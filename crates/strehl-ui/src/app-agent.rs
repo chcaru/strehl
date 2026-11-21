@@ -233,7 +233,7 @@ impl StrehlApp {
         ui.label(
             RichText::new("LOCAL COLLABORATION")
                 .monospace()
-                .size(9.0)
+                .size(crate::studio_theme::scale::CAPS)
                 .color(ACCENT),
         );
         theme::caption(
@@ -266,7 +266,7 @@ impl StrehlApp {
                 );
                 if ui.button("Copy session path").clicked() {
                     ui.ctx()
-                        .copy_text(bridge.descriptor_path().display().to_string());
+                        .copy_text(crate::display_path::display_path(bridge.descriptor_path()));
                 }
             }
         } else if ui
@@ -335,7 +335,11 @@ impl StrehlApp {
         }
         egui::CollapsingHeader::new("Changes made by agent").show(ui, |ui| {
             for event in &self.agent.events {
-                ui.label(RichText::new(event).size(10.0).color(MUTED));
+                ui.label(
+                    RichText::new(event)
+                        .size(crate::studio_theme::scale::SECONDARY)
+                        .color(MUTED),
+                );
             }
         });
         if let Some(error) = &self.agent.error {

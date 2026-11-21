@@ -244,7 +244,7 @@ fn scan(directory: &Path, cancelled: &AtomicBool) -> Result<StackScan> {
         }
         let metadata = entry
             .metadata()
-            .with_context(|| format!("Reading {}", path.display()))?;
+            .with_context(|| format!("Reading {}", crate::display_path::display_path(&path)))?;
         if !metadata.is_file() {
             continue;
         }
@@ -279,7 +279,10 @@ fn scan(directory: &Path, cancelled: &AtomicBool) -> Result<StackScan> {
                 by_name
                     .remove(&plane.file_name().map(ToOwned::to_owned))
                     .with_context(|| {
-                        format!("The capture records {}, but it is missing", plane.display())
+                        format!(
+                            "The capture records {}, but it is missing",
+                            crate::display_path::display_path(plane)
+                        )
                     })
             })
             .collect::<Result<_>>()?;
@@ -613,7 +616,7 @@ fn run_render(
             "Strehl desktop render\nProgram: {:?}\nArguments: {:?}\nInherited STREHL_* overrides removed; STREHL_CACHE_DIR explicitly set to the shared engine cache {}.\nPixel shift: {}.\nRAYON_NUM_THREADS: {workers}. STREHL_PYRAMID_WORKERS: {workers}.\nExecution limits only; engine canonical reduction order and memory plan preserved.\nTemporal detail smoothing: {} (experimental saved recipe setting).\n",
             command.get_program(),
             command.get_args().collect::<Vec<_>>(),
-            cache.display(),
+            crate::display_path::display_path(&cache),
             if pixel_shift_requested(&command) {
                 "four-shot groups assembled from measured channels (STREHL_PIXEL_SHIFT=remosaic)"
             } else {
@@ -640,7 +643,7 @@ fn run_render(
                 ensure!(
                     status.success(),
                     "The engine exited with {status}. Full output: {}",
-                    log.display()
+                    crate::display_path::display_path(&log)
                 );
                 ensure!(
                     !cancelled.load(Ordering::Relaxed),
@@ -885,9 +888,13 @@ pub(crate) fn remove_experimental_overrides(
 }
 
 fn canonical_directory(path: &Path) -> Result<PathBuf> {
-    let canonical =
-        fs::canonicalize(path).with_context(|| format!("Finding {}", path.display()))?;
-    ensure!(canonical.is_dir(), "{} is not a folder", path.display());
+    let canonical = fs::canonicalize(path)
+        .with_context(|| format!("Finding {}", crate::display_path::display_path(path)))?;
+    ensure!(
+        canonical.is_dir(),
+        "{} is not a folder",
+        crate::display_path::display_path(path)
+    );
     Ok(canonical)
 }
 
@@ -944,8 +951,12 @@ pub(crate) fn prepare_output_parent(source: &Path, requested: &Path) -> Result<P
     validate_output_parent(source, &intended)?;
     for component in missing.into_iter().rev() {
         directory.push(component);
-        fs::create_dir(&directory)
-            .with_context(|| format!("Creating output folder {}", directory.display()))?;
+        fs::create_dir(&directory).with_context(|| {
+            format!(
+                "Creating output folder {}",
+                crate::display_path::display_path(&directory)
+            )
+        })?;
         directory = canonical_directory(&directory)?;
         validate_output_parent(source, &directory)?;
     }
@@ -1028,7 +1039,7 @@ pub(crate) fn create_job_directory(parent: &Path) -> Result<PathBuf> {
                 return Err(error).with_context(|| {
                     format!(
                         "Creating render folder {}. Choose another folder in Adjust > Destination",
-                        directory.display()
+                        crate::display_path::display_path(&directory)
                     )
                 });
             }

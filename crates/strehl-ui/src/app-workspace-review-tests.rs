@@ -78,12 +78,10 @@ fn default_process_survives_actual_station_and_pane_controls_and_integrated_sour
     // The Stack station's tabs, the activity tray's engine log, then the
     // Library station: each is a real control in the frame.
     for (step, (labels, pane)) in [
-        (&["STACK"][..], workspace::Sidebar::Adjust),
-        (&["REVIEW"][..], workspace::Sidebar::Review),
-        (
-            &["Nothing running", "ENGINE LOG"][..],
-            workspace::Sidebar::Activity,
-        ),
+        (&["STACK"][..], Some(workspace::Sidebar::Adjust)),
+        (&["REVIEW"][..], Some(workspace::Sidebar::Review)),
+        // The engine log is a drawer over the station.
+        (&["Nothing running", "ENGINE LOG"][..], None),
     ]
     .into_iter()
     .enumerate()
@@ -108,7 +106,14 @@ fn default_process_survives_actual_station_and_pane_controls_and_integrated_sour
             find_text(&opened, "READ").is_some(),
             "{label} replaced Process"
         );
-        assert_eq!(app.sidebar, Some(pane), "{label} must open its actual pane");
+        match pane {
+            None => assert_eq!(
+                app.shell.navigator.drawer,
+                Some(super::studio_route::Drawer::Activity),
+                "{label} must open its actual pane"
+            ),
+            pane => assert_eq!(app.sidebar, pane, "{label} must open its actual pane"),
+        }
     }
     app.inspect_frame(11);
     assert!(app.process_view);
@@ -124,8 +129,8 @@ fn default_process_survives_actual_station_and_pane_controls_and_integrated_sour
         "source inspection belongs in the primary image and timeline"
     );
     assert_eq!(
-        app.sidebar,
-        Some(workspace::Sidebar::Activity),
+        app.shell.navigator.drawer,
+        Some(super::studio_route::Drawer::Activity),
         "source inspection cannot hijack navigation"
     );
     // The Library is the subject grid; the process waits on the Stack station.

@@ -226,7 +226,7 @@ fn the_stations_navigate_and_every_existing_pane_stays_reachable() {
         find(&menu, "Agent").expect("brand menu").center(),
         time + 0.35,
     );
-    assert_eq!(app.sidebar, Some(workspace::Sidebar::Agent));
+    assert_eq!(app.shell.navigator.drawer, Some(Drawer::Agent));
     assert_eq!(
         app.shell.navigator.station(),
         Station::Stack,
@@ -574,4 +574,134 @@ fn benchmark_shell_chrome_with_a_large_catalog() {
         app.catalog.nodes.len(),
         times
     );
+}
+
+fn bar_frame(app: &mut StrehlApp, ctx: &egui::Context, width: f32, time: f64) -> egui::FullOutput {
+    ctx.run(
+        egui::RawInput {
+            screen_rect: Some(egui::Rect::from_min_size(
+                egui::Pos2::ZERO,
+                egui::vec2(width, 1050.0),
+            )),
+            time: Some(time),
+            ..Default::default()
+        },
+        |ctx| {
+            app.sync_route();
+            app.shell_bars(ctx);
+            crate::window_chrome::finish_with(ctx, false, 1.0);
+        },
+    )
+}
+
+#[test]
+fn the_top_bar_right_end_fits_between_the_stations_and_the_window_buttons() {
+    use crate::activity::{ActivityKind, ActivityStatus, Lane};
+    let capture = || {
+        let mut status = ActivityStatus::new(
+            ActivityKind::Capture,
+            "capture",
+            ActivityKind::Capture.label(),
+            Lane::Camera,
+        );
+        status.phase = "Capturing".into();
+        (status.done, status.total) = (Some(61), Some(96));
+        status.eta = Some(Duration::from_secs(198));
+        status
+    };
+    let render = || {
+        let mut status = ActivityStatus::new(
+            ActivityKind::Stack,
+            "run",
+            "Green scarab, wing case, close-up at 5.6x through the second tube",
+            Lane::Heavy,
+        );
+        status.phase = "Merging".into();
+        (status.done, status.total) = (Some(120), Some(299));
+        status.eta = Some(Duration::from_secs(100));
+        status
+    };
+    let mut rig = crate::rig_status::RigSummary {
+        initialized: true,
+        online: true,
+        camera_connected: true,
+        camera_model: Some("ILCE-7CR".into()),
+        phase: Some("capturing".into()),
+        completed: Some(61),
+        planned: Some(96),
+        ..Default::default()
+    };
+    rig.light.on = Some(true);
+    rig.light.watts = Some(41.0);
+    for width in [1280.0, 1440.0, 1680.0] {
+        for (both, failure) in [(false, false), (true, false), (true, true)] {
+            let ctx = context();
+            let mut app = app();
+            app.go_station(Station::Stack);
+            app.shell.stand_in_rig(rig.clone(), 0.0);
+            app.activity_hub.activities.begin();
+            app.activity_hub.activities.report(capture());
+            if both {
+                app.activity_hub.activities.report(render());
+            }
+            if failure {
+                app.shell.notices.push(
+                    crate::notices::Severity::Failure,
+                    crate::notices::Source::Library,
+                    "Render of Green scarab, wing case failed: the output folder is full",
+                    None,
+                );
+            }
+            let mut out = bar_frame(&mut app, &ctx, width, 0.0);
+            for step in 1..3 {
+                out = bar_frame(&mut app, &ctx, width, step as f64 * 0.05);
+            }
+            let bar: Vec<_> = texts(&out)
+                .into_iter()
+                .filter(|(_, rect)| rect.bottom() <= 44.0)
+                .collect();
+            let export = bar.iter().find(|(t, _)| t == "EXPORT").unwrap().1;
+            let library = bar.iter().find(|(t, _)| t == "01").unwrap().1;
+            let stations = (library.left() - 11.0)..=(export.right() + 11.0);
+            let controls = width - crate::window_chrome::CONTROLS_WIDTH;
+            for (text, rect) in &bar {
+                if rect.left() > export.right() {
+                    assert!(
+                        rect.left() >= export.right() + 12.0 && rect.right() <= controls,
+                        "{text:?} {rect:?} crowds the stations or the window buttons at {width}"
+                    );
+                } else if rect.right() < library.left() {
+                    assert!(rect.right() <= *stations.start(), "{text:?} at {width}");
+                }
+            }
+            if width >= 1680.0 && !failure {
+                // The kind's word is not repeated by the phase.
+                assert!(bar.iter().any(|(t, _)| t == "Capturing"), "{bar:?}");
+                assert!(!bar.iter().any(|(t, _)| t == "Capture"));
+                let dim = if both {
+                    "61 / 96 · 3:18 left · +1"
+                } else {
+                    "61 / 96 · 3:18 left"
+                };
+                assert!(bar.iter().any(|(t, _)| t == dim), "{bar:?}");
+                if !both {
+                    assert!(bar.iter().any(|(t, _)| t == "light 41 W"), "{bar:?}");
+                }
+            }
+        }
+    }
+}
+
+#[test]
+fn launch_overlays_open_the_shells_own_surfaces() {
+    let mut app = app();
+    app.apply_launch_route(LaunchRoute::Library, None);
+    app.apply_launch_overlay("projects");
+    assert_eq!(app.shell.navigator.drawer, Some(Drawer::Projects));
+    app.apply_launch_overlay("activity");
+    assert_eq!(app.shell.navigator.drawer, Some(Drawer::Activity));
+    app.apply_launch_overlay("palette");
+    assert!(app.shell.palette.is_open());
+    app.apply_launch_overlay("preferences");
+    assert!(app.shell.preferences_open);
 }

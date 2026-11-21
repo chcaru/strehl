@@ -78,6 +78,9 @@ pub(super) struct Shell {
     focus_motion: f64,
     pub rig: RigSummary,
     rig_read: Option<f64>,
+    /// The version last saved or restored and the editor's history revision
+    /// then: while the recipe is unchanged the breadcrumb names it.
+    version_seen: Option<(String, u64)>,
     /// The Adjust pane changed the recipe during the last paint.
     recipe_changed: bool,
     catalog_revision: u64,
@@ -120,6 +123,7 @@ impl Shell {
                 &serde_json::json!({"online":false,"initialized":false}),
             ),
             rig_read: None,
+            version_seen: None,
             recipe_changed: false,
             catalog_revision: 0,
             catalog_pending_seen: None,
@@ -234,6 +238,23 @@ impl StrehlApp {
         }
         self.navigate(route.route(self.active_stack, self.result.clone()));
     }
+    /// The project tree is on screen: the Library's legacy flag, or its
+    /// drawer over another station.
+    pub(super) fn projects_visible(&self) -> bool {
+        self.sidebar == Some(workspace::Sidebar::Projects)
+            || self.shell.navigator.drawer == Some(Drawer::Projects)
+    }
+    /// The `--overlay` launch option.
+    pub(super) fn apply_launch_overlay(&mut self, overlay: &str) {
+        match overlay {
+            "projects" => self.open_project_tree(),
+            "activity" => self.open_drawer(Drawer::Activity),
+            "agent" => self.open_drawer(Drawer::Agent),
+            "palette" => self.shell.palette.open(),
+            "preferences" => self.shell.preferences_open = true,
+            _ => {}
+        }
+    }
     /// Restore the last station on an interactive launch that asked for none.
     pub(super) fn restore_station(&mut self) {
         let Some(station) = Station::from_number(self.shell.prefs.station) else {
@@ -264,6 +285,7 @@ impl StrehlApp {
         self.library_tick(ctx);
         self.refresh_rig(ctx);
         self.track_catalog();
+        self.track_version();
         if self.shell.prefs_dirty && !ctx.input(|i| i.pointer.any_down()) {
             self.save_preferences();
         }
@@ -360,6 +382,29 @@ impl StrehlApp {
         if rig != self.shell.rig {
             self.shell.rig = rig;
         }
+    }
+
+    fn track_version(&mut self) {
+        let revision = self.editor.history_revision();
+        match self.project_explorer.selected_history() {
+            Some(id)
+                if self
+                    .shell
+                    .version_seen
+                    .as_ref()
+                    .is_none_or(|(seen, _)| seen != id) =>
+            {
+                self.shell.version_seen = Some((id.to_owned(), revision));
+            }
+            Some(_) => {}
+            None => self.shell.version_seen = None,
+        }
+    }
+
+    /// The open photograph's version while its recipe is the saved one.
+    pub(super) fn version_crumb(&self) -> Option<&str> {
+        let (id, revision) = self.shell.version_seen.as_ref()?;
+        (*revision == self.editor.history_revision()).then_some(id.as_str())
     }
 
     fn track_catalog(&mut self) {
@@ -774,13 +819,14 @@ impl StrehlApp {
                 .response
                 .rect
         }
-        // Drawers hold today's panes: over a redrawn station on a light theme
-        // they need the Graphite scope that legacy stations get as a whole.
-        let legacy_drawer = self.shell.navigator.drawer.is_some()
-            && studio_theme::tokens(ctx).light
-            && !self.station_paints_legacy(station);
-        let rect = if legacy_drawer {
-            studio_theme::scoped(ctx, ThemeName::Graphite, || panel(self, ctx, station))
+        // Drawers hold today's panes, painted with the Graphite constants:
+        // over a redrawn station they are recoloured into the theme in effect
+        // (a legacy station is drawn in the Graphite scope as a whole).
+        let drawer = self.shell.navigator.drawer.is_some() && !self.station_paints_legacy(station);
+        let rect = if drawer {
+            theme::follow_theme(ctx, egui::LayerId::background(), || {
+                panel(self, ctx, station)
+            })
         } else {
             panel(self, ctx, station)
         };
@@ -1000,6 +1046,26 @@ impl StrehlApp {
 
     /// How visible the floating chrome is in focus mode: it fades after
     /// two seconds without pointer motion, as one alpha (no relayout).
+    /// Capture's glance mode covers the whole window, top bar included.
+    pub(super) fn glance_covers_window(&self) -> bool {
+        self.shell.navigator.station() == Station::Capture && self.capture.glance_open()
+    }
+
+    /// The bare glance screen shows no window buttons; they return while the
+    /// pointer is at the window's top-right corner.
+    pub(super) fn glance_chrome_alpha(&self, ctx: &egui::Context) -> f32 {
+        let corner = crate::window_chrome::controls_rect(ctx.viewport_rect()).expand(24.0);
+        let near = ctx
+            .input(|i| i.pointer.hover_pos())
+            .is_some_and(|at| corner.contains(at));
+        let time = if studio_theme::reduced_motion(ctx) {
+            0.0
+        } else {
+            0.16
+        };
+        ctx.animate_bool_with_time(egui::Id::new("studio-glance-chrome"), near, time)
+    }
+
     pub(super) fn focus_chrome_alpha(&mut self, ctx: &egui::Context) -> f32 {
         let now = ctx.input(|i| i.time);
         let moved = ctx.input(|i| {

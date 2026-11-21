@@ -72,7 +72,8 @@ struct SourceStamp {
 }
 impl SourceStamp {
     fn read(path: &Path) -> Result<Self> {
-        let meta = fs::metadata(path).with_context(|| format!("Reading {}", path.display()))?;
+        let meta = fs::metadata(path)
+            .with_context(|| format!("Reading {}", crate::display_path::display_path(path)))?;
         ensure!(meta.is_file(), "The selected source is not a file");
         Ok(Self {
             bytes: meta.len(),
@@ -268,7 +269,8 @@ fn parse_frame(frame: &Value, source: &Path, stamp: &SourceStamp) -> Result<Summ
 }
 
 fn bounded_read(path: &Path, maximum: u64) -> Result<Vec<u8>> {
-    let file = File::open(path).with_context(|| format!("Opening {}", path.display()))?;
+    let file = File::open(path)
+        .with_context(|| format!("Opening {}", crate::display_path::display_path(path)))?;
     ensure!(
         file.metadata()?.len() <= maximum,
         "Metadata report is unexpectedly large"
@@ -324,7 +326,7 @@ fn run_child(mut command: Command, cancelled: &AtomicBool, log: &Path) -> Result
             ensure!(
                 status.success(),
                 "Metadata inspection failed ({status}). Details: {}",
-                log.display()
+                crate::display_path::display_path(log)
             );
             return Ok(());
         }

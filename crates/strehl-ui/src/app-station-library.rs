@@ -344,6 +344,9 @@ impl StrehlApp {
             .map(|node| node.name.clone())
             .unwrap_or_default();
         self.capture_parent = subject.or(collection);
+        if !subject_name.is_empty() {
+            self.capture.set_plan_subject(&subject_name);
+        }
         self.library.target = Some(CaptureTarget {
             subject,
             collection,

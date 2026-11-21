@@ -466,6 +466,11 @@ impl ProjectExplorer {
         self.selected_history = None;
         self.selected_revision = Some(path.to_path_buf());
     }
+    /// The photograph-history item last revealed or chosen: a saved or
+    /// restored version's id, for the shell's breadcrumb.
+    pub(crate) fn selected_history(&self) -> Option<&str> {
+        self.selected_history.as_deref()
+    }
     pub(crate) fn reveal_photo_history(
         &mut self,
         catalog: &mut Catalog,
@@ -910,7 +915,8 @@ impl ProjectExplorer {
                     ui.close();
                 }
                 if ui.button("Copy source folder").clicked() {
-                    ui.ctx().copy_text(source.display().to_string());
+                    ui.ctx()
+                        .copy_text(crate::display_path::display_path(source));
                     ui.close();
                 }
                 if let Some(run) = catalog.latest_run(id).cloned()
@@ -1092,7 +1098,8 @@ impl ProjectExplorer {
                 ui.close();
             }
             if ui.button("Copy TIFF path").clicked() {
-                ui.ctx().copy_text(run.output.display().to_string());
+                ui.ctx()
+                    .copy_text(crate::display_path::display_path(&run.output));
                 ui.close();
             }
         });
@@ -1199,7 +1206,8 @@ impl ProjectExplorer {
                 ui.close();
             }
             if ui.button("Copy source folder").clicked() {
-                ui.ctx().copy_text(draft.source.display().to_string());
+                ui.ctx()
+                    .copy_text(crate::display_path::display_path(&draft.source));
                 ui.close();
             }
         });
@@ -1302,7 +1310,7 @@ impl ProjectExplorer {
                 }
                 if ui.button("Copy photograph path").clicked() {
                     ui.ctx()
-                        .copy_text(version.owner.output.display().to_string());
+                        .copy_text(crate::display_path::display_path(&version.owner.output));
                     ui.close();
                 }
             });
@@ -1412,7 +1420,8 @@ impl ProjectExplorer {
                         ui.close();
                     }
                     if ui.button("Copy export path").clicked() {
-                        ui.ctx().copy_text(export.path.display().to_string());
+                        ui.ctx()
+                            .copy_text(crate::display_path::display_path(&export.path));
                         ui.close();
                     }
                 });
@@ -1513,8 +1522,15 @@ impl ProjectExplorer {
         }
         if let Some(draft) = &node.stack {
             let source = crate::display_path::display_path(&draft.source);
-            ui.add(egui::Label::new(RichText::new(&source).size(9.0).color(MUTED)).truncate())
-                .on_hover_text(source);
+            ui.add(
+                egui::Label::new(
+                    RichText::new(&source)
+                        .size(crate::studio_theme::scale::CAPS)
+                        .color(MUTED),
+                )
+                .truncate(),
+            )
+            .on_hover_text(source);
         } else {
             theme::caption(ui, "New stack adds source photos here");
         }
@@ -1656,7 +1672,11 @@ fn paint_row(ui: &egui::Ui, rect: egui::Rect, hit: &egui::Response, selected: bo
 }
 fn row_text(ui: &egui::Ui, rect: egui::Rect, left: f32, title: &str, suffix: &str, color: Color32) {
     let painter = ui.painter_at(rect);
-    let suffix_galley = painter.layout_no_wrap(suffix.to_owned(), FontId::proportional(9.0), MUTED);
+    let suffix_galley = painter.layout_no_wrap(
+        suffix.to_owned(),
+        FontId::proportional(crate::studio_theme::scale::CAPS),
+        MUTED,
+    );
     let title_right = rect.right()
         - 8.0
         - if suffix.is_empty() {

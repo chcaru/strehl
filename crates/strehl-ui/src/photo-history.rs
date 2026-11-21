@@ -95,7 +95,8 @@ fn payload_path(root: &Path, id: &str) -> Result<PathBuf> {
 }
 
 fn hash_file(path: &Path, cancelled: &AtomicBool) -> Result<(u64, String)> {
-    let mut file = File::open(path).with_context(|| format!("Opening {}", path.display()))?;
+    let mut file = File::open(path)
+        .with_context(|| format!("Opening {}", crate::display_path::display_path(path)))?;
     let before = file.metadata()?;
     ensure!(
         before.is_file(),

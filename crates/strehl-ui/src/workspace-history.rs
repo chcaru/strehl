@@ -410,7 +410,7 @@ impl Catalog {
         anyhow::ensure!(
             loaded.load_error.is_none(),
             "Current Projects cannot be read; your recovery is saved at {}",
-            recovery.display()
+            crate::display_path::display_path(&recovery)
         );
         *self = loaded;
         Ok(recovery)
@@ -1080,7 +1080,7 @@ pub(crate) fn reopen(run: Run) -> Task<(Run, PipelineProgress)> {
             anyhow::ensure!(
                 run.output.is_file(),
                 "The saved TIFF is missing: {}",
-                run.output.display()
+                crate::display_path::display_path(&run.output)
             );
             anyhow::ensure!(
                 progress.output_geometry.is_some(),

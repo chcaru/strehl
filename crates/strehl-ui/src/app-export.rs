@@ -86,14 +86,14 @@ fn information_row(ui: &mut egui::Ui, name: &str, value: &str) {
 fn path_context_menu(response: egui::Response, path: &Path) -> Option<PathBuf> {
     let mut reveal = None;
     response
-        .on_hover_text(path.display().to_string())
+        .on_hover_text(crate::display_path::display_path(path))
         .context_menu(|ui| {
             if ui.button("Reveal in Explorer").clicked() {
                 reveal = Some(path.to_path_buf());
                 ui.close();
             }
             if ui.button("Copy path").clicked() {
-                ui.ctx().copy_text(path.display().to_string());
+                ui.ctx().copy_text(crate::display_path::display_path(path));
                 ui.close();
             }
         });
@@ -297,7 +297,7 @@ impl StrehlApp {
                         );
                         reveal = path_context_menu(label, path).or(reveal.take());
                         if ui.small_button("Copy path").clicked() {
-                            ui.ctx().copy_text(path.display().to_string());
+                            ui.ctx().copy_text(crate::display_path::display_path(path));
                         }
                     }
                     if let Some(error) = &self.editor.error {

@@ -268,6 +268,7 @@ impl StrehlApp {
         // station the owner last used.
         let launch_route = launch.route;
         let launch_subject = launch.route_subject.clone();
+        let launch_overlay = launch.overlay.clone();
         let restore_station = launch_route.is_none()
             && !(launch.headless
                 || launch.offscreen
@@ -525,6 +526,9 @@ impl StrehlApp {
             app.apply_launch_route(route, launch_subject.as_deref());
         } else if restore_station {
             app.restore_station();
+        }
+        if let Some(overlay) = launch_overlay.as_deref() {
+            app.apply_launch_overlay(overlay);
         }
         app
     }
@@ -2764,8 +2768,7 @@ impl StrehlApp {
         let ready = ready
             && (self.sidebar != Some(workspace::Sidebar::Capture)
                 || self.capture.ready_for_screenshot())
-            && (self.sidebar != Some(workspace::Sidebar::Projects)
-                || !self.project_explorer.preview_pending())
+            && (!self.projects_visible() || !self.project_explorer.preview_pending())
             // The Library waits for its pictures and folder scans.
             && (station != studio_route::Station::Library || !self.library_loading())
             // Develop and Export show the photograph they act on.
@@ -2981,7 +2984,9 @@ impl StrehlApp {
             }
             ctx.request_repaint();
         }
-        let chrome = if self.shell.focus {
+        let chrome = if self.glance_covers_window() {
+            self.glance_chrome_alpha(ctx)
+        } else if self.shell.focus {
             self.focus_chrome_alpha(ctx)
         } else {
             1.0

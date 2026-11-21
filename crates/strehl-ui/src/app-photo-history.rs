@@ -636,7 +636,7 @@ impl StrehlApp {
             if field.has_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter)) {
                 save = Some(());
             }
-        } else if self.sidebar == Some(workspace::Sidebar::Projects)
+        } else if self.projects_visible()
             && self.editor.loaded.is_some()
             && ui
                 .add_enabled(

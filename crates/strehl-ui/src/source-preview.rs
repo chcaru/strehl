@@ -369,8 +369,8 @@ pub(crate) fn load_draft_source(
 ) -> Result<PreviewImage> {
     ensure!(max_side > 0, "The draft has no usable display size");
     check_cancelled(cancelled)?;
-    let (mut file, _, file_len) =
-        PreviewReader::open(path).with_context(|| format!("Opening {}", path.display()))?;
+    let (mut file, _, file_len) = PreviewReader::open(path)
+        .with_context(|| format!("Opening {}", crate::display_path::display_path(path)))?;
     let candidates = jpeg_candidates(&mut file, file_len, cancelled)?;
     let mut ranked = Vec::with_capacity(candidates.len());
     for candidate in candidates {
@@ -459,8 +459,8 @@ fn load_browser(
         "The camera preview has no usable display size"
     );
     check_cancelled(cancelled)?;
-    let (mut file, metadata, file_len) =
-        PreviewReader::open(path).with_context(|| format!("Opening {}", path.display()))?;
+    let (mut file, metadata, file_len) = PreviewReader::open(path)
+        .with_context(|| format!("Opening {}", crate::display_path::display_path(path)))?;
     let stamp = cache::Stamp::new(path, &metadata);
     let catalog = cache::catalog(&mut file, file_len, stamp.as_ref(), cancelled)?;
     let (candidates, source_size) =

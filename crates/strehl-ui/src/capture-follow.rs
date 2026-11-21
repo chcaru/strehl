@@ -464,14 +464,14 @@ impl Follower {
                 .create(true)
                 .append(true)
                 .open(&log)
-                .with_context(|| format!("Opening {}", log.display()))?;
+                .with_context(|| format!("Opening {}", crate::display_path::display_path(&log)))?;
             writeln!(
                 out,
                 "\nStrehl desktop: following {}\nProgram: {:?}\nArguments: {:?}\nInherited STREHL_* overrides removed; STREHL_CACHE_DIR set to the shared engine cache {}.",
-                run.display(),
+                crate::display_path::display_path(run),
                 command.get_program(),
                 command.get_args().collect::<Vec<_>>(),
-                cache.display()
+                crate::display_path::display_path(&cache)
             )?;
             command
                 .stdin(Stdio::null())

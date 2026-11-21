@@ -738,7 +738,7 @@ fn name_and_place(
         let place = view
             .destination
             .map_or("No folder chosen for this subject".into(), |p| {
-                p.display().to_string()
+                crate::display_path::display_path(p)
             });
         style::text(ui, &place, 12.5, pal.ink_2);
         if style::link(ui, pal, "Change…", false).clicked() {
@@ -1195,7 +1195,9 @@ pub(crate) fn run_batch(
                         .write(true)
                         .create_new(true)
                         .open(recipe)
-                        .with_context(|| format!("writing {}", recipe.display()))?;
+                        .with_context(|| {
+                            format!("writing {}", crate::display_path::display_path(recipe))
+                        })?;
                     out.write_all(&context.recipe_json)?;
                     out.sync_all()?;
                     Ok(None)
@@ -1213,13 +1215,18 @@ pub(crate) fn run_batch(
 
 /// Copy a file to a new name, never replacing one.
 fn copy_new(from: &Path, to: &Path, cancelled: &AtomicBool) -> Result<()> {
-    let mut source =
-        std::fs::File::open(from).with_context(|| format!("reading {}", from.display()))?;
+    let mut source = std::fs::File::open(from)
+        .with_context(|| format!("reading {}", crate::display_path::display_path(from)))?;
     let mut target = std::fs::OpenOptions::new()
         .write(true)
         .create_new(true)
         .open(to)
-        .with_context(|| format!("{} already exists or cannot be written", to.display()))?;
+        .with_context(|| {
+            format!(
+                "{} already exists or cannot be written",
+                crate::display_path::display_path(to)
+            )
+        })?;
     let result = (|| -> Result<()> {
         let mut buffer = vec![0u8; 4 << 20];
         loop {

@@ -46,6 +46,25 @@ ROUTES = {
                                 "capture-plan.png"),
     "capture-plan-lightbox": (["--route", "capture", "--capture-fixture", "plan", "--theme", "lightbox"],
                               "capture-plan.png"),
+    "engine-lightbox": (["--open-run", RUN, "--route", "engine", "--theme", "lightbox"], "engine-room.png"),
+    "develop-instrument": (["--open-run", RUN, "--route", "develop", "--theme", "instrument"], "develop.png"),
+    "develop-lightbox": (["--open-run", RUN, "--route", "develop", "--theme", "lightbox"], "develop.png"),
+    "export-lightbox": (["--open-run", RUN, "--route", "export", "--theme", "lightbox"], "export.png"),
+    "glance-lightbox": (["--route", "capture", "--capture-fixture", "glance", "--theme", "lightbox"], "glance.png"),
+    # The shell's own surfaces over a station (no reference: compare across themes).
+    "projects-drawer": (["--open-run", RUN, "--route", "develop", "--overlay", "projects"], "develop.png"),
+    "projects-drawer-lightbox": (["--open-run", RUN, "--route", "develop", "--overlay", "projects",
+                                  "--theme", "lightbox"], "develop.png"),
+    "projects-drawer-instrument": (["--open-run", RUN, "--route", "develop", "--overlay", "projects",
+                                    "--theme", "instrument"], "develop.png"),
+    "activity-drawer-lightbox": (["--open-run", RUN, "--route", "develop", "--overlay", "activity",
+                                  "--theme", "lightbox"], "develop.png"),
+    "agent-drawer-lightbox": (["--open-run", RUN, "--route", "develop", "--overlay", "agent",
+                               "--theme", "lightbox"], "develop.png"),
+    "palette": (["--route", "library", "--overlay", "palette"], "stack-palette.png"),
+    "palette-lightbox": (["--route", "library", "--overlay", "palette", "--theme", "lightbox"], "stack-palette.png"),
+    "preferences-instrument": (["--route", "library", "--overlay", "preferences", "--theme", "instrument"],
+                               "library.png"),
     "stack-instrument": (["--open-run", RUN, "--route", "stack", "--theme", "instrument"], "stack-instrument.png"),
     "stack-lightbox": (["--open-run", RUN, "--route", "stack", "--theme", "lightbox"], "stack-lightbox.png"),
     "stack-plane-held": (["--open-run", RUN, "--route", "stack", "--plane-hold", "128"], "stack-plane-held.png"),
@@ -72,6 +91,7 @@ def main():
     parser.add_argument("--exe", required=True, type=Path)
     parser.add_argument("--out", required=True, type=Path)
     parser.add_argument("--reference", type=Path, default=REFERENCE)
+    parser.add_argument("--size", default="1680x1050", help="window size, e.g. 1280x800")
     parser.add_argument("names", nargs="*")
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
@@ -90,7 +110,7 @@ def main():
             settings.unlink()
         command = [str(args.exe), "--offscreen-screenshot", str(png), "--catalog", str(catalog),
                    "--capture-settings", str(settings),
-                   "--output-dir", str(args.out / "results"), "--size", "1680x1050", *extra]
+                   "--output-dir", str(args.out / "results"), "--size", args.size, *extra]
         started = time.time()
         with open(args.out / f"{name}.log", "wb") as log:
             try:

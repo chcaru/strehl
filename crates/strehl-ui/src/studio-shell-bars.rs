@@ -26,6 +26,10 @@ struct CrumbKey {
     result: bool,
     run: Option<PathBuf>,
     navigation: u64,
+    /// On Capture: the plan's subject and stack, and the phase's word.
+    capture: Option<(String, String, &'static str)>,
+    /// On Develop and Export: the open version's id.
+    version: Option<String>,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub(super) struct Crumb {
@@ -43,9 +47,15 @@ pub(super) enum CrumbTarget {
     Render(crate::workspace_history::NodeId),
     /// The engine room: back to the photograph.
     Room,
+    /// A subject: its page.
+    Subject(crate::workspace_history::NodeId),
+    /// Where you are, with nothing behind it.
+    Here,
 }
 
 const CRUMBS_MAX: f32 = 430.0;
+/// The crumb standing for segments folded away in a narrow window.
+const ELLIPSIS: &str = "…";
 const CRUMB_GAP: f32 = 18.0;
 
 /// One status button on the right of the top bar.
@@ -56,7 +66,199 @@ struct Stat<'a> {
     dim: &'a str,
     progress: Option<f32>,
     search: bool,
+    /// The search stat's "Ctrl K" cap (dropped when the bar is tight).
+    key: bool,
+    /// When the name and the dim do not both fit, show the dim alone (the
+    /// activity's count and time say more than its phase word).
+    dim_first: bool,
     max_width: f32,
+}
+
+/// A stat's parts at its allotted width: text shortens with an ellipsis,
+/// and below a readable minimum it is left out.
+struct StatLayout {
+    name: Option<std::sync::Arc<egui::Galley>>,
+    dim: Option<std::sync::Arc<egui::Galley>>,
+    key: Option<std::sync::Arc<egui::Galley>>,
+    width: f32,
+}
+
+/// Text narrower than this is not worth showing: the mark stands alone.
+const STAT_TEXT_MIN: f32 = 28.0;
+/// The activity keeps at least this much before anything else gives way.
+const ACTIVITY_FLOOR: f32 = 170.0;
+/// An unread failure keeps this much before it folds into the activity.
+const FAILURE_FLOOR: f32 = 160.0;
+
+fn stat_layout(ui: &egui::Ui, stat: &Stat<'_>) -> StatLayout {
+    let gap = 8.0;
+    let key = (stat.search && stat.key).then(|| {
+        ui.painter().layout_job(crate::studio_fonts::tracked(
+            "Ctrl K",
+            w::font(ui, Face::Regular, scale::CAPS),
+            egui::Color32::PLACEHOLDER,
+            0.08,
+        ))
+    });
+    let mut content = 0.0;
+    if stat.mark.is_some() {
+        content += w::MARK_SLOT;
+    }
+    if stat.search {
+        content += 15.0 + key.as_ref().map_or(0.0, |k| gap + k.size().x + 10.0);
+    }
+    let lead = if content > 0.0 { gap } else { 0.0 };
+    let mut room = stat.max_width - content - 28.0 - lead;
+    let natural = |label: &str| {
+        w::text_galley(ui, label, Face::Regular, scale::CONTROL)
+            .size()
+            .x
+    };
+    let name_label = if stat.dim_first
+        && !stat.name.is_empty()
+        && !stat.dim.is_empty()
+        && natural(stat.name) + gap + natural(stat.dim) > room
+    {
+        ""
+    } else {
+        stat.name
+    };
+    let mut text = |label: &str| {
+        if label.is_empty() || room < STAT_TEXT_MIN {
+            return None;
+        }
+        let galley = elided(ui, label, room);
+        room -= galley.size().x + gap;
+        Some(galley)
+    };
+    let name = text(name_label);
+    let dim = text(stat.dim);
+    let words = match (&name, &dim) {
+        (Some(n), Some(d)) => n.size().x + gap + d.size().x,
+        (Some(g), None) | (None, Some(g)) => g.size().x,
+        (None, None) => 0.0,
+    };
+    let width = content + if words > 0.0 { lead + words } else { 0.0 } + 28.0;
+    StatLayout {
+        name,
+        dim,
+        key,
+        width: width.ceil(),
+    }
+}
+
+/// `text` on one line, at most `max` wide, ending in an ellipsis if cut.
+fn elided(ui: &egui::Ui, text: &str, max: f32) -> std::sync::Arc<egui::Galley> {
+    let mut job = egui::text::LayoutJob::single_section(
+        text.to_owned(),
+        egui::TextFormat {
+            font_id: w::font(ui, Face::Regular, scale::CONTROL),
+            color: egui::Color32::PLACEHOLDER,
+            ..Default::default()
+        },
+    );
+    job.wrap = egui::text::TextWrapping {
+        max_width: max.max(1.0),
+        max_rows: 1,
+        break_anywhere: true,
+        overflow_character: Some('…'),
+    };
+    ui.painter().layout_job(job)
+}
+
+/// Fit the right end of the top bar into `budget`, between the stations and
+/// the window buttons. With nothing running, an unread failure takes the
+/// activity's words. Then in order: search drops its key; the rig drops its
+/// fact; the failure shortens to its floor; the activity shortens to its
+/// floor (keeping its count and time over its phase word); the failure folds
+/// into the activity's mark; the rig keeps only its lamp; the activity takes
+/// what is left, down to its mark.
+fn fit_right_cluster(
+    ui: &egui::Ui,
+    budget: f32,
+    idle: bool,
+    palette: &mut Stat<'_>,
+    activity: &mut Stat<'_>,
+    failure: &mut Option<Stat<'_>>,
+    rig: &mut Stat<'_>,
+) {
+    let width = |stat: &Stat<'_>| stat_layout(ui, stat).width;
+    let others = |palette: &Stat<'_>, failure: &Option<Stat<'_>>, rig: &Stat<'_>| {
+        width(palette) + failure.as_ref().map_or(0.0, &width) + width(rig)
+    };
+    let over = |p: &Stat<'_>, a: &Stat<'_>, f: &Option<Stat<'_>>, r: &Stat<'_>| {
+        others(p, f, r) + width(a) > budget
+    };
+    let idle_words = (activity.name, activity.dim);
+    if idle && failure.is_some() && over(palette, activity, failure, rig) {
+        (activity.name, activity.dim) = ("", "");
+    }
+    if over(palette, activity, failure, rig) {
+        palette.key = false;
+    }
+    if over(palette, activity, failure, rig) {
+        rig.dim = "";
+    }
+    if over(palette, activity, failure, rig)
+        && let Some(failure) = failure.as_mut()
+    {
+        let left = budget - width(palette) - width(activity) - width(rig);
+        failure.max_width = failure.max_width.min(left.max(FAILURE_FLOOR));
+    }
+    if over(palette, activity, failure, rig) {
+        let left = budget - others(palette, failure, rig);
+        activity.max_width = activity.max_width.min(left.max(ACTIVITY_FLOOR));
+    }
+    if over(palette, activity, failure, rig) && failure.take().is_some() {
+        activity.mark = Some(Mark::Failed);
+        if idle {
+            (activity.name, activity.dim) = idle_words;
+        }
+    }
+    if over(palette, activity, failure, rig) {
+        rig.name = "";
+    }
+    if over(palette, activity, failure, rig) {
+        activity.max_width = (budget - others(palette, failure, rig)).max(0.0);
+    }
+}
+
+/// The activity as the top bar shows it: "Capturing 61 / 96 · 3:18 left".
+/// The kind's word is dropped when the phase already says it.
+fn activity_words(activity: &crate::activity::ActivityStatus) -> (String, String) {
+    let stem = |word: &str| {
+        let word = word.trim().to_lowercase();
+        word.strip_suffix('e').map(str::to_owned).unwrap_or(word)
+    };
+    let phase = activity.phase.trim();
+    let title = activity.title.trim();
+    let repeats =
+        !phase.is_empty() && !title.is_empty() && phase.to_lowercase().starts_with(&stem(title));
+    let mut parts = Vec::new();
+    if !phase.is_empty() && !repeats {
+        parts.push(phase.to_owned());
+    }
+    if let (Some(done), Some(total)) = (activity.done, activity.total) {
+        parts.push(format!("{done} / {total}"));
+    }
+    if let Some(eta) = activity.eta {
+        parts.push(format!("{} left", clock(eta)));
+    } else if let Some(started) = activity.started {
+        parts.push(clock(Instant::now().saturating_duration_since(started)));
+    }
+    let name = if repeats { phase } else { title };
+    (name.to_owned(), parts.join(" · "))
+}
+
+/// "3:18", "1:02:05".
+fn clock(duration: Duration) -> String {
+    let seconds = duration.as_secs_f64().round() as u64;
+    let (h, m, s) = (seconds / 3600, seconds / 60 % 60, seconds % 60);
+    if h > 0 {
+        format!("{h}:{m:02}:{s:02}")
+    } else {
+        format!("{m}:{s:02}")
+    }
 }
 
 impl StrehlApp {
@@ -120,29 +322,11 @@ impl StrehlApp {
         let modal = self.picker_active();
         let height = bar.height() - 1.0;
         theme::rule(ui.painter(), bar.left_bottom(), bar.right_bottom(), t.line);
-        // The right end first, so the drag space knows where it stops.
+        // The stations, centred on the window. The right end has the room
+        // between them and the window buttons and never more.
+        let stations = self.stations(ui, &t, bar, height);
         let mut right = bar.right() - window_chrome::CONTROLS_WIDTH;
-        let palette = self.stat(
-            ui,
-            &t,
-            right,
-            height,
-            Stat {
-                id: "studio-palette",
-                mark: None,
-                name: "",
-                dim: "",
-                progress: None,
-                search: true,
-                max_width: 200.0,
-            },
-        );
-        let palette = palette.on_hover_text("Go to anything · Ctrl K");
-        if palette.clicked() {
-            egui::Popup::close_all(&ctx);
-            self.shell.palette.open();
-        }
-        right = palette.rect.left();
+        let budget = (right - stations.right() - 12.0).max(0.0);
         let activities = self.activities();
         let (activity_mark, activity_name, activity_dim, progress) = match activities.first() {
             None => (
@@ -152,83 +336,99 @@ impl StrehlApp {
                 None,
             ),
             Some(first) => {
-                let more = if activities.len() > 1 {
-                    format!(" · +{}", activities.len() - 1)
-                } else {
-                    String::new()
-                };
-                (
-                    Mark::Running,
-                    first.title.clone(),
-                    format!("{}{more}", first.progress_line(Instant::now())),
-                    first.fraction(),
-                )
+                let (name, mut dim) = activity_words(first);
+                if activities.len() > 1 {
+                    dim = format!("{dim} · +{}", activities.len() - 1);
+                }
+                (Mark::Running, name, dim, first.fraction())
             }
         };
-        let activity = self.stat(
-            ui,
-            &t,
-            right,
-            height,
-            Stat {
-                id: "studio-activity",
-                mark: Some(activity_mark),
-                name: &activity_name,
-                dim: &activity_dim,
-                progress,
-                search: false,
-                max_width: 340.0,
-            },
-        );
-        right = activity.rect.left();
         if activities
             .iter()
             .any(|a| a.kind == crate::activity::ActivityKind::Stack)
         {
             ctx.request_repaint_after(Duration::from_secs(1));
         }
+        let running = activities.len();
         let failure = self
             .shell
             .notices
             .newest_unread_failure()
-            .map(|notice| notice.text.clone());
-        let failure_response = failure.as_deref().map(|text| {
-            let first_line = text.lines().next().unwrap_or(text);
-            self.stat(
-                ui,
-                &t,
-                right,
-                height,
-                Stat {
-                    id: "studio-failure",
-                    mark: Some(Mark::Failed),
-                    name: first_line,
-                    dim: "",
-                    progress: None,
-                    search: false,
-                    max_width: 300.0,
-                },
-            )
+            .map(|notice| notice.text.lines().next().unwrap_or_default().to_owned());
+        let (rig_name, rig_dim) = self.shell.rig.headline();
+        let mut palette_stat = Stat {
+            id: "studio-palette",
+            mark: None,
+            name: "",
+            dim: "",
+            progress: None,
+            search: true,
+            key: true,
+            dim_first: false,
+            max_width: 200.0,
+        };
+        let mut activity_stat = Stat {
+            id: "studio-activity",
+            mark: Some(activity_mark),
+            name: &activity_name,
+            dim: &activity_dim,
+            progress,
+            search: false,
+            key: false,
+            dim_first: true,
+            max_width: 340.0,
+        };
+        let mut failure_stat = failure.as_deref().map(|text| Stat {
+            id: "studio-failure",
+            mark: Some(Mark::Failed),
+            name: text,
+            dim: "",
+            progress: None,
+            search: false,
+            key: false,
+            dim_first: false,
+            max_width: 300.0,
         });
+        let mut rig_stat = Stat {
+            id: "studio-rig",
+            mark: Some(rig_status::lamp_mark(self.shell.rig.lamp())),
+            name: &rig_name,
+            dim: &rig_dim,
+            progress: None,
+            search: false,
+            key: false,
+            dim_first: false,
+            max_width: 260.0,
+        };
+        fit_right_cluster(
+            ui,
+            budget,
+            running == 0,
+            &mut palette_stat,
+            &mut activity_stat,
+            &mut failure_stat,
+            &mut rig_stat,
+        );
+        let palette = self.stat(ui, &t, right, height, palette_stat);
+        let palette = palette.on_hover_text("Go to anything · Ctrl K");
+        if palette.clicked() {
+            egui::Popup::close_all(&ctx);
+            self.shell.palette.open();
+        }
+        right = palette.rect.left();
+        let activity = self.stat(ui, &t, right, height, activity_stat);
+        let activity = if running == 0 {
+            activity
+        } else {
+            activity.on_hover_text(format!("{activity_name}  {activity_dim}").trim().to_owned())
+        };
+        right = activity.rect.left();
+        let failure_response = failure_stat.map(|stat| self.stat(ui, &t, right, height, stat));
         if let Some(response) = &failure_response {
             right = response.rect.left();
         }
-        let (rig_name, rig_dim) = self.shell.rig.headline();
-        let rig_response = self.stat(
-            ui,
-            &t,
-            right,
-            height,
-            Stat {
-                id: "studio-rig",
-                mark: Some(rig_status::lamp_mark(self.shell.rig.lamp())),
-                name: &rig_name,
-                dim: &rig_dim,
-                progress: None,
-                search: false,
-                max_width: 260.0,
-            },
-        );
+        let rig_response = self.stat(ui, &t, right, height, rig_stat);
+        let rig_response = rig_response.on_hover_text(format!("{rig_name}  {rig_dim}"));
         let right_edge = rig_response.rect.left();
         self.shell.rig_popup = Some(egui::Popup::default_response_id(&rig_response));
         self.shell.tray_popup = Some(egui::Popup::default_response_id(&activity));
@@ -294,9 +494,13 @@ impl StrehlApp {
         }
         // The left: brand, then the breadcrumb.
         let brand = self.brand(ui, &t, bar, height);
-        let crumbs_right = self.crumbs(ui, &t, brand.right() + CRUMB_GAP, height, right_edge);
-        // The stations, centred on the window.
-        let stations = self.stations(ui, &t, bar, height);
+        let crumbs_right = self.crumbs(
+            ui,
+            &t,
+            brand.right() + CRUMB_GAP,
+            height,
+            stations.left() - 12.0,
+        );
         // Empty space moves the window; double-click maximises.
         for (index, gap) in [
             egui::Rect::from_min_max(
@@ -337,41 +541,10 @@ impl StrehlApp {
         stat: Stat<'_>,
     ) -> egui::Response {
         let top = ui.max_rect().top();
-        let size = scale::CONTROL;
-        let name =
-            (!stat.name.is_empty()).then(|| w::text_galley(ui, stat.name, Face::Regular, size));
-        let dim = (!stat.dim.is_empty()).then(|| w::text_galley(ui, stat.dim, Face::Regular, size));
-        let key = stat.search.then(|| {
-            ui.painter().layout_job(crate::studio_fonts::tracked(
-                "Ctrl K",
-                w::font(ui, Face::Regular, scale::CAPS),
-                egui::Color32::PLACEHOLDER,
-                0.08,
-            ))
-        });
         let gap = 8.0;
-        let mut content = 0.0;
-        if stat.mark.is_some() {
-            content += w::MARK_SLOT + gap;
-        }
-        if stat.search {
-            content += 15.0 + gap + key.as_ref().map_or(0.0, |k| k.size().x + 10.0);
-        }
-        let name_width = name.as_ref().map_or(0.0, |g| g.size().x);
-        let dim_width = dim.as_ref().map_or(0.0, |g| g.size().x);
-        let text_room = (stat.max_width - content - 28.0).max(40.0);
-        let name_width = name_width.min(text_room);
-        let dim_width = dim_width.min((text_room - name_width - gap).max(0.0));
-        content += name_width
-            + if dim_width > 0.0 && name_width > 0.0 {
-                gap
-            } else {
-                0.0
-            }
-            + dim_width;
-        let width = (content + 28.0).ceil();
+        let layout = stat_layout(ui, &stat);
         let rect = egui::Rect::from_min_max(
-            egui::pos2(right - width, top),
+            egui::pos2(right - layout.width, top),
             egui::pos2(right, top + height),
         );
         let response = ui.interact(rect, ui.id().with(stat.id), egui::Sense::click());
@@ -397,7 +570,7 @@ impl StrehlApp {
         if stat.search {
             crate::command_palette::paint_search_at(&painter, egui::pos2(x + 7.5, y), t.ink3);
             x += 15.0 + gap;
-            if let Some(key) = &key {
+            if let Some(key) = &layout.key {
                 let cap = egui::Rect::from_min_size(
                     egui::pos2(x, y - 8.0),
                     egui::vec2(key.size().x + 10.0, 16.0),
@@ -411,20 +584,12 @@ impl StrehlApp {
                 w::paint_galley_at(&painter, x + 5.0, y + 0.5, key, t.ink3);
             }
         }
-        if let Some(name) = &name {
-            let clip = egui::Rect::from_min_max(
-                egui::pos2(x, rect.top()),
-                egui::pos2(x + name_width, rect.bottom()),
-            );
-            w::paint_galley_at(&painter.with_clip_rect(clip), x, y, name, t.ink);
-            x += name_width + gap;
+        if let Some(name) = &layout.name {
+            w::paint_galley_at(&painter, x, y, name, t.ink);
+            x += name.size().x + gap;
         }
-        if let Some(dim) = &dim {
-            let clip = egui::Rect::from_min_max(
-                egui::pos2(x, rect.top()),
-                egui::pos2(x + dim_width, rect.bottom()),
-            );
-            w::paint_galley_at(&painter.with_clip_rect(clip), x, y, dim, t.ink3);
+        if let Some(dim) = &layout.dim {
+            w::paint_galley_at(&painter, x, y, dim, t.ink3);
         }
         if let Some(fraction) = stat.progress {
             painter.rect_filled(
@@ -523,6 +688,20 @@ impl StrehlApp {
 
     fn crumb_segments(&mut self) -> &[Crumb] {
         let run = self.expected_run.as_ref().map(|run| run.directory.clone());
+        let station = self.shell.navigator.station();
+        // Capture names what the plan names; the strings are short.
+        let capture = (station == Station::Capture).then(|| {
+            let (subject, stack) = self.capture.plan_names();
+            let phase = match (self.shell.rig.capturing(), self.shell.rig.phase.as_deref()) {
+                (true, Some("paused")) => "Paused",
+                (true, _) => "Capturing",
+                (false, _) => "New stack",
+            };
+            (subject.to_owned(), stack.to_owned(), phase)
+        });
+        let version = matches!(station, Station::Develop | Station::Export)
+            .then(|| self.version_crumb().map(str::to_owned))
+            .flatten();
         let key = CrumbKey {
             catalog: self.shell.catalog_revision(),
             nodes: self.catalog.nodes.len(),
@@ -531,74 +710,94 @@ impl StrehlApp {
             result: self.result.is_some(),
             run,
             navigation: self.shell.navigator.revision(),
+            capture,
+            version,
         };
         if self.shell.crumbs.key.as_ref() != Some(&key) {
-            let mut segments = vec![Crumb {
-                label: "Library".into(),
-                target: CrumbTarget::Library,
-            }];
-            let station = self.shell.navigator.station();
-            // A subject page: Library / subject (its collection is on the page).
-            if let Route::Subject(id) = self.shell.navigator.route()
-                && let Some(subject) = self.catalog.node(*id)
-            {
-                segments.push(Crumb {
-                    label: subject.name.clone(),
-                    target: CrumbTarget::Room,
-                });
-            }
-            if station != Station::Library && station != Station::Capture {
-                if let Some(id) = self.active_stack {
-                    let mut chain = Vec::new();
-                    let mut parent = self.catalog.node(id).and_then(|n| n.parent);
-                    while let Some(container) = parent.and_then(|p| self.catalog.node(p)) {
-                        chain.push(Crumb {
-                            label: container.name.clone(),
-                            target: CrumbTarget::Container(container.id),
-                        });
-                        parent = container.parent;
-                        if chain.len() > 8 {
-                            break;
-                        }
-                    }
-                    // The top-level collection, then the nearest folder.
-                    if let Some(top) = chain.last() {
-                        segments.push(top.clone());
-                    }
-                    if chain.len() > 1 {
-                        segments.push(chain[0].clone());
-                    }
-                    if let Some(node) = self.catalog.node(id) {
-                        segments.push(Crumb {
-                            label: node.name.clone(),
-                            target: CrumbTarget::Stack(id),
-                        });
-                        if let Some(label) = self.render_label() {
-                            segments.push(Crumb {
-                                label,
-                                target: CrumbTarget::Render(id),
-                            });
-                        }
-                    }
-                } else if self.stack.is_some() || self.result.is_some() {
-                    segments.push(Crumb {
-                        label: self.document_name(),
-                        target: CrumbTarget::Room,
-                    });
-                }
-                if self.shell.navigator.route().room() == Some(Room::Engine) {
-                    segments.push(Crumb {
-                        label: "Engine room".into(),
-                        target: CrumbTarget::Room,
-                    });
-                }
-            }
+            let segments = self.build_crumbs(station, &key);
             self.shell.crumbs = CrumbCache {
                 key: Some(key),
                 segments,
             };
         }
         &self.shell.crumbs.segments
+    }
+
+    /// The mockups' breadcrumb: Library / subject / stack / render, then the
+    /// version or the room; on Capture the plan's subject and stack, then
+    /// "New stack" or "Capturing".
+    fn build_crumbs(&self, station: Station, key: &CrumbKey) -> Vec<Crumb> {
+        let crumb = |label: &str, target| Crumb {
+            label: label.to_owned(),
+            target,
+        };
+        let mut segments = vec![crumb("Library", CrumbTarget::Library)];
+        match self.shell.navigator.route() {
+            Route::Subject(id) => {
+                if let Some(subject) = self.catalog.node(*id) {
+                    segments.push(crumb(&subject.name, CrumbTarget::Here));
+                }
+            }
+            _ if station == Station::Library => {}
+            _ if station == Station::Capture => {
+                if let Some((subject, stack, phase)) = &key.capture {
+                    if !subject.is_empty() {
+                        let found = self.catalog.nodes.iter().find(|node| {
+                            node.kind == crate::workspace_history::NodeKind::Subject
+                                && node.name.eq_ignore_ascii_case(subject)
+                        });
+                        segments.push(crumb(
+                            subject,
+                            found.map_or(CrumbTarget::Here, |node| CrumbTarget::Subject(node.id)),
+                        ));
+                    }
+                    if *phase != "New stack" && !stack.is_empty() {
+                        segments.push(crumb(stack, CrumbTarget::Here));
+                    }
+                    segments.push(crumb(phase, CrumbTarget::Here));
+                }
+            }
+            _ => {
+                if let Some(id) = self.active_stack {
+                    // The stack's subject; an older stack outside any
+                    // subject shows the folder or collection holding it.
+                    let holder = self
+                        .catalog
+                        .subject_of(id)
+                        .or_else(|| self.catalog.node(id).and_then(|node| node.parent))
+                        .and_then(|holder| self.catalog.node(holder));
+                    if let Some(holder) = holder {
+                        segments.push(crumb(
+                            &holder.name,
+                            if holder.kind == crate::workspace_history::NodeKind::Subject {
+                                CrumbTarget::Subject(holder.id)
+                            } else {
+                                CrumbTarget::Container(holder.id)
+                            },
+                        ));
+                    }
+                    if let Some(node) = self.catalog.node(id) {
+                        segments.push(crumb(&node.name, CrumbTarget::Stack(id)));
+                        if let Some(label) = self.render_label() {
+                            segments.push(crumb(&label, CrumbTarget::Render(id)));
+                        }
+                    }
+                } else if self.stack.is_some() || self.result.is_some() {
+                    segments.push(crumb(&self.document_name(), CrumbTarget::Here));
+                }
+                if self.shell.navigator.route().room() == Some(Room::Engine) {
+                    segments.push(crumb("Engine room", CrumbTarget::Room));
+                } else if let Some(id) = &key.version
+                    && let Some(version) = self.catalog.photo_versions.iter().find(|version| {
+                        version.id == *id
+                            && self.editor.path.as_ref() == Some(&version.owner.output)
+                    })
+                {
+                    segments.push(crumb(&version.name, CrumbTarget::Here));
+                }
+            }
+        }
+        segments
     }
 
     /// The breadcrumb, at most 430 wide; middle segments shorten first.
@@ -610,18 +809,36 @@ impl StrehlApp {
         height: f32,
         limit: f32,
     ) -> f32 {
-        let segments = self.crumb_segments().to_vec();
+        let mut segments = self.crumb_segments().to_vec();
         let size = scale::CONTROL;
         let font = w::font(ui, Face::Regular, size);
         let separator = w::text_galley(ui, "/", Face::Regular, size);
         let sep_width = separator.size().x + 18.0;
-        let widths: Vec<f32> = segments
-            .iter()
-            .map(|s| w::text_galley(ui, &s.label, Face::Regular, size).size().x)
-            .collect();
+        let measure = |segments: &[Crumb]| -> Vec<f32> {
+            segments
+                .iter()
+                .map(|s| w::text_galley(ui, &s.label, Face::Regular, size).size().x)
+                .collect()
+        };
         let room = CRUMBS_MAX.min(limit - left - 40.0).max(60.0);
-        let natural: f32 =
-            widths.iter().sum::<f32>() + sep_width * segments.len().saturating_sub(1) as f32;
+        let span = |widths: &[f32]| {
+            widths.iter().sum::<f32>() + sep_width * widths.len().saturating_sub(1) as f32
+        };
+        // Too long: the segments after Library fold into one "…" first, so
+        // what stays is whole (Library / … / Dorsal · 2.8× / Capturing).
+        let mut widths = measure(&segments);
+        while span(&widths) > room && segments.len() > 3 {
+            if segments[1].label == ELLIPSIS {
+                segments.remove(2);
+            } else {
+                segments[1] = Crumb {
+                    label: ELLIPSIS.into(),
+                    target: CrumbTarget::Here,
+                };
+            }
+            widths = measure(&segments);
+        }
+        let natural = span(&widths);
         let mut allowed = widths.clone();
         if natural > room && segments.len() > 2 {
             let fixed =
@@ -723,9 +940,9 @@ impl StrehlApp {
                     self.catalog.selected = Some(id);
                     self.navigate(Route::Library(super::studio_route::LibraryView::All));
                 }
-                CrumbTarget::Room if self.shell.navigator.station() == Station::Library => {}
                 CrumbTarget::Room => self.set_room(Room::Photograph),
-                CrumbTarget::Stack(_) | CrumbTarget::Render(_) => {}
+                CrumbTarget::Subject(id) => self.navigate(Route::Subject(id)),
+                CrumbTarget::Stack(_) | CrumbTarget::Render(_) | CrumbTarget::Here => {}
             },
             None => {}
         }
@@ -1005,7 +1222,11 @@ impl StrehlApp {
             }
             ui.add_space(12.0);
             if let Some(tip) = tip {
-                ui.label(egui::RichText::new(tip).size(scale::HINT).color(t.ink3));
+                ui.label(
+                    egui::RichText::new(tip)
+                        .size(scale::SECONDARY)
+                        .color(t.ink3),
+                );
             }
             for (fact, strong) in self.photo_facts().into_iter().rev() {
                 ui.label(

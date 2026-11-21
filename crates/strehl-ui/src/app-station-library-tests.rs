@@ -375,7 +375,7 @@ fn a_subject_route_resolves_by_name_or_id_and_falls_back_to_the_library() {
 }
 
 #[test]
-fn the_library_follows_the_theme_and_its_drawers_stay_legible_on_paper() {
+fn the_library_and_its_drawers_follow_the_theme_on_paper() {
     let ctx = context();
     crate::studio_theme::apply(
         &ctx,
@@ -396,12 +396,28 @@ fn the_library_follows_the_theme_and_its_drawers_stay_legible_on_paper() {
     );
     app.open_project_tree();
     let out = frame(&mut app, &ctx, 0.2, vec![]);
-    let graphite = crate::studio_theme::GRAPHITE.panel;
-    assert!(
-        out.shapes.iter().any(|s| matches!(&s.shape,
-            egui::Shape::Rect(r) if r.fill == graphite && r.rect.left() > SIZE.x - 440.0)),
-        "the legacy tree is drawn in the Graphite scope"
-    );
+    // The legacy tree is recoloured into the theme in effect.
+    let (graphite, lightbox) = (crate::studio_theme::GRAPHITE, crate::studio_theme::LIGHTBOX);
+    let drawer: Vec<_> = out
+        .shapes
+        .iter()
+        .filter(|s| s.shape.visual_bounding_rect().left() > SIZE.x - 440.0)
+        .collect();
+    assert!(drawer.iter().any(|s| matches!(&s.shape,
+        egui::Shape::Rect(r) if r.fill == lightbox.panel)));
+    assert!(!drawer.iter().any(|s| matches!(&s.shape,
+        egui::Shape::Rect(r) if [graphite.panel, graphite.raised, graphite.bg].contains(&r.fill))));
+    let ink = |name: &str| {
+        drawer.iter().find_map(|s| match &s.shape {
+            egui::Shape::Text(t) if t.galley.text() == name => Some(
+                t.override_text_color
+                    .unwrap_or(t.galley.job.sections[0].format.color),
+            ),
+            _ => None,
+        })
+    };
+    let rows = ink("New stack").expect("the tree's commands");
+    assert_ne!(rows, graphite.ink, "no Graphite ink on paper");
     // Badges sit on photographs: a dark plate with light capitals on paper too.
     let palette = LibraryPalette::from_tokens(&crate::studio_theme::LIGHTBOX);
     let graphite = LibraryPalette::graphite();

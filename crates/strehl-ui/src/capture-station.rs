@@ -151,6 +151,20 @@ impl CaptureWorkspace {
         (self.station.rail.rebuilds, self.station.live.uploads)
     }
 
+    /// The plan's subject and stack names as typed (the shell's breadcrumb).
+    pub fn plan_names(&self) -> (&str, &str) {
+        (
+            self.station.plan.subject.trim(),
+            self.station.plan.stack_name.trim(),
+        )
+    }
+
+    /// A new stack asked for from a subject in the Library: the plan names
+    /// that subject.
+    pub fn set_plan_subject(&mut self, subject: &str) {
+        self.station.plan.subject = subject.to_owned();
+    }
+
     /// The subject and stack name the plan gave the capture in `run`.
     pub fn names_for(&self, run: &std::path::Path) -> Option<(String, String)> {
         self.station
