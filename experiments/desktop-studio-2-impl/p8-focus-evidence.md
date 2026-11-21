@@ -22,9 +22,10 @@ time.
   plane") is confirmed in size and is not the blocker.
 - **Time: not affordable as a default.** On the 299-plane weevil the pass took 215-319 s
   after a 9 s render (MEASURED, 19-51 % other-process load): 24 to 35 times the render.
-  On the 1,444-plane bracket it took 1,393 s (23 minutes) after a 65-159 s render
-  (MEASURED, 53 % other load). At the A7CR plane the per-frame cost scales with pixels,
-  about 1.8 times: about 7-10 minutes for 299 planes and 42 minutes for 1,444 (DERIVED).
+  On the 1,444-plane bracket it took 923-1,393 s (15-23 minutes) after a 20-159 s render
+  (MEASURED, 14-53 % other load). At the A7CR plane the per-frame cost scales with pixels,
+  about 1.8 times: about 7-10 minutes for 299 planes and 28-42 minutes for 1,444
+  (DERIVED).
 - **Coverage is sparse, and on the long bracket empty.** On the weevil 3.8 % of pixels carry
   usable evidence; 629 of 10,880 areas (5.8 %) are a quarter usable, all on the subject
   (VERIFIED by eye on the scratch share map, not kept: it is the owner's picture). On the
@@ -158,9 +159,9 @@ processes used 31-78 % of the CPU on average and up to 100 %. Times are bounds o
   several).
 - **Reservation (DERIVED, `the_reservation_is_set_by_the_plane`):** 3.48 GiB here;
   the measured private peak of the pass is 0.45-1.3 GiB above it (two decoded frames in
-  the decode window, the process, and memory the allocator had not yet returned from the
-  render: the committed build's runs read 0.8 GiB higher than the earlier builds', with no
-  allocation added to the pass, cause UNVERIFIED).
+  the decode window, the process, and, ARGUED, memory the allocator had not yet returned
+  from the render: the same build read 3.95 GiB on the 1,444-plane run and 4.70-4.78 GiB on
+  the 299-plane runs).
 
 ### 1,444 planes (A7C II, `bug-7\100MSDCF`)
 
@@ -168,15 +169,20 @@ processes used 31-78 % of the CPU on average and up to 100 %. Times are bounds o
 | --- | --- | --- | --- | --- | --- | --- |
 | off (cold alignment) | 311.9 s | 27.5 + 64.6 s | | 9.36 GiB | | 78.0 % |
 | on (`b23ae160`) | 1,581.1 s | 20.7 + 159.3 s | 1,392.8 s | 6.32 GiB | 3.48 / 3.95 GiB | 53.1 % |
+| on (committed code) | 947.8 s | 4.4 + 19.9 s | 922.9 s | 6.48 GiB | 3.54 / 3.95 GiB | 14.1 % |
 
-- **Output bytes (MEASURED):** off and on: result `78eca336d24a2b6a...`, linear master
+- **Output bytes (MEASURED):** off and both on arms: result `78eca336d24a2b6a...`, linear master
   `edd7d80950a5c267...` (the master P2 recorded for this bracket).
 - **Plane maps unchanged (MEASURED):** the on file's bytes before the focus records hash to
   the off file (11,939,108 B).
 - **The field (MEASURED):** not usable, reason 5 ("no area has 25 % of its pixels usable");
   3,427 of 8,241,504 pixels usable, 7,985,600 covered; 173 areas with any usable pixel, none
-  a quarter usable. Its refusal flags are in the open issues if the committed build's rerun
-  finished in time.
+  a quarter usable; the same in both on arms.
+- **Refusal flags (MEASURED, committed code):** boundary 324,656; scale disagreement
+  7,453,701; competing mode 7,627,877; weak response 5,380,758; no local fit 3,445,778;
+  missing coverage 258,256; unresolved mode 4,774,877. Competing modes and scale
+  disagreement cover about nine pixels in ten: over 1,444 fine steps the policy finds more
+  than one near-equal peak almost everywhere.
 - **Memory (MEASURED):** the pass peaked at the same 3.48 / 3.95 GiB as at 299 planes: the
   frame count does not set it.
 
