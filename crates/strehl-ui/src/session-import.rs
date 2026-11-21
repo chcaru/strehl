@@ -700,7 +700,9 @@ mod views;
 
 #[path = "session-bundle-export.rs"]
 mod bundle_export;
-pub(crate) use bundle_export::export as export_view_bundle;
+pub(crate) use bundle_export::{
+    BundleProgress, export_with_progress as export_view_bundle_with_progress,
+};
 
 /// Recheck only the selected photograph's retained output binding before switching.
 /// Imported legacy sessions retain their import-time identity; no RAW is opened.

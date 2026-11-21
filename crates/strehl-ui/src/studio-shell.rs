@@ -18,7 +18,7 @@
 use super::studio_route::{Drawer, LaunchRoute, Navigator, Room, Route, StackTab, Station};
 use super::*;
 use crate::{
-    activity::{ActivityKind, ActivityStatus, CancelMode, Lane},
+    activity::ActivityStatus,
     command_palette::CommandPalette,
     notices::{self, Notices, Severity, Source},
     rig_status::RigSummary,
@@ -71,7 +71,7 @@ pub(super) struct Shell {
     pub palette: CommandPalette,
     pub prefs: StudioPrefs,
     prefs_path: Option<PathBuf>,
-    prefs_dirty: bool,
+    pub(super) prefs_dirty: bool,
     theme_applied: Option<(ThemeName, studio_theme::Surround, bool)>,
     pub preferences_open: bool,
     pub focus: bool,
@@ -447,112 +447,21 @@ impl StrehlApp {
                     "drawer":navigator.drawer.map(|d| d.label()),"focus":self.shell.focus}),
             ),
             ("notices", self.shell.notices.snapshot()),
-            (
-                "activities",
-                serde_json::Value::Array(
-                    self.activities()
-                        .iter()
-                        .map(ActivityStatus::snapshot)
-                        .collect(),
-                ),
-            ),
+            ("activities", Self::activities_value(&self.activity_hub)),
         ]
     }
 
-    // ----- activities (read-only, plan 6.6 step 1) ------------------------
+    // ----- activities (plan 6.6) -------------------------------------------
 
-    /// Every long task running now. Empty, without allocating, when idle.
-    pub(super) fn activities(&self) -> Vec<ActivityStatus> {
-        let mut list = Vec::new();
-        if let Some(job) = &self.job {
-            let mut stack = ActivityStatus::running(
-                ActivityKind::Stack,
-                format!("Stacking {}", self.document_name()),
-                Lane::Heavy,
-            );
-            stack.stack = self.active_stack;
-            stack.phase = if job.is_cancelling() {
-                "Stopping".into()
-            } else if self.pending_run.is_some() {
-                "Starting".into()
-            } else {
-                self.progress.stage.title().into()
-            };
-            if let Some((done, total)) = self.progress.folded {
-                stack.done = Some(done as u64);
-                stack.total = Some(total as u64);
-            }
-            stack.started = self.started;
-            stack.cancel = if job.is_cancelling() {
-                CancelMode::None
-            } else {
-                CancelMode::Cooperative
-            };
-            stack.facts = match &self.stack {
-                Some(scan) => format!(
-                    "{} workers · {} RAW · {}",
-                    self.controls.workers,
-                    scan.frames.len(),
-                    bytes(scan.total_bytes)
-                ),
-                None => format!("{} workers", self.controls.workers),
-            };
-            list.push(stack);
-        }
-        if self.scan.is_some() {
-            list.push(ActivityStatus::running(
-                ActivityKind::Open,
-                "Reading the bracket",
-                Lane::Background,
-            ));
-        }
-        if self.replay.is_some() {
-            list.push(ActivityStatus::running(
-                ActivityKind::Open,
-                "Opening the saved render",
-                Lane::Background,
-            ));
-        }
-        if self.session_import.is_some() {
-            list.push(ActivityStatus::running(
-                ActivityKind::Import,
-                "Importing a completed session",
-                Lane::Background,
-            ));
-        }
-        if self.editor.exporting.is_some() || self.photo_history_busy() {
-            list.push(ActivityStatus::running(
-                ActivityKind::Export,
-                "Exporting",
-                Lane::Background,
-            ));
-        }
-        if self.view_bundle_export.is_some() {
-            list.push(ActivityStatus::running(
-                ActivityKind::ViewBundle,
-                "Exporting the view bundle",
-                Lane::Background,
-            ));
-        }
-        if self.camera_metadata.is_loading() {
-            list.push(ActivityStatus::running(
-                ActivityKind::Metadata,
-                "Reading camera metadata",
-                Lane::Background,
-            ));
-        }
-        if self.shell.rig.capturing() {
-            let mut capture =
-                ActivityStatus::running(ActivityKind::Capture, "Capture", Lane::Camera);
-            capture.phase = self
-                .capture_activity_phase()
-                .or_else(|| self.shell.rig.phase.clone())
-                .unwrap_or_default();
-            capture.done = self.shell.rig.completed;
-            capture.total = self.shell.rig.planned;
-            list.push(capture);
-        }
-        list
+    /// What runs now or needs the user, for the top bar: this frame's
+    /// reports without the queue's waiting stacks. Empty, without
+    /// allocating, when idle.
+    pub(super) fn activities(&self) -> Vec<&ActivityStatus> {
+        self.activity_hub
+            .activities
+            .active()
+            .filter(|status| status.queued.is_none())
+            .collect()
     }
 
     // ----- the body --------------------------------------------------------

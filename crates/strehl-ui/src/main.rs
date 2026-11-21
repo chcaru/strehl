@@ -6,6 +6,8 @@
 static GLOBAL: strehl_cli::EngineAllocator = strehl_cli::ENGINE_ALLOCATOR;
 
 mod activity;
+#[path = "activity-queue.rs"]
+mod activity_queue;
 #[path = "activity-tray.rs"]
 mod activity_tray;
 #[path = "agent-interface.rs"]
@@ -114,6 +116,8 @@ mod process_theater;
 mod processing_view;
 #[path = "project-explorer.rs"]
 mod project_explorer;
+#[path = "render-eta.rs"]
+mod render_eta;
 #[path = "reveal-path.rs"]
 mod reveal_path;
 #[path = "rig-status.rs"]

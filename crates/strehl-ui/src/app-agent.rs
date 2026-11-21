@@ -652,6 +652,23 @@ impl StrehlApp {
                 self.start_render();
                 return Ok(json!({"state":"queued","operation":"stack"}));
             }
+            QueueStack { id } => {
+                let queue_id = self.queue_stack(id)?;
+                return Ok(json!({"state":"queued","operation":"queue_stack","queue_id":queue_id}));
+            }
+            RemoveQueuedStack { queue_id } => {
+                anyhow::ensure!(
+                    self.activity_hub.queue.remove(queue_id).is_some(),
+                    "That stack is not waiting in the queue"
+                );
+            }
+            MoveQueuedStack { queue_id, position } => {
+                anyhow::ensure!(
+                    self.activity_hub.queue.move_to(queue_id, position),
+                    "That stack is not waiting in the queue"
+                );
+            }
+            ResumeQueue {} => self.activity_hub.queue.resume(),
             CancelStack {} => {
                 if let Some((_, _, task)) = &self.session_import {
                     task.cancel();

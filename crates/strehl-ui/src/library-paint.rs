@@ -415,6 +415,41 @@ pub(crate) fn segments(
     (outer, clicked)
 }
 
+/// A square switch (`.toggle`), 26 x 14; returns its response.
+pub(crate) fn toggle(
+    ui: &mut Ui,
+    at: Pos2,
+    id: impl std::hash::Hash,
+    on: bool,
+    palette: &LibraryPalette,
+) -> Response {
+    let rect = Rect::from_min_size(at, Vec2::new(26.0, 14.0));
+    let response = ui.interact(rect, ui.id().with(("library-toggle", id)), Sense::click());
+    let painter = ui.painter();
+    inset(
+        painter,
+        rect,
+        if on { palette.accent } else { palette.line_2 },
+    );
+    let knob = Rect::from_min_size(
+        Pos2::new(
+            if on {
+                rect.left() + 15.0
+            } else {
+                rect.left() + 3.0
+            },
+            rect.top() + 3.0,
+        ),
+        Vec2::splat(8.0),
+    );
+    painter.rect_filled(
+        knob,
+        CornerRadius::ZERO,
+        if on { palette.accent } else { palette.ink_3 },
+    );
+    response
+}
+
 /// The four lifecycle bars (`.life4 i`); returns their width.
 pub(crate) fn life_bars(painter: &Painter, at: Pos2, colors: [Color32; 4]) -> f32 {
     for (index, color) in colors.into_iter().enumerate() {
@@ -490,6 +525,8 @@ pub(crate) enum Glyph {
     List,
     Note,
     Arrow,
+    /// Quiet mode: a crescent.
+    Moon,
 }
 pub(crate) fn glyph(painter: &Painter, center: Pos2, kind: Glyph, color: Color32) {
     let stroke = Stroke::new(1.25_f32, color);
@@ -529,6 +566,21 @@ pub(crate) fn glyph(painter: &Painter, center: Pos2, kind: Glyph, color: Color32
             );
             painter.line_segment([p(-2.5, -1.5), p(2.5, -1.5)], stroke);
             painter.line_segment([p(-2.5, 1.5), p(2.5, 1.5)], stroke);
+        }
+        Glyph::Moon => {
+            // Two arcs: the outer disc's edge and the bite taken from it.
+            let arc = |cx: f32, r: f32, from: f32, to: f32| -> Vec<Pos2> {
+                (0..=16)
+                    .map(|i| {
+                        let a = from + (to - from) * i as f32 / 16.0;
+                        p(cx + r * a.cos(), r * a.sin())
+                    })
+                    .collect()
+            };
+            use std::f32::consts::PI;
+            let mut outline = arc(0.0, 6.0, 0.35 * PI, 1.65 * PI);
+            outline.extend(arc(2.6, 4.6, 1.45 * PI, 0.55 * PI));
+            painter.add(egui::Shape::closed_line(outline, stroke));
         }
         Glyph::Arrow => {
             let thin = Stroke::new(1.0_f32, color);

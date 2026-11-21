@@ -45,6 +45,7 @@ fn copy_checked(
     Ok(())
 }
 
+#[cfg(test)]
 pub(crate) fn export(
     source: &Path,
     destination: &Path,
@@ -53,10 +54,47 @@ pub(crate) fn export(
     export_observed(source, destination, cancelled, &mut |_| {})
 }
 
+/// Bytes copied and the bundle's size, read by the activity tray while a
+/// worker copies (Studio 2 P5).
+#[derive(Debug, Default)]
+pub(crate) struct BundleProgress {
+    pub copied: std::sync::atomic::AtomicU64,
+    pub total: std::sync::atomic::AtomicU64,
+}
+
+/// `export`, counting bytes into `progress` as they are verified and written.
+pub(crate) fn export_with_progress(
+    source: &Path,
+    destination: &Path,
+    cancelled: &AtomicBool,
+    progress: &BundleProgress,
+) -> Result<std::path::PathBuf> {
+    export_measured(
+        source,
+        destination,
+        cancelled,
+        &mut |total| progress.total.store(total, Ordering::Relaxed),
+        &mut |bytes| {
+            progress.copied.fetch_add(bytes, Ordering::Relaxed);
+        },
+    )
+}
+
+#[cfg(test)]
 fn export_observed(
     source: &Path,
     destination: &Path,
     cancelled: &AtomicBool,
+    observer: &mut impl FnMut(u64),
+) -> Result<std::path::PathBuf> {
+    export_measured(source, destination, cancelled, &mut |_| {}, observer)
+}
+
+fn export_measured(
+    source: &Path,
+    destination: &Path,
+    cancelled: &AtomicBool,
+    measured: &mut impl FnMut(u64),
     observer: &mut impl FnMut(u64),
 ) -> Result<std::path::PathBuf> {
     ensure!(
@@ -110,6 +148,15 @@ fn export_observed(
     ensure!(
         !cancelled.load(Ordering::Relaxed),
         "View bundle export cancelled"
+    );
+    // The bundle's size, for progress: every artifact copied, completion included.
+    measured(
+        evidence
+            .files
+            .keys()
+            .filter_map(|name| std::fs::metadata(source.join(name)).ok())
+            .map(|meta| meta.len())
+            .sum(),
     );
     std::fs::create_dir(&destination)?;
     let destination = destination.canonicalize()?;

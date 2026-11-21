@@ -1,0 +1,39 @@
+STREHL_UI_PROGRESS event=stage name=alignment total=1321
+strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)
+camera          : ILCE-7CM2
+iso             : 100
+frames          : 1321 from D:\captures\subject\100MSDCF  (first decode 0.12 s)
+alignment       : ON (sidecar), reference frame 660, 1321 placed / 0 refused, 0.1 s
+memory plan     : 4 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 32 execution threads
+gpu fold        : ON, NVIDIA GeForce RTX 5090 (1650 MB device memory); bit-identical to the CPU fold
+decode ahead    : 16 decoder threads (frame preparation is on the GPU, so the CPU decodes)
+folded          : 166 / 1321 frames in 5.0 s (0.03 s per frame, 32 execution threads)
+collapse+write  : 97.8 s
+total           : 103.3 s
+STREHL_UI_PROGRESS event=stage name=read total=1321
+STREHL_UI_PROGRESS event=stage name=alignment total=1321
+strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)
+camera          : ILCE-7CM2
+iso             : 100
+frames          : 1321 from D:\captures\subject\100MSDCF  (first decode 0.12 s)
+alignment       : ON (sidecar), reference frame 660, 1321 placed / 0 refused, 0.0 s
+memory plan     : 4 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 32 execution threads
+gpu fold        : ON, NVIDIA GeForce RTX 5090 (1650 MB device memory); bit-identical to the CPU fold
+STREHL_UI_PROGRESS event=stage name=merge total=1321
+decode ahead    : 16 decoder threads (frame preparation is on the GPU, so the CPU decodes)
+STREHL_UI_PROGRESS event=frame-finished index=199 processed=200 accepted=200 total=1321
+STREHL_UI_PROGRESS event=frame-finished index=399 processed=400 accepted=400 total=1321
+STREHL_UI_PROGRESS event=frame-finished index=599 processed=600 accepted=600 total=1321
+STREHL_UI_PROGRESS event=frame-finished index=799 processed=800 accepted=800 total=1321
+STREHL_UI_PROGRESS event=frame-finished index=999 processed=1000 accepted=1000 total=1321
+STREHL_UI_PROGRESS event=frame-finished index=1199 processed=1200 accepted=1200 total=1321
+folded          : 1321 / 1321 frames in 13.9 s (0.01 s per frame, 32 execution threads)
+STREHL_UI_PROGRESS event=stage name=render total=1321
+STREHL_UI_PROGRESS event=render-step name=reconstruct state=started total=1321
+STREHL_UI_PROGRESS event=render-step name=reconstruct state=finished total=1321
+STREHL_UI_PROGRESS event=render-step name=develop state=started total=1321
+STREHL_UI_PROGRESS event=render-step name=develop state=finished total=1321
+STREHL_UI_PROGRESS event=render-step name=write state=started total=1321
+STREHL_UI_PROGRESS event=render-step name=write state=finished total=1321
+collapse+write  : 95.0 s
+total           : 109.2 s

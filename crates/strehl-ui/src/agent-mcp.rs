@@ -557,6 +557,18 @@ pub(crate) fn tool_definitions() -> Value {
             &["index"],
         ),
         command("start_stack", json!({}), &[]),
+        command("queue_stack", json!({"id":id_schema()}), &["id"]),
+        command(
+            "remove_queued_stack",
+            json!({"queue_id":id_schema()}),
+            &["queue_id"],
+        ),
+        command(
+            "move_queued_stack",
+            json!({"queue_id":id_schema(),"position":{"type":"integer","minimum":0,"maximum":255}}),
+            &["queue_id", "position"],
+        ),
+        command("resume_queue", json!({}), &[]),
         command("cancel_stack", json!({}), &[]),
         command(
             "export_view_bundle",

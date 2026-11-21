@@ -445,7 +445,8 @@ fn a_new_error_becomes_the_top_bars_failure_until_the_tray_is_read() {
     );
     assert_eq!(keys[0].1["key"], "library");
     assert_eq!(keys[1].1[0]["severity"], "failure");
-    assert!(keys[2].1.as_array().unwrap().is_empty());
+    assert!(keys[2].1["current"].as_array().unwrap().is_empty());
+    assert_eq!(keys[2].1["queue_paused"], false);
 }
 
 #[test]

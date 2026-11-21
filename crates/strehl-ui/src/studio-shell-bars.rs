@@ -181,7 +181,10 @@ impl StrehlApp {
             },
         );
         right = activity.rect.left();
-        if activities.iter().any(|a| a.kind == ActivityKind::Stack) {
+        if activities
+            .iter()
+            .any(|a| a.kind == crate::activity::ActivityKind::Stack)
+        {
             ctx.request_repaint_after(Duration::from_secs(1));
         }
         let failure = self
@@ -253,8 +256,21 @@ impl StrehlApp {
         }
         let mut tray_action = None;
         let status = self.status.clone();
+        let quiet = self.shell.prefs.quiet;
+        let quiet_holds = quiet && self.activity_hub.quiet.full_screen();
         let tray = popover(&activity).show(|ui| {
-            tray_action = activity_tray::tray(ui, &activities, &mut self.shell.notices, &status);
+            tray_action = activity_tray::tray(
+                ui,
+                activity_tray::TrayInputs {
+                    activities: &self.activity_hub.activities,
+                    notices: &mut self.shell.notices,
+                    status: &status,
+                    quiet,
+                    quiet_holds,
+                    now: Instant::now(),
+                    unix: crate::workspace_history::timestamp(),
+                },
+            );
         });
         if tray.is_some() {
             // Opening the tray reads the notices.
@@ -263,8 +279,6 @@ impl StrehlApp {
         if let Some(action) = tray_action {
             egui::Popup::close_all(&ctx);
             match action {
-                TrayAction::Stop(ActivityKind::Stack) => self.stop_stack(),
-                TrayAction::Stop(_) => {}
                 TrayAction::OpenLog => self.open_drawer_only(Drawer::Activity),
                 TrayAction::OpenAgent => self.open_drawer_only(Drawer::Agent),
                 TrayAction::Notice(crate::notices::Action::OpenLog) => {
@@ -275,6 +289,7 @@ impl StrehlApp {
                         self.go_station(station);
                     }
                 }
+                other => self.activity_action(other),
             }
         }
         // The left: brand, then the breadcrumb.
@@ -1308,6 +1323,12 @@ impl StrehlApp {
                     });
                 });
                 w::toggle_row(ui, "Reduced motion", &mut prefs.reduced_motion);
+                w::section(ui, "Activity", |_| {});
+                w::toggle_row(
+                    ui,
+                    "Quiet: hold stacks while a full-screen program is in front",
+                    &mut prefs.quiet,
+                );
                 ui.add(
                     egui::Label::new(
                         egui::RichText::new(

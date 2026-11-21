@@ -542,7 +542,8 @@ impl CameraMetadata {
         self.result = None;
         self.error = None;
     }
-    fn cancel(&mut self) {
+    /// Stop the read in flight (the activity tray's Stop).
+    pub(crate) fn cancel(&mut self) {
         self.token = self.token.wrapping_add(1);
         self.pending = None;
         if let Some(work) = &self.work {

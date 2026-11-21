@@ -362,11 +362,6 @@ impl StrehlApp {
         });
     }
 
-    /// The top bar's capture activity text (the time left).
-    pub(super) fn capture_activity_phase(&self) -> Option<String> {
-        self.capture.activity_phase()
-    }
-
     /// The capture client's unread success notice, once.
     pub(super) fn capture_notice(&mut self) -> Option<String> {
         self.capture.unread_notice()

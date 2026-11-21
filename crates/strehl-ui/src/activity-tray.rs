@@ -1,6 +1,11 @@
-//! The activity tray (implementation plan 6.6): what is running now, with its
-//! progress and a way to stop it, and the notices, newest first.
-use crate::activity::{ActivityStatus, CancelMode};
+//! The activity tray (plan 6.6, mockup `capture-flight-jobs`): what runs now
+//! with its time left and a way to stop it, the stacks waiting in the queue,
+//! what finished earlier today, the notices, and the Quiet switch. Drawn
+//! inside the shell's popover; it reads `Activities` and returns a
+//! `TrayAction` for the shell to route.
+use crate::activity::{
+    ActionId, Activities, ActivityState, ActivityStatus, CancelMode, HistoryEntry,
+};
 use crate::notices::{self, Notices, Severity};
 use crate::studio_fonts::Face;
 use crate::studio_theme::{self, Tokens, scale};
@@ -8,13 +13,38 @@ use crate::studio_widgets::{self as w, Mark};
 use eframe::egui::{self, Ui};
 use std::time::{Instant, SystemTime};
 
+const WIDTH: f32 = 430.0;
+const EARLIER: usize = 5;
+
 #[derive(Clone, Debug, PartialEq)]
 pub(crate) enum TrayAction {
-    /// Stop the activity with this kind (cooperative cancel).
-    Stop(crate::activity::ActivityKind),
+    /// Stop a running activity (its `CancelMode` says how).
+    Cancel(u64),
+    /// Take a stack off the queue.
+    Remove(u64),
+    /// The Quiet preference.
+    SetQuiet(bool),
+    ResumeQueue,
+    /// An activity's or a finished activity's next step.
+    Action(ActionId),
+    /// The engine log and full activity history.
     OpenLog,
     OpenAgent,
     Notice(notices::Action),
+}
+
+pub(crate) struct TrayInputs<'a> {
+    pub activities: &'a Activities,
+    pub notices: &'a mut Notices,
+    /// The workspace status line, shown when nothing runs.
+    pub status: &'a str,
+    /// The Quiet preference.
+    pub quiet: bool,
+    /// Quiet holds heavy work now (a full-screen program is in front).
+    pub quiet_holds: bool,
+    pub now: Instant,
+    /// Unix seconds now, for "Earlier today".
+    pub unix: u64,
 }
 
 pub(crate) fn severity_mark(severity: Severity) -> Mark {
@@ -31,7 +61,7 @@ fn header(ui: &mut Ui, t: &Tokens, title: &str, right: impl FnOnce(&mut Ui)) {
         .inner_margin(egui::Margin::symmetric(14, 11))
         .show(ui, |ui| {
             ui.horizontal(|ui| {
-                w::caps_colored(ui, title, scale::CAPS, t.ink);
+                w::caps_colored(ui, title, scale::CAPS, t.ink3);
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), right);
             });
         });
@@ -44,55 +74,224 @@ fn header(ui: &mut Ui, t: &Tokens, title: &str, right: impl FnOnce(&mut Ui)) {
     );
 }
 
+fn today(entry: &HistoryEntry, unix: u64) -> bool {
+    use chrono::{Local, TimeZone};
+    match (
+        Local.timestamp_opt(entry.finished as i64, 0).single(),
+        Local.timestamp_opt(unix as i64, 0).single(),
+    ) {
+        (Some(at), Some(now)) => at.date_naive() == now.date_naive(),
+        _ => false,
+    }
+}
+fn clock(unix: u64) -> String {
+    use chrono::{Local, TimeZone};
+    Local
+        .timestamp_opt(unix as i64, 0)
+        .single()
+        .map(|at| at.format("%H:%M").to_string())
+        .unwrap_or_default()
+}
+
 /// The tray body, 430 wide.
-pub(crate) fn tray(
-    ui: &mut Ui,
-    activities: &[ActivityStatus],
-    notices: &mut Notices,
-    status: &str,
-) -> Option<TrayAction> {
+pub(crate) fn tray(ui: &mut Ui, inputs: TrayInputs<'_>) -> Option<TrayAction> {
+    let TrayInputs {
+        activities,
+        notices,
+        status,
+        quiet,
+        quiet_holds,
+        now,
+        unix,
+    } = inputs;
     let t = studio_theme::tokens(ui.ctx());
-    ui.set_width(430.0);
-    ui.set_max_width(430.0);
+    ui.set_width(WIDTH);
+    ui.set_max_width(WIDTH);
     ui.spacing_mut().item_spacing = egui::vec2(0.0, 0.0);
     let mut action = None;
-    header(ui, &t, "Activity", |ui| {
-        if w::link(ui, "Engine log", false).clicked() {
-            action = Some(TrayAction::OpenLog);
-        }
-    });
-    let now = Instant::now();
-    if activities.is_empty() {
-        row(ui, &t, Mark::NotYet, "Nothing running", "", |ui| {
-            ui.label(
-                egui::RichText::new(if status.is_empty() { "Idle" } else { status })
-                    .size(scale::SECONDARY)
-                    .color(t.ink3),
-            );
+    // ACTIVITY, then the moon, "Quiet" and its switch.
+    let frame = egui::Frame::NONE
+        .inner_margin(egui::Margin::symmetric(14, 11))
+        .show(ui, |ui| {
+            ui.horizontal(|ui| {
+                w::caps_colored(ui, "Activity", scale::CAPS, t.ink);
+                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                    ui.spacing_mut().item_spacing = egui::vec2(8.0, 0.0);
+                    let mut on = quiet;
+                    if w::toggle(ui, &mut on)
+                        .on_hover_text("Hold stacks, repairs and compaction while a full-screen program is in front")
+                        .changed()
+                    {
+                        action = Some(TrayAction::SetQuiet(on));
+                    }
+                    ui.label(egui::RichText::new("Quiet").size(scale::SECONDARY).color(t.ink2));
+                    let (moon, _) = ui.allocate_exact_size(egui::vec2(14.0, 14.0), egui::Sense::hover());
+                    crate::library_paint::glyph(ui.painter(), moon.center(), crate::library_paint::Glyph::Moon, t.ink2);
+                });
+            });
         });
+    let rect = frame.response.rect;
+    crate::theme::rule(
+        ui.painter(),
+        rect.left_bottom(),
+        rect.right_bottom(),
+        t.line,
+    );
+
+    // Running and needs-you work; the queue's stacks are listed below.
+    let active: Vec<&ActivityStatus> = activities.active().filter(|s| s.queued.is_none()).collect();
+    if active.is_empty() {
+        row(
+            ui,
+            &t,
+            Mark::NotYet,
+            "Nothing running",
+            if status.is_empty() {
+                "Queue a stack from any subject, or start a capture"
+            } else {
+                status
+            },
+            |_| {},
+        );
     }
-    for activity in activities {
-        let line = activity.progress_line(now);
-        let detail = match (line.is_empty(), activity.facts.is_empty()) {
-            (false, false) => format!("{line}\n{}", activity.facts),
-            (false, true) => line,
-            (true, false) => activity.facts.clone(),
-            (true, true) => String::new(),
+    for activity in &active {
+        let (mark, detail) = match &activity.state {
+            ActivityState::NeedsYou { message, .. } => (Mark::Look, message.clone()),
+            ActivityState::Waiting { for_what, gives_up } => {
+                let mut detail = format!("Waiting for {for_what}");
+                if let Some(at) = gives_up {
+                    detail.push_str(&format!(
+                        " · gives up in {}",
+                        crate::render_eta::spoken(at.saturating_duration_since(now))
+                    ));
+                }
+                (Mark::NotYet, detail)
+            }
+            _ => (Mark::Running, running_detail(activity, now)),
         };
-        let response = row(ui, &t, Mark::Running, &activity.title, &detail, |ui| {
-            if activity.cancel == CancelMode::Cooperative && w::link(ui, "Stop", false).clicked() {
-                action = Some(TrayAction::Stop(activity.kind));
+        let detail = if activity.facts.is_empty() {
+            detail
+        } else {
+            format!("{detail}\n{}", activity.facts)
+        };
+        let rect = row(ui, &t, mark, &activity.title, &detail, |ui| {
+            if let ActivityState::NeedsYou {
+                action: Some(next), ..
+            } = &activity.state
+            {
+                if w::link(ui, action_label(next), true).clicked() {
+                    action = Some(TrayAction::Action(next.clone()));
+                }
+            } else if activity.cancel != CancelMode::None && w::link(ui, "Stop", false).clicked() {
+                action = Some(TrayAction::Cancel(activity.id));
             }
         });
         if let Some(fraction) = activity.fraction() {
-            let rect = response;
             let bar = egui::Rect::from_min_size(
-                egui::pos2(rect.left() + 41.0, rect.bottom() - 6.0),
-                egui::vec2(rect.width() - 55.0, 2.0),
+                egui::pos2(rect.left() + 40.0, rect.bottom() - 7.0),
+                egui::vec2(rect.width() - 54.0, 2.0),
             );
-            w::progress_bar(ui.painter(), bar, fraction, t.accent, &t);
+            w::progress_bar(ui.painter(), bar, fraction, t.ok, &t);
         }
     }
+
+    // The queue.
+    let waiting: Vec<&ActivityStatus> = activities
+        .waiting()
+        .filter(|s| s.queued.is_some())
+        .collect();
+    if !waiting.is_empty() {
+        let paused = waiting.iter().any(|s| matches!(&s.state, ActivityState::Waiting { for_what, .. } if for_what.contains("resume the queue")));
+        let note = match &waiting[0].state {
+            ActivityState::Waiting { for_what, .. } => match for_what.as_str() {
+                "the stack before it" => "start when the running stack ends".to_owned(),
+                "its turn" => "start next".to_owned(),
+                other => format!("waiting for {other}"),
+            },
+            _ => String::new(),
+        };
+        header(ui, &t, &format!("Waiting · {}", waiting.len()), |ui| {
+            if paused {
+                if w::link(ui, "Resume", true).clicked() {
+                    action = Some(TrayAction::ResumeQueue);
+                }
+            } else {
+                ui.label(
+                    egui::RichText::new(&note)
+                        .size(scale::SECONDARY)
+                        .color(t.ink3),
+                );
+            }
+        });
+        for (index, item) in waiting.iter().enumerate() {
+            let mut detail = item.phase.clone();
+            if let Some(eta) = item.eta
+                && !detail.contains("about")
+            {
+                detail.push_str(&format!(" · about {}", crate::render_eta::spoken(eta)));
+            }
+            row_numbered(ui, &t, index + 1, &item.title, &detail, |ui| {
+                if let Some(id) = item.queued
+                    && w::link(ui, "Remove", false).clicked()
+                {
+                    action = Some(TrayAction::Remove(id));
+                }
+            });
+        }
+    }
+
+    // Earlier today.
+    let earlier: Vec<&HistoryEntry> = activities
+        .history()
+        .iter()
+        .filter(|e| today(e, unix))
+        .take(EARLIER)
+        .collect();
+    if !earlier.is_empty() {
+        header(ui, &t, "Earlier today", |ui| {
+            if w::link(ui, "Full log", false).clicked() {
+                action = Some(TrayAction::OpenLog);
+            }
+        });
+        for entry in &earlier {
+            let mark = match entry.outcome.as_str() {
+                "done" => Mark::Fine,
+                "needs_you" => Mark::Look,
+                _ => Mark::Failed,
+            };
+            let mut detail = entry.summary.clone();
+            if let Some(took) = entry.took_seconds.filter(|t| *t >= 1.0) {
+                detail.push_str(&format!(
+                    " · took {}",
+                    crate::render_eta::spoken(std::time::Duration::from_secs_f64(took))
+                ));
+            }
+            row(ui, &t, mark, &entry.title, &detail, |ui| {
+                match &entry.action {
+                    Some(
+                        next @ (ActionId::Reveal { .. }
+                        | ActionId::ShowLog { .. }
+                        | ActionId::Retry { .. }
+                        | ActionId::OpenRun { .. }
+                        | ActionId::OpenStack { .. }),
+                    ) => {
+                        if w::link(ui, action_label(next), false).clicked() {
+                            action = Some(TrayAction::Action(next.clone()));
+                        }
+                    }
+                    _ => {
+                        ui.label(
+                            egui::RichText::new(clock(entry.finished))
+                                .size(scale::SECONDARY)
+                                .color(t.ink3),
+                        );
+                    }
+                }
+            });
+        }
+    }
+
+    // The notices, newest first.
     header(ui, &t, "Notices", |ui| {
         if notices.unread() > 0 && w::link(ui, "Mark all read", false).clicked() {
             notices.mark_all_read();
@@ -108,15 +307,14 @@ pub(crate) fn tray(
             |_| {},
         );
     }
-    let clock = SystemTime::now();
+    let wall = SystemTime::now();
     let mut dismiss = None;
-    let mut chosen = None;
-    let listed: Vec<_> = notices.iter().take(8).cloned().collect();
+    let listed: Vec<_> = notices.iter().take(6).cloned().collect();
     for notice in &listed {
         let detail = format!(
             "{} · {}{}",
             notice.source.label(),
-            notices::ago(notice.time, clock),
+            notices::ago(notice.time, wall),
             if notice.resolved { " · cleared" } else { "" }
         );
         row(
@@ -126,8 +324,7 @@ pub(crate) fn tray(
             &notice.text,
             &detail,
             |ui| {
-                if ui
-                    .add(w::Button::quiet("Dismiss").small())
+                if w::link(ui, "Dismiss", false)
                     .on_hover_text("Remove this notice")
                     .clicked()
                 {
@@ -139,7 +336,7 @@ pub(crate) fn tray(
                         notices::Action::OpenStation(_) => "Open",
                     };
                     if w::link(ui, label, notice.severity == Severity::Failure).clicked() {
-                        chosen = Some(TrayAction::Notice(next.clone()));
+                        action = Some(TrayAction::Notice(next.clone()));
                     }
                 }
             },
@@ -159,16 +356,58 @@ pub(crate) fn tray(
     if let Some(id) = dismiss {
         notices.dismiss(id);
     }
+
+    // Quiet's promise while it holds, then the agent.
+    if quiet_holds {
+        let rect = row(
+            ui,
+            &t,
+            Mark::Hidden,
+            "Quiet holds heavy work",
+            "Stacks, repairs and compaction wait while a full-screen program is in front. Captures and transfers never wait.",
+            |_| {},
+        );
+        crate::library_paint::glyph(
+            ui.painter(),
+            egui::pos2(rect.left() + 18.0 + w::MARK_SLOT * 0.5, rect.top() + 18.0),
+            crate::library_paint::Glyph::Moon,
+            t.ink2,
+        );
+    }
     egui::Frame::NONE
         .inner_margin(egui::Margin::symmetric(14, 9))
         .show(ui, |ui| {
             ui.horizontal(|ui| {
+                ui.spacing_mut().item_spacing = egui::vec2(16.0, 0.0);
+                if w::link(ui, "Engine log", false).clicked() {
+                    action = Some(TrayAction::OpenLog);
+                }
                 if w::link(ui, "Agent", false).clicked() {
                     action = Some(TrayAction::OpenAgent);
                 }
             });
         });
-    action.or(chosen)
+    action
+}
+
+/// "Merge · 120 / 299 · 3 min 18 s left · ends 21:47"
+fn running_detail(status: &ActivityStatus, now: Instant) -> String {
+    let mut line = status.progress_line(now);
+    if let Some(eta) = status.eta {
+        let ends = chrono::Local::now() + chrono::Duration::seconds(eta.as_secs() as i64);
+        line.push_str(&format!(" · ends {}", ends.format("%H:%M")));
+    }
+    line
+}
+fn action_label(action: &ActionId) -> &'static str {
+    match action {
+        ActionId::OpenStack { .. } | ActionId::OpenRun { .. } => "Open",
+        ActionId::OpenCapture => "Capture",
+        ActionId::Reveal { .. } => "Reveal",
+        ActionId::ShowLog { .. } => "Log",
+        ActionId::Retry { .. } => "Retry",
+        ActionId::ResumeQueue => "Resume",
+    }
 }
 
 /// A tray row: mark, title, detail under it, controls on the right. Title
@@ -181,39 +420,98 @@ fn row(
     detail: &str,
     controls: impl FnOnce(&mut Ui),
 ) -> egui::Rect {
-    const CONTROLS: f32 = 112.0;
+    row_with(ui, t, Lead::Mark(mark), title, detail, controls)
+}
+/// A queued stack's row: its place in the queue instead of a mark.
+fn row_numbered(
+    ui: &mut Ui,
+    t: &Tokens,
+    place: usize,
+    title: &str,
+    detail: &str,
+    controls: impl FnOnce(&mut Ui),
+) -> egui::Rect {
+    row_with(ui, t, Lead::Number(place), title, detail, controls)
+}
+enum Lead {
+    Mark(Mark),
+    Number(usize),
+}
+fn row_with(
+    ui: &mut Ui,
+    t: &Tokens,
+    lead: Lead,
+    title: &str,
+    detail: &str,
+    controls: impl FnOnce(&mut Ui),
+) -> egui::Rect {
+    // The controls share the title line; the detail runs the full width
+    // under it, as in the mockup.
+    const CONTROLS: f32 = 120.0;
+    const TITLE_LINE: f32 = 21.0;
     let frame = egui::Frame::NONE
         .inner_margin(egui::Margin {
             left: 14,
             right: 14,
-            top: 10,
+            top: 11,
             bottom: 12,
         })
         .show(ui, |ui| {
             let width = ui.available_width();
             ui.set_width(width);
             ui.horizontal_top(|ui| {
-                ui.spacing_mut().item_spacing = egui::vec2(0.0, 3.0);
-                ui.add_space(4.0);
+                ui.spacing_mut().item_spacing = egui::vec2(0.0, 0.0);
+                ui.add_space(2.0);
                 let (slot, _) =
-                    ui.allocate_exact_size(egui::vec2(w::MARK_SLOT, 16.0), egui::Sense::hover());
-                w::paint_mark(ui.painter(), slot.center(), mark, t);
+                    ui.allocate_exact_size(egui::vec2(w::MARK_SLOT, 17.0), egui::Sense::hover());
+                match lead {
+                    Lead::Mark(mark) => w::paint_mark(ui.painter(), slot.center(), mark, t),
+                    Lead::Number(place) => {
+                        ui.painter().text(
+                            slot.center(),
+                            egui::Align2::CENTER_CENTER,
+                            place.to_string(),
+                            egui::FontId::proportional(scale::SECONDARY),
+                            t.ink3,
+                        );
+                    }
+                }
                 ui.add_space(14.0);
-                let text_width = (width - 18.0 - w::MARK_SLOT - CONTROLS).max(80.0);
+                let text_width = (width - 16.0 - w::MARK_SLOT).max(120.0);
                 ui.allocate_ui_with_layout(
                     egui::vec2(text_width, 0.0),
                     egui::Layout::top_down(egui::Align::Min),
                     |ui| {
-                        ui.set_max_width(text_width);
-                        ui.spacing_mut().item_spacing = egui::vec2(0.0, 3.0);
-                        ui.add(
-                            egui::Label::new(
-                                egui::RichText::new(title)
-                                    .font(w::font(ui, Face::Strong, scale::BODY))
-                                    .color(t.ink),
-                            )
-                            .wrap(),
-                        );
+                        ui.set_width(text_width);
+                        ui.spacing_mut().item_spacing = egui::vec2(0.0, 2.0);
+                        ui.horizontal_top(|ui| {
+                            ui.spacing_mut().item_spacing = egui::vec2(8.0, 0.0);
+                            let title_width = (text_width - CONTROLS).max(80.0);
+                            ui.allocate_ui_with_layout(
+                                egui::vec2(title_width, 0.0),
+                                egui::Layout::top_down(egui::Align::Min),
+                                |ui| {
+                                    ui.set_max_width(title_width);
+                                    ui.add(
+                                        egui::Label::new(
+                                            egui::RichText::new(title)
+                                                .font(w::font(ui, Face::Strong, scale::BODY))
+                                                .color(t.ink),
+                                        )
+                                        .wrap(),
+                                    );
+                                },
+                            );
+                            // Centred on a one-line title, as in the mockup.
+                            ui.allocate_ui_with_layout(
+                                egui::vec2(ui.available_width(), TITLE_LINE),
+                                egui::Layout::right_to_left(egui::Align::Center),
+                                |ui| {
+                                    ui.spacing_mut().item_spacing = egui::vec2(10.0, 0.0);
+                                    controls(ui)
+                                },
+                            );
+                        });
                         if !detail.is_empty() {
                             ui.add(
                                 egui::Label::new(
@@ -226,10 +524,6 @@ fn row(
                         }
                     },
                 );
-                ui.with_layout(egui::Layout::right_to_left(egui::Align::Min), |ui| {
-                    ui.spacing_mut().item_spacing = egui::vec2(8.0, 0.0);
-                    controls(ui)
-                });
             });
         });
     let rect = frame.response.rect;
@@ -243,120 +537,5 @@ fn row(
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::activity::{ActivityKind, Lane};
-    use crate::notices::Source;
-
-    fn paint(
-        ctx: &egui::Context,
-        activities: &[ActivityStatus],
-        notices: &mut Notices,
-        time: f64,
-        events: Vec<egui::Event>,
-    ) -> (egui::FullOutput, Option<TrayAction>) {
-        let mut action = None;
-        let output = ctx.run(
-            egui::RawInput {
-                screen_rect: Some(egui::Rect::from_min_size(
-                    egui::Pos2::ZERO,
-                    egui::vec2(800.0, 900.0),
-                )),
-                time: Some(time),
-                events,
-                ..Default::default()
-            },
-            |ctx| {
-                egui::CentralPanel::default().show(ctx, |ui| {
-                    action = tray(ui, activities, notices, "Stacking");
-                });
-            },
-        );
-        (output, action)
-    }
-    fn find(output: &egui::FullOutput, needle: &str) -> Option<egui::Pos2> {
-        output.shapes.iter().find_map(|shape| match &shape.shape {
-            egui::Shape::Text(text) if text.galley.text() == needle => {
-                Some(text.visual_bounding_rect().center())
-            }
-            _ => None,
-        })
-    }
-
-    #[test]
-    fn the_tray_lists_running_work_with_stop_and_notices_newest_first() {
-        let ctx = egui::Context::default();
-        crate::theme::install(&ctx);
-        let mut stack =
-            ActivityStatus::running(ActivityKind::Stack, "Stacking Blue weevil", Lane::Heavy);
-        stack.cancel = CancelMode::Cooperative;
-        stack.done = Some(10);
-        stack.total = Some(40);
-        stack.facts = "32 workers · 299 RAW · 61.4 GiB".into();
-        let mut notices = Notices::default();
-        notices.push(Severity::Done, Source::Export, "Exported weevil.avif", None);
-        notices.push(
-            Severity::Failure,
-            Source::Stack,
-            "The engine stopped",
-            Some(notices::Action::OpenLog),
-        );
-        let (output, _) = paint(&ctx, &[stack.clone()], &mut notices, 0.0, vec![]);
-        for needle in [
-            "Stacking Blue weevil",
-            "STOP",
-            "The engine stopped",
-            "Exported weevil.avif",
-        ] {
-            assert!(find(&output, needle).is_some(), "missing {needle}");
-        }
-        let failure = find(&output, "The engine stopped").unwrap();
-        let export = find(&output, "Exported weevil.avif").unwrap();
-        assert!(failure.y < export.y, "newest first");
-        let bar = output.shapes.iter().any(|s| matches!(&s.shape,
-            egui::Shape::Rect(r) if r.rect.height() == 2.0 && r.fill == crate::studio_theme::GRAPHITE.accent));
-        assert!(bar, "a counted task shows its progress rule");
-        let stop = find(&output, "STOP").unwrap();
-        let press = |pressed| egui::Event::PointerButton {
-            pos: stop,
-            button: egui::PointerButton::Primary,
-            pressed,
-            modifiers: egui::Modifiers::NONE,
-        };
-        paint(
-            &ctx,
-            &[stack.clone()],
-            &mut notices,
-            0.1,
-            vec![egui::Event::PointerMoved(stop), press(true)],
-        );
-        let (_, action) = paint(&ctx, &[stack], &mut notices, 0.15, vec![press(false)]);
-        assert_eq!(action, Some(TrayAction::Stop(ActivityKind::Stack)));
-    }
-
-    #[test]
-    fn an_idle_tray_says_so_and_dismissing_removes_a_notice() {
-        let ctx = egui::Context::default();
-        crate::theme::install(&ctx);
-        let mut notices = Notices::default();
-        notices.push(Severity::Info, Source::App, "Preferences saved", None);
-        let (output, _) = paint(&ctx, &[], &mut notices, 0.0, vec![]);
-        assert!(find(&output, "Nothing running").is_some());
-        let dismiss = find(&output, "Dismiss").unwrap();
-        let press = |pressed| egui::Event::PointerButton {
-            pos: dismiss,
-            button: egui::PointerButton::Primary,
-            pressed,
-            modifiers: egui::Modifiers::NONE,
-        };
-        paint(
-            &ctx,
-            &[],
-            &mut notices,
-            0.1,
-            vec![egui::Event::PointerMoved(dismiss), press(true)],
-        );
-        paint(&ctx, &[], &mut notices, 0.15, vec![press(false)]);
-        assert_eq!(notices.len(), 0);
-    }
-}
+#[path = "activity-tray-tests.rs"]
+mod tests;

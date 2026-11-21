@@ -195,6 +195,22 @@ pub(crate) enum AgentCommand {
         zoom: f32,
     },
     StartStack {},
+    /// Put a catalog stack, with its saved recipe, on the serial stack queue
+    /// (Studio 2 P5). It starts when the Heavy lane is free.
+    QueueStack {
+        id: u64,
+    },
+    /// Take a waiting stack off the queue by its queue id.
+    RemoveQueuedStack {
+        queue_id: u64,
+    },
+    /// Move a waiting stack to `position` in the queue (0 starts next).
+    MoveQueuedStack {
+        queue_id: u64,
+        position: usize,
+    },
+    /// Resume a queue restored paused after a restart.
+    ResumeQueue {},
     CancelStack {},
     ExportViewBundle {
         grant_id: String,

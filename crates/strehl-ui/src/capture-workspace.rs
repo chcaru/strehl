@@ -1342,25 +1342,6 @@ impl CaptureWorkspace {
         }
         (host.phase == HostPhase::Fault).then(|| "Camera needs attention".into())
     }
-    /// The top bar's capture activity, short: the time left (the activity
-    /// adds the planes), or why the clock is not running.
-    pub fn activity_phase(&self) -> Option<String> {
-        let s = self.connection.as_ref()?.snapshot();
-        let host = &s.host;
-        match host.phase {
-            HostPhase::Scanning => Some("surveying".into()),
-            HostPhase::Paused => Some("paused".into()),
-            _ if host.phase.active() => {
-                let left = host.timer.as_ref()?.remaining?.max(0.0).round() as u64;
-                Some(if left >= 3600 {
-                    format!("{}:{:02}:{:02}", left / 3600, left / 60 % 60, left % 60)
-                } else {
-                    format!("{}:{:02}", left / 60, left % 60)
-                })
-            }
-            _ => None,
-        }
-    }
     /// Every reason Start is unavailable now ([`preflight::start_blockers`]).
     pub fn start_blockers(&self) -> Vec<preflight::Blocker> {
         let s = self
@@ -1369,6 +1350,86 @@ impl CaptureWorkspace {
             .map(Connection::snapshot)
             .unwrap_or_default();
         preflight::start_blockers(&s, self)
+    }
+    /// The capture, its checker, the calibration and the engine tools as
+    /// activities (Studio 2 P5, plan 6.6). Cheap: no I/O, one snapshot read.
+    pub(crate) fn report_activities(&self, activities: &mut crate::activity::Activities) {
+        use crate::activity::{
+            ActivityKind, ActivityState, ActivityStatus, CancelMode, Lane, calibration_status,
+            follow_status, tool_status,
+        };
+        if let Some(connection) = &self.connection {
+            let s = connection.snapshot();
+            let host = &s.host;
+            if host.phase.active() && !self.calibrating() {
+                let key = host
+                    .sequence_id
+                    .map_or_else(|| "capture".to_owned(), |id| format!("sequence:{id}"));
+                let paused = host.phase == HostPhase::Paused;
+                let mut status = ActivityStatus::new(
+                    ActivityKind::Capture,
+                    &key,
+                    ActivityKind::Capture.label(),
+                    Lane::Camera,
+                )
+                .with_phase(if host.phase == HostPhase::Scanning {
+                    "Surveying the range"
+                } else if paused {
+                    "Paused"
+                } else {
+                    "Capturing"
+                })
+                .with_progress(
+                    (host.phase != HostPhase::Scanning).then_some(host.completed),
+                    (host.phase != HostPhase::Scanning).then_some(host.total.max(host.completed)),
+                )
+                .with_cancel(CancelMode::Cooperative);
+                status.eta = host
+                    .timer
+                    .as_ref()
+                    .and_then(|t| t.remaining)
+                    .map(|r| std::time::Duration::from_secs_f64(r.max(0.0)));
+                if paused {
+                    status.state = ActivityState::Waiting {
+                        for_what: "you to resume the capture".into(),
+                        gives_up: None,
+                    };
+                }
+                activities.report(status);
+            } else if host.phase == HostPhase::Fault {
+                activities.report(
+                    ActivityStatus::new(
+                        ActivityKind::Capture,
+                        "capture-fault",
+                        ActivityKind::Capture.label(),
+                        Lane::Camera,
+                    )
+                    .with_state(ActivityState::NeedsYou {
+                        message: "The camera needs attention".into(),
+                        action: Some(crate::activity::ActionId::OpenCapture),
+                    }),
+                );
+            }
+        }
+        if let Some(follower) = &self.follower {
+            activities.report(follow_status(follower));
+        }
+        if let Some(status) = calibration_status(&self.calibration, "calibration") {
+            activities.report(status);
+        }
+        for (kind, slot, lane) in [
+            (ActivityKind::FocusStep, &self.step_report, Lane::Background),
+            (
+                ActivityKind::CompactEstimate,
+                &self.compact_estimate,
+                Lane::Background,
+            ),
+            (ActivityKind::CompactApply, &self.compact_apply, Lane::Heavy),
+        ] {
+            if let Some(status) = tool_status(kind, slot, lane) {
+                activities.report(status);
+            }
+        }
     }
     /// The capture checker's records, each plane's journal line among them.
     pub fn follow_progress(&self) -> Option<&follow::Progress> {

@@ -126,7 +126,19 @@ fn flight_and_glance_fill_the_window() {
         app.capture.status_line().as_deref(),
         Some("Capturing 61 / 96 planes · 00:03:18 left")
     );
-    assert_eq!(app.capture_activity_phase().as_deref(), Some("3:18"));
+    // The top bar and the tray read the capture's activity report.
+    let mut activities = crate::activity::Activities::default();
+    activities.begin();
+    app.capture.report_activities(&mut activities);
+    let capture = activities
+        .statuses()
+        .iter()
+        .find(|s| s.kind == crate::activity::ActivityKind::Capture)
+        .expect("the capture reports an activity");
+    assert_eq!(
+        capture.progress_line(std::time::Instant::now()),
+        "Capturing · 61 / 96 · 3 min 18 s left"
+    );
     let (_dir, mut app) = station("glance");
     frame(&mut app, &ctx, vec![]);
     let out = frame(&mut app, &ctx, vec![]);
