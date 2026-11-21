@@ -219,6 +219,13 @@ impl<'a> Neighbourhood<'a> {
                     if m <= 0.0 {
                         continue;
                     }
+                    if backdrop.key == crate::BackdropKey::Dark {
+                        // Clean to black, by membership.
+                        for c in 0..3 {
+                            o[c] = v[c] * (1.0 - m);
+                        }
+                        continue;
+                    }
                     let mut acc = [0.0f32; 4];
                     for k in 0..side {
                         let s = &weighted[((row + k) * size[0] + col) * 4..][..4];

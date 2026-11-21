@@ -120,6 +120,7 @@ fn option_free_recipes_stay_readable_by_the_older_schema_and_new_fields_are_refu
     let mut v = recipe.clone();
     v.backdrop = Some(Backdrop {
         enabled: true,
+        key: BackdropKey::Light,
         threshold: 0.8,
         softness: 1.0,
     });
@@ -339,6 +340,7 @@ fn heals_and_backdrops_validate_their_geometry() {
     assert!(recipe.validate().is_err());
     let backdrop = Backdrop {
         enabled: true,
+        key: BackdropKey::Light,
         threshold: 0.5,
         softness: 1.0,
     };
@@ -348,6 +350,7 @@ fn heals_and_backdrops_validate_their_geometry() {
     assert_eq!(
         Backdrop {
             enabled: true,
+            key: BackdropKey::Light,
             softness: 0.0,
             ..backdrop
         }
@@ -357,6 +360,7 @@ fn heals_and_backdrops_validate_their_geometry() {
     assert!(
         Backdrop {
             enabled: true,
+            key: BackdropKey::Light,
             threshold: 0.0,
             ..backdrop
         }

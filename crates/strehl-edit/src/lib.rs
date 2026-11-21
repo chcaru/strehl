@@ -57,10 +57,10 @@ pub use image::{
 pub use metadata::{ExportDateTime, ExportMetadata};
 pub use neighbourhood::Neighbourhood;
 pub use recipe::{
-    AdaptiveParameters, AdaptiveToneRange, Adjustments, Backdrop, Crop, DevelopmentRecipe,
-    HdrSettings, Heal, MAX_HEALS, MAX_RECIPE_STROKE_POINTS, MAX_SPATIAL_TREATMENTS,
-    MAX_STROKE_POINTS, PreparedRecipe, PreparedShape, RegionAdjustment, RegionShape, ScaleBar,
-    ScaleBarCorner, ScaleBarStyle, SourceRange, SpatialTreatment,
+    AdaptiveParameters, AdaptiveToneRange, Adjustments, Backdrop, BackdropKey, Crop,
+    DevelopmentRecipe, HdrSettings, Heal, MAX_HEALS, MAX_RECIPE_STROKE_POINTS,
+    MAX_SPATIAL_TREATMENTS, MAX_STROKE_POINTS, PreparedRecipe, PreparedShape, RegionAdjustment,
+    RegionShape, ScaleBar, ScaleBarCorner, ScaleBarStyle, SourceRange, SpatialTreatment,
 };
 pub use resample::{Resize, ResizeFilter};
 pub use scalar_tiff::{ScalarImage, ScalarSamples, read_scalar_tiff};

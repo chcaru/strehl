@@ -9,7 +9,9 @@ pub use spatial::{
 
 #[path = "recipe-finishing.rs"]
 mod finishing;
-pub use finishing::{Backdrop, Crop, Heal, MAX_HEALS, ScaleBar, ScaleBarCorner, ScaleBarStyle};
+pub use finishing::{
+    Backdrop, BackdropKey, Crop, Heal, MAX_HEALS, ScaleBar, ScaleBarCorner, ScaleBarStyle,
+};
 
 #[path = "recipe-prepared.rs"]
 mod prepared;

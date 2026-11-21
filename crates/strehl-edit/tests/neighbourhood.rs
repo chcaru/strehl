@@ -99,6 +99,7 @@ fn studio() -> (LinearImage, DevelopmentRecipe) {
     let recipe = DevelopmentRecipe {
         backdrop: Some(Backdrop {
             enabled: true,
+            key: BackdropKey::Light,
             threshold: 0.5,
             softness: 1.0,
         }),
@@ -200,6 +201,7 @@ fn textured() -> (LinearImage, DevelopmentRecipe) {
     });
     recipe.backdrop = Some(Backdrop {
         enabled: true,
+        key: BackdropKey::Light,
         threshold: 0.7,
         softness: 0.5,
     });
@@ -259,4 +261,49 @@ fn the_preview_patch_with_its_halo_matches_the_export_pixels() {
             .render_region_sdr8(&plain, [0.1, 0.2], [0.9, 0.7], 120)
             .unwrap()
     );
+}
+
+#[test]
+fn a_dark_key_cleans_a_black_ground_to_black_and_keeps_the_subject() {
+    // A dark ground with faint dust and glow, and a bright subject disc.
+    let image = scene(400, 300, |x, y| {
+        let d = ((x as f32 - 200.0).powi(2) + (y as f32 - 150.0).powi(2)).sqrt();
+        let v = if d < 60.0 {
+            0.4
+        } else {
+            0.004 * (1.0 + 0.5 * noise(y * 400 + x))
+        };
+        [v; 3]
+    });
+    let recipe = DevelopmentRecipe {
+        backdrop: Some(Backdrop {
+            threshold: 0.012,
+            softness: 1.0,
+            key: BackdropKey::Dark,
+            enabled: true,
+        }),
+        ..Default::default()
+    };
+    let out = staged(&image, &recipe);
+    let at = |img: &LinearImage, x: u32, y: u32| img.pixels[((y * 400 + x) * 3) as usize];
+    assert_eq!(at(&out, 20, 20), 0.0, "ground goes to black");
+    assert_eq!(
+        at(&out, 200, 150),
+        at(&image, 200, 150),
+        "subject untouched"
+    );
+    assert_eq!(
+        Backdrop {
+            key: BackdropKey::Dark,
+            ..recipe.backdrop.unwrap()
+        }
+        .membership(0.0),
+        1.0
+    );
+    // Hidden, it does nothing.
+    let mut hidden = recipe.clone();
+    hidden.backdrop.as_mut().unwrap().enabled = false;
+    assert!(!hidden.has_neighbourhood());
+    let json = serde_json::to_string(&recipe).unwrap();
+    assert!(json.contains(r#""key":"dark""#) && !json.contains("enabled"));
 }
