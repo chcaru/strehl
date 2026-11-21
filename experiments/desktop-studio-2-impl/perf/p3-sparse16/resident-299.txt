@@ -1,0 +1,7 @@
+
+running 1 test
+test source_browser::tests::v26_tests::benchmark::benchmark_real_stack_scrub_publication ... 299 actual sources; resident warming 1460.4ms; report C:/strehl-scratch/p3/sparse16-299.json
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1120 filtered out; finished in 11.54s
+
