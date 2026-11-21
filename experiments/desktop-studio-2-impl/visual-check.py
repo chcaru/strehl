@@ -20,6 +20,7 @@ from pathlib import Path
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
+# Git-ignored (private pictures); worktrees can point at the main checkout's copy with --reference.
 REFERENCE = ROOT / "experiments" / "desktop-studio-2026-11-20" / "mockups" / "outputs" / "reference"
 RUN = r"C:\Users\chris\Pictures\Strehl\strehl-1793781369068-68052-3"
 # name: (extra arguments, reference image)
@@ -30,6 +31,16 @@ ROUTES = {
     "develop": (["--open-run", RUN, "--route", "develop"], "develop.png"),
     "export": (["--open-run", RUN, "--route", "export"], "export.png"),
     "capture": (["--route", "capture"], "capture-plan.png"),
+    # The Capture station from fabricated states: no camera host is reached.
+    "capture-plan": (["--route", "capture", "--capture-fixture", "plan"], "capture-plan.png"),
+    "capture-flight": (["--route", "capture", "--capture-fixture", "flight"], "capture-flight.png"),
+    "glance": (["--route", "capture", "--capture-fixture", "glance"], "glance.png"),
+    "capture-flight-lightbox": (["--route", "capture", "--capture-fixture", "flight", "--theme", "lightbox"],
+                                "capture-flight-lightbox.png"),
+    "capture-plan-instrument": (["--route", "capture", "--capture-fixture", "plan", "--theme", "instrument"],
+                                "capture-plan.png"),
+    "capture-plan-lightbox": (["--route", "capture", "--capture-fixture", "plan", "--theme", "lightbox"],
+                              "capture-plan.png"),
     "stack-instrument": (["--open-run", RUN, "--route", "stack", "--theme", "instrument"], "stack-instrument.png"),
     "stack-lightbox": (["--open-run", RUN, "--route", "stack", "--theme", "lightbox"], "stack-lightbox.png"),
 }
@@ -54,6 +65,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--exe", required=True, type=Path)
     parser.add_argument("--out", required=True, type=Path)
+    parser.add_argument("--reference", type=Path, default=REFERENCE)
     parser.add_argument("names", nargs="*")
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
@@ -66,7 +78,12 @@ def main():
                 stale.unlink()
         catalog = args.out / f"{name}.projects.json"
         shutil.copyfile(catalog_source, catalog)
+        # A fresh capture settings path keeps every route away from the owner's rig.
+        settings = args.out / f"{name}.capture.json"
+        if settings.exists():
+            settings.unlink()
         command = [str(args.exe), "--offscreen-screenshot", str(png), "--catalog", str(catalog),
+                   "--capture-settings", str(settings),
                    "--output-dir", str(args.out / "results"), "--size", "1680x1050", *extra]
         started = time.time()
         with open(args.out / f"{name}.log", "wb") as log:
@@ -79,7 +96,7 @@ def main():
             continue
         app = Image.open(png).convert("RGB")
         measured = chrome(app)
-        ref_path = REFERENCE / reference
+        ref_path = args.reference / reference
         if ref_path.exists():
             ref = Image.open(ref_path).convert("RGB").resize(app.size)
             sheet = Image.new("RGB", (app.width * 2 + 8, app.height), (80, 0, 80))

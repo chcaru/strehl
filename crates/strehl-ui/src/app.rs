@@ -50,6 +50,8 @@ mod session;
 mod session_import;
 #[path = "app-session-output.rs"]
 mod session_output;
+#[path = "app-station-capture.rs"]
+mod station_capture;
 #[path = "studio-route.rs"]
 pub(crate) mod studio_route;
 #[path = "studio-shell.rs"]
@@ -491,6 +493,11 @@ impl StrehlApp {
         if launch.capture {
             app.process_view = true;
             app.sidebar = Some(workspace::Sidebar::Capture);
+        }
+        if let Some(name) = &launch.capture_fixture
+            && let Err(error) = app.capture.load_fixture(name)
+        {
+            app.capture.error = Some(format!("{error:#}"));
         }
         // Adopt the launch flags above, then apply an explicit route.
         app.sync_route();

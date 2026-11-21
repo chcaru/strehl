@@ -111,64 +111,30 @@ fn workspace() -> (tempfile::TempDir, CaptureWorkspace) {
     (dir, ui)
 }
 
-/// Stop asks first: the first click sends nothing, "Keep going" forgets it,
-/// and only "Stop now" tries to send (here refused: no connection).
+/// Disconnect in the connection settings asks first; only "Disconnect now"
+/// tries to send (here refused: no connection).
 #[test]
-fn stop_needs_a_confirming_click() {
+fn disconnect_needs_a_confirming_click() {
     let ctx = egui::Context::default();
     crate::theme::install(&ctx);
     let (_dir, mut ws) = workspace();
-    let s = snapshot(capturing());
-    let mut time = 0.0;
-    click(&ctx, &mut time, "Stop…", |ui| ws.sequence_ui(ui, &s));
-    assert_eq!(ws.confirm, Some(Confirm::Stop));
-    assert!(ws.error.is_none(), "the first click sends nothing");
-    click(&ctx, &mut time, "Keep going", |ui| ws.sequence_ui(ui, &s));
-    assert_eq!(ws.confirm, None);
-    assert!(ws.error.is_none());
-    click(&ctx, &mut time, "Stop…", |ui| ws.sequence_ui(ui, &s));
-    click(&ctx, &mut time, "Stop now", |ui| ws.sequence_ui(ui, &s));
-    assert_eq!(ws.confirm, None);
-    assert_eq!(ws.error.as_deref(), Some("Open Capture first"), "sent once");
-    // A confirmation left open ends with the sequence.
-    ws.confirm = Some(Confirm::Stop);
-    let idle = snapshot(ready());
-    frame(&ctx, time, vec![], |ui| ws.sequence_ui(ui, &idle));
-    assert_eq!(ws.confirm, None);
-}
-
-#[test]
-fn disconnect_and_shut_down_need_a_confirming_click() {
-    let ctx = egui::Context::default();
-    crate::theme::install(&ctx);
-    let (_dir, mut ws) = workspace();
-    let s = snapshot(ready());
+    let mut state = ready();
+    state["end_set"] = json!(true);
+    let s = snapshot(state);
     let mut time = 0.0;
     click(&ctx, &mut time, "Disconnect…", |ui| {
         ws.connection_ui(ui, &s)
     });
     assert_eq!(ws.confirm, Some(Confirm::Disconnect));
-    assert!(ws.error.is_none());
+    assert!(ws.error.is_none(), "the first click sends nothing");
     click(&ctx, &mut time, "Disconnect now", |ui| {
         ws.connection_ui(ui, &s)
     });
     assert_eq!(ws.error.as_deref(), Some("Open Capture first"));
-    ws.error = None;
-    click(&ctx, &mut time, "Shut down camera…", |ui| {
-        ws.power_ui(ui, &s)
-    });
-    assert_eq!(ws.confirm, Some(Confirm::ShutDown));
-    assert!(ws.error.is_none(), "the first click sends nothing");
-    click(&ctx, &mut time, "Keep it on", |ui| ws.power_ui(ui, &s));
-    assert_eq!(ws.confirm, None);
-    click(&ctx, &mut time, "Shut down camera…", |ui| {
-        ws.power_ui(ui, &s)
-    });
-    click(&ctx, &mut time, "Shut down now", |ui| ws.power_ui(ui, &s));
-    assert_eq!(ws.error.as_deref(), Some("Open Capture first"));
 }
 
-/// A FAULT is drawn in the failure red, with its message; other phases are not.
+/// A fault is drawn in the failure red: the plan's rig step says it, and
+/// the strip's Rig chip is the red diamond (P0 item 4).
 #[test]
 fn a_fault_is_drawn_red() {
     let ctx = egui::Context::default();
@@ -179,33 +145,41 @@ fn a_fault_is_drawn_red() {
     state["editable"] = json!(false);
     state["failure"] = json!({"message":"The camera stopped answering","exposure_uncertain":false,"can_reconnect":true});
     let s = snapshot(state);
-    let out = frame(&ctx, 0.0, vec![], |ui| ws.sequence_ui(ui, &s));
-    assert_eq!(color_of(&out, "FAULT"), Some(FAULT_RED));
+    let (connection, _inbox) = Connection::detached(s.clone());
+    ws.connection = Some(connection);
+    let out = frame(&ctx, 0.0, vec![], |ui| ws.station_inspector(ui));
+    let palette = style::CapturePalette::default();
     assert_eq!(
         color_of(&out, "The camera stopped answering"),
-        Some(FAULT_RED)
+        Some(palette.bad)
     );
-    let s = snapshot(ready());
-    let out = frame(&ctx, 0.1, vec![], |ui| ws.sequence_ui(ui, &s));
-    assert_eq!(color_of(&out, "READY"), Some(GREEN));
+    let blockers = preflight::start_blockers(&s, &ws);
+    let chips = preflight::strip_chips(&s, &blockers);
+    assert_eq!(chips[0].label, "Rig");
+    assert_eq!(chips[0].mark, style::Mark::Bad);
 }
 
-/// A disabled Start says why, with the first pre-flight blocker.
+/// A blocked Start says why: the strip shows the first blocker, and the
+/// plan's Start stays disabled until it is resolved.
 #[test]
 fn start_shows_its_first_blocker() {
     let ctx = egui::Context::default();
     crate::theme::install(&ctx);
     let (_dir, mut ws) = workspace();
     let s = snapshot(ready());
-    let out = frame(&ctx, 0.0, vec![], |ui| ws.sequence_ui(ui, &s));
+    let (connection, _inbox) = Connection::detached(s.clone());
+    ws.connection = Some(connection);
+    let out = frame(&ctx, 0.0, vec![], |ui| ws.station_strip(ui));
     assert!(text_at(&out, "Mark the end of the focus range").is_some());
     let mut state = ready();
     state["end_set"] = json!(true);
     state["planned"] = json!(10);
     let s = snapshot(state);
     assert!(preflight::start_blockers(&s, &ws).is_empty());
-    let out = frame(&ctx, 0.1, vec![], |ui| ws.sequence_ui(ui, &s));
+    ws.connection.as_ref().unwrap().replace(s);
+    let out = frame(&ctx, 0.1, vec![], |ui| ws.station_strip(ui));
     assert!(text_at(&out, "Mark the end of the focus range").is_none());
+    assert!(text_at(&out, "Ready").is_some());
 }
 
 /// The success notice is read once per notice (P0 item 9).

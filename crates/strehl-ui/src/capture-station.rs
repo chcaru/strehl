@@ -59,6 +59,14 @@ pub(crate) struct MarkAt {
     pub since: Instant,
 }
 
+/// A plane's RAW shown in the canvas ("Show" on a retaken plane).
+pub(crate) struct PinnedPlane {
+    pub plane: u64,
+    task: Option<crate::jobs::Task<crate::preview::PreviewImage>>,
+    texture: Option<TextureHandle>,
+    error: Option<String>,
+}
+
 /// The station's views and their state.
 #[derive(Default)]
 pub(crate) struct Station {
@@ -67,7 +75,6 @@ pub(crate) struct Station {
     rail: FocusRail,
     pub live: LiveView,
     pub glance: bool,
-    glance_seen: bool,
     proof: Option<ProofState>,
     pub mark_at: Option<MarkAt>,
     /// The flight rail's ticks and what they were built from.
@@ -77,6 +84,16 @@ pub(crate) struct Station {
     pub calibrated_at: Option<SystemTime>,
     recover_open: bool,
     settings_open: bool,
+    /// The catalog's subjects, for the plan's subject field, and the
+    /// catalog revision they were read at.
+    subjects: Vec<String>,
+    subjects_revision: Option<u64>,
+    /// The names the plan gave captures, by run folder (newest last).
+    named_runs: std::collections::VecDeque<(PathBuf, String, String)>,
+    /// A plane's RAW in the canvas, until dismissed.
+    pinned: Option<PinnedPlane>,
+    /// The checker's journal of a fixture (`--capture-fixture`).
+    fixture_progress: Option<Arc<super::follow::Progress>>,
 }
 
 /// Which screen the station shows.
@@ -99,6 +116,138 @@ impl CaptureWorkspace {
             .as_ref()
             .map(Connection::snapshot)
             .unwrap_or_default()
+    }
+
+    /// The palette the screens draw with (the shell's tokens).
+    pub fn set_palette(&mut self, palette: CapturePalette) {
+        self.station.palette = palette;
+    }
+
+    /// The catalog's subject names, offered by the plan's subject field.
+    pub fn set_subjects(&mut self, subjects: Vec<String>) {
+        self.station.subjects = subjects;
+    }
+
+    /// Whether the subject names were read before catalog `revision`;
+    /// records it as read.
+    pub fn subjects_stale(&mut self, revision: u64) -> bool {
+        let stale = self.station.subjects_revision != Some(revision);
+        self.station.subjects_revision = Some(revision);
+        stale
+    }
+
+    /// Records the plan's names for the capture in `run` (the newest 16).
+    pub(crate) fn remember_names(&mut self, run: PathBuf, subject: String, stack: String) {
+        self.station.named_runs.push_back((run, subject, stack));
+        if self.station.named_runs.len() > 16 {
+            self.station.named_runs.pop_front();
+        }
+    }
+
+    /// The rail's mesh builds and the live view's texture uploads so far
+    /// (performance checks: pointer motion must not add to either).
+    #[allow(dead_code)]
+    pub(crate) fn station_counters(&self) -> (u64, u64) {
+        (self.station.rail.rebuilds, self.station.live.uploads)
+    }
+
+    /// The subject and stack name the plan gave the capture in `run`.
+    pub fn names_for(&self, run: &std::path::Path) -> Option<(String, String)> {
+        self.station
+            .named_runs
+            .iter()
+            .rev()
+            .find(|(r, _, _)| r == run)
+            .map(|(_, subject, stack)| (subject.clone(), stack.clone()))
+    }
+
+    /// The checker's progress: the follower's, or a fixture's.
+    pub(crate) fn station_progress(&self) -> Option<Arc<super::follow::Progress>> {
+        self.follower
+            .as_ref()
+            .map(|f| f.progress_arc())
+            .or_else(|| self.station.fixture_progress.clone())
+    }
+
+    /// The RAW file of `plane` in the run being (or last) followed: its
+    /// first member, as stored on this PC.
+    pub fn plane_raw(&self, plane: u64) -> Option<PathBuf> {
+        let progress = self.station_progress()?;
+        let name = progress.plane(plane)?["names"][0].as_str()?.to_owned();
+        let run = self.follower.as_ref().map(|f| f.run.clone())?;
+        [format!("{name}.straw"), name]
+            .into_iter()
+            .map(|n| run.join(n))
+            .find(|p| p.is_file())
+    }
+
+    /// Shows `path` (a plane's RAW) in the canvas until dismissed: its camera
+    /// preview, read on a worker.
+    pub fn show_plane_raw(&mut self, plane: u64, path: PathBuf) {
+        let task = crate::jobs::spawn_task("strehl-capture-plane", move |cancelled| {
+            crate::source_preview::load_draft_source(&path, 1920, &cancelled)
+        });
+        self.station.pinned = Some(PinnedPlane {
+            plane,
+            task: Some(task),
+            texture: None,
+            error: None,
+        });
+    }
+
+    /// Loads a fixture (`--capture-fixture plan|flight|glance`): the
+    /// station shows it from a connection that sends nothing.
+    pub fn load_fixture(&mut self, name: &str) -> anyhow::Result<()> {
+        use super::fixture::{self, Fixture};
+        let which = Fixture::parse(name)
+            .ok_or_else(|| anyhow::anyhow!("Use --capture-fixture plan, flight or glance"))?;
+        self.connection = Some(Connection::fixture(fixture::snapshot(which)));
+        self.station.plan.subject = "Blue weevil".into();
+        self.station.plan.stack_name = "Dorsal · 2.8×".into();
+        self.test_shot = TestShot::Done {
+            folder: PathBuf::from("fixture"),
+            levels: fixture::test_levels(),
+            taken: fixture::earlier(16),
+        };
+        self.calibration = Calibration::Done(serde_json::json!({"width":50.0,"suggested_step":7,
+            "summary":"Detail stays sharp over about 50 focus units."}));
+        self.station.calibrated_at = Some(fixture::earlier(14));
+        if which != Fixture::Plan {
+            self.station.fixture_progress = Some(Arc::new(fixture::progress()));
+            let image = fixture::subject_image(960, 640, 0.8);
+            let rgba = image.pixels.iter().flat_map(|p| p.to_array()).collect();
+            let update = ProofUpdate {
+                draft: crate::draft_preview::DraftPreview {
+                    image: crate::preview::PreviewImage {
+                        path: PathBuf::from("fixture"),
+                        source_size: [960, 640],
+                        size: [960, 640],
+                        rgba,
+                        is_overview: true,
+                    },
+                    source_frames: 61,
+                    aligned_frames: 61,
+                    skipped_frames: 0,
+                    alignment_edges: 0,
+                    cycle_rank: 0,
+                    reference_frame: 30,
+                    warnings: Vec::new(),
+                },
+                received: 61,
+                used: 61,
+                stride: 1,
+                revision: 1,
+            };
+            self.station.proof = Some(ProofState {
+                run: PathBuf::from("fixture"),
+                job: ProofJob::start(),
+                latest: Some(Box::new(update)),
+                texture: None,
+                error: None,
+            });
+        }
+        self.station.glance = which == Fixture::Glance;
+        Ok(())
     }
 
     /// Plan, or flight while a capture runs or is paused.
@@ -125,15 +274,6 @@ impl CaptureWorkspace {
         self.station.glance = true;
     }
 
-    pub(super) fn station_glance_seen(&self) -> bool {
-        self.station.glance_seen
-    }
-
-    pub(super) fn open_glance_once(&mut self) {
-        self.station.glance_seen = true;
-        self.station.glance = true;
-    }
-
     /// The shell's rig popover was asked for from the plan.
     #[allow(dead_code)]
     pub fn take_open_rig(&mut self) -> bool {
@@ -151,15 +291,15 @@ impl CaptureWorkspace {
     pub fn station_hints(&self) -> StationHints {
         let s = self.station_snapshot();
         let note = if s.fresh() {
-            format!(
-                "Camera host online · {} · {}",
-                if s.receiver["ok"] == true {
-                    "receiver ready"
-                } else {
-                    "receiver not ready"
-                },
-                s.receiver["folder"].as_str().unwrap_or("")
-            )
+            let receiver = if s.receiver["ok"] == true {
+                "receiver ready"
+            } else {
+                "receiver not ready"
+            };
+            match s.receiver["folder"].as_str().filter(|f| !f.is_empty()) {
+                Some(folder) => format!("Camera host online · {receiver} · {folder}"),
+                None => format!("Camera host online · {receiver}"),
+            }
         } else {
             "Camera host offline".into()
         };
@@ -184,6 +324,11 @@ impl CaptureWorkspace {
 
     /// Advances the proof and a dragged bound; called with the other polls.
     pub(super) fn poll_station(&mut self, s: &Snapshot) {
+        // The lens and the plan as the host holds them, before painting.
+        self.observe_focus(s);
+        if let Some(plan) = s.host.plan.clone() {
+            self.sync_plan(plan, s.host.plan_revision.unwrap_or(0));
+        }
         // The proof follows the capture being written (not a test shot).
         if let Some(run) = s
             .in_progress
@@ -202,6 +347,25 @@ impl CaptureWorkspace {
                 texture: None,
                 error: None,
             });
+        }
+        if let Some(run) = s
+            .in_progress
+            .as_ref()
+            .filter(|r| !r.test && s.host.phase.capturing())
+            && !self
+                .station
+                .named_runs
+                .iter()
+                .any(|(r, _, _)| *r == run.folder)
+        {
+            let (subject, stack) = (
+                self.station.plan.subject.trim().to_owned(),
+                self.station.plan.stack_name.trim().to_owned(),
+            );
+            if !subject.is_empty() || !stack.is_empty() {
+                let folder = run.folder.clone();
+                self.remember_names(folder, subject, stack);
+            }
         }
         if let Some(proof) = &mut self.station.proof {
             match proof.job.poll() {
@@ -295,20 +459,38 @@ impl CaptureWorkspace {
     pub fn station_canvas(&mut self, ui: &mut Ui) {
         let s = self.station_snapshot();
         let palette = self.station.palette;
+        self.shown = true;
+        // An offscreen screenshot waits for the state that was drawn.
+        self.painted_ready = (!s.receiver.is_null() || s.receiver_error.is_some())
+            && ((s.observed.is_some() && (s.preview.is_some() || !s.host.preview.available))
+                || s.connection_error.is_some()
+                || self.config.controller.is_empty());
+        self.station_canvas_body(ui, &s, &palette);
+        // A focus target from the rail or a dragged bound goes out once the
+        // camera is free (the canvas is the station's last slot).
+        self.flush_focus(&s);
+    }
+
+    fn station_canvas_body(&mut self, ui: &mut Ui, s: &Snapshot, palette: &CapturePalette) {
+        let palette = palette.on_canvas();
+        if self.station.pinned.is_some() {
+            self.pinned_canvas(ui, &palette);
+            return;
+        }
         match self.station_mode() {
             StationMode::Plan => {
-                let intents = self.station.live.show(ui, &s, &palette);
+                let intents = self.station.live.show(ui, s, &palette);
                 for intent in intents {
-                    self.apply_live(&s, intent);
+                    self.apply_live(s, intent);
                 }
             }
             StationMode::Flight => {
                 let proof = self.proof_texture(ui.ctx());
-                self.station.live.sync_textures(ui.ctx(), &s, &palette);
+                self.station.live.sync_textures(ui.ctx(), s, &palette);
                 let latest = self.station.live.preview_texture();
-                let progress = self.follower.as_ref().map(|f| f.progress_arc());
+                let progress = self.station_progress();
                 let inputs = FlightInputs {
-                    s: &s,
+                    s,
                     progress: progress.as_deref(),
                     checking: self.follow_enabled,
                     proof,
@@ -319,10 +501,96 @@ impl CaptureWorkspace {
                 };
                 let intents = flight::canvas(ui, &inputs, &palette);
                 for intent in intents {
-                    self.apply_flight(&s, intent);
+                    self.apply_flight(s, intent);
                 }
             }
         }
+    }
+
+    /// A plane's RAW in the canvas, with the way back to the live view.
+    fn pinned_canvas(&mut self, ui: &mut Ui, palette: &CapturePalette) {
+        let rect = ui.max_rect();
+        ui.painter().rect_filled(rect, 0.0, palette.surround);
+        let Some(pinned) = &mut self.station.pinned else {
+            return;
+        };
+        if let Some(task) = &pinned.task
+            && let Ok(result) = task.receiver.try_recv()
+        {
+            pinned.task = None;
+            match result {
+                Ok(image) => {
+                    let color = egui::ColorImage::from_rgba_unmultiplied(image.size, &image.rgba);
+                    pinned.texture = Some(ui.ctx().load_texture(
+                        "capture-plane-raw",
+                        color,
+                        TextureOptions::LINEAR,
+                    ));
+                }
+                Err(e) => pinned.error = Some(e),
+            }
+        }
+        let photo = super::live::photo_rect(rect, 1.5);
+        let p = ui.painter();
+        p.rect_filled(photo, 0.0, egui::Color32::BLACK);
+        if let Some(t) = &pinned.texture {
+            let size = t.size_vec2();
+            let scale = (photo.width() / size.x).min(photo.height() / size.y);
+            p.image(
+                t.id(),
+                Rect::from_center_size(photo.center(), size * scale),
+                Rect::from_min_max(egui::Pos2::ZERO, egui::pos2(1.0, 1.0)),
+                egui::Color32::WHITE,
+            );
+        } else if pinned.task.is_some() {
+            ui.ctx().request_repaint_after(Duration::from_millis(100));
+        }
+        let caption = match &pinned.error {
+            Some(e) => format!("Plane {} · {e}", pinned.plane),
+            None => format!(
+                "Plane {} · from its RAW's camera preview, not the RAW stack",
+                pinned.plane
+            ),
+        };
+        super::style::paint_job(
+            p,
+            photo.left_top() - egui::vec2(0.0, 8.0),
+            egui::Align2::LEFT_BOTTOM,
+            super::style::caps_job(&caption, 10.5, palette.ink2),
+        );
+        let back = Rect::from_min_size(
+            photo.right_top() + egui::vec2(-130.0, -30.0),
+            egui::vec2(130.0, 24.0),
+        );
+        let mut close = false;
+        ui.scope_builder(egui::UiBuilder::new().max_rect(back), |ui| {
+            close = super::style::button_sized(
+                ui,
+                "Back to the capture",
+                super::style::ButtonKind::Plain,
+                back.size(),
+                true,
+                palette,
+            )
+            .clicked();
+        });
+        if close || ui.input(|i| i.key_pressed(egui::Key::Escape)) {
+            self.station.pinned = None;
+        }
+    }
+
+    /// Glance mode, drawn over the whole window (top bar and hint bar
+    /// included), as the mockup's bare screen.
+    pub fn station_glance_overlay(&mut self, ctx: &egui::Context) {
+        let screen = ctx.content_rect();
+        egui::Area::new(egui::Id::new("capture-glance"))
+            .order(egui::Order::Foreground)
+            .fixed_pos(screen.min)
+            .show(ctx, |ui| {
+                ui.set_min_size(screen.size());
+                let mut child = ui.new_child(egui::UiBuilder::new().max_rect(screen));
+                self.station_glance(&mut child);
+            });
     }
 
     /// The focus rail, in the rail's slot.
@@ -332,7 +600,7 @@ impl CaptureWorkspace {
         let palette = self.station.palette;
         let flight_mode = self.station_mode() == StationMode::Flight;
         let (start, end) = host.plan_bounds();
-        let progress = self.follower.as_ref().map(|f| f.progress_arc());
+        let progress = self.station_progress();
         let ticks = flight_mode.then(|| {
             let step = host.plan.as_ref().map_or(1, |p| p.step);
             // Rebuilt only when a plane's state can have changed.
@@ -412,6 +680,7 @@ impl CaptureWorkspace {
                         power_down: s.host.power.as_ref().map(|p| p.manage_stack),
                     },
                     engine: self.engine.is_some(),
+                    subjects: &self.station.subjects,
                 };
                 let mut intents = self.station.plan.show(ui, &inputs, &palette);
                 // T takes a test shot; Enter starts a ready plan.
@@ -430,7 +699,7 @@ impl CaptureWorkspace {
                 }
             }
             StationMode::Flight => {
-                let progress = self.follower.as_ref().map(|f| f.progress_arc());
+                let progress = self.station_progress();
                 let inputs = FlightInputs {
                     s: &s,
                     progress: progress.as_deref(),
@@ -455,7 +724,7 @@ impl CaptureWorkspace {
         let s = self.station_snapshot();
         let palette = self.station.palette;
         let proof = self.proof_texture(ui.ctx()).map(|(id, size, _)| (id, size));
-        let progress = self.follower.as_ref().map(|f| f.progress_arc());
+        let progress = self.station_progress();
         let received = self
             .station
             .proof
@@ -532,14 +801,24 @@ impl CaptureWorkspace {
         }
         if self.station.settings_open {
             let mut open = true;
-            egui::Window::new("Camera host connection")
+            egui::Window::new("Captures, storage and connection")
                 .open(&mut open)
                 .collapsible(false)
+                .default_width(360.0)
                 .show(ctx, |ui| {
-                    self.connection_ui(ui, s);
+                    egui::ScrollArea::vertical()
+                        .max_height(620.0)
+                        .show(ui, |ui| {
+                            self.connection_ui(ui, s);
+                            ui.separator();
+                            self.storage_ui(ui, s);
+                            ui.separator();
+                            self.completed_ui(ui, s, true);
+                        });
                 });
             self.station.settings_open &= open;
         }
+        self.phone_ui(ctx);
         if self.schedule_ui.editing() {
             let blockers = preflight::start_blockers(s, self);
             let mut cmd = None;
@@ -643,6 +922,7 @@ impl CaptureWorkspace {
                 }
             }
             PlanIntent::Schedule => self.schedule_ui.open(s),
+            PlanIntent::OpenSettings => self.station.settings_open = true,
             PlanIntent::Fix(fix) => self.apply_fix(s, fix),
         }
     }

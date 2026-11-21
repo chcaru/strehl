@@ -944,6 +944,10 @@ impl StrehlApp {
         );
         let ui = &mut strip;
         ui.spacing_mut().item_spacing = egui::vec2(6.0, 0.0);
+        if self.shell.navigator.station() == Station::Capture {
+            self.capture_hints(ui);
+            return;
+        }
         for (keys, text) in hints(self.shell.navigator.station()) {
             for key in *keys {
                 w::key_cap(ui, key);
@@ -1037,6 +1041,11 @@ impl StrehlApp {
                 self.go_station(Station::Capture);
             }
             RigAction::Command(command) => {
+                // Shutting the camera down or disconnecting it asks first.
+                if self.capture_needs_confirm(&command.command()) {
+                    egui::Popup::close_all(ctx);
+                    return;
+                }
                 let snapshot = self.capture.snapshot();
                 let result = rig_status::request(&snapshot, command.command())
                     .and_then(|request| self.capture.submit(request));
