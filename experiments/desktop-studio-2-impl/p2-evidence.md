@@ -373,8 +373,12 @@ placebo, on both folds:
 - 1,444 planes: `7fc03ae4…`, `edd7d809…`.
 
 The result TIFF differs from round 1's `61effa01b` hash by 6 container bytes. Its pixel array and
-the master are identical (MEASURED, 3-plane render), and the integration head without this work
-already shows it. So it comes from another phase's merge, not from P2.
+the master are identical (MEASURED, 3-plane render). Correction after a follow-up check: the 6
+bytes are `-dirty` in TIFF tag 305 (Software). This round's engines were built from a worktree
+with uncommitted changes, so the build stamp gained the suffix. No phase changed the format:
+with `STREHL_BUILD_ID` forced to one value, `61effa01b` and `11b64893a` give byte-identical
+result and master (MEASURED). The `--srgb` result embeds the commit by design, so comparisons
+across builds must force a common `STREHL_BUILD_ID`.
 
 `verify-ui-progress.py` now passes in full (alignment, merge and bytes) on the current engine, 3
 planes, CPU fold: on, off and placebo `49afb7d0…`. Its two stale alignment checks are fixed
