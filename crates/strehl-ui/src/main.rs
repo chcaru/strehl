@@ -38,10 +38,10 @@ mod draft_preview;
 #[path = "edit-workspace.rs"]
 mod edit_workspace;
 mod engine;
-#[path = "export-presets.rs"]
-mod export_presets;
 #[path = "evidence-file.rs"]
 mod evidence_file;
+#[path = "export-presets.rs"]
+mod export_presets;
 #[path = "hdr-display.rs"]
 mod hdr_display;
 #[path = "image-gesture.rs"]
@@ -118,8 +118,6 @@ mod source_browser;
 mod source_preview;
 #[path = "stack-map.rs"]
 mod stack_map;
-#[path = "subject-page.rs"]
-mod subject_page;
 #[path = "studio-fonts.rs"]
 mod studio_fonts;
 #[path = "studio-preferences.rs"]
@@ -128,6 +126,8 @@ mod studio_preferences;
 mod studio_theme;
 #[path = "studio-widgets.rs"]
 mod studio_widgets;
+#[path = "subject-page.rs"]
+mod subject_page;
 mod theme;
 #[path = "ui-icon.rs"]
 mod ui_icon;
