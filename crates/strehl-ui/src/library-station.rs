@@ -90,6 +90,12 @@ pub(crate) enum LibraryIntent {
     ReviewStorage,
     /// Back from a subject to the library.
     Back,
+    /// Stack this stack with its saved recipe: at once when nothing renders,
+    /// else next in the stack queue.
+    QueueStack(NodeId),
+    /// Stack every stack of this subject that has no render yet, through
+    /// the stack queue.
+    QueueSubject(NodeId),
 }
 
 /// The running capture, as the shell describes it.
@@ -123,6 +129,10 @@ pub(crate) struct LibraryInputs<'a> {
     pub palette: &'a LibraryPalette,
     pub rig: Option<&'a RigCapture>,
     pub storage: Option<&'a StorageCard>,
+    /// Depth signatures by subject (its newest render), for list rows.
+    pub signatures: Option<&'a HashMap<NodeId, Vec<f32>>>,
+    /// A stack is rendering: stacking more waits in the queue.
+    pub stacking: bool,
 }
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
@@ -506,6 +516,9 @@ pub(crate) struct LibraryStation {
     last_offset: f32,
     scrolling_up: bool,
     stats: LibraryStats,
+    /// List rows painted in the last frame (their signatures are wanted).
+    painted: Vec<NodeId>,
+    sparks: paint::SparkCache,
 }
 
 impl LibraryStation {
@@ -521,6 +534,10 @@ impl LibraryStation {
             (Some(model), Some((_, list))) => list.iter().map(|&i| model.cards[i].id).collect(),
             _ => Vec::new(),
         }
+    }
+    /// Subjects whose list rows were painted in the last frame.
+    pub(crate) fn painted_rows(&self) -> &[NodeId] {
+        &self.painted
     }
     /// The latest sources check, for the subject page.
     pub(crate) fn sources(&self) -> &HashMap<NodeId, SourcesState> {
@@ -571,6 +588,8 @@ impl LibraryStation {
             palette,
             rig,
             storage,
+            signatures,
+            stacking,
         } = inputs;
         let ctx = ui.ctx().clone();
         previews.poll(&ctx);
@@ -598,7 +617,15 @@ impl LibraryStation {
             Pos2::new(main.left() + PAD_X, top),
             Pos2::new(main.right() - PAD_X, main.bottom()),
         );
-        intent = intent.or(self.grid(ui, grid, previews, palette, rig, now));
+        intent = intent.or(self.grid(
+            ui,
+            grid,
+            previews,
+            palette,
+            rig,
+            (now, stacking),
+            signatures,
+        ));
         intent = intent.or(self.menu(ui, palette));
         intent = intent.or(self.keys(ui));
         intent = intent.or(self.drops(ui, main, palette));
@@ -1094,6 +1121,7 @@ impl LibraryStation {
         intent
     }
 
+    #[allow(clippy::too_many_arguments)]
     fn grid(
         &mut self,
         ui: &mut Ui,
@@ -1101,8 +1129,10 @@ impl LibraryStation {
         previews: &mut LibraryPreviews,
         palette: &LibraryPalette,
         rig: Option<&RigCapture>,
-        now: u64,
+        (now, stacking): (u64, bool),
+        signatures: Option<&HashMap<NodeId, Vec<f32>>>,
     ) -> Option<LibraryIntent> {
+        self.painted.clear();
         let (Some(model), Some((list_key, list))) = (&self.model, &self.list) else {
             return None;
         };
@@ -1138,6 +1168,8 @@ impl LibraryStation {
         let selected = self.selected;
         let view = self.view;
         let sources = &self.sources;
+        let sparks = &mut self.sparks;
+        let painted_rows = &mut self.painted;
         let mut offset = self.last_offset;
         ui.scope_builder(egui::UiBuilder::new().max_rect(grid), |ui| {
             egui::ScrollArea::vertical()
@@ -1174,13 +1206,25 @@ impl LibraryStation {
                                 moved,
                                 selected: selected == Some(card.id),
                                 now,
+                                stacking,
                             };
                             let found = match view {
                                 LibraryView::Grid => {
                                     paint_card(ui, rect, card, texture.as_ref(), state, palette)
                                 }
                                 LibraryView::List => {
-                                    paint_row(ui, rect, card, texture.as_ref(), state, palette)
+                                    painted_rows.push(card.id);
+                                    let signature =
+                                        signatures.and_then(|s| s.get(&card.id)).map(Vec::as_slice);
+                                    paint_row(
+                                        ui,
+                                        rect,
+                                        card,
+                                        texture.as_ref(),
+                                        state,
+                                        palette,
+                                        (sparks, signature),
+                                    )
                                 }
                             };
                             intent = intent.take().or(found);
@@ -1614,6 +1658,34 @@ struct CardState {
     moved: Option<NodeId>,
     selected: bool,
     now: u64,
+    /// A stack is rendering (the menu says "Stack next").
+    stacking: bool,
+}
+
+/// Right-click on a subject with stacks to stack: stack them now, or next
+/// in the queue while another stack renders.
+fn stack_menu(
+    response: &egui::Response,
+    card: &SubjectCard,
+    state: CardState,
+) -> Option<LibraryIntent> {
+    if card.summary.to_stack == 0 || state.capturing {
+        return None;
+    }
+    let mut intent = None;
+    response.context_menu(|ui| {
+        let what = paint::plural(card.summary.to_stack, "stack", "stacks");
+        let label = if state.stacking {
+            format!("Stack next · {what}")
+        } else {
+            format!("Stack · {what}")
+        };
+        if ui.button(label).clicked() {
+            intent = Some(LibraryIntent::QueueSubject(card.id));
+            ui.close();
+        }
+    });
+    intent
 }
 
 /// The four bars' colours and the next-step words for a subject.
@@ -1776,6 +1848,9 @@ fn paint_card(
     {
         return Some(LibraryIntent::Locate(stack));
     }
+    if let Some(intent) = stack_menu(&response, card, state) {
+        return Some(intent);
+    }
     (response.clicked() || response.double_clicked()).then_some(LibraryIntent::OpenSubject(card.id))
 }
 
@@ -1810,6 +1885,7 @@ fn paint_row(
     texture: Option<&TextureHandle>,
     state: CardState,
     palette: &LibraryPalette,
+    (sparks, signature): (&mut paint::SparkCache, Option<&[f32]>),
 ) -> Option<LibraryIntent> {
     if !ui.is_rect_visible(rect) {
         return None;
@@ -1879,6 +1955,17 @@ fn paint_row(
             accent,
             palette,
         );
+    }
+    // The newest render's depth signature, between the words and the badge.
+    let spark = Rect::from_min_size(
+        Pos2::new(rect.right() - 200.0 - 24.0 - 200.0, rect.top() + 18.0),
+        Vec2::new(200.0, 40.0),
+    );
+    if spark.left() > words_rect.right() + 16.0 {
+        paint::spark(&painter, spark, sparks, card.id, signature, palette);
+    }
+    if let Some(intent) = stack_menu(&response, card, state) {
+        return Some(intent);
     }
     response
         .clicked()

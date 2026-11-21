@@ -681,3 +681,117 @@ fn offscreen_library_rig_and_subject_pictures() {
         eprintln!("wrote {}", png.display());
     }
 }
+
+/// A catalog whose subject has one stack with a saved render whose log
+/// carries level-0 gate maps for its three planes, and one stack never
+/// stacked.
+fn signature_catalog(
+    root: &std::path::Path,
+) -> (crate::workspace_history::Catalog, NodeId, NodeId, NodeId) {
+    use crate::workspace_history::{Catalog, Run, StackDraft};
+    let mut catalog = Catalog::default();
+    let project = catalog.create_project("Insects").unwrap();
+    let subject = catalog.create_subject(project, "Weevil").unwrap();
+    let directory = root.join("strehl-1-1-1");
+    std::fs::create_dir_all(&directory).unwrap();
+    let log = directory.join("render.log");
+    let mut text = String::from("STREHL_UI_PROGRESS event=stage name=merge total=3\n");
+    for (sequence, (frame, data)) in [(0, "ffff"), (1, "ff00"), (2, "0000")].iter().enumerate() {
+        text.push_str(&format!(
+            "STREHL_UI_PROGRESS event=diagnostic seq={} frame={frame} level=0 kind=gate-support scope=frame scale=linear width=2 height=1 min=0 max=1 folded=1 total=3 sampling=nearest data={data}\n",
+            sequence + 1
+        ));
+    }
+    std::fs::write(&log, text).unwrap();
+    let run = Run {
+        directory: directory.clone(),
+        source: root.join("captures/dorsal"),
+        output: directory.join("result.tiff"),
+        log,
+        label: "dorsal".into(),
+        created: 100,
+        status: "Saved".into(),
+        frames: 3,
+        sources: Vec::new(),
+        settings: Default::default(),
+        exposure: None,
+        gate: None,
+        workers: 1,
+        pinned: false,
+        imported: None,
+    };
+    let stacked = catalog
+        .create_stack(subject, "Dorsal", StackDraft::from_run(&run))
+        .unwrap();
+    catalog.add_revision(stacked, run).unwrap();
+    let fresh = catalog
+        .create_stack(subject, "Lateral", draft("/captures/weevil/lateral", 1_000))
+        .unwrap();
+    (catalog, subject, stacked, fresh)
+}
+
+#[test]
+fn subject_and_list_rows_get_their_signatures_from_a_worker_when_no_stack_renders() {
+    let files = tempfile::tempdir().unwrap();
+    let (catalog, subject, stacked, _) = signature_catalog(files.path());
+    let ctx = context();
+    let mut app = app_with(catalog);
+    app.library_intent(&ctx, LibraryIntent::OpenSubject(subject));
+    let colour = LibraryPalette::from_tokens(&studio_theme::tokens(&ctx))
+        .ok
+        .gamma_multiply(0.75);
+    let bars = |out: &egui::FullOutput| {
+        out.shapes
+            .iter()
+            .filter(|s| matches!(&s.shape, egui::Shape::Rect(r) if r.fill == colour))
+            .count()
+    };
+    let out = frame(&mut app, &ctx, 0.0, vec![]);
+    assert_eq!(bars(&out), 0, "nothing until the worker has read the run");
+    assert!(app.library.signatures.pending(), "the painted row asked");
+    assert!(app.library_loading(), "offscreen pictures wait for it");
+    tick_until(&mut app, &ctx, |app| !app.library.signatures.pending());
+    let out = frame(&mut app, &ctx, 0.1, vec![]);
+    // Planes 0 and 1 have evidence above zero; plane 2 was observed at zero.
+    assert_eq!(bars(&out), 2);
+    assert_eq!(
+        app.library.signatures.stacks().get(&stacked),
+        Some(&vec![1.0, 0.5, 0.0])
+    );
+    assert_eq!(app.library.signatures.computed, 1);
+    // The list view shows the subject's newest render from the cache.
+    app.library_intent(&ctx, LibraryIntent::Back);
+    app.library.station.view = crate::library_station::LibraryView::List;
+    let out = frame(&mut app, &ctx, 0.2, vec![]);
+    assert_eq!(bars(&out), 2);
+    assert!(!app.library.signatures.pending());
+    assert_eq!(app.library.signatures.computed, 1, "computed once");
+}
+
+#[test]
+fn stack_and_stack_next_go_through_the_queue() {
+    let files = tempfile::tempdir().unwrap();
+    let (catalog, subject, stacked, fresh) = signature_catalog(files.path());
+    let ctx = context();
+    let mut app = app_with(catalog);
+    app.engine = Some(files.path().join("engine.exe"));
+    app.output = files.path().join("results");
+    // Keep what is queued waiting, so the test reads the queue itself.
+    app.activity_hub.queue.paused = true;
+    // Right-click "Stack": only the stack without a render.
+    app.library_intent(&ctx, LibraryIntent::QueueSubject(subject));
+    assert_eq!(app.activity_hub.queue.stacks().collect::<Vec<_>>(), [fresh]);
+    // Again: nothing new; it already waits.
+    app.library_intent(&ctx, LibraryIntent::QueueSubject(subject));
+    assert_eq!(app.activity_hub.queue.stacks().count(), 1);
+    // A row's Stack queues that stack with its saved recipe.
+    app.library_intent(&ctx, LibraryIntent::QueueStack(stacked));
+    assert_eq!(
+        app.activity_hub.queue.stacks().collect::<Vec<_>>(),
+        [fresh, stacked]
+    );
+    // The subject page shows both rows as queued.
+    app.library_intent(&ctx, LibraryIntent::OpenSubject(subject));
+    let out = frame(&mut app, &ctx, 0.0, vec![]);
+    assert_eq!(texts(&out).iter().filter(|(t, _)| t == "QUEUED").count(), 2);
+}

@@ -14,6 +14,71 @@ use eframe::egui::{
 };
 use std::sync::Arc;
 
+/// A depth series' identity (address, length) and the drawn width.
+pub(crate) type SparkKey = (usize, usize, u32);
+/// Pooled sparks by row.
+pub(crate) type SparkCache = std::collections::HashMap<u64, (SparkKey, Vec<f32>)>;
+
+/// A depth signature as a spark: a baseline, then the series pooled to at
+/// most one column per 2 px (the tallest value in each), scaled to its own
+/// peak, as square bars. Negative values (no evidence) draw nothing. The
+/// pooled columns are cached per row, series identity and width; returns
+/// whether they were built this call.
+pub(crate) fn spark(
+    painter: &Painter,
+    rect: Rect,
+    cache: &mut SparkCache,
+    row: u64,
+    series: Option<&[f32]>,
+    palette: &LibraryPalette,
+) -> bool {
+    hline(
+        painter,
+        rect.left()..=rect.right(),
+        rect.bottom() - 1.0,
+        palette.line_2,
+    );
+    let Some(series) = series.filter(|s| !s.is_empty()) else {
+        return false;
+    };
+    let columns = ((rect.width() / 2.0) as usize).clamp(1, series.len());
+    let key = (series.as_ptr() as usize, series.len(), rect.width() as u32);
+    let built = cache.get(&row).is_none_or(|(k, _)| *k != key);
+    if built {
+        let mut pooled = vec![0.0f32; columns];
+        for (index, value) in series.iter().enumerate() {
+            let column = index * columns / series.len();
+            pooled[column] = pooled[column].max(value.max(0.0));
+        }
+        let peak = pooled
+            .iter()
+            .copied()
+            .fold(0.0f32, f32::max)
+            .max(f32::EPSILON);
+        pooled.iter_mut().for_each(|v| *v /= peak);
+        cache.insert(row, (key, pooled));
+    }
+    let pooled = &cache[&row].1;
+    let step = rect.width() / pooled.len() as f32;
+    let color = palette.ok.gamma_multiply(0.75);
+    for (index, value) in pooled.iter().enumerate() {
+        if *value <= 0.0 {
+            continue;
+        }
+        let x = rect.left() + index as f32 * step;
+        let height = (rect.height() - 2.0) * value;
+        painter.rect_filled(
+            Rect::from_min_max(
+                Pos2::new(x, rect.bottom() - 1.0 - height),
+                Pos2::new(x + (step - 1.0).max(1.0), rect.bottom() - 1.0),
+            ),
+            CornerRadius::ZERO,
+            color,
+        );
+    }
+    built
+}
+
 /// The screens' colours (mockup `base.css`, Graphite). The shell converts its
 /// theme tokens into this; nothing here reads the global theme.
 #[derive(Clone, Copy, Debug, PartialEq)]

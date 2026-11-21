@@ -33,6 +33,8 @@ mod controls;
 mod core_sample;
 #[path = "depth-rail.rs"]
 mod depth_rail;
+#[path = "depth-signature.rs"]
+mod depth_signature;
 #[path = "develop-presets.rs"]
 mod develop_presets;
 #[path = "develop-station.rs"]

@@ -205,6 +205,10 @@ impl StackQueue {
         self.touch();
         Ok(id)
     }
+    /// The stacks waiting, in order.
+    pub(crate) fn stacks(&self) -> impl Iterator<Item = NodeId> + '_ {
+        self.items.iter().map(|item| item.stack)
+    }
     /// Whether `stack` already waits with the same render.
     pub(crate) fn waiting_same(&self, stack: NodeId, request: &FrozenRequest) -> bool {
         self.items
