@@ -480,3 +480,34 @@ fn benchmark_stack_station_pointer_sweeps() {
         );
     }
 }
+
+#[test]
+fn develop_and_export_show_the_photograph_alone_and_the_footer_offers_render_again() {
+    let ctx = context();
+    let mut app = finished_app(&ctx);
+    frame(&mut app, &ctx, 0.0, vec![]);
+    let stack = frame(&mut app, &ctx, 0.1, vec![]);
+    let shown = texts(&stack);
+    assert!(shown.iter().any(|text| text == "Develop this render"));
+    assert!(shown.iter().any(|text| text == "Render again"));
+    for station in [Station::Develop, Station::Export] {
+        app.go_station(station);
+        frame(&mut app, &ctx, 0.2, vec![]);
+        let output = frame(&mut app, &ctx, 0.3, vec![]);
+        let shown = texts(&output);
+        for legacy in [
+            "CAPTURE / ADMITTED SAMPLES",
+            "PHOTOGRAPH / EDIT",
+            "YOUR PHOTOGRAPH",
+        ] {
+            assert!(
+                !shown.iter().any(|text| text.contains(legacy)),
+                "{station:?} shows only the photograph, not {legacy}"
+            );
+        }
+        assert!(
+            app.process_space.edit_mapping().is_some(),
+            "overlays still map onto it"
+        );
+    }
+}

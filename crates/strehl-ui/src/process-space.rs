@@ -105,6 +105,10 @@ impl ProcessSpace {
     pub(crate) fn set_inspection(&mut self, hover: Option<usize>, held: Option<usize>) {
         self.theater.set_inspection(hover, held);
     }
+    /// Develop and Export: the photograph alone fills the canvas.
+    pub(crate) fn set_photograph_only(&mut self, only: bool) {
+        self.theater.photograph_only = only;
+    }
     pub(crate) fn set_instant_inspection(&mut self, instant: bool) {
         self.theater.instant_inspection = instant;
     }
@@ -349,6 +353,13 @@ impl ProcessSpace {
             return response;
         }
         self.session_contacts.clear();
+        if self.theater.photograph_only && input.progress.stage == Stage::Complete {
+            // Develop and Export: no journey, timeline or margins.
+            self.theater
+                .show_with_ribbon(ui, scene, &input, &mut response, None);
+            self.theater.update_balance(ui.ctx(), None, None);
+            return response;
+        }
         if input.standalone_photo() {
             self.theater
                 .show_with_ribbon(ui, scene.shrink(12.0), &input, &mut response, None);

@@ -88,6 +88,9 @@ pub(crate) struct ProcessTheater {
     /// The Stack station shows inspection in place, with no relayout and no
     /// 0.24 s workspace animation (spec 7.2). The engine room keeps it.
     pub(crate) instant_inspection: bool,
+    /// Develop and Export: only the photograph on the canvas (its editor
+    /// overlays draw on top), with no timeline, instruments or captions.
+    pub(crate) photograph_only: bool,
     source_relation_rect: Option<Rect>,
     source_axis_bounds: Option<Rect>,
     review_hover: Option<usize>,
@@ -174,6 +177,7 @@ impl Default for ProcessTheater {
             returning_source: None,
             inspection_mix: 0.0,
             instant_inspection: false,
+            photograph_only: false,
             source_relation_rect: None,
             source_axis_bounds: None,
             review_hover: None,
@@ -898,6 +902,7 @@ impl ProcessTheater {
                 edit_focus: self.edit_focus,
                 edit_workspace: self.edit_workspace,
                 instant_inspection: self.instant_inspection,
+                photograph_only: self.photograph_only,
                 ..Default::default()
             };
             self.set_photo_paint(photo_paint);
@@ -972,7 +977,7 @@ impl ProcessTheater {
             self.pin = self.scales.pin();
         }
         let pending_view = self.requested_view.map(|_| self.scales.target_view());
-        let standalone = input.standalone_photo();
+        let standalone = input.standalone_photo() || self.photograph_only;
         if input.progress.stage == Stage::Complete && self.last_stage != Stage::Complete {
             self.enlarged = None;
         }
@@ -1065,7 +1070,7 @@ impl ProcessTheater {
             if self.edit_workspace && self.edit_focus {
                 target.1.min.y = rect.top();
             } else if standalone {
-                target.1.min.y = rect.top() + 24.0;
+                target.1.min.y = rect.top() + if self.photograph_only { 0.0 } else { 24.0 };
             }
             let blend = |from: Rect, to: Rect| {
                 Rect::from_min_max(
@@ -2658,7 +2663,9 @@ impl ProcessTheater {
     fn finished_photograph(&mut self, ui: &mut Ui, rect: Rect, image_box: Rect, input: &Input<'_>) {
         self.result_photo.set_edit_navigation(self.editing_canvas());
         self.result_photo.suppress_diagnostics(
-            input.progress.source_repair.is_some() || input.standalone_photo(),
+            input.progress.source_repair.is_some()
+                || input.standalone_photo()
+                || self.photograph_only,
         );
         let p = ui.painter_at(rect);
         let multiple = self.participation.has_ranges();
@@ -2696,33 +2703,39 @@ impl ProcessTheater {
                 None => "YOUR PHOTOGRAPH / LINKED INSPECTION".into(),
             }
         };
-        text(
-            &p.with_clip_rect(Rect::from_min_max(
-                rect.min,
-                egui::pos2(rect.right() - 88.0, rect.top() + 28.0),
-            )),
-            rect.min + egui::vec2(10.0, 8.0),
-            &label,
-            9.0,
-            if self.participation_frame.is_some() {
-                GREEN
-            } else {
-                ACCENT
-            },
-        );
+        if !self.photograph_only {
+            text(
+                &p.with_clip_rect(Rect::from_min_max(
+                    rect.min,
+                    egui::pos2(rect.right() - 88.0, rect.top() + 28.0),
+                )),
+                rect.min + egui::vec2(10.0, 8.0),
+                &label,
+                9.0,
+                if self.participation_frame.is_some() {
+                    GREEN
+                } else {
+                    ACCENT
+                },
+            );
+        }
         let fit_button = Rect::from_min_size(
             egui::pos2(rect.right() - 78.0, rect.top() + 7.0),
             egui::vec2(68.0, 19.0),
         );
-        let fit_hit = ui.interact(fit_button, ui.id().with("result-scene"), Sense::click());
-        p.text(
-            fit_button.center(),
-            Align2::CENTER_CENTER,
-            format!("{:.1}× · Scene", self.scales.aperture().width().recip()),
-            FontId::monospace(8.0),
-            if fit_hit.hovered() { INK } else { MUTED },
-        );
-        if self.annotating_canvas() && fit_hit.clicked() {
+        // Develop and Export own their own Fit control in the strip.
+        let fit_clicked = !self.photograph_only && {
+            let fit_hit = ui.interact(fit_button, ui.id().with("result-scene"), Sense::click());
+            p.text(
+                fit_button.center(),
+                Align2::CENTER_CENTER,
+                format!("{:.1}× · Scene", self.scales.aperture().width().recip()),
+                FontId::monospace(8.0),
+                if fit_hit.hovered() { INK } else { MUTED },
+            );
+            fit_hit.clicked()
+        };
+        if self.annotating_canvas() && fit_clicked {
             if self.source_relation_rect.is_some() {
                 self.scales.reset_view();
                 self.source_drag = None;
@@ -2819,7 +2832,7 @@ impl ProcessTheater {
                 self.source_relation_mix,
             );
         }
-        if action.reset || fit_hit.clicked() {
+        if action.reset || fit_clicked {
             if self.source_relation_rect.is_some() {
                 self.scales.reset_view();
                 self.source_drag = None;
@@ -2869,7 +2882,11 @@ impl ProcessTheater {
                 "Drag: pan · Shift-drag: select a region · double-click: scene"
             }
         };
-        if !self.edit_workspace && !self.review_strip_visible && photograph_footer(rect) >= 53.0 {
+        if !self.edit_workspace
+            && !self.photograph_only
+            && !self.review_strip_visible
+            && photograph_footer(rect) >= 53.0
+        {
             text(
                 &p,
                 rect.left_bottom() + egui::vec2(10.0, -19.0),

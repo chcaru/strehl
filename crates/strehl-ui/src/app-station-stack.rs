@@ -783,6 +783,90 @@ impl StrehlApp {
         }
     }
 
+    // ----- footer -----------------------------------------------------------------
+
+    /// Develop this render and Render again; while a stack runs, Stop and a
+    /// Queue button that hands this stack to P5's queue instead of a
+    /// disabled button.
+    pub(super) fn stack_station_footer(&mut self, ui: &mut egui::Ui) {
+        let t = studio_theme::tokens(ui.ctx());
+        if let Some(job) = &self.job {
+            let cancelling = job.is_cancelling();
+            if ui
+                .add(w::Button::danger("Stop").enabled(!cancelling))
+                .on_hover_text("Stop this run; what it has written is kept")
+                .clicked()
+            {
+                self.stop_stack();
+            }
+            let queueable = self.active_stack.is_some() && !cancelling;
+            if ui
+                .add(w::Button::new("Queue a render").enabled(queueable))
+                .on_hover_text(if queueable {
+                    "Stack this again with its saved recipe when the running stack ends"
+                } else {
+                    "Save this stack in the Library to queue it"
+                })
+                .clicked()
+            {
+                self.queue_while_running();
+                ui.ctx().request_repaint();
+            }
+            let label = if cancelling {
+                "Stopping\u{2026}"
+            } else if self.pending_run.is_some() {
+                "Starting\u{2026}"
+            } else {
+                "Stacking\u{2026}"
+            };
+            ui.label(
+                egui::RichText::new(label)
+                    .size(scale::SECONDARY)
+                    .color(t.ink3),
+            );
+            return;
+        }
+        let blocker = self.stack_start_blocker();
+        let total = self.stack.as_ref().map_or(0, |stack| stack.frames.len());
+        let included = self
+            .controls
+            .settings
+            .frame_limit
+            .unwrap_or(total)
+            .min(total);
+        let finished = self.result.is_some() && self.progress.stage == Stage::Complete;
+        if finished
+            && ui
+                .add(w::Button::primary("Develop this render").chevron())
+                .clicked()
+        {
+            self.go_station(Station::Develop);
+        }
+        let label = if finished {
+            "Render again".to_owned()
+        } else if total > 0 {
+            format!("Stack {included} photos")
+        } else {
+            "Stack".into()
+        };
+        let button = if finished {
+            w::Button::new(&label)
+        } else {
+            w::Button::primary(&label)
+        };
+        if ui
+            .add(button.enabled(blocker.is_none()))
+            .on_hover_text(blocker.map_or_else(
+                || format!("Stack {included} photos into a new render \u{b7} Ctrl+Enter"),
+                str::to_owned,
+            ))
+            .clicked()
+        {
+            self.start_render();
+            ui.ctx().request_repaint();
+        }
+    }
+
     // ----- inspector -------------------------------------------------------------
 
     pub(super) fn stack_inspector_tabs(&mut self, ui: &mut egui::Ui) -> bool {
