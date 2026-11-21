@@ -50,6 +50,7 @@ fn dusty() -> LinearImage {
 
 fn heal() -> Heal {
     Heal {
+        enabled: true,
         center: [60.5 / 200.0, 70.5 / 150.0],
         radius: [8.0 / 200.0, 8.0 / 150.0],
         source_offset: [30.0 / 200.0, 0.0],
@@ -97,6 +98,7 @@ fn studio() -> (LinearImage, DevelopmentRecipe) {
     });
     let recipe = DevelopmentRecipe {
         backdrop: Some(Backdrop {
+            enabled: true,
             threshold: 0.5,
             softness: 1.0,
         }),
@@ -152,6 +154,7 @@ fn the_backdrop_is_smoothed_from_backdrop_only_and_the_subject_is_untouched() {
 fn any_rect_with_its_halo_equals_the_whole_photograph_pass() {
     let (image, mut recipe) = studio();
     recipe.heals.push(Heal {
+        enabled: true,
         center: [0.3, 0.3],
         radius: [0.01, 0.016],
         source_offset: [0.1, 0.05],
@@ -190,11 +193,13 @@ fn textured() -> (LinearImage, DevelopmentRecipe) {
     let mut recipe = DevelopmentRecipe::default();
     recipe.global.exposure = -0.3;
     recipe.heals.push(Heal {
+        enabled: true,
         center: [0.4, 0.45],
         radius: [0.05, 0.025],
         source_offset: [0.2, 0.1],
     });
     recipe.backdrop = Some(Backdrop {
+        enabled: true,
         threshold: 0.7,
         softness: 0.5,
     });

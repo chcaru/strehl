@@ -13,6 +13,14 @@ fn is_zero(value: &f32) -> bool {
     *value == 0.0
 }
 
+fn enabled() -> bool {
+    true
+}
+
+fn is_enabled(value: &bool) -> bool {
+    *value
+}
+
 /// A crop rectangle in normalized full-photograph coordinates, turned about its
 /// own centre by `angle_deg`.
 ///
@@ -163,6 +171,9 @@ pub struct ScaleBar {
     pub corner: ScaleBarCorner,
     #[serde(default)]
     pub style: ScaleBarStyle,
+    /// Hidden from the layer list and from exports when false.
+    #[serde(default = "enabled", skip_serializing_if = "is_enabled")]
+    pub enabled: bool,
 }
 
 impl ScaleBar {
@@ -214,6 +225,8 @@ pub struct Heal {
     pub center: [f32; 2],
     pub radius: [f32; 2],
     pub source_offset: [f32; 2],
+    #[serde(default = "enabled", skip_serializing_if = "is_enabled")]
+    pub enabled: bool,
 }
 
 impl Heal {
@@ -244,6 +257,8 @@ impl Heal {
 pub struct Backdrop {
     pub threshold: f32,
     pub softness: f32,
+    #[serde(default = "enabled", skip_serializing_if = "is_enabled")]
+    pub enabled: bool,
 }
 
 impl Backdrop {

@@ -43,9 +43,10 @@ impl<'a> Neighbourhood<'a> {
         let heals = recipe
             .heals
             .iter()
+            .filter(|h| h.enabled)
             .map(|h| prepare_heal(image, h))
             .collect();
-        let backdrop = recipe.backdrop.map(|b| {
+        let backdrop = recipe.backdrop.filter(|b| b.enabled).map(|b| {
             (
                 b,
                 (long * KEY_FRACTION).round().max(1.0) as usize,

@@ -288,6 +288,20 @@ impl LinearImage {
         self.developed_at(i, recipe)
     }
 
+    /// `developed_pixel` for loops: prepare the recipe once, outside the loop.
+    pub fn developed_pixel_prepared(
+        &self,
+        i: usize,
+        recipe: &crate::PreparedRecipe<'_>,
+    ) -> [f32; 3] {
+        self.developed_at(i, recipe)
+    }
+
+    /// `display_pixel` for loops: prepare the recipe once, outside the loop.
+    pub fn display_pixel_prepared(&self, i: usize, recipe: &crate::PreparedRecipe<'_>) -> [f32; 3] {
+        self.display_at(i, recipe)
+    }
+
     /// Source pixel `i` and its pixel-centre normalized coordinate.
     #[inline]
     pub(crate) fn raw_uv(&self, i: usize) -> ([f32; 3], [f32; 2]) {

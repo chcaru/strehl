@@ -103,6 +103,7 @@ fn option_free_recipes_stay_readable_by_the_older_schema_and_new_fields_are_refu
     variants.push(v);
     let mut v = recipe.clone();
     v.scale_bar = Some(ScaleBar {
+        enabled: true,
         length_um: 500.0,
         corner: ScaleBarCorner::BottomRight,
         style: ScaleBarStyle::Light,
@@ -110,6 +111,7 @@ fn option_free_recipes_stay_readable_by_the_older_schema_and_new_fields_are_refu
     variants.push(v);
     let mut v = recipe.clone();
     v.heals.push(Heal {
+        enabled: true,
         center: [0.3, 0.3],
         radius: [0.01, 0.01],
         source_offset: [0.05, 0.0],
@@ -117,6 +119,7 @@ fn option_free_recipes_stay_readable_by_the_older_schema_and_new_fields_are_refu
     variants.push(v);
     let mut v = recipe.clone();
     v.backdrop = Some(Backdrop {
+        enabled: true,
         threshold: 0.8,
         softness: 1.0,
     });
@@ -286,6 +289,7 @@ fn crop_geometry_fits_rounds_and_shrinks_about_its_centre() {
 #[test]
 fn scale_bar_labels_and_suggestions_use_round_lengths() {
     let bar = |length_um| ScaleBar {
+        enabled: true,
         length_um,
         corner: ScaleBarCorner::BottomLeft,
         style: ScaleBarStyle::Dark,
@@ -303,6 +307,7 @@ fn scale_bar_labels_and_suggestions_use_round_lengths() {
 #[test]
 fn heals_and_backdrops_validate_their_geometry() {
     let heal = Heal {
+        enabled: true,
         center: [0.4, 0.4],
         radius: [0.02, 0.03],
         source_offset: [0.05, 0.0],
@@ -310,14 +315,17 @@ fn heals_and_backdrops_validate_their_geometry() {
     heal.validate().unwrap();
     for bad in [
         Heal {
+            enabled: true,
             source_offset: [0.01, 0.0],
             ..heal
         },
         Heal {
+            enabled: true,
             source_offset: [0.7, 0.0],
             ..heal
         },
         Heal {
+            enabled: true,
             radius: [0.3, 0.3],
             ..heal
         },
@@ -330,6 +338,7 @@ fn heals_and_backdrops_validate_their_geometry() {
     };
     assert!(recipe.validate().is_err());
     let backdrop = Backdrop {
+        enabled: true,
         threshold: 0.5,
         softness: 1.0,
     };
@@ -338,6 +347,7 @@ fn heals_and_backdrops_validate_their_geometry() {
     assert!(backdrop.membership(0.35) > 0.0 && backdrop.membership(0.35) < 1.0);
     assert_eq!(
         Backdrop {
+            enabled: true,
             softness: 0.0,
             ..backdrop
         }
@@ -346,6 +356,7 @@ fn heals_and_backdrops_validate_their_geometry() {
     );
     assert!(
         Backdrop {
+            enabled: true,
             threshold: 0.0,
             ..backdrop
         }
@@ -424,4 +435,92 @@ fn white_balance_pick_reports_clamping_and_refuses_impossible_samples() {
     let image = cast_image([0.2; 3], None);
     let corner = image.sample_placed([0.0, 0.0], 5).unwrap();
     assert_eq!(corner, [0.6, 0.1, 0.05]);
+}
+
+#[test]
+fn a_pending_repair_exports_with_the_repairs_the_master_holds() {
+    let repair = |id: &str, first| RegionAdjustment {
+        source_range: Some(SourceRange {
+            first,
+            last: first + 4,
+        }),
+        adjustments: Adjustments::default(),
+        ..region(id, stroke(vec![[0.3, 0.3], [0.5, 0.4]], 0.03))
+    };
+    let baked = DevelopmentRecipe {
+        regions: vec![
+            repair("old", 10),
+            region(
+                "tone",
+                RegionShape::Rectangle {
+                    min: [0.1, 0.1],
+                    max: [0.4, 0.4],
+                },
+            ),
+        ],
+        ..Default::default()
+    };
+    let image = LinearImage {
+        width: 8,
+        height: 8,
+        pixels: vec![0.2; 8 * 8 * 3],
+        origin: ImageOrigin::SceneLinear,
+        baseline: None,
+        baked_recipe: Some(baked.clone()),
+    };
+    // Now: the baked repair re-ranged, a new stroke painted, tone changed,
+    // and the tone region moved ahead of the repair in the list.
+    let mut current = baked.clone();
+    current.regions.swap(0, 1);
+    current.regions[1].source_range = Some(SourceRange {
+        first: 20,
+        last: 30,
+    });
+    current.regions.push(repair("new", 40));
+    current.global.exposure = 0.7;
+    current.validate().unwrap();
+    assert!(
+        image.validate_source_repairs(&current).is_err(),
+        "fixture is pending"
+    );
+    let export = current.with_baked_repairs(image.baked_recipe.as_ref());
+    export.validate().unwrap();
+    image.validate_source_repairs(&export).unwrap();
+    assert_eq!(export.global, current.global, "tone is kept");
+    let order = |r: &DevelopmentRecipe| {
+        r.application_order()
+            .into_iter()
+            .map(|i| r.regions[i].id.clone())
+            .collect::<Vec<_>>()
+    };
+    assert_eq!(
+        order(&export)[..3],
+        order(&current)[..],
+        "tone order is kept"
+    );
+    assert!(
+        export
+            .regions
+            .iter()
+            .find(|r| r.id == "new")
+            .unwrap()
+            .source_range
+            .is_none()
+    );
+    // A deleted baked repair returns as a neutral region; nothing pending is identity.
+    let mut deleted = current.clone();
+    deleted.remove_region("old");
+    let export = deleted.with_baked_repairs(image.baked_recipe.as_ref());
+    image.validate_source_repairs(&export).unwrap();
+    assert_eq!(
+        export
+            .regions
+            .iter()
+            .find(|r| r.id == "old")
+            .unwrap()
+            .adjustments,
+        Adjustments::default()
+    );
+    let unchanged = baked.with_baked_repairs(Some(&baked));
+    assert_eq!(unchanged, baked);
 }
