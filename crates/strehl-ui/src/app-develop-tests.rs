@@ -132,6 +132,111 @@ fn a_pending_depth_repair_keeps_the_photograph_and_export_enabled() {
 }
 
 #[test]
+fn a_depth_repair_rebuilds_the_painted_area_only_and_falls_back_to_the_whole_stack() {
+    let dir = tempfile::tempdir().unwrap();
+    let mut app = fixture(dir.path());
+    paint_repair(&mut app);
+    let run_dir = dir.path().join("run");
+    for name in ["master.tiff", "result.tiff", "render.log"] {
+        std::fs::write(run_dir.join(name), b"original").unwrap();
+    }
+    std::fs::create_dir_all(run_dir.join("cache")).unwrap();
+    std::fs::write(run_dir.join("cache").join("captures-1.warpmap.txt"), b"map").unwrap();
+    app.stack = Some(StackScan {
+        directory: dir.path().join("captures"),
+        frames: (0..5)
+            .map(|i| FrameFile {
+                path: PathBuf::from(format!("frame-{i}.ARW")),
+                bytes: 1,
+            })
+            .collect(),
+        total_bytes: 5,
+    });
+    app.engine = Some(dir.path().join("no-such-engine.exe"));
+    app.output = dir.path().join("out");
+    let mut settings = app.controls.settings.clone();
+    settings.confidence_map = true;
+    app.catalog.add(crate::workspace_history::Run {
+        directory: run_dir.clone(),
+        source: dir.path().join("captures"),
+        output: run_dir.join("result.tiff"),
+        log: run_dir.join("render.log"),
+        label: "captures".into(),
+        created: 1,
+        status: "Saved".into(),
+        frames: 5,
+        sources: Vec::new(),
+        settings,
+        exposure: None,
+        gate: None,
+        workers: 4,
+        pinned: false,
+        imported: None,
+    });
+    // The open render qualifies: master, photograph, log and its own map.
+    let (original, request) = app
+        .region_only_source(Path::new("strehl.exe"), &app.editor.recipe)
+        .unwrap();
+    assert_eq!(original.master, run_dir.join("master.tiff"));
+    assert_eq!(original.photo, run_dir.join("result.tiff"));
+    assert_eq!(original.log, run_dir.join("render.log"));
+    assert_eq!(
+        original.warp_map,
+        Some(run_dir.join("cache").join("captures-1.warpmap.txt"))
+    );
+    assert!(
+        !request.settings.confidence_map,
+        "no second pass over every frame"
+    );
+    assert_eq!(request.recipe.as_ref(), Some(&app.editor.recipe));
+    app.start_depth_repair().unwrap();
+    assert_eq!(
+        app.edit_pane.develop.repair.as_ref().unwrap().route,
+        develop::RepairRoute::Region
+    );
+    // This engine cannot start: the region-only rebuild stops, the whole
+    // stack is tried instead and says why, then that stops too.
+    let ctx = egui::Context::default();
+    let deadline = Instant::now() + Duration::from_secs(20);
+    let mut fell_back = None;
+    while let Some(repair) = &app.edit_pane.develop.repair {
+        if let develop::RepairRoute::Full(why) = &repair.route {
+            fell_back = Some(why.clone());
+            assert!(repair.status().starts_with("Re-stacking the whole stack"));
+        } else {
+            assert!(
+                repair
+                    .status()
+                    .starts_with("Rebuilding the painted area only")
+            );
+        }
+        app.poll_develop(&ctx);
+        assert!(Instant::now() < deadline, "the repairs never finished");
+        std::thread::sleep(Duration::from_millis(10));
+    }
+    assert!(
+        fell_back
+            .as_deref()
+            .is_some_and(|why| why.contains("region-only rebuild stopped")),
+        "{fell_back:?}"
+    );
+    assert!(
+        app.edit_pane
+            .develop
+            .notice
+            .as_deref()
+            .unwrap_or_default()
+            .contains("stopped")
+    );
+    // Without the render in the library, the whole stack is re-stacked.
+    app.catalog = Default::default();
+    let why = app
+        .region_only_source(Path::new("strehl.exe"), &app.editor.recipe)
+        .unwrap_err();
+    assert!(why.contains("not in the library"), "{why}");
+}
+
+#[test]
 fn develop_intents_route_to_the_editor_or_the_app() {
     let dir = tempfile::tempdir().unwrap();
     let mut app = fixture(dir.path());

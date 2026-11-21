@@ -407,6 +407,7 @@ impl StrehlApp {
         }
         match status.kind {
             ActivityKind::Stack => self.stop_stack(),
+            ActivityKind::Repair => self.cancel_depth_repair(),
             ActivityKind::Export => {
                 if let Some(task) = &self.editor.exporting {
                     task.cancel();
@@ -517,6 +518,7 @@ impl StrehlApp {
             };
             activities.report(status);
         }
+        self.report_depth_repair(activities);
         if let Some(item) = &self.activity_hub.launching {
             let mut status = ActivityStatus::new(
                 ActivityKind::Stack,

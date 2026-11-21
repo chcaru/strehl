@@ -43,7 +43,7 @@ impl Repairs {
         })
     }
 
-    fn regions(&self) -> impl Iterator<Item = &RegionAdjustment> {
+    pub(super) fn regions(&self) -> impl Iterator<Item = &RegionAdjustment> {
         self.recipe
             .iter()
             .flat_map(|r| &r.regions)
@@ -236,7 +236,7 @@ impl Repairs {
     }
 }
 
-fn uv(x: usize, y: usize, c: usize, geom: PlaneGeometry) -> [f32; 2] {
+pub(super) fn uv(x: usize, y: usize, c: usize, geom: PlaneGeometry) -> [f32; 2] {
     // RGGB site centres in the final image, not coordinates in a newly cropped
     // ROI or in a source camera frame. This also matches binned geometry in
     // the limit; individual CFA sites differ by at most half an output pixel.

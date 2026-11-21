@@ -243,6 +243,7 @@ fn options(dir: &Path) -> MergeOptions {
         out: Some(dir.join("primary.tiff")),
         linear_master: None,
         region_recipe: None,
+        region_only: None,
         sensor_master: Request::File(dir.join("sensor.tiff")),
         limit: None,
         srgb: false,

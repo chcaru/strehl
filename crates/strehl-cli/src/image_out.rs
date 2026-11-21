@@ -1378,9 +1378,97 @@ fn tone_from_rgb(width: usize, height: usize, rgb_lin: &[f32], dev: &Develop) ->
 /// Fill in the measured tone if this render wants one, and say so on the
 /// terminal. A render that silently invents a tone curve would be unreproducible
 /// and unarguable; the numbers go on stderr with everything else.
+/// A region-only repair's composite (implementation plan E4): the original
+/// development's tone, pinned instead of measured, and the original master's
+/// and photograph's pixels, kept byte for byte wherever `keep` is set.
+///
+/// Set by the render on its own thread for the one write it makes; every
+/// other render leaves it unset and writes exactly what it always wrote.
+pub(crate) struct RegionComposite {
+    pub tone: Tone,
+    pub exposure_gain: f32,
+    /// One flag per output pixel, row-major.
+    pub keep: Vec<bool>,
+    /// The original master's interleaved RGB32 samples.
+    pub master: Vec<f32>,
+    /// The original photograph's interleaved RGB16 samples.
+    pub photo: Vec<u16>,
+    /// Which of the two outputs the writer composited.
+    pub wrote_master: bool,
+    pub wrote_photo: bool,
+}
+
+thread_local! {
+    static REGION_COMPOSITE: std::cell::RefCell<Option<RegionComposite>> =
+        const { std::cell::RefCell::new(None) };
+}
+
+pub(crate) fn begin_region_composite(composite: RegionComposite) {
+    REGION_COMPOSITE.with(|c| *c.borrow_mut() = Some(composite));
+}
+
+pub(crate) fn end_region_composite() -> Option<RegionComposite> {
+    REGION_COMPOSITE.with(|c| c.borrow_mut().take())
+}
+
+/// Overwrite every kept pixel with the original's samples, bit for bit.
+fn keep_original<T: Copy + Send + Sync>(
+    samples: &mut [T],
+    original: &[T],
+    keep: &[bool],
+) -> Result<()> {
+    anyhow::ensure!(
+        samples.len() == original.len() && samples.len() == keep.len() * 3,
+        "the region-only original is not the size of this render"
+    );
+    samples
+        .par_chunks_mut(3)
+        .zip(original.par_chunks(3))
+        .zip(keep.par_iter())
+        .for_each(|((dst, src), &k)| {
+            if k {
+                dst.copy_from_slice(src);
+            }
+        });
+    Ok(())
+}
+
+fn region_composite_into<T: Copy + Send + Sync>(
+    samples: &mut [T],
+    dev: &Develop,
+    pick: impl for<'a> Fn(&'a mut RegionComposite) -> (&'a [T], &'a mut bool),
+) -> Result<()> {
+    REGION_COMPOSITE.with(|c| {
+        let mut c = c.borrow_mut();
+        let Some(c) = c.as_mut() else {
+            return Ok(());
+        };
+        anyhow::ensure!(
+            dev.tone == Some(c.tone) && dev.exposure_gain.to_bits() == c.exposure_gain.to_bits(),
+            "the region-only render did not develop with the original's tone and exposure"
+        );
+        let keep = std::mem::take(&mut c.keep);
+        let (original, wrote) = pick(c);
+        let done = keep_original(samples, original, &keep);
+        *wrote = true;
+        c.keep = keep;
+        done
+    })
+}
+
 fn resolve_tone(dev: &Develop, measure: impl FnOnce() -> Tone) -> Develop {
     if !dev.wants_tone || dev.tone.is_some() {
         return *dev;
+    }
+    if let Some(tone) = REGION_COMPOSITE.with(|c| c.borrow().as_ref().map(|c| c.tone)) {
+        eprintln!(
+            "tone            : PINNED to the original render's (black {:.5}, white {:.5}, contrast {:.2})",
+            tone.black, tone.white, tone.contrast
+        );
+        return Develop {
+            tone: Some(tone),
+            ..*dev
+        };
     }
     #[cfg(all(test, feature = "native-direct-planes"))]
     if let Some(tone) = crate::merge_cmd::matched_source_tests::pinned_tone() {
@@ -1452,6 +1540,9 @@ pub(crate) fn write_demosaiced_with_master_coverage(
                 }
             },
         );
+        region_composite_into(&mut pixels, dev, |c| {
+            (c.master.as_slice(), &mut c.wrote_master)
+        })?;
         let image = strehl_edit::LinearImage {
             width: width as u32, height: height as u32, pixels,
             origin: strehl_edit::ImageOrigin::SceneLinear,
@@ -1483,6 +1574,7 @@ pub(crate) fn write_demosaiced_with_master_coverage(
             }
         },
     );
+    region_composite_into(&mut rgb, dev, |c| (c.photo.as_slice(), &mut c.wrote_photo))?;
     write_rgb16_described(path, width as u32, height as u32, &rgb, dev)
 }
 

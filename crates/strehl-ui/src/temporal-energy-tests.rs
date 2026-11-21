@@ -179,7 +179,7 @@ fn temporal_energy_refuses_enabled_source_repairs_before_output_creation() {
         .is_err()
     );
     let (sender, _) = mpsc::sync_channel(4);
-    match run_render(&request, &Arc::new(AtomicBool::new(false)), &sender) {
+    match run_render(&request, None, &Arc::new(AtomicBool::new(false)), &sender) {
         RenderOutcome::Failed { directory, message } => {
             assert!(directory.is_none());
             assert_eq!(message, expected);

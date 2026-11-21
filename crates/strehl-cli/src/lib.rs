@@ -363,6 +363,27 @@ enum Command {
         /// Rebuild annotated regions from explicitly limited source-frame ranges.
         #[arg(long, requires = "out")]
         region_recipe: Option<PathBuf>,
+        /// Region-only repair: rebuild only the regions of --region-recipe
+        /// against this existing linear master, decoding only their frames.
+        /// Every output pixel whose demosaic stencil meets no repaired site
+        /// keeps the original master's and photograph's bytes exactly.
+        /// Requires --region-only-photo, --linear-master and --region-recipe;
+        /// pair it with --reuse-ca-from and the original run's warp map.
+        #[arg(
+            long,
+            value_name = "MASTER_TIFF",
+            requires_all = ["region_recipe", "linear_master", "region_only_photo"]
+        )]
+        region_only_master: Option<PathBuf>,
+        /// The photograph (16-bit SDR TIFF) the original render wrote beside
+        /// the master given to --region-only-master.
+        #[arg(long, value_name = "PHOTO_TIFF", requires = "region_only_master")]
+        region_only_photo: Option<PathBuf>,
+        /// Reuse the lateral-CA refinement an earlier render measured, read
+        /// from that render's log, instead of measuring it again in a preview
+        /// pass. A log that measured none (or did not apply it) pins none.
+        #[arg(long, value_name = "RENDER_LOG")]
+        reuse_ca_from: Option<PathBuf>,
         /// Stack at most this many frames, in filename order.
         #[arg(short, long)]
         limit: Option<usize>,
@@ -1144,6 +1165,9 @@ where
             binned,
             fix_ca,
             refine_ca,
+            reuse_ca_from,
+            region_only_master,
+            region_only_photo,
             exposure,
             auto_exposure,
             gates,
@@ -1183,6 +1207,11 @@ where
                     "--refine-ca takes on or off, not {v:?}"
                 );
                 unsafe { std::env::set_var(merge_cmd::REFINE_CA_ENV, v) };
+            }
+            // Same mechanism again: the render reads the earlier render's
+            // refinement instead of measuring its own.
+            if let Some(log) = reuse_ca_from.as_deref() {
+                unsafe { std::env::set_var(merge_cmd::REUSE_CA_ENV, log) };
             }
 
             // Resolved here, alongside `resampler` and `photometric`, so that
@@ -1439,6 +1468,10 @@ where
                     }
                 },
                 region_recipe,
+                region_only: match (region_only_master, region_only_photo) {
+                    (Some(master), Some(photo)) => Some(merge_cmd::RegionOnly { master, photo }),
+                    _ => None,
+                },
                 limit,
                 srgb,
                 // Resolved here, once, from the two mutually exclusive flags, so
