@@ -1,0 +1,20 @@
+started 2026-11-21T06:14:25-08:00
+base C:/strehl-scratch/p3s2/bin/base.exe
+mine C:/strehl-scratch/p3s2/bin/p3.exe (build 8f92802ac)
+base.exe benchmark_finished_workspace_pointer_sweeps exit 0 cpu load before 2 % compilers 3
+p3.exe benchmark_finished_workspace_pointer_sweeps exit 0 cpu load before 1 % compilers 3
+base.exe benchmark_finished_workspace_pointer_sweeps exit 0 cpu load before 2 % compilers 3
+p3.exe benchmark_finished_workspace_pointer_sweeps exit 0 cpu load before 3 % compilers 3
+base.exe benchmark_finished_workspace_pointer_sweeps exit 0 cpu load before 9 % compilers 3
+p3.exe benchmark_finished_workspace_pointer_sweeps exit 0 cpu load before 13 % compilers 3
+p3.exe benchmark_stack_station_pointer_sweeps exit 0 cpu load before 8 % compilers 3
+p3.exe benchmark_long_stack_pointer_sweeps exit 0 cpu load before 12 % compilers 3
+p3.exe benchmark_stack_station_pointer_sweeps exit 0 cpu load before 5 % compilers 3
+p3.exe benchmark_long_stack_pointer_sweeps exit 0 cpu load before 10 % compilers 3
+p3.exe benchmark_stack_station_pointer_sweeps exit 0 cpu load before 5 % compilers 6
+base.exe benchmark_real_stack_scrub_publication exit 0 cpu load before 1 % compilers 6
+p3.exe benchmark_real_stack_scrub_publication exit 0 cpu load before 1 % compilers 6
+base.exe benchmark_real_stack_scrub_publication exit 0 cpu load before 10 % compilers 6
+p3.exe benchmark_real_stack_scrub_publication exit 0 cpu load before 5 % compilers 6
+p3.exe benchmark_real_stack_scrub_publication exit 0 cpu load before 2 % compilers 6
+finished 2026-11-21T06:16:45-08:00

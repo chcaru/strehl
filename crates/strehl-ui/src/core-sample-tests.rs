@@ -382,3 +382,53 @@ fn six_thousand_planes_pool_each_strip_to_its_pixel_width() {
         "{rects} rects"
     );
 }
+
+#[test]
+fn long_stacks_recount_within_a_budget_and_commit_the_window_at_once() {
+    use crate::process_region_probe::RECOUNT_BUDGET;
+    let planes = 1_000;
+    let archive = archive(planes);
+    let counts = |probe: &RegionProbe| -> Vec<Vec<(usize, usize, usize)>> {
+        (0..DETAIL_LEVELS)
+            .map(|level| {
+                probe
+                    .window_counts(level)
+                    .map(|(plane, count)| (plane, count.admitted, count.observed))
+                    .collect()
+            })
+            .collect()
+    };
+    let first = Rect::from_center_size(egui::pos2(0.3, 0.5), egui::vec2(0.09, 0.13));
+    let second = first.translate(egui::vec2(0.2, 0.0));
+    let mut probe = RegionProbe::default();
+    probe.measure(&archive, 0, ANALYSIS, planes, first);
+    assert!(
+        !probe.recounting(),
+        "a new stack's first reading is immediate"
+    );
+    let before = counts(&probe);
+    let revision = probe.window_revision();
+    probe.measure(&archive, 0, ANALYSIS, planes, second);
+    assert!(
+        probe.recounting(),
+        "more than {RECOUNT_BUDGET} windows: bounded"
+    );
+    let mut frames = 1;
+    while probe.recounting() {
+        assert_eq!(counts(&probe), before, "the previous complete window stays");
+        assert_eq!(probe.window_revision(), revision);
+        probe.measure(&archive, 0, ANALYSIS, planes, second);
+        frames += 1;
+        assert!(frames < 20, "the recount must finish");
+    }
+    assert!(frames >= 2);
+    assert_ne!(probe.window_revision(), revision, "committed at once");
+    let mut fresh = RegionProbe::default();
+    fresh.measure(&archive, 0, ANALYSIS, planes, second);
+    assert_eq!(
+        counts(&probe),
+        counts(&fresh),
+        "identical to an immediate recount"
+    );
+    assert_eq!(probe.measured_region(), Some(second));
+}

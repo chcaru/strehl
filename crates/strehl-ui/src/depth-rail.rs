@@ -82,6 +82,27 @@ impl Default for RailPalette {
         Self::GRAPHITE
     }
 }
+impl RailPalette {
+    /// The shell's current theme (Graphite, Instrument or Lightbox).
+    pub(crate) fn from_tokens(t: &crate::studio_theme::Tokens) -> Self {
+        Self {
+            ok: t.ok,
+            plane: t.plane,
+            plane_ink: if t.light {
+                Color32::WHITE
+            } else {
+                Color32::from_rgb(0x04, 0x20, 0x1c)
+            },
+            accent: t.accent,
+            accent_ink: t.accent_ink,
+            ink: t.ink,
+            ink2: t.ink2,
+            ink3: t.ink3,
+            line: t.line,
+            line2: t.line2,
+        }
+    }
+}
 
 /// Where a plane's evidence came from.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
@@ -395,6 +416,10 @@ impl DepthRail {
 
     pub(crate) fn planes(&self) -> usize {
         self.planes.len()
+    }
+    /// Changes exactly when a per-plane value changed (a cache key).
+    pub(crate) fn series_revision(&self) -> u64 {
+        self.series
     }
     pub(crate) fn evidence(&self, plane: usize) -> Option<PlaneEvidence> {
         self.planes.get(plane).copied()

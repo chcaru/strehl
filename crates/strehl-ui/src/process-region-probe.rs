@@ -192,6 +192,22 @@ struct Evidence {
 }
 
 type EvidenceKey = (usize, usize);
+
+/// At most this many (level, plane) windows are recounted in one frame. A
+/// longer recount runs over several frames into a staging list while the
+/// previous complete window stays on screen; it then replaces it at once,
+/// and the newest pointer region starts only after it (spec 5.3 budget for
+/// 6,000 planes). Short stacks recount immediately, exactly as before.
+pub(crate) const RECOUNT_BUDGET: usize = 4096;
+
+/// A changed level, its new window, its planes and their staged counts.
+type StagedLevel = (usize, Option<SampleWindow>, Vec<usize>, Vec<SampleCount>);
+
+struct PendingWindows {
+    region: Rect,
+    levels: Vec<StagedLevel>,
+    level: usize,
+}
 type EvidenceSlots = Vec<Option<(EvidenceKey, Evidence)>>;
 
 /// Window counts by (level, frame), dense by frame within each level. A
@@ -250,6 +266,24 @@ impl EvidenceStore {
     fn clear(&mut self) {
         self.levels.clear();
         self.len = 0;
+    }
+    fn entries(&self, level: usize) -> usize {
+        self.frames(level).map_or(0, |frames| {
+            frames.iter().filter(|slot| slot.is_some()).count()
+        })
+    }
+    fn planes(&self, level: usize) -> Vec<usize> {
+        self.frames(level).map_or_else(Vec::new, |frames| {
+            frames.iter().flatten().map(|(key, _)| key.1).collect()
+        })
+    }
+    fn set_count(&mut self, key: EvidenceKey, window: Option<SampleWindow>, count: SampleCount) {
+        if let Some((_, frames)) = self.levels.iter_mut().find(|(slot, _)| *slot == key.0)
+            && let Some(Some((_, evidence))) = frames.get_mut(key.1)
+        {
+            evidence.count = count;
+            evidence.window = window;
+        }
     }
     /// Update every entry of one level in place, in frame order.
     fn recount(&mut self, level: usize, mut update: impl FnMut(usize, &mut Evidence)) {
@@ -339,6 +373,8 @@ pub(crate) struct RegionProbe {
     /// Bumped whenever any window count changes: the core sample's strips and
     /// the depth rail's region line rebuild only on this key.
     window_revision: u64,
+    /// A long stack's window recount in progress (see `RECOUNT_BUDGET`).
+    pending: Option<PendingWindows>,
     #[cfg(test)]
     receipt_scans: usize,
     #[cfg(test)]
@@ -521,6 +557,9 @@ impl RegionProbe {
         }
         let region = self.current_region(ui, image, aperture)?;
         self.update(archive, level, analysis_extent, frame_count, region);
+        if self.recounting() {
+            ui.ctx().request_repaint();
+        }
         let project = |uv: Pos2| image.min + (uv - aperture.min) / aperture.size() * image.size();
         let outline = Rect::from_min_max(project(region.min), project(region.max));
         let painter = ui.painter_at(image);
@@ -626,6 +665,11 @@ impl RegionProbe {
         self.window_revision
     }
 
+    /// A long stack's window recount is still running; ask for a frame.
+    pub(crate) fn recounting(&self) -> bool {
+        self.pending.is_some()
+    }
+
     pub(crate) fn measured_region(&self) -> Option<Rect> {
         self.region
     }
@@ -709,7 +753,10 @@ impl RegionProbe {
             });
             self.spatial_dirty = true;
             self.window_revision = self.window_revision.wrapping_add(1);
-        } else if self.region == Some(region) {
+            self.pending = None;
+        } else if (self.region == Some(region) && self.pending.is_none())
+            || self.recount_bounded(archive, region)
+        {
             self.sync_spatial(archive, active);
             return;
         }
@@ -779,6 +826,97 @@ impl RegionProbe {
             }
         }
         self.sync_spatial(archive, active);
+    }
+
+    /// Same receipts, a new window, on a long stack: recount within the
+    /// budget. Returns true when this frame was handled here (in progress or
+    /// committed); false to recount immediately, as before.
+    fn recount_bounded(&mut self, archive: &AdmissionArchive, region: Rect) -> bool {
+        if self.pending.is_none() {
+            if self.region == Some(region) {
+                return true;
+            }
+            let changed: Vec<(usize, Option<SampleWindow>)> = self
+                .level_meta
+                .iter()
+                .filter_map(|&(level, meta)| {
+                    let window = meta.and_then(|meta| SampleWindow::new(level, meta, region));
+                    let old = self
+                        .windows
+                        .iter()
+                        .find(|(old, _)| *old == level)
+                        .map(|(_, old)| *old);
+                    (old != Some(window) && self.evidence.frames(level).is_some())
+                        .then_some((level, window))
+                })
+                .collect();
+            let work: usize = changed
+                .iter()
+                .map(|&(level, _)| self.evidence.entries(level))
+                .sum();
+            // Levels seen for the first time take the full path below.
+            let complete = self.level_meta.iter().all(|&(level, meta)| {
+                meta.is_none()
+                    || self.evidence.frames(level).is_some()
+                    || archive.frames(level).next().is_none()
+            });
+            if work <= RECOUNT_BUDGET || !complete {
+                return false;
+            }
+            self.pending = Some(PendingWindows {
+                region,
+                levels: changed
+                    .into_iter()
+                    .map(|(level, window)| {
+                        let planes = self.evidence.planes(level);
+                        let counts = Vec::with_capacity(planes.len());
+                        (level, window, planes, counts)
+                    })
+                    .collect(),
+                level: 0,
+            });
+        }
+        let mut pending = self.pending.take().expect("a recount in progress");
+        let mut budget = RECOUNT_BUDGET;
+        while budget > 0 && pending.level < pending.levels.len() {
+            let (level, window, planes, counts) = &mut pending.levels[pending.level];
+            let start = counts.len();
+            let end = (start + budget).min(planes.len());
+            for &frame in &planes[start..end] {
+                counts.push(window.map_or_else(SampleCount::default, |window| {
+                    window.archive_counts(archive, *level, frame)
+                }));
+            }
+            budget -= end - start;
+            if counts.len() == planes.len() {
+                pending.level += 1;
+            } else {
+                break;
+            }
+        }
+        if pending.level < pending.levels.len() {
+            self.pending = Some(pending);
+            return true;
+        }
+        // Commit the whole window at once.
+        for (level, window, planes, counts) in pending.levels {
+            for (&frame, &count) in planes.iter().zip(&counts) {
+                self.evidence.set_count((level, frame), window, count);
+            }
+            #[cfg(test)]
+            {
+                self.readings += counts.len();
+            }
+            if let Some((_, old)) = self.windows.iter_mut().find(|(old, _)| *old == level) {
+                *old = window;
+            } else {
+                self.windows.push((level, window));
+            }
+        }
+        self.region = Some(pending.region);
+        self.spatial_dirty = true;
+        self.window_revision = self.window_revision.wrapping_add(1);
+        true
     }
 
     fn sync_spatial(&mut self, archive: &AdmissionArchive, active: usize) {

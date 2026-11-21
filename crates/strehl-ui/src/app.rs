@@ -58,6 +58,8 @@ mod station_capture;
 mod station_develop;
 #[path = "app-station-library.rs"]
 mod station_library;
+#[path = "app-station-stack.rs"]
+mod station_stack;
 #[path = "studio-route.rs"]
 pub(crate) mod studio_route;
 #[path = "studio-shell.rs"]
@@ -245,6 +247,8 @@ pub struct StrehlApp {
     shell: studio_shell::Shell,
     /// Activities, Quiet, the stack queue and the render ETA (Studio 2 P5).
     activity_hub: activities::ActivityHub,
+    /// The Stack station's parts (P3): rail, filmstrip, plane lens, core sample.
+    stack_station: station_stack::StackStation,
 }
 
 impl StrehlApp {
@@ -391,6 +395,7 @@ impl StrehlApp {
             agent_session_out: launch.agent_session_out,
             shell,
             activity_hub,
+            stack_station: station_stack::StackStation::with_hold(launch.plane_hold),
         };
         if isolated_state {
             app.editor.recovery_root = app
