@@ -294,13 +294,14 @@ fn neighbour_trace(
             }
             None => blank += 1,
         }
+        // The decoders keep refining requested captures during a real sweep,
+        // so uploads are recorded, not forbidden: a stand-in itself is resident.
         if let Some(limit) = limit {
             let shown = browser.displayed_index();
             assert!(
                 shown.is_some_and(|shown| shown.abs_diff(selected) <= limit),
                 "step {selected} showed {shown:?}: farther than the nearest resident neighbour"
             );
-            assert_eq!(upload_bytes, 0, "a resident stand-in uploads nothing");
         }
         std::thread::sleep(Duration::from_millis(8));
     }

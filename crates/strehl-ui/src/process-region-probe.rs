@@ -1,7 +1,6 @@
 //! A temporary photograph region, measured only at retained kernel samples.
 //! The caller certifies the photograph's aligned UV domain. This observer never
 //! grabs input, modifies the exploration journal, or invents dense ownership.
-use std::collections::BTreeMap;
 #[path = "process-region-spatial.rs"]
 mod spatial_paint;
 #[path = "process-region-visual.rs"]
@@ -192,6 +191,101 @@ struct Evidence {
     count: SampleCount,
 }
 
+type EvidenceKey = (usize, usize);
+type EvidenceSlots = Vec<Option<(EvidenceKey, Evidence)>>;
+
+/// Window counts by (level, frame), dense by frame within each level. A
+/// pointer crossing a sample cell recounts every plane at that level, so on
+/// long stacks lookups and updates must be O(1), not ordered-map walks. The
+/// API mirrors the `BTreeMap` it replaces: same item types, ascending order.
+#[derive(Default)]
+struct EvidenceStore {
+    levels: Vec<(usize, EvidenceSlots)>,
+    len: usize,
+}
+impl EvidenceStore {
+    fn frames(&self, level: usize) -> Option<&EvidenceSlots> {
+        self.levels
+            .iter()
+            .find(|(slot, _)| *slot == level)
+            .map(|(_, frames)| frames)
+    }
+    fn get(&self, key: &EvidenceKey) -> Option<&Evidence> {
+        self.frames(key.0)?
+            .get(key.1)?
+            .as_ref()
+            .map(|(_, evidence)| evidence)
+    }
+    #[cfg(test)]
+    fn contains_key(&self, key: &EvidenceKey) -> bool {
+        self.get(key).is_some()
+    }
+    #[cfg(test)]
+    fn len(&self) -> usize {
+        self.len
+    }
+    #[cfg(test)]
+    fn is_empty(&self) -> bool {
+        self.len == 0
+    }
+    fn insert(&mut self, key: EvidenceKey, value: Evidence) {
+        let at = match self
+            .levels
+            .binary_search_by_key(&key.0, |(level, _)| *level)
+        {
+            Ok(at) => at,
+            Err(at) => {
+                self.levels.insert(at, (key.0, Vec::new()));
+                at
+            }
+        };
+        let frames = &mut self.levels[at].1;
+        if frames.len() <= key.1 {
+            frames.resize_with(key.1 + 1, || None);
+        }
+        if frames[key.1].replace((key, value)).is_none() {
+            self.len += 1;
+        }
+    }
+    fn clear(&mut self) {
+        self.levels.clear();
+        self.len = 0;
+    }
+    fn retain(&mut self, mut keep: impl FnMut(&EvidenceKey, &mut Evidence) -> bool) {
+        for (_, frames) in &mut self.levels {
+            for slot in frames.iter_mut() {
+                if let Some((key, evidence)) = slot
+                    && !keep(key, evidence)
+                {
+                    *slot = None;
+                    self.len -= 1;
+                }
+            }
+        }
+    }
+    /// Entries of one level in frame order. Both ends name the same level.
+    fn range(
+        &self,
+        range: std::ops::RangeInclusive<EvidenceKey>,
+    ) -> impl Iterator<Item = (&EvidenceKey, &Evidence)> + '_ {
+        let (start, end) = range.into_inner();
+        debug_assert_eq!(start.0, end.0, "evidence ranges stay within a level");
+        let frames = self.frames(start.0).map_or(&[][..], Vec::as_slice);
+        let from = start.1.min(frames.len());
+        let to = end.1.saturating_add(1).min(frames.len()).max(from);
+        frames[from..to]
+            .iter()
+            .filter_map(|slot| slot.as_ref().map(|(key, evidence)| (key, evidence)))
+    }
+}
+#[cfg(test)]
+impl std::ops::Index<&EvidenceKey> for EvidenceStore {
+    type Output = Evidence;
+    fn index(&self, key: &EvidenceKey) -> &Evidence {
+        self.get(key).expect("no evidence for this key")
+    }
+}
+
 struct Fallback {
     packet: DiagnosticSurface,
     meta: AdmissionMeta,
@@ -219,7 +313,7 @@ pub(crate) struct RegionProbe {
     visual_revision: u64,
     visual_cache: std::cell::RefCell<visual::HeatCache>,
     spatial_paint: std::cell::RefCell<spatial_paint::Cache>,
-    evidence: BTreeMap<(usize, usize), Evidence>,
+    evidence: EvidenceStore,
     levels: Vec<usize>,
     fallback: Option<Fallback>,
     analysis_extent: Option<[usize; 2]>,
@@ -679,7 +773,7 @@ impl RegionProbe {
                     || (Some(key.1) == self.source_frame && evidence.count.observed > 0)
             })
             .collect();
-        strongest.sort_by(|left, right| {
+        let order = |left: &(&EvidenceKey, &Evidence), right: &(&EvidenceKey, &Evidence)| {
             (Some(right.0.1) == self.source_frame)
                 .cmp(&(Some(left.0.1) == self.source_frame))
                 .then_with(|| {
@@ -691,7 +785,13 @@ impl RegionProbe {
                         .total_cmp(&left.1.count.fraction().unwrap())
                 })
                 .then(left.0.1.cmp(&right.0.1))
-        });
+        };
+        // Only the leading three are used: select them, then order them.
+        if strongest.len() > 3 {
+            strongest.select_nth_unstable_by(2, order);
+            strongest.truncate(3);
+        }
+        strongest.sort_by(order);
         let key = SpatialKey {
             level: active,
             sources: strongest

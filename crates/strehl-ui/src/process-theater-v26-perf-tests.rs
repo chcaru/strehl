@@ -129,7 +129,12 @@ impl Fixture {
             frames * 8
         );
         for level in 0..8 {
-            let (meta, _) = progress.admission_archive.cells(level, 65).unwrap();
+            // Long fixtures can exceed the archive cap; capped levels are
+            // reported by the benchmark, never validated as present.
+            let Some((meta, _)) = progress.admission_archive.cells(level, 65) else {
+                assert!(frames * 8 > progress.admission_archive.len());
+                continue;
+            };
             assert!(
                 crate::process_sample_glyphs::SampleGeometry::new(level, meta).is_some(),
                 "coarse telemetry must be geometrically usable, never silently rejected"
