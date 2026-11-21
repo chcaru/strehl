@@ -1,0 +1,9 @@
+    Finished `release` profile [optimized] target(s) in 0.38s
+     Running unittests src\main.rs (target-bench\release\deps\strehl_ui-c1d91b6ab14ac14f.exe)
+
+running 1 test
+299 actual sources; resident warming 1443.6ms; report C:\dev\blog\death-of-software\projects\strehl\experiments\desktop-studio-2-impl\perf\baseline\resident-299.json
+test source_browser::tests::v26_tests::benchmark::benchmark_real_stack_scrub_publication ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1076 filtered out; finished in 11.73s
+
