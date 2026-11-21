@@ -346,6 +346,7 @@ impl StrehlApp {
     fn agent_snapshot(&self) -> Value {
         let projects: Vec<_> = self.catalog.nodes.iter().take(256).map(|node| json!({
             "id":node.id,"parent":node.parent,"name":node.name,"kind":node.kind,
+            "subject":node.subject,
             "revisions":node.revisions.iter().enumerate().rev().take(32).map(|(i,path)| json!({"index":i,"name":path.file_name()})).collect::<Vec<_>>(),
             "revision_count":node.revisions.len()
         })).collect();
@@ -757,6 +758,62 @@ impl StrehlApp {
             RenameNode { id, name } => {
                 self.project_explorer
                     .organize(&mut self.catalog, |catalog| catalog.rename(id, &name))?;
+                self.persist_catalog();
+            }
+            CreateSubject { name, parent_id } => {
+                let id = self
+                    .project_explorer
+                    .organize(&mut self.catalog, |catalog| {
+                        catalog.create_subject(parent_id, &name)
+                    })?;
+                self.persist_catalog();
+                return Ok(json!({"id":id}));
+            }
+            MoveNode { id, parent_id } => {
+                self.project_explorer
+                    .organize(&mut self.catalog, |catalog| {
+                        catalog.move_node(id, Some(parent_id))
+                    })?;
+                self.persist_catalog();
+            }
+            SetSubjectMeta {
+                id,
+                notes,
+                optics,
+                scale,
+                hero_run,
+            } => {
+                let hero = hero_run
+                    .map(|choice| {
+                        choice
+                            .map(|choice| {
+                                anyhow::ensure!(
+                                    self.catalog.subject_of(choice.stack_id) == Some(id),
+                                    "Choose a stack of this subject"
+                                );
+                                let run = self
+                                    .catalog
+                                    .revision(choice.stack_id, choice.run_index)
+                                    .ok_or_else(|| anyhow::anyhow!("Unknown revision"))?;
+                                anyhow::ensure!(
+                                    run.status == "Saved",
+                                    "Choose a saved render for the subject's picture"
+                                );
+                                Ok(run.output.clone())
+                            })
+                            .transpose()
+                    })
+                    .transpose()?;
+                let edit = crate::workspace_history::SubjectEdit {
+                    notes,
+                    hero,
+                    optics,
+                    scale,
+                };
+                self.project_explorer
+                    .organize(&mut self.catalog, |catalog| {
+                        catalog.set_subject_meta(id, edit)
+                    })?;
                 self.persist_catalog();
             }
             ImportCompletedSession {
@@ -1350,3 +1407,7 @@ mod spatial_tests;
 #[cfg(test)]
 #[path = "app-session-control-tests.rs"]
 mod session_control_tests;
+
+#[cfg(test)]
+#[path = "app-agent-subject-tests.rs"]
+mod subject_command_tests;

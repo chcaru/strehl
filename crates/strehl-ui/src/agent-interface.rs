@@ -69,6 +69,24 @@ pub(crate) struct CatalogSessionPass {
     pub stack_ids: Vec<u64>,
 }
 
+/// A subject's representative photograph: one saved render of one of its
+/// stacks, by the zero-based position in `projects[].revisions`. No paths.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct HeroRun {
+    pub stack_id: u64,
+    pub run_index: usize,
+}
+
+/// Absent leaves a field alone; JSON null clears it.
+fn present<'de, D, T>(deserializer: D) -> Result<Option<Option<T>>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Option::<T>::deserialize(deserializer).map(Some)
+}
+
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub(crate) enum AdaptiveDevelopIntent {
@@ -213,6 +231,41 @@ pub(crate) enum AgentCommand {
     RenameNode {
         id: u64,
         name: String,
+    },
+    /// Catalog format 2: a subject in a project or folder; it holds stacks only.
+    CreateSubject {
+        name: String,
+        parent_id: u64,
+    },
+    /// Move a folder, subject or stack. Projects stay at the top level.
+    MoveNode {
+        id: u64,
+        parent_id: u64,
+    },
+    /// Edit a subject's notes, optics, scale or picture. Absent fields are
+    /// unchanged; null clears optics, scale or hero_run.
+    SetSubjectMeta {
+        id: u64,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        notes: Option<String>,
+        #[serde(
+            default,
+            deserialize_with = "present",
+            skip_serializing_if = "Option::is_none"
+        )]
+        optics: Option<Option<crate::workspace_history::Optics>>,
+        #[serde(
+            default,
+            deserialize_with = "present",
+            skip_serializing_if = "Option::is_none"
+        )]
+        scale: Option<Option<crate::workspace_history::ScaleCalibration>>,
+        #[serde(
+            default,
+            deserialize_with = "present",
+            skip_serializing_if = "Option::is_none"
+        )]
+        hero_run: Option<Option<HeroRun>>,
     },
     /// A grant identifies a folder explicitly shared by the human in Strehl.
     ImportStack {
@@ -415,8 +468,26 @@ impl AgentCommand {
                 resolve_export_settings(format, *color_space, *hdr, *quality, *speed, None)
                     .map(|_| ())
             }
-            Self::CreateProject { name, .. } | Self::RenameNode { name, .. } => {
-                text_bound(name, 160, false)
+            Self::CreateProject { name, .. }
+            | Self::RenameNode { name, .. }
+            | Self::CreateSubject { name, .. } => text_bound(name, 160, false),
+            Self::SetSubjectMeta {
+                notes,
+                optics,
+                scale,
+                ..
+            } => {
+                if let Some(notes) = notes {
+                    text_bound(notes, 16_000, true)?;
+                }
+                if let Some(Some(optics)) = optics {
+                    text_bound(&optics.camera, 640, true)?;
+                    text_bound(&optics.lens, 640, true)?;
+                }
+                if let Some(Some(scale)) = scale {
+                    scale.validate().map_err(|e| e.to_string())?;
+                }
+                Ok(())
             }
             Self::ImportCompletedSession {
                 grant_id,

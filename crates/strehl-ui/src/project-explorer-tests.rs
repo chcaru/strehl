@@ -737,3 +737,40 @@ fn pointer_drag_moves_virtual_stack_once_and_rejects_cycles_without_opening_phot
         "A virtual folder cannot become its own ancestor"
     );
 }
+
+#[test]
+fn format_two_subjects_show_as_containers_of_their_stacks() {
+    let (mut catalog, project, stack) = fixture();
+    let subject = catalog.create_subject(project, "Bee").unwrap();
+    catalog.move_node(stack, Some(subject)).unwrap();
+    let second = catalog
+        .create_stack(
+            subject,
+            "Bee ventral",
+            StackDraft::from_run(&catalog.runs[0].clone()),
+        )
+        .unwrap();
+    let mut explorer = ProjectExplorer::default();
+    let ctx = egui::Context::default();
+    theme::install(&ctx);
+    let (out, _) = paint(&mut explorer, &mut catalog, &ctx, vec![], false);
+    let subject_row = find(&out, "Bee").expect("subject row is rendered");
+    let stack_row = find(&out, "Bee antennae").expect("its stack is rendered under it");
+    assert!(
+        find(&out, "2 stacks").is_some(),
+        "the subject counts its stacks"
+    );
+    assert!(stack_row.y > subject_row.y && stack_row.x > subject_row.x);
+    assert!(find(&out, "Bee ventral").is_some());
+    let opened = click(&mut explorer, &mut catalog, &ctx, stack_row, false);
+    assert!(matches!(opened.action, Some(ExplorerAction::OpenStack { id }) if id == stack));
+    catalog.selected = Some(subject);
+    let (out, _) = paint(&mut explorer, &mut catalog, &ctx, vec![], false);
+    let at = find(&out, "New stack").unwrap();
+    let request = click(&mut explorer, &mut catalog, &ctx, at, false);
+    assert!(
+        matches!(request.action, Some(ExplorerAction::NewCapture { parent: Some(id) }) if id == subject),
+        "a new stack from a selected subject joins it"
+    );
+    assert_ne!(second, stack);
+}

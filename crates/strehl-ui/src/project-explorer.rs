@@ -2,7 +2,7 @@
 //! request to open a stack; no command moves photographs or deletes evidence.
 use crate::{
     theme::{self, ACCENT, AMBER, GREEN, INK, LINE, MUTED, RAISED},
-    workspace_history::{Catalog, NodeId, NodeKind, ProjectNode, Run, timestamp},
+    workspace_history::{Catalog, NodeId, NodeKind, ProjectNode, Run, SubjectMeta, timestamp},
 };
 use eframe::egui::{self, Align2, Color32, FontId, Key, RichText, Sense, Stroke};
 use std::path::{Path, PathBuf};
@@ -47,19 +47,20 @@ pub(crate) struct ProjectExplorer {
 }
 /// Reversible organization metadata only. Recipes, manifests and immutable Run
 /// observations are deliberately outside this history.
-#[derive(Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq)]
 struct Organization {
     nodes: Vec<OrganizedNode>,
     results: Vec<(PathBuf, String, bool)>,
     version_names: Vec<(String, String)>,
 }
-#[derive(Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq)]
 struct OrganizedNode {
     id: NodeId,
     parent: Option<NodeId>,
     name: String,
     kind: NodeKind,
     notes: String,
+    subject: Option<SubjectMeta>,
 }
 impl Organization {
     fn capture(catalog: &Catalog) -> Self {
@@ -73,6 +74,7 @@ impl Organization {
                     name: n.name.clone(),
                     kind: n.kind,
                     notes: n.notes.clone(),
+                    subject: n.subject.clone(),
                 })
                 .collect(),
             version_names: catalog
@@ -88,15 +90,14 @@ impl Organization {
         }
     }
     fn apply(&self, catalog: &mut Catalog) {
-        // Stacks can only enter through import; an undo never removes captures.
-        catalog.nodes.retain(|n| {
-            n.kind == NodeKind::Stack || self.nodes.iter().any(|saved| saved.id == n.id)
-        });
         for saved in &self.nodes {
             if let Some(node) = catalog.node_mut(saved.id) {
                 node.parent = saved.parent;
                 node.name.clone_from(&saved.name);
                 node.notes.clone_from(&saved.notes);
+                if node.kind == NodeKind::Subject && saved.subject.is_some() {
+                    node.subject.clone_from(&saved.subject);
+                }
             } else if saved.kind != NodeKind::Stack {
                 catalog.nodes.push(ProjectNode {
                     id: saved.id,
@@ -107,9 +108,35 @@ impl Organization {
                     expanded: true,
                     stack: None,
                     revisions: vec![],
+                    subject: (saved.kind == NodeKind::Subject).then(|| {
+                        saved
+                            .subject
+                            .clone()
+                            .unwrap_or_else(|| SubjectMeta::new(timestamp()))
+                    }),
                 });
             }
         }
+        // Stacks can only enter through import and subjects hold them: an
+        // undo never removes either, nor any container still holding one.
+        let mut keep: std::collections::HashSet<NodeId> = catalog
+            .nodes
+            .iter()
+            .filter(|n| {
+                matches!(n.kind, NodeKind::Stack | NodeKind::Subject)
+                    || self.nodes.iter().any(|saved| saved.id == n.id)
+            })
+            .map(|n| n.id)
+            .collect();
+        let mut pending: Vec<NodeId> = keep.iter().copied().collect();
+        while let Some(id) = pending.pop() {
+            if let Some(parent) = catalog.node(id).and_then(|n| n.parent)
+                && keep.insert(parent)
+            {
+                pending.push(parent);
+            }
+        }
+        catalog.nodes.retain(|n| keep.contains(&n.id));
         for (id, name) in &self.version_names {
             if let Some(v) = catalog.photo_versions.iter_mut().find(|v| v.id == *id) {
                 v.name.clone_from(name);
@@ -678,6 +705,7 @@ impl ProjectExplorer {
             NodeKind::Project => Glyph::Project,
             NodeKind::Folder => Glyph::Folder,
             NodeKind::Stack => Glyph::Stack,
+            NodeKind::Subject => Glyph::Subject,
         };
         glyph(
             ui.painter(),
@@ -697,20 +725,39 @@ impl ProjectExplorer {
                 1 => "1 result".into(),
                 count => format!("{count} results"),
             },
+            NodeKind::Subject => match children.len() {
+                0 => "subject".into(),
+                1 => "1 stack".into(),
+                count => format!("{count} stacks"),
+            },
         };
-        let representative = if node.kind == NodeKind::Stack {
+        let stack_picture = |stack: NodeId| {
             catalog
-                .latest_run(id)
+                .latest_run(stack)
                 .map(|r| (r.output.clone(), false))
                 .or_else(|| {
                     catalog
-                        .node(id)
+                        .node(stack)
                         .and_then(|n| n.stack.as_ref())
                         .and_then(|s| s.sources.first())
                         .map(|s| (s.path.clone(), true))
                 })
-        } else {
-            None
+        };
+        let representative = match node.kind {
+            NodeKind::Stack => stack_picture(id),
+            // The chosen photograph, else the newest stack's.
+            NodeKind::Subject => catalog
+                .node(id)
+                .and_then(|n| n.subject.as_ref())
+                .and_then(|s| s.hero.clone())
+                .map(|hero| (hero, false))
+                .or_else(|| {
+                    children
+                        .iter()
+                        .rev()
+                        .find_map(|&child| stack_picture(child))
+                }),
+            NodeKind::Project | NodeKind::Folder => None,
         };
         let texture = representative
             .as_ref()
@@ -818,6 +865,7 @@ impl ProjectExplorer {
                 NodeKind::Project => "Project",
                 NodeKind::Folder => "Virtual folder",
                 NodeKind::Stack => "Stack · source captures and results",
+                NodeKind::Subject => "Subject · the stacks of one specimen",
             }
         );
         hit.clone().on_hover_ui(|ui| {
@@ -839,7 +887,7 @@ impl ProjectExplorer {
                 ui.close();
             }
             if node.kind != NodeKind::Stack {
-                if ui.button("New folder…").clicked() {
+                if node.kind != NodeKind::Subject && ui.button("New folder…").clicked() {
                     self.edit(EditTarget::Folder(id), "New folder");
                     ui.close();
                 }
@@ -1428,6 +1476,7 @@ impl ProjectExplorer {
             NodeKind::Project => "Project",
             NodeKind::Folder => "Folder",
             NodeKind::Stack => "Stack",
+            NodeKind::Subject => "Subject",
         };
         let details = if let Some(draft) = &node.stack {
             format!(
@@ -1489,6 +1538,7 @@ enum Glyph {
     Project,
     Folder,
     Stack,
+    Subject,
     Result,
     Right,
     Down,
@@ -1503,6 +1553,7 @@ fn glyph(painter: &egui::Painter, center: egui::Pos2, glyph: Glyph, color: Color
         Glyph::Project => Icon::Projects,
         Glyph::Folder => Icon::Folder,
         Glyph::Stack => Icon::Stack,
+        Glyph::Subject => Icon::Camera,
         Glyph::Result => Icon::Photograph,
         Glyph::Right => Icon::Right,
         Glyph::Down => Icon::Down,
