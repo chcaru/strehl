@@ -379,6 +379,15 @@ impl StrehlApp {
         }
     }
 
+    /// Today's Edit pane. Studio 2's Develop replaced it (app-station-develop.rs);
+    /// it stays compiled as the benchmark baseline and for its tests.
+    #[cfg_attr(
+        not(test),
+        expect(
+            dead_code,
+            reason = "retired by Studio 2 Develop; kept as the benchmark baseline"
+        )
+    )]
     pub(super) fn edit_panel(&mut self, ui: &mut egui::Ui) {
         ui.spacing_mut().interact_size.y = controls::ACTION_HEIGHT;
         ui.spacing_mut().item_spacing = egui::vec2(6.0, 4.0);
@@ -574,7 +583,7 @@ impl StrehlApp {
         }
     }
 
-    fn current_adjustments(&mut self) -> &mut Adjustments {
+    pub(super) fn current_adjustments(&mut self) -> &mut Adjustments {
         if let Some(index) = self
             .editor
             .recipe
@@ -655,7 +664,7 @@ impl StrehlApp {
             });
     }
 
-    fn edit_region_shelf(&mut self, ui: &mut egui::Ui, open: bool) {
+    pub(super) fn edit_region_shelf(&mut self, ui: &mut egui::Ui, open: bool) {
         let (heading, hit) =
             ui.allocate_exact_size(egui::vec2(ui.available_width(), 29.0), egui::Sense::click());
         theme::rule(ui.painter(), heading.left_top(), heading.right_top(), LINE);
@@ -1044,7 +1053,7 @@ impl StrehlApp {
         }
     }
 
-    fn region_inspector(&mut self, ui: &mut egui::Ui) {
+    pub(super) fn region_inspector(&mut self, ui: &mut egui::Ui) {
         if self.editor.selected.is_none() {
             return;
         }

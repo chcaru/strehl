@@ -416,7 +416,12 @@ pub(crate) struct DevelopView<'a> {
     pub um_per_px: Option<f64>,
     pub image_size: [u32; 2],
     pub hdr_photo: bool,
+    /// The display can show HDR now (the presenter is active).
+    pub hdr_available: bool,
+    /// The photograph is presented in HDR (not switched to SDR).
     pub hdr_display: bool,
+    /// What the display reports: state, monitor, reason, luminance.
+    pub display: Vec<String>,
     pub can_export: bool,
 }
 
@@ -426,6 +431,11 @@ pub(crate) enum DevelopIntent {
     SetCompare(Compare),
     SetSurround(Surround),
     SetHdr(bool),
+    /// The HDR photograph's peak and reference white, in nits.
+    SetHdrLuminance {
+        peak_nits: f32,
+        reference_white_nits: f32,
+    },
     ToggleClipping,
     SetBrush {
         size_px: f32,
@@ -517,7 +527,7 @@ pub(crate) fn default_range(planes: usize) -> (usize, usize) {
 
 // ---------------------------------------------------------------- tools strip
 
-/// The 44 px tools column. Returns the tool clicked.
+/// The tools column (44 px). The shell fills and rules the panel.
 pub(crate) fn tools_strip(
     ui: &mut Ui,
     palette: &StudioPalette,
@@ -525,14 +535,6 @@ pub(crate) fn tools_strip(
 ) -> Option<DevelopTool> {
     let mut chosen = None;
     let rect = ui.available_rect_before_wrap();
-    ui.painter()
-        .rect_filled(rect, CornerRadius::ZERO, palette.panel);
-    style::hairline(
-        ui.painter(),
-        rect.right_top(),
-        rect.right_bottom(),
-        palette.line,
-    );
     let mut y = rect.top() + 8.0;
     for (i, tool) in DevelopTool::ALL.into_iter().enumerate() {
         if i == 3 || i == 6 {
@@ -595,109 +597,109 @@ pub(crate) fn tool_shortcut(ctx: &egui::Context) -> Option<DevelopTool> {
     })
 }
 
+/// The other Develop keys: `[` and `]` size the brush, `\` toggles before
+/// and after.
+pub(crate) fn view_shortcuts(ctx: &egui::Context, canvas: &DevelopCanvas) -> Vec<DevelopIntent> {
+    if ctx.wants_keyboard_input() {
+        return Vec::new();
+    }
+    ctx.input(|i| {
+        let mut out = Vec::new();
+        if i.modifiers.any() {
+            return out;
+        }
+        let size = if canvas.tool == DevelopTool::Heal {
+            canvas.heal_px
+        } else {
+            canvas.brush_px
+        };
+        for (key, factor) in [
+            (egui::Key::OpenBracket, 0.8),
+            (egui::Key::CloseBracket, 1.25),
+        ] {
+            if i.key_pressed(key) {
+                out.push(DevelopIntent::SetBrush {
+                    size_px: (size * factor).round().clamp(4.0, 240.0),
+                    feather: canvas.brush_feather,
+                });
+            }
+        }
+        if i.key_pressed(egui::Key::Backslash) {
+            out.push(DevelopIntent::SetCompare(
+                if canvas.compare == Compare::Before {
+                    Compare::After
+                } else {
+                    Compare::Before
+                },
+            ));
+        }
+        out
+    })
+}
+
 // -------------------------------------------------------------- control strip
 
-/// The 36 px strip above the canvas: the tool's options at the left, the
+/// The 36 px strip above the canvas, drawn into the shell's row (a
+/// left-to-right layout already inset): the tool's options at the left, the
 /// view controls (compare, surround, HDR, clipping) at the right.
 pub(crate) fn control_strip(
     ui: &mut Ui,
     view: &DevelopView<'_>,
     canvas: &DevelopCanvas,
-    rail: &mut dyn DepthRail,
 ) -> Vec<DevelopIntent> {
     let pal = view.palette;
     let mut intents = Vec::new();
-    let rect = ui.available_rect_before_wrap();
-    let strip = Rect::from_min_size(rect.min, egui::vec2(rect.width(), 36.0));
-    ui.painter()
-        .rect_filled(strip, CornerRadius::ZERO, pal.panel);
-    style::hairline(
-        ui.painter(),
-        strip.left_bottom(),
-        strip.right_bottom(),
-        pal.line,
-    );
-    let mut child = ui.new_child(
-        egui::UiBuilder::new()
-            .max_rect(strip.shrink2(egui::vec2(14.0, 0.0)))
-            .layout(egui::Layout::left_to_right(egui::Align::Center)),
-    );
-    let ui = &mut child;
     ui.spacing_mut().item_spacing.x = 14.0;
     style::caps(ui, canvas.tool.caption(), style::CAPS, pal.accent);
     vr(ui, pal);
+    ui.spacing_mut().item_spacing.x = 10.0;
     match canvas.tool {
         DevelopTool::DepthBrush => {
-            ui.spacing_mut().item_spacing.x = 8.0;
-            let size = style::slider(
-                ui,
-                pal,
-                "Size",
-                canvas.brush_px,
-                4.0..=240.0,
-                40.0,
-                Number::Whole,
-                120.0,
-            );
-            let feather = style::slider(
-                ui,
-                pal,
-                "Feather",
-                canvas.brush_feather,
-                0.0..=1.0,
-                0.5,
-                Number::Fixed2,
-                120.0,
-            );
+            style::text(ui, "Size", 12.5, pal.ink_2);
+            let size = style::inline_slider(ui, pal, canvas.brush_px, 4.0..=240.0, 80.0);
+            style::text(ui, "Feather", 12.5, pal.ink_2);
+            let feather = style::inline_slider(ui, pal, canvas.brush_feather, 0.0..=1.0, 80.0);
             if size.value.is_some() || feather.value.is_some() {
                 intents.push(DevelopIntent::SetBrush {
-                    size_px: size.value.unwrap_or(canvas.brush_px),
+                    size_px: size.value.map_or(canvas.brush_px, f32::round),
                     feather: feather.value.unwrap_or(canvas.brush_feather),
                 });
             }
             if let Some(planes) = view.planes {
-                let range = canvas.repair_range.unwrap_or_else(|| default_range(planes));
-                if let Some((first, last)) = rail.show(ui, pal, range, planes) {
-                    intents.push(DevelopIntent::SetRepairRange(first, last));
-                }
-                style::text(ui, "drag on the rail to change", style::BODY, pal.ink_3);
+                let (first, last) = canvas.repair_range.unwrap_or_else(|| default_range(planes));
+                style::text(ui, "Take from", 12.5, pal.ink_2);
+                style::strong(ui, &layers::plane_range(first, last), 12.5, pal.accent);
+                style::text(ui, "drag on the rail to change", 12.5, pal.ink_3);
             } else {
                 style::text(
                     ui,
                     "Open the stack's planes to choose where to take from",
-                    style::BODY,
+                    12.5,
                     pal.ink_3,
                 );
             }
-            if view.repair.pending && view.repair.running.is_none() {
-                if style::button(
+            if let Some(running) = &view.repair.running {
+                style::text(ui, running, 12.5, pal.ink_2);
+            } else if view.repair.pending
+                && style::button(
                     ui,
                     pal,
                     "Rebuild now",
                     ButtonKind::Plain,
-                    egui::vec2(96.0, 22.0),
+                    egui::vec2(92.0, 22.0),
                     true,
                 )
+                .on_hover_text("Re-stack the painted areas from their planes in the background")
                 .clicked()
-                {
-                    intents.push(DevelopIntent::StartRepair);
-                }
-            } else if let Some(running) = &view.repair.running {
-                style::text(ui, running, style::BODY, pal.ink_2);
+            {
+                intents.push(DevelopIntent::StartRepair);
             }
         }
         DevelopTool::Crop => {
             let angle = view.recipe.crop.map_or(0.0, |c| c.angle_deg);
-            let out = style::slider(
-                ui,
-                pal,
-                "Straighten",
-                angle,
-                -45.0..=45.0,
-                0.0,
-                Number::Fixed2,
-                200.0,
-            );
+            style::text(ui, "Straighten", 12.5, pal.ink_2);
+            let out = style::inline_slider(ui, pal, angle, -45.0..=45.0, 160.0);
+            style::text(ui, &format!("{angle:+.1}°"), 12.5, pal.ink);
             if let Some(value) = out.value {
                 let crop = view.recipe.crop.unwrap_or(Crop {
                     min: [0.0, 0.0],
@@ -705,46 +707,49 @@ pub(crate) fn control_strip(
                     angle_deg: 0.0,
                 });
                 let turned = Crop {
-                    angle_deg: value,
+                    angle_deg: (value * 10.0).round() / 10.0,
                     ..crop
                 };
                 intents.push(DevelopIntent::SetCrop(Some(
                     turned.fit_inside(view.image_size[0].max(1), view.image_size[1].max(1)),
                 )));
             }
-            if style::link(ui, pal, "Reset crop", false).clicked() {
-                intents.push(DevelopIntent::SetCrop(None));
+            if let Some(crop) = view.recipe.crop {
+                let [w, h] = crop.output_size(view.image_size[0].max(1), view.image_size[1].max(1));
+                style::text(ui, &format!("{w} × {h}"), 12.5, pal.ink_3);
+                if style::link(ui, pal, "Reset", false).clicked() {
+                    intents.push(DevelopIntent::SetCrop(None));
+                }
+            } else {
+                style::text(
+                    ui,
+                    "drag the frame's edges on the photograph",
+                    12.5,
+                    pal.ink_3,
+                );
             }
         }
         DevelopTool::WhiteBalance => {
             style::text(
                 ui,
                 "Click something neutral · warmth and tint stop at a factor of 2",
-                style::BODY,
+                12.5,
                 pal.ink_2,
             );
         }
         DevelopTool::Heal => {
-            let size = style::slider(
-                ui,
-                pal,
-                "Size",
-                canvas.heal_px,
-                4.0..=200.0,
-                24.0,
-                Number::Whole,
-                140.0,
-            );
+            style::text(ui, "Size", 12.5, pal.ink_2);
+            let size = style::inline_slider(ui, pal, canvas.heal_px, 4.0..=200.0, 80.0);
             if let Some(value) = size.value {
                 intents.push(DevelopIntent::SetBrush {
-                    size_px: value,
+                    size_px: value.round(),
                     feather: canvas.brush_feather,
                 });
             }
             style::text(
                 ui,
                 "click a spot · its source is taken beside it",
-                style::BODY,
+                12.5,
                 pal.ink_3,
             );
         }
@@ -761,26 +766,23 @@ pub(crate) fn control_strip(
                 &["Dark ground", "Light ground"],
                 Some(usize::from(current.key == BackdropKey::Light)),
             );
-            let level = style::slider(
+            style::text(ui, "Level", 12.5, pal.ink_2);
+            // Logarithmic: 0.1 % to 100 % of white.
+            let level = style::inline_slider(
                 ui,
                 pal,
-                "Level %",
-                current.threshold * 100.0,
-                0.1..=100.0,
-                1.2,
-                Number::Fixed2,
-                140.0,
+                (current.threshold * 1000.0).log10(),
+                0.0..=3.0,
+                100.0,
             );
-            let soft = style::slider(
+            style::text(
                 ui,
-                pal,
-                "Soft edge",
-                current.softness,
-                0.0..=4.0,
-                1.0,
-                Number::Fixed2,
-                120.0,
+                &format!("{:.1} %", current.threshold * 100.0),
+                12.5,
+                pal.ink,
             );
+            style::text(ui, "Soft edge", 12.5, pal.ink_2);
+            let soft = style::inline_slider(ui, pal, current.softness, 0.0..=4.0, 80.0);
             let mut next = current;
             if let Some(k) = key {
                 next.key = if k == 0 {
@@ -790,10 +792,10 @@ pub(crate) fn control_strip(
                 };
             }
             if let Some(v) = level.value {
-                next.threshold = (v / 100.0).clamp(0.001, 1.0);
+                next.threshold = (10f32.powf(v) / 1000.0).clamp(0.001, 1.0);
             }
             if let Some(v) = soft.value {
-                next.softness = v;
+                next.softness = (v * 10.0).round() / 10.0;
             }
             if next != current || (view.recipe.backdrop.is_none() && key.is_some()) {
                 intents.push(DevelopIntent::SetBackdrop(Some(next)));
@@ -813,7 +815,7 @@ pub(crate) fn control_strip(
             });
             let mut next = bar;
             let mut length = bar.length_um;
-            style::text(ui, "Length", style::BODY, pal.ink_2);
+            style::text(ui, "Length", 12.5, pal.ink_2);
             if ui
                 .add(
                     egui::DragValue::new(&mut length)
@@ -859,7 +861,7 @@ pub(crate) fn control_strip(
                     Some(um) => format!("{um:.3} µm per pixel from the subject"),
                     None => "No scale calibration for this subject".into(),
                 },
-                style::BODY,
+                12.5,
                 if view.um_per_px.is_some() {
                     pal.ink_3
                 } else {
@@ -871,7 +873,7 @@ pub(crate) fn control_strip(
             style::text(
                 ui,
                 "Click to pin a note; edit its text in Layers",
-                style::BODY,
+                12.5,
                 pal.ink_2,
             );
         }
@@ -893,25 +895,27 @@ pub(crate) fn control_strip(
             }
         }
         DevelopTool::Move => {
-            style::text(ui, "Drag to move · scroll to zoom", style::BODY, pal.ink_3);
+            style::text(
+                ui,
+                "Drag to move · scroll to zoom · double-click to fit",
+                12.5,
+                pal.ink_3,
+            );
         }
     }
-    // View controls, right-aligned.
+    // View controls, right-aligned; the order on screen is left to right.
     ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
         ui.spacing_mut().item_spacing.x = 14.0;
-        if style::button(
-            ui,
-            pal,
-            "Clipping",
-            ButtonKind::Quiet,
-            egui::vec2(64.0, 22.0),
-            true,
-        )
-        .clicked()
+        if style::toggle_button(ui, pal, "Clipping", canvas.clipping)
+            .on_hover_text("Mark the developed photograph's pure black and pure white")
+            .clicked()
         {
             intents.push(DevelopIntent::ToggleClipping);
         }
+        // Shown only where it changes something: an HDR photograph on an
+        // HDR display.
         if view.hdr_photo
+            && view.hdr_available
             && let Some(i) = style::seg(
                 ui,
                 pal,
@@ -925,6 +929,7 @@ pub(crate) fn control_strip(
             intents.push(DevelopIntent::SetSurround(s));
         }
         let compare = [Compare::After, Compare::Before, Compare::Split];
+        // Right to left: the segments are listed in reverse.
         if let Some(i) = style::seg(
             ui,
             pal,
@@ -949,32 +954,111 @@ fn vr(ui: &mut Ui, pal: &StudioPalette) {
 
 fn swatches(ui: &mut Ui, pal: &StudioPalette, current: Surround) -> Option<Surround> {
     let mut chosen = None;
-    // Right-to-left layout: allocate in reverse to keep black first on screen.
-    for surround in Surround::ALL.into_iter().rev() {
-        let (rect, response) = ui.allocate_exact_size(egui::vec2(14.0, 14.0), Sense::click());
-        ui.painter()
-            .rect_filled(rect, CornerRadius::ZERO, surround.colour());
-        let ring = if surround == current {
-            Stroke::new(1.5_f32, pal.accent)
-        } else {
-            Stroke::new(1.0_f32, pal.line_2)
-        };
-        ui.painter().rect_stroke(
-            rect,
-            CornerRadius::ZERO,
-            ring,
-            if surround == current {
-                StrokeKind::Outside
-            } else {
-                StrokeKind::Inside
-            },
+    let (rect, _) =
+        ui.allocate_exact_size(egui::vec2(4.0 * 14.0 + 3.0 * 3.0, 14.0), Sense::hover());
+    for (i, surround) in Surround::ALL.into_iter().enumerate() {
+        let cell = Rect::from_min_size(
+            egui::pos2(rect.left() + i as f32 * 17.0, rect.top()),
+            egui::vec2(14.0, 14.0),
         );
+        let response = ui
+            .interact(cell, ui.id().with(("surround", i)), Sense::click())
+            .on_hover_text(match surround {
+                Surround::Black => "Black surround",
+                Surround::Dark => "Dark surround",
+                Surround::Grey => "Mid-grey surround",
+                Surround::White => "White surround",
+            });
+        ui.painter()
+            .rect_filled(cell, CornerRadius::ZERO, surround.colour());
+        if surround == current {
+            ui.painter().rect_stroke(
+                cell,
+                CornerRadius::ZERO,
+                Stroke::new(1.5_f32, pal.accent),
+                StrokeKind::Outside,
+            );
+        } else {
+            ui.painter().rect_stroke(
+                cell,
+                CornerRadius::ZERO,
+                Stroke::new(1.0_f32, pal.line_2),
+                StrokeKind::Inside,
+            );
+        }
         if response.clicked() {
             chosen = Some(surround);
         }
-        ui.add_space(-11.0);
     }
     chosen
+}
+
+// ----------------------------------------------------------------------- rail
+
+/// The rail slot while the depth brush is out: its head and the planes the
+/// painted area takes from. The Stack station's depth rail (P3) replaces
+/// `RangeFallback` through `DepthRail`; this head and the range stay.
+pub(crate) fn depth_rail(
+    ui: &mut Ui,
+    view: &DevelopView<'_>,
+    canvas: &DevelopCanvas,
+    rail: &mut dyn DepthRail,
+) -> Vec<DevelopIntent> {
+    let pal = view.palette;
+    let mut intents = Vec::new();
+    let rect = ui.max_rect();
+    let head = Rect::from_min_size(rect.min, egui::vec2(rect.width(), 30.0));
+    let mut head_ui = ui.new_child(
+        egui::UiBuilder::new()
+            .max_rect(head.shrink2(egui::vec2(14.0, 0.0)))
+            .layout(egui::Layout::left_to_right(egui::Align::Center)),
+    );
+    head_ui.spacing_mut().item_spacing.x = 16.0;
+    style::caps(&mut head_ui, "Depth rail", style::CAPS, pal.ink);
+    style::text(
+        &mut head_ui,
+        "planes the painted area takes from",
+        style::SMALL,
+        pal.ink_3,
+    );
+    head_ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+        style::text(
+            ui,
+            "the sharpness trace arrives with the Stack station's rail",
+            style::SMALL,
+            pal.ink_3,
+        );
+    });
+    let body = Rect::from_min_max(egui::pos2(rect.left() + 14.0, head.bottom()), rect.max);
+    let mut body_ui = ui.new_child(
+        egui::UiBuilder::new()
+            .max_rect(body)
+            .layout(egui::Layout::left_to_right(egui::Align::Center)),
+    );
+    body_ui.spacing_mut().item_spacing.x = 8.0;
+    match view.planes {
+        Some(planes) => {
+            let range = canvas.repair_range.unwrap_or_else(|| default_range(planes));
+            if let Some((first, last)) = rail.show(&mut body_ui, pal, range, planes) {
+                intents.push(DevelopIntent::SetRepairRange(first, last));
+            }
+            style::text(
+                &mut body_ui,
+                &format!("of {planes}"),
+                style::SMALL,
+                pal.ink_3,
+            );
+        }
+        None => {
+            style::text(
+                &mut body_ui,
+                "Open this photograph's stack to choose its planes.",
+                style::SMALL,
+                pal.ink_3,
+            );
+        }
+    }
+    intents
 }
 
 // ------------------------------------------------------------------ inspector
@@ -983,44 +1067,160 @@ fn swatches(ui: &mut Ui, pal: &StudioPalette, current: Surround) -> Option<Surro
 #[derive(Clone, Debug, Default)]
 pub(crate) struct DevelopPanel {
     pub tab: InspectorTab,
-    /// Detail, Crop and straighten, Display.
-    pub groups: [bool; 3],
+    /// Detail, Crop and straighten, Display; then the app's Saved looks and
+    /// Source evidence groups.
+    pub groups: [bool; 6],
 }
 
-/// The 348 px inspector: tabs, the tab's body and the foot.
-pub(crate) fn inspector(
+/// The tabs' captions: Adjust, Layers · n, Versions · n.
+pub(crate) fn tab_labels(
+    view: &DevelopView<'_>,
+    layer_rows: &[LayerRow],
+) -> [(InspectorTab, String); 3] {
+    [
+        (InspectorTab::Adjust, "Adjust".to_owned()),
+        (
+            InspectorTab::Layers,
+            format!("Layers · {}", layer_rows.len()),
+        ),
+        (
+            InspectorTab::Versions,
+            format!("Versions · {}", view.versions.len()),
+        ),
+    ]
+}
+
+/// A foldable group's head in the Adjust tab: chevron, title, summary, rule.
+pub(crate) fn group_header(
+    ui: &mut Ui,
+    pal: &StudioPalette,
+    title: &str,
+    summary: &str,
+    open: bool,
+) -> egui::Response {
+    let width = ui.available_width();
+    let (rect, response) = ui.allocate_exact_size(egui::vec2(width, 34.0), Sense::click());
+    let painter = ui.painter();
+    style::hairline(painter, rect.left_bottom(), rect.right_bottom(), pal.line);
+    let chevron = Rect::from_center_size(
+        egui::pos2(rect.left() + 5.0, rect.center().y),
+        egui::vec2(11.0, 11.0),
+    );
+    style::icon(
+        painter,
+        chevron,
+        Icon::Chevron,
+        if open { pal.accent } else { pal.ink_3 },
+    );
+    style::paint_strong(
+        painter,
+        egui::pos2(rect.left() + 19.0, rect.center().y),
+        Align2::LEFT_CENTER,
+        title,
+        style::BODY,
+        if response.hovered() {
+            pal.accent
+        } else {
+            pal.ink
+        },
+    );
+    style::paint_text(
+        painter,
+        rect.right_center(),
+        Align2::RIGHT_CENTER,
+        summary,
+        style::SMALL,
+        pal.ink_3,
+    );
+    response
+}
+
+/// Display: what the screen reports, and an HDR photograph's luminance.
+fn display_group(ui: &mut Ui, view: &DevelopView<'_>, intents: &mut Vec<DevelopIntent>) {
+    let pal = view.palette;
+    for (i, line) in view.display.iter().enumerate() {
+        style::text(
+            ui,
+            line,
+            style::SMALL,
+            if i == 0 { pal.ink } else { pal.ink_3 },
+        );
+    }
+    if !view.hdr_photo {
+        style::text(
+            ui,
+            "This saved image has no HDR highlight data. A new stack keeps the RAW-derived HDR master.",
+            style::SMALL,
+            pal.ink_2,
+        );
+        return;
+    }
+    let hdr = view.recipe.hdr;
+    let width = ui.available_width();
+    let peak = style::slider(
+        ui,
+        pal,
+        "Peak brightness",
+        hdr.peak_nits,
+        hdr.reference_white_nits..=10_000.0,
+        1000.0,
+        style::Number::Whole,
+        width,
+    );
+    let max_white = hdr.peak_nits.min(500.0);
+    let white = style::slider(
+        ui,
+        pal,
+        "Reference white",
+        hdr.reference_white_nits,
+        80.0..=max_white,
+        203.0_f32.min(max_white),
+        style::Number::Whole,
+        width,
+    );
+    if peak.value.is_some() || white.value.is_some() {
+        intents.push(DevelopIntent::SetHdrLuminance {
+            peak_nits: peak.value.unwrap_or(hdr.peak_nits).round(),
+            reference_white_nits: white.value.unwrap_or(hdr.reference_white_nits).round(),
+        });
+    }
+}
+
+/// The open tab's contents, for a caller that pads and scrolls them.
+pub(crate) fn tab_contents(
     ui: &mut Ui,
     panel: &mut DevelopPanel,
     view: &DevelopView<'_>,
     layer_rows: &[LayerRow],
 ) -> Vec<DevelopIntent> {
-    let pal = view.palette;
     let mut intents = Vec::new();
-    let full = ui.available_rect_before_wrap();
-    ui.painter()
-        .rect_filled(full, CornerRadius::ZERO, pal.panel);
-    style::hairline(ui.painter(), full.left_top(), full.left_bottom(), pal.line);
-    let names = [
-        "Adjust".to_owned(),
-        format!("Layers · {}", layer_rows.len()),
-        format!("Versions · {}", view.versions.len()),
-    ];
-    let tab = match panel.tab {
-        InspectorTab::Adjust => 0,
-        InspectorTab::Layers => 1,
-        InspectorTab::Versions => 2,
-    };
-    if let Some(i) = style::tabs(ui, pal, &names, tab) {
-        panel.tab = [
-            InspectorTab::Adjust,
-            InspectorTab::Layers,
-            InspectorTab::Versions,
-        ][i];
+    match panel.tab {
+        InspectorTab::Adjust => adjust_tab(ui, panel, view, layer_rows, &mut intents),
+        InspectorTab::Layers => {
+            let status = view.repair.running.as_deref();
+            intents.extend(
+                layers::layers_panel(ui, view.palette, layer_rows, view.scope, status)
+                    .into_iter()
+                    .map(DevelopIntent::Layer),
+            );
+        }
+        InspectorTab::Versions => versions_tab(ui, view, &mut intents),
     }
-    let foot_height = 53.0;
+    intents
+}
+
+/// The tab's body, padded and scrolling, for the shell's inspector body.
+pub(crate) fn inspector_body(
+    ui: &mut Ui,
+    panel: &mut DevelopPanel,
+    view: &DevelopView<'_>,
+    layer_rows: &[LayerRow],
+) -> Vec<DevelopIntent> {
+    let mut intents = Vec::new();
+    let rect = ui.max_rect();
     let body = Rect::from_min_max(
-        egui::pos2(full.left() + 16.0, ui.cursor().top() + 14.0),
-        egui::pos2(full.right() - 16.0, full.bottom() - foot_height - 8.0),
+        egui::pos2(rect.left() + 16.0, rect.top() + 14.0),
+        egui::pos2(rect.right() - 16.0, rect.bottom() - 8.0),
     );
     let mut body_ui = ui.new_child(
         egui::UiBuilder::new()
@@ -1032,20 +1232,85 @@ pub(crate) fn inspector(
         .auto_shrink([false, false])
         .show(&mut body_ui, |ui| {
             ui.spacing_mut().item_spacing.y = 9.0;
-            match panel.tab {
-                InspectorTab::Adjust => adjust_tab(ui, panel, view, layer_rows, &mut intents),
-                InspectorTab::Layers => {
-                    let status = view.repair.running.as_deref();
-                    intents.extend(
-                        layers::layers_panel(ui, pal, layer_rows, view.scope, status)
-                            .into_iter()
-                            .map(DevelopIntent::Layer),
-                    );
-                }
-                InspectorTab::Versions => versions_tab(ui, view, &mut intents),
-            }
+            intents = tab_contents(ui, panel, view, layer_rows);
         });
-    // Foot: Export… and Save version.
+    intents
+}
+
+/// The foot: Export… and Save version, into the shell's footer row.
+pub(crate) fn inspector_footer(ui: &mut Ui, view: &DevelopView<'_>) -> Vec<DevelopIntent> {
+    let pal = view.palette;
+    let mut intents = Vec::new();
+    let save_width = 92.0;
+    let export_width = (ui.available_width() - save_width - 8.0).max(80.0);
+    let export = style::button(
+        ui,
+        pal,
+        "Export…",
+        ButtonKind::Primary,
+        egui::vec2(export_width, 28.0),
+        view.can_export,
+    );
+    // The mockup's chevron: Export is the next station.
+    style::icon(
+        ui.painter(),
+        Rect::from_center_size(
+            egui::pos2(export.rect.right() - 16.0, export.rect.center().y),
+            egui::vec2(12.0, 12.0),
+        ),
+        Icon::Chevron,
+        if view.can_export {
+            pal.accent_ink
+        } else {
+            pal.ink_3
+        },
+    );
+    if export.clicked() {
+        intents.push(DevelopIntent::Export);
+    }
+    if style::button(
+        ui,
+        pal,
+        "Save version",
+        ButtonKind::Plain,
+        egui::vec2(save_width, 28.0),
+        true,
+    )
+    .clicked()
+    {
+        intents.push(DevelopIntent::SaveVersion);
+    }
+    intents
+}
+
+/// Tabs, body and foot together: the whole 348 px inspector, for callers
+/// without the shell (tests, a floating panel).
+pub(crate) fn inspector(
+    ui: &mut Ui,
+    panel: &mut DevelopPanel,
+    view: &DevelopView<'_>,
+    layer_rows: &[LayerRow],
+) -> Vec<DevelopIntent> {
+    let pal = view.palette;
+    let full = ui.available_rect_before_wrap();
+    ui.painter()
+        .rect_filled(full, CornerRadius::ZERO, pal.panel);
+    let labels = tab_labels(view, layer_rows);
+    let names: Vec<String> = labels.iter().map(|(_, l)| l.clone()).collect();
+    let tab = labels
+        .iter()
+        .position(|(t, _)| *t == panel.tab)
+        .unwrap_or(0);
+    if let Some(i) = style::tabs(ui, pal, &names, tab) {
+        panel.tab = labels[i].0;
+    }
+    let foot_height = 53.0;
+    let body = Rect::from_min_max(
+        egui::pos2(full.left(), full.top() + 36.0),
+        egui::pos2(full.right(), full.bottom() - foot_height),
+    );
+    let mut body_ui = ui.new_child(egui::UiBuilder::new().max_rect(body));
+    let mut intents = inspector_body(&mut body_ui, panel, view, layer_rows);
     let foot = Rect::from_min_max(
         egui::pos2(full.left(), full.bottom() - foot_height),
         full.max,
@@ -1057,32 +1322,7 @@ pub(crate) fn inspector(
             .layout(egui::Layout::left_to_right(egui::Align::Center)),
     );
     foot_ui.spacing_mut().item_spacing.x = 8.0;
-    let save_width = 92.0;
-    let export_width = foot_ui.available_width() - save_width - 8.0;
-    if style::button(
-        &mut foot_ui,
-        pal,
-        "Export…",
-        ButtonKind::Primary,
-        egui::vec2(export_width, 28.0),
-        view.can_export,
-    )
-    .clicked()
-    {
-        intents.push(DevelopIntent::Export);
-    }
-    if style::button(
-        &mut foot_ui,
-        pal,
-        "Save version",
-        ButtonKind::Plain,
-        egui::vec2(save_width, 28.0),
-        true,
-    )
-    .clicked()
-    {
-        intents.push(DevelopIntent::SaveVersion);
-    }
+    intents.extend(inspector_footer(&mut foot_ui, view));
     ui.advance_cursor_after_rect(full);
     intents
 }
@@ -1202,32 +1442,11 @@ fn adjust_tab(
         ),
     ];
     for (i, (title, summary)) in groups.iter().enumerate() {
-        let width = ui.available_width();
-        let (rect, response) = ui.allocate_exact_size(egui::vec2(width, 34.0), Sense::click());
-        let painter = ui.painter();
-        style::hairline(painter, rect.left_bottom(), rect.right_bottom(), pal.line);
-        let chevron = Rect::from_center_size(
-            egui::pos2(rect.left() + 5.0, rect.center().y),
-            egui::vec2(11.0, 11.0),
-        );
-        style::icon(painter, chevron, Icon::Chevron, pal.ink_3);
-        painter.text(
-            egui::pos2(rect.left() + 19.0, rect.center().y),
-            Align2::LEFT_CENTER,
-            *title,
-            egui::FontId::proportional(style::BODY),
-            pal.ink,
-        );
-        style::paint_text(
-            painter,
-            rect.right_center(),
-            Align2::RIGHT_CENTER,
-            summary,
-            style::SMALL,
-            pal.ink_3,
-        );
-        if response.clicked() {
+        if group_header(ui, pal, title, summary, panel.groups[i]).clicked() {
             panel.groups[i] = !panel.groups[i];
+        }
+        if panel.groups[i] && i == 2 {
+            display_group(ui, view, intents);
         }
         if panel.groups[i] && i == 1 {
             if style::link(ui, pal, "Choose the crop tool", false).clicked() {
@@ -1495,8 +1714,6 @@ pub(crate) struct DevelopCanvas {
     /// The surround is painted only once chosen, so today's canvas is unchanged.
     pub surround_chosen: bool,
     pub clipping: bool,
-    /// The HDR/SDR switch: a preference until the presenter can force SDR.
-    pub prefer_sdr: bool,
     /// Brush diameter in screen points.
     pub brush_px: f32,
     pub brush_feather: f32,
@@ -1522,7 +1739,6 @@ impl Default for DevelopCanvas {
             surround: Surround::Dark,
             surround_chosen: false,
             clipping: false,
-            prefer_sdr: false,
             brush_px: 40.0,
             brush_feather: 0.5,
             heal_px: 24.0,
@@ -1545,6 +1761,8 @@ pub(crate) struct CanvasView<'a> {
     pub um_per_px: Option<f64>,
     /// The split view's "before" overview, when it is ready.
     pub before: Option<(&'a egui::TextureHandle, [[f32; 2]; 2])>,
+    /// Pure black and pure white of the development, when Clipping is on.
+    pub clipping: Option<&'a egui::TextureHandle>,
 }
 
 fn uv_of(image: Rect, at: Pos2) -> [f32; 2] {
@@ -1589,6 +1807,14 @@ impl DevelopCanvas {
             return;
         }
         let painter = ui.painter().with_clip_rect(visible);
+        if let Some(texture) = view.clipping.filter(|_| self.clipping) {
+            painter.image(
+                texture.id(),
+                image,
+                Rect::from_min_max(Pos2::ZERO, egui::pos2(1.0, 1.0)),
+                Color32::WHITE,
+            );
+        }
         if self.compare == Compare::Split {
             self.split_view(ui, &painter, image, visible, view);
         }
@@ -2036,6 +2262,40 @@ pub(crate) fn paint_crop(
             pal.accent,
         );
     }
+}
+
+/// The crop as Export shows it: the outside dimmed and a hairline frame.
+pub(crate) fn paint_crop_outline(painter: &egui::Painter, image: Rect, crop: Crop, size: [u32; 2]) {
+    let size = size.map(|v| v.max(1));
+    let corners = crop
+        .corners_px(size[0], size[1])
+        .map(|c| screen_of(image, c, size));
+    let outer = [
+        image.left_top(),
+        image.right_top(),
+        image.right_bottom(),
+        image.left_bottom(),
+    ];
+    let mut mesh = egui::Mesh::default();
+    let shade = Color32::from_black_alpha(150);
+    for p in outer.iter().chain(corners.iter()) {
+        mesh.colored_vertex(*p, shade);
+    }
+    for i in 0..4u32 {
+        let j = (i + 1) % 4;
+        mesh.add_triangle(i, j, 4 + i);
+        mesh.add_triangle(j, 4 + j, 4 + i);
+    }
+    painter.add(egui::Shape::mesh(mesh));
+    let frame: Vec<Pos2> = corners
+        .iter()
+        .copied()
+        .chain(std::iter::once(corners[0]))
+        .collect();
+    painter.add(egui::Shape::line(
+        frame,
+        Stroke::new(1.0_f32, Color32::WHITE.gamma_multiply(0.4)),
+    ));
 }
 
 /// The scale bar as it will be burned in, scaled to the photograph on screen.
