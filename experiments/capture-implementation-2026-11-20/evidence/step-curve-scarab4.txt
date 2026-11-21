@@ -1,0 +1,34 @@
+step-scarab4: capture step 8, sharp width 113; 631 flat tiles, 315 detail tiles of 128 px
+every  step  width/step   scale   s1 signal/floor   detail median [p10, p1]   flat (noise) energy
+    1     8       14.1    0.7 px        9.7x (noise-limited)   1.000 [1.000, 1.000]   1.000
+    1     8       14.1    1.0 px        9.8x (noise-limited)   1.000 [1.000, 1.000]   1.000
+    1     8       14.1    1.5 px       10.0x (noise-limited)   1.000 [1.000, 1.000]   1.000
+    1     8       14.1    2.5 px       10.0x   1.000 [1.000, 1.000]   1.000
+    2    16        7.1    0.7 px        9.7x (noise-limited)   0.999 [0.988, 0.970]   0.994
+    2    16        7.1    1.0 px        9.8x (noise-limited)   1.000 [0.989, 0.971]   0.996
+    2    16        7.1    1.5 px       10.0x (noise-limited)   1.000 [0.990, 0.973]   0.997
+    2    16        7.1    2.5 px       10.0x   1.000 [0.989, 0.974]   0.998
+    3    24        4.7    0.7 px        9.7x (noise-limited)   0.987 [0.979, 0.971]   0.984
+    3    24        4.7    1.0 px        9.8x (noise-limited)   0.991 [0.984, 0.976]   0.988
+    3    24        4.7    1.5 px       10.0x (noise-limited)   0.994 [0.988, 0.980]   0.992
+    3    24        4.7    2.5 px       10.0x   0.996 [0.990, 0.983]   0.995
+    4    32        3.5    0.7 px        9.7x (noise-limited)   0.947 [0.933, 0.918]   0.941
+    4    32        3.5    1.0 px        9.8x (noise-limited)   0.953 [0.940, 0.923]   0.949
+    4    32        3.5    1.5 px       10.0x (noise-limited)   0.957 [0.946, 0.925]   0.955
+    4    32        3.5    2.5 px       10.0x   0.961 [0.950, 0.930]   0.959
+    6    48        2.4    0.7 px        9.7x (noise-limited)   0.872 [0.842, 0.821]   0.872
+    6    48        2.4    1.0 px        9.8x (noise-limited)   0.893 [0.869, 0.850]   0.893
+    6    48        2.4    1.5 px       10.0x (noise-limited)   0.914 [0.895, 0.880]   0.912
+    6    48        2.4    2.5 px       10.0x   0.934 [0.918, 0.904]   0.931
+    8    64        1.8    0.7 px        9.7x (noise-limited)   0.859 [0.834, 0.813]   0.870
+    8    64        1.8    1.0 px        9.8x (noise-limited)   0.871 [0.846, 0.827]   0.880
+    8    64        1.8    1.5 px       10.0x (noise-limited)   0.887 [0.863, 0.841]   0.893
+    8    64        1.8    2.5 px       10.0x   0.909 [0.888, 0.871]   0.912
+   12    96        1.2    0.7 px        9.7x (noise-limited)   0.833 [0.785, 0.748]   0.860
+   12    96        1.2    1.0 px        9.8x (noise-limited)   0.845 [0.796, 0.770]   0.869
+   12    96        1.2    1.5 px       10.0x (noise-limited)   0.863 [0.818, 0.794]   0.880
+   12    96        1.2    2.5 px       10.0x   0.890 [0.856, 0.837]   0.900
+crops at s1's strongest edges, 160 px square, 200 % nearest neighbour, left to right: every 1, 2, 3, 4, 6, 8, 12 plane(s)
+   step-step-scarab4-edge-0-y694-x6274.png: origin y=694 x=6274
+   step-step-scarab4-edge-1-y2351-x8824.png: origin y=2351 x=8824
+   step-step-scarab4-edge-2-y1961-x6757.png: origin y=1961 x=6757

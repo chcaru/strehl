@@ -1,0 +1,23 @@
+1. each RAW: SNR (mean / temporal sigma) by brightness of the scene point (fraction of full scale at 0.6 s), median over planes
+   setting                   0.3%     0.7%     1.4%     3.2%     7.1%    14.1%    28.3%   gain DN/e-  read e-   e- at 10 %   B/A level (sd over planes)
+   0.6 s ISO 100             12.1     18.8     23.0     36.9     46.5        -        -       0.416     0.00        3813   0.9439 (0.0189)
+   0.3 s ISO 160              8.2     12.9     15.6     25.3     32.5        -        -       0.607     1.36        2323   1.0302 (0.0101)
+   1/6 s ISO 320              5.3      8.7     10.7     17.5     22.3        -        -       1.271     1.60        1110   0.9885 (0.0066)
+   1/10 s ISO 640             4.5      7.0      8.5     14.0     17.8        -        -       2.518     0.74         672   1.0240 (0.0447)
+   1/25 s ISO 1600            2.7      4.3      5.3      8.7     11.0        -        -       6.499     0.46         260   1.0048 (0.0025)
+   1/50 s ISO 3200            1.9      3.0      3.7      6.1      7.8        -        -      12.765     0.63         133   1.0547 (0.0094)
+   1/25 s ISO 1600 single       2.7      4.3      5.3      8.6     11.0        -        -       6.397     0.85         265   0.9938 (0.0009)
+   1/25 s ISO 100 single       3.0      4.0      5.5      9.2     12.1        -        -       0.347     2.36         305   0.9632 (0.0173)
+
+2. final render (four-shot, 10 planes): SNR in flat tiles (4078 tiles of 64 px), A render minus B render, median by brightness tertile
+   tertile mean level (fraction of 16-bit full scale, 0.6 s render): 0.010, 0.012, 0.014
+   0.6 s ISO 100        dark 62.0  mid 67.7  bright 76.3   (B/A level 0.9482)
+   0.3 s ISO 160        dark 44.3  mid 48.1  bright 53.8   (B/A level 1.0204)
+   1/6 s ISO 320        dark 29.5  mid 32.4  bright 36.9   (B/A level 0.9875)
+   1/10 s ISO 640       dark 25.0  mid 27.2  bright 30.4   (B/A level 0.9772)
+   1/25 s ISO 1600      dark 14.0  mid 15.4  bright 17.7   (B/A level 1.0040)
+   1/50 s ISO 3200      dark 8.7  mid 9.7  bright 11.3   (B/A level 1.0168)
+
+3. crops, 192 px square, 200 % nearest neighbour, left to right: 0.6 s ISO 100, 0.3 s ISO 160, 1/6 s ISO 320, 1/10 s ISO 640, 1/25 s ISO 1600, 1/50 s ISO 3200
+   exposure-detail-y1344-x704.png: origin y=1344 x=704
+   exposure-dark-flat-y4736-x2752.png: origin y=4736 x=2752

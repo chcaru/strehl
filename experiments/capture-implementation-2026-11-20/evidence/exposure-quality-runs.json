@@ -1,0 +1,90 @@
+[
+ {
+  "shutter": 393226,
+  "seconds": 0.6,
+  "iso": 100,
+  "shots": 4,
+  "planes": 10,
+  "runs": [
+   "D:\\StrehlCaptures\\stack-1795224632710-4539",
+   "D:\\StrehlCaptures\\stack-1795224693963-4539"
+  ]
+ },
+ {
+  "shutter": 65539,
+  "seconds": 0.3333333333333333,
+  "iso": 160,
+  "shots": 4,
+  "planes": 10,
+  "runs": [
+   "D:\\StrehlCaptures\\stack-1795224755438-4539",
+   "D:\\StrehlCaptures\\stack-1795224808930-4539"
+  ]
+ },
+ {
+  "shutter": 65542,
+  "seconds": 0.16666666666666666,
+  "iso": 320,
+  "shots": 4,
+  "planes": 10,
+  "runs": [
+   "D:\\StrehlCaptures\\stack-1795224862647-4539",
+   "D:\\StrehlCaptures\\stack-1795224910762-4539"
+  ]
+ },
+ {
+  "shutter": 65546,
+  "seconds": 0.1,
+  "iso": 640,
+  "shots": 4,
+  "planes": 10,
+  "runs": [
+   "D:\\StrehlCaptures\\stack-1795224959614-4539",
+   "D:\\StrehlCaptures\\stack-1795225007267-4539"
+  ]
+ },
+ {
+  "shutter": 65561,
+  "seconds": 0.04,
+  "iso": 1600,
+  "shots": 4,
+  "planes": 10,
+  "runs": [
+   "D:\\StrehlCaptures\\stack-1795225055679-4539",
+   "D:\\StrehlCaptures\\stack-1795225103390-4539"
+  ]
+ },
+ {
+  "shutter": 65586,
+  "seconds": 0.02,
+  "iso": 3200,
+  "shots": 4,
+  "planes": 10,
+  "runs": [
+   "D:\\StrehlCaptures\\stack-1795225151688-4539",
+   "D:\\StrehlCaptures\\stack-1795225197851-4539"
+  ]
+ },
+ {
+  "shutter": 65561,
+  "seconds": 0.04,
+  "iso": 1600,
+  "shots": 1,
+  "planes": 3,
+  "runs": [
+   "D:\\StrehlCaptures\\stack-1795225245571-4539",
+   "D:\\StrehlCaptures\\stack-1795225255096-4539"
+  ]
+ },
+ {
+  "shutter": 65561,
+  "seconds": 0.04,
+  "iso": 100,
+  "shots": 1,
+  "planes": 3,
+  "runs": [
+   "D:\\StrehlCaptures\\stack-1795225264842-4539",
+   "D:\\StrehlCaptures\\stack-1795225273598-4539"
+  ]
+ }
+]

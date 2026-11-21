@@ -1,0 +1,59 @@
+9504x6336, uint16
+difference in 8-bit display steps (0-255): mean 0.203, 99th percentile 1.16, 99.99th 3.89, max 11.5
+pixels differing by 1 step or more: 2.66 %; by 3 or more: 0.0630 %
+8-bit images identical at 57.53 % of pixels
+crops, 256 px square at 200 % nearest neighbour: lossless | compacted | difference x16 about mid grey
+   crop-0-detail-y960-x2368.png: origin y=960 x=2368
+   crop-1-detail-y192-x6208.png: origin y=192 x=6208
+   crop-2-detail-y320-x4928.png: origin y=320 x=4928
+   crop-3-flat-y192-x7232.png: origin y=192 x=7232
+
+compact: exit 0, 152.5 s
+capture's archives after compact: 784 files with 1 link(s)
+capture's first three archives unchanged: True
+size: lossless 47.69 GB, compacted 17.34 GB
+render lossless: exit 0, 44.7 s
+render compacted: exit 0, 48.9 s
+
+40 windows of 1024 px, 40 with a clear peak
+shift compacted vs lossless (px): dx median -0.0010 (range -0.1332..0.0463), dy median -0.0111 (range -0.0808..0.0628)
+   y   256 x   256  dx +0.0054 dy +0.0628  peak 0.99
+   y   256 x  1280  dx -0.0012 dy +0.0378  peak 0.99
+   y   256 x  2304  dx -0.0126 dy +0.0306  peak 1.00
+   y   256 x  3328  dx -0.0149 dy +0.0270  peak 1.00
+   y   256 x  4352  dx -0.0280 dy +0.0152  peak 1.00
+   y   256 x  5376  dx -0.0291 dy +0.0100  peak 1.00
+   y   256 x  6400  dx -0.0536 dy -0.0134  peak 1.00
+   y   256 x  7424  dx -0.1332 dy -0.0808  peak 1.00
+   y  1280 x   256  dx +0.0142 dy +0.0257  peak 1.00
+   y  1280 x  1280  dx +0.0146 dy +0.0091  peak 1.00
+   y  1280 x  2304  dx +0.0128 dy +0.0064  peak 1.00
+   y  1280 x  3328  dx +0.0103 dy +0.0075  peak 1.00
+   y  1280 x  4352  dx -0.0086 dy +0.0032  peak 1.00
+   y  1280 x  5376  dx -0.0146 dy +0.0019  peak 1.00
+   y  1280 x  6400  dx -0.0320 dy -0.0010  peak 1.00
+   y  1280 x  7424  dx -0.0465 dy -0.0168  peak 1.00
+   y  2304 x   256  dx +0.0303 dy -0.0014  peak 1.00
+   y  2304 x  1280  dx +0.0370 dy -0.0054  peak 1.00
+   y  2304 x  2304  dx +0.0159 dy -0.0017  peak 1.00
+   y  2304 x  3328  dx -0.0008 dy +0.0059  peak 1.00
+   y  2304 x  4352  dx -0.0053 dy -0.0083  peak 1.00
+   y  2304 x  5376  dx -0.0070 dy -0.0122  peak 1.00
+   y  2304 x  6400  dx -0.0184 dy -0.0239  peak 1.00
+   y  2304 x  7424  dx -0.0331 dy -0.0135  peak 1.00
+   y  3328 x   256  dx +0.0463 dy -0.0306  peak 1.00
+   y  3328 x  1280  dx +0.0354 dy -0.0277  peak 1.00
+   y  3328 x  2304  dx +0.0183 dy -0.0025  peak 1.00
+   y  3328 x  3328  dx +0.0043 dy -0.0142  peak 1.00
+   y  3328 x  4352  dx +0.0024 dy -0.0099  peak 1.00
+   y  3328 x  5376  dx +0.0041 dy -0.0162  peak 1.00
+   y  3328 x  6400  dx -0.0128 dy -0.0372  peak 1.00
+   y  3328 x  7424  dx -0.0329 dy -0.0448  peak 1.00
+   y  4352 x   256  dx +0.0311 dy -0.0260  peak 1.00
+   y  4352 x  1280  dx +0.0391 dy -0.0496  peak 1.00
+   y  4352 x  2304  dx +0.0262 dy -0.0538  peak 1.00
+   y  4352 x  3328  dx +0.0173 dy -0.0358  peak 1.00
+   y  4352 x  4352  dx +0.0032 dy -0.0400  peak 1.00
+   y  4352 x  5376  dx -0.0022 dy -0.0352  peak 1.00
+   y  4352 x  6400  dx -0.0237 dy -0.0511  peak 1.00
+   y  4352 x  7424  dx -0.0362 dy -0.0520  peak 1.00

@@ -125,6 +125,83 @@ of variance to its noise model for compacted frames; every other render is uncha
 (6/6 reference hashes, byte-freeze 5/5). In a compacted file the full-size JPEG's IFD
 points at the 1616 x 1080 preview and states its size (`compacted-jpeg-check.txt`).
 
+## Follow-up: quality against time, and the compacted final image (2026-11-20 evening)
+
+The owner asked where the quality floor is for shorter exposures and for coarser steps, and
+for the final images from compacted and lossless files side by side. Charts and crops were
+sent to the owner (kept in `outputs/quality-curves-2026-11-20/`,
+`outputs/exposure-quality-2026-11-20/`, `outputs/step-curve-2026-11-20/`,
+`outputs/compact-compare-2026-11-20/`, none committed); numbers in `evidence/`.
+
+**Exposure (MEASURED, `exposure-quality.py`, `exposure-analyse.py`).** The rig subject;
+for each setting two four-shot runs of the same 10 planes (step 8 from 40960, error
+correction off), ISO raised to keep the brightness. Noise is temporal: run A minus run B,
+for each RAW (same plane and shot) and for the final render (CLI default, pyramid merge),
+in flat areas, so the scene's texture is not counted as noise.
+
+| Setting | Plane (s) | Final image SNR, mid-tones | Relative | sqrt(exposure ratio) | One RAW SNR, relative |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 0.6 s ISO 100 | 5.7 | 67.7 | 1.00 | 1.00 | 1.00 |
+| 1/3 s ISO 160 | 5.0 | 48.1 | 0.71 | 0.75 | 0.70 |
+| 1/6 s ISO 320 | 4.4 | 32.4 | 0.48 | 0.53 | 0.48 |
+| 1/10 s ISO 640 | 4.4 | 27.2 | 0.40 | 0.41 | 0.38 |
+| 1/25 s ISO 1600 | 4.3 | 15.4 | 0.23 | 0.26 | 0.24 |
+| 1/50 s ISO 3200 | 4.0 | 9.7 | 0.14 | 0.18 | 0.17 |
+
+(Plane times of 1/3 and 1/50 s read from the runs' capture events before they were deleted, to
+0.1 s; the others match `exposure-floor.txt`.) The noise follows the light, not the ISO: SNR
+falls as the square root of the exposure time (shot noise). Control: at 1/25 s, ISO 100
+pushed four stops in the analysis gave a RAW SNR of 12.1 against 11.0 at ISO 1600, so the
+camera adds no noise of its own when ISO goes up; the shorter exposure collects fewer photons
+(at a scene point at 10 % of full scale at 0.6 s: about 3800 electrons, 260 at 1/25 s). The
+curve: down to 1/6 s each step buys time (5.7 -> 4.4 s a plane, 22 %) at twice the noise;
+below 1/6 s the plane hardly gets faster (4.4 -> 4.0 s) while the noise keeps rising.
+At 1/25 s and shorter, coloured single-pixel speckles appear in dark flat areas of the
+final image (crop `exposure-dark-flat-*.png`; cause UNVERIFIED). In this subject's flat
+areas the brightest points reached only about 10 % of full scale at 0.6 s ISO 100
+(MEASURED: no flat pixels above that). So more light, not a longer exposure, is the way to
+get both speed and low noise (ARGUED).
+
+**The light (MEASURED, `exposure-levels.py`).** Brightness of every RAW: within a four-shot
+group the shots agree to 0.3-1.3 % (median) at every exposure, 1/25 s the steadiest (no
+flicker at short exposures); single groups reached 5-9 %. Straight after switching on, the
+light dimmed 9 % over the first run's 60 s and 6 % over the second's; later runs drifted
+-6 to +4 %, with no pattern by exposure. ARGUED: with "manage power" switching the light on
+at a stack's start, the first minute of planes is brighter than the rest; not tested here.
+
+**Focus step (MEASURED, `step-curve.ps1`, `step-curve-analyse.py`).** Renders from every
+k-th plane of two stacks captured at step 8, against all planes; fine detail (1.5 px
+gradient energy, noise floor removed) at the worst 10 % of detail tiles, the points that
+fall between planes:
+
+| Step | Scarab (width 113) | Its stack time at 5.67 s a plane | Dark stack (width 88) |
+| ---: | ---: | ---: | ---: |
+| 8 | 1.000 | 18.5 min | 1.000 |
+| 16 | 0.990 | 9.3 min | 0.989 |
+| 24 | 0.988 | 6.2 min | 0.983 |
+| 32 | 0.946 | 4.6 min | 0.982 |
+| 48 | 0.895 | 3.1 min | 0.962 |
+| 64 | 0.863 | 2.4 min | |
+| 96 | 0.818 | 1.6 min | |
+
+The knee is at about a fifth of the sharp width (scarab: 24 keeps everything 16 keeps; 32
+loses 5 %). ARGUED from two stacks: the suggested step (width / 7) could be width / 5, a
+third fewer planes; not changed (the owner's call). Finer steps buy no measurable noise
+reduction: the pyramid merge chooses per detail band and does not average many planes. In
+flat tiles the energy moved -21 to +19 % from step to step on the dark stack with no
+direction, and on the scarab it tracked the detail (its flat tiles hold soft texture), so
+noise is set by the exposure, not the step.
+
+**Compact, the final images (MEASURED, `compare-compact.ps1`, `compact-final-compare.py`,
+`compact-shift.py`; `evidence/compact-final-images.txt`).** The scarab stack compacted again
+in a hard-linked copy (47.7 -> 17.3 GB of archives, 152 s; the capture's archives back to one
+link each, the first three hash-checked unchanged; the copy deleted), both rendered with the
+desktop's command (`stack --merge pyramid --srgb`, four-shot). In 8-bit display steps: mean
+difference 0.2, 99th percentile 1.2, largest 11.5; 57.5 % of pixels identical. The
+difference that remains is edge-shaped: the alignment, refitted on the quantised data,
+places frames up to 0.13 px differently (median 0.01 px; phase correlation over 40
+windows), which moves edges, not detail. Crops at 200 %: no visible difference.
+
 ## Not built, and what is next
 
 - The last RAW of a group fetched during the next group's first exposure (5.65 s to about
@@ -140,5 +217,8 @@ points at the 1616 x 1080 preview and states its size (`compacted-jpeg-check.txt
 
 `ab-settle.py`, `ec-e2e.py`, `exposure-floor.py`, `calibrate-e2e.py`, `return-analyse.py`,
 `thinning-numbers.py`, `prove-thinning.ps1`, `compacted-jpeg-check.py`, `deploy.py`,
-`build-pi.sh`, `clean-runs.py` (deletes only named test runs made on 2026-11-20); the lab
+`build-pi.sh`, `clean-runs.py` (deletes only named test runs made on 2026-11-20); the
+follow-up's `exposure-quality.py`, `exposure-analyse.py`, `exposure-levels.py`,
+`step-curve.ps1`, `step-curve-analyse.py`, `compare-compact.ps1`, `compact-final-compare.py`,
+`compact-shift.py`, `make-charts.py`; the lab
 script `../capture-pipeline-2026-11-20/ptp-lab/l11-return.txt`; results in `evidence/`.
