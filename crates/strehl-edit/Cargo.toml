@@ -16,6 +16,8 @@ serde = { version = "=1.0.229", features = ["derive"] }
 serde_json = { version = "=1.0.151", features = ["float_roundtrip"] }
 sha2 = "0.11"
 quick-xml = "0.41"
+# Scale-bar labels, rasterised from a system font at run time.
+ab_glyph = "0.2.32"
 # Pure Rust builds avoid an external encoder, DLL, assembler or subprocess.
 rav1e = { version = "0.8.1", default-features = false, features = ["threading"] }
 avif-serialize = "0.8.9"
@@ -30,3 +32,7 @@ tempfile = "3"
 [[example]]
 name = "matched-display"
 path = "../../experiments/rea-a7c2-2026-10-24-c/matched-display.rs"
+
+[[example]]
+name = "p7-export-freeze"
+path = "../../experiments/desktop-studio-2-impl/p7-export-freeze.rs"

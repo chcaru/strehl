@@ -7,6 +7,20 @@ pub use spatial::{
     AdaptiveParameters, AdaptiveToneRange, MAX_SPATIAL_TREATMENTS, SpatialTreatment,
 };
 
+#[path = "recipe-finishing.rs"]
+mod finishing;
+pub use finishing::{Backdrop, Crop, Heal, MAX_HEALS, ScaleBar, ScaleBarCorner, ScaleBarStyle};
+
+#[path = "recipe-prepared.rs"]
+mod prepared;
+pub(crate) use prepared::{PixelRecipe, feathered as feathered_weight};
+pub use prepared::{PreparedRecipe, PreparedShape};
+
+/// Points in one depth-brush stroke, after simplification.
+pub const MAX_STROKE_POINTS: usize = 1024;
+/// Stroke points in one recipe, keeping it far below the engine's 1 MiB cap.
+pub const MAX_RECIPE_STROKE_POINTS: usize = 4096;
+
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize, Default)]
 #[serde(default, deny_unknown_fields)]
 pub struct Adjustments {
@@ -28,9 +42,25 @@ pub struct Adjustments {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum RegionShape {
-    Ellipse { center: [f32; 2], radius: [f32; 2] },
-    Rectangle { min: [f32; 2], max: [f32; 2] },
-    Polygon { points: Vec<[f32; 2]> },
+    Ellipse {
+        center: [f32; 2],
+        radius: [f32; 2],
+    },
+    Rectangle {
+        min: [f32; 2],
+        max: [f32; 2],
+    },
+    Polygon {
+        points: Vec<[f32; 2]>,
+    },
+    /// A brush stroke: every point within `radius` of the polyline, with the
+    /// region's feather as a fraction of the radius. Radii are per axis like
+    /// an ellipse's, so a brush round in pixels has `rx * width == ry * height`.
+    /// This is the depth brush's mask; with `source_range` it is a repair.
+    Stroke {
+        points: Vec<[f32; 2]>,
+        radius: [f32; 2],
+    },
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -92,6 +122,24 @@ pub struct DevelopmentRecipe {
     /// Image-specific curves, separate from portable preset parameters.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub spatial: Vec<SpatialTreatment>,
+    // Macro finishing (P7). Each is omitted when unused, so a recipe without
+    // them serializes byte-identically to earlier builds, which read it.
+    /// Crop and straighten; applied by export through mapped coordinates.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub crop: Option<Crop>,
+    /// Scale bar design; its calibration comes from the subject's lens.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub scale_bar: Option<ScaleBar>,
+    /// Neighbourhood stage before `apply_pixel`: heals, then backdrop.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub heals: Vec<Heal>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub backdrop: Option<Backdrop>,
+    /// Tone application order of region ids. Regions not listed follow in
+    /// list order. The list order stays the engine's repair-blend order, so
+    /// reordering layers never invalidates a rebuilt master.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub layers_order: Vec<String>,
 }
 
 impl Default for DevelopmentRecipe {
@@ -102,11 +150,16 @@ impl Default for DevelopmentRecipe {
             regions: Vec::new(),
             hdr: HdrSettings::default(),
             spatial: Vec::new(),
+            crop: None,
+            scale_bar: None,
+            heals: Vec::new(),
+            backdrop: None,
+            layers_order: Vec::new(),
         }
     }
 }
 
-fn bounded(value: f32, min: f32, max: f32, field: &str) -> Result<()> {
+pub(crate) fn bounded(value: f32, min: f32, max: f32, field: &str) -> Result<()> {
     ensure!(
         value.is_finite() && (min..=max).contains(&value),
         "{field} must be finite and in {min}..={max}"
@@ -201,6 +254,17 @@ impl RegionShape {
                 }
                 (min, max)
             }
+            Self::Stroke { points, radius } => {
+                let mut min = [1.0f32; 2];
+                let mut max = [0.0f32; 2];
+                for p in points {
+                    for c in 0..2 {
+                        min[c] = min[c].min((p[c] - radius[c]).max(0.0));
+                        max[c] = max[c].max((p[c] + radius[c]).min(1.0));
+                    }
+                }
+                (min, max)
+            }
         }
     }
 
@@ -242,6 +306,17 @@ impl RegionShape {
                     .sum::<f32>()
                     .abs();
                 ensure!(area > 1e-8, "polygon must have nonzero area");
+            }
+            Self::Stroke { points, radius } => {
+                ensure!(
+                    (1..=MAX_STROKE_POINTS).contains(&points.len()),
+                    "a stroke needs 1..{MAX_STROKE_POINTS} points; simplify it with stroke_from_path"
+                );
+                for p in points {
+                    point(*p)?;
+                }
+                bounded(radius[0], 0.0001, 0.5, "stroke radius x")?;
+                bounded(radius[1], 0.0001, 0.5, "stroke radius y")?;
             }
         }
         Ok(())
@@ -289,15 +364,11 @@ impl RegionShape {
                 }
                 dist / ((max[0] - min[0]).min(max[1] - min[1]) * 0.5).max(1e-6)
             }
+            Self::Stroke { points, radius } => {
+                1.0 - prepared::stroke_distance(points, *radius, point)
+            }
         };
-        if d <= 0.0 {
-            return 0.0;
-        }
-        if feather <= 0.0 {
-            return 1.0;
-        }
-        let t = (d / feather).clamp(0.0, 1.0);
-        t * t * (3.0 - 2.0 * t)
+        prepared::feathered(d, feather)
     }
 }
 
@@ -370,13 +441,58 @@ impl DevelopmentRecipe {
                 "spatial treatment refers to a missing region"
             );
         }
+        let stroke_points: usize = self
+            .regions
+            .iter()
+            .map(|r| match &r.shape {
+                RegionShape::Stroke { points, .. } => points.len(),
+                _ => 0,
+            })
+            .sum();
+        ensure!(
+            stroke_points <= MAX_RECIPE_STROKE_POINTS,
+            "at most {MAX_RECIPE_STROKE_POINTS} stroke points are supported in one recipe"
+        );
+        let mut listed = std::collections::HashSet::new();
+        for id in &self.layers_order {
+            ensure!(
+                ids.contains(id) && listed.insert(id),
+                "layer order must list existing region IDs at most once"
+            );
+        }
+        if let Some(crop) = &self.crop {
+            crop.validate()?;
+        }
+        if let Some(bar) = &self.scale_bar {
+            bar.validate()?;
+        }
+        ensure!(
+            self.heals.len() <= MAX_HEALS,
+            "at most {MAX_HEALS} heals are supported"
+        );
+        for heal in &self.heals {
+            heal.validate()?;
+        }
+        if let Some(backdrop) = &self.backdrop {
+            backdrop.validate()?;
+        }
         Ok(())
     }
 
+    /// Prefer `prepare` in any loop: with an explicit layer order, or with
+    /// polygon and stroke regions, this per-call form repeats that work.
     pub fn apply_pixel(&self, rgb: [f32; 3], uv: [f32; 2]) -> [f32; 3] {
+        if !self.layers_order.is_empty() {
+            return self.prepare().apply_pixel(rgb, uv);
+        }
         let mut v = self.global.apply(rgb, 1.0);
         for region in &self.regions {
-            if region.enabled && region.adjustments != Adjustments::default() {
+            // Rejection is exact: outside its box a region's weight is 0, at
+            // which `Adjustments::apply` returns its input unchanged.
+            if region.enabled
+                && region.adjustments != Adjustments::default()
+                && !region.shape.cheap_reject(uv)
+            {
                 v = region
                     .adjustments
                     .apply(v, region.shape.weight(uv, region.feather));
@@ -394,6 +510,83 @@ impl DevelopmentRecipe {
             v = treatment.apply(v, uv, weight);
         }
         v
+    }
+
+    /// Culling boxes and layer order, computed once for a render loop.
+    pub fn prepare(&self) -> PreparedRecipe<'_> {
+        PreparedRecipe::new(self)
+    }
+
+    /// Indices into `regions` in tone application order: `layers_order`
+    /// first, then unlisted regions in list order.
+    pub fn application_order(&self) -> Vec<usize> {
+        if self.layers_order.is_empty() {
+            return (0..self.regions.len()).collect();
+        }
+        let mut order: Vec<usize> = self
+            .layers_order
+            .iter()
+            .filter_map(|id| self.regions.iter().position(|r| &r.id == id))
+            .collect();
+        let listed: std::collections::HashSet<usize> = order.iter().copied().collect();
+        order.extend((0..self.regions.len()).filter(|i| !listed.contains(i)));
+        order
+    }
+
+    /// Move a layer to `index` in the application order, making the full
+    /// order explicit. Repair-blend (list) order is unchanged.
+    pub fn move_layer(&mut self, id: &str, index: usize) -> Result<()> {
+        let mut order: Vec<String> = self
+            .application_order()
+            .into_iter()
+            .map(|i| self.regions[i].id.clone())
+            .collect();
+        let from = order
+            .iter()
+            .position(|x| x == id)
+            .ok_or_else(|| anyhow::anyhow!("no region {id:?}"))?;
+        let moved = order.remove(from);
+        order.insert(index.min(order.len()), moved);
+        let list_order = order.iter().zip(&self.regions).all(|(a, r)| a == &r.id);
+        self.layers_order = if list_order { Vec::new() } else { order };
+        Ok(())
+    }
+
+    /// Remove a region with its layer entry and any Adaptive scope on it.
+    pub fn remove_region(&mut self, id: &str) -> Option<RegionAdjustment> {
+        let index = self.regions.iter().position(|r| r.id == id)?;
+        self.layers_order.retain(|x| x != id);
+        self.clear_adaptive_scope(Some(id));
+        Some(self.regions.remove(index))
+    }
+
+    /// True when the recipe uses a field earlier builds cannot read: they
+    /// refuse such a file and fall back to the master's baked recipe.
+    pub fn uses_finishing(&self) -> bool {
+        self.crop.is_some()
+            || self.scale_bar.is_some()
+            || !self.heals.is_empty()
+            || self.backdrop.is_some()
+            || !self.layers_order.is_empty()
+            || self
+                .regions
+                .iter()
+                .any(|r| matches!(r.shape, RegionShape::Stroke { .. }))
+    }
+
+    /// The neighbourhood stage (heals, backdrop) has work to do. It runs on
+    /// the photograph's samples, so `apply_pixel` never applies it; the image
+    /// renderers and the export do.
+    pub fn has_neighbourhood(&self) -> bool {
+        !self.heals.is_empty() || self.backdrop.is_some()
+    }
+
+    /// For samples that have already been through the neighbourhood stage.
+    pub fn without_neighbourhood(&self) -> Self {
+        let mut recipe = self.clone();
+        recipe.heals.clear();
+        recipe.backdrop = None;
+        recipe
     }
 
     pub fn clear_adaptive_scope(&mut self, target: Option<&str>) {

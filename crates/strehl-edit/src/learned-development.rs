@@ -223,7 +223,7 @@ impl PreparedSdrDevelopment {
             "Active scene treatment is SDR-only; learned HDR development is unsupported"
         );
         let (raw, uv) = self.source_pixel(i)?;
-        let developed = self.image.developed_sample(raw, uv, &self.recipe);
+        let developed = self.image.developed_sample(raw, uv, &*self.recipe);
         ensure!(
             developed.iter().all(|v| v.is_finite()),
             "Nonfinite developed sample"
@@ -256,7 +256,7 @@ impl PreparedSdrDevelopment {
         }
         let baseline = self
             .image
-            .display_sample(raw, uv, &self.recipe)
+            .display_sample(raw, uv, &*self.recipe)
             .map(crate::color::decode_srgb);
         let result = std::array::from_fn(|c| baseline[c] * (1. - amount) + candidate[c] * amount);
         ensure!(
@@ -268,7 +268,7 @@ impl PreparedSdrDevelopment {
 
     fn display_sample(&self, raw: [f32; 3], uv: [f32; 2]) -> Result<[f32; 3]> {
         if !self.is_active() {
-            let display = self.image.display_sample(raw, uv, &self.recipe);
+            let display = self.image.display_sample(raw, uv, &*self.recipe);
             ensure!(
                 display.iter().all(|v| v.is_finite()),
                 "Nonfinite SDR display sample"
@@ -353,7 +353,7 @@ impl PreparedSdrDevelopment {
             let developed = if self.image.origin == ImageOrigin::DisplayReferred {
                 self.display_sample(raw, uv)?.map(crate::color::decode_srgb)
             } else {
-                self.image.developed_sample(raw, uv, &self.recipe)
+                self.image.developed_sample(raw, uv, &*self.recipe)
             };
             ensure!(
                 developed.iter().all(|v| v.is_finite()),

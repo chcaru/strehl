@@ -1,6 +1,11 @@
-use crate::{DevelopmentRecipe, ExportSettings, ImageOrigin, LinearImage, OutputColorSpace};
+use crate::{
+    DevelopmentRecipe, ExportSettings, ImageOrigin, LinearImage, OutputColorSpace,
+    export_pipeline::{Domain, StageReport, develop_value},
+    image::srgb_encode,
+};
 use anyhow::{Context as _, Result, bail, ensure};
 use rav1e::prelude::*;
+use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::{
     io::Write,
@@ -29,6 +34,14 @@ pub fn pq_encode(nits: f32) -> f32 {
     ((3424.0 / 4096.0 + (2413.0 / 128.0) * l) / (1.0 + (2392.0 / 128.0) * l)).powf(2523.0 / 32.0)
 }
 
+/// Inverse of `pq_encode`: normalized PQ code to absolute cd/m².
+pub(crate) fn pq_decode(code: f32) -> f32 {
+    let e = code.clamp(0.0, 1.0).powf(32.0 / 2523.0);
+    let num = (e - 3424.0 / 4096.0).max(0.0);
+    let den = 2413.0 / 128.0 - (2392.0 / 128.0) * e;
+    10_000.0 * (num / den).powf(16384.0 / 2610.0)
+}
+
 /// Encodes 10-bit 4:4:4 PQ BT.2020 using built-in rav1e. No external executable.
 /// Both AV1 sequence header and AVIF nclx carry the same colorimetry.
 pub fn export_hdr_avif(
@@ -36,7 +49,7 @@ pub fn export_hdr_avif(
     image: &LinearImage,
     recipe: &DevelopmentRecipe,
 ) -> Result<HdrExportReport> {
-    export_avif(
+    crate::export_image(
         path,
         image,
         recipe,
@@ -46,29 +59,30 @@ pub fn export_hdr_avif(
             ..Default::default()
         },
         &AtomicBool::new(false),
-    )
+    )?
+    .hdr_metadata
+    .context("HDR export produced no HDR report")
 }
 
-pub(crate) fn export_avif(
+/// Rows developed in parallel before the sequential statistics and coding,
+/// which keep the pre-P7 row-major summation order.
+const BAND_ROWS: usize = 64;
+
+pub(crate) fn export_avif_job(
     path: &Path,
-    image: &LinearImage,
-    recipe: &DevelopmentRecipe,
-    settings: &ExportSettings,
-    cancel: &AtomicBool,
-) -> Result<HdrExportReport> {
+    job: &crate::export::Job<'_>,
+) -> Result<(HdrExportReport, Option<StageReport>, Vec<String>)> {
     use crate::export::check_cancel;
     use avif_serialize::{Aviffy, constants as c};
+    let (settings, recipe, image, cancel) = (job.settings, job.recipe, job.image, job.cancel);
+    let [width, height] = job.layout.output;
     check_cancel(cancel)?;
-    settings.validate()?;
-    image.validate()?;
-    recipe.validate()?;
-    image.validate_source_repairs(recipe)?;
     ensure!(
         !settings.hdr || image.origin == ImageOrigin::SceneLinear,
         "HDR export requires a scene-linear master; a clipped SDR photograph cannot recover HDR"
     );
     ensure!(
-        image.width >= 16 && image.height >= 16,
+        width >= 16 && height >= 16,
         "AVIF encoding requires dimensions of at least 16 pixels"
     );
     let (primaries, container_primaries) = match settings.color_space {
@@ -96,8 +110,8 @@ pub(crate) fn export_avif(
         )
     };
     let mut config = EncoderConfig::with_speed_preset(settings.speed);
-    config.width = image.width as usize;
-    config.height = image.height as usize;
+    config.width = width as usize;
+    config.height = height as usize;
     config.bit_depth = 10;
     config.chroma_sampling = ChromaSampling::Cs444;
     config.pixel_range = PixelRange::Full;
@@ -120,54 +134,83 @@ pub(crate) fn export_avif(
         .with_threads(threads)
         .new_context()
         .context("configuring built-in AVIF encoder")?;
+    let domain = if settings.hdr {
+        Domain::Hdr(settings.color_space, recipe.hdr.reference_white_nits)
+    } else {
+        Domain::Sdr(settings.color_space)
+    };
+    let staged = job.staged_buffer(domain)?;
+    let prepared = recipe.prepare();
     let mut frame = context.new_frame();
     let mut max_light = 0.0f32;
     let mut sum_light = 0.0f64;
     let mut clipped = 0u64;
     let (kr, kb) = settings.color_space.ycbcr_coefficients();
-    for y in 0..image.height as usize {
+    let (w, h) = (width as usize, height as usize);
+    let linear_sdr = !settings.hdr && staged.as_ref().is_some_and(|(b, _)| b.linear);
+    let mut band = vec![0.0f32; w * 3 * BAND_ROWS.min(h)];
+    for top in (0..h).step_by(BAND_ROWS) {
         check_cancel(cancel)?;
-        for x in 0..image.width as usize {
-            let i = y * image.width as usize + x;
-            let p = if settings.hdr {
-                let lin = settings
-                    .color_space
-                    .convert_from_linear_srgb(image.developed_pixel(i, recipe))
-                    .map(|v| v * recipe.hdr.reference_white_nits);
+        let rows = BAND_ROWS.min(h - top);
+        let values: &[f32] = match &staged {
+            Some((buffer, _)) => &buffer.pixels[top * w * 3..(top + rows) * w * 3],
+            None => {
+                let layout = job.layout;
+                band[..rows * w * 3]
+                    .par_chunks_mut(w * 3)
+                    .enumerate()
+                    .for_each(|(r, line)| {
+                        for (x, out) in line.as_chunks_mut::<3>().0.iter_mut().enumerate() {
+                            let (raw, uv) = layout.sample(image, x as u32, (top + r) as u32);
+                            *out = develop_value(image, &prepared, domain, raw, uv);
+                        }
+                    });
+                &band[..rows * w * 3]
+            }
+        };
+        for r in 0..rows {
+            let y = top + r;
+            for x in 0..w {
+                let v = &values[(r * w + x) * 3..(r * w + x) * 3 + 3];
+                let p = if settings.hdr {
+                    let lin = [v[0], v[1], v[2]];
+                    ensure!(
+                        lin.iter().all(|v| v.is_finite()),
+                        "development produced non-finite HDR output samples"
+                    );
+                    clipped += lin
+                        .iter()
+                        .filter(|&&v| v < 0.0 || v > recipe.hdr.peak_nits)
+                        .count() as u64;
+                    let light = lin.map(|v| v.clamp(0.0, recipe.hdr.peak_nits));
+                    max_light = max_light.max(light.into_iter().fold(0.0, f32::max));
+                    sum_light += f64::from(settings.color_space.luminance(light));
+                    light.map(pq_encode)
+                } else if linear_sdr {
+                    [srgb_encode(v[0]), srgb_encode(v[1]), srgb_encode(v[2])]
+                } else {
+                    [v[0], v[1], v[2]]
+                };
                 ensure!(
-                    lin.iter().all(|v| v.is_finite()),
-                    "development produced non-finite HDR output samples"
+                    p.iter().all(|v| v.is_finite()),
+                    "development produced non-finite output samples"
                 );
-                clipped += lin
-                    .iter()
-                    .filter(|&&v| v < 0.0 || v > recipe.hdr.peak_nits)
-                    .count() as u64;
-                let light = lin.map(|v| v.clamp(0.0, recipe.hdr.peak_nits));
-                max_light = max_light.max(light.into_iter().fold(0.0, f32::max));
-                sum_light += f64::from(settings.color_space.luminance(light));
-                light.map(pq_encode)
-            } else {
-                crate::export::sdr_pixel(image, recipe, settings.color_space, i)
-            };
-            ensure!(
-                p.iter().all(|v| v.is_finite()),
-                "development produced non-finite output samples"
-            );
-            let yy = kr * p[0] + (1.0 - kr - kb) * p[1] + kb * p[2];
-            // H.273 full-range 10-bit chroma has an integer 512 center, not
-            // 0.5 * 1023. Round signed chroma before adding that center.
-            let codes = [
-                (yy * 1023.0).round(),
-                ((p[2] - yy) / (2.0 * (1.0 - kb)) * 1023.0).round() + 512.0,
-                ((p[0] - yy) / (2.0 * (1.0 - kr)) * 1023.0).round() + 512.0,
-            ];
-            for (c, code) in codes.into_iter().enumerate() {
-                let plane = &mut frame.planes[c];
-                let offset = plane.cfg.yorigin * plane.cfg.stride
-                    + plane.cfg.xorigin
-                    + y * plane.cfg.stride
-                    + x;
-                plane.data[offset] = code.clamp(0.0, 1023.0) as u16;
+                let yy = kr * p[0] + (1.0 - kr - kb) * p[1] + kb * p[2];
+                // H.273 full-range 10-bit chroma has an integer 512 center, not
+                // 0.5 * 1023. Round signed chroma before adding that center.
+                let codes = [
+                    (yy * 1023.0).round(),
+                    ((p[2] - yy) / (2.0 * (1.0 - kb)) * 1023.0).round() + 512.0,
+                    ((p[0] - yy) / (2.0 * (1.0 - kr)) * 1023.0).round() + 512.0,
+                ];
+                for (c, code) in codes.into_iter().enumerate() {
+                    let plane = &mut frame.planes[c];
+                    let offset = plane.cfg.yorigin * plane.cfg.stride
+                        + plane.cfg.xorigin
+                        + y * plane.cfg.stride
+                        + x;
+                    plane.data[offset] = code.clamp(0.0, 1023.0) as u16;
+                }
             }
         }
     }
@@ -184,8 +227,7 @@ pub(crate) fn export_avif(
         }
     };
     let max_content_light_nits = max_light.ceil() as u16;
-    let average_light_nits =
-        (sum_light / (f64::from(image.width) * f64::from(image.height))).ceil() as u16;
+    let average_light_nits = (sum_light / (f64::from(width) * f64::from(height))).ceil() as u16;
     check_cancel(cancel)?;
     let mut container = Aviffy::new();
     container
@@ -197,7 +239,14 @@ pub(crate) fn export_avif(
     if settings.hdr {
         container.set_content_light_level(max_content_light_nits, average_light_nits);
     }
-    let data = container.to_vec(&payload, None, image.width, image.height, 10);
+    let mut written = Vec::new();
+    if let Some(exif) =
+        crate::metadata::exif_block(&settings.metadata, job.extras.date_time.as_ref())
+    {
+        container.set_exif(exif);
+        written.push("exif".to_owned());
+    }
+    let data = container.to_vec(&payload, None, width, height, 10);
     crate::publish::new_file_checked(
         path,
         |file| {
@@ -207,9 +256,9 @@ pub(crate) fn export_avif(
         },
         || check_cancel(cancel),
     )?;
-    Ok(HdrExportReport {
-        width: image.width,
-        height: image.height,
+    let report = HdrExportReport {
+        width,
+        height,
         bit_depth: 10,
         color_primaries: settings.color_space.label().into(),
         transfer: if settings.hdr {
@@ -224,5 +273,6 @@ pub(crate) fn export_avif(
         average_light_nits,
         clipped_samples: clipped,
         bytes: data.len(),
-    })
+    };
+    Ok((report, staged.map(|(_, r)| r), written))
 }

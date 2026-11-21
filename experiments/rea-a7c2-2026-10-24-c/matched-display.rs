@@ -17,6 +17,9 @@ fn main() -> anyhow::Result<()> {
         color_space: OutputColorSpace::Srgb,
         quality: 100,
         speed: 6,
+        // The pre-P7 TIFF carried the recipe; keep this experiment's output.
+        embed_recipe: true,
+        ..Default::default()
     };
     for pair in args[1..].as_chunks::<2>().0 {
         anyhow::ensure!(
