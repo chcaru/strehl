@@ -592,6 +592,9 @@ impl StrehlApp {
                         repair.progress.ingest(&text);
                     }
                 }
+                // The repair shows only its progress line. Its per-plane maps
+                // are read from the evidence file when the repaired render opens.
+                RenderEvent::Evidence(_) => {}
                 RenderEvent::Finished(outcome) => {
                     let Some(repair) = self.edit_pane.develop.repair.take() else {
                         break;
