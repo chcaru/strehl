@@ -30,6 +30,8 @@ pub(crate) mod flight;
 pub(crate) mod follow;
 #[path = "capture-glance.rs"]
 pub(crate) mod glance;
+#[path = "capture-guide.rs"]
+pub(crate) mod guide;
 #[path = "capture-live.rs"]
 pub(crate) mod live;
 #[path = "capture-plan.rs"]
@@ -38,6 +40,8 @@ pub(crate) mod plan;
 pub(crate) mod preflight;
 #[path = "capture-rail.rs"]
 pub(crate) mod rail;
+#[path = "capture-rig-settings.rs"]
+pub(crate) mod rig_settings;
 #[path = "capture-schedule.rs"]
 mod schedule_ui;
 #[path = "capture-station.rs"]
@@ -102,6 +106,9 @@ pub(crate) struct CaptureWorkspace {
     compact_confirm: bool,
     /// A test shot at the current focus (Studio 2, 7.4).
     test_shot: test_shot::TestShot,
+    /// The ISO and shutter codes the test shot was taken at, for the
+    /// exposure guidance.
+    test_shot_exposure: Option<(u64, u64)>,
     /// Waiting for the camera to connect, and what became of the last wait.
     connect_wait: Option<tools::ConnectWait>,
     connect_note: Option<String>,
@@ -159,6 +166,7 @@ impl CaptureWorkspace {
             compact_apply: Default::default(),
             compact_confirm: false,
             test_shot: test_shot::TestShot::Idle,
+            test_shot_exposure: None,
             connect_wait: None,
             connect_note: None,
             confirm: None,
@@ -1468,6 +1476,7 @@ impl CaptureWorkspace {
         })?;
         let sequence = s.host.sequence_id.unwrap_or(0) + 1;
         self.submit(request)?;
+        self.test_shot_exposure = s.host.exposure.as_ref().and_then(|e| e.iso.zip(e.shutter));
         self.test_shot = test_shot::TestShot::Capturing {
             sequence,
             deadline: Instant::now() + test_shot::TEST_SHOT_TIMEOUT + Self::warmup(&s),

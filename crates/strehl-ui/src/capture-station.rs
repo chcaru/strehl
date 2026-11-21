@@ -213,6 +213,8 @@ impl CaptureWorkspace {
     /// station shows it from a connection that sends nothing.
     pub fn load_fixture(&mut self, name: &str) -> anyhow::Result<()> {
         use super::fixture::{self, Fixture};
+        // `plan+rig`, `plan+guide`, `plan+schedule`...: a plan with a panel open.
+        let (name, open) = name.split_once('+').unwrap_or((name, ""));
         let which = Fixture::parse(name)
             .ok_or_else(|| anyhow::anyhow!("Use --capture-fixture plan, flight or glance"))?;
         self.connection = Some(Connection::fixture(fixture::snapshot(which)));
@@ -226,6 +228,8 @@ impl CaptureWorkspace {
         self.calibration = Calibration::Done(serde_json::json!({"width":50.0,"suggested_step":7,
             "summary":"Detail stays sharp over about 50 focus units."}));
         self.station.calibrated_at = Some(fixture::earlier(14));
+        self.test_shot_exposure = Some((100, 65544));
+        self.open_fixture_panel(open);
         if which != Fixture::Plan {
             self.station.fixture_progress = Some(Arc::new(fixture::progress()));
             let image = fixture::subject_image(960, 640, 0.8);
@@ -647,7 +651,7 @@ impl CaptureWorkspace {
             survey,
             can_use_survey: host.suggestion.as_ref().is_some_and(|s| !s.clipped),
             editable: s.fresh() && host.editable && !s.pending && self.focus_flight.is_none(),
-            keys: !self.station.glance,
+            keys: !self.station.glance && !self.schedule_ui.editing(),
         };
         let intents = self.station.rail.show(ui, &inputs, &palette);
         for intent in intents {
@@ -684,6 +688,7 @@ impl CaptureWorkspace {
                     test_shot: TestShotView {
                         stage,
                         levels,
+                        exposure: self.test_shot_exposure,
                         taken,
                         error,
                     },
@@ -697,8 +702,31 @@ impl CaptureWorkspace {
                     subjects: &self.station.subjects,
                 };
                 let mut intents = self.station.plan.show(ui, &inputs, &palette);
+                // The comparison panel ("What changes"), left of the inspector.
+                if let Some(mut tab) = self.station.plan.guide {
+                    let guide_inputs = super::guide::GuideInputs {
+                        s: &s,
+                        step: inputs.step,
+                        settle_ms: inputs.settle_ms,
+                        calibration: &inputs.calibration,
+                        test_shot: &inputs.test_shot,
+                        editable: s.fresh() && s.host.editable && !s.pending,
+                    };
+                    let (chosen, close) = super::guide::show_panel(
+                        ui.ctx(),
+                        ui.max_rect(),
+                        &mut tab,
+                        &guide_inputs,
+                        &palette,
+                    );
+                    intents.extend(chosen);
+                    self.station.plan.guide = (!close).then_some(tab);
+                }
                 // T takes a test shot; Enter starts a ready plan.
-                if !ui.ctx().wants_keyboard_input() && !self.station.glance {
+                if !ui.ctx().wants_keyboard_input()
+                    && !self.station.glance
+                    && !self.schedule_ui.editing()
+                {
                     ui.input(|i| {
                         if i.key_pressed(egui::Key::T) {
                             intents.push(PlanIntent::TestShot);
@@ -835,15 +863,12 @@ impl CaptureWorkspace {
         self.phone_ui(ctx);
         if self.schedule_ui.editing() {
             let blockers = preflight::start_blockers(s, self);
-            let mut cmd = None;
-            egui::Window::new("Schedule stack")
-                .collapsible(false)
-                .show(ctx, |ui| {
-                    cmd = self
-                        .schedule_ui
-                        .show(ui, s, preflight::can_schedule(&blockers));
-                });
-            if let Some(cmd) = cmd {
+            let timing = self.schedule_timing(s);
+            let palette = self.station.palette;
+            if let Some(cmd) =
+                self.schedule_ui
+                    .show(ctx, s, preflight::can_schedule(&blockers), timing, &palette)
+            {
                 self.command(s, cmd);
             }
         }
@@ -874,14 +899,27 @@ impl CaptureWorkspace {
 
     /// Sends the plan's step and settle as the host's `settings` command.
     fn send_settings(&mut self, s: &Snapshot, step: u16, settle_ms: u32) {
+        self.send_plan(s, step, settle_ms, None, None);
+    }
+
+    /// The host's `settings` command with the plan's step and settle, and
+    /// its approach and exposure timeout unless given.
+    fn send_plan(
+        &mut self,
+        s: &Snapshot,
+        step: u16,
+        settle_ms: u32,
+        approach: Option<u16>,
+        capture_timeout_s: Option<u32>,
+    ) {
         let Some(plan) = s.host.plan.clone() else {
             return;
         };
         let command = Command::Settings {
             step: step.max(1),
             settle_ms,
-            approach: plan.approach,
-            capture_timeout_s: plan.capture_timeout_s,
+            approach: approach.unwrap_or(plan.approach),
+            capture_timeout_s: capture_timeout_s.unwrap_or(plan.capture_timeout_s),
         };
         let revision = s.host.plan_revision.unwrap_or(0);
         let result = s.request(command).and_then(|mut r| {
@@ -920,6 +958,23 @@ impl CaptureWorkspace {
             PlanIntent::StopCalibration => self.stop_calibration(),
             PlanIntent::SetStep(step) => self.send_settings(s, step, self.draft.settle_ms),
             PlanIntent::SetSettle(ms) => self.send_settings(s, self.draft.step, ms),
+            PlanIntent::SetApproach(approach) => self.send_plan(
+                s,
+                self.draft.step,
+                self.draft.settle_ms,
+                Some(approach),
+                None,
+            ),
+            PlanIntent::SetCaptureTimeout(seconds) => self.send_plan(
+                s,
+                self.draft.step,
+                self.draft.settle_ms,
+                None,
+                Some(seconds),
+            ),
+            PlanIntent::SetWarmup(seconds) => self.command(s, Command::SetWarmup { seconds }),
+            PlanIntent::UseSurveyBounds => self.command(s, Command::ApplyBounds {}),
+            PlanIntent::OpenGuide(tab) => self.station.plan.guide = Some(tab),
             PlanIntent::SetFourShot(four) => self.command(
                 s,
                 Command::PixelShift {

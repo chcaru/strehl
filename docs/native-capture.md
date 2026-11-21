@@ -71,11 +71,23 @@ Choose **0–300 seconds** and **Save warmup** in Studio power to change the Pi'
 default. Zero skips the timed delay. Strehl still checks for measured lamp power
 before moving to the start and taking an exposure.
 
+On the desktop, **Settings** in the plan's **Rig** step holds the approach,
+settle, exposure timeout and light warm-up, with **Manage power** and **Error
+correction**. Each says what it does and its default; a typed value is checked
+against the camera host's own ranges before it is sent. **What changes** beside
+the exposure and the step table compares ISO and exposure, step, settle and
+warm-up by noise, detail kept, time and disk, from the rig's measurements
+(`experiments/desktop-studio-2-impl/fb-plan.md`).
+
 ### Schedule one stack
 
 1. Connect and focus the camera, mark both ends, and apply your sequence edits.
-   Select **Schedule stack** on the desktop or phone. Enter the date and time in
-   that device's local time zone. The selected time starts preparation.
+   Select **Schedule…** on the desktop or **Schedule stack** on the phone. On
+   the desktop choose **At a time** (a calendar and hour and minute wheels) or
+   **In a while** (+15 m to +8 h, or hours and minutes from now); the dialog
+   shows the local start with its UTC offset and the estimated end. A local time
+   that daylight saving skips is refused, and a repeated one starts at the
+   first. The selected time starts preparation.
 2. Choose whether to power the camera and light on, the lamp warmup for this
    run, and which devices to switch off after the final files are saved.
    **Schedule this stack** saves the marks, step, approach, settle time, exposure,

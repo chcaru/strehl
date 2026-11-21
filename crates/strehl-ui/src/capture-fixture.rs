@@ -81,7 +81,7 @@ fn plan_state() -> Value {
         "power":{"light":{"on":true,"watts":41.0},"camera":{"on":true,"watts":2.1},"available":true,
             "can_start_camera":false,"can_stop_camera":true,"can_manage":true,"manage_stack":true,"warmup_seconds":5},
         "exposure":{"iso":100,"shutter":65544,"f_number":560,"iso_options":[100,200,400,800,1600,3200],
-            "shutter_options":[65546,65544,65541,65539,65538,65537],"writable":true,"mode":"M","problem":null},
+            "shutter_options":[65561,65556,65551,65549,65546,65544,65542,65541,65540,65539,262154,65538,393226,524298,65537],"writable":true,"mode":"M","problem":null},
         "preview":{"available":true,"fresh":true,"generation":7,"age_seconds":0.2,"width":960,"height":640},
         "samples":samples,"magnifier_ratios":[0,59,117],"magnifier_current":59,
         "suggestion":{"start":37100,"end":37764,"supported_tiles":20,"clipped":false,"explanation":"Sharp detail from 37,100 to 37,764"},
@@ -175,7 +175,7 @@ pub(crate) fn test_levels() -> RawLevels {
         clipped_share: 0.0,
         shadow_level: 0.012,
         median_level: 0.21,
-        highlight_level: 0.86,
+        highlight_level: 0.24,
     }
 }
 
