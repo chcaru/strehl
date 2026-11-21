@@ -25,6 +25,9 @@ pub(super) struct DiagnosticCounts {
     /// This pass's evidence file ([`Progress::begin_evidence`]): its
     /// per-plane maps go there instead of into the log.
     evidence: Option<evidence::Writer>,
+    /// And its live side file: the newest generation's coefficient maps and
+    /// coarse preview.
+    live: Option<evidence::LiveWriter>,
 }
 
 /// The desktop's lattice for a map of a `size` grid: at most `GRID_WIDTH` x
@@ -267,6 +270,25 @@ impl Progress {
                 None,
             );
         }
+        self.publish_live(false);
+    }
+
+    /// Publish the gathered generation to the live side file; `last` when
+    /// the fold has ended. A failed write stops the file: later generations'
+    /// maps go to the log as before.
+    fn publish_live(&self, last: bool) {
+        let mut counts = self
+            .diagnostics
+            .lock()
+            .expect("merge diagnostics lock poisoned");
+        if let Some(live) = counts.live.as_mut()
+            && !live.commit(last)
+        {
+            counts.live = None;
+            eprintln!(
+                "evidence file   : the live side file failed; later stack maps stay in this log"
+            );
+        }
     }
 
     pub(crate) fn reconstruction(
@@ -279,6 +301,8 @@ impl Progress {
         if !self.enabled || planes.len() < 3 {
             return;
         }
+        // The fold is over: its newest generation must be the one on disk.
+        self.publish_live(true);
         self.surface(
             index,
             0,
@@ -386,6 +410,70 @@ impl Progress {
                 return;
             }
         }
+        // The stack's maps after each accepted generation: averaging to the
+        // evidence file, the newest coefficient maps and preview to the live
+        // file, and each preview's revision sample to the evidence file.
+        let sequence = counts.sequence + 1;
+        let stored = match (scope, kind) {
+            ("stack", "averaging") => counts.evidence.as_mut().is_some_and(|writer| {
+                let payload = [
+                    &(folded as u32).to_le_bytes()[..],
+                    &evidence::pack_support(&pixels),
+                ]
+                .concat();
+                writer.append(frame, level, evidence::Kind::Averaging, sequence, &payload)
+            }),
+            ("stack", "coefficient") => counts.live.as_mut().is_some_and(|live| {
+                live.add(
+                    frame,
+                    level,
+                    evidence::Kind::Coefficient,
+                    sequence,
+                    folded,
+                    [width, height],
+                    (min, max),
+                    &pixels,
+                )
+            }),
+            ("stack", "preview") if counts.evidence.is_some() && counts.live.is_some() => {
+                let ([sw, sh], sites) = evidence::revision_sites(width, height);
+                let mut payload = Vec::with_capacity(20 + sites.len());
+                payload.extend((folded as u32).to_le_bytes());
+                for value in [width, height, sw, sh] {
+                    payload.extend((value as u16).to_le_bytes());
+                }
+                payload.extend(min.to_le_bytes());
+                payload.extend(max.to_le_bytes());
+                payload.extend(sites.iter().map(|&site| pixels[site]));
+                let sampled = counts.evidence.as_mut().is_some_and(|writer| {
+                    writer.append(
+                        frame,
+                        level,
+                        evidence::Kind::PreviewSample,
+                        sequence,
+                        &payload,
+                    )
+                });
+                sampled
+                    && counts.live.as_mut().is_some_and(|live| {
+                        live.add(
+                            frame,
+                            level,
+                            evidence::Kind::Preview,
+                            sequence,
+                            folded,
+                            [width, height],
+                            (min, max),
+                            &pixels,
+                        )
+                    })
+            }
+            _ => false,
+        };
+        if stored {
+            counts.sequence = sequence;
+            return;
+        }
         counts.sequence += 1;
         self.emit(format!("event=diagnostic seq={} frame={frame} level={level} kind={kind} scope={scope} scale={scale} width={width} height={height} min={min:e} max={max:e} folded={folded} total={} sampling=nearest data={}", counts.sequence, self.total, hex(&pixels)));
     }
@@ -417,10 +505,28 @@ impl Progress {
                         evidence::VERSION
                     ));
                 }
-                self.diagnostics
+                let live = match evidence::LiveWriter::open(directory, self.total) {
+                    Ok(live) => {
+                        self.emit(format!(
+                            "event=live-file path={} version={}",
+                            evidence::LIVE_FILE_NAME,
+                            evidence::LIVE_VERSION
+                        ));
+                        Some(live)
+                    }
+                    Err(why) => {
+                        eprintln!(
+                            "evidence file   : no live side file ({why}); stack maps stay in this log"
+                        );
+                        None
+                    }
+                };
+                let mut counts = self
+                    .diagnostics
                     .lock()
-                    .expect("merge diagnostics lock poisoned")
-                    .evidence = Some(writer);
+                    .expect("merge diagnostics lock poisoned");
+                counts.evidence = Some(writer);
+                counts.live = live;
             }
             Err(why) => {
                 eprintln!("evidence file   : not written ({why}); per-plane maps stay in this log");
