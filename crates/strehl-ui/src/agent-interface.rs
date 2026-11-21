@@ -557,6 +557,7 @@ pub(crate) fn resolve_export_settings(
         ),
         quality: quality.unwrap_or(defaults.quality),
         speed: speed.unwrap_or(defaults.speed),
+        ..defaults
     };
     settings.validate().map_err(|e| e.to_string())?;
     ensure(
