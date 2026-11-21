@@ -59,7 +59,7 @@ pub(crate) struct SampleCount {
     pub admitted: usize,
 }
 impl SampleCount {
-    fn fraction(self) -> Option<f32> {
+    pub(crate) fn fraction(self) -> Option<f32> {
         (self.observed > 0).then(|| self.admitted as f32 / self.observed as f32)
     }
 }
@@ -234,6 +234,9 @@ pub(crate) struct RegionProbe {
     windows: Vec<(usize, Option<SampleWindow>)>,
     region: Option<Rect>,
     spatial_dirty: bool,
+    /// Bumped whenever any window count changes: the core sample's strips and
+    /// the depth rail's region line rebuild only on this key.
+    window_revision: u64,
     #[cfg(test)]
     receipt_scans: usize,
     #[cfg(test)]
@@ -244,6 +247,11 @@ pub(crate) struct RegionProbe {
     spatial_reads: usize,
 }
 impl RegionProbe {
+    /// The region side in screen points (Ctrl + wheel, 32 to 320).
+    pub(crate) fn side(&self) -> f32 {
+        self.side.unwrap_or(96.0)
+    }
+
     pub(crate) fn set_texture(&mut self, texture: egui::TextureId) {
         self.texture = Some(texture);
     }
@@ -470,6 +478,67 @@ impl RegionProbe {
         Some(region)
     }
 
+    /// Measure a region without painting anything (the Stack station's core
+    /// sample paints its own popover). Same caching as `show`.
+    pub(crate) fn measure(
+        &mut self,
+        archive: &AdmissionArchive,
+        level: usize,
+        analysis_extent: [usize; 2],
+        frame_count: usize,
+        region: Rect,
+    ) {
+        if frame_count == 0 || analysis_extent.contains(&0) {
+            return;
+        }
+        self.update(archive, level, analysis_extent, frame_count, region);
+    }
+
+    /// Recorded counts in the measured window at one level, in plane order.
+    pub(crate) fn window_counts(
+        &self,
+        level: usize,
+    ) -> impl Iterator<Item = (usize, SampleCount)> + '_ {
+        self.evidence
+            .range((level, 0)..=(level, usize::MAX))
+            .map(|(&(_, frame), evidence)| (frame, evidence.count))
+    }
+
+    /// The leading captures at the measured level: the top three by admitted
+    /// share in the window (a ranking of gate support, never a weight).
+    pub(crate) fn leading(&self) -> Vec<usize> {
+        self.spatial_key
+            .as_ref()
+            .map(|key| key.sources.iter().map(|&(frame, _, _)| frame).collect())
+            .unwrap_or_default()
+    }
+
+    /// Admitted sample centres for the leading captures, with their bits.
+    pub(crate) fn leading_sites(&self) -> impl Iterator<Item = (Pos2, u8)> + '_ {
+        self.spatial
+            .iter()
+            .map(|point| (point.glyph.center, point.sources))
+    }
+
+    pub(crate) fn window_revision(&self) -> u64 {
+        self.window_revision
+    }
+
+    pub(crate) fn measured_region(&self) -> Option<Rect> {
+        self.region
+    }
+
+    /// The fallback average's share of sampled sites in the window, when the
+    /// caller supplied the completed averaging packet for this level.
+    pub(crate) fn fallback_fraction(&self, level: usize) -> Option<f32> {
+        self.fallback
+            .as_ref()
+            .filter(|fallback| {
+                fallback.packet.level == level && Some(fallback.meta.extent) == self.analysis_extent
+            })
+            .and_then(|fallback| fallback.count.fraction())
+    }
+
     fn update(
         &mut self,
         archive: &AdmissionArchive,
@@ -537,6 +606,7 @@ impl RegionProbe {
                     && archive.metadata(level, frame) == Some(evidence.meta)
             });
             self.spatial_dirty = true;
+            self.window_revision = self.window_revision.wrapping_add(1);
         } else if self.region == Some(region) {
             self.sync_spatial(archive, active);
             return;
@@ -558,6 +628,7 @@ impl RegionProbe {
                 self.windows.push((level, window));
             }
             self.spatial_dirty = true;
+            self.window_revision = self.window_revision.wrapping_add(1);
             for frame in archive.frames(level).filter(|&frame| frame < frame_count) {
                 if self
                     .evidence
@@ -777,7 +848,7 @@ impl PopupPaint {
             .push(egui::Shape::line_segment(points, Stroke::new(width, color)));
     }
 }
-fn region_at(image: Rect, aperture: Rect, pointer: Pos2, side: f32) -> Option<Rect> {
+pub(crate) fn region_at(image: Rect, aperture: Rect, pointer: Pos2, side: f32) -> Option<Rect> {
     if !image.is_finite()
         || !aperture.is_finite()
         || !image.contains(pointer)
@@ -796,7 +867,7 @@ fn region_at(image: Rect, aperture: Rect, pointer: Pos2, side: f32) -> Option<Re
     ))
 }
 
-fn popup_placement(viewport: Rect, region: Rect, desired: Vec2) -> Rect {
+pub(crate) fn popup_placement(viewport: Rect, region: Rect, desired: Vec2) -> Rect {
     let gap = 12.0;
     let right = (viewport.right() - region.right() - gap).max(0.0);
     let left = (region.left() - gap - viewport.left()).max(0.0);

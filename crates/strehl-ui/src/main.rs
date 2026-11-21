@@ -22,6 +22,8 @@ mod capture_client;
 #[path = "capture-workspace.rs"]
 mod capture_workspace;
 mod controls;
+#[path = "core-sample.rs"]
+mod core_sample;
 #[path = "depth-rail.rs"]
 mod depth_rail;
 #[path = "develop-presets.rs"]
@@ -33,6 +35,8 @@ mod draft_preview;
 #[path = "edit-workspace.rs"]
 mod edit_workspace;
 mod engine;
+#[path = "filmstrip.rs"]
+mod filmstrip;
 #[path = "hdr-display.rs"]
 mod hdr_display;
 #[path = "image-gesture.rs"]
