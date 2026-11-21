@@ -402,26 +402,56 @@ fn the_library_follows_the_theme_and_its_drawers_stay_legible_on_paper() {
             egui::Shape::Rect(r) if r.fill == graphite && r.rect.left() > SIZE.x - 440.0)),
         "the legacy tree is drawn in the Graphite scope"
     );
+    // Badges sit on photographs: a dark plate with light capitals on paper too.
+    let palette = LibraryPalette::from_tokens(&crate::studio_theme::LIGHTBOX);
+    let graphite = LibraryPalette::graphite();
+    assert_eq!(
+        (palette.plate, palette.plate_ink),
+        (graphite.plate, graphite.ink)
+    );
+    assert_ne!(palette.ink, graphite.ink);
 }
 
 #[test]
 fn pointer_motion_over_the_library_rebuilds_nothing() {
+    let pictures = tempfile::tempdir().unwrap();
+    crate::library_station::tests::write_pictures(pictures.path(), 200);
     let ctx = context();
-    let mut app = app_with(library_catalog(200, None));
-    for step in 0..3 {
-        frame(&mut app, &ctx, step as f64 * 0.05, vec![]);
+    let mut app = app_with(library_catalog(200, Some(pictures.path())));
+    // Settle: the pictures in view decode on workers and upload once.
+    let started = Instant::now();
+    let mut time = 0.0;
+    for _ in 0..3 {
+        frame(&mut app, &ctx, time, vec![]);
+        time += 0.05;
     }
+    let mut uploads = 0;
+    while app.library_loading() && started.elapsed() < Duration::from_secs(20) {
+        uploads += frame(&mut app, &ctx, time, vec![]).textures_delta.set.len();
+        time += 0.05;
+        std::thread::sleep(Duration::from_millis(5));
+    }
+    assert!(!app.library_loading(), "the pictures in view arrived");
+    assert!(
+        uploads >= 10,
+        "the control: pictures did upload ({uploads})"
+    );
+    frame(&mut app, &ctx, time, vec![]);
     let before = app.library.station.stats();
     let revision = app.library_revision();
     for step in 0..40 {
-        frame(
+        let out = frame(
             &mut app,
             &ctx,
-            1.0 + step as f64 * 0.02,
+            time + 1.0 + step as f64 * 0.02,
             vec![egui::Event::PointerMoved(egui::pos2(
                 300.0 + step as f32 * 30.0,
                 200.0 + step as f32 * 15.0,
             ))],
+        );
+        assert!(
+            out.textures_delta.set.is_empty() && out.textures_delta.free.is_empty(),
+            "pointer motion uploads nothing (frame {step})"
         );
     }
     let after = app.library.station.stats();
@@ -482,11 +512,25 @@ fn a_folder_drop_on_the_library_imports_instead_of_opening_one_bracket() {
 #[ignore = "explicit CPU paint+tessellation benchmark of the Library station"]
 fn benchmark_library_pointer_sweep() {
     for count in [40, 200] {
+        let pictures = tempfile::tempdir().unwrap();
+        crate::library_station::tests::write_pictures(pictures.path(), count);
         let ctx = context();
-        let mut app = app_with(library_catalog(count, None));
-        for step in 0..5 {
-            frame(&mut app, &ctx, step as f64 * 0.05, vec![]);
+        let mut app = app_with(library_catalog(count, Some(pictures.path())));
+        let started = Instant::now();
+        let mut time = 0.0;
+        let mut out = frame(&mut app, &ctx, time, vec![]);
+        while (time < 0.25 || app.library_loading()) && started.elapsed() < Duration::from_secs(30)
+        {
+            time += 0.05;
+            out = frame(&mut app, &ctx, time, vec![]);
+            std::thread::sleep(Duration::from_millis(5));
         }
+        assert!(!app.library_loading() && find(&out, "All subjects").is_some());
+        let images = out
+            .shapes
+            .iter()
+            .filter(|s| matches!(&s.shape, egui::Shape::Mesh(m) if m.texture_id != egui::TextureId::default()))
+            .count();
         let mut times = Vec::new();
         for round in 0..5 {
             let started = Instant::now();
@@ -496,7 +540,7 @@ fn benchmark_library_pointer_sweep() {
                 let output = frame(
                     &mut app,
                     &ctx,
-                    1.0 + round as f64 + step as f64 / 120.0,
+                    time + 1.0 + round as f64 + step as f64 / 120.0,
                     vec![egui::Event::PointerMoved(at)],
                 );
                 std::hint::black_box(ctx.tessellate(output.shapes, output.pixels_per_point));
@@ -505,8 +549,11 @@ fn benchmark_library_pointer_sweep() {
         }
         let stats = app.library.station.stats();
         eprintln!(
-            "library, {count} subjects: {:.3?} ms per frame; model builds {}, list builds {}",
-            times, stats.model_builds, stats.list_builds
+            "library, {count} subjects, {images} pictures in view, {} shapes: {:.3?} ms per frame; model builds {}, list builds {}",
+            out.shapes.len(),
+            times,
+            stats.model_builds,
+            stats.list_builds
         );
     }
 }
