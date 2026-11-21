@@ -140,10 +140,12 @@ together. Its distinctive approach is the combination of these choices:
   memory-aware execution plan keep the working set bounded. The native desktop
   includes the engine, running in an owned worker process so rendering and
   cancellation remain separate from interaction.
-- **Make the evidence explorable.** The process view connects the capture
-  network, band matrix, accumulating image, and timeline. The finished photograph
-  is the center of inspection: source comparisons, selected ranges, linked
-  regions, and observation diagnostics modify that view.
+- **Make the evidence explorable.** The finished photograph is the center of
+  inspection. Hover it for a core sample of where its detail came from, hold a
+  plane beside it, or colour it by plane, depth, soft spots or alignment. The
+  engine room connects the capture network, band matrix, accumulating image and
+  timeline, with source comparisons, selected ranges, linked regions and
+  observation diagnostics.
 
 These are implemented design choices, not a claim that every component is a
 new invention or that Strehl outperforms every other stacker. The
@@ -153,14 +155,19 @@ failed approaches, corrections, and remaining limitations.
 
 ## The workflow stays together
 
+The desktop's five stations follow a stack's life: **Library**, **Capture**,
+**Stack**, **Develop** and **Export**.
+
 | Workflow | What you can do |
 | --- | --- |
-| Find a bracket | Browse camera previews before importing. Keep projects, folders, captures, results, edits, and deliveries in one library. |
-| Tune the stack | Adjust the pyramid merge, exposure, geometry, capture limits, and execution plan; render a full-resolution 16-bit TIFF and retain a linear master. |
-| Read the evidence | Follow alignment and merging, then inspect admission by region and detail scale. View recorded observation balance alongside the photograph. |
+| Find a subject | Keep subjects, their stacks, renders, versions and exports in one library, grouped into collections. Drop capture folders to make a subject per folder and a stack per camera folder. |
+| Capture | Plan a focus bracket on the camera host: marks, step, exposure, test shot; follow each plane's checks while it runs. |
+| Tune the stack | Adjust the pyramid merge, exposure, geometry, capture limits, and execution plan; render a full-resolution 16-bit TIFF and retain a linear master. Renders wait in a queue. |
+| Read the evidence | Read the checks, hold a plane, and see where each plane's detail was kept. In the engine room, follow alignment and merging and inspect admission by region and detail scale. |
 | Refine a selection | Experimental **Magic lasso** traces contrasting objects or defects inside a loose enclosure. Its proposed outlines remain editable; ambiguous areas can remain unselected. |
 | Repair a source choice | Limit a selected region to a capture span and **re-stack** to rebuild it. This is separate from immediate light and color edits. |
 | Keep a look | Save presets, import supported numeric XMP controls, compare Before, and preserve named edit versions. Adobe AI profiles and proprietary processing are not imported. |
+| Deliver | Export several presets at once (web, HDR, print, archive) and keep each photograph's export history. |
 | Arrange the workspace | Resize panes, keep the photograph central, undo exploration changes, and double-click to reset views. |
 | Automate | Use the separate CLI, portable development recipe, Rust workspace, or local MCP interface. |
 

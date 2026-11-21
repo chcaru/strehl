@@ -586,18 +586,26 @@ impl SubjectPage {
         }
         let hero = Rect::from_min_size(Pos2::new(x0, left.top() + 42.0), Vec2::new(x1 - x0, 304.0));
         painter.rect_filled(hero, CornerRadius::ZERO, palette.raised);
-        // The chosen picture, else the first of the newest stacks' that loads.
+        // The chosen picture, else the newest stacks' renders, and only then
+        // a source frame (as the Library's card: a capture's first plane is
+        // usually far out of focus).
+        let newest = model.order(StackOrder::Newest);
+        let stacked = |source: bool| {
+            newest.iter().flat_map(move |&i| {
+                model.stacks[i]
+                    .pictures
+                    .iter()
+                    .filter(move |(_, is_source)| *is_source == source)
+                    .cloned()
+            })
+        };
         let picture = model
             .meta
             .hero
             .iter()
             .map(|hero| (hero.clone(), false))
-            .chain(
-                model
-                    .order(StackOrder::Newest)
-                    .into_iter()
-                    .flat_map(|i| model.stacks[i].pictures.iter().cloned()),
-            )
+            .chain(stacked(false))
+            .chain(stacked(true))
             .find(|(path, source)| !previews.failed(path, *source, crate::library_previews::SIDE));
         if let Some((path, source)) = &picture
             && let Some(texture) = previews.file(path, *source)

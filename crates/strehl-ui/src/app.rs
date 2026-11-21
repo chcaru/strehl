@@ -619,7 +619,9 @@ impl StrehlApp {
                 .iter()
                 .find(|run| &run.directory == directory && run.owns_output(&owner.output))
                 .cloned()
-                .ok_or_else(|| anyhow::anyhow!("The saved stack run is no longer in Projects"))?;
+                .ok_or_else(|| {
+                    anyhow::anyhow!("The saved stack run is no longer in the Library")
+                })?;
             // This transient view selects a declared layer; the catalog's run
             // snapshot and its initial photograph remain unchanged.
             run.output = owner.output.clone();
@@ -2767,7 +2769,7 @@ impl StrehlApp {
         let station = self.shell.navigator.station();
         let ready = ready
             && (self.sidebar != Some(workspace::Sidebar::Capture)
-                || self.capture.ready_for_screenshot())
+                || (self.capture.ready_for_screenshot() && self.rig_status_current()))
             && (!self.projects_visible() || !self.project_explorer.preview_pending())
             // The Library waits for its pictures and folder scans.
             && (station != studio_route::Station::Library || !self.library_loading())

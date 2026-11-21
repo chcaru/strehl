@@ -27,43 +27,94 @@ and [release checklist](../../docs/public-release.md).
 **Working with a stack**
 
 The top bar holds the five stations, in the order a stack lives:
-**Library**, **Capture**, **Stack**, **Develop** and **Export**. A mark beside
-each of the last four says whether that step is done, running or still to do.
-Ctrl K opens a palette that goes to any stack, render or command; F gives the
-canvas the whole window until F or Escape. The hint bar along the bottom lists
-the keys for the open station. **Preferences** (in the Strehl menu or the
-palette) choose the Graphite, Instrument or Lightbox theme, the surround
-around the photograph and reduced motion.
+**01 Library**, **02 Capture**, **03 Stack**, **04 Develop** and **05 Export**.
+A mark beside each of the last four says whether that step is done, running or
+still to do. To their left, the breadcrumb names where you are (Library /
+subject / stack / render, then the version or the engine room); a subject in it
+opens that subject's page. To their right: the rig (camera and light), what is
+running, and **Ctrl K**. The hint bar along the bottom lists the keys of the
+open station, and the window's last undo.
 
-**Capture** controls a headless Pi camera host through native
-live view, focus bounds, sequence controls and PC receiver settings. The rig
-status in the top bar shows the camera, light, receiver and phone remote, and
-can power the camera and light. Completed captures open directly in the
-Library. See [native Capture](../../docs/native-capture.md).
+| Key | Where | What it does |
+| --- | --- | --- |
+| Ctrl K | everywhere | the palette: go to any subject, stack or render, or run a command |
+| F | Capture, Stack, Develop, Export | focus mode: the canvas takes the window until F or Escape |
+| Ctrl Z / Ctrl Shift Z | everywhere | undo and redo the latest change, whichever pane made it |
+| Ctrl O | everywhere | open source photos |
+| Enter, F2 | Library | open the selected subject; rename it |
+| Enter, N | a subject | open the stack; new stack of this subject |
+| Hover, click | Stack | hover the photograph for a core sample, the depth rail for a plane; click to pin the sample or hold the plane |
+| ← → | Stack | step a held plane; Escape lets it go |
+| 1–5 | Stack | lenses: Photograph, Plane, Depth, Soft spots, Alignment |
+| Space | Stack | the clean photograph while held |
+| E | Stack | the engine room and back |
+| Ctrl Enter | Stack | stack these photos |
+| B, [ ], \ | Develop | depth brush, brush size, before and after |
+| Ctrl E | Export | export the ticked presets |
 
-1. Open the **Library** and choose **New stack**, press Ctrl/Cmd+O, or drop a source
-   folder onto the workspace. The bracket chooser supports folder navigation,
-   camera previews and direct-folder capture counts.
-2. Use projects and folders to organize stacks. These are virtual library objects;
-   reorganizing them does not move source photographs. A stack keeps the recipe
-   for its next render and its saved revisions.
-3. Open **Stack** and its **Adjust** tab to set the next render's pyramid, exposure, geometry, capture
-   limit and execution options. Default values follow the engine; **Reset** clears
-   overrides. The desktop exposes the photographic pyramid controls described in
-   the [settings audit](../../docs/desktop-settings-audit.md), rather than every
-   research or alternative-backend CLI option.
-4. Choose an output destination and press **Stack** (in the Library, or the
-   Stack station's footer). New sessions default to
-   your Pictures/Strehl folder, independently of the launcher's working directory.
-   The default output is a
-   full-resolution, 16-bit sRGB TIFF. Half-size output changes spatial sampling;
-   it still uses every included capture. Each run gets a fresh output folder and
-   log. **Stop** cancels the owned render process; a partial TIFF is not published
-   as the finished photograph.
-5. Inspect the result in the same Process workspace. Opening a saved revision
-   restores its photograph and recorded observations without rendering again.
-   Source previews are withheld if the recorded source identities no longer match.
-   Identity checks use ordered paths, sizes and modification times, not file hashes.
+The **Strehl** menu (the brand at the left of the top bar) and the palette open
+**Preferences…**, **Focus mode**, **Agent**, **Activity log**, **Project tree** and
+**Reset layout**. Preferences choose the Graphite, Instrument or Lightbox theme,
+the surround around the photograph, reduced motion and **Quiet** (hold stacks
+while a full-screen program is in front). The project tree, Agent and Activity
+log open in the inspector over the station you are on; **Close** returns it.
+
+1. **Library.** The left list filters the subjects: **All subjects**, **On the
+   rig**, what **Needs you** (to stack, to check, to develop, exported) and your
+   **Collections**. Each card shows a subject's newest pictures, its stacks and
+   size, and its next step. Search covers names, notes, lenses and dates; sort
+   by **Recent**, **Name** or **Size**. **New subject** makes a subject; drop
+   capture folders onto the Library to make one subject per folder and one
+   stack per camera folder (`100MSDCF`, `101MSDCF`, … under a subject folder).
+   Collections and subjects are library objects: reorganising them never moves
+   your source photographs. The storage card at the bottom shows the capture
+   volume's free space; **Review storage…** opens Capture.
+2. **A subject.** Its page shows the picture, notes, **Optics and scale** (camera,
+   lens, magnification and the scale bar's calibration; **Set optics and
+   scale…**), what is on disk, every stack with its renders and versions, and a
+   journal of what was done with which settings. **Open** takes a stack to the
+   Stack station; **Shoot again with these settings** and **New stack of this
+   subject** open Capture with the subject named; **Add folders…** imports
+   folders into it; a stack whose photographs moved offers **Locate the
+   sources…**.
+3. **Capture** plans and runs a capture on the camera host: the pre-flight
+   strip, the live view, the focus rail with the start and end marks, and the
+   plan in the inspector. During a capture it shows the plane, the time left,
+   the checks of each plane and what happens when it finishes; **Glance** (G)
+   shows that across the room. A finished capture opens in its subject. See
+   [native Capture](../../docs/native-capture.md).
+4. **Stack** shows the photograph with its evidence. Hover the photograph for
+   a core sample of where its detail came from, or the depth rail for a plane;
+   click to hold a plane beside the photograph. The lenses colour the
+   photograph by plane, depth, soft spots or alignment, at a chosen detail
+   size. The inspector's **Checks** list what needs a look; **Recipe** holds the
+   next render's settings; **Renders** lists this stack's renders. **Render again** stacks
+   with the recipe; **Develop this render** moves on. The **engine room** (E,
+   or **Engine room** in the palette) has the process instruments: the capture network,
+   the band matrix, the accumulating image and the capture timeline.
+5. **Develop** finishes the photograph: the tools along the left (move, crop,
+   regions, the depth brush), **After / Before / Split** and **Clipping** above
+   the canvas, and the inspector's **Adjust** (looks such as **Natural** and
+   **Signature**, light and colour, detail, crop, display), **Layers** (regions
+   and their notes) and **Versions**. **Save version** keeps a named version;
+   edits are saved beside the result and the rendered pixels are never changed.
+6. **Export** writes files from presets: **Web**, **HDR**, **Print** and
+   **Archive**, or your own (**New preset…**). Tick the presets, set the name
+   pattern and the folder under **Name and place**, then **Export N files**.
+   The table below lists this photograph's exports with **Reveal**, **Copy
+   path** and **Export again**.
+
+Stacks wait in a serial queue: asking for a second render while one runs puts
+it behind; the activity in the top bar shows the running one ("Merging 120 /
+299 · 1:40 left") and how many wait, and its tray lists them with Stop and
+Remove. Output defaults to your Pictures/Strehl folder. The default output is a
+full-resolution, 16-bit sRGB TIFF and a linear master. Half-size output changes
+spatial sampling; it still uses every included capture. Each run gets a fresh
+output folder and log. Stopping a render does not publish a partial TIFF as the
+finished photograph. Opening a saved render restores its photograph and recorded
+observations without rendering again. Source previews are withheld if the
+recorded source identities no longer match. Identity checks use ordered paths,
+sizes and modification times, not file hashes.
 
 A capture that records four-shot pixel-shift groups opens as its focal planes: one
 capture per focus position (member 1's file), in the order the capture recorded
@@ -86,7 +137,7 @@ durable receipts, it decodes the plane, checks a four-shot group as the stack
 will, and measures the plane's alignment pairs. The panel shows the planes checked,
 the four-shot groups that pass, the planes the stack will not assemble as recorded
 and the focus positions worth retaking. **Stack when the capture finishes** then
-opens the completed capture in Projects and starts the stack with the current
+opens the completed capture in its subject and starts the stack with the current
 settings, which reads those measurements instead of repeating them. It does this
 only when nothing else is running and either Capture is the open tab or no other
 bracket is loaded; otherwise it leaves a note. A stopped or incomplete capture is
@@ -119,8 +170,8 @@ uncompressed). Only the worst case decides whether the stack may start.
 
 Multi-stack sessions are experimental and only in builds with the `multi-stack`
 feature (`cargo build --release -p strehl-ui --features multi-stack`). In such a build,
-import a source stack, then choose **Create multi-stack session** in Projects or
-Adjust. The new session has its own saved recipe; the original stack remains in
+import a source stack, then choose **Create multi-stack session** in the project
+tree or the Stack station's recipe. The new session has its own saved recipe; the original stack remains in
 the library. Add an **independent pass** for a repeat, changed exposure or lighting
 treatment. Use **Add continuation folder** when another directory continues the
 same focus sweep. Folder segments and passes have explicit order; folder names
@@ -167,8 +218,8 @@ Every run saves a fresh manifest, source snapshot and log. The engine's photogra
 masters, alignment envelope and reports live in its `session-output` subdirectory.
 Original CFA and matching alignment caches are shared between revisions under
 `.strehl-session-cache` in the chosen output destination, outside all source folders.
-Aligned layers each have a `layer-NN` folder; use **Aligned layer** in Projects or
-Review to inspect them individually. A running job uses an immutable snapshot even
+Aligned layers each have a `layer-NN` folder; use **Aligned layer** in the project
+tree or the engine room to inspect them individually. A running job uses an immutable snapshot even
 if the next recipe is edited later. Sources changed since import require Reload.
 Independent views has a view selector that remembers the displayed result.
 Changing viewpoints fits the new canvas; reopening that view preserves zoom.
@@ -213,11 +264,10 @@ repairs. See the [mode guide](../../docs/temporal-energy.md).
 
 **Exploring the photograph**
 
-The photograph, detail views and capture timeline remain together on every
-station's canvas. The Stack station's inspector has **Adjust** and **Review**;
-Develop's has the editing pane and Export's the export pane. **Agent** and the
-engine log (**Activity log**) open in the inspector from the Strehl menu, the
-activity tray or Ctrl K. Drag pane boundaries to change proportions;
+The tools below are those of the Stack station's **engine room** (E), where the
+photograph, its detail views and the capture timeline stay together. **Agent**
+and the engine log (**Activity log**) open in the inspector from the Strehl menu,
+the activity tray or Ctrl K. Drag pane boundaries to change proportions;
 double-click a boundary or use **Reset layout** to restore them. The top bar's
 empty space moves the window (double-click maximizes); its right end has
 minimize, maximize and close; outer edges and corners resize the window.
@@ -281,10 +331,7 @@ log; reported memory plans are not live RAM measurements.
 
 **Developing and repairing a photograph**
 
-Open **Develop** after stacking. **Give photograph more room** (or the
-**Photograph** / **With instruments** switch above the canvas) gives the image
-more space while retaining the timeline; turn it off to show the process
-instruments again.
+Open **Develop** after stacking (**Develop this render** on the Stack station).
 Adjust the whole photograph, or choose **Ellipse**, **Rectangle**, **Polygon**, or
 **Lasso** and draw a region. Select its name to adjust only that region, set its
 feather, or leave a note. **Before** temporarily shows the original rendering; Undo/Redo also covers
