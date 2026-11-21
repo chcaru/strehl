@@ -306,3 +306,38 @@ fn temporal_energy_conflict_blocks_the_actual_launch_before_catalog_changes() {
     app.controls.settings.binned = false;
     assert!(app.stack_start_blocker().is_none());
 }
+
+#[test]
+fn a_new_stack_from_a_camera_folder_takes_the_subject_folder_name() {
+    let files = jobs::tests::TestDirectory::new("v25-camera-folder-name");
+    let source = files.path().join("bug-3").join("107MSDCF");
+    std::fs::create_dir_all(&source).unwrap();
+    let path = source.join("DSC00001.ARW");
+    std::fs::write(&path, [0u8; 42]).unwrap();
+    let mut app = StrehlApp::from_launch(4096, LaunchOptions::default());
+    app.catalog = crate::workspace_history::Catalog::default();
+    app.stack = Some(StackScan {
+        directory: source.clone(),
+        frames: vec![jobs::FrameFile { path, bytes: 42 }],
+        total_bytes: 42,
+    });
+    app.output = files.path().join("results");
+    app.ensure_project_stack();
+    let id = app.active_stack.expect("a stack was created");
+    assert_eq!(app.catalog.node(id).unwrap().name, "bug-3");
+
+    // An ordinary folder keeps its own name.
+    let plain = files.path().join("petal-study");
+    std::fs::create_dir_all(&plain).unwrap();
+    let path = plain.join("frame.arw");
+    std::fs::write(&path, [0u8; 42]).unwrap();
+    app.active_stack = None;
+    app.stack = Some(StackScan {
+        directory: plain,
+        frames: vec![jobs::FrameFile { path, bytes: 42 }],
+        total_bytes: 42,
+    });
+    app.ensure_project_stack();
+    let id = app.active_stack.expect("a second stack was created");
+    assert_eq!(app.catalog.node(id).unwrap().name, "petal-study");
+}
