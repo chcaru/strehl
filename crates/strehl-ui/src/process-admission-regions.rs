@@ -358,6 +358,9 @@ fn region_key(
 /// A bounded multi-source cache, so back-and-forth scrubbing does not repeat
 /// morphology or contour extraction. Unrelated arriving packets do not evict
 /// an unchanged source receipt.
+// The synchronous reference path: production paints through the workers;
+// the tests check region and selection geometry through it.
+#[cfg_attr(not(test), allow(dead_code))]
 #[derive(Default)]
 pub(crate) struct DenseAdmissionCache {
     entries: VecDeque<(Key, Option<Arc<DenseRegion>>)>,
@@ -373,6 +376,7 @@ pub(crate) struct DenseAdmissionCache {
     #[cfg(test)]
     comparison_builds: usize,
 }
+#[cfg_attr(not(test), allow(dead_code))]
 impl DenseAdmissionCache {
     pub(crate) fn region(
         &mut self,
@@ -566,6 +570,7 @@ impl DenseAdmissionCache {
     }
 }
 
+#[cfg_attr(not(test), allow(dead_code))]
 struct ComparisonEntry {
     pinned: Option<Arc<DenseSelection>>,
     current: Arc<DenseRegion>,
@@ -581,6 +586,7 @@ struct SelectionRequest {
     extent: [usize; 2],
     settings: RegionSettings,
 }
+#[cfg_attr(not(test), allow(dead_code))]
 #[derive(PartialEq, Eq)]
 struct SelectionKey {
     request: SelectionRequest,
@@ -608,6 +614,7 @@ impl DenseSelectionLayer {
 }
 pub(crate) struct DenseSelection {
     pub layers: Vec<DenseSelectionLayer>,
+    #[cfg_attr(not(test), allow(dead_code))]
     meta: AdmissionMeta,
     colors: Vec<Color32>,
     patches: Vec<SelectionPatch>,
@@ -653,6 +660,7 @@ impl DenseSelection {
         self.patches.is_empty()
     }
 
+    #[cfg_attr(not(test), allow(dead_code))]
     fn extract(archive: &AdmissionArchive, key: &SelectionKey) -> Option<Self> {
         let request = &key.request;
         let meta = key.receipts.first()?.1;
@@ -1905,6 +1913,277 @@ fn clipped_interval([from, to]: [Pos2; 2], clip: Rect) -> Option<[f32; 2]> {
         }
     }
     Some(range)
+}
+
+#[derive(Clone, PartialEq, Eq)]
+struct SelectionJob {
+    request: SelectionRequest,
+    receipts: Vec<(usize, AdmissionMeta)>,
+    current: Option<(usize, AdmissionMeta)>,
+}
+
+struct SelectionInput {
+    meta: AdmissionMeta,
+    level: usize,
+    settings: RegionSettings,
+    spans: Vec<(SelectionSpan, Vec<bool>, usize)>,
+    current: Option<(usize, Vec<bool>)>,
+}
+
+impl SelectionInput {
+    /// The expensive part: density, contours and the overlap partition.
+    fn build(self) -> Option<DenseSelection> {
+        let geometry = SampleGeometry::new(self.level, self.meta)?;
+        let mut layers = Vec::new();
+        for (span, union, recorded_frames) in self.spans {
+            let region = DenseRegion::extract(self.meta, geometry, &union, self.settings)?;
+            layers.push(DenseSelectionLayer {
+                span,
+                region: Arc::new(region),
+                recorded_frames,
+                requested_frames: span.len(),
+            });
+        }
+        if let Some((frame, cells)) = self.current
+            && let Some(region) = DenseRegion::extract(self.meta, geometry, &cells, self.settings)
+        {
+            layers.push(DenseSelectionLayer {
+                span: SelectionSpan {
+                    start: frame,
+                    end: frame,
+                    id: usize::MAX,
+                },
+                region: Arc::new(region),
+                recorded_frames: 1,
+                requested_frames: 1,
+            });
+        }
+        DenseSelection::from_layers(layers, self.level, self.meta)
+    }
+}
+
+/// Pinned ranges (and the current capture inside them) off the paint path,
+/// as `DenseRegionWorker` does for one capture: the unions are gathered on
+/// the UI thread when the receipts change (one OR per recorded mask), the
+/// regions and their overlap partition are built on one bounded worker, and
+/// the previous selection stays on screen until the new one is ready.
+#[derive(Default)]
+pub(crate) struct DenseSelectionWorker {
+    cache: VecDeque<(SelectionJob, Option<Arc<DenseSelection>>)>,
+    running: Option<(SelectionJob, crate::jobs::Task<Option<DenseSelection>>)>,
+    queued: Option<(SelectionJob, SelectionInput)>,
+    shown: Option<Arc<DenseSelection>>,
+    last: Option<(SelectionRequest, Option<usize>, u64, SelectionJob)>,
+    #[cfg(test)]
+    pub(crate) started: usize,
+    /// Test-only: build inside the call (paint-exact legacy tests).
+    #[cfg(test)]
+    pub(crate) inline: bool,
+}
+
+impl DenseSelectionWorker {
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn selection(
+        &mut self,
+        ctx: &egui::Context,
+        archive: &AdmissionArchive,
+        domain: [u64; 2],
+        spans: &[SelectionSpan],
+        current: Option<usize>,
+        level: usize,
+        extent: [usize; 2],
+        settings: RegionSettings,
+    ) -> Option<Arc<DenseSelection>> {
+        self.poll(ctx);
+        if !settings.enabled
+            || spans.is_empty()
+            || spans
+                .iter()
+                .any(|span| span.start > span.end || span.end >= 65_536)
+        {
+            return None;
+        }
+        let request = SelectionRequest {
+            domain,
+            spans: spans.to_vec(),
+            level,
+            extent,
+            settings: RegionSettings {
+                threshold: settings.threshold.clamp(35, 85),
+                ..settings
+            },
+        };
+        let revision = archive.revision();
+        let job = match &self.last {
+            Some((old, old_current, old_revision, job))
+                if *old == request && *old_current == current && *old_revision == revision =>
+            {
+                job.clone()
+            }
+            _ => {
+                let receipts: Vec<(usize, AdmissionMeta)> = archive
+                    .frames(level)
+                    .filter(|&frame| spans.iter().any(|span| span.contains(frame)))
+                    .filter_map(|frame| archive.metadata(level, frame).map(|meta| (frame, meta)))
+                    .collect();
+                let current = current
+                    .and_then(|frame| archive.metadata(level, frame).map(|meta| (frame, meta)));
+                let job = SelectionJob {
+                    request: request.clone(),
+                    receipts,
+                    current,
+                };
+                self.last = Some((
+                    request,
+                    current.map(|(frame, _)| frame),
+                    revision,
+                    job.clone(),
+                ));
+                job
+            }
+        };
+        if let Some(index) = self.cache.iter().position(|(entry, _)| *entry == job) {
+            let entry = self.cache.remove(index).expect("found");
+            self.shown = entry.1.clone();
+            self.cache.push_back(entry);
+            self.queued = None;
+            return self.shown.clone();
+        }
+        let waiting = self
+            .running
+            .as_ref()
+            .is_some_and(|(running, _)| *running == job)
+            || self
+                .queued
+                .as_ref()
+                .is_some_and(|(queued, _)| *queued == job);
+        if !waiting {
+            match gather(archive, &job) {
+                Some(input) => {
+                    self.queued = Some((job, input));
+                    self.start(ctx);
+                }
+                None => {
+                    self.insert(job, None);
+                    self.shown = None;
+                    return None;
+                }
+            }
+        }
+        self.shown.clone()
+    }
+
+    pub(crate) fn pending(&self) -> bool {
+        self.running.is_some() || self.queued.is_some()
+    }
+
+    fn poll(&mut self, ctx: &egui::Context) {
+        let finished = self
+            .running
+            .as_ref()
+            .and_then(|(_, task)| match task.receiver.try_recv() {
+                Ok(result) => Some(result.ok().flatten()),
+                Err(std::sync::mpsc::TryRecvError::Disconnected) => Some(None),
+                Err(std::sync::mpsc::TryRecvError::Empty) => None,
+            });
+        if let Some(selection) = finished {
+            let (job, _) = self.running.take().expect("a finished build is running");
+            let selection = selection.map(Arc::new);
+            self.insert(job, selection.clone());
+            self.shown = selection;
+        }
+        self.start(ctx);
+    }
+
+    fn start(&mut self, ctx: &egui::Context) {
+        if self.running.is_some() {
+            return;
+        }
+        let Some((job, input)) = self.queued.take() else {
+            return;
+        };
+        #[cfg(test)]
+        {
+            self.started += 1;
+            if self.inline {
+                let selection = input.build().map(Arc::new);
+                self.insert(job, selection.clone());
+                self.shown = selection;
+                return;
+            }
+        }
+        let notify = ctx.clone();
+        let task = crate::jobs::spawn_notifying_task(
+            "strehl-dense-selection",
+            move |_| Ok(input.build()),
+            move || notify.request_repaint(),
+        );
+        self.running = Some((job, task));
+    }
+
+    fn insert(&mut self, job: SelectionJob, selection: Option<Arc<DenseSelection>>) {
+        self.cache.retain(|(entry, _)| *entry != job);
+        if self.cache.len() == 8 {
+            self.cache.pop_front();
+        }
+        self.cache.push_back((job, selection));
+    }
+}
+
+/// Unions per span and the current capture's cells, copied for the worker.
+fn gather(archive: &AdmissionArchive, job: &SelectionJob) -> Option<SelectionInput> {
+    let request = &job.request;
+    let meta = job
+        .receipts
+        .first()
+        .map(|(_, meta)| *meta)
+        .or(job.current.map(|(_, meta)| meta))?;
+    let compatible = |candidate: &AdmissionMeta| {
+        candidate.extent == meta.extent && candidate.samples == meta.samples
+    };
+    if meta.extent != request.extent
+        || !job
+            .receipts
+            .iter()
+            .all(|(_, candidate)| compatible(candidate))
+    {
+        return None;
+    }
+    let mut spans = Vec::new();
+    for &span in &request.spans {
+        let mut union = vec![false; meta.samples[0] * meta.samples[1]];
+        let mut recorded = 0;
+        for &(frame, _) in job
+            .receipts
+            .iter()
+            .filter(|(frame, _)| span.contains(*frame))
+        {
+            let (_, cells) = archive.cells(request.level, frame)?;
+            for (admitted, cell) in union.iter_mut().zip(cells) {
+                *admitted |= cell;
+            }
+            recorded += 1;
+        }
+        if recorded > 0 {
+            spans.push((span, union, recorded));
+        }
+    }
+    // A current capture in another domain is left out, as before.
+    let current = job
+        .current
+        .filter(|(_, candidate)| compatible(candidate))
+        .and_then(|(frame, _)| {
+            archive
+                .cells(request.level, frame)
+                .map(|(_, cells)| (frame, cells.collect()))
+        });
+    Some(SelectionInput {
+        meta,
+        level: request.level,
+        settings: request.settings,
+        spans,
+        current,
+    })
 }
 
 #[cfg(test)]

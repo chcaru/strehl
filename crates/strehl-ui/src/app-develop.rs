@@ -12,8 +12,8 @@
 )]
 use super::*;
 use crate::develop_station::{
-    self as station, DevelopIntent, DevelopPanel, DevelopView, RangeFallback, RepairView,
-    VersionRow, style::StudioPalette,
+    self as station, DevelopIntent, DevelopPanel, DevelopView, RepairView, VersionRow,
+    style::StudioPalette,
 };
 use crate::export_presets::{self as presets, NameFields};
 use crate::export_station::{
@@ -190,6 +190,22 @@ impl StrehlApp {
             &station::DevelopCanvas,
         ) -> R,
     ) -> Option<R> {
+        self.with_develop_view_and_rail(|view, rows, panel, canvas, _| {
+            show(view, rows, panel, canvas)
+        })
+    }
+
+    /// `with_develop_view`, plus the Stack station's depth rail for the brush.
+    fn with_develop_view_and_rail<R>(
+        &mut self,
+        show: impl FnOnce(
+            &DevelopView<'_>,
+            &[station::layers::LayerRow],
+            &mut DevelopPanel,
+            &station::DevelopCanvas,
+            &mut dyn station::DepthRail,
+        ) -> R,
+    ) -> Option<R> {
         let loaded = self.editor.loaded.as_ref()?;
         let palette = self.edit_pane.develop.palette;
         let (_, _, um_per_px) = self.develop_subject();
@@ -265,7 +281,11 @@ impl StrehlApp {
         };
         let canvas = &self.editor.develop;
         let panel = &mut self.edit_pane.develop.panel;
-        Some(show(&view, &rows, panel, canvas))
+        let mut rail = super::station_stack::DevelopRangeRail {
+            station: &mut self.stack_station,
+            progress: &self.progress,
+        };
+        Some(show(&view, &rows, panel, canvas, &mut rail))
     }
 
     /// The tools strip, for the shell's 44 px column, with the Develop keys.
@@ -294,12 +314,12 @@ impl StrehlApp {
         self.handle_develop_intents(intents, time);
     }
 
-    /// The rail slot while the depth brush is out. `RangeFallback` stands in
-    /// for the Stack station's depth rail, which implements `DepthRail`.
+    /// The rail slot while the depth brush is out: the Stack station's depth
+    /// rail, so the painted area's planes read as they do in Stack.
     pub(super) fn show_develop_rail(&mut self, ui: &mut egui::Ui) {
         let intents = self
-            .with_develop_view(|view, _, _, canvas| {
-                station::depth_rail(ui, view, canvas, &mut RangeFallback)
+            .with_develop_view_and_rail(|view, _, _, canvas, rail| {
+                station::depth_rail(ui, view, canvas, rail)
             })
             .unwrap_or_default();
         let time = ui.input(|i| i.time);

@@ -314,6 +314,8 @@ fn changed_sources_are_withheld_before_or_after_replay_but_saved_participation_r
         app.image_path = Some(run.output);
         app.process_view = true;
         app.on_stack_station();
+        // The saved participation timeline is the engine room's (P3).
+        app.set_room(super::studio_route::Room::Engine);
         draw(&mut app, &ctx, 1.0, vec![]);
         let saved = draw(&mut app, &ctx, 2.0, vec![]);
         assert!(

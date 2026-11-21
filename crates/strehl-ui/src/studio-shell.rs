@@ -524,11 +524,7 @@ impl StrehlApp {
         match station {
             Station::Library => none,
             Station::Capture => self.capture_layout(),
-            Station::Stack => StationLayout {
-                inspector: self.shell.navigator.route().room() != Some(Room::Engine),
-                control_strip: true,
-                ..none
-            },
+            Station::Stack => self.stack_layout(),
             Station::Develop | Station::Export => self.develop_layout(station),
         }
     }
@@ -538,7 +534,7 @@ impl StrehlApp {
         match station {
             Station::Library => self.library_paints_legacy(),
             Station::Capture | Station::Develop | Station::Export => false,
-            Station::Stack => true,
+            Station::Stack => self.stack_paints_legacy(),
         }
     }
 
@@ -672,16 +668,24 @@ impl StrehlApp {
             self.develop_rail(ui, station);
         } else if station == Station::Capture {
             self.capture_rail(ui);
+        } else if station == Station::Stack {
+            self.stack_rail(ui);
         }
     }
     /// The canvas: today's process view, or the welcome page with nothing open.
     pub(super) fn station_canvas(&mut self, ui: &mut egui::Ui, station: Station) {
+        // Develop and Export show the photograph alone (P3 theater mode).
+        self.process_space
+            .set_photograph_only(matches!(station, Station::Develop | Station::Export));
         if station == Station::Library {
             return self.library_canvas(ui);
         }
         if station == Station::Capture {
             self.capture_canvas(ui);
             return;
+        }
+        if station == Station::Stack {
+            return self.stack_canvas(ui);
         }
         if self.stack.is_none()
             && !self.activity
@@ -713,6 +717,7 @@ impl StrehlApp {
         strip.spacing_mut().item_spacing = egui::vec2(14.0, 0.0);
         let ui = &mut strip;
         match station {
+            Station::Stack if self.stack_control_strip(ui) => {}
             Station::Stack => {
                 w::caps(ui, "View");
                 let mut room = self.shell.navigator.route().room().unwrap_or_default();
@@ -922,6 +927,7 @@ impl StrehlApp {
             return;
         }
         match station {
+            Station::Stack if self.stack_inspector_tabs(ui) => {}
             Station::Stack => {
                 for (tab, label) in [(StackTab::Adjust, "Adjust"), (StackTab::Review, "Review")] {
                     let selected = self.shell.navigator.stack_tab == tab;
@@ -944,6 +950,7 @@ impl StrehlApp {
     /// the Edit pane on Develop, the Export pane on Export.
     pub(super) fn station_inspector_body(&mut self, ui: &mut egui::Ui, station: Station) {
         match station {
+            Station::Stack if self.stack_inspector_body(ui) => {}
             Station::Stack => match self.shell.navigator.stack_tab {
                 StackTab::Adjust => self.scrolling_pane(ui, "Adjust", |app, ui| {
                     app.session_panel(ui);
@@ -984,83 +991,9 @@ impl StrehlApp {
     /// The inspector footer: the station's main action.
     pub(super) fn station_inspector_footer(&mut self, ui: &mut egui::Ui, station: Station) {
         match station {
-            Station::Stack => self.stack_footer(ui),
+            Station::Stack => self.stack_station_footer(ui),
             Station::Develop | Station::Export => self.develop_footer(ui, station),
             _ => {}
-        }
-    }
-
-    fn stack_footer(&mut self, ui: &mut egui::Ui) {
-        let t = studio_theme::tokens(ui.ctx());
-        if let Some(job) = &self.job {
-            let cancelling = job.is_cancelling();
-            let label = if cancelling {
-                "Stopping…"
-            } else if self.pending_run.is_some() {
-                "Starting…"
-            } else {
-                "Stacking…"
-            };
-            ui.add(w::Button::new(label).enabled(false));
-            if ui
-                .add(w::Button::danger("Stop").enabled(!cancelling))
-                .on_hover_text("Stop this run; what it has written is kept")
-                .clicked()
-            {
-                self.stop_stack();
-            }
-            return;
-        }
-        let blocker = self.stack_start_blocker();
-        let total = self.stack.as_ref().map_or(0, |stack| stack.frames.len());
-        let included = self
-            .controls
-            .settings
-            .frame_limit
-            .unwrap_or(total)
-            .min(total);
-        let finished = self.result.is_some() && self.progress.stage == Stage::Complete;
-        if finished {
-            if ui
-                .add(w::Button::primary("Develop this render").chevron())
-                .clicked()
-            {
-                self.go_station(Station::Develop);
-            }
-            let again = ui
-                .add(w::Button::new("Render again").enabled(blocker.is_none()))
-                .on_hover_text(blocker.map_or_else(
-                    || format!("Stack {included} photos into a new render · Ctrl+Enter"),
-                    str::to_owned,
-                ));
-            if again.clicked() {
-                self.start_render();
-                ui.ctx().request_repaint();
-            }
-        } else {
-            let label = if total > 0 {
-                format!("Stack {included} photos")
-            } else {
-                "Stack".into()
-            };
-            if ui
-                .add(w::Button::primary(&label).enabled(blocker.is_none()))
-                .on_hover_text(blocker.unwrap_or("Ctrl+Enter"))
-                .clicked()
-            {
-                self.start_render();
-                ui.ctx().request_repaint();
-            }
-            if let Some(reason) = blocker {
-                ui.add(
-                    egui::Label::new(
-                        egui::RichText::new(reason)
-                            .size(scale::SECONDARY)
-                            .color(t.ink3),
-                    )
-                    .truncate(),
-                );
-            }
         }
     }
 

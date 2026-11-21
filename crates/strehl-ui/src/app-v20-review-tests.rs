@@ -387,6 +387,9 @@ fn escape_dismisses_actual_photo_menu_before_resetting_inspection_or_zoom() {
     let ctx = egui::Context::default();
     theme::install(&ctx);
     let photo = install_owned_photo(&mut app, &ctx);
+    // The process view's photo menu lives in the engine room since P3.
+    app.on_stack_station();
+    app.set_room(super::studio_route::Room::Engine);
     // A completed texture alone is deliberately insufficient for linked UV
     // inspection. Reproduce the real writer's coordinate certificate as well.
     app.progress.ingest("planes: 90 x 60 per CFA plane\nbands: 7 Laplacian levels + 1 base, coarsest 1 x 1\nwrote: photo.tiff (180 x 120, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, Malvar-He-Cutler demosaic)\n");

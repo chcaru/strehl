@@ -1644,10 +1644,12 @@ fn hints(route: &Route) -> &'static [(&'static [&'static str], &'static str)] {
         ],
         Station::Capture => &[(&["Ctrl", "K"], "go to anything"), (&["F"], "focus")],
         Station::Stack => &[
-            (&["Ctrl", "Enter"], "stack again"),
+            (&["Hover"], "photograph: core sample \u{b7} rail: plane"),
+            (&["Click"], "pin the sample \u{b7} hold the plane"),
+            (&["\u{2190}", "\u{2192}"], "step a held plane"),
+            (&["1\u{2013}5"], "lenses"),
+            (&["Space"], "clean photograph"),
             (&["E"], "engine room"),
-            (&["F"], "focus"),
-            (&["Ctrl", "K"], "go to anything"),
         ],
         Station::Develop => &[
             (&["B"], "depth brush"),

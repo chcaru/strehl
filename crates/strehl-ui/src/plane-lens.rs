@@ -265,6 +265,24 @@ impl Default for LensPalette {
         Self::GRAPHITE
     }
 }
+impl LensPalette {
+    /// Text on the photograph's surround uses the canvas inks (Lightbox keeps
+    /// light ink there); the cards and captions use the panel inks.
+    pub(crate) fn from_tokens(t: &crate::studio_theme::Tokens) -> Self {
+        Self {
+            plane: t.plane,
+            accent: t.accent,
+            ink: t.ink,
+            ink2: t.ink2,
+            ink3: t.ink3,
+            line: t.line,
+            line2: t.line2,
+            panel: t.panel,
+            surround: t.surround,
+            spectrum: t.spectrum,
+        }
+    }
+}
 
 /// Appendix A: the detail spectrum on the dark themes (2 to 256 px).
 pub(crate) const SPECTRUM_DARK: [Color32; DETAIL_LEVELS] = [

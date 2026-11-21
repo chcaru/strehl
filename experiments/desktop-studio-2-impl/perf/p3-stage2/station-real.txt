@@ -1,0 +1,14 @@
+
+running 1 test
+test app::station_stack::tests::benchmark_stack_station_pointer_sweeps ... stack_station_cpu_ms_per_frame kind=synthetic planes=130 maps=1040 dropped=0 build_s=0.0 photo=[0.19599416666666666, 0.17692916666666667, 0.17561833333333335, 0.17324250000000002] rail=[0.11565916666666666, 0.12432833333333333, 0.13148833333333335, 0.13533083333333332] held_step=0.138
+stack_station_cpu_min_ms kind=synthetic planes=130 photo=0.173 rail=0.116 held_step=0.138
+stack_station_cpu_ms_per_frame kind=synthetic planes=1500 maps=12000 dropped=0 build_s=0.2 photo=[0.3836641666666667, 0.36461749999999993, 0.38704916666666667, 0.392225] rail=[0.12050833333333334, 0.1362091666666667, 0.13717333333333334, 0.13473666666666664] held_step=0.140
+stack_station_cpu_min_ms kind=synthetic planes=1500 photo=0.365 rail=0.121 held_step=0.140
+stack_station_cpu_ms_per_frame kind=synthetic planes=6000 maps=48000 dropped=0 build_s=0.8 photo=[0.5882741666666667, 0.5251233333333333, 0.55004, 0.5117025] rail=[0.11565583333333333, 0.12819416666666666, 0.13298583333333333, 0.13033333333333333] held_step=0.135
+stack_station_cpu_min_ms kind=synthetic planes=6000 photo=0.512 rail=0.116 held_step=0.135
+stack_station_cpu_ms_per_frame kind=real planes=1444 maps=11552 dropped=0 build_s=5.8 photo=[0.4567866666666667, 0.4261275, 0.5063583333333334, 0.4623791666666667] rail=[0.16882, 0.16923333333333332, 0.16796833333333333, 0.18410500000000002] held_step=0.182
+stack_station_cpu_min_ms kind=real planes=1444 photo=0.426 rail=0.168 held_step=0.182
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1332 filtered out; finished in 7.96s
+

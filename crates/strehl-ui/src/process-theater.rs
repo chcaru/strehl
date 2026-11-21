@@ -88,6 +88,9 @@ pub(crate) struct ProcessTheater {
     /// The Stack station shows inspection in place, with no relayout and no
     /// 0.24 s workspace animation (spec 7.2). The engine room keeps it.
     pub(crate) instant_inspection: bool,
+    /// Develop and Export: only the photograph on the canvas (its editor
+    /// overlays draw on top), with no timeline, instruments or captions.
+    pub(crate) photograph_only: bool,
     source_relation_rect: Option<Rect>,
     source_axis_bounds: Option<Rect>,
     review_hover: Option<usize>,
@@ -100,9 +103,10 @@ pub(crate) struct ProcessTheater {
     source_relation_reveal: Option<(f64, f32, bool)>,
     source_relation_axis: Option<SourceRelationAxis>,
     source_admission: source_admission::SourceAdmissionCache,
-    dense_admission: crate::process_admission_regions::DenseAdmissionCache,
     // Single-capture regions are extracted on a worker, never during paint.
     dense_regions: crate::process_admission_regions::DenseRegionWorker,
+    // Pinned ranges are built on a worker too.
+    dense_selections: crate::process_admission_regions::DenseSelectionWorker,
     source_region_painter: crate::process_admission_regions::DenseRegionPainter,
     source_selection_painter: crate::process_admission_regions::DenseSelectionPainter,
     source_drag: Option<(Pos2, Pos2, f32)>,
@@ -173,6 +177,7 @@ impl Default for ProcessTheater {
             returning_source: None,
             inspection_mix: 0.0,
             instant_inspection: false,
+            photograph_only: false,
             source_relation_rect: None,
             source_axis_bounds: None,
             review_hover: None,
@@ -185,11 +190,19 @@ impl Default for ProcessTheater {
             source_relation_reveal: None,
             source_relation_axis: None,
             source_admission: Default::default(),
-            dense_admission: Default::default(),
             dense_regions: {
                 #[allow(unused_mut)]
                 let mut worker = crate::process_admission_regions::DenseRegionWorker::default();
                 // Legacy paint-exact tests; `v26_perf_tests` covers the worker.
+                #[cfg(test)]
+                {
+                    worker.inline = true;
+                }
+                worker
+            },
+            dense_selections: {
+                #[allow(unused_mut)]
+                let mut worker = crate::process_admission_regions::DenseSelectionWorker::default();
                 #[cfg(test)]
                 {
                     worker.inline = true;
@@ -728,10 +741,16 @@ impl ProcessTheater {
         }
     }
 
+    /// The Stack station's filmstrip frames stand in for the instruments'
+    /// visible contacts while the process view is not painted.
+    pub(crate) fn set_station_contacts(&mut self, contacts: Vec<usize>) {
+        self.visible_contacts = contacts;
+    }
+
     /// Region extraction is pending on its worker.
     #[allow(dead_code)] // Read by the Stack station (stage 2).
     pub(crate) fn region_pending(&self) -> bool {
-        self.dense_regions.pending()
+        self.dense_regions.pending() || self.dense_selections.pending()
     }
 
     /// The timeline temporarily owns inspection even with Edit open. Canvas
@@ -883,6 +902,7 @@ impl ProcessTheater {
                 edit_focus: self.edit_focus,
                 edit_workspace: self.edit_workspace,
                 instant_inspection: self.instant_inspection,
+                photograph_only: self.photograph_only,
                 ..Default::default()
             };
             self.set_photo_paint(photo_paint);
@@ -957,7 +977,7 @@ impl ProcessTheater {
             self.pin = self.scales.pin();
         }
         let pending_view = self.requested_view.map(|_| self.scales.target_view());
-        let standalone = input.standalone_photo();
+        let standalone = input.standalone_photo() || self.photograph_only;
         if input.progress.stage == Stage::Complete && self.last_stage != Stage::Complete {
             self.enlarged = None;
         }
@@ -1050,7 +1070,7 @@ impl ProcessTheater {
             if self.edit_workspace && self.edit_focus {
                 target.1.min.y = rect.top();
             } else if standalone {
-                target.1.min.y = rect.top() + 24.0;
+                target.1.min.y = rect.top() + if self.photograph_only { 0.0 } else { 24.0 };
             }
             let blend = |from: Rect, to: Rect| {
                 Rect::from_min_max(
@@ -2119,6 +2139,7 @@ impl ProcessTheater {
         // Reuse the existing caption lane. Evidence must never resize the
         // photograph at TIFF arrival or steal room from a compact comparison.
         self.review_strip_visible = final_owned
+            && !self.photograph_only
             && footer >= 53.0
             && rect.width() >= 230.0
             && input.progress.bands.is_some();
@@ -2145,12 +2166,17 @@ impl ProcessTheater {
                 }
             }
         }
-        let image_box = Rect::from_min_max(
-            rect.min + egui::vec2(10.0, if self.edit_workspace { 28.0 } else { 36.0 }),
-            // Reserve the diagnostic caption from the first camera frame.
-            // Its later contents cannot shrink the live image at TIFF arrival.
-            rect.max - egui::vec2(10.0, footer),
-        );
+        let image_box = if self.photograph_only {
+            // Develop and Export: no caption above, no legend below.
+            rect.shrink(10.0)
+        } else {
+            Rect::from_min_max(
+                rect.min + egui::vec2(10.0, if self.edit_workspace { 28.0 } else { 36.0 }),
+                // Reserve the diagnostic caption from the first camera frame.
+                // Its later contents cannot shrink the live image at TIFF arrival.
+                rect.max - egui::vec2(10.0, footer),
+            )
+        };
         let navigable = self.output_space(input).is_some() || input.standalone_photo();
         if final_owned && navigable {
             self.requested_view = None;
@@ -2165,7 +2191,7 @@ impl ProcessTheater {
             if !self.annotating_canvas() {
                 self.final_modifier(ui, rect, image_box, input);
             }
-            if !input.standalone_photo() && !self.edit_workspace {
+            if !input.standalone_photo() && !self.edit_workspace && !self.photograph_only {
                 self.result_photo.legend(
                     ui,
                     Rect::from_min_size(
@@ -2643,7 +2669,9 @@ impl ProcessTheater {
     fn finished_photograph(&mut self, ui: &mut Ui, rect: Rect, image_box: Rect, input: &Input<'_>) {
         self.result_photo.set_edit_navigation(self.editing_canvas());
         self.result_photo.suppress_diagnostics(
-            input.progress.source_repair.is_some() || input.standalone_photo(),
+            input.progress.source_repair.is_some()
+                || input.standalone_photo()
+                || self.photograph_only,
         );
         let p = ui.painter_at(rect);
         let multiple = self.participation.has_ranges();
@@ -2681,33 +2709,39 @@ impl ProcessTheater {
                 None => "YOUR PHOTOGRAPH / LINKED INSPECTION".into(),
             }
         };
-        text(
-            &p.with_clip_rect(Rect::from_min_max(
-                rect.min,
-                egui::pos2(rect.right() - 88.0, rect.top() + 28.0),
-            )),
-            rect.min + egui::vec2(10.0, 8.0),
-            &label,
-            9.0,
-            if self.participation_frame.is_some() {
-                GREEN
-            } else {
-                ACCENT
-            },
-        );
+        if !self.photograph_only {
+            text(
+                &p.with_clip_rect(Rect::from_min_max(
+                    rect.min,
+                    egui::pos2(rect.right() - 88.0, rect.top() + 28.0),
+                )),
+                rect.min + egui::vec2(10.0, 8.0),
+                &label,
+                9.0,
+                if self.participation_frame.is_some() {
+                    GREEN
+                } else {
+                    ACCENT
+                },
+            );
+        }
         let fit_button = Rect::from_min_size(
             egui::pos2(rect.right() - 78.0, rect.top() + 7.0),
             egui::vec2(68.0, 19.0),
         );
-        let fit_hit = ui.interact(fit_button, ui.id().with("result-scene"), Sense::click());
-        p.text(
-            fit_button.center(),
-            Align2::CENTER_CENTER,
-            format!("{:.1}× · Scene", self.scales.aperture().width().recip()),
-            FontId::monospace(8.0),
-            if fit_hit.hovered() { INK } else { MUTED },
-        );
-        if self.annotating_canvas() && fit_hit.clicked() {
+        // Develop and Export own their own Fit control in the strip.
+        let fit_clicked = !self.photograph_only && {
+            let fit_hit = ui.interact(fit_button, ui.id().with("result-scene"), Sense::click());
+            p.text(
+                fit_button.center(),
+                Align2::CENTER_CENTER,
+                format!("{:.1}× · Scene", self.scales.aperture().width().recip()),
+                FontId::monospace(8.0),
+                if fit_hit.hovered() { INK } else { MUTED },
+            );
+            fit_hit.clicked()
+        };
+        if self.annotating_canvas() && fit_clicked {
             if self.source_relation_rect.is_some() {
                 self.scales.reset_view();
                 self.source_drag = None;
@@ -2734,7 +2768,8 @@ impl ProcessTheater {
                 .analysis_size
                 .or(input.progress.plane_size)
                 .and_then(|extent| {
-                    self.dense_admission.selection_with_current(
+                    self.dense_selections.selection(
+                        ui.ctx(),
                         &input.progress.admission_archive,
                         [input.epoch, input.progress.diagnostic_epoch],
                         self.participation.spans(),
@@ -2803,7 +2838,7 @@ impl ProcessTheater {
                 self.source_relation_mix,
             );
         }
-        if action.reset || fit_hit.clicked() {
+        if action.reset || fit_clicked {
             if self.source_relation_rect.is_some() {
                 self.scales.reset_view();
                 self.source_drag = None;
@@ -2853,7 +2888,11 @@ impl ProcessTheater {
                 "Drag: pan · Shift-drag: select a region · double-click: scene"
             }
         };
-        if !self.edit_workspace && !self.review_strip_visible && photograph_footer(rect) >= 53.0 {
+        if !self.edit_workspace
+            && !self.photograph_only
+            && !self.review_strip_visible
+            && photograph_footer(rect) >= 53.0
+        {
             text(
                 &p,
                 rect.left_bottom() + egui::vec2(10.0, -19.0),
@@ -3431,7 +3470,8 @@ impl ProcessTheater {
         {
             let settings = crate::process_admission_regions::RegionSettings::read(ui.ctx());
             if self.participation.has_ranges() {
-                if let Some(selection) = self.dense_admission.selection_with_current(
+                if let Some(selection) = self.dense_selections.selection(
+                    ui.ctx(),
                     &input.progress.admission_archive,
                     [input.epoch, input.progress.diagnostic_epoch],
                     self.participation.spans(),

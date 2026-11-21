@@ -1278,3 +1278,84 @@ fn current_capture_composes_inside_and_outside_pins_without_rebuilding_pinned_un
     assert_eq!(cache.comparisons.len(), 8);
     assert_eq!(cache.selection_builds, 1);
 }
+
+#[test]
+fn the_selection_worker_builds_off_the_paint_path_and_matches_the_reference() {
+    let (archive, reference) = overlap_fixture();
+    let spans = [span(4, 12, 0), span(31, 35, 1)];
+    let ctx = egui::Context::default();
+    let mut worker = DenseSelectionWorker::default();
+    let first = worker.selection(
+        &ctx,
+        &archive,
+        DOMAIN,
+        &spans,
+        None,
+        0,
+        EXTENT,
+        RegionSettings::default(),
+    );
+    assert!(
+        first.is_none(),
+        "the first request is answered by the worker"
+    );
+    assert!(worker.pending());
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
+    let built = loop {
+        if let Some(selection) = worker.selection(
+            &ctx,
+            &archive,
+            DOMAIN,
+            &spans,
+            None,
+            0,
+            EXTENT,
+            RegionSettings::default(),
+        ) {
+            break selection;
+        }
+        assert!(
+            std::time::Instant::now() < deadline,
+            "the worker must finish"
+        );
+        std::thread::sleep(std::time::Duration::from_millis(1));
+    };
+    assert_eq!(built.layers.len(), reference.layers.len());
+    for (a, b) in built.layers.iter().zip(&reference.layers) {
+        assert_eq!(a.span, b.span);
+        assert_eq!(a.recorded_frames, b.recorded_frames);
+        assert_eq!(a.region.admitted, b.region.admitted);
+        assert_eq!(a.region.indices, b.region.indices);
+    }
+    // A request the cache answers starts no work and returns the same Arc.
+    let started = worker.started;
+    let again = worker
+        .selection(
+            &ctx,
+            &archive,
+            DOMAIN,
+            &spans,
+            None,
+            0,
+            EXTENT,
+            RegionSettings::default(),
+        )
+        .unwrap();
+    assert!(Arc::ptr_eq(&again, &built));
+    assert_eq!(worker.started, started);
+    // A new range keeps the previous selection until its own is built.
+    let wider = [span(4, 12, 0), span(30, 35, 1)];
+    let stand_in = worker
+        .selection(
+            &ctx,
+            &archive,
+            DOMAIN,
+            &wider,
+            None,
+            0,
+            EXTENT,
+            RegionSettings::default(),
+        )
+        .unwrap();
+    assert!(Arc::ptr_eq(&stand_in, &built));
+}

@@ -691,7 +691,7 @@ fn every_file(ui: &mut Ui, view: &ExportView<'_>, intents: &mut Vec<ExportIntent
         recipe_on,
         !tiffs.is_empty(),
         "Develop recipe and region notes",
-        "TIFF only, off by default",
+        "TIFF only",
     ) {
         for (preset, image) in tiffs {
             let mut next = (*image).clone();

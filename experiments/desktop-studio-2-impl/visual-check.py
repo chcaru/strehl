@@ -67,6 +67,7 @@ ROUTES = {
                                "library.png"),
     "stack-instrument": (["--open-run", RUN, "--route", "stack", "--theme", "instrument"], "stack-instrument.png"),
     "stack-lightbox": (["--open-run", RUN, "--route", "stack", "--theme", "lightbox"], "stack-lightbox.png"),
+    "stack-plane-held": (["--open-run", RUN, "--route", "stack", "--plane-hold", "128"], "stack-plane-held.png"),
 }
 
 

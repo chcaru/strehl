@@ -214,6 +214,8 @@ pub struct LaunchOptions {
     pub(crate) overlay: Option<String>,
     /// `--theme`: Graphite, Instrument or Lightbox for this session only.
     pub(crate) theme: Option<studio_theme::ThemeName>,
+    /// `--plane-hold N`: the Stack station holds plane N (from 1) once open.
+    pub(crate) plane_hold: Option<usize>,
     /// `--capture-fixture plan|flight|glance`: the Capture station from a
     /// fabricated state (offscreen checks); nothing reaches a camera.
     pub(crate) capture_fixture: Option<String>,
@@ -472,6 +474,17 @@ fn main() -> eframe::Result {
                 )
             }) {
                 eprintln!("Use --overlay projects|activity|agent|palette|preferences");
+                std::process::exit(2);
+            }
+            continue;
+        }
+        if arg == "--plane-hold" {
+            launch.plane_hold = args
+                .next()
+                .and_then(|v| v.to_str().and_then(|v| v.parse().ok()))
+                .filter(|&plane: &usize| plane > 0);
+            if launch.plane_hold.is_none() {
+                eprintln!("Use --plane-hold N (a plane number, from 1)");
                 std::process::exit(2);
             }
             continue;
