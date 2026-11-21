@@ -305,10 +305,6 @@ impl Catalog {
     /// Changes with every `save`, including in-memory catalogs, which the app
     /// calls after each edit. A view that caches per catalog revision keys on
     /// it together with the record counts.
-    #[cfg_attr(
-        not(test),
-        allow(dead_code, reason = "the shell keys the library on it in P4 stage 2")
-    )]
     pub(crate) fn generation(&self) -> u64 {
         self.generation.get()
     }

@@ -257,12 +257,15 @@ pub(crate) enum StackTab {
 pub(crate) enum Drawer {
     Agent,
     Activity,
+    /// Today's project tree: folders, notes, sessions and saved photographs.
+    Projects,
 }
 impl Drawer {
     pub(crate) fn label(self) -> &'static str {
         match self {
             Self::Agent => "Agent",
             Self::Activity => "Activity log",
+            Self::Projects => "Project tree",
         }
     }
 }
@@ -277,6 +280,11 @@ pub(crate) struct Navigator {
     pub drawer: Option<Drawer>,
     /// The flags the adapter last wrote; a difference means old code wrote.
     applied: Option<Legacy>,
+    /// A stack, bracket, render or photograph is open or opening. Older code
+    /// writes the Projects pane when it opens one (a finished capture, an
+    /// imported session): with Studio 2 that document lives on the Stack
+    /// station; with nothing open, Projects means the Library.
+    pub document_open: bool,
     revision: u64,
 }
 impl Navigator {
@@ -296,6 +304,7 @@ impl Navigator {
         let sidebar = match self.drawer {
             Some(Drawer::Agent) => Some(Sidebar::Agent),
             Some(Drawer::Activity) => Some(Sidebar::Activity),
+            Some(Drawer::Projects) => Some(Sidebar::Projects),
             None => match &self.route {
                 Route::Library(_) | Route::Subject(_) => Some(Sidebar::Projects),
                 Route::Capture(_) => Some(Sidebar::Capture),
@@ -326,9 +335,12 @@ impl Navigator {
         match sidebar {
             Some(Sidebar::Agent) => self.drawer = Some(Drawer::Agent),
             Some(Sidebar::Activity) => self.drawer = Some(Drawer::Activity),
+            // Opening something from the project tree keeps the tree open.
+            Some(Sidebar::Projects) if self.drawer == Some(Drawer::Projects) => {}
             other => {
                 self.drawer = None;
                 let station = match other {
+                    Some(Sidebar::Projects) if self.document_open => Station::Stack,
                     Some(Sidebar::Projects) => Station::Library,
                     Some(Sidebar::Capture) => Station::Capture,
                     Some(Sidebar::Adjust) => {

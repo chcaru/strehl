@@ -106,6 +106,7 @@ fn global_undo_reverses_latest_project_action_after_that_domain_reaches_capacity
     let mut app = app();
     let id = app.catalog.create_project("Original").unwrap();
     app.catalog.selected = Some(id);
+    app.show_project_tree_beside_process();
     paint(&mut app, &ctx, egui::vec2(1060.0, 720.0), 0.0, vec![]);
     // Beyond the independent per-domain cap. A later revision must still be
     // ordered even when the domain reports unchanged bounded history depths.
@@ -150,6 +151,7 @@ fn source_picker_is_opened_from_selected_nested_folder_without_creating_a_stack_
         let p = app.catalog.create_project("Field study").unwrap();
         let f = app.catalog.create_folder(p, "Lens experiments").unwrap();
         app.catalog.selected = Some(f);
+        app.show_project_tree_beside_process();
         if from_welcome {
             app.sidebar = None;
         }
@@ -189,6 +191,8 @@ fn source_picker_is_opened_from_selected_nested_folder_without_creating_a_stack_
 
 #[test]
 fn workspace_sits_directly_under_the_top_bar_at_different_pixel_densities() {
+    // The old Library layout, the tree beside the process, is now the Stack
+    // station with the Project tree drawer.
     for scale in [1.0, 1.25, 1.5, 2.0] {
         let ctx = egui::Context::default();
         ctx.set_pixels_per_point(scale);
@@ -198,6 +202,7 @@ fn workspace_sits_directly_under_the_top_bar_at_different_pixel_densities() {
         app.catalog
             .create_project("Desktop density witness")
             .unwrap();
+        app.show_project_tree_beside_process();
         let size = egui::vec2(1060.0, 720.0);
         let mut out = paint(&mut app, &ctx, size, 0.0, vec![]);
         for i in 1..5 {
@@ -205,7 +210,7 @@ fn workspace_sits_directly_under_the_top_bar_at_different_pixel_densities() {
         }
         // The 44-point top bar is the only row above the workspace.
         let top = crate::window_chrome::CONTROLS_HEIGHT + 1.0;
-        let heading = text_rect(&out, "PROJECTS");
+        let heading = text_rect(&out, "PROJECT TREE");
         assert!(
             heading.top() >= top && heading.top() < top + 20.0,
             "no second title row may appear at scale {scale}: {heading:?}"
@@ -215,13 +220,14 @@ fn workspace_sits_directly_under_the_top_bar_at_different_pixel_densities() {
             action.top() < top + 65.0,
             "source workflow should stay next to the explorer heading"
         );
+        // The Stack station's 36-point control strip sits above the process.
         let read = text_rect(&out, "READ");
         assert!(
-            read.top() < top + 40.0,
+            read.top() < top + 36.0 + 40.0,
             "primary process starts directly under the top bar at scale {scale}"
         );
         assert!(
-            read.left() > heading.left(),
+            read.right() < heading.left(),
             "process stays alongside project navigation"
         );
         let again = paint(&mut app, &ctx, size, 1.0, vec![]);

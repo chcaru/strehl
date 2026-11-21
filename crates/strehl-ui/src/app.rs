@@ -50,6 +50,8 @@ mod session;
 mod session_import;
 #[path = "app-session-output.rs"]
 mod session_output;
+#[path = "app-station-library.rs"]
+mod station_library;
 #[path = "studio-route.rs"]
 pub(crate) mod studio_route;
 #[path = "studio-shell.rs"]
@@ -179,6 +181,8 @@ pub struct StrehlApp {
     /// A finished capture opened in Projects, stacked once its frames are read.
     stack_when_read: Option<PathBuf>,
     project_explorer: crate::project_explorer::ProjectExplorer,
+    /// The Library station and subject page, composed into the shell.
+    library: station_library::LibraryState,
     active_stack: Option<crate::workspace_history::NodeId>,
     pending_stack: Option<crate::workspace_history::NodeId>,
     capture_parent: Option<crate::workspace_history::NodeId>,
@@ -251,6 +255,7 @@ impl StrehlApp {
         // An interactive launch that names no pane or document reopens the
         // station the owner last used.
         let launch_route = launch.route;
+        let launch_subject = launch.route_subject.clone();
         let restore_station = launch_route.is_none()
             && !(launch.headless
                 || launch.offscreen
@@ -321,6 +326,7 @@ impl StrehlApp {
             capture: crate::capture_workspace::CaptureWorkspace::new(launch.capture_settings),
             stack_when_read: None,
             project_explorer: Default::default(),
+            library: Default::default(),
             active_stack: None,
             pending_stack: None,
             capture_parent: None,
@@ -495,7 +501,7 @@ impl StrehlApp {
         // Adopt the launch flags above, then apply an explicit route.
         app.sync_route();
         if let Some(route) = launch_route {
-            app.apply_launch_route(route);
+            app.apply_launch_route(route, launch_subject.as_deref());
         } else if restore_station {
             app.restore_station();
         }
@@ -2725,6 +2731,8 @@ impl StrehlApp {
                 || self.capture.ready_for_screenshot())
             && (self.sidebar != Some(workspace::Sidebar::Projects)
                 || !self.project_explorer.preview_pending())
+            // The Library waits for its pictures and folder scans.
+            && (station != studio_route::Station::Library || !self.library_loading())
             // Develop and Export show the photograph they act on.
             && (!matches!(
                 station,
@@ -2891,7 +2899,10 @@ impl StrehlApp {
                 .collect::<Vec<_>>()
         }) {
             if self.job.is_none() && !self.picker_active() {
-                if path.is_dir() {
+                // The Library takes folder drops itself (one stack per folder).
+                let library = self.shell.navigator.station() == studio_route::Station::Library;
+                if path.is_dir() && library {
+                } else if path.is_dir() {
                     self.import(path);
                 } else if is_image(&path) {
                     self.open_result(path);

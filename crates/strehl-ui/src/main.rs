@@ -188,6 +188,8 @@ pub struct LaunchOptions {
     pub output_directory: Option<PathBuf>,
     /// `--route`: the Studio 2 station (and room) to open.
     pub(crate) route: Option<app::studio_route::LaunchRoute>,
+    /// `--route subject:<name or id>`: which subject.
+    pub(crate) route_subject: Option<String>,
     /// `--theme`: Graphite, Instrument or Lightbox for this session only.
     pub(crate) theme: Option<studio_theme::ThemeName>,
 }
@@ -419,9 +421,17 @@ fn main() -> eframe::Result {
         }
         if arg == "--route" {
             let value = args.next().and_then(|v| v.to_str().map(str::to_owned));
-            launch.route = value
+            let (name, subject) = match value.as_deref().map(|v| v.split_once(':')) {
+                Some(Some((name, subject))) => (Some(name.to_owned()), Some(subject.to_owned())),
+                _ => (value, None),
+            };
+            launch.route = name
                 .as_deref()
-                .and_then(app::studio_route::LaunchRoute::parse);
+                .and_then(app::studio_route::LaunchRoute::parse)
+                .filter(|route| {
+                    subject.is_none() || *route == app::studio_route::LaunchRoute::Subject
+                });
+            launch.route_subject = subject;
             if launch.route.is_none() {
                 eprintln!("Use --route {}", app::studio_route::LaunchRoute::NAMES);
                 std::process::exit(2);

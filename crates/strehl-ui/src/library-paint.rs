@@ -58,6 +58,30 @@ impl LibraryPalette {
         }
     }
 }
+impl LibraryPalette {
+    /// The palette for the theme in effect (Graphite, Instrument, Lightbox).
+    /// The picture plate stays a dark veil in every theme: it sits on photographs.
+    pub(crate) fn from_tokens(t: &crate::studio_theme::Tokens) -> Self {
+        Self {
+            bg: t.bg,
+            panel: t.panel,
+            raised: t.raised,
+            control: t.control,
+            line: t.line,
+            line_2: t.line2,
+            ink: t.ink,
+            ink_2: t.ink2,
+            ink_3: t.ink3,
+            accent: t.accent,
+            accent_ink: t.accent_ink,
+            ok: t.ok,
+            warn: t.warn,
+            bad: t.bad,
+            info: t.info,
+            plate: Self::graphite().plate,
+        }
+    }
+}
 impl Default for LibraryPalette {
     fn default() -> Self {
         Self::graphite()

@@ -48,6 +48,7 @@ fn paint(
             ..Default::default()
         },
         |ctx| {
+            app.on_stack_station();
             app.undo_shortcuts(ctx);
             app.shell_bars(ctx);
             app.workspace(ctx);
@@ -210,7 +211,7 @@ fn local_view_undo_and_global_recipe_redo_share_one_consistent_order() {
 fn project_creation_undo_works_while_its_tree_row_has_keyboard_focus() {
     let (mut app, _, _) = fixture();
     let ctx = egui::Context::default();
-    app.sidebar = Some(workspace::Sidebar::Projects);
+    app.show_project_tree_beside_process();
     let out = paint(&mut app, &ctx, 0.0, vec![]);
     click(
         &mut app,
@@ -250,7 +251,7 @@ fn project_creation_undo_works_while_its_tree_row_has_keyboard_focus() {
 fn saved_result_open_highlights_the_result_and_stack_open_highlights_its_recipe_owner() {
     let (mut app, _, _) = fixture();
     let ctx = egui::Context::default();
-    app.sidebar = Some(workspace::Sidebar::Projects);
+    app.show_project_tree_beside_process();
     let out = paint(&mut app, &ctx, 0.0, vec![]);
     click(
         &mut app,
@@ -273,11 +274,23 @@ fn saved_result_open_highlights_the_result_and_stack_open_highlights_its_recipe_
         selected(&out, result.center()),
         "programmatic result navigation must visibly select its exact row"
     );
-    click(&mut app, &ctx, find(&out, "Fern").unwrap().center(), 0.3);
+    // The tree's row, not the breadcrumb naming the open stack.
+    let tree = |out: &egui::FullOutput, needle: &str| {
+        out.shapes
+            .iter()
+            .filter_map(|s| match &s.shape {
+                egui::Shape::Text(t) if t.galley.text() == needle => {
+                    Some(egui::Rect::from_min_size(t.pos, t.galley.size()))
+                }
+                _ => None,
+            })
+            .find(|rect| rect.left() > 1440.0 - 440.0)
+    };
+    click(&mut app, &ctx, tree(&out, "Fern").unwrap().center(), 0.3);
     app.scan = None;
     app.replay = None;
     let out = paint(&mut app, &ctx, 0.4, vec![]);
-    let owner = find(&out, "Fern").unwrap();
+    let owner = tree(&out, "Fern").unwrap();
     assert!(selected(&out, owner.center()));
     assert!(!selected(
         &out,
@@ -288,8 +301,9 @@ fn saved_result_open_highlights_the_result_and_stack_open_highlights_its_recipe_
 fn workspace_chrome_is_one_top_bar_and_never_places_controls_over_projects() {
     let (mut app, _, _) = fixture();
     let ctx = egui::Context::default();
+    app.show_project_tree_beside_process();
     let out = paint(&mut app, &ctx, 0.0, vec![]);
-    let projects = find(&out, "PROJECTS").expect("actual explorer header is present");
+    let projects = find(&out, "PROJECT TREE").expect("actual explorer drawer is present");
     let top = crate::window_chrome::CONTROLS_HEIGHT + 1.0;
     assert!(
         projects.top() >= top && projects.top() < top + 16.0,
@@ -306,13 +320,13 @@ fn workspace_chrome_is_one_top_bar_and_never_places_controls_over_projects() {
     ));
     assert!(!controls.intersects(projects));
     assert!(
-        projects.left() >= 0.0 && projects.right() < 440.0,
-        "no rail precedes the pane"
+        projects.left() > 1440.0 - 440.0,
+        "the tree is in the inspector"
     );
     let out = paint(&mut app, &ctx, 0.1, vec![]);
     assert_eq!(
         projects,
-        find(&out, "PROJECTS").unwrap(),
+        find(&out, "PROJECT TREE").unwrap(),
         "native controls must not push the pane downward on a later frame"
     );
 }

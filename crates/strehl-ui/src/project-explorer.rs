@@ -178,6 +178,11 @@ impl ProjectExplorer {
     pub(crate) fn preview_pending(&self) -> bool {
         self.previews.pending()
     }
+    /// The one preview service the tree and the Library grid share, so their
+    /// budgets (plan 5.5 item 7) hold for the sum.
+    pub(crate) fn previews_mut(&mut self) -> &mut previews::LibraryPreviews {
+        &mut self.previews
+    }
 
     pub(crate) fn set_current_photo(
         &mut self,

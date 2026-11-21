@@ -130,6 +130,37 @@ fn flags_written_by_older_code_are_adopted_then_rewritten() {
 }
 
 #[test]
+fn projects_written_with_a_document_open_means_its_stack_station() {
+    let mut navigator = Navigator::default();
+    synced(&mut navigator, Some(Sidebar::Projects), true);
+    assert_eq!(
+        navigator.station(),
+        Station::Library,
+        "nothing open: the Library"
+    );
+    // A finished capture is imported: older code resets to Projects.
+    navigator.document_open = true;
+    synced(&mut navigator, Some(Sidebar::Edit), true);
+    synced(&mut navigator, Some(Sidebar::Projects), true);
+    assert_eq!(navigator.station(), Station::Stack);
+    // The owner can still choose the Library with a document open.
+    navigator.go(Route::Library(LibraryView::All));
+    let written = synced(&mut navigator, Some(Sidebar::Adjust), true);
+    assert_eq!(written, (Some(Sidebar::Projects), true));
+    synced(&mut navigator, written.0, written.1);
+    assert_eq!(navigator.station(), Station::Library);
+    // Work done from the project tree drawer leaves it open.
+    navigator.go(Route::for_station(Station::Stack, None, None));
+    let written = synced(&mut navigator, Some(Sidebar::Projects), true);
+    navigator.toggle_drawer(Drawer::Projects);
+    let written = synced(&mut navigator, written.0, written.1);
+    assert_eq!(written, (Some(Sidebar::Projects), true));
+    synced(&mut navigator, Some(Sidebar::Projects), false);
+    assert_eq!(navigator.drawer, Some(Drawer::Projects));
+    assert_eq!(navigator.station(), Station::Stack);
+}
+
+#[test]
 fn an_explicit_navigation_wins_over_flags_changed_earlier_in_the_frame() {
     let mut navigator = Navigator::default();
     navigator.go(Route::Develop {
