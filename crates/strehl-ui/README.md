@@ -26,22 +26,34 @@ and [release checklist](../../docs/public-release.md).
 
 **Working with a stack**
 
-**Capture** in the left rail controls a headless Pi camera host through native
-live view, focus bounds, sequence controls and PC receiver settings. Completed
-captures open directly in Projects. See [native Capture](../../docs/native-capture.md).
+The top bar holds the five stations, in the order a stack lives:
+**Library**, **Capture**, **Stack**, **Develop** and **Export**. A mark beside
+each of the last four says whether that step is done, running or still to do.
+Ctrl K opens a palette that goes to any stack, render or command; F gives the
+canvas the whole window until F or Escape. The hint bar along the bottom lists
+the keys for the open station. **Preferences** (in the Strehl menu or the
+palette) choose the Graphite, Instrument or Lightbox theme, the surround
+around the photograph and reduced motion.
 
-1. Open **Projects** and choose **New stack**, press Ctrl/Cmd+O, or drop a source
+**Capture** controls a headless Pi camera host through native
+live view, focus bounds, sequence controls and PC receiver settings. The rig
+status in the top bar shows the camera, light, receiver and phone remote, and
+can power the camera and light. Completed captures open directly in the
+Library. See [native Capture](../../docs/native-capture.md).
+
+1. Open the **Library** and choose **New stack**, press Ctrl/Cmd+O, or drop a source
    folder onto the workspace. The bracket chooser supports folder navigation,
    camera previews and direct-folder capture counts.
 2. Use projects and folders to organize stacks. These are virtual library objects;
    reorganizing them does not move source photographs. A stack keeps the recipe
    for its next render and its saved revisions.
-3. Open **Adjust** to set the next render's pyramid, exposure, geometry, capture
+3. Open **Stack** and its **Adjust** tab to set the next render's pyramid, exposure, geometry, capture
    limit and execution options. Default values follow the engine; **Reset** clears
    overrides. The desktop exposes the photographic pyramid controls described in
    the [settings audit](../../docs/desktop-settings-audit.md), rather than every
    research or alternative-backend CLI option.
-4. Choose an output destination and press **Stack**. New sessions default to
+4. Choose an output destination and press **Stack** (in the Library, or the
+   Stack station's footer). New sessions default to
    your Pictures/Strehl folder, independently of the launcher's working directory.
    The default output is a
    full-resolution, 16-bit sRGB TIFF. Half-size output changes spatial sampling;
@@ -201,12 +213,14 @@ repairs. See the [mode guide](../../docs/temporal-energy.md).
 
 **Exploring the photograph**
 
-The photograph, detail views and capture timeline remain together. **Projects**,
-**Adjust**, **Edit**, **Export**, **Agent**, **Review** and **Activity** open in the
-resizable sidebar. Drag pane boundaries to change proportions; double-click a
-boundary or use **Reset layout**
-to restore them. The compact window dock provides Move, minimize, maximize and
-close controls; outer edges and corners resize the window.
+The photograph, detail views and capture timeline remain together on every
+station's canvas. The Stack station's inspector has **Adjust** and **Review**;
+Develop's has the editing pane and Export's the export pane. **Agent** and the
+engine log (**Activity log**) open in the inspector from the Strehl menu, the
+activity tray or Ctrl K. Drag pane boundaries to change proportions;
+double-click a boundary or use **Reset layout** to restore them. The top bar's
+empty space moves the window (double-click maximizes); its right end has
+minimize, maximize and close; outer edges and corners resize the window.
 
 After completion, hover or scrub the capture timeline to compare a camera source
 beside the final photograph. Click to hold a capture. With the timeline focused,
@@ -267,22 +281,25 @@ log; reported memory plans are not live RAM measurements.
 
 **Developing and repairing a photograph**
 
-Open **Edit** after stacking. **Photograph focus** gives the image more space
-while retaining the timeline; turn it off to show the process instruments again.
+Open **Develop** after stacking. **Give photograph more room** (or the
+**Photograph** / **With instruments** switch above the canvas) gives the image
+more space while retaining the timeline; turn it off to show the process
+instruments again.
 Adjust the whole photograph, or choose **Ellipse**, **Rectangle**, **Polygon**, or
 **Lasso** and draw a region. Select its name to adjust only that region, set its
 feather, or leave a note. **Before** temporarily shows the original rendering; Undo/Redo also covers
 these edits. Recipes save beside the result, preserving the original image.
 
-**Stack repair · next run** restricts a region to a chosen capture span. Press
+**Source repair** restricts a region to a chosen capture span. Press
 **Stack** to rebuild it; changing that span or region does not change the already
 rendered pixels. Each run saves a new result and editable float master. Export a
-new TIFF, PNG, JPEG, or HDR AVIF from the separate **Export** pane. Older SDR
+new TIFF, PNG, JPEG, or HDR AVIF from the **Export** station. Older SDR
 results remain editable but need a new stack for HDR. See the
 [development guide](../../docs/development-and-hdr.md)
 for supported preset controls and HDR limits.
 
-Use **Agent → Enable agent access** to connect an existing MCP host. Its
+Use **Agent → Enable agent access** (from the Strehl menu, the activity tray
+or Ctrl K) to connect an existing MCP host. Its
 conversation stays in that host; annotations, suggestions, adjustments, and
 results appear in Strehl. **Circle an issue** opens the same region tool used for
 manual edits. See [connection instructions](../../docs/agent-interface.md).

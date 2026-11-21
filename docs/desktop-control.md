@@ -294,6 +294,31 @@ IEND chunk. Its screenshot command does not require `--session-file`.
 This is the SDR workspace rendering path; it does not validate native monitor HDR
 presentation. The normal interactive `--screenshot` option remains available.
 
+### Stations and themes
+
+`--route` opens a Studio 2 station: `library`, `subject`, `capture`, `stack`,
+`engine` (the Stack station's engine room), `develop` or `export`. It is applied
+after the launch's document is opened, so `--open-run DIR --route develop`
+renders that run's photograph in Develop. Until catalog format 2 adds subjects,
+`subject` opens the Library. `--theme graphite|instrument|lightbox` sets the
+theme for that render only; the owner's Preferences (`studio.json` beside the
+catalog) are never written by offscreen or headless runs. The older
+`--edit`, `--export` and `--projects` flags are forwarded too and open the
+Develop, Export and Library stations.
+
+```powershell
+python scripts/strehl-control.py --exe $exe screenshot --open-run 'C:\Users\me\Pictures\Strehl\strehl-run' --catalog 'C:\scratch\catalog.json' --route stack --theme graphite --size 1680x1050 --png 'C:\scratch\stack.png'
+$renderExit = $LASTEXITCODE
+if ($renderExit -ne 0) { throw "Offscreen render failed: $renderExit" }
+```
+
+The executable accepts the same options directly with `--offscreen-screenshot
+PNG`. Readiness also waits for the photograph on Develop and Export. Snapshots
+carry additive `route` (`key`, `station`, `drawer`, `focus`), `notices` (the 16
+newest, with `severity`, `source`, `read` and `resolved`) and `activities` (what
+is running, with its `phase`, `done`, `total` and whether it can be stopped);
+`status` and `error` keep their meaning.
+
 ## Export an independent-view bundle
 
 An Independent views result keeps each photograph and focus map in its own coordinates. Open a completed result and choose **Export view bundle…** beside the view selector or in Export. Choose a fresh folder name. The app copies the bound photographs, linear masters, focus maps, original identity metadata and receipts. It preserves recorded original paths as provenance; it does not copy RAWs or developed edit versions. Selected-photograph export remains a separate action.
