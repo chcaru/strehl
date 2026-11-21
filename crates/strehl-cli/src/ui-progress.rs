@@ -12,6 +12,31 @@ mod diagnostics;
 #[path = "ui-evidence.rs"]
 mod evidence;
 pub(crate) use diagnostics::{FrameTap, lattice};
+pub(crate) use evidence::Kind as EvidenceKind;
+#[cfg(test)]
+pub(crate) use evidence::MAX_SUMMARY_BYTES as MAX_FOCUS_SUMMARY_BYTES;
+
+/// The focus field's records (`merge_cmd/focus-evidence.rs`) in the
+/// evidence file beside `out`, whose grids the render's `sizes` give.
+pub(crate) fn write_focus_records(
+    out: &std::path::Path,
+    sizes: &[strehl_core::pyramid::LevelSize],
+    frames: usize,
+    records: impl FnOnce([usize; 2]) -> Vec<(EvidenceKind, Vec<u8>)>,
+) -> Result<std::path::PathBuf, String> {
+    let directory = out
+        .parent()
+        .filter(|parent| !parent.as_os_str().is_empty())
+        .unwrap_or(std::path::Path::new("."));
+    let header = evidence::Header {
+        levels: sizes
+            .iter()
+            .map(|&size| (lattice(size), [size.width, size.height]))
+            .collect(),
+        frames,
+    };
+    evidence::write_focus(directory, header, records)
+}
 
 const ENV: &str = "STREHL_UI_PROGRESS";
 

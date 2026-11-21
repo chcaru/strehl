@@ -1,10 +1,11 @@
 //! Streaming per-pass focus evidence. This optional consumer never changes the
 //! ordinary merge, stores no aligned volume, and retains original frame order.
+use crate::focus_pass::{FocusFrames, FocusSource};
 use crate::session_align::SessionAlignment;
-use crate::session_cache::SourceCache;
+use crate::session_cache::{CachedSource, SourceCache};
 use crate::session_cmd::{Resources, reserve_output_directory, write_json_new};
 use crate::session_input::{ResolvedSession, SessionSpec, SourceIdentity};
-use crate::session_sampling::{NativeSampler, SamplingDomain, sampling_bytes};
+use crate::session_sampling::SamplingDomain;
 use anyhow::{Context, Result, ensure};
 use clap::Args;
 use serde_json::json;
@@ -12,15 +13,14 @@ use sha2::{Digest, Sha256};
 use std::fs::OpenOptions;
 use std::io::{BufWriter, Read, Write};
 use std::path::{Path, PathBuf};
+use std::sync::Arc;
 use strehl_core::align::Resampler;
-use strehl_core::focus::{FINE_WINDOW_RADIUS, FocusField, window_radius};
-use strehl_core::focus_evidence::{
-    FocusEvidence, FocusEvidenceBuilder, FocusEvidencePolicy, FocusFrame,
-};
-use strehl_core::merge::{REGULARISER_RADIUS, regularise};
-use strehl_core::noise::NoiseModel;
+use strehl_core::focus::{FINE_WINDOW_RADIUS, window_radius};
+use strehl_core::focus_evidence::{FocusEvidence, FocusEvidencePolicy};
+use strehl_core::merge::REGULARISER_RADIUS;
+use strehl_core::noise::{Levels, NoiseModel};
 use strehl_core::optics::OpticalProfile;
-use strehl_core::plane::{PlaneGeometry, QuadSource};
+use strehl_core::plane::QuadSource;
 use strehl_core::warpmap::WarpMap;
 
 #[derive(Args, Clone, Debug)]
@@ -52,16 +52,39 @@ pub struct PassFocusEvidence {
 /// Actual per-pixel arrays plus source sampler, one source decode/copy allowance,
 /// and the caller-owned original cache. The caller reserves its other live work.
 pub fn reservation_bytes(domain: SamplingDomain, frames: usize) -> Result<usize> {
-    domain.validate()?;
-    let geom = PlaneGeometry {
-        width: domain.width,
-        height: domain.height,
-    };
-    FocusEvidenceBuilder::reservation_bytes(geom, frames)?
-        .checked_add(sampling_bytes(domain)?)
-        .and_then(|n| n.checked_add(domain.pixels().checked_mul(48)?))
-        .and_then(|n| n.checked_add(domain.full.pixels().checked_mul(32)?))
-        .context("focus evidence memory reservation overflow")
+    crate::focus_pass::reservation_bytes(domain, frames)
+}
+
+/// A session's originals through its source cache.
+struct SessionFrames<'a> {
+    session: &'a ResolvedSession,
+    identities: &'a [SourceIdentity],
+    cache: &'a mut SourceCache,
+}
+
+impl FocusSource for Arc<CachedSource> {
+    fn quad(&self) -> &dyn QuadSource {
+        self.as_ref()
+    }
+    fn camera(&self) -> &str {
+        CachedSource::camera(self)
+    }
+    fn iso(&self) -> Option<f32> {
+        CachedSource::iso(self)
+    }
+    fn levels(&self) -> Levels {
+        CachedSource::levels(self)
+    }
+}
+
+impl FocusFrames for SessionFrames<'_> {
+    type Source = Arc<CachedSource>;
+    fn load(&mut self, global_index: usize) -> Result<Self::Source> {
+        Ok(self.cache.load_or_decode(
+            &self.session.frames[global_index],
+            &self.identities[global_index],
+        )?)
+    }
 }
 
 /// Warp placements use the caller's full anchor grid. Per-pass ordinal zero is
@@ -78,7 +101,6 @@ pub fn compute_pass(
     profile: Option<&OpticalProfile>,
     budget: usize,
 ) -> Result<PassFocusEvidence> {
-    let started = std::time::Instant::now();
     let track = session
         .passes
         .get(pass)
@@ -87,115 +109,27 @@ pub fn compute_pass(
         identities.len() == session.len() && map.len() == session.len(),
         "focus source census differs"
     );
-    ensure!(
-        map.geometry() == domain.full,
-        "focus warp gauge differs from full domain"
-    );
-    let reserved = reservation_bytes(domain, track.global_range.len())?;
-    ensure!(
-        reserved <= budget,
-        "focus evidence needs {:.2} GiB; increase session memory limit",
-        reserved as f64 / (1_u64 << 30) as f64
-    );
-    let lead_index = track.global_range.start;
-    let lead = cache.load_or_decode(&session.frames[lead_index], &identities[lead_index])?;
-    let expected_camera = lead.camera().to_owned();
-    let expected_iso = lead.iso();
-    let expected_levels = lead.levels();
-    ensure!(
-        lead.geometry() == domain.full
-            && expected_iso == Some(noise.iso)
-            && strehl_core::CfaPlane::ALL
-                .into_iter()
-                .all(|p| noise.plane(p).levels == expected_levels),
-        "focus injected calibration does not match source geometry, levels or ISO"
-    );
-    drop(lead);
-    let frames: Vec<_> = track
-        .global_range
-        .clone()
-        .map(|global_index| FocusFrame {
-            acquisition: global_index as u64,
-            global_index,
-        })
-        .collect();
-    let geom = PlaneGeometry {
-        width: domain.width,
-        height: domain.height,
+    let sweep: Vec<usize> = track.global_range.clone().collect();
+    let mut frames = SessionFrames {
+        session,
+        identities,
+        cache,
     };
-    let n = geom.pixels();
-    let mut builder =
-        FocusEvidenceBuilder::new(geom, frames.clone(), FocusEvidencePolicy::default(), budget)?;
-    let mut sampler = NativeSampler::new(domain)?;
-    let mut field = FocusField::new(geom);
-    let mut green = vec![0.0; n];
-    let mut fine = vec![0.0; n];
-    let mut regularized = vec![0.0; n];
-    let mut scratch = vec![0.0; n];
-    let mut mask_scratch = vec![0_u32; n];
-    let mut valid = vec![false; n];
-    let mut raw_coverage = vec![false; n];
-    let halo = window_radius()
-        .checked_add(1 + REGULARISER_RADIUS)
-        .context("focus halo overflow")?;
-    for phase in 0..2 {
-        if phase == 1 {
-            builder.begin_shape_pass()?;
-        }
-        for (ordinal, &frame) in frames.iter().enumerate() {
-            if let Some(placement) = map.warps()[frame.global_index].placed() {
-                let source = cache.load_or_decode(
-                    &session.frames[frame.global_index],
-                    &identities[frame.global_index],
-                )?;
-                ensure!(
-                    source.geometry() == domain.full
-                        && source.camera() == expected_camera
-                        && source.iso() == expected_iso
-                        && source.levels() == expected_levels,
-                    "focus source calibration changes within pass at acquisition {}",
-                    frame.global_index
-                );
-                let sampled = sampler.gather(
-                    source.as_ref(),
-                    source.levels(),
-                    placement,
-                    profile,
-                    map.resampler(),
-                )?;
-                for i in 0..n {
-                    green[i] = 0.5 * (sampled.planes[1][i] + sampled.planes[3][i]);
-                    raw_coverage[i] |= sampled.coverage[i];
-                }
-                complete_support(&sampled.support, geom, halo, &mut mask_scratch, &mut valid)?;
-                field.compute_with_fine(&green, noise, FINE_WINDOW_RADIUS, &mut fine);
-                regularise(field.values(), geom, &mut scratch, &mut regularized);
-            } else {
-                valid.fill(false);
-                regularized.fill(0.0);
-                fine.fill(0.0);
-            }
-            if phase == 0 {
-                builder.observe_anchor(ordinal, frame, &regularized, &valid)?;
-            } else {
-                builder.observe_shape(ordinal, frame, &fine, &regularized, &valid)?;
-            }
-            if ordinal % 25 == 0 || ordinal + 1 == frames.len() {
-                eprintln!(
-                    "session focus: pass {} phase {} frame {}/{}",
-                    pass + 1,
-                    phase + 1,
-                    ordinal + 1,
-                    frames.len()
-                );
-            }
-        }
-    }
+    let result = crate::focus_pass::compute(
+        &mut frames,
+        &sweep,
+        map,
+        domain,
+        noise,
+        profile,
+        budget,
+        &format!("session focus: pass {}", pass + 1),
+    )?;
     Ok(PassFocusEvidence {
-        field: builder.finish()?,
-        raw_coverage,
-        reservation_bytes: reserved,
-        elapsed_seconds: started.elapsed().as_secs_f64(),
+        field: result.field,
+        raw_coverage: result.raw_coverage,
+        reservation_bytes: result.reservation_bytes,
+        elapsed_seconds: result.elapsed_seconds,
         resolved_parameters: resolved_parameters(noise, profile, map.resampler()),
     })
 }
@@ -220,6 +154,7 @@ pub fn algorithm_sha256() -> String {
     crate::session_input::hex(&Sha256::digest(
         [
             include_bytes!("session-focus.rs").as_slice(),
+            include_bytes!("focus-pass.rs").as_slice(),
             include_bytes!("session-sampling.rs").as_slice(),
             include_bytes!("../../strehl-core/src/focus-evidence.rs").as_slice(),
             include_bytes!("../../strehl-core/src/focus.rs").as_slice(),
@@ -233,61 +168,7 @@ pub fn algorithm_sha256() -> String {
     ))
 }
 
-/// Every tap in the composed Sobel/box/regularizer footprint must be supported.
-/// Exterior samples are unknown, not reflected validity. O(pixels), fixed scratch.
-pub fn complete_support(
-    input: &[bool],
-    g: PlaneGeometry,
-    r: usize,
-    scratch: &mut [u32],
-    out: &mut [bool],
-) -> Result<()> {
-    ensure!(
-        g.width > 0
-            && g.height > 0
-            && input.len() == g.pixels()
-            && scratch.len() == input.len()
-            && out.len() == input.len(),
-        "invalid focus support dimensions"
-    );
-    out.fill(false);
-    scratch.fill(0);
-    let width = r
-        .checked_mul(2)
-        .and_then(|v| v.checked_add(1))
-        .context("focus support radius overflow")?;
-    if width > g.width || width > g.height {
-        return Ok(());
-    }
-    ensure!(
-        width
-            .checked_mul(width)
-            .is_some_and(|n| n <= u32::MAX as usize),
-        "focus support counter overflow"
-    );
-    for y in 0..g.height {
-        let row = &input[y * g.width..(y + 1) * g.width];
-        let mut bad = row[..width].iter().filter(|&&ok| !ok).count() as u32;
-        for x in r..g.width - r {
-            scratch[y * g.width + x] = bad;
-            if x + 1 < g.width - r {
-                bad += u32::from(!row[x + r + 1]);
-                bad -= u32::from(!row[x - r]);
-            }
-        }
-    }
-    for x in r..g.width - r {
-        let mut bad = (0..width).map(|y| scratch[y * g.width + x]).sum::<u32>();
-        for y in r..g.height - r {
-            out[y * g.width + x] = bad == 0;
-            if y + 1 < g.height - r {
-                bad += scratch[(y + r + 1) * g.width + x];
-                bad -= scratch[(y - r) * g.width + x];
-            }
-        }
-    }
-    Ok(())
-}
+pub use crate::focus_pass::complete_support;
 
 pub(crate) fn run(args: &EvidenceArgs) -> Result<()> {
     let session = SessionSpec::load(&args.manifest)?.resolve(&args.manifest)?;
@@ -544,34 +425,4 @@ fn file_receipt(path: &Path) -> Result<serde_json::Value> {
     Ok(
         json!({"file":path.file_name().context("focus output has no filename")?.to_string_lossy(),"bytes":std::fs::metadata(path)?.len(),"sha256":crate::session_input::hex(&hash.finalize())}),
     )
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    #[test]
-    fn support_requires_all_taps_and_never_invents_exterior() {
-        let g = PlaneGeometry {
-            width: 13,
-            height: 11,
-        };
-        let mut input = vec![true; g.pixels()];
-        let mut scratch = vec![0; g.pixels()];
-        let mut out = vec![false; g.pixels()];
-        complete_support(&input, g, 2, &mut scratch, &mut out).unwrap();
-        assert_eq!(out.iter().filter(|&&v| v).count(), 9 * 7);
-        input[g.index(6, 5)] = false;
-        complete_support(&input, g, 2, &mut scratch, &mut out).unwrap();
-        for y in 0..g.height {
-            for x in 0..g.width {
-                assert_eq!(
-                    out[g.index(x, y)],
-                    (2..11).contains(&x)
-                        && (2..9).contains(&y)
-                        && !(x.abs_diff(6) <= 2 && y.abs_diff(5) <= 2)
-                );
-            }
-        }
-        complete_support(&input, g, usize::MAX, &mut scratch, &mut out).unwrap_err();
-    }
 }

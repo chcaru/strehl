@@ -13,6 +13,27 @@
 //!   bit first. Kinds 2 (focus energy) and 3 (gate floor) carry `f32 min,
 //!   f32 max` and one quantised byte per site: the bytes the hex lines carried.
 //!
+//! - `strehl stack --focus-evidence` (plan E5) appends a compact focus field
+//!   on level 0's lattice: kinds 7 (focus depth) and 8 (focus share) carry
+//!   `f32 min, f32 max` and one byte per site, kind 9 a summary. The maps
+//!   reader skips them; [`read_focus`] reads them as an [`EvidenceFocus`].
+//!
+//! Every record kind, once ([`kind`]); `evidence.strehl` and P2's
+//! `live.strehl` share one numbering:
+//!
+//! | Kind | Record | File |
+//! | --- | --- | --- |
+//! | 0 | gate support | evidence |
+//! | 1 | averaging map | evidence |
+//! | 2 | focus energy | evidence |
+//! | 3 | gate floor | evidence |
+//! | 4 | coefficient | live (P2) |
+//! | 5 | preview | live (P2) |
+//! | 6 | preview's revision sample | evidence (P2) |
+//! | 7 | focus depth | evidence (E5) |
+//! | 8 | focus share | evidence (E5) |
+//! | 9 | focus summary | evidence (E5) |
+//!
 //! A set gate-support bit means the sampled kernel weight was positive at that
 //! site, not that the plane won it or supplied a measured share of the blend.
 //! The sequence is the engine's diagnostic sequence, shared with the stack
@@ -29,6 +50,33 @@ use std::fs::File;
 use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, Ordering};
+
+/// The record kinds, each number once (the module's table).
+#[allow(dead_code)]
+pub(crate) mod kind {
+    pub(crate) const GATE_SUPPORT: u8 = 0;
+    pub(crate) const AVERAGING: u8 = 1;
+    pub(crate) const FOCUS_ENERGY: u8 = 2;
+    pub(crate) const GATE_FLOOR: u8 = 3;
+    pub(crate) const COEFFICIENT: u8 = 4;
+    pub(crate) const PREVIEW: u8 = 5;
+    pub(crate) const PREVIEW_SAMPLE: u8 = 6;
+    pub(crate) const FOCUS_DEPTH: u8 = 7;
+    pub(crate) const FOCUS_SHARE: u8 = 8;
+    pub(crate) const FOCUS_SUMMARY: u8 = 9;
+    pub(crate) const ALL: [u8; 10] = [
+        GATE_SUPPORT,
+        AVERAGING,
+        FOCUS_ENERGY,
+        GATE_FLOOR,
+        COEFFICIENT,
+        PREVIEW,
+        PREVIEW_SAMPLE,
+        FOCUS_DEPTH,
+        FOCUS_SHARE,
+        FOCUS_SUMMARY,
+    ];
+}
 
 /// The file's name inside a run's folder; the engine's log line names it too.
 pub(crate) const FILE_NAME: &str = "evidence.strehl";
@@ -250,7 +298,7 @@ impl EvidenceDecoder {
             folded: 1,
         };
         match kind {
-            0 => {
+            kind::GATE_SUPPORT => {
                 if payload.len() != sites.div_ceil(8) {
                     return None;
                 }
@@ -280,7 +328,7 @@ impl EvidenceDecoder {
                     packed: Some(PackedMask { bits, on }),
                 })
             }
-            2 | 3 => {
+            kind::FOCUS_ENERGY | kind::GATE_FLOOR => {
                 if payload.len() != 8 + sites {
                     return None;
                 }
@@ -288,7 +336,7 @@ impl EvidenceDecoder {
                 if !min.is_finite() || !max.is_finite() || min > max || min < 0.0 {
                     return None;
                 }
-                let kind = if kind == 2 {
+                let kind = if kind == kind::FOCUS_ENERGY {
                     DiagnosticKind::FocusEnergy
                 } else {
                     DiagnosticKind::GateFloor
@@ -426,6 +474,171 @@ pub(crate) struct EvidenceSummary {
     /// Bytes of an incomplete final record (an interrupted engine).
     pub torn: usize,
     pub failure: Option<String>,
+}
+
+/// The focus field of an ordinary stack (`strehl stack --focus-evidence`,
+/// plan E5), on level 0's lattice: per area, which part of the range it came
+/// from, as an order of planes, not a measured distance. The depth lens may
+/// draw only when [`EvidenceFocus::usable`] is set, and only on areas with a
+/// depth ([`EvidenceFocus::ordinal`]).
+// Read by the depth lens (P8's second half); until then by tests only.
+#[allow(dead_code)]
+#[derive(Clone, Debug, PartialEq)]
+pub(crate) struct EvidenceFocus {
+    /// Areas across and down: level 0's lattice.
+    pub lattice: [usize; 2],
+    /// The analysis domain the lattice divides, in quad pixels.
+    pub extent: [usize; 2],
+    /// Frames in the sweep; ordinals run over `[0, frames - 1]`.
+    pub frames: usize,
+    pub usable: bool,
+    /// Why the field is not usable (empty when it is).
+    pub reason: String,
+    /// The summary's reason code (0 none, 1 too few frames, 2 not aligned,
+    /// 3 memory, 4 failed, 5 nothing usable).
+    pub reason_code: u16,
+    /// Pixels with usable evidence, of the field's `extent`.
+    pub usable_pixels: usize,
+    pub seconds: f32,
+    pub reservation_bytes: u64,
+    /// Pixels with each refusal flag set, in bit order: boundary, scale
+    /// disagreement, competing mode, weak response, no local fit, missing
+    /// coverage, unresolved mode.
+    pub flag_pixels: [usize; 7],
+    /// Per area, row-major: depth bytes over `[0, frames - 1]` (255: no
+    /// pixel of the area usable), and the usable share over `[0, 1]`.
+    /// Empty when the pass did not run.
+    depth: Vec<u8>,
+    share: Vec<u8>,
+}
+
+#[allow(dead_code)]
+impl EvidenceFocus {
+    /// The depth byte of an area with no usable pixel.
+    pub(crate) const NO_DEPTH: u8 = 255;
+    /// The share of an area that must be usable for [`Self::ordinal`] (the
+    /// engine's `MIN_AREA_SHARE`, which sets the summary's flag).
+    pub(crate) const MIN_SHARE: f32 = 0.25;
+
+    /// Area `(i, j)`'s measured plane ordinal (fractional), where the field
+    /// is usable and at least [`Self::MIN_SHARE`] of the area is.
+    pub(crate) fn ordinal(&self, i: usize, j: usize) -> Option<f32> {
+        self.ordinal_with_share(i, j, Self::MIN_SHARE)
+    }
+
+    /// [`Self::ordinal`] for areas at least `min_share` usable.
+    pub(crate) fn ordinal_with_share(&self, i: usize, j: usize, min_share: f32) -> Option<f32> {
+        let [w, h] = self.lattice;
+        let byte = *self.depth.get(j * w + i).filter(|_| i < w && j < h)?;
+        (self.usable && byte != Self::NO_DEPTH && self.share(i, j) >= min_share)
+            .then(|| byte as f32 / 254.0 * self.frames.saturating_sub(1) as f32)
+    }
+
+    /// Area `(i, j)`'s share of pixels with usable evidence, `0..=1`.
+    pub(crate) fn share(&self, i: usize, j: usize) -> f32 {
+        let [w, h] = self.lattice;
+        self.share
+            .get(j * w + i)
+            .filter(|_| i < w && j < h)
+            .map_or(0.0, |&byte| byte as f32 / 255.0)
+    }
+}
+
+/// The focus field in a run's evidence file, if the engine wrote one. Reads
+/// record heads only and seeks over every other payload, so a large file
+/// costs one small read per record.
+/// The focus summary's fixed part, before its text.
+const SUMMARY_HEAD: usize = 66;
+
+#[allow(dead_code)]
+pub(crate) fn read_focus(path: &Path) -> anyhow::Result<Option<EvidenceFocus>> {
+    use std::io::{Seek, SeekFrom};
+    let mut file = match File::open(path) {
+        Ok(file) => file,
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+        Err(error) => return Err(error.into()),
+    };
+    let length = file.metadata()?.len();
+    let mut decoder = EvidenceDecoder::default();
+    let mut head = vec![0u8; 16];
+    file.read_exact(&mut head)?;
+    let levels = u32_at(&head, 12) as usize;
+    anyhow::ensure!((1..=MAX_LEVELS).contains(&levels), "{levels} levels");
+    let mut rest = vec![0u8; 12 * levels + 4];
+    file.read_exact(&mut rest)?;
+    head.extend_from_slice(&rest);
+    decoder.feed(&head, &mut Vec::new());
+    if let Some(why) = decoder.failure() {
+        anyhow::bail!("{why}");
+    }
+    let header = decoder.header().cloned().expect("a whole header");
+    let lattice = header.levels[0];
+    let sites = lattice.samples[0] * lattice.samples[1];
+    let mut at = head.len() as u64;
+    let (mut summary, mut depth, mut share) = (None, None, None);
+    let mut record = [0u8; RECORD_HEAD];
+    while at + RECORD_HEAD as u64 <= length {
+        file.seek(SeekFrom::Start(at))?;
+        file.read_exact(&mut record)?;
+        let size = u32_at(&record, 12) as usize;
+        anyhow::ensure!(
+            size <= MAX_PAYLOAD,
+            "a record declares {size} payload bytes"
+        );
+        let end = at + (RECORD_HEAD + size) as u64;
+        if end > length {
+            break; // a torn tail
+        }
+        let (frame, level, kind) = (u32_at(&record, 0), record[4], record[5]);
+        let focus = [kind::FOCUS_DEPTH, kind::FOCUS_SHARE, kind::FOCUS_SUMMARY];
+        if focus.contains(&kind) && frame == 0 && level == 0 {
+            let mut payload = vec![0u8; size];
+            file.read_exact(&mut payload)?;
+            match kind {
+                kind::FOCUS_DEPTH | kind::FOCUS_SHARE if size == 8 + sites => {
+                    let bytes = payload[8..].to_vec();
+                    if kind == kind::FOCUS_DEPTH {
+                        depth = Some(bytes);
+                    } else {
+                        share = Some(bytes);
+                    }
+                }
+                kind::FOCUS_SUMMARY if size >= SUMMARY_HEAD && payload[0] == 1 => {
+                    let text = u16::from_le_bytes([payload[64], payload[65]]) as usize;
+                    if size == SUMMARY_HEAD + text {
+                        summary = Some(payload);
+                    }
+                }
+                _ => {}
+            }
+        }
+        at = end;
+    }
+    let Some(s) = summary else {
+        return Ok(None);
+    };
+    let text = String::from_utf8_lossy(&s[SUMMARY_HEAD..]).into_owned();
+    let usable = s[1] == 1;
+    let (depth, share) = match (depth, share) {
+        (Some(depth), Some(share)) => (depth, share),
+        // A usable summary without its maps is not a usable field.
+        _ if usable => return Ok(None),
+        _ => (Vec::new(), Vec::new()),
+    };
+    Ok(Some(EvidenceFocus {
+        lattice: lattice.samples,
+        extent: lattice.extent,
+        frames: u32_at(&s, 4) as usize,
+        usable,
+        reason: text,
+        reason_code: u16::from_le_bytes([s[2], s[3]]),
+        usable_pixels: u32_at(&s, 16) as usize,
+        seconds: f32_at(&s, 24),
+        reservation_bytes: u64::from_le_bytes(s[28..36].try_into().expect("eight bytes")),
+        flag_pixels: std::array::from_fn(|bit| u32_at(&s, 36 + 4 * bit) as usize),
+        depth,
+        share,
+    }))
 }
 
 #[cfg(test)]
