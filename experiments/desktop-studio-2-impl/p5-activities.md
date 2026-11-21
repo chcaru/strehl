@@ -1,5 +1,8 @@
 # P5 stage 1: activities, the stack queue, ETA, Quiet mode and the tray
 
+Stage 2 (composition into the shell) is recorded below, under "Stage 2: composition into the
+Studio 2 shell (done)".
+
 **Date:** 2026-11-21. **Branch:** `studio2/p5-activities` from `55a07d64c`.
 **Scope:** plan 6.6 (steps 1-3, 5 and 6 as models and adapters), 5.2, 9 (P5), 11. Stage 1 adds
 the model, the adapters, the queue and its file, the ETA, Quiet mode and the tray. Nothing in
@@ -117,12 +120,105 @@ Line numbers are at `55a07d64c`; search by the quoted name.
 10. **View bundle:** `start_view_bundle_export` uses
     `session_import::export_view_bundle_with_progress`; its activity reports `copied`/`total`.
 
+## Stage 2: composition into the Studio 2 shell (done)
+
+**Date:** 2026-11-21. **Branch:** `studio2/p5-activities`, merged with the integration branch at
+`82ccbfd45` (merge `49c967e36`). **Build:** release `strehl-ui.exe` from this branch;
+`CARGO_BUILD_JOBS=8`.
+
+**The merge.** The P1 shell had its own `activity.rs` (190 lines) and `activity-tray.rs` (362
+lines). The P5 model is the authority; it took the shell's `ActivityKind::Open` (reading a
+bracket, reopening a render), `key()`, `facts`, `ActivityStatus::running` and `progress_line`
+(phase · count · time left, or elapsed). `Shell::activities()` now reads the registry (this
+frame's reports minus waiting stacks) for the top-bar indicator; the snapshot key `activities`
+is `Activities::public` plus `queue_paused`, one key, the shell's `route` and `notices` kept.
+The tray is drawn inside the shell's popover with Studio 2 tokens and widgets, in the mockup's
+order: header with moon, Quiet and its switch; running rows (title, Stop on the title line,
+phase · count · time left · ends HH:MM, the facts line, an ok-coloured bar); Waiting (numbered,
+Remove, Resume when paused, the head's reason on the right); Earlier today (Full log, Reveal/
+Log/Retry/Open or the finish time); then the shell's Notices (Mark all read, Log/Open, Dismiss,
+"N earlier") and Engine log/Agent links; the Quiet note while it holds. `TrayAction` replaces
+both earlier enums.
+
+**`app.rs`** (contained; the rest is in `app-activities.rs`): one field
+`activity_hub: activities::ActivityHub` (the name `activity` was taken by a bool); startup calls
+`ActivityHub::load`, which runs P4's `reconcile_interrupted_runs(&[])` and loads, reconciles and
+pauses the queue beside the catalog (`activities.json`; offscreen pictures read none);
+`start_render` first calls `queue_while_running`; the job start and view reset moved into
+`launch_render(request)`, shared with the queue; one-line hooks in the `Started`, `Log` and
+`Finished` events; `activities_frame(ctx)` once per poll after the events. Step 6 (a per-job
+struct) was skipped as instructed: the Heavy lane is serial.
+
+**Policy (ARGUED).** The queue starts its head when no Heavy work runs, Quiet does not hold,
+and the workspace can take a stack (no file dialog, nothing opening, and not under a hand in
+Develop or Export with a photograph loaded). A queued stack that is not the open one is opened
+with `open_project_stack` first, then launched with its frozen request and run record. Start
+(shortcut or palette) while a stack renders queues the open stack's current recipe; the same
+render as the running one, or one already waiting, is refused, so a repeated press queues
+nothing. The Start button itself stays disabled while a stack runs, and the agent's
+`start_stack` answers as before. Quiet is the Preferences switch "Quiet" (`studio.json`
+`quiet`, on by default) and the tray's switch writes the same preference; when off, the
+foreground is not read. Tray Stop routes per owner; a capture only opens its own confirmation
+on the Capture screen; compaction reports `CancelMode::None` and shows no Stop. Camera
+metadata's `cancel` is `pub(crate)`. The view-bundle export reports bytes copied. A failing
+`activities.json` save is tried once per change, not every frame.
+
+**Agent (additive).** `queue_stack {id}`, `remove_queued_stack {queue_id}`,
+`move_queued_stack {queue_id, position}`, `resume_queue {}`; MCP schemas and
+`docs/desktop-control.md` updated.
+
+### Stage 2 results
+
+- **Tests, clippy, format** (MEASURED): `cargo test --locked -p strehl-ui` 1,288 passed,
+  0 failed, 23 ignored ("Compiling strehl-ui" observed); clippy `-D warnings` and
+  `fmt --check` clean. New: app-level queue (Start while rendering queues a variant once, the
+  duplicate is refused, the queue starts it after the first ends, history records both), the
+  workspace hold and Remove from the tray, a restored queue waits paused (offscreen reads none),
+  tray Stop routing (capture asks first; compaction has no Stop); tray tests rewritten for the
+  merged tray, including notices and Dismiss.
+- **End to end** (VERIFIED, release, headless agent, scratch catalog, isolated capture
+  settings, three brackets of 3, 40 and 40 frames copied from a capture folder into scratch):
+  three `queue_stack` calls; alpha started at once with beta and gamma listed waiting "the stack
+  before it"; `start_stack` while running answered `"A stack is already running"` as before;
+  queueing alpha again was refused; beta started once alpha had saved; `cancel_stack` on
+  beta, then gamma started and beta read "Cancelled"; alpha queued behind gamma; the process was
+  killed with gamma running and alpha waiting. `activities.json` held alpha queued and gamma
+  running. After relaunch the snapshot read `queue_paused: true`, alpha "waiting for you to
+  resume the queue", gamma "stopped: the desktop closed while this stack was running", and the
+  catalog run gamma `Interrupted`; nothing started in 3 s; `resume_queue` started alpha, whose
+  time left came from its earlier log (0.5 s in the merge, 0.41 s writing) and it saved.
+  Renders of 40 frames merged in under a second here, so no live rate (8 frames over 1 s) formed
+  in this run; the live path is covered by the log-fixture tests.
+- **Look** (VERIFIED by viewing): the tray rendered offscreen in Graphite, Instrument and
+  Lightbox (`offscreen_tray_pictures`, ignored test) beside `capture-flight-jobs.png`: same
+  sections, order, rules, marks, caps links and bar; detail lines run full width under the title
+  as in the mockup. `visual-check.py library stack` (release): the top bar reads "Nothing
+  running" as before.
+- **Performance** (MEASURED, release, `--test-threads 1`): the activities pass with a paused
+  two-stack queue and 200 history entries 0.22-0.23 µs a frame; the open tray painted and
+  tessellated under a pointer sweep 0.063-0.081 ms a frame
+  (`benchmark_activities_frame_and_tray_pointer_sweep`). The P0 pointer sweep
+  (`benchmark_finished_workspace_pointer_sweeps`), three repeats: process 1.25-1.40 ms a frame
+  (medians 1.28-1.33), source 0.44-0.45 (one 0.55 sample); a first run straight after the
+  release build read 1.35-1.49 and was repeated.
+
 ## Open issues
 
-- The capture's own Stop and Pause need the P0 confirmation before the tray may offer them; the
-  capture activity reports `Cooperative` cancel and the shell routes it to the confirmed path.
-- `CompactApply` has no cancel in `CaptureWorkspace` today; its activity shows Stop through the
-  slot's kill only if the shell adds `cancel_compact_apply`.
-- Release-build figures were not measured.
-- The milestone row `desktop-studio-2-p5-2026-11-21` is still "reserved"; left to the
-  orchestrator.
+- Stage 1 items now closed: the capture's Stop goes only through its own confirmation;
+  compaction shows no Stop (`CancelMode::None`); release figures are above; the milestone row is
+  marked done.
+- A waiting stack shows "about N s" only when the running render is the same stack (its seed);
+  an estimate for any queued stack needs its previous log read on a worker at enqueue (not
+  built).
+- In the end-to-end run the seeded estimate appeared in the merge and the write but not while
+  the resumed stack aligned (Preparing); whether the seed arrived late or a 3-frame log lacks
+  the stage lines for a whole-render estimate is UNVERIFIED.
+- The live rate needs 8 frames over at least 1 s; very fast stacks finish their merge first
+  and show time left only from a seed.
+- Queueing from the UI: Ctrl+Enter and the palette's Start while a stack runs, and the agent.
+  The Stack station's disabled Start button (P3) and a Library "Queue" action (P4 stage 2) can
+  call `queue_stack(id)` / `queue_while_running()`; not added here.
+- A capture that finishes while a stack runs still reports that stacking is blocked rather than
+  queueing it (`app-workspace.rs` follow path).
+- Whether a borderless-windowed game reports a Quiet state is still UNVERIFIED; switching Quiet
+  off in Preferences or the tray removes the hold.
