@@ -2220,10 +2220,22 @@ fn last_filmstrip_photos_remain_fixed_and_opaque_during_end_follow_and_real_whee
         app.activity = true;
         app.progress.ingest(&format!("STREHL_UI_PROGRESS event=stage name=merge total={COUNT}\nSTREHL_UI_PROGRESS event=frame-started index=30 total={COUNT}\n"));
         app.follow_current_frame();
+        // Establish the native contacts before any canonical tier exists.
+        // Otherwise, under a loaded parallel run, the selection's neighbour
+        // overview (radius 4 reaches 27) can land before the contact batch
+        // and legitimately give the contact a derived 3:2 thumbnail; the
+        // guard below is about what happens after a native one is in place.
+        app.browser.hold_canonical_tiers(true);
         filmstrip_scene(&mut app, &ctx, size, 0.0, vec![]);
         wait_for(&mut app, &ctx, |app| {
-            (COUNT - 24..COUNT).all(|index| app.browser.has_thumbnail(index))
+            (COUNT - 24..COUNT).all(|index| app.browser.native_thumbnail(index).is_some())
         });
+        assert!(
+            (COUNT - 24..COUNT)
+                .all(|index| !app.browser.has_overview(index) && !app.browser.has_image(index)),
+            "the hold must really keep every canonical tier out of the warm-up"
+        );
+        app.browser.hold_canonical_tiers(false);
         assert_eq!(
             app.browser.thumbnail(27).unwrap().size(),
             [8, 6],
