@@ -382,10 +382,12 @@ impl LibraryModel {
             .collect();
         let cards = &self.cards;
         match sort {
+            // The subject on the rig is the most recent of all.
             LibrarySort::Recent => chosen.sort_by(|&a, &b| {
-                cards[b]
-                    .last
-                    .cmp(&cards[a].last)
+                let now = |i: usize| rig_subject == Some(cards[i].id);
+                now(b)
+                    .cmp(&now(a))
+                    .then_with(|| cards[b].last.cmp(&cards[a].last))
                     .then_with(|| cards[a].sort_name.cmp(&cards[b].sort_name))
             }),
             LibrarySort::Name => chosen.sort_by(|&a, &b| {
@@ -523,6 +525,16 @@ impl LibraryStation {
     /// The latest sources check, for the subject page.
     pub(crate) fn sources(&self) -> &HashMap<NodeId, SourcesState> {
         &self.sources.states
+    }
+    /// Keep the sources check current while a subject page, not the grid,
+    /// is on screen (cheap when nothing changed: a key comparison).
+    pub(crate) fn check_sources(&mut self, catalog: &Catalog, revision: u64, ctx: &egui::Context) {
+        self.sources
+            .refresh(catalog, ModelKey::of(catalog, revision), ctx);
+    }
+    /// A sources check is running.
+    pub(crate) fn sources_pending(&self) -> bool {
+        self.sources.task.is_some()
     }
     #[cfg(test)]
     pub(crate) fn set_sources(&mut self, states: HashMap<NodeId, SourcesState>) {
@@ -1879,4 +1891,4 @@ pub(crate) mod tests;
 
 #[cfg(test)]
 #[path = "library-visual-tests.rs"]
-mod visual_tests;
+pub(crate) mod visual_tests;

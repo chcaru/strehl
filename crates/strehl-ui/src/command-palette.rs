@@ -28,6 +28,8 @@ pub(crate) enum Command {
     Theme(crate::studio_theme::ThemeName),
     Agent,
     ActivityLog,
+    /// Today's project tree, in the inspector.
+    ProjectTree,
     Rig,
     ResetLayout,
     /// A stack in the catalog.

@@ -36,6 +36,14 @@ pub(crate) struct DevelopedPreview {
     pub histogram: Option<Arc<crate::develop_station::Histogram>>,
 }
 
+/// Clipping marks for the current development: pure black in information
+/// blue, pure white in warning orange, over the photograph.
+pub(crate) struct ClipOverlay {
+    pub image: Arc<LinearImage>,
+    pub revision: u64,
+    pub texture: TextureHandle,
+}
+
 /// The split view's "before": one SDR overview per photograph, developed
 /// and uploaded on a worker. It does not depend on edits, so it is never
 /// redeveloped while a slider moves.
@@ -113,6 +121,8 @@ pub(crate) struct EditorState {
     pub(crate) histogram: Option<Arc<crate::develop_station::Histogram>>,
     pub(crate) before_overview: Option<BeforeOverview>,
     before_task: Option<Task<BeforeOverview>>,
+    pub(crate) clip_overlay: Option<ClipOverlay>,
+    clip_task: Option<Task<ClipOverlay>>,
     /// The subject's scale calibration, set by the app for the overlay.
     pub(crate) um_per_px: Option<f64>,
 }
@@ -305,6 +315,16 @@ impl EditorState {
             return Err(error);
         }
         Ok(())
+    }
+
+    /// Edit recipes kept from an earlier session, or a photograph that
+    /// failed to open and can be retried: `recovery_panel` has something.
+    pub(crate) fn has_recovery(&self) -> bool {
+        !self.recoveries.is_empty()
+            || (self.loaded.is_none()
+                && self.loading.is_none()
+                && self.error.is_some()
+                && self.path.is_some())
     }
 
     pub fn recovery_panel(&mut self, ui: &mut egui::Ui) {
@@ -597,6 +617,7 @@ impl EditorState {
             },
         );
         self.poll_before_overview(ctx, max_texture_side);
+        self.poll_clipping(ctx);
         if let Some(result) = self
             .exporting
             .as_ref()
@@ -654,6 +675,7 @@ impl EditorState {
         if self.loading.is_some()
             || self.developing.is_some()
             || self.before_task.is_some()
+            || self.clip_task.is_some()
             || self.exporting.is_some()
             || self.preset.is_some()
             || self.saving.is_some()
@@ -898,6 +920,76 @@ impl EditorState {
         }));
     }
 
+    /// Mark the development's clipping on a worker, once per edit, never
+    /// while a pointer button is down; the texture uploads in the worker.
+    fn poll_clipping(&mut self, ctx: &egui::Context) {
+        if let Some(result) = self
+            .clip_task
+            .as_ref()
+            .and_then(|task| task.receiver.try_recv().ok())
+        {
+            self.clip_task = None;
+            if let Ok(overlay) = result
+                && self
+                    .loaded
+                    .as_ref()
+                    .is_some_and(|loaded| Arc::ptr_eq(&loaded.image, &overlay.image))
+            {
+                self.clip_overlay = Some(overlay);
+            }
+        }
+        if !self.develop.clipping {
+            self.clip_overlay = None;
+            return;
+        }
+        let current = self.loaded.as_ref().is_some_and(|loaded| {
+            self.clip_overlay.as_ref().is_some_and(|o| {
+                Arc::ptr_eq(&o.image, &loaded.image) && o.revision == self.revision
+            })
+        });
+        if current || self.clip_task.is_some() || ctx.input(|i| i.pointer.any_down()) {
+            return;
+        }
+        let Some(job) = self.development_job(false) else {
+            return;
+        };
+        let image = job.image(false).clone();
+        let revision = self.revision;
+        let (black, white) = (
+            crate::studio_theme::tokens(ctx).info,
+            crate::studio_theme::tokens(ctx).warn,
+        );
+        let ctx = ctx.clone();
+        self.clip_task = Some(spawn_task("strehl-develop-clipping", move |_| {
+            let (width, height, rgb) =
+                job.image(true)
+                    .render_region_sdr8(job.recipe(), [0.0, 0.0], [1.0, 1.0], 1024)?;
+            let pixels = rgb
+                .as_chunks::<3>()
+                .0
+                .iter()
+                .map(|p| {
+                    if p.iter().any(|&v| v >= 254) {
+                        white.gamma_multiply(0.85)
+                    } else if p.iter().all(|&v| v <= 1) {
+                        black.gamma_multiply(0.85)
+                    } else {
+                        egui::Color32::TRANSPARENT
+                    }
+                })
+                .collect();
+            let picture = egui::ColorImage::new([width as usize, height as usize], pixels);
+            let texture =
+                ctx.load_texture("develop-clipping", picture, egui::TextureOptions::NEAREST);
+            ctx.request_repaint();
+            Ok(ClipOverlay {
+                image,
+                revision,
+                texture,
+            })
+        }));
+    }
+
     /// The recipe the current master can export now: the live recipe, or,
     /// while a depth repair waits for its re-stack, the live tone with the
     /// repairs the master holds (`with_baked_repairs`).
@@ -966,6 +1058,18 @@ impl EditorState {
                 );
             }
             I::ToggleClipping => self.develop.clipping = !self.develop.clipping,
+            I::SetHdrLuminance {
+                peak_nits,
+                reference_white_nits,
+            } => {
+                self.recipe.hdr.peak_nits = peak_nits.clamp(80.0, 10_000.0);
+                self.recipe.hdr.reference_white_nits =
+                    reference_white_nits.clamp(80.0, self.recipe.hdr.peak_nits.min(500.0));
+                if self.recipe != before {
+                    self.before = false;
+                    self.begin_edit(before, time);
+                }
+            }
             I::SetBrush { size_px, feather } => {
                 if self.develop.tool == crate::develop_station::DevelopTool::Heal {
                     self.develop.heal_px = *size_px;

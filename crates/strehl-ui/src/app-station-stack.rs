@@ -85,6 +85,7 @@ pub(crate) struct StackStation {
     /// Develop's compact rail: pooled columns per series and width.
     develop_columns: Option<DevelopColumns>,
     develop_anchor: Option<usize>,
+    applied_inspection: Option<(Option<usize>, Option<usize>)>,
 }
 impl Default for StackStation {
     fn default() -> Self {
@@ -106,6 +107,7 @@ impl Default for StackStation {
             last_core: Default::default(),
             develop_columns: None,
             develop_anchor: None,
+            applied_inspection: None,
         }
     }
 }
@@ -491,9 +493,16 @@ impl StrehlApp {
         );
         // The browser warms these frames, and requests previews for the
         // plane the lens shows through the theater's inspection state.
-        let (hover, held) = station.lens.inspection();
+        let inspection = station.lens.inspection();
+        // Only the lens's own changes: inspection set elsewhere (agent,
+        // engine room, tests) is never overwritten by an idle station.
+        let changed = station.applied_inspection != Some(inspection);
+        station.applied_inspection = Some(inspection);
         self.process_space.set_station_contacts(shown);
-        self.process_space.set_inspection(hover, held);
+        if changed {
+            self.process_space
+                .set_inspection(inspection.0, inspection.1);
+        }
         if hovered.is_some() {
             ui.ctx().set_cursor_icon(egui::CursorIcon::PointingHand);
         }

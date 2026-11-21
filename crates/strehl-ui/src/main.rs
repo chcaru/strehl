@@ -6,6 +6,8 @@
 static GLOBAL: strehl_cli::EngineAllocator = strehl_cli::ENGINE_ALLOCATOR;
 
 mod activity;
+#[path = "activity-queue.rs"]
+mod activity_queue;
 #[path = "activity-tray.rs"]
 mod activity_tray;
 #[path = "agent-interface.rs"]
@@ -114,6 +116,8 @@ mod process_theater;
 mod processing_view;
 #[path = "project-explorer.rs"]
 mod project_explorer;
+#[path = "render-eta.rs"]
+mod render_eta;
 #[path = "reveal-path.rs"]
 mod reveal_path;
 #[path = "rig-status.rs"]
@@ -202,10 +206,15 @@ pub struct LaunchOptions {
     pub output_directory: Option<PathBuf>,
     /// `--route`: the Studio 2 station (and room) to open.
     pub(crate) route: Option<app::studio_route::LaunchRoute>,
+    /// `--route subject:<name or id>`: which subject.
+    pub(crate) route_subject: Option<String>,
     /// `--theme`: Graphite, Instrument or Lightbox for this session only.
     pub(crate) theme: Option<studio_theme::ThemeName>,
     /// `--plane-hold N`: the Stack station holds plane N (from 1) once open.
     pub(crate) plane_hold: Option<usize>,
+    /// `--capture-fixture plan|flight|glance`: the Capture station from a
+    /// fabricated state (offscreen checks); nothing reaches a camera.
+    pub(crate) capture_fixture: Option<String>,
 }
 
 fn parse_screenshot_ranges(value: &str) -> Option<Vec<[usize; 2]>> {
@@ -435,9 +444,17 @@ fn main() -> eframe::Result {
         }
         if arg == "--route" {
             let value = args.next().and_then(|v| v.to_str().map(str::to_owned));
-            launch.route = value
+            let (name, subject) = match value.as_deref().map(|v| v.split_once(':')) {
+                Some(Some((name, subject))) => (Some(name.to_owned()), Some(subject.to_owned())),
+                _ => (value, None),
+            };
+            launch.route = name
                 .as_deref()
-                .and_then(app::studio_route::LaunchRoute::parse);
+                .and_then(app::studio_route::LaunchRoute::parse)
+                .filter(|route| {
+                    subject.is_none() || *route == app::studio_route::LaunchRoute::Subject
+                });
+            launch.route_subject = subject;
             if launch.route.is_none() {
                 eprintln!("Use --route {}", app::studio_route::LaunchRoute::NAMES);
                 std::process::exit(2);
@@ -451,6 +468,18 @@ fn main() -> eframe::Result {
                 .filter(|&plane: &usize| plane > 0);
             if launch.plane_hold.is_none() {
                 eprintln!("Use --plane-hold N (a plane number, from 1)");
+                std::process::exit(2);
+            }
+            continue;
+        }
+        if arg == "--capture-fixture" {
+            launch.capture_fixture = args.next().and_then(|v| v.to_str().map(str::to_owned));
+            if !launch
+                .capture_fixture
+                .as_deref()
+                .is_some_and(|v| matches!(v, "plan" | "flight" | "glance"))
+            {
+                eprintln!("Use --capture-fixture plan|flight|glance");
                 std::process::exit(2);
             }
             continue;

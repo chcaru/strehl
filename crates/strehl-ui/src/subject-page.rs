@@ -512,6 +512,17 @@ impl SubjectPage {
                 subject: Some(subject),
             }));
         }
+        // Enter opens the stack whose lineage is open, else the first.
+        if !ui.ctx().wants_keyboard_input()
+            && self.editing.is_none()
+            && ui.input(|i| i.key_pressed(egui::Key::Enter))
+        {
+            let stack = self.open.or_else(|| {
+                let first = *model.order(self.order).first()?;
+                Some(model.stacks[first].id)
+            });
+            intent = intent.or(stack.map(LibraryIntent::OpenStack));
+        }
         self.model = Some(model);
         intent
     }

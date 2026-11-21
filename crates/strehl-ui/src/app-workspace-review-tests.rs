@@ -72,6 +72,7 @@ fn default_process_survives_actual_station_and_pane_controls_and_integrated_sour
     theme::install(&ctx);
     let mut app = test_app();
     assert!(app.process_view, "normal launch starts inside the process");
+    app.on_stack_station();
     let initial = draw(&mut app, &ctx, 0.0, vec![]);
     assert!(find_text(&initial, "READ").is_some());
     // The Stack station's tabs, the activity tray's engine log, then the
@@ -83,7 +84,6 @@ fn default_process_survives_actual_station_and_pane_controls_and_integrated_sour
             &["Nothing running", "ENGINE LOG"][..],
             workspace::Sidebar::Activity,
         ),
-        (&["LIBRARY"][..], workspace::Sidebar::Projects),
     ]
     .into_iter()
     .enumerate()
@@ -125,9 +125,26 @@ fn default_process_survives_actual_station_and_pane_controls_and_integrated_sour
     );
     assert_eq!(
         app.sidebar,
-        Some(workspace::Sidebar::Projects),
+        Some(workspace::Sidebar::Activity),
         "source inspection cannot hijack navigation"
     );
+    // The Library is the subject grid; the process waits on the Stack station.
+    let out = draw(&mut app, &ctx, 6.0, vec![]);
+    let at = find_text(&out, "LIBRARY").unwrap();
+    draw(
+        &mut app,
+        &ctx,
+        6.1,
+        vec![egui::Event::PointerMoved(at), pointer(at, true)],
+    );
+    let library = draw(&mut app, &ctx, 6.2, vec![pointer(at, false)]);
+    let library = if find_text(&library, "All subjects").is_some() {
+        library
+    } else {
+        draw(&mut app, &ctx, 6.3, vec![])
+    };
+    assert_eq!(app.sidebar, Some(workspace::Sidebar::Projects));
+    assert!(find_text(&library, "All subjects").is_some());
 }
 
 #[test]
@@ -291,6 +308,9 @@ fn changed_sources_are_withheld_before_or_after_replay_but_saved_participation_r
         app.result = Some(run.output.clone());
         app.image_path = Some(run.output);
         app.process_view = true;
+        app.on_stack_station();
+        // The saved participation timeline is the engine room's (P3).
+        app.set_room(super::studio_route::Room::Engine);
         draw(&mut app, &ctx, 1.0, vec![]);
         let saved = draw(&mut app, &ctx, 2.0, vec![]);
         assert!(
@@ -319,6 +339,7 @@ fn reopening_all_preview_packets_before_first_paint_recovers_the_latest_actual_p
     }
     app.activity = true;
     app.recorded = true;
+    app.on_stack_station();
     // This is the real app coalescer used after the asynchronous replay returns.
     // No intermediate UI paint sees any of the first eleven delivered prefixes.
     app.cache_process_surfaces(&ctx);

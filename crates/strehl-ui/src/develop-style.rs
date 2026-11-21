@@ -56,6 +56,37 @@ impl StudioPalette {
     };
 }
 
+impl StudioPalette {
+    /// The palette of the theme chosen in Preferences (Graphite, Instrument
+    /// or Lightbox).
+    pub(crate) fn from_tokens(t: &crate::studio_theme::Tokens) -> Self {
+        Self {
+            bg: t.bg,
+            panel: t.panel,
+            raised: t.raised,
+            control: t.control,
+            line: t.line,
+            line_2: t.line2,
+            ink: t.ink,
+            ink_2: t.ink2,
+            ink_3: t.ink3,
+            accent: t.accent,
+            accent_ink: t.accent_ink,
+            accent_soft: t.accent_soft,
+            ok: t.ok,
+            warn: t.warn,
+            bad: t.bad,
+            info: t.info,
+            plane: t.plane,
+            surround: t.surround,
+        }
+    }
+
+    pub(crate) fn of(ctx: &egui::Context) -> Self {
+        Self::from_tokens(&crate::studio_theme::tokens(ctx))
+    }
+}
+
 impl Default for StudioPalette {
     fn default() -> Self {
         Self::GRAPHITE
@@ -101,6 +132,25 @@ pub(crate) fn paint_text(
     color: Color32,
 ) -> Rect {
     painter.text(at, align, text, FontId::proportional(size), color)
+}
+
+/// Paint text in the strong face (the mockup's `<b>`).
+pub(crate) fn paint_strong(
+    painter: &egui::Painter,
+    at: Pos2,
+    align: Align2,
+    text: &str,
+    size: f32,
+    color: Color32,
+) -> Rect {
+    let font = crate::studio_fonts::font(painter.ctx(), crate::studio_fonts::Face::Strong, size);
+    painter.text(at, align, text, font, color)
+}
+
+/// A strong label in a layout.
+pub(crate) fn strong(ui: &mut Ui, text: &str, size: f32, color: Color32) -> Response {
+    let font = crate::studio_fonts::font(ui.ctx(), crate::studio_fonts::Face::Strong, size);
+    ui.label(egui::RichText::new(text).font(font).color(color))
 }
 
 pub(crate) fn hairline(painter: &egui::Painter, a: Pos2, b: Pos2, color: Color32) {
@@ -332,6 +382,84 @@ pub(crate) fn slider(
         }
     }
     out
+}
+
+/// The control strip's compact slider (mockup `.slider` inline): a hairline
+/// track, an accent run from the start, a thin handle. Click or drag sets.
+pub(crate) fn inline_slider(
+    ui: &mut Ui,
+    pal: &StudioPalette,
+    value: f32,
+    range: std::ops::RangeInclusive<f32>,
+    width: f32,
+) -> SliderOutput {
+    let (lo, hi) = (*range.start(), *range.end());
+    let (rect, response) = ui.allocate_exact_size(egui::vec2(width, 13.0), Sense::click_and_drag());
+    let painter = ui.painter();
+    let mid = rect.center().y;
+    hairline(
+        painter,
+        egui::pos2(rect.left(), mid),
+        egui::pos2(rect.right(), mid),
+        pal.line_2,
+    );
+    let t = ((value - lo) / (hi - lo).max(1e-9)).clamp(0.0, 1.0);
+    let x = rect.left() + t * rect.width();
+    painter.rect_filled(
+        Rect::from_min_max(egui::pos2(rect.left(), mid - 1.0), egui::pos2(x, mid + 1.0)),
+        CornerRadius::ZERO,
+        pal.accent,
+    );
+    painter.rect_filled(
+        Rect::from_min_max(
+            egui::pos2(x - 1.0, rect.top()),
+            egui::pos2(x + 1.0, rect.bottom()),
+        ),
+        CornerRadius::ZERO,
+        pal.ink,
+    );
+    let mut out = SliderOutput {
+        dragging: response.dragged(),
+        released: response.drag_stopped(),
+        ..Default::default()
+    };
+    if (response.dragged() || response.clicked())
+        && let Some(pointer) = response.interact_pointer_pos()
+    {
+        let next =
+            lo + ((pointer.x - rect.left()) / rect.width().max(1.0)).clamp(0.0, 1.0) * (hi - lo);
+        if (next - value).abs() > 1e-6 {
+            out.value = Some(next);
+        }
+    }
+    out
+}
+
+/// A quiet button that stays underlined in accent while on.
+pub(crate) fn toggle_button(ui: &mut Ui, pal: &StudioPalette, label: &str, on: bool) -> Response {
+    let galley =
+        ui.painter()
+            .layout_no_wrap(label.to_owned(), FontId::proportional(SMALL), pal.ink);
+    let (rect, response) =
+        ui.allocate_exact_size(egui::vec2(galley.size().x + 12.0, 22.0), Sense::click());
+    let colour = if on || response.hovered() {
+        pal.ink
+    } else {
+        pal.ink_2
+    };
+    ui.painter().galley_with_override_text_color(
+        egui::pos2(rect.left() + 6.0, rect.center().y - galley.size().y * 0.5),
+        galley,
+        colour,
+    );
+    if on {
+        ui.painter().rect_filled(
+            Rect::from_min_max(egui::pos2(rect.left(), rect.bottom() - 1.5), rect.max),
+            CornerRadius::ZERO,
+            pal.accent,
+        );
+    }
+    response
 }
 
 /// A square toggle: hairline frame and a square knob, accent when on.

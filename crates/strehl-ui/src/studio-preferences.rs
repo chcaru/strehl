@@ -23,6 +23,9 @@ pub(crate) struct StudioPrefs {
     pub inspector_width: f32,
     /// The last station, 1 to 5; 0 when none was recorded.
     pub station: u8,
+    /// Quiet mode: hold stacks, repairs and compaction while a full-screen
+    /// program is in front (plan 6.6). On unless switched off.
+    pub quiet: bool,
 }
 impl Default for StudioPrefs {
     fn default() -> Self {
@@ -32,6 +35,7 @@ impl Default for StudioPrefs {
             reduced_motion: false,
             inspector_width: INSPECTOR_DEFAULT,
             station: 0,
+            quiet: true,
         }
     }
 }
@@ -87,6 +91,7 @@ mod tests {
             reduced_motion: true,
             inspector_width: 412.0,
             station: 3,
+            quiet: false,
         };
         save(&path, &prefs).unwrap();
         assert_eq!(load(Some(&path)), prefs);
@@ -100,6 +105,7 @@ mod tests {
         assert_eq!(loaded.theme, ThemeName::Lightbox);
         assert_eq!(loaded.inspector_width, INSPECTOR_MAX);
         assert_eq!(loaded.station, 0);
+        assert!(loaded.quiet, "Quiet is on unless switched off");
         std::fs::write(&path, b"not json").unwrap();
         assert_eq!(load(Some(&path)), StudioPrefs::default());
         assert_eq!(load(None), StudioPrefs::default());

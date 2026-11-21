@@ -26,11 +26,26 @@ RUN = r"C:\Users\chris\Pictures\Strehl\strehl-1793781369068-68052-3"
 # name: (extra arguments, reference image)
 ROUTES = {
     "library": (["--route", "library"], "library.png"),
+    "library-instrument": (["--route", "library", "--theme", "instrument"], "library.png"),
+    "library-lightbox": (["--route", "library", "--theme", "lightbox"], "library.png"),
+    # Without a name: the open stack's subject, else the most developed one.
+    "subject": (["--route", "subject"], "subject.png"),
+    "subject-lightbox": (["--route", "subject", "--theme", "lightbox"], "subject.png"),
     "stack": (["--open-run", RUN, "--route", "stack"], "stack.png"),
     "engine": (["--open-run", RUN, "--route", "engine"], "engine-room.png"),
     "develop": (["--open-run", RUN, "--route", "develop"], "develop.png"),
     "export": (["--open-run", RUN, "--route", "export"], "export.png"),
     "capture": (["--route", "capture"], "capture-plan.png"),
+    # The Capture station from fabricated states: no camera host is reached.
+    "capture-plan": (["--route", "capture", "--capture-fixture", "plan"], "capture-plan.png"),
+    "capture-flight": (["--route", "capture", "--capture-fixture", "flight"], "capture-flight.png"),
+    "glance": (["--route", "capture", "--capture-fixture", "glance"], "glance.png"),
+    "capture-flight-lightbox": (["--route", "capture", "--capture-fixture", "flight", "--theme", "lightbox"],
+                                "capture-flight-lightbox.png"),
+    "capture-plan-instrument": (["--route", "capture", "--capture-fixture", "plan", "--theme", "instrument"],
+                                "capture-plan.png"),
+    "capture-plan-lightbox": (["--route", "capture", "--capture-fixture", "plan", "--theme", "lightbox"],
+                              "capture-plan.png"),
     "stack-instrument": (["--open-run", RUN, "--route", "stack", "--theme", "instrument"], "stack-instrument.png"),
     "stack-lightbox": (["--open-run", RUN, "--route", "stack", "--theme", "lightbox"], "stack-lightbox.png"),
     "stack-plane-held": (["--open-run", RUN, "--route", "stack", "--plane-hold", "128"], "stack-plane-held.png"),

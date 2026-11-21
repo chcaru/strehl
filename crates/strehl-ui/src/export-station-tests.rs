@@ -205,6 +205,7 @@ fn the_inspector_shows_the_batch_button_and_ticks_presets() {
                             batch: None,
                             can_export: true,
                             note: None,
+                            view_bundle: None,
                         };
                         intents = inspector(ui, panel, &view);
                     });

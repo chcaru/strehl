@@ -1,13 +1,11 @@
-//! Offscreen pictures of the Library and Subject screens for the side-by-side
-//! check against the mockup references (plan 10.2). Ignored: needs a GPU and
-//! writes PNGs into `STREHL_P4_SHOTS`. With `STREHL_P4_CATALOG` set to a copy
-//! of a catalog, the screens show that catalog instead of the fixture.
-//!
-//! The GPU helpers repeat `app-offscreen.rs` (not editable in this phase);
-//! stage 2 replaces this with `--route library` in the real offscreen path.
+//! The mockup's Library: its subjects, collections and stacks, with synthetic
+//! pictures and source folders, for the offscreen pictures checked against
+//! the mockup references (plan 10.2). The pictures themselves are rendered
+//! through the application's own offscreen path with `--route library` and
+//! `--route subject` (`app-station-library-tests.rs`). `render` stays for
+//! pictures of a single widget, such as the activity tray's.
 use super::tests::{BASE, develop, draft, run};
 use super::*;
-use crate::subject_page::{SubjectInputs, SubjectPage};
 use anyhow::{Context as _, Result, ensure};
 use eframe::egui_wgpu::{RenderState, RendererOptions, ScreenDescriptor};
 use image::ImageEncoder;
@@ -18,10 +16,14 @@ use std::{
     time::{Duration, Instant},
 };
 
+/// The window size `render` paints at (the mockup's area below the title bar).
 const SIZE: [u32; 2] = [1680, 982];
 
-/// The mockup's subjects, with synthetic pictures.
-fn mockup_catalog(pictures: &Path) -> (Catalog, NodeId) {
+/// The mockup's subjects, with synthetic pictures under `root`. Every stack's
+/// source folder exists there except Peacock ore's, which shows as moved.
+pub(crate) fn mockup_catalog(root: &Path) -> (Catalog, NodeId) {
+    let pictures = root.join("pictures");
+    std::fs::create_dir_all(&pictures).unwrap();
     let mut catalog = Catalog::default();
     let collections: Vec<NodeId> = ["Insects", "Minerals", "Plants and food", "Test targets"]
         .iter()
@@ -65,7 +67,12 @@ fn mockup_catalog(pictures: &Path) -> (Catalog, NodeId) {
             first = subject;
         }
         for s in 0..*stacks {
-            let source = format!("/captures/{index}/{s}/100MSDCF");
+            let folder = root.join(format!("captures/{index}/{s}/100MSDCF"));
+            if *name != "Peacock ore" {
+                std::fs::create_dir_all(&folder).unwrap();
+                std::fs::write(folder.join("DSC00001.ARW"), [0_u8; 16]).unwrap();
+            }
+            let source = folder.to_string_lossy().into_owned();
             let stack = catalog
                 .create_stack(
                     subject,
@@ -134,123 +141,8 @@ fn mockup_catalog(pictures: &Path) -> (Catalog, NodeId) {
     (catalog, first)
 }
 
-#[test]
-#[ignore = "needs a GPU; writes PNGs into STREHL_P4_SHOTS"]
-fn offscreen_library_and_subject_pictures() {
-    let shots = PathBuf::from(std::env::var_os("STREHL_P4_SHOTS").expect("STREHL_P4_SHOTS"));
-    std::fs::create_dir_all(&shots).unwrap();
-    let pictures = tempfile::tempdir().unwrap();
-    let (catalog, first) = match std::env::var_os("STREHL_P4_CATALOG") {
-        Some(path) => {
-            let catalog = Catalog::load(Some(PathBuf::from(path)));
-            assert!(catalog.load_error.is_none(), "{:?}", catalog.load_error);
-            let first = catalog
-                .nodes
-                .iter()
-                .filter(|n| n.kind == NodeKind::Subject)
-                .max_by_key(|n| catalog.subject_summary(n.id).map_or(0, |s| s.renders))
-                .unwrap()
-                .id;
-            (catalog, first)
-        }
-        None => mockup_catalog(pictures.path()),
-    };
-    let rig = RigCapture {
-        subject: Some(first),
-        stack: catalog.stacks_of(first).first().copied(),
-        title: "Blue weevil · Dorsal · 2.8×".into(),
-        detail:
-            "Capturing plane 61 of 96 · 3 min 18 s left · every plane so far has passed its check"
-                .into(),
-        progress: 0.635,
-        picture: None,
-    };
-    let storage = StorageCard {
-        volume: "D:".into(),
-        free: 371_000_000_000,
-        total: 1_900_000_000_000,
-        compactable: Some((14, 410_000_000_000)),
-    };
-    let palette = LibraryPalette::graphite();
-    let mut station = LibraryStation::default();
-    let mut page = SubjectPage::default();
-    let mut previews = LibraryPreviews::default();
-    let signatures: HashMap<NodeId, Vec<f32>> = catalog
-        .stacks_of(first)
-        .into_iter()
-        .enumerate()
-        .map(|(n, stack)| {
-            let series = (0..299)
-                .map(|i| {
-                    let x = i as f32 / 299.0;
-                    let ridge = (-((x - 0.45 - n as f32 * 0.05) * 7.0).powi(2)).exp();
-                    ridge * (0.7 + 0.3 * ((i * 7919 % 97) as f32 / 97.0))
-                })
-                .collect();
-            (stack, series)
-        })
-        .collect();
-    // Fixture folders do not exist; show them present except one moved.
-    let fixture = std::env::var_os("STREHL_P4_CATALOG").is_none();
-    let present: HashMap<NodeId, SourcesState> = catalog
-        .nodes
-        .iter()
-        .filter(|n| n.kind == NodeKind::Stack)
-        .map(|n| {
-            let moved = catalog
-                .subject_of(n.id)
-                .and_then(|s| catalog.node(s))
-                .is_some_and(|s| s.name == "Peacock ore");
-            (
-                n.id,
-                if moved {
-                    SourcesState::Missing
-                } else {
-                    SourcesState::Present
-                },
-            )
-        })
-        .collect();
-    render(&shots.join("library.png"), |ui| {
-        if fixture {
-            station.set_sources(present.clone());
-        }
-        station.show(
-            ui,
-            LibraryInputs {
-                catalog: &catalog,
-                revision: 1,
-                previews: &mut previews,
-                palette: &palette,
-                rig: Some(&rig),
-                storage: Some(&storage),
-            },
-        );
-        !previews.pending()
-    })
-    .unwrap();
-    let sources = station.sources().clone();
-    render(&shots.join("subject.png"), |ui| {
-        page.show(
-            ui,
-            SubjectInputs {
-                catalog: &catalog,
-                revision: 1,
-                subject: first,
-                previews: &mut previews,
-                palette: &palette,
-                rig: None,
-                sources: &sources,
-                signatures: Some(&signatures),
-            },
-        );
-        !previews.pending()
-    })
-    .unwrap();
-}
-
 /// Paint `draw` until it reports ready (and at least a few frames), then save.
-fn render(destination: &Path, mut draw: impl FnMut(&mut Ui) -> bool) -> Result<()> {
+pub(crate) fn render(destination: &Path, mut draw: impl FnMut(&mut Ui) -> bool) -> Result<()> {
     let deadline = Instant::now() + Duration::from_secs(120);
     let config = crate::hdr_display::configuration();
     let instance = wait_until(config.wgpu_setup.new_instance(), deadline)?;

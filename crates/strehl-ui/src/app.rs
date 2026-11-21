@@ -21,6 +21,8 @@ use crate::{
     viewer::Viewer,
     workbench::{SourcePhoto, Workbench, WorkbenchMode},
 };
+#[path = "app-activities.rs"]
+mod activities;
 #[path = "app-adaptive.rs"]
 mod adaptive;
 #[path = "app-agent.rs"]
@@ -50,6 +52,12 @@ mod session;
 mod session_import;
 #[path = "app-session-output.rs"]
 mod session_output;
+#[path = "app-station-capture.rs"]
+mod station_capture;
+#[path = "app-station-develop.rs"]
+mod station_develop;
+#[path = "app-station-library.rs"]
+mod station_library;
 #[path = "app-station-stack.rs"]
 mod station_stack;
 #[path = "studio-route.rs"]
@@ -181,6 +189,8 @@ pub struct StrehlApp {
     /// A finished capture opened in Projects, stacked once its frames are read.
     stack_when_read: Option<PathBuf>,
     project_explorer: crate::project_explorer::ProjectExplorer,
+    /// The Library station and subject page, composed into the shell.
+    library: station_library::LibraryState,
     active_stack: Option<crate::workspace_history::NodeId>,
     pending_stack: Option<crate::workspace_history::NodeId>,
     capture_parent: Option<crate::workspace_history::NodeId>,
@@ -235,6 +245,8 @@ pub struct StrehlApp {
     agent_session_out: Option<PathBuf>,
     /// The Studio 2 frame: route, notices, palette, preferences.
     shell: studio_shell::Shell,
+    /// Activities, Quiet, the stack queue and the render ETA (Studio 2 P5).
+    activity_hub: activities::ActivityHub,
     /// The Stack station's parts (P3): rail, filmstrip, plane lens, core sample.
     stack_station: station_stack::StackStation,
 }
@@ -255,6 +267,7 @@ impl StrehlApp {
         // An interactive launch that names no pane or document reopens the
         // station the owner last used.
         let launch_route = launch.route;
+        let launch_subject = launch.route_subject.clone();
         let restore_station = launch_route.is_none()
             && !(launch.headless
                 || launch.offscreen
@@ -275,6 +288,8 @@ impl StrehlApp {
                 .or_else(crate::workspace_history::default_path),
         );
         let shell = studio_shell::Shell::new(&launch, catalog.path.as_deref());
+        let mut catalog = catalog;
+        let activity_hub = activities::ActivityHub::load(&mut catalog, &launch);
         let mut app = Self {
             session_ui: crate::session_workspace::SessionUi::default(),
             ordinary_recipe: None,
@@ -325,6 +340,7 @@ impl StrehlApp {
             capture: crate::capture_workspace::CaptureWorkspace::new(launch.capture_settings),
             stack_when_read: None,
             project_explorer: Default::default(),
+            library: Default::default(),
             active_stack: None,
             pending_stack: None,
             capture_parent: None,
@@ -378,6 +394,7 @@ impl StrehlApp {
             headless_shutdown: false,
             agent_session_out: launch.agent_session_out,
             shell,
+            activity_hub,
             stack_station: station_stack::StackStation::with_hold(launch.plane_hold),
         };
         if isolated_state {
@@ -497,10 +514,15 @@ impl StrehlApp {
             app.process_view = true;
             app.sidebar = Some(workspace::Sidebar::Capture);
         }
+        if let Some(name) = &launch.capture_fixture
+            && let Err(error) = app.capture.load_fixture(name)
+        {
+            app.capture.error = Some(format!("{error:#}"));
+        }
         // Adopt the launch flags above, then apply an explicit route.
         app.sync_route();
         if let Some(route) = launch_route {
-            app.apply_launch_route(route);
+            app.apply_launch_route(route, launch_subject.as_deref());
         } else if restore_station {
             app.restore_station();
         }
@@ -695,6 +717,9 @@ impl StrehlApp {
             || self.bracket_browser.active()
     }
     fn start_render(&mut self) {
+        if self.queue_while_running() {
+            return;
+        }
         if self.stack_start_blocker().is_some() {
             return;
         }
@@ -730,9 +755,7 @@ impl StrehlApp {
             pinned: false,
             imported: None,
         });
-        self.replay = None;
-        self.expected_run = None;
-        self.job = Some(jobs::start_render(RenderRequest {
+        let request = RenderRequest {
             executable: engine.clone(),
             source: stack.directory.clone(),
             output_parent: self.output.clone(),
@@ -745,7 +768,16 @@ impl StrehlApp {
                 && self.editor.loaded.is_some()
                 && self.editor.path == self.result)
                 .then(|| self.editor.recipe.clone()),
-        }));
+        };
+        self.launch_render(request);
+    }
+    /// Start `request` (its `pending_run` and `pending_stack` set) and let
+    /// the workspace follow it; also the stack queue's start.
+    pub(super) fn launch_render(&mut self, request: RenderRequest) {
+        self.replay = None;
+        self.expected_run = None;
+        self.activity_hub.launching_render(&request);
+        self.job = Some(jobs::start_render(request));
         self.progress = PipelineProgress::default();
         if self.controls.settings.session.as_ref().is_some_and(|s| {
             s.manifest.mode == crate::session_workspace::SessionMode::IndependentViews
@@ -922,6 +954,7 @@ impl StrehlApp {
                     log,
                 } => {
                     self.status = "Stacking".into();
+                    self.activity_render_started(ctx);
                     if let Some(mut run) = self.pending_run.take() {
                         run.directory = directory.clone();
                         run.output = output.clone();
@@ -944,6 +977,7 @@ impl StrehlApp {
                     ));
                 }
                 RenderEvent::Log(text) => {
+                    self.activity_render_log(&text);
                     self.progress.ingest(&text);
                     if let Some(view) = self.progress.active_view() {
                         self.status = format!("{} · {}", view.label(), self.progress.stage.title());
@@ -971,6 +1005,7 @@ impl StrehlApp {
                     }
                 }
                 RenderEvent::Finished(outcome) => {
+                    self.activity_render_finished(&outcome);
                     self.pending_run = None;
                     self.pending_stack = None;
                     self.job = None;
@@ -1025,6 +1060,7 @@ impl StrehlApp {
             }
         }
         self.sync_workbench_phase();
+        self.activities_frame(ctx);
         // Completion can queue the TIFF while removing the last active job.
         // Start its decode in this same tick, before the event loop decides
         // whether to sleep; the image must never need a pointer event to load.
@@ -2730,6 +2766,8 @@ impl StrehlApp {
                 || self.capture.ready_for_screenshot())
             && (self.sidebar != Some(workspace::Sidebar::Projects)
                 || !self.project_explorer.preview_pending())
+            // The Library waits for its pictures and folder scans.
+            && (station != studio_route::Station::Library || !self.library_loading())
             // Develop and Export show the photograph they act on.
             && (!matches!(
                 station,
@@ -2896,7 +2934,10 @@ impl StrehlApp {
                 .collect::<Vec<_>>()
         }) {
             if self.job.is_none() && !self.picker_active() {
-                if path.is_dir() {
+                // The Library takes folder drops itself (one stack per folder).
+                let library = self.shell.navigator.station() == studio_route::Station::Library;
+                if path.is_dir() && library {
+                } else if path.is_dir() {
                     self.import(path);
                 } else if is_image(&path) {
                     self.open_result(path);

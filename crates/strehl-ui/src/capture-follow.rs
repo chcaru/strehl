@@ -197,7 +197,6 @@ impl JournalReader {
 }
 
 /// Reads a whole journal (see [`JournalReader`]).
-#[cfg(test)]
 pub(crate) fn progress(journal: &str) -> Progress {
     let mut reader = JournalReader::default();
     reader.feed(journal.as_bytes());

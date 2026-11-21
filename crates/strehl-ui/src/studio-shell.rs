@@ -18,7 +18,7 @@
 use super::studio_route::{Drawer, LaunchRoute, Navigator, Room, Route, StackTab, Station};
 use super::*;
 use crate::{
-    activity::{ActivityKind, ActivityStatus, CancelMode, Lane},
+    activity::ActivityStatus,
     command_palette::CommandPalette,
     notices::{self, Notices, Severity, Source},
     rig_status::RigSummary,
@@ -41,7 +41,6 @@ pub(super) const INSPECTOR_FOOTER: f32 = 53.0;
 pub(super) const TOOLS_WIDTH: f32 = 44.0;
 #[allow(dead_code)]
 pub(super) const RAIL_HEAD: f32 = 30.0;
-pub(super) const LIBRARY_SIDEBAR: f32 = 300.0;
 /// Focus mode: the floating panels fade after this long without pointer motion.
 const FOCUS_IDLE: f64 = 2.0;
 /// The rig summary is read from the capture client at most this often.
@@ -72,14 +71,13 @@ pub(super) struct Shell {
     pub palette: CommandPalette,
     pub prefs: StudioPrefs,
     prefs_path: Option<PathBuf>,
-    prefs_dirty: bool,
+    pub(super) prefs_dirty: bool,
     theme_applied: Option<(ThemeName, studio_theme::Surround, bool)>,
     pub preferences_open: bool,
     pub focus: bool,
     focus_motion: f64,
     pub rig: RigSummary,
     rig_read: Option<f64>,
-    rig_notice: Option<String>,
     /// The Adjust pane changed the recipe during the last paint.
     recipe_changed: bool,
     catalog_revision: u64,
@@ -93,6 +91,13 @@ pub(super) struct Shell {
 }
 
 impl Shell {
+    /// Stand in for the capture client's state, read at `time`, until the
+    /// next read is due.
+    #[cfg(test)]
+    pub(super) fn stand_in_rig(&mut self, rig: RigSummary, time: f64) {
+        self.rig = rig;
+        self.rig_read = Some(time);
+    }
     pub(super) fn new(launch: &LaunchOptions, catalog: Option<&Path>) -> Self {
         let prefs_path = catalog.map(studio_preferences::path_beside);
         let mut prefs = studio_preferences::load(prefs_path.as_deref());
@@ -115,7 +120,6 @@ impl Shell {
                 &serde_json::json!({"online":false,"initialized":false}),
             ),
             rig_read: None,
-            rig_notice: None,
             recipe_changed: false,
             catalog_revision: 0,
             catalog_pending_seen: None,
@@ -147,6 +151,11 @@ impl StrehlApp {
 
     /// Adopt flags older code wrote and write the adapter's flags.
     pub(super) fn sync_route(&mut self) {
+        self.shell.navigator.document_open = self.stack.is_some()
+            || self.scan.is_some()
+            || self.replay.is_some()
+            || self.result.is_some()
+            || self.session_import.is_some();
         let result = self.result.as_deref();
         self.shell.navigator.sync(
             &mut self.sidebar,
@@ -169,7 +178,14 @@ impl StrehlApp {
     }
     /// A station's button: its route for the open document.
     pub(super) fn go_station(&mut self, station: Station) {
-        if station == self.shell.navigator.station() && self.shell.navigator.drawer.is_none() {
+        // A station's label returns it to its own view: the grid from a
+        // subject page, the photograph from the engine room.
+        let route = self.shell.navigator.route();
+        if station == self.shell.navigator.station()
+            && self.shell.navigator.drawer.is_none()
+            && !matches!(route, Route::Subject(_))
+            && route.room() != Some(Room::Engine)
+        {
             return;
         }
         self.navigate(Route::for_station(
@@ -195,8 +211,27 @@ impl StrehlApp {
         self.shell.navigator.toggle_drawer(drawer);
         self.sync_route();
     }
+    /// Tests written for the old layout, where the process view sat beside
+    /// the project tree, look at it on the Stack station.
+    #[cfg(test)]
+    pub(super) fn on_stack_station(&mut self) {
+        if self.shell.navigator.station() == Station::Library {
+            self.go_station(Station::Stack);
+        }
+    }
+    /// The old Library layout, the project tree beside the process view: the
+    /// Stack station with the Project tree drawer.
+    #[cfg(test)]
+    pub(super) fn show_project_tree_beside_process(&mut self) {
+        self.on_stack_station();
+        self.open_project_tree();
+    }
     /// The `--route` launch option.
-    pub(super) fn apply_launch_route(&mut self, route: LaunchRoute) {
+    /// `subject` names the subject of `--route subject:<name or id>`.
+    pub(super) fn apply_launch_route(&mut self, route: LaunchRoute, subject: Option<&str>) {
+        if route == LaunchRoute::Subject {
+            return self.library_launch_subject(subject);
+        }
         self.navigate(route.route(self.active_stack, self.result.clone()));
     }
     /// Restore the last station on an interactive launch that asked for none.
@@ -221,16 +256,12 @@ impl StrehlApp {
     pub(super) fn tick(&mut self, ctx: &egui::Context) {
         self.apply_theme(ctx);
         self.sync_route();
-        // The camera connection is wanted while Capture is open; once open it
-        // stays for this session, as before.
-        if self.shell.navigator.station() == Station::Capture {
-            self.capture.activate(ctx);
-        }
-        // Following a capture and handing a finished one to the Library.
-        self.poll_capture(ctx);
+        // The camera connection, the capture checker and a finished capture.
+        self.capture_tick(ctx);
         self.sync_route();
         self.select_edit_tool();
         self.save_pending_draft();
+        self.library_tick(ctx);
         self.refresh_rig(ctx);
         self.track_catalog();
         if self.shell.prefs_dirty && !ctx.input(|i| i.pointer.any_down()) {
@@ -321,14 +352,10 @@ impl StrehlApp {
         let snapshot = self.capture.snapshot();
         let rig = RigSummary::from_snapshot(&snapshot);
         // The capture client's success notices, which nothing else shows.
-        let notice = snapshot["notice"].as_str().map(str::to_owned);
-        if notice != self.shell.rig_notice {
-            if let Some(text) = &notice {
-                self.shell
-                    .notices
-                    .push(Severity::Done, Source::Capture, text.clone(), None);
-            }
-            self.shell.rig_notice = notice;
+        if let Some(text) = self.capture_notice() {
+            self.shell
+                .notices
+                .push(Severity::Done, Source::Capture, text, None);
         }
         if rig != self.shell.rig {
             self.shell.rig = rig;
@@ -420,109 +447,21 @@ impl StrehlApp {
                     "drawer":navigator.drawer.map(|d| d.label()),"focus":self.shell.focus}),
             ),
             ("notices", self.shell.notices.snapshot()),
-            (
-                "activities",
-                serde_json::Value::Array(
-                    self.activities()
-                        .iter()
-                        .map(ActivityStatus::snapshot)
-                        .collect(),
-                ),
-            ),
+            ("activities", Self::activities_value(&self.activity_hub)),
         ]
     }
 
-    // ----- activities (read-only, plan 6.6 step 1) ------------------------
+    // ----- activities (plan 6.6) -------------------------------------------
 
-    /// Every long task running now. Empty, without allocating, when idle.
-    pub(super) fn activities(&self) -> Vec<ActivityStatus> {
-        let mut list = Vec::new();
-        if let Some(job) = &self.job {
-            let mut stack = ActivityStatus::running(
-                ActivityKind::Stack,
-                format!("Stacking {}", self.document_name()),
-                Lane::Heavy,
-            );
-            stack.stack = self.active_stack;
-            stack.phase = if job.is_cancelling() {
-                "Stopping".into()
-            } else if self.pending_run.is_some() {
-                "Starting".into()
-            } else {
-                self.progress.stage.title().into()
-            };
-            if let Some((done, total)) = self.progress.folded {
-                stack.done = Some(done as u64);
-                stack.total = Some(total as u64);
-            }
-            stack.started = self.started;
-            stack.cancel = if job.is_cancelling() {
-                CancelMode::None
-            } else {
-                CancelMode::Cooperative
-            };
-            stack.facts = match &self.stack {
-                Some(scan) => format!(
-                    "{} workers · {} RAW · {}",
-                    self.controls.workers,
-                    scan.frames.len(),
-                    bytes(scan.total_bytes)
-                ),
-                None => format!("{} workers", self.controls.workers),
-            };
-            list.push(stack);
-        }
-        if self.scan.is_some() {
-            list.push(ActivityStatus::running(
-                ActivityKind::Open,
-                "Reading the bracket",
-                Lane::Background,
-            ));
-        }
-        if self.replay.is_some() {
-            list.push(ActivityStatus::running(
-                ActivityKind::Open,
-                "Opening the saved render",
-                Lane::Background,
-            ));
-        }
-        if self.session_import.is_some() {
-            list.push(ActivityStatus::running(
-                ActivityKind::Import,
-                "Importing a completed session",
-                Lane::Background,
-            ));
-        }
-        if self.editor.exporting.is_some() || self.photo_history_busy() {
-            list.push(ActivityStatus::running(
-                ActivityKind::Export,
-                "Exporting",
-                Lane::Background,
-            ));
-        }
-        if self.view_bundle_export.is_some() {
-            list.push(ActivityStatus::running(
-                ActivityKind::ViewBundle,
-                "Exporting the view bundle",
-                Lane::Background,
-            ));
-        }
-        if self.camera_metadata.is_loading() {
-            list.push(ActivityStatus::running(
-                ActivityKind::Metadata,
-                "Reading camera metadata",
-                Lane::Background,
-            ));
-        }
-        if self.shell.rig.capturing() {
-            let mut capture =
-                ActivityStatus::running(ActivityKind::Capture, "Capture", Lane::Camera);
-            capture.phase = self.shell.rig.phase.clone().unwrap_or_default();
-            capture.done = self.shell.rig.completed;
-            capture.total = self.shell.rig.planned;
-            list.push(capture);
-        }
-        list
+    /// What runs now or needs the user, for the top bar: this frame's
+    /// reports without the queue's waiting stacks. Empty, without
+    /// allocating, when idle.
+    pub(super) fn activities(&self) -> Vec<&ActivityStatus> {
+        self.activity_hub
+            .activities
+            .active()
+            .filter(|status| status.queued.is_none())
+            .collect()
     }
 
     // ----- the body --------------------------------------------------------
@@ -538,28 +477,19 @@ impl StrehlApp {
             owns_body: false,
         };
         match station {
-            Station::Library => StationLayout {
-                sidebar: Some(LIBRARY_SIDEBAR),
-                ..none
-            },
-            Station::Capture => StationLayout {
-                owns_body: true,
-                ..none
-            },
+            Station::Library => none,
+            Station::Capture => self.capture_layout(),
             Station::Stack => self.stack_layout(),
-            Station::Develop | Station::Export => StationLayout {
-                inspector: true,
-                control_strip: true,
-                ..none
-            },
+            Station::Develop | Station::Export => self.develop_layout(station),
         }
     }
     /// True while a station still paints with the Graphite constants. On a
     /// light theme it is then drawn in the Graphite scope.
     pub(super) fn station_paints_legacy(&self, station: Station) -> bool {
         match station {
+            Station::Library => self.library_paints_legacy(),
+            Station::Capture | Station::Develop | Station::Export => false,
             Station::Stack => self.stack_paints_legacy(),
-            _ => true,
         }
     }
 
@@ -584,12 +514,7 @@ impl StrehlApp {
             self.inspector_panel(ctx, station);
         }
         if layout.owns_body {
-            let can_import = self.job.is_none()
-                && self.scan.is_none()
-                && self.replay.is_none()
-                && self.session_import.is_none()
-                && !self.picker_active();
-            self.capture.show(ctx, can_import);
+            self.capture.show_station(ctx);
             return;
         }
         let t = studio_theme::tokens(ctx);
@@ -684,39 +609,33 @@ impl StrehlApp {
     // ----- station fill functions: the extension points --------------------
 
     /// The Library's left panel. Today: the Projects pane under its heading.
-    pub(super) fn station_sidebar(&mut self, ui: &mut egui::Ui, station: Station) {
-        if station == Station::Library {
-            let t = studio_theme::tokens(ui.ctx());
-            let (heading, _) = ui
-                .allocate_exact_size(egui::vec2(ui.available_width(), 29.0), egui::Sense::hover());
-            let galley = w::caps_galley(ui, "Projects", scale::CAPS);
-            w::paint_galley_at(
-                ui.painter(),
-                heading.left() + 12.0,
-                heading.center().y,
-                &galley,
-                t.ink,
-            );
-            theme::rule(
-                ui.painter(),
-                heading.left_bottom(),
-                heading.right_bottom(),
-                t.line,
-            );
-            let (changed, action) = self.projects_pane(ui);
-            self.after_pane(changed, false, action);
+    /// No station has a shell sidebar today: the Library draws its own list.
+    pub(super) fn station_sidebar(&mut self, _ui: &mut egui::Ui, _station: Station) {}
+    /// The 44 px tool strip. No station has tools yet (Develop's arrive in P7).
+    pub(super) fn station_tools(&mut self, ui: &mut egui::Ui, station: Station) {
+        if station == Station::Develop {
+            self.develop_tools(ui);
         }
     }
-    /// The 44 px tool strip. No station has tools yet (Develop's arrive in P7).
-    pub(super) fn station_tools(&mut self, _ui: &mut egui::Ui, _station: Station) {}
     /// The rail and filmstrip slot. The depth rail arrives in P3.
     pub(super) fn station_rail(&mut self, ui: &mut egui::Ui, station: Station) {
-        if station == Station::Stack {
+        if matches!(station, Station::Develop | Station::Export) {
+            self.develop_rail(ui, station);
+        } else if station == Station::Capture {
+            self.capture_rail(ui);
+        } else if station == Station::Stack {
             self.stack_rail(ui);
         }
     }
     /// The canvas: today's process view, or the welcome page with nothing open.
     pub(super) fn station_canvas(&mut self, ui: &mut egui::Ui, station: Station) {
+        if station == Station::Library {
+            return self.library_canvas(ui);
+        }
+        if station == Station::Capture {
+            self.capture_canvas(ui);
+            return;
+        }
         if station == Station::Stack {
             return self.stack_canvas(ui);
         }
@@ -728,6 +647,9 @@ impl StrehlApp {
             self.welcome_workspace(ui);
         } else {
             self.show_process(ui);
+        }
+        if matches!(station, Station::Develop | Station::Export) {
+            self.develop_canvas_overlay(ui, station);
         }
     }
 
@@ -776,38 +698,15 @@ impl StrehlApp {
                     }
                 });
             }
-            Station::Develop => {
-                w::caps(ui, "Develop");
-                self.document_caption(ui, &t);
-                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    let ready = self.editor.loaded.is_some();
-                    if ui
-                        .add(w::Button::quiet("Fit").small().enabled(ready))
-                        .on_hover_text("Fit the photograph to the canvas")
-                        .clicked()
-                    {
-                        self.editor.fit_view_requested = true;
-                    }
-                    let mut large = self.edit_photo_focus;
-                    w::segmented(
-                        ui,
-                        "studio-develop-room",
-                        &mut large,
-                        &[(true, "Photograph"), (false, "With instruments")],
-                    );
-                    self.edit_photo_focus = large;
+            Station::Develop | Station::Export => self.develop_strip(ui, station),
+            Station::Capture => {
+                // The strip draws its own 14 px margins.
+                let full = ui.max_rect().expand2(egui::vec2(14.0, 0.0));
+                ui.scope_builder(egui::UiBuilder::new().max_rect(full), |ui| {
+                    self.capture_control_strip(ui)
                 });
             }
-            Station::Export => {
-                w::caps(ui, "Export");
-                self.document_caption(ui, &t);
-                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    if w::link(ui, "Back to Develop", false).clicked() {
-                        self.go_station(Station::Develop);
-                    }
-                });
-            }
-            Station::Library | Station::Capture => {}
+            Station::Library => {}
         }
     }
 
@@ -860,15 +759,29 @@ impl StrehlApp {
     // ----- inspector ---------------------------------------------------------
 
     fn inspector_panel(&mut self, ctx: &egui::Context, station: Station) {
-        let t = studio_theme::tokens(ctx);
-        let response = egui::SidePanel::right("studio-inspector")
-            .resizable(true)
-            .default_width(self.shell.prefs.inspector_width)
-            .width_range(studio_preferences::INSPECTOR_MIN..=studio_preferences::INSPECTOR_MAX)
-            .show_separator_line(false)
-            .frame(egui::Frame::new().fill(t.panel).inner_margin(0))
-            .show(ctx, |ui| self.inspector_contents(ui, station));
-        let width = response.response.rect.width();
+        fn panel(app: &mut StrehlApp, ctx: &egui::Context, station: Station) -> egui::Rect {
+            let t = studio_theme::tokens(ctx);
+            egui::SidePanel::right("studio-inspector")
+                .resizable(true)
+                .default_width(app.shell.prefs.inspector_width)
+                .width_range(studio_preferences::INSPECTOR_MIN..=studio_preferences::INSPECTOR_MAX)
+                .show_separator_line(false)
+                .frame(egui::Frame::new().fill(t.panel).inner_margin(0))
+                .show(ctx, |ui| app.inspector_contents(ui, station))
+                .response
+                .rect
+        }
+        // Drawers hold today's panes: over a redrawn station on a light theme
+        // they need the Graphite scope that legacy stations get as a whole.
+        let legacy_drawer = self.shell.navigator.drawer.is_some()
+            && studio_theme::tokens(ctx).light
+            && !self.station_paints_legacy(station);
+        let rect = if legacy_drawer {
+            studio_theme::scoped(ctx, ThemeName::Graphite, || panel(self, ctx, station))
+        } else {
+            panel(self, ctx, station)
+        };
+        let width = rect.width();
         if (width - self.shell.prefs.inspector_width).abs() > 0.5
             && !ctx.input(|i| i.pointer.any_down())
         {
@@ -887,7 +800,13 @@ impl StrehlApp {
         theme::rule(ui.painter(), rect.left_top(), rect.left_bottom(), t.line);
         let drawer = self.shell.navigator.drawer;
         let footer = drawer.is_none() && self.station_has_footer(station);
-        let tabs = egui::Rect::from_min_size(rect.min, egui::vec2(rect.width(), INSPECTOR_TABS));
+        // Capture's inspector has no tabs: the plan begins at the top.
+        let tab_height = if drawer.is_none() && station == Station::Capture {
+            0.0
+        } else {
+            INSPECTOR_TABS
+        };
+        let tabs = egui::Rect::from_min_size(rect.min, egui::vec2(rect.width(), tab_height));
         let foot = egui::Rect::from_min_max(
             egui::pos2(
                 rect.left(),
@@ -969,18 +888,13 @@ impl StrehlApp {
                     }
                 }
             }
-            Station::Develop => {
-                w::tab(ui, "Develop", true, None);
-            }
-            Station::Export => {
-                w::tab(ui, "Export", true, None);
-            }
+            Station::Develop | Station::Export => self.develop_tabs(ui, station),
             Station::Library | Station::Capture => {}
         }
     }
 
     fn station_has_footer(&self, station: Station) -> bool {
-        matches!(station, Station::Stack | Station::Develop)
+        matches!(station, Station::Stack | Station::Develop | Station::Export)
     }
 
     /// The inspector body for a station. Today: Adjust and Review on Stack,
@@ -1019,9 +933,9 @@ impl StrehlApp {
                     self.scrolling_pane(ui, "Review", |app, ui| app.review_panel(ui))
                 }
             },
-            Station::Develop => self.edit_panel(ui),
-            Station::Export => self.export_panel(ui),
-            Station::Library | Station::Capture => {}
+            Station::Develop | Station::Export => self.develop_inspector_body(ui, station),
+            Station::Capture => self.capture_inspector(ui),
+            Station::Library => {}
         }
     }
 
@@ -1029,20 +943,7 @@ impl StrehlApp {
     pub(super) fn station_inspector_footer(&mut self, ui: &mut egui::Ui, station: Station) {
         match station {
             Station::Stack => self.stack_footer(ui),
-            Station::Develop => {
-                let ready = self.editor.loaded.is_some();
-                if ui
-                    .add(
-                        w::Button::primary("Export this photograph")
-                            .chevron()
-                            .wide()
-                            .enabled(ready),
-                    )
-                    .clicked()
-                {
-                    self.go_station(Station::Export);
-                }
-            }
+            Station::Develop | Station::Export => self.develop_footer(ui, station),
             _ => {}
         }
     }
@@ -1130,6 +1031,10 @@ impl StrehlApp {
 
     fn drawer_body(&mut self, ui: &mut egui::Ui, drawer: Drawer) {
         match drawer {
+            Drawer::Projects => {
+                let (changed, action) = self.projects_pane(ui);
+                self.after_pane(changed, false, action);
+            }
             Drawer::Agent => self.scrolling_pane(ui, "Agent", |app, ui| app.agent_panel(ui)),
             Drawer::Activity => self.scrolling_pane(ui, "Activity", |app, ui| {
                 if let Some(error) = &app.error {

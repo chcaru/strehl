@@ -16,6 +16,7 @@ fn paint(
     time: f64,
     events: Vec<egui::Event>,
 ) -> egui::FullOutput {
+    app.show_project_tree_beside_process();
     ctx.run(
         egui::RawInput {
             screen_rect: Some(egui::Rect::from_min_size(egui::Pos2::ZERO, size)),
@@ -474,6 +475,7 @@ fn minimized_and_transient_tiny_viewports_cannot_rewrite_sidebar_geometry() {
         let mut app = isolated_app();
         app.catalog.create_project("Restore witness").unwrap();
         app.stack = Some(fixture_scan());
+        app.show_project_tree_beside_process();
         let original_layout = app.process_space.layout();
         let mut frame = 0;
         let mut update = |app: &mut StrehlApp, size: egui::Vec2, minimized: bool| {

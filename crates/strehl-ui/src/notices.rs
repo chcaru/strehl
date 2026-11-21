@@ -39,6 +39,7 @@ pub(crate) enum Source {
     Capture,
     Develop,
     Export,
+    Library,
 }
 impl Source {
     pub(crate) fn label(self) -> &'static str {
@@ -48,6 +49,7 @@ impl Source {
             Self::Capture => "Capture",
             Self::Develop => "Develop",
             Self::Export => "Export",
+            Self::Library => "Library",
         }
     }
 }

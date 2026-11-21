@@ -222,3 +222,62 @@ run tail (one RAW a plane, the end reported once).
   with the receiver on this PC; a card-only capture has no proof.
 - Flight in the simulator shows no proof or checks (no receiver, no RAWs); the
   proof, the checks and the health lines need the rig test of the main list.
+
+## Capture station in the shell, stage 2 (2026-11-21)
+
+The Capture station is the only Capture screen: the `STREHL_CAPTURE_STATION`
+gate and the old one-page screen (sequence, focus, preview, scrub, power,
+test shot, follow and calibration panels) are removed. The composition is one
+file, `crates/strehl-ui/src/app-station-capture.rs`; the shell's Capture arms
+call it.
+
+- Layout (spec 7.4): no tools column; the inspector is the plan, or the
+  flight inspector while a capture runs, with no tabs; the control strip is
+  the pre-flight strip (absent in flight); the rail is the depth rail (135 px
+  planning, 127 px in flight); the canvas is the live view or the flight
+  canvas; glance covers the window above the shell. Colours come from
+  `studio_theme::tokens` (`CapturePalette::from_tokens`), so the station
+  follows all three themes.
+- Hint bar from `station_hints`; the rig popover opens from the plan's rig
+  step (`take_open_rig`); Shut down and Disconnect from the popover ask in a
+  modal first (P0 item 7); the top bar's capture activity reads the time left
+  (`activity_phase`), and the capture client's success notice goes to the
+  shell's notices once.
+- "Show" on a retaken plane: the plane in the Stack station when that run is
+  open, else the plane's RAW in the live canvas (Esc or "Back to the
+  capture"). The flight's last-planes list keeps the newest retaken plane in
+  its last row so Show stays in reach.
+- Naming: the plan's subject field suggests the catalog's subjects (read once
+  per catalog revision). A finished capture lands in the named subject (found
+  by name, else created in the selected project, else in a "Captures"
+  project) under the plan's stack name, or P4's `default_stack_name`.
+- Every frame (shell tick): `set_station_open`, then `poll_background` in the
+  window (`poll_follow` offscreen and in tests); the background cadence and
+  the follower apply when the station is closed.
+- Connection, storage and past captures (with import, compact and focus-step
+  measurement) moved to a "Captures, storage and connection" window opened
+  from the plan's last line.
+- `--capture-fixture plan|flight|glance` draws the station from fabricated
+  states (`capture-fixture.rs`: a synthetic subject, no owner pictures); the
+  fixture connection sends and receives nothing.
+
+### Commands and results (stage 2)
+
+| Command | Result |
+| --- | --- |
+| `cargo test --locked -p strehl-ui` | MEASURED: Compiling strehl-ui; 1262 passed, 0 failed, 22 ignored |
+| `cargo clippy --locked -p strehl-ui --all-targets --no-deps -- -D warnings` | MEASURED: Checking strehl-ui; exit 0 |
+| `cargo fmt -p strehl-ui -- --check` | MEASURED: exit 0 |
+| `visual-check.py --exe target/release/strehl-ui.exe --reference <main checkout's reference folder> capture capture-plan capture-flight glance capture-flight-lightbox capture-plan-instrument capture-plan-lightbox` (isolated `--capture-settings`, fixtures) | VERIFIED by eye against `capture-plan.png`, `capture-flight.png`, `glance.png` and `capture-flight-lightbox.png`: slots, inspector, strip, rail, flight headline, health column, last planes with the retaken plane and Show, glance. Lightbox draws the canvas with the canvas inks |
+| `strehl-ui --route capture --capture-settings <scratch>` against `strehl-capture-headless --demo` on 127.0.0.1:18787 (no camera, light or Pi), Graphite and Lightbox | VERIFIED: "Camera host online"; the plan, strip and rail of a host with no camera connected |
+| `cargo test --locked --release -p strehl-ui capture_station_pointer_sweeps -- --ignored --nocapture` | MEASURED: whole shell plus station, paint and tessellation, 6 sweeps of 80 frames: plan 0.156-0.164 ms/frame (8,644 vertices), flight 0.114-0.133 ms/frame (6,208 vertices). Not the P0 process-view harness; its baseline was 1.28-1.32 ms/frame |
+| `pointer_motion_over_the_station_rebuilds_nothing` | MEASURED: rail mesh builds and live-view uploads unchanged over a 24-frame sweep through the shell |
+
+### Open issues (stage 2)
+
+- The breadcrumb shows only "Library" on Capture (P1 leaves Capture out of
+  the crumbs); the mockup shows subject / stack / Capturing.
+- The activities tray is P5's; the capture activity is the shell's row.
+- Glance keeps the window's minimise / maximise / close buttons above it.
+- Mockup details without data: frame rate in the live badge, "Tell my
+  phone", the power-down grace, icons in the flight inspector.

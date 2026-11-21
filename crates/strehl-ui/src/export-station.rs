@@ -179,6 +179,9 @@ pub(crate) struct ExportView<'a> {
     pub can_export: bool,
     /// For example: a depth repair is pending; files use the last finished pixels.
     pub note: Option<&'a str>,
+    /// An independent-views session can leave as a view bundle; `true`
+    /// while one is being written.
+    pub view_bundle: Option<bool>,
 }
 
 /// Panel state that is not the library itself.
@@ -203,6 +206,9 @@ pub(crate) enum ExportIntent {
     Reveal(PathBuf),
     CopyPath(PathBuf),
     ExportAgain(String),
+    /// Copy every bound photograph, master, focus map and receipt.
+    ExportViewBundle,
+    CancelViewBundle,
 }
 
 /// Sharpening choices "for the size". `Screen` is the conservative default
@@ -222,23 +228,18 @@ pub(crate) fn sharpen_choices() -> [(&'static str, Option<OutputSharpening>); 3]
     ]
 }
 
-/// The inspector: presets, the selected preset, "In every file", name and
-/// place, and the foot with the batch button.
-pub(crate) fn inspector(
+/// The inspector's body (presets, the selected preset, "In every file",
+/// name and place), padded and scrolling, for the shell's inspector body.
+pub(crate) fn inspector_body(
     ui: &mut Ui,
     panel: &mut ExportPanel,
     view: &ExportView<'_>,
 ) -> Vec<ExportIntent> {
-    let pal = view.palette;
     let mut intents = Vec::new();
-    let full = ui.available_rect_before_wrap();
-    ui.painter()
-        .rect_filled(full, CornerRadius::ZERO, pal.panel);
-    style::hairline(ui.painter(), full.left_top(), full.left_bottom(), pal.line);
-    let foot_height = 53.0;
+    let rect = ui.max_rect();
     let body = Rect::from_min_max(
-        egui::pos2(full.left() + 16.0, full.top() + 14.0),
-        egui::pos2(full.right() - 16.0, full.bottom() - foot_height - 8.0),
+        egui::pos2(rect.left() + 16.0, rect.top() + 14.0),
+        egui::pos2(rect.right() - 16.0, rect.bottom() - 8.0),
     );
     if panel
         .selected
@@ -267,24 +268,25 @@ pub(crate) fn inspector(
             }
             every_file(ui, view, &mut intents);
             name_and_place(ui, panel, view, &mut intents);
+            if let Some(running) = view.view_bundle {
+                view_bundle(ui, view.palette, running, &mut intents);
+            }
         });
-    let foot = Rect::from_min_max(
-        egui::pos2(full.left(), full.bottom() - foot_height),
-        full.max,
-    );
-    style::hairline(ui.painter(), foot.left_top(), foot.right_top(), pal.line);
-    let mut foot_ui = ui.new_child(
-        egui::UiBuilder::new()
-            .max_rect(foot.shrink2(egui::vec2(16.0, 12.0)))
-            .layout(egui::Layout::left_to_right(egui::Align::Center)),
-    );
+    intents
+}
+
+/// The foot, into the shell's footer row: "Export N files" with the time it
+/// will take, or the running batch with Cancel. Ctrl+E exports the ticked.
+pub(crate) fn inspector_footer(ui: &mut Ui, view: &ExportView<'_>) -> Vec<ExportIntent> {
+    let pal = view.palette;
+    let mut intents = Vec::new();
     let ticked: Vec<&PresetOutput> = view.library.ticked().map(|p| &p.output).collect();
     if let Some(batch) = &view.batch {
         let text = batch.caption();
-        let width = foot_ui.available_width() - 80.0;
-        let (rect, _) = foot_ui.allocate_exact_size(egui::vec2(width, 28.0), Sense::hover());
+        let width = (ui.available_width() - 80.0).max(80.0);
+        let (rect, _) = ui.allocate_exact_size(egui::vec2(width, 28.0), Sense::hover());
         style::paint_text(
-            foot_ui.painter(),
+            ui.painter(),
             rect.left_center(),
             Align2::LEFT_CENTER,
             &text,
@@ -295,16 +297,15 @@ pub(crate) fn inspector(
             egui::pos2(rect.left(), rect.bottom() - 2.0),
             rect.right_bottom(),
         );
-        foot_ui
-            .painter()
+        ui.painter()
             .rect_filled(bar, CornerRadius::ZERO, pal.line_2);
-        foot_ui.painter().rect_filled(
+        ui.painter().rect_filled(
             Rect::from_min_size(bar.min, egui::vec2(bar.width() * batch.fraction(), 2.0)),
             CornerRadius::ZERO,
             pal.accent,
         );
         if style::button(
-            &mut foot_ui,
+            ui,
             pal,
             "Cancel",
             ButtonKind::Plain,
@@ -322,11 +323,14 @@ pub(crate) fn inspector(
             1 => "Export 1 file".to_owned(),
             n => format!("Export {n} files"),
         };
-        let seconds = estimate_seconds(&ticked, view.size);
-        let estimate = format!("about {}", format_seconds(seconds));
-        let width = foot_ui.available_width() - 80.0;
+        let estimate = format!(
+            "about {}",
+            format_seconds(estimate_seconds(&ticked, view.size))
+        );
+        let estimate_width = 64.0;
+        let width = (ui.available_width() - estimate_width - 8.0).max(80.0);
         if style::button(
-            &mut foot_ui,
+            ui,
             pal,
             &label,
             ButtonKind::Primary,
@@ -342,15 +346,48 @@ pub(crate) fn inspector(
         {
             intents.push(ExportIntent::ExportTicked);
         }
-        style::text(&mut foot_ui, &estimate, style::SMALL, pal.ink_3);
+        style::text(ui, &estimate, style::SMALL, pal.ink_3);
     }
-    ui.advance_cursor_after_rect(full);
     if ui.input(|i| i.modifiers.command && i.key_pressed(egui::Key::E))
         && view.batch.is_none()
         && view.can_export
+        && view.destination.is_some()
     {
         intents.push(ExportIntent::ExportTicked);
     }
+    intents
+}
+
+/// Body and foot together, for callers without the shell (tests).
+pub(crate) fn inspector(
+    ui: &mut Ui,
+    panel: &mut ExportPanel,
+    view: &ExportView<'_>,
+) -> Vec<ExportIntent> {
+    let pal = view.palette;
+    let full = ui.available_rect_before_wrap();
+    ui.painter()
+        .rect_filled(full, CornerRadius::ZERO, pal.panel);
+    let foot_height = 53.0;
+    let body = Rect::from_min_max(
+        full.min,
+        egui::pos2(full.right(), full.bottom() - foot_height),
+    );
+    let mut body_ui = ui.new_child(egui::UiBuilder::new().max_rect(body));
+    let mut intents = inspector_body(&mut body_ui, panel, view);
+    let foot = Rect::from_min_max(
+        egui::pos2(full.left(), full.bottom() - foot_height),
+        full.max,
+    );
+    style::hairline(ui.painter(), foot.left_top(), foot.right_top(), pal.line);
+    let mut foot_ui = ui.new_child(
+        egui::UiBuilder::new()
+            .max_rect(foot.shrink2(egui::vec2(16.0, 12.0)))
+            .layout(egui::Layout::left_to_right(egui::Align::Center)),
+    );
+    foot_ui.spacing_mut().item_spacing.x = 8.0;
+    intents.extend(inspector_footer(&mut foot_ui, view));
+    ui.advance_cursor_after_rect(full);
     intents
 }
 
@@ -710,30 +747,52 @@ fn name_and_place(
     });
 }
 
+fn view_bundle(ui: &mut Ui, pal: &StudioPalette, running: bool, intents: &mut Vec<ExportIntent>) {
+    style::sect(ui, pal, "View bundle", Some("every view of this session"));
+    style::text(
+        ui,
+        "Copies every bound photograph, linear master, focus map and receipt to a new folder. Original RAWs and unsaved edits are not copied.",
+        style::SMALL,
+        pal.ink_2,
+    );
+    let width = ui.available_width();
+    if running {
+        style::text(ui, "Writing the view bundle…", style::SMALL, pal.ink);
+        if style::button(
+            ui,
+            pal,
+            "Cancel",
+            ButtonKind::Plain,
+            egui::vec2(72.0, 24.0),
+            true,
+        )
+        .clicked()
+        {
+            intents.push(ExportIntent::CancelViewBundle);
+        }
+    } else if style::button(
+        ui,
+        pal,
+        "Export view bundle…",
+        ButtonKind::Plain,
+        egui::vec2(width.min(180.0), 24.0),
+        true,
+    )
+    .clicked()
+    {
+        intents.push(ExportIntent::ExportViewBundle);
+    }
+}
+
 /// "Preview of" and the selected preset's output, above the canvas.
 pub(crate) fn control_strip(
     ui: &mut Ui,
     panel: &mut ExportPanel,
     view: &ExportView<'_>,
 ) -> Vec<ExportIntent> {
+    // Drawn into the shell's row: a left-to-right layout already inset.
     let pal = view.palette;
     let mut intents = Vec::new();
-    let rect = ui.available_rect_before_wrap();
-    let strip = Rect::from_min_size(rect.min, egui::vec2(rect.width(), 36.0));
-    ui.painter()
-        .rect_filled(strip, CornerRadius::ZERO, pal.panel);
-    style::hairline(
-        ui.painter(),
-        strip.left_bottom(),
-        strip.right_bottom(),
-        pal.line,
-    );
-    let mut child = ui.new_child(
-        egui::UiBuilder::new()
-            .max_rect(strip.shrink2(egui::vec2(14.0, 0.0)))
-            .layout(egui::Layout::left_to_right(egui::Align::Center)),
-    );
-    let ui = &mut child;
     ui.spacing_mut().item_spacing.x = 14.0;
     style::caps(ui, "Preview of", style::CAPS, pal.ink_3);
     let ticked: Vec<&ExportPreset> = view.library.ticked().collect();

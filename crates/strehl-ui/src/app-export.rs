@@ -171,6 +171,15 @@ impl StrehlApp {
         Ok(())
     }
 
+    /// Today's Export pane. Studio 2's Export station replaced it
+    /// (app-station-develop.rs); it stays compiled for its tests.
+    #[cfg_attr(
+        not(test),
+        expect(
+            dead_code,
+            reason = "retired by the Studio 2 Export station; kept for its tests"
+        )
+    )]
     pub(super) fn export_panel(&mut self, ui: &mut egui::Ui) {
         self.view_bundle_export_action(ui);
         let Some(loaded) = self.editor.loaded.as_ref() else {

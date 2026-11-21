@@ -1,0 +1,34 @@
+STREHL_UI_PROGRESS event=stage name=alignment total=299
+strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)
+camera          : ILCE-7CM2
+iso             : 100
+frames          : 299 from D:\captures\subject\100MSDCF  (first decode 0.04 s)
+alignment       : ON (sidecar), reference frame 149, 299 placed / 0 refused, 0.0 s
+memory plan     : 4 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 32 execution threads
+folded          : 38 / 299 frames in 17.6 s (0.46 s per frame, 32 execution threads)
+collapse+write  : 1.1 s
+total           : 18.8 s
+STREHL_UI_PROGRESS event=stage name=read total=299
+STREHL_UI_PROGRESS event=stage name=alignment total=299
+strehl stack -- LAPLACIAN MULTI-BAND MERGE (--merge pyramid; THE DEFAULT PATH)
+camera          : ILCE-7CM2
+iso             : 100
+frames          : 299 from D:\captures\subject\100MSDCF  (first decode 0.05 s)
+alignment       : ON (sidecar), reference frame 149, 299 placed / 0 refused, 0.0 s
+memory plan     : 4 canonical chunks, 1 reusable frame worker, 1 retained + 1 scratch accumulator, 32 execution threads
+STREHL_UI_PROGRESS event=stage name=merge total=299
+STREHL_UI_PROGRESS event=frame-finished index=49 processed=50 accepted=50 total=299
+STREHL_UI_PROGRESS event=frame-finished index=99 processed=100 accepted=100 total=299
+STREHL_UI_PROGRESS event=frame-finished index=149 processed=150 accepted=150 total=299
+STREHL_UI_PROGRESS event=frame-finished index=199 processed=200 accepted=200 total=299
+STREHL_UI_PROGRESS event=frame-finished index=249 processed=250 accepted=250 total=299
+folded          : 299 / 299 frames in 155.3 s (0.52 s per frame, 32 execution threads)
+STREHL_UI_PROGRESS event=stage name=render total=299
+STREHL_UI_PROGRESS event=render-step name=reconstruct state=started total=299
+STREHL_UI_PROGRESS event=render-step name=reconstruct state=finished total=299
+STREHL_UI_PROGRESS event=render-step name=develop state=started total=299
+STREHL_UI_PROGRESS event=render-step name=develop state=finished total=299
+STREHL_UI_PROGRESS event=render-step name=write state=started total=299
+STREHL_UI_PROGRESS event=render-step name=write state=finished total=299
+collapse+write  : 1.9 s
+total           : 157.3 s

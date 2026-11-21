@@ -441,6 +441,8 @@ pub(crate) struct Connection {
     sender: mpsc::SyncSender<Work>,
     /// [`Cadence`], read by the client thread before every wait.
     cadence: Arc<AtomicU8>,
+    /// A fixture's state stays fresh: it has no client thread.
+    fixture: bool,
 }
 impl Connection {
     pub fn start(config: Config, path: PathBuf, ctx: egui::Context) -> Result<Self> {
@@ -462,6 +464,7 @@ impl Connection {
             shared,
             sender,
             cadence,
+            fixture: false,
         })
     }
     pub fn cadence(&self) -> Cadence {
@@ -489,7 +492,11 @@ impl Connection {
         s.stopped.retain(|c| !runs.contains(&c.folder));
     }
     pub fn snapshot(&self) -> Snapshot {
-        self.shared.lock().unwrap().clone()
+        let mut s = self.shared.lock().unwrap().clone();
+        if self.fixture {
+            s.observed = Some(Instant::now());
+        }
+        s
     }
     fn send(&self, work: Work) -> Result<()> {
         let mut s = self.shared.lock().unwrap();
@@ -542,6 +549,21 @@ impl TestInbox {
     }
 }
 
+impl Connection {
+    /// A connection without a client thread that shows `snapshot` and sends
+    /// nothing (every request fails as "unavailable"): the offscreen
+    /// fixtures (`--capture-fixture`).
+    pub fn fixture(snapshot: Snapshot) -> Self {
+        let (sender, _) = mpsc::sync_channel(1);
+        Self {
+            shared: Arc::new(Mutex::new(snapshot)),
+            sender,
+            cadence: Arc::new(AtomicU8::new(Cadence::Live.code())),
+            fixture: true,
+        }
+    }
+}
+
 #[cfg(test)]
 impl Connection {
     /// A connection without a client thread, showing `snapshot`; what it is
@@ -553,6 +575,7 @@ impl Connection {
                 shared: Arc::new(Mutex::new(snapshot)),
                 sender,
                 cadence: Arc::new(AtomicU8::new(Cadence::Live.code())),
+                fixture: false,
             },
             TestInbox(receiver),
         )
