@@ -27,17 +27,29 @@ def alignment_events(events, frame_count):
         if item.get('event', '').startswith('align-'):
             assert int(item['frames']) == frame_count
             parsed.append(item)
+    # The fresh solve ends at its first result. A render that aligns first
+    # and then loads that solve for its fold (the lateral-CA refinement does)
+    # reports a later cache result, which must repeat the solve exactly.
+    results = [index for index, item in enumerate(parsed) if item['event'] == 'align-result']
+    assert results, 'Alignment reported no result'
+    reloads, parsed = parsed[results[0] + 1:], parsed[:results[0] + 1]
     phases = [item['name'] for item in parsed if item['event'] == 'align-phase']
-    for phase in ['planes', 'pyramids', 'pairs', 'cycle-check', 'solve', 'validate']:
+    for phase in ['planes', 'pairs', 'cycle-check', 'solve', 'validate']:
         assert phase in phases, f'Fresh alignment did not expose {phase}: {phases}'
     pair_phase, = [item for item in parsed
                    if item['event'] == 'align-phase' and item['name'] == 'pairs']
     planned = int(pair_phase['total'])
     assert planned > 0
-    for event in ['align-plane', 'align-pyramid']:
+    # The streaming solve builds each plane's pyramid with its plane, so a
+    # separate pyramid phase and its per-frame events appear only when the
+    # whole-stack reference builds pyramids on their own; then all must.
+    streamed = 'pyramids' not in phases
+    for event in ['align-plane'] + ([] if streamed else ['align-pyramid']):
         finished = [item for item in parsed if item['event'] == event]
         assert {int(item['index']) for item in finished} == set(range(frame_count)), event
         assert int(finished[-1]['completed']) == frame_count, event
+    if streamed:
+        assert not any(item['event'] == 'align-pyramid' for item in parsed), "Pyramid events without their phase"
     comparisons = [item for item in parsed if item['event'] == 'align-pair']
     starts = [item for item in parsed if item['event'] == 'align-pair-start']
     assert comparisons and starts, 'No real pair-fit work reached the observer'
@@ -66,12 +78,21 @@ def alignment_events(events, frame_count):
         assert current_accepted - accepted <= current - done
         done, accepted = current, current_accepted
     assert done == planned, 'Pair progress ended before all attempts completed'
-    result, = [item for item in parsed if item['event'] == 'align-result']
+    result = parsed[-1]
     assert result['source'] == 'solved', 'This check must exercise fresh alignment, not cache reuse'
     assert int(result['placed']) + int(result['refused']) == frame_count
     assert 0 <= int(result['reference']) < frame_count
-    return dict(plane_events=frame_count, pyramid_events=frame_count,
-                comparisons=done, accepted_fits=accepted, source=result['source'], phases=phases)
+    for item in reloads:
+        assert item['event'] in {'align-phase', 'align-result'}, f'Work after the solve: {item}'
+        if item['event'] == 'align-phase':
+            assert item['name'] == 'cache', f'A reload is a cache read, not {item}'
+        else:
+            assert item['source'] == 'cache' and all(item[key] == result[key] for key in
+                                                     ['reference', 'placed', 'refused']), (
+                f'A reload must repeat the solve: {item}')
+    return dict(plane_events=frame_count, pyramid_events=0 if streamed else frame_count,
+                streamed=streamed, comparisons=done, accepted_fits=accepted, source=result['source'],
+                reloads=sum(item['event'] == 'align-result' for item in reloads), phases=phases)
 
 
 def commission_alignment_verifier():
@@ -94,6 +115,23 @@ def commission_alignment_verifier():
     emit('event=align-result source=solved reference=1 placed=3 refused=0 total=3')
     valid = alignment_events(events, 3)
     assert valid['comparisons'] == 3 and valid['accepted_fits'] == 2
+    streaming = [line for line in events
+                 if 'name=pyramids' not in line and 'event=align-pyramid ' not in line]
+    reload = ['STREHL_UI_PROGRESS event=align-phase name=cache total=3 frames=3',
+              'STREHL_UI_PROGRESS event=align-result source=cache reference=1 placed=3 refused=0 total=3 frames=3']
+    streamed = alignment_events(streaming + reload, 3)
+    assert streamed['streamed'] and streamed['reloads'] == 1
+    for label, broken in [
+            ('changed-reload', streaming + [reload[0], reload[1].replace('reference=1', 'reference=2')]),
+            ('missing-streamed-plane', [line for line in streaming if 'event=align-plane index=2 ' not in line]),
+            ('orphan-pyramid', streaming[:3] + ['STREHL_UI_PROGRESS event=align-pyramid index=0 completed=1 total=3 frames=3']
+             + streaming[3:]),
+            ('work-after-solve', streaming + ['STREHL_UI_PROGRESS event=align-pair i=0 j=1 completed=4 accepted=3 total=3 frames=3'])]:
+        try:
+            alignment_events(broken, 3)
+        except (AssertionError, KeyError, ValueError):
+            continue
+        raise AssertionError(f'The alignment verifier accepted {label}')
     missing_refusal = [line for line in events if 'event=align-pair i=0 j=2 ' not in line]
     changed_population = [line.replace('total=3', 'total=2').replace('completed=3', 'completed=2')
                           if 'event=align-pair ' in line else line for line in missing_refusal]
@@ -103,7 +141,9 @@ def commission_alignment_verifier():
         except AssertionError:
             continue
         raise AssertionError(f'The alignment verifier accepted its {label} negative control')
-    return dict(valid_mixed_result=True, missing_refusal_rejected=True, edited_population_rejected=True)
+    return dict(valid_mixed_result=True, missing_refusal_rejected=True, edited_population_rejected=True,
+                valid_streamed_with_reload=True, changed_reload_rejected=True, missing_streamed_plane_rejected=True,
+                orphan_pyramid_rejected=True, work_after_solve_rejected=True)
 
 
 def merge_events(events, frame_count, levels=8, chunk_frames=None, require_intrachunk=False, plain_base=True,
@@ -633,9 +673,7 @@ def main():
     parser.add_argument('--require-intrachunk-preview', action='store_true', help='Require changed real preview pixels between accepted folds inside one canonical chunk')
     parser.add_argument('--commission', action='store_true', help='Exercise verifier controls without reading RAW files')
     parser.add_argument('--merge-only', action='store_true',
-                        help='Skip the alignment-event checks. The streaming alignment no longer reports a '
-                             'pyramids phase (MEASURED 2026-11-21 at 61effa01b), so those checks fail on '
-                             'every current engine until they are updated; the merge and bytes are still checked')
+                        help='Skip the alignment-event checks (the merge and bytes are still checked)')
     args = parser.parse_args()
     if not 1 <= args.workers <= 1024:
         parser.error('--workers must be between 1 and 1024')
