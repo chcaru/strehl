@@ -26,14 +26,18 @@ themes, Design system.
   a plane to hold the two side by side; Escape returns. Try the lens buttons and the three
   inspector tabs.
 - While a plane is held, moving along the rail shows other planes in the two-up; a click
-  holds the new one.
+  holds the new one, and `←` `→` step it by one plane (with `Shift`, by ten).
+- The detail-size switch (2 to 256) chooses the size the plane's region is drawn at; the small
+  maps under the two-up do the same.
+- In a pinned core sample, "Show the plane" holds its leading plane.
 - Keys on Stack: `1`–`5` choose the lens, hold `Space` for the clean photograph, `E` opens
   the engine room (and `E` there returns). On Capture · in flight, `G` opens glance mode.
 - On **Develop**, the rail shows the painted area's profile and the chosen range.
 - A link can select a theme and a state:
   `strehl-studio-2-mockups.html?theme=lightbox&do=peek:128;tab:recipe;pop:jobs#stack`.
   `do` accepts `lens:photo|plane|depth|soft|align`, `tab:NAME`, `pop:rig|jobs|palette`,
-  `peek:PLANE`, `hold:PLANE` and `hover:U,V` (a position on the photograph, 0 to 1).
+  `peek:PLANE`, `hold:PLANE`, `size:INDEX` (0 to 7) and `hover:U,V` (a position on the
+  photograph, 0 to 1).
 - The lettering is Bahnschrift, which ships with Windows. Elsewhere the page falls back to
   another DIN-style face or the system face.
 
@@ -44,8 +48,8 @@ python experiments/desktop-studio-2026-11-20/mockups/check-interactions.py
 ```
 
 Loads the built file in a headless Chrome or Edge, dispatches pointer and key events (hover the
-photograph, hover and click the rail, hold, scrub, Escape, lens keys, popovers on another
-screen) and prints PASS or FAIL per check. It needs the pictures and data: with placeholders
+photograph, hover and click the rail, hold, scrub, arrow keys, the detail-size switch, Escape,
+lens keys, popovers on another screen) and prints PASS or FAIL per check. It needs the pictures and data: with placeholders
 the probe has nothing to read. It does not judge appearance.
 
 ## Pictures and data

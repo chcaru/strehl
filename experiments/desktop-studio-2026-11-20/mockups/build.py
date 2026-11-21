@@ -23,7 +23,7 @@ ORDER = ["overview", "today", "library", "subject", "capture-plan", "flight", "g
 SEPARATORS_BEFORE = {"library", "variants"}
 STATIONS = [("capture", "Capture"), ("stack", "Stack"), ("develop", "Develop"), ("export", "Export")]
 GLYPH = {"done": '<i class="gl ok"></i>', "warn": '<i class="gl warn"></i>', "run": '<i class="gl run"></i>',
-         "todo": '<i class="gl idle"></i>', "cur": ""}
+         "todo": '<i class="gl idle"></i>', "cur": '<i class="gl none"></i>', "": '<i class="gl none"></i>'}
 BRAND = ('<svg viewBox="0 0 64 64"><polygon points="8,41 32,27 56,41 32,55" fill="var(--panel)" stroke="var(--accent)" stroke-opacity=".4" stroke-width="3.5"/>'
          '<polygon points="8,32 32,18 56,32 32,46" fill="var(--panel)" stroke="var(--accent)" stroke-opacity=".7" stroke-width="3.5"/>'
          '<polygon points="8,23 32,9 56,23 32,37" fill="var(--panel)" stroke="var(--accent)" stroke-width="3.5"/>'

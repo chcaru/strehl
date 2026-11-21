@@ -42,13 +42,13 @@ Three things to try. Move the pointer over the photograph: a region is marked an
           <div data-k="strips"></div>
           <p data-k="words">Fine detail here comes from a handful of planes.</p>
           <div class="cs-foot">Kept is support at the noise gate, not a share of the blend. Planes can overlap. Ctrl + wheel resizes the region.</div>
-          <div class="row cs-acts"><button class="btn sm">Show the plane</button><button class="btn sm">Repair here…</button><button class="btn sm quiet">Note</button></div>
+          <div class="row cs-acts"><button class="btn sm" data-act="show-plane">Show the plane</button><button class="btn sm" data-go="develop">Repair here…</button><button class="btn sm quiet">Note</button></div>
         </div>
         <div class="legend glass"><span class="cap">Depth lens · focus order</span><i></i><div class="row dim2" style="font-size:11px;justify-content:space-between"><span>near</span><span>far</span></div><small>No colour where no plane has clear detail. An order of planes, not a measured distance.</small></div>
         <svg class="mmrule" data-mm="9.42"></svg>
       </div>
       <div class="twoup">
-        <div class="tu tu-final"><div class="tu-cap"><b>Final</b><span>where plane <span data-k="hold-plane">143</span> was kept, at 2 px · <span data-k="hold-share"></span> of the frame</span></div><div class="photo"><div class="base im im-hero"></div><canvas class="lens" width="720" height="480"></canvas></div></div>
+        <div class="tu tu-final"><div class="tu-cap"><b>Final</b><span>where plane <span data-k="hold-plane">143</span> was kept, at <span data-k="hold-size">2 px</span> · <span data-k="hold-share"></span> of the frame</span></div><div class="photo"><div class="base im im-hero"></div><canvas class="lens" width="720" height="480"></canvas></div></div>
         <div class="tu tu-plane"><div class="tu-cap"><b>Plane <span data-k="hold-plane">143</span></b><span>camera preview · the outline is approximate, not a registration</span></div><div class="photo"><div class="base im"></div><canvas class="lens" width="720" height="480"></canvas></div></div>
         <div class="tu-sizes pickone"></div>
       </div>
@@ -138,12 +138,12 @@ Three things to try. Move the pointer over the photograph: a region is marked an
     <div class="insp-foot"><button class="btn primary wide" data-go="develop">Develop this render<svg class="i"><use href="#i-chev"/></svg></button><button class="btn">Render again<span class="dim2">≈ 20 s</span></button></div>
   </div>
 </div>
-<div class="hint"><span><span class="kbd">Hover</span>photograph: core sample · rail: plane</span><span><span class="kbd">Click</span>pin the sample · hold the plane</span><span><span class="kbd">1–5</span>lenses</span><span><span class="kbd">Space</span>clean photograph</span><span><span class="kbd">E</span>engine room</span><span class="sp"></span><span>7032 × 4688 · linear master · <b>HDR display</b></span><span>Undo: pin moved</span></div>
+<div class="hint"><span><span class="kbd">Hover</span>photograph: core sample · rail: plane</span><span><span class="kbd">Click</span>pin the sample · hold the plane</span><span><span class="kbd">←</span><span class="kbd">→</span>step a held plane</span><span><span class="kbd">1–5</span>lenses</span><span><span class="kbd">Space</span>clean photograph</span><span><span class="kbd">E</span>engine room</span><span class="sp"></span><span>7032 × 4688 · linear master · <b>HDR display</b></span><span>Undo: pin moved</span></div>
 <span class="pin" style="left:498px;top:22px">7</span>
 <!--notes-->
 <div><i>1</i><b>Lenses, not panels.</b> Plane, depth, soft spots and alignment are painted on the photograph itself, with one switch. Today the photograph gets 8 % of the window and the evidence sits in nine separate panels.</div>
 <div><i>2</i><b>Core sample.</b> Today's "This region / source support" popover, kept and tidied: the marked region, the final crop beside the planes that lead there, and a strip per detail size showing which planes were kept. A sentence says what it means. Hover reads live; a click pins it.</div>
-<div><i>3</i><b>Depth rail and filmstrip.</b> One bar per plane, as in today's timeline, on an engraved scale. The dashed line is the region under the pointer. Hover a plane: the photograph shows where it was kept, and the plane appears above the rail with the same outline. Click: the two are held side by side, with one small map per detail size.</div>
+<div><i>3</i><b>Depth rail and filmstrip.</b> One bar per plane, as in today's timeline, on an engraved scale. The dashed line is the region under the pointer. Hover a plane: the photograph shows where it was kept, and the plane appears above the rail with the same outline. Click: the two are held side by side, with one small map per detail size. While holding, move along the rail or use the arrow keys to compare other planes; the detail-size switch changes which size is drawn.</div>
 <div><i>4</i><b>Checks in plain words.</b> No blended score: a count, then one measured fact per line, each with "Show". "Refused frames", "coverage" and "fallback" are still here, under names a photographer uses.</div>
 <div class="new"><i>5</i><b>Decide while the subject is mounted.</b> The page knows the rig is still on and offers to extend or reshoot before it powers down. The engine's continuation folders already allow a stack to be extended.</div>
 <div class="new"><i>6</i><b>Empty planes become savings.</b> A finding turns into two actions: tighter bounds for the next shot, and an explicit, confirmed trim of the sources already on disk.</div>

@@ -38,8 +38,24 @@ f.onload = function () {
     ok("hold + hover: two-up follows the pointer", shown !== heldPlane && app.dataset.hold === heldPlane, "held " + heldPlane + ", showing " + shown);
     svg.dispatchEvent(new w.MouseEvent("mouseleave", {}));
     ok("hold + leave: back to the held plane", q('#s-stack .tu-plane [data-k="hold-plane"]').textContent === heldPlane);
+    key("ArrowRight");
+    ok("hold + arrow: steps the held plane", +app.dataset.hold === +heldPlane + 1, "now " + app.dataset.hold);
+    d.body.dispatchEvent(new w.KeyboardEvent("keydown", { key: "ArrowLeft", shiftKey: true, bubbles: true }));
+    ok("hold + shift arrow: steps by ten", +app.dataset.hold === +heldPlane - 9, "now " + app.dataset.hold);
+    ok("hold + arrows: still on the Stack screen", q("#s-stack").classList.contains("on"));
+    ok("hold: exactly one filmstrip frame marked", d.querySelectorAll("#s-stack .film div.held").length === 1);
+    var shareBefore = q('#s-stack [data-k="hold-share"]').textContent;
+    d.querySelectorAll("#s-stack .sizes span")[5].click();
+    ok("detail size 64: caption and share change", q('#s-stack [data-k="hold-size"]').textContent === "64 px" && q('#s-stack [data-k="hold-share"]').textContent !== shareBefore,
+      shareBefore + " -> " + q('#s-stack [data-k="hold-share"]').textContent);
+    ok("detail size 64: its map is marked", d.querySelectorAll("#s-stack .tu-sizes > div")[5].classList.contains("on"));
+    d.querySelectorAll("#s-stack .tu-sizes > div")[0].click();
+    ok("click a size map: the switch follows", d.querySelectorAll("#s-stack .sizes span")[0].classList.contains("on") && app.dataset.size === "0");
     key("Escape");
     ok("Escape: released", !app.dataset.hold && app.dataset.lens === "photo");
+    q('#s-stack [data-act="show-plane"]').click();
+    ok("core sample: Show the plane holds its leading plane", !!app.dataset.hold && app.dataset.hold === q("#s-stack .cs").dataset.plane, "plane " + app.dataset.hold);
+    key("Escape");
 
     // 4. keys
     key("3"); ok("key 3: depth lens", app.dataset.lens === "depth");

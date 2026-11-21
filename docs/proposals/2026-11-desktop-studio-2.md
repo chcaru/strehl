@@ -227,14 +227,14 @@ owner's 35 stacks would become 20 subjects (DERIVED from the catalog's source pa
 Variant A, "Stations", is recommended and is what the mockups draw.
 
 - **Top bar** (also the window's drag area): brand, breadcrumb (Library › subject › stack ›
-  render › version, each segment a switcher to its siblings), the stations, then the rig chip,
-  the job pill, Ctrl K and the window buttons.
+  render › version, each segment a switcher to its siblings), the stations, then the rig status,
+  the job status, Ctrl K and the window buttons.
 - **Stations:** Library, then Capture › Stack › Develop › Export. Each of the four carries a
   state glyph for the open stack: done, needs a look, running, not yet.
 - **Canvas** in the middle, **inspector** on the right (one per station, with tabs),
   **depth rail** along the bottom (three heights: closed, chart, chart with filmstrip), a one-line
   **hint bar** at the foot for the keys that apply here.
-- **Rig chip:** camera, light, link speed, camera host and receiver in one popover with the
+- **Rig status:** camera, light, link speed, camera host and receiver in one popover with the
   power switches, on every station. Amber for a slow USB link or a stopped receiver.
 - **Job tray:** section 5.8.
 - **Ctrl K:** every subject, stack and command by name with its shortcut.
@@ -297,7 +297,10 @@ given a second step.
 - *Click* to hold. The canvas becomes two-up, final beside plane, with one small map per detail
   size beneath (today's "FINAL admit / px" strip). Escape or "Photograph" returns.
 - *While holding,* moving along the rail shows other planes in the two-up without letting go
-  of the held one; leaving the rail returns to it, and a click holds the new plane.
+  of the held one; leaving the rail returns to it, and a click holds the new plane. Left and
+  Right step the held plane, as they step the comparison today.
+- The detail-size switch chooses the size the regions are drawn at, on the photograph, in the
+  peek and in the two-up.
 - The outline on the camera preview is labelled as today: approximate, not a registration.
 
 Source: estimated admission regions and the "Source + final" split
@@ -605,7 +608,7 @@ Each phase ships on its own and is checked with offscreen renders at 1440 × 940
 Acceptance: the photograph is at least 40 % of the window after a stack; no new stack is named
 after a camera folder; every disabled Start shows a reason.
 
-**Phase 1: shell and library.** Stations (variant B first if preferred), top bar, rig chip,
+**Phase 1: shell and library.** Stations (variant B first if preferred), top bar, rig status,
 job tray with the five states and a queue, themes and components, subjects in the catalog with
 migration, library grid, subject page, storage review, preferences.
 Acceptance: a capture started and left alone ends as a stacked render without the Capture tab
@@ -725,6 +728,12 @@ the filmstrip is evenly spaced; axis numerals give way to the index marker. It a
 fault in the mockup that kept the rig, job tray and command palette from opening on six
 screens, and added `check-interactions.py`, which drives the built mockup with synthetic
 pointer and key events (21 checks, all passing).
+
+A second polish pass made the rest consistent: the stations keep one position on every
+screen; the quietest text colour meets a 4.5 : 1 contrast ratio in all three themes; hover,
+keyboard-focus and reduced-motion states exist; the detail-size switch and the arrow keys act
+on a held plane; "Show the plane" in a core sample holds its leading plane; the engine room
+uses its full height. The interaction check grew to 29 checks.
 
 Dropped from the first iteration: the circular loupe that showed a lens only under the
 pointer. The marked region and its core sample do that job and are what the owner uses today.

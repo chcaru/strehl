@@ -132,8 +132,8 @@ canvas.lens-plane { image-rendering: auto; }
 .names { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .names .cap { display: block; margin-bottom: 5px; }
 .step { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 0 8px; padding: 12px 0 13px; border-top: 1px solid var(--line); position: relative; }
-.step > i { font: 300 26px/1 var(--ui); font-style: normal; color: var(--ink-3); margin-top: -3px; }
-.step.ok > i { color: var(--ok); }
+.step > i:not(.pin) { font: 300 26px/1 var(--ui); font-style: normal; color: var(--ink-3); margin-top: -3px; }
+.step.ok > i:not(.pin) { color: var(--ok); }
 .step > div > span { color: var(--ink-2); font-size: 12.5px; display: block; margin-top: 3px; }
 .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 8px 0 6px; }
 table.steps { width: 100%; border-collapse: collapse; font-size: 12px; margin: 6px 0 6px; }
@@ -173,7 +173,7 @@ table.steps tr.risk td { color: var(--warn); }
 .gbar { height: 6px; background: #a9c779; }
 .gmain { flex: 1; display: grid; grid-template-columns: 500px 1fr 320px; align-items: center; gap: 40px; padding: 0 70px; }
 .gproof .im { width: 500px; height: 333px; }
-.gproof span { display: block; margin-top: 14px; color: #6a6964; font-size: 11px; letter-spacing: .13em; text-transform: uppercase; }
+.gproof span { display: block; margin-top: 14px; color: #807e77; font-size: 11px; letter-spacing: .13em; text-transform: uppercase; }
 .gcenter { text-align: center; }
 .gline { font-size: 14px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: #a19f98; margin-top: 18px; }
 .gside > div { display: grid; grid-template-columns: 14px 1fr; gap: 0 14px; align-items: baseline; padding: 16px 0; border-top: 1px solid #232326; }
@@ -234,7 +234,7 @@ table.steps tr.risk td { color: var(--warn); }
 .sinfo .life { margin-top: 10px; }
 .ssize { text-align: right; } .ssize b { display: block; font-weight: 400; font-size: 15px; } .ssize span { font-size: 12px; color: var(--ink-3); }
 .lineage { grid-column: 1 / -1; min-width: 0; display: flex; gap: 14px; align-items: flex-start; padding: 4px 0 2px 150px; position: relative; }
-.lcol { display: flex; gap: 8px; position: relative; flex: none; padding-top: 22px; }
+.lcol { display: flex; gap: 8px; position: relative; flex: none; padding-top: 22px; min-width: 150px; }
 .lcol .cap { position: absolute; left: 0; top: 0; white-space: nowrap; }
 .lit { width: 104px; font-size: 12px; }
 .lit .im { height: 68px; margin-bottom: 5px; }
@@ -303,7 +303,9 @@ table.steps tr.risk td { color: var(--warn); }
 .lhead span { font-size: 12px; font-weight: 600; } .lhead small { display: block; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); font-weight: 400; }
 .lrow { border-top: 1px solid var(--line); padding: 5px 0; }
 .lrow b { display: block; } .lrow small { font-size: 11px; color: var(--ink-3); display: block; }
-.ltile { height: 73px; position: relative; overflow: hidden; background: #000; }
+.ltile { min-height: 73px; position: relative; overflow: hidden; background: #000; }
+.ladderbox [data-ladder] { flex: 1; min-height: 0; display: grid; grid-auto-rows: 1fr; }
+.lrow { align-items: stretch; } .lrow > div:first-child { align-self: center; }
 .ltile > div { position: absolute; inset: 0; }
 .ltile em { position: absolute; right: 5px; bottom: 3px; font: 600 11px var(--ui); font-style: normal; color: #fff; text-shadow: 0 1px 2px #000; }
 .ephoto { height: 248px; position: relative; }
@@ -351,7 +353,7 @@ table.steps tr.risk td { color: var(--warn); }
 .sysrow > .cap { width: 90px; flex: none; }
 .types { padding: 0; }
 .types > div { display: flex; align-items: baseline; gap: 16px; padding: 10px 0; border-bottom: 1px solid #1d1d20; flex-wrap: wrap; }
-.types em { font-style: normal; color: #6a6964; font-size: 12.5px; margin-left: auto; }
+.types em { font-style: normal; color: #807e77; font-size: 12.5px; margin-left: auto; }
 .specrow { display: flex; height: 26px; }
 .specrow i { flex: 1; display: grid; place-items: center; font: 600 10.5px var(--ui); font-style: normal; color: #0b0b0c; }
 
@@ -362,7 +364,7 @@ table.steps tr.risk td { color: var(--warn); }
 
 /* containers that carry an in-place annotation mark */
 .names, .sect, .insp-foot, .tools, .scard, .verdict, .rigcard, .looks, .scope, .nav, .libhead { position: relative; }
-.page { --ok: #a9c779; --warn: #f08a4b; --bad: #e5604c; --info: #8ab4e8; --ink-3: #6a6964; --accent: #e6b450; }
+.page { --ok: #a9c779; --warn: #f08a4b; --bad: #e5604c; --info: #8ab4e8; --ink-3: #807e77; --accent: #e6b450; }
 
 /* the detail spectrum has a deeper set of inks on paper (see spec() in app.js) */
 body[data-theme="lightbox"] .sizes span:nth-child(1) { --c: #0f9d92 !important; }
@@ -376,5 +378,17 @@ body[data-theme="lightbox"] .sizes span:nth-child(8) { --c: #a58a00 !important; 
 
 /* On paper the photograph still sits on a dark surround: text placed straight on the canvas
    takes light inks, and panels on the canvas take the paper inks back. */
-body[data-theme="lightbox"] .canvas { --ink: #e9e6de; --ink-2: #a19f98; --ink-3: #8b8982; --line: #3a3a3d; --line-2: #57575c; color: var(--ink); }
-body[data-theme="lightbox"] .canvas .glass { --ink: #19191b; --ink-2: #55544f; --ink-3: #8b8982; --line: #d8d5cd; --line-2: #b9b5ab; color: var(--ink); }
+body[data-theme="lightbox"] .canvas { --ink: #e9e6de; --ink-2: #a19f98; --ink-3: #96948d; --line: #3a3a3d; --line-2: #57575c; color: var(--ink); }
+body[data-theme="lightbox"] .canvas .glass { --ink: #19191b; --ink-2: #55544f; --ink-3: #6f6d66; --line: #d8d5cd; --line-2: #b9b5ab; color: var(--ink); }
+
+/* ---------- states: hover, keyboard focus, selection, reduced motion ---------- */
+.btn, .seg span, .link, .nav, .tabs span, .stations .st, .stat, .tools span, .sizes span, .looks span, .intents > div,
+.film div > i, .scard .im, .jog i, .crumbs span, .wctl span { transition: color .12s, background-color .12s, box-shadow .12s; }
+.scard:hover .im { box-shadow: 0 0 0 1px var(--ink-3); }
+.scard.on:hover .im { box-shadow: 0 0 0 1.5px var(--accent); }
+.nav:hover, .tabs span:hover, .looks span:hover, .intents > div:hover, .jog i:hover, .sizes span:hover { color: var(--ink); }
+.render:not(.on):hover, .layer:not(.on):hover, .preset:not(.on):hover, .srow:hover, .rp:hover, .job:hover, .palette .it:hover { background: var(--raised); }
+.film div:hover > i { box-shadow: 0 0 0 1.5px var(--plane); }
+.app :focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
+.app ::selection { background: var(--accent); color: var(--accent-ink); }
+@media (prefers-reduced-motion: reduce) { .app *, .app *::before, .app *::after { transition: none !important; } }
