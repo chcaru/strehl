@@ -210,3 +210,88 @@ fn the_replay_limit_is_lifted_only_for_runs_with_an_evidence_file() {
     fs::write(run.directory.join(FILE_NAME), b"").unwrap();
     assert_eq!(replay_limit(&run), 4 << 30);
 }
+
+#[test]
+fn a_run_reopens_with_its_stack_maps_from_the_evidence_and_live_files() {
+    use crate::evidence_file::LIVE_FILE_NAME;
+    use crate::evidence_file::tests::{live_bytes, preview_pixels, sample_payload};
+    let folder = Folder::new();
+    let log = format!(
+        "planes: 4 x 2 per CFA plane\n\
+         STREHL_UI_PROGRESS event=evidence-file path={FILE_NAME} version={VERSION}\n\
+         STREHL_UI_PROGRESS event=live-file path={LIVE_FILE_NAME} version=1\n\
+         STREHL_UI_PROGRESS event=frame-finished index=1 processed=2 accepted=2 total=3\n\
+         {WROTE}"
+    );
+    let run = folder.run("stack-maps", &log);
+    let size = [300, 210];
+    // The preview's samples name its pyramid level, which the header lists.
+    let mut file = header_bytes(&[([2, 1], [4, 2]), ([1, 1], [2, 1])], 3);
+    for (generation, base) in [(1u32, 1u32), (2, 5)] {
+        let frame = generation - 1;
+        file.extend(record_bytes(
+            frame,
+            0,
+            0,
+            base,
+            &support_payload(&[true, false]),
+        ));
+        let mut averaging = generation.to_le_bytes().to_vec();
+        averaging.extend(support_payload(&[generation == 2, true]));
+        file.extend(record_bytes(frame, 0, 1, base + 1, &averaging));
+        let pixels = preview_pixels(generation as usize, size);
+        let sample = sample_payload(generation, size, (0.0, 500.0), &pixels);
+        file.extend(record_bytes(frame, 1, 6, base + 3, &sample));
+    }
+    fs::write(run.directory.join(FILE_NAME), &file).unwrap();
+    // The newest generation's coefficient map and whole preview.
+    let live = live_bytes(
+        3,
+        &[
+            (1, 0, 4, 7, 2, [2, 1], (-3.0, 3.0), vec![0, 255]),
+            (1, 1, 5, 8, 2, size, (0.0, 500.0), preview_pixels(2, size)),
+        ],
+    );
+    fs::write(run.directory.join(LIVE_FILE_NAME), &live).unwrap();
+    let progress = replay(run);
+    assert_eq!(progress.stage, Stage::Complete);
+    assert_eq!(progress.live_file, Some((LIVE_FILE_NAME.to_owned(), 1)));
+    // Accepted-prefix history of the averaging maps: both generations.
+    let averaging = progress
+        .sampled_mask_history
+        .iter()
+        .find(|history| history.kind == DiagnosticKind::Averaging)
+        .unwrap();
+    assert_eq!(averaging.observations(), 2);
+    assert_eq!(
+        averaging.bins[0].on_samples + averaging.bins[1].on_samples,
+        3
+    );
+    // The revision trace from the samples: generation 1 to 2.
+    let trace: Vec<_> = progress
+        .revisions
+        .history()
+        .iter()
+        .map(|r| (r.from, r.to, r.sequence))
+        .collect();
+    assert_eq!(trace, [(1, 2, 8)]);
+    // The live view shows the whole newest preview, not a sample.
+    let shown = progress.live_preview.latest.as_ref().unwrap();
+    assert_eq!(
+        (shown.width, shown.height, shown.folded, shown.sequence),
+        (300, 210, 2, 8)
+    );
+    let ring: Vec<_> = progress
+        .diagnostic_surfaces
+        .iter()
+        .map(|packet| (packet.sequence, packet.kind))
+        .collect();
+    assert!(ring.contains(&(7, DiagnosticKind::Coefficient)));
+    assert!(ring.contains(&(8, DiagnosticKind::Preview)));
+    assert!(ring.contains(&(6, DiagnosticKind::Averaging)));
+    assert!(
+        ring.iter()
+            .all(|&(sequence, kind)| kind != DiagnosticKind::Preview || sequence == 8),
+        "samples never enter the display ring"
+    );
+}

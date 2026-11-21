@@ -546,3 +546,74 @@ fn full_canonical_budget_can_replace_the_same_visible_slot_atomically() {
         2048 * 2048 * 4 + 600 * 400 * 4
     );
 }
+
+#[test]
+fn long_stacks_recount_the_region_lane_within_a_budget_and_commit_it_at_once() {
+    use crate::process_region_probe::RECOUNT_BUDGET;
+    let frames = 2 * RECOUNT_BUDGET + 5;
+    let mut progress = PipelineProgress::default();
+    progress.mark_complete();
+    progress.analysis_size = Some([800, 600]);
+    for frame in 0..frames {
+        // Admission differs between the lattice's left and right halves and
+        // from capture to capture, so the two windows give different lanes.
+        let mut surface = packet(frame as u64 + 1, frame, 0, 0);
+        surface.pixels = (0..8)
+            .map(|index| if (index % 4 + frame) % 3 == 0 { 255 } else { 0 })
+            .collect::<Vec<u8>>()
+            .into();
+        progress.admission_archive.ingest(&surface, [800, 600]);
+    }
+    let input = Input {
+        frame_count: frames,
+        ..data(&progress, &[])
+    };
+    let archive = &progress.admission_archive;
+    let left = Rect::from_min_max(Pos2::ZERO, egui::pos2(0.5, 1.0));
+    let right = Rect::from_min_max(egui::pos2(0.5, 0.0), egui::pos2(1.0, 1.0));
+    let lane = |row: &CaptureParticipation| -> Vec<Area> {
+        row.evidence
+            .values()
+            .map(|evidence| evidence.window)
+            .collect()
+    };
+    let fresh = |aperture: Rect| {
+        let mut row = CaptureParticipation::default();
+        row.update(&input, archive, 0, aperture, 1040.0, HEIGHT);
+        assert!(!row.recounting(), "new receipts are counted at once");
+        lane(&row)
+    };
+    let (left_lane, right_lane) = (fresh(left), fresh(right));
+    assert_eq!(left_lane.len(), frames);
+    assert_ne!(left_lane, right_lane, "the windows must really differ");
+
+    let mut row = CaptureParticipation::default();
+    row.update(&input, archive, 0, left, 1040.0, HEIGHT);
+    let refreshes = row.evidence_refreshes;
+    let mut calls = 0;
+    loop {
+        row.update(&input, archive, 0, right, 1040.0, HEIGHT);
+        calls += 1;
+        if !row.recounting() {
+            break;
+        }
+        assert_eq!(lane(&row), left_lane, "the previous complete lane stays");
+        assert_eq!(row.evidence_refreshes, refreshes);
+        assert!(calls < 3, "the recount must finish within its budget");
+    }
+    assert_eq!(calls, 3, "{frames} captures at {RECOUNT_BUDGET} a frame");
+    assert_eq!(lane(&row), right_lane, "committed at once, exactly");
+    assert_eq!(row.evidence_refreshes, refreshes + 1);
+
+    // A newer window waits for the one being counted, then follows it.
+    row.update(&input, archive, 0, left, 1040.0, HEIGHT);
+    row.update(&input, archive, 0, right, 1040.0, HEIGHT);
+    let mut calls = 0;
+    while row.recounting() {
+        row.update(&input, archive, 0, right, 1040.0, HEIGHT);
+        calls += 1;
+        assert!(calls < 8, "both recounts must finish");
+    }
+    assert_eq!(lane(&row), right_lane, "the newest window is the one shown");
+    assert_eq!(row.evidence_refreshes, refreshes + 3);
+}

@@ -117,6 +117,10 @@ pub struct SourceBrowser {
     errors: BTreeMap<(usize, Kind), String>,
     probe_frames: [Option<usize>; 2],
     live_frame: Option<usize>,
+    /// Test fixtures only: deliver native contacts alone, so a fixture can
+    /// establish them before any canonical tier can race them.
+    #[cfg(test)]
+    contacts_only: bool,
 }
 
 impl Default for SourceBrowser {
@@ -145,6 +149,8 @@ impl Default for SourceBrowser {
             errors: BTreeMap::new(),
             probe_frames: [None, None],
             live_frame: None,
+            #[cfg(test)]
+            contacts_only: false,
         }
     }
 }
@@ -185,6 +191,24 @@ impl SourceBrowser {
 
     pub fn set_live_frame(&mut self, frame: Option<usize>) {
         self.live_frame = frame;
+    }
+
+    /// Hold every canonical tier (detail, scrub, sparse) while native
+    /// contacts load. Which lane delivers a contact first is legitimately
+    /// load dependent; a fixture that needs the native one first says so.
+    #[cfg(test)]
+    pub(crate) fn hold_canonical_tiers(&mut self, hold: bool) {
+        self.contacts_only = hold;
+    }
+
+    #[cfg(test)]
+    fn canonical_held(&self) -> bool {
+        self.contacts_only
+    }
+
+    #[cfg(not(test))]
+    fn canonical_held(&self) -> bool {
+        false
     }
 
     /// A snapshot retains the actual bracket epoch and frame identity. Its
@@ -555,6 +579,7 @@ impl SourceBrowser {
 
         if self.work.is_none()
             && selected < frames.len()
+            && !self.canonical_held()
             && let Some((index, kind)) = self.next_detail(frames.len(), now)
         {
             let side = match kind {
@@ -614,11 +639,12 @@ impl SourceBrowser {
             // The sparse tier is resident from open: it needs no idle period,
             // and it precedes the windowed scrub tier because it covers the
             // whole stack.
-            if indices.is_empty() && self.sparse_pending.is_empty() {
+            if indices.is_empty() && self.sparse_pending.is_empty() && !self.canonical_held() {
                 indices = self.next_sparse(frames.len());
                 kind = Kind::Sparse;
             }
             if indices.is_empty()
+                && !self.canonical_held()
                 && self.scrub_pending.is_empty()
                 && now.saturating_duration_since(self.requested_at) >= SCRUB_IDLE
             {

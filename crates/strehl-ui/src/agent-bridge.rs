@@ -356,6 +356,12 @@ impl BridgeClient {
                 return Ok(serde_json::from_slice(&bytes?)?);
             }
             if !self.directory.join("session.json").is_file() {
+                // The app publishes its final replies before it revokes the
+                // descriptor, so a reply can land between the two checks
+                // above: that reply is the answer, not a lost request.
+                if response_path.exists() {
+                    continue;
+                }
                 bail!("The human disconnected Strehl's agent session");
             }
             thread::sleep(POLL);

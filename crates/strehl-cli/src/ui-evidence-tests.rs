@@ -223,8 +223,10 @@ fn the_file_carries_the_hex_lines_maps_byte_for_byte_and_the_log_keeps_the_rest(
     let (plain_maps, filed_maps) = (maps(&plain_lines), maps(&filed_lines));
     // Per frame: 3 gate-support, 2 focus-energy, 2 gate-floor; one stack map.
     assert_eq!(plain_maps.len(), frames * 7 + 1);
-    assert_eq!(filed_maps.len(), 1, "only the stack map stays in the log");
-    assert!(filed_maps[0].contains("kind=averaging"));
+    assert!(
+        filed_maps.is_empty(),
+        "the averaging map moved to the file too"
+    );
 
     let (lattices, total, records) = read(&scratch.0.join(FILE_NAME));
     assert_eq!(total, frames);
@@ -237,10 +239,12 @@ fn the_file_carries_the_hex_lines_maps_byte_for_byte_and_the_log_keeps_the_rest(
         [127, 96],
         "the aspect-preserving lattice, not 128 x 96"
     );
-    assert_eq!(records.len(), frames * 7);
+    assert_eq!(records.len(), frames * 7 + 1);
     // Every plane map in the file equals its hex line: same identity, same
     // sequence and the same bytes (bits for support, min/max and bytes else).
-    for (line, (frame, level, kind, sequence, payload)) in plain_maps.iter().zip(&records) {
+    for (line, (frame, level, kind, sequence, payload)) in
+        plain_maps.iter().zip(&records).take(frames * 7)
+    {
         assert_eq!(field(line, "frame").parse::<usize>().unwrap(), *frame);
         assert_eq!(field(line, "level").parse::<usize>().unwrap(), *level);
         assert_eq!(field(line, "seq").parse::<u32>().unwrap(), *sequence);
@@ -261,11 +265,187 @@ fn the_file_carries_the_hex_lines_maps_byte_for_byte_and_the_log_keeps_the_rest(
             }
         }
     }
-    // The stack map's sequence follows the plane maps', as one stream.
+    // The stack's averaging map follows as kind 1: its accepted count, then
+    // the same bits, in the same stream.
+    let (line, (frame, level, kind, sequence, payload)) =
+        (plain_maps.last().unwrap(), records.last().unwrap());
+    assert!(line.contains("kind=averaging"));
+    assert_eq!((*frame, *level, *kind), (frames - 1, 0, 1));
+    assert_eq!(field(line, "seq").parse::<u32>().unwrap(), *sequence);
+    assert_eq!(payload[..4], (frames as u32).to_le_bytes());
+    assert_eq!(payload[4..], pack_support(&hex_pixels(line))[..]);
+}
+
+/// The live side file read back: `(frame, level, kind, sequence, folded,
+/// [w, h], min, max, bytes)` per record.
+type LiveRecord = (usize, usize, u8, u32, u32, [usize; 2], f32, f32, Vec<u8>);
+
+fn read_live(path: &Path) -> (usize, Vec<LiveRecord>) {
+    let bytes = std::fs::read(path).unwrap();
+    assert_eq!(&bytes[..8], b"STRHLIV1");
+    let u32_at = |at: usize| u32::from_le_bytes(bytes[at..at + 4].try_into().unwrap());
+    let u16_at = |at: usize| u16::from_le_bytes([bytes[at], bytes[at + 1]]) as usize;
+    let f32_at = |at: usize| f32::from_le_bytes(bytes[at..at + 4].try_into().unwrap());
+    assert_eq!(u32_at(8), LIVE_VERSION);
+    let (frames, count) = (u32_at(12) as usize, u32_at(16) as usize);
+    let mut at = 20;
+    let mut records = Vec::new();
+    while at < bytes.len() {
+        let length = u32_at(at + 12) as usize;
+        let p = at + 16;
+        let size = [u16_at(p + 4), u16_at(p + 6)];
+        assert_eq!(length, 16 + size[0] * size[1]);
+        records.push((
+            u32_at(at) as usize,
+            bytes[at + 4] as usize,
+            bytes[at + 5],
+            u32_at(at + 8),
+            u32_at(p),
+            size,
+            f32_at(p + 8),
+            f32_at(p + 12),
+            bytes[p + 16..p + length].to_vec(),
+        ));
+        at = p + length;
+    }
+    assert_eq!(records.len(), count);
+    (frames, records)
+}
+
+#[test]
+fn stack_maps_move_to_the_files_and_the_live_file_holds_the_newest_generation() {
+    use strehl_core::pyramid::{BandMerge, FrameWorkspace, MergeConfig, level_sizes};
+    let scratch = Scratch::new("stack");
+    let cfg = MergeConfig {
+        bands: 3,
+        ..MergeConfig::default()
+    };
+    let (w, h, frames) = (600, 420, 5);
+    let sizes = level_sizes(w, h, cfg.bands);
+    let fold = |progress: &Progress| {
+        let mut merge = BandMerge::new(w, h, 1, cfg);
+        let mut workspace = FrameWorkspace::new(&sizes, 1);
+        for frame in 0..frames {
+            let pixels: Vec<f32> = (0..w * h)
+                .map(|i| 100.0 + ((i * (frame + 3) + i / w * 7) % 97) as f32)
+                .collect();
+            workspace.next_frame();
+            merge.add_frame(
+                &[&pixels],
+                &pixels,
+                &vec![4.0; pixels.len()],
+                &mut workspace,
+            );
+            progress.live_accumulator(None, &merge, frame);
+        }
+        progress.reconstruction(
+            &[vec![1.0; w * h], vec![2.0; w * h], vec![3.0; w * h]],
+            sizes[0],
+            frames - 1,
+            frames,
+        );
+    };
+    let (plain, plain_lines) = Progress::captured(frames);
+    fold(&plain);
+    let (filed, filed_lines) = Progress::captured(frames);
+    filed.begin_evidence(&sizes, Some(&scratch.0.join("result.tiff")));
+    fold(&filed);
+    let plain_lines = plain_lines.lock().unwrap();
+    let filed_lines = filed_lines.lock().unwrap();
+    let kinds = |lines: &[String], kind: &str| -> Vec<String> {
+        lines
+            .iter()
+            .filter(|line| line.contains(&format!("kind={kind} ")))
+            .cloned()
+            .collect()
+    };
+    assert!(filed_lines.contains(&format!(
+        "STREHL_UI_PROGRESS event=live-file path={LIVE_FILE_NAME} version={LIVE_VERSION}"
+    )));
+    // Only the one reconstruction stays in the log.
+    for kind in ["averaging", "coefficient", "preview"] {
+        assert_eq!(
+            kinds(&plain_lines, kind).len(),
+            frames * if kind == "preview" { 1 } else { sizes.len() }
+        );
+        assert!(kinds(&filed_lines, kind).is_empty(), "{kind}");
+    }
     assert_eq!(
-        field(&filed_maps[0], "seq").parse::<u32>().unwrap(),
-        records.last().unwrap().3 + 1
+        kinds(&filed_lines, "reconstructed"),
+        kinds(&plain_lines, "reconstructed")
     );
+
+    // Every generation's averaging maps and preview sample, in the file.
+    let (_, _, records) = read(&scratch.0.join(FILE_NAME));
+    let averaging: Vec<_> = records.iter().filter(|r| r.2 == 1).collect();
+    let plain_averaging = kinds(&plain_lines, "averaging");
+    assert_eq!(averaging.len(), plain_averaging.len());
+    for (record, line) in averaging.iter().zip(&plain_averaging) {
+        assert_eq!(record.3, field(line, "seq").parse::<u32>().unwrap());
+        assert_eq!(
+            record.4[..4],
+            field(line, "folded").parse::<u32>().unwrap().to_le_bytes()
+        );
+        assert_eq!(record.4[4..], pack_support(&hex_pixels(line))[..]);
+    }
+    let samples: Vec<_> = records.iter().filter(|r| r.2 == 6).collect();
+    let plain_previews = kinds(&plain_lines, "preview");
+    assert_eq!(samples.len(), frames);
+    let mut changed = 0;
+    for (record, line) in samples.iter().zip(&plain_previews) {
+        let payload = &record.4;
+        let u16_at = |at: usize| u16::from_le_bytes([payload[at], payload[at + 1]]) as usize;
+        let (pw, ph) = (u16_at(4), u16_at(6));
+        let (sw, sh) = (u16_at(8), u16_at(10));
+        assert_eq!(pw, field(line, "width").parse::<usize>().unwrap());
+        assert_eq!(ph, field(line, "height").parse::<usize>().unwrap());
+        assert!(sw <= 64 && sh <= 48 && sw * sh == payload.len() - 20);
+        assert_eq!(record.3, field(line, "seq").parse::<u32>().unwrap());
+        assert_eq!(
+            payload[12..16],
+            field(line, "min").parse::<f32>().unwrap().to_le_bytes()
+        );
+        assert_eq!(
+            payload[16..20],
+            field(line, "max").parse::<f32>().unwrap().to_le_bytes()
+        );
+        // Each sample is the preview's own byte at the revision lattice.
+        let full = hex_pixels(line);
+        for y in 0..sh {
+            for x in 0..sw {
+                let sx = ((2 * x + 1) * pw / (2 * sw)).min(pw - 1);
+                let sy = ((2 * y + 1) * ph / (2 * sh)).min(ph - 1);
+                assert_eq!(payload[20 + y * sw + x], full[sy * pw + sx]);
+            }
+        }
+        changed += usize::from(payload[20..] != samples[0].4[20..]);
+    }
+    assert!(changed > 0, "the samples follow a changing preview");
+
+    // The live file: the newest generation only, byte for byte its maps.
+    let (total, live) = read_live(&scratch.0.join(LIVE_FILE_NAME));
+    assert_eq!(total, frames);
+    assert!(!scratch.0.join(format!("{LIVE_FILE_NAME}.partial")).exists());
+    let newest = |lines: &[String], kind: &str, level: usize| -> String {
+        kinds(lines, kind)
+            .into_iter()
+            .rfind(|line| field(line, "level").parse::<usize>().unwrap() == level)
+            .unwrap()
+    };
+    assert_eq!(live.len(), sizes.len() + 1);
+    for record in &live {
+        let (frame, level, kind, sequence, folded, size, min, max, bytes) = record;
+        let name = if *kind == 4 { "coefficient" } else { "preview" };
+        let line = newest(&plain_lines, name, *level);
+        assert_eq!(*frame, frames - 1);
+        assert_eq!(*folded as usize, frames);
+        assert_eq!(*sequence, field(&line, "seq").parse::<u32>().unwrap());
+        assert_eq!(size[0], field(&line, "width").parse::<usize>().unwrap());
+        assert_eq!(*min, field(&line, "min").parse::<f32>().unwrap());
+        assert_eq!(*max, field(&line, "max").parse::<f32>().unwrap());
+        assert_eq!(*bytes, hex_pixels(&line));
+    }
+    assert_eq!(live.iter().filter(|r| r.2 == 5).count(), 1);
 }
 
 #[test]
@@ -336,7 +516,11 @@ fn gpu_maps_are_the_cpu_observers_maps_in_either_destination() {
     let (filed, filed_lines) = Progress::captured(2);
     filed.begin_evidence(&sizes, Some(&scratch.0.join("out.tiff")));
     filed.gpu_support(1, &bits, &sizes);
-    assert_eq!(filed_lines.lock().unwrap().len(), 1, "only the file's name");
+    assert_eq!(
+        filed_lines.lock().unwrap().len(),
+        2,
+        "only the two files' names"
+    );
     let (_, _, records) = read(&scratch.0.join(FILE_NAME));
     for (level, record) in records.iter().enumerate() {
         assert_eq!((record.0, record.1, record.2), (1, level, 0));

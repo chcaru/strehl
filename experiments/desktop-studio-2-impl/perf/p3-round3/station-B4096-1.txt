@@ -1,0 +1,12 @@
+
+running 1 test
+test app::station_stack::tests::benchmark_stack_station_pointer_sweeps ... stack_station_cpu_ms_per_frame kind=synthetic planes=130 maps=1040 dropped=0 build_s=0.0 photo=[0.1556025, 0.13626, 0.12230916666666666, 0.12184333333333335] rail=[0.139415, 0.14156666666666667, 0.1324575, 0.13952749999999997] held_step=0.132
+stack_station_cpu_min_ms kind=synthetic planes=130 photo=0.122 rail=0.132 held_step=0.132
+stack_station_cpu_ms_per_frame kind=synthetic planes=1500 maps=12000 dropped=0 build_s=0.2 photo=[0.2483875, 0.20976083333333334, 0.20732083333333334, 0.21132916666666668] rail=[0.117935, 0.11376083333333332, 0.127255, 0.12858583333333332] held_step=0.128
+stack_station_cpu_min_ms kind=synthetic planes=1500 photo=0.207 rail=0.114 held_step=0.128
+stack_station_cpu_ms_per_frame kind=synthetic planes=6000 maps=48000 dropped=0 build_s=0.8 photo=[0.3177041666666666, 0.25010666666666664, 0.2497775, 0.251115] rail=[0.11612916666666666, 0.1297275, 0.12998333333333334, 0.1304175] held_step=0.128
+stack_station_cpu_min_ms kind=synthetic planes=6000 photo=0.250 rail=0.116 held_step=0.128
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1395 filtered out; finished in 1.58s
+

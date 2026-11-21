@@ -252,6 +252,7 @@ impl AdmissionArchive {
     /// transmitted coefficient centre, without interpolation or inferred
     /// neighbours. The observation can be spatially displaced from the pin;
     /// exact overlays use SampleGeometry::observed_index_at instead.
+    #[cfg(test)]
     pub(crate) fn sample(&self, level: usize, frame: usize, pin: [f32; 2]) -> Option<bool> {
         if pin.iter().any(|value| !value.is_finite()) {
             return None;
@@ -260,6 +261,31 @@ impl AdmissionArchive {
         let geometry = crate::process_sample_glyphs::SampleGeometry::new(level, entry.meta)?;
         let index = geometry.nearest_index_at(eframe::egui::pos2(pin[0], pin[1]))?;
         Some(entry.bits[index / 64] & (1u64 << (index % 64)) != 0)
+    }
+
+    /// [`Self::sample`] for every retained capture of `level`, in capture
+    /// order. A level's masks share one sampling domain (a change resets the
+    /// level), so the nearest site is found once, not once per capture: this
+    /// is what a per-paint scan over a long stack can afford.
+    pub(crate) fn samples_at(
+        &self,
+        level: usize,
+        pin: [f32; 2],
+    ) -> impl Iterator<Item = (usize, bool)> + '_ {
+        let masks = self.levels.get(level).and_then(Option::as_ref);
+        let index = masks
+            .and_then(|masks| masks.first())
+            .filter(|_| pin.iter().all(|value| value.is_finite()))
+            .and_then(|first| crate::process_sample_glyphs::SampleGeometry::new(level, first.meta))
+            .and_then(|geometry| geometry.nearest_index_at(eframe::egui::pos2(pin[0], pin[1])));
+        masks.zip(index).into_iter().flat_map(|(masks, index)| {
+            masks.iter().map(move |mask| {
+                (
+                    mask.frame,
+                    mask.bits[index / 64] & (1u64 << (index % 64)) != 0,
+                )
+            })
+        })
     }
 
     pub(crate) fn metadata(&self, level: usize, frame: usize) -> Option<AdmissionMeta> {
@@ -288,27 +314,51 @@ impl AdmissionArchive {
         rows: [usize; 2],
     ) -> Option<(usize, usize)> {
         let entry = self.entry(level, frame)?;
-        let [width, height] = entry.meta.samples;
-        if columns[0] > columns[1] || columns[1] > width || rows[0] > rows[1] || rows[1] > height {
-            return None;
-        }
-        let mut admitted = 0;
-        for row in rows[0]..rows[1] {
-            let mut start = row * width + columns[0];
-            let end = row * width + columns[1];
-            while start < end {
-                let word_end = ((start / 64 + 1) * 64).min(end);
-                let length = word_end - start;
-                let mask = if length == 64 {
-                    u64::MAX
-                } else {
-                    (1u64 << length) - 1
-                };
-                admitted += ((entry.bits[start / 64] >> (start % 64)) & mask).count_ones() as usize;
-                start = word_end;
-            }
-        }
-        Some((admitted, (columns[1] - columns[0]) * (rows[1] - rows[0])))
+        window_count(entry, columns, rows)
+    }
+
+    /// [`Self::window_counts`] for every retained capture of `level`, in
+    /// capture order, with its metadata: one pass over the level's masks, no
+    /// per-capture search, for recounts across a long stack.
+    pub(crate) fn window_counts_all(
+        &self,
+        level: usize,
+        window: Option<([usize; 2], [usize; 2])>,
+    ) -> impl Iterator<Item = (usize, AdmissionMeta, Option<(usize, usize)>)> + '_ {
+        self.window_counts_range(level, 0..usize::MAX, window)
+    }
+
+    /// [`Self::window_counts_all`] for the level's retained captures at
+    /// `positions` (capture order, clamped): a long recount resumes where the
+    /// previous frame's budget ended without walking the masks before it.
+    pub(crate) fn window_counts_range(
+        &self,
+        level: usize,
+        positions: std::ops::Range<usize>,
+        window: Option<([usize; 2], [usize; 2])>,
+    ) -> impl Iterator<Item = (usize, AdmissionMeta, Option<(usize, usize)>)> + '_ {
+        self.levels
+            .get(level)
+            .and_then(Option::as_ref)
+            .into_iter()
+            .flat_map(move |masks| {
+                let end = positions.end.min(masks.len());
+                masks[positions.start.min(end)..end]
+                    .iter()
+                    .map(move |mask| {
+                        let count =
+                            window.and_then(|(columns, rows)| window_count(mask, columns, rows));
+                        (mask.frame, mask.meta, count)
+                    })
+            })
+    }
+
+    /// Retained captures at `level`.
+    pub(crate) fn level_len(&self, level: usize) -> usize {
+        self.levels
+            .get(level)
+            .and_then(Option::as_ref)
+            .map_or(0, |masks| masks.len())
     }
 
     /// Exact retained binary samples in row-major order. This is the observed
@@ -415,6 +465,32 @@ fn valid(packet: &DiagnosticSurface, extent: [usize; 2]) -> bool {
         && packet.height <= SAMPLE_LIMIT[1]
         && packet.pixels.len() == packet.width * packet.height
         && !extent.contains(&0)
+}
+
+/// Admitted and observed samples of `mask` in a half-open lattice rectangle,
+/// counted a word at a time.
+fn window_count(mask: &Mask, columns: [usize; 2], rows: [usize; 2]) -> Option<(usize, usize)> {
+    let [width, height] = mask.meta.samples;
+    if columns[0] > columns[1] || columns[1] > width || rows[0] > rows[1] || rows[1] > height {
+        return None;
+    }
+    let mut admitted = 0;
+    for row in rows[0]..rows[1] {
+        let mut start = row * width + columns[0];
+        let end = row * width + columns[1];
+        while start < end {
+            let word_end = ((start / 64 + 1) * 64).min(end);
+            let length = word_end - start;
+            let mask_bits = if length == 64 {
+                u64::MAX
+            } else {
+                (1u64 << length) - 1
+            };
+            admitted += ((mask.bits[start / 64] >> (start % 64)) & mask_bits).count_ones() as usize;
+            start = word_end;
+        }
+    }
+    Some((admitted, (columns[1] - columns[0]) * (rows[1] - rows[0])))
 }
 
 fn binary_pixels(packet: &DiagnosticSurface) -> bool {

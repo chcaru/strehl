@@ -381,3 +381,68 @@ fn archive_memory_at_the_cap_is_bounded_and_reported() {
     );
     assert!(bytes <= (MAX_ENTRIES + MAX_ENTRIES / 8 + 8) * std::mem::size_of::<Mask>() + 64 * 1024);
 }
+
+#[test]
+fn level_scans_read_exactly_what_per_capture_reads_return() {
+    // The long-stack scans (`samples_at`, `window_counts_all`) against the
+    // per-capture reads they replace, over every capture, level and pin.
+    let mut archive = AdmissionArchive::default();
+    let mut sequence = 0;
+    for frame in [0, 3, 4, 9, 17, 40] {
+        for level in 0..3 {
+            sequence += 1;
+            let samples = [13 - 2 * level, 7 - level];
+            let mut mask = packet(sequence, frame, level, samples);
+            mask.pixels = (0..samples[0] * samples[1])
+                .map(|i| {
+                    if (i * 7 + frame + level) % 3 == 0 {
+                        255
+                    } else {
+                        0
+                    }
+                })
+                .collect::<Vec<_>>()
+                .into();
+            archive.ingest(&mask, [900, 600]);
+        }
+    }
+    for level in 0..4 {
+        for pin in [
+            [0.0, 0.0],
+            [0.31, 0.77],
+            [0.99, 0.5],
+            [2.0, -1.0],
+            [f32::NAN, 0.5],
+        ] {
+            let scanned: Vec<_> = archive.samples_at(level, pin).collect();
+            let read: Vec<_> = archive
+                .frames(level)
+                .filter_map(|frame| archive.sample(level, frame, pin).map(|bit| (frame, bit)))
+                .collect();
+            assert_eq!(scanned, read, "level {level} pin {pin:?}");
+        }
+        for window in [
+            None,
+            Some(([1, 4], [0, 3])),
+            Some(([0, 13], [0, 7])),
+            Some(([5, 3], [0, 1])),
+        ] {
+            let scanned: Vec<_> = archive.window_counts_all(level, window).collect();
+            let read: Vec<_> = archive
+                .frames(level)
+                .map(|frame| {
+                    (
+                        frame,
+                        archive.metadata(level, frame).unwrap(),
+                        window.and_then(|(columns, rows)| {
+                            archive.window_counts(level, frame, columns, rows)
+                        }),
+                    )
+                })
+                .collect();
+            assert_eq!(scanned, read, "level {level} window {window:?}");
+        }
+    }
+    assert!(archive.samples_at(1, [0.3, 0.3]).any(|(_, bit)| bit));
+    assert!(archive.samples_at(1, [0.3, 0.3]).any(|(_, bit)| !bit));
+}

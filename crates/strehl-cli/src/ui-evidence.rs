@@ -7,11 +7,18 @@
 //!   `u16 lattice_w, u16 lattice_h, u32 extent_w, u32 extent_h` (the level's
 //!   coefficient grid; level 0's is the analysis domain), `u32 frames_total`.
 //! - Records: `u32 frame, u8 level, u8 kind, u16 reserved (0), u32 sequence,
-//!   u32 payload_len`, then the payload. Kinds 0 (gate support) and 1
-//!   (averaging, reserved: the stack's maps stay in the log) carry one bit
-//!   per lattice site, row-major, least significant bit first, unused tail
-//!   bits zero. Kinds 2 (focus energy) and 3 (gate floor) carry `f32 min,
-//!   f32 max` and one quantised byte per site: the bytes the hex lines carried.
+//!   u32 payload_len`, then the payload.
+//!   - Kind 0, a plane's gate support: one bit per lattice site, row-major,
+//!     least significant bit first, unused tail bits zero.
+//!   - Kinds 2 (focus energy) and 3 (gate floor): `f32 min, f32 max` and one
+//!     quantised byte per site, the bytes the hex lines carried.
+//!   - Kind 1, the stack's averaging map after an accepted plane: `u32
+//!     folded` (the accepted count it describes), then kind 0's bits.
+//!   - Kind 6, the revision sample of that generation's coarse preview:
+//!     `u32 folded, u16 preview_w, u16 preview_h, u16 w, u16 h, f32 min,
+//!     f32 max`, then the preview's bytes at the desktop's revision lattice
+//!     (`process-revision.rs`: at most 64 x 48, nearest sites). The desktop's
+//!     revision trace needs every generation, but only these samples.
 //! - `strehl stack --focus-evidence` (plan E5) appends a compact focus field
 //!   at the end, on level 0's lattice with frame 0: kinds 7 (focus depth) and
 //!   8 (focus share) carry `f32 min, f32 max` and one byte per site, kind 9
@@ -36,11 +43,20 @@
 //! | 8 | focus share | evidence (E5) |
 //! | 9 | focus summary | evidence (E5) |
 //!
-//! Every accepted plane gets its gate-support maps. The float kinds are kept
-//! for at most [`MAX_FLOAT_PLANES`] planes spread evenly through the stack
-//! ([`float_kept`]), the desktop's own retention. The sequence is the
-//! diagnostic sequence the log's stack maps also use, so the two sources
+//! Every accepted plane gets its gate-support maps, and every accepted
+//! generation its averaging maps and revision sample. The float kinds are
+//! kept for at most [`MAX_FLOAT_PLANES`] planes spread evenly through the
+//! stack ([`float_kept`]), the desktop's own retention. The sequence is the
+//! diagnostic sequence the log's remaining maps also use, so the sources
 //! order as one stream.
+//!
+//! The newest generation's coefficient maps and full coarse preview, which
+//! the desktop only ever shows newest, are in a bounded side file replaced
+//! whole ([`LiveWriter`], `live.strehl`): `"STRHLIV1"`, `u32 version`, `u32
+//! frames_total`, `u32 records`, then records framed as above, kind 4
+//! (coefficient) and 5 (preview) with the payload `u32 folded, u16 w, u16 h,
+//! f32 min, f32 max` and `w x h` bytes. Before this file, those maps were
+//! hex lines for every accepted plane: about 0.5 MB a plane of log.
 //!
 //! Like every observer here, the writer receives values the fold already
 //! computed and returns nothing to it; it is created only when
@@ -59,9 +75,14 @@ pub(crate) const VERSION: u32 = 1;
 /// `process-scales.rs`.
 pub(crate) const MAX_FLOAT_PLANES: usize = 384;
 
+/// The live side file's name, beside the evidence file.
+pub(crate) const LIVE_FILE_NAME: &str = "live.strehl";
+pub(crate) const LIVE_VERSION: u32 = 1;
+
+/// The desktop's revision lattice (`process-revision.rs` `WIDTH`, `HEIGHT`).
+pub(crate) const REVISION_LATTICE: [usize; 2] = [64, 48];
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-// Kinds 1 and 4-6 are named for the table; P2's writer uses them.
-#[allow(dead_code)]
 pub(crate) enum Kind {
     GateSupport = 0,
     Averaging = 1,
@@ -104,6 +125,26 @@ impl Kind {
             _ => None,
         }
     }
+}
+
+/// The nearest sites of a `width x height` preview at the revision lattice,
+/// as the desktop's `process-revision.rs` `compare` takes them.
+pub(crate) fn revision_sites(width: usize, height: usize) -> ([usize; 2], Vec<usize>) {
+    let [mw, mh] = REVISION_LATTICE;
+    let scale = (mw as f64 / width as f64)
+        .min(mh as f64 / height as f64)
+        .min(1.0);
+    let w = (width as f64 * scale).floor().max(1.0) as usize;
+    let h = (height as f64 * scale).floor().max(1.0) as usize;
+    let mut sites = Vec::with_capacity(w * h);
+    for y in 0..h {
+        let source_y = ((2 * y + 1) * height / (2 * h)).min(height - 1);
+        for x in 0..w {
+            let source_x = ((2 * x + 1) * width / (2 * w)).min(width - 1);
+            sites.push(source_y * width + source_x);
+        }
+    }
+    ([w, h], sites)
 }
 
 /// Whether `frame` of `total` keeps its float maps: the `MAX_FLOAT_PLANES`
@@ -247,16 +288,31 @@ impl Writer {
             return false;
         };
         let sites = lattice[0] * lattice[1];
+        let u16_at = |at: usize| {
+            payload
+                .get(at..at + 2)
+                .map(|b| u16::from_le_bytes([b[0], b[1]]))
+        };
         let fits = match kind {
             Kind::GateSupport => payload.len() == sites.div_ceil(8),
             Kind::FocusEnergy | Kind::GateFloor => payload.len() == 8 + sites,
+            Kind::Averaging => payload.len() == 4 + sites.div_ceil(8),
+            Kind::PreviewSample => match (u16_at(8), u16_at(10)) {
+                (Some(w), Some(h))
+                    if usize::from(w) <= REVISION_LATTICE[0]
+                        && usize::from(h) <= REVISION_LATTICE[1] =>
+                {
+                    payload.len() == 20 + usize::from(w) * usize::from(h)
+                }
+                _ => false,
+            },
             // The focus field is one whole-run map on level 0's lattice.
             Kind::FocusDepth | Kind::FocusShare => {
                 level == 0 && frame == 0 && payload.len() == 8 + sites
             }
             Kind::FocusSummary => level == 0 && frame == 0 && payload.len() <= MAX_SUMMARY_BYTES,
-            // Written by P2's code paths, not this writer.
-            Kind::Averaging | Kind::Coefficient | Kind::Preview | Kind::PreviewSample => false,
+            // The live file's kinds.
+            Kind::Coefficient | Kind::Preview => false,
         };
         if self.failed || frame >= self.header.frames || !fits || sequence > u32::MAX as u64 {
             return false;
@@ -318,6 +374,115 @@ pub(crate) fn write_focus(
         Ok(writer.path)
     } else {
         Err(format!("writing {} failed", writer.path.display()))
+    }
+}
+
+/// The live side file: the newest accepted generation's coefficient maps and
+/// coarse preview, gathered while the generation is observed and published
+/// whole by a rename, so a reader sees one complete generation or the one
+/// before. Owned by one render pass's [`crate::ui_progress::Progress`].
+pub(crate) struct LiveWriter {
+    path: PathBuf,
+    staging: PathBuf,
+    frames: usize,
+    /// The generation being gathered: encoded records and their count.
+    records: Vec<u8>,
+    count: u32,
+    /// A gathered generation the last rename could not publish (a reader
+    /// held the file without delete sharing); retried at the next commit.
+    unpublished: bool,
+}
+
+impl LiveWriter {
+    pub(crate) fn open(directory: &Path, frames: usize) -> Result<Self, String> {
+        if frames == 0 || frames > u32::MAX as usize {
+            return Err("frame count outside the format".into());
+        }
+        let path = directory.join(LIVE_FILE_NAME);
+        let staging = directory.join(format!("{LIVE_FILE_NAME}.partial"));
+        // A previous pass's or render's newest generation is not this one's.
+        match std::fs::remove_file(&path) {
+            Ok(()) => (),
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => (),
+            Err(e) => return Err(format!("{}: {e}", path.display())),
+        }
+        Ok(Self {
+            path,
+            staging,
+            frames,
+            records: Vec::new(),
+            count: 0,
+            unpublished: false,
+        })
+    }
+
+    /// Gather one map of the current generation: kind 4 or 5, `w x h` bytes.
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn add(
+        &mut self,
+        frame: usize,
+        level: usize,
+        kind: Kind,
+        sequence: u64,
+        folded: usize,
+        size: [usize; 2],
+        range: (f32, f32),
+        pixels: &[u8],
+    ) -> bool {
+        if !matches!(kind, Kind::Coefficient | Kind::Preview)
+            || frame >= self.frames
+            || level > u8::MAX as usize
+            || sequence > u32::MAX as u64
+            || folded > u32::MAX as usize
+            || size.iter().any(|&v| v == 0 || v > u16::MAX as usize)
+            || pixels.len() != size[0] * size[1]
+        {
+            return false;
+        }
+        let length = 16 + pixels.len();
+        self.records.extend((frame as u32).to_le_bytes());
+        self.records.extend([level as u8, kind as u8, 0, 0]);
+        self.records.extend((sequence as u32).to_le_bytes());
+        self.records.extend((length as u32).to_le_bytes());
+        self.records.extend((folded as u32).to_le_bytes());
+        self.records.extend((size[0] as u16).to_le_bytes());
+        self.records.extend((size[1] as u16).to_le_bytes());
+        self.records.extend(range.0.to_le_bytes());
+        self.records.extend(range.1.to_le_bytes());
+        self.records.extend_from_slice(pixels);
+        self.count += 1;
+        true
+    }
+
+    /// Publish the gathered generation. With `last` (the fold has ended), a
+    /// rename a reader is holding up is retried for up to half a second, so
+    /// the final generation is the one left on disk. False on an I/O failure.
+    pub(crate) fn commit(&mut self, last: bool) -> bool {
+        if self.count > 0 {
+            let mut bytes = Vec::with_capacity(16 + self.records.len());
+            bytes.extend_from_slice(b"STRHLIV1");
+            bytes.extend(LIVE_VERSION.to_le_bytes());
+            bytes.extend((self.frames as u32).to_le_bytes());
+            bytes.extend(self.count.to_le_bytes());
+            bytes.extend_from_slice(&self.records);
+            self.records.clear();
+            self.count = 0;
+            if std::fs::write(&self.staging, &bytes).is_err() {
+                return false;
+            }
+            self.unpublished = true;
+        }
+        let attempts = if last { 20 } else { 1 };
+        for attempt in 0..attempts {
+            if !self.unpublished {
+                break;
+            }
+            if attempt > 0 {
+                std::thread::sleep(std::time::Duration::from_millis(25));
+            }
+            self.unpublished = std::fs::rename(&self.staging, &self.path).is_err();
+        }
+        true
     }
 }
 

@@ -386,7 +386,8 @@ fn six_thousand_planes_pool_each_strip_to_its_pixel_width() {
 #[test]
 fn long_stacks_recount_within_a_budget_and_commit_the_window_at_once() {
     use crate::process_region_probe::RECOUNT_BUDGET;
-    let planes = 1_000;
+    // Only the active level is counted: more planes than one frame's budget.
+    let planes = 2 * RECOUNT_BUDGET + 7;
     let archive = archive(planes);
     let counts = |probe: &RegionProbe| -> Vec<Vec<(usize, usize, usize)>> {
         (0..DETAIL_LEVELS)
@@ -407,6 +408,11 @@ fn long_stacks_recount_within_a_budget_and_commit_the_window_at_once() {
         "a new stack's first reading is immediate"
     );
     let before = counts(&probe);
+    assert_eq!(before[0].len(), planes, "the active level is counted");
+    assert!(
+        before[1..].iter().all(Vec::is_empty),
+        "levels nobody reads are not counted"
+    );
     let revision = probe.window_revision();
     probe.measure(&archive, 0, ANALYSIS, planes, second);
     assert!(
@@ -419,9 +425,9 @@ fn long_stacks_recount_within_a_budget_and_commit_the_window_at_once() {
         assert_eq!(probe.window_revision(), revision);
         probe.measure(&archive, 0, ANALYSIS, planes, second);
         frames += 1;
-        assert!(frames < 20, "the recount must finish");
+        assert!(frames <= 3, "the recount must finish within its budget");
     }
-    assert!(frames >= 2);
+    assert_eq!(frames, 3, "{planes} windows at {RECOUNT_BUDGET} a frame");
     assert_ne!(probe.window_revision(), revision, "committed at once");
     let mut fresh = RegionProbe::default();
     fresh.measure(&archive, 0, ANALYSIS, planes, second);

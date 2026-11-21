@@ -267,6 +267,7 @@ impl StrehlApp {
         // An interactive launch that names no pane or document reopens the
         // station the owner last used.
         let launch_route = launch.route;
+        let launch_depth_brush = launch.depth_brush;
         let launch_subject = launch.route_subject.clone();
         let launch_overlay = launch.overlay.clone();
         let restore_station = launch_route.is_none()
@@ -519,6 +520,9 @@ impl StrehlApp {
             && let Err(error) = app.capture.load_fixture(name)
         {
             app.capture.error = Some(format!("{error:#}"));
+        }
+        if launch_depth_brush {
+            app.editor.develop.tool = crate::develop_station::DevelopTool::DepthBrush;
         }
         // Adopt the launch flags above, then apply an explicit route.
         app.sync_route();
@@ -1005,10 +1009,7 @@ impl StrehlApp {
                 RenderEvent::Evidence(batch) => {
                     // Decoded on the render job's thread; each map is a copy
                     // into the archive and the recent ring (plan 5.2).
-                    let crate::evidence_file::EvidenceBatch { header, records } = *batch;
-                    for record in records {
-                        self.progress.ingest_evidence(&header, record);
-                    }
+                    self.progress.ingest_evidence_batch(*batch);
                 }
                 RenderEvent::Finished(outcome) => {
                     self.activity_render_finished(&outcome);

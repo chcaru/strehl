@@ -9,7 +9,16 @@ use crate::{
 };
 use std::time::Instant;
 
-const FRAMES: usize = 130;
+/// Captures in the fixture: 130, the baseline's, unless
+/// `STREHL_UI_BENCH_FRAMES` names another count (at least 66) for a long-stack
+/// run of the ignored benchmark.
+static FRAMES: std::sync::LazyLock<usize> = std::sync::LazyLock::new(|| {
+    std::env::var("STREHL_UI_BENCH_FRAMES")
+        .ok()
+        .and_then(|value| value.parse().ok())
+        .filter(|&frames: &usize| frames > 65)
+        .unwrap_or(130)
+});
 const ANALYSIS: [usize; 2] = [3516, 2344];
 const OUTPUT: [u32; 2] = [7032, 4688];
 
@@ -24,7 +33,7 @@ struct Fixture {
 
 impl Fixture {
     fn new() -> Self {
-        Self::with_frames(FRAMES)
+        Self::with_frames(*FRAMES)
     }
 
     /// The same synthetic stack at any length. Long stacks keep every map the
@@ -199,7 +208,7 @@ impl Fixture {
 
     fn with_overlapping_ranges() -> Self {
         let mut fixture = Self::new();
-        for frame in 0..FRAMES {
+        for frame in 0..*FRAMES {
             // Neither the last capture in a range nor an unrelated comparison
             // source can supply the whole selected region. The range unions
             // cover x16..78 and x50..112, with a substantial shared interior.
@@ -426,7 +435,7 @@ fn timeline_point(output: &egui::FullOutput, frame: usize) -> Pos2 {
             _ => None,
         })
         .expect("actual painted timeline axis");
-    axis[0].lerp(axis[1], frame as f32 / (FRAMES - 1) as f32) - egui::vec2(0.0, 4.0)
+    axis[0].lerp(axis[1], frame as f32 / (*FRAMES - 1) as f32) - egui::vec2(0.0, 4.0)
 }
 
 fn timeline_gesture(
@@ -1484,9 +1493,10 @@ fn benchmark_finished_workspace_pointer_sweeps() {
         timings[0], timings[1]
     );
     println!(
-        "full_workspace_cpu_min_ms process={} source={} final_vertices={vertices:?} frames={FRAMES} levels=8 max_grid=128x96 confidence_map=absent",
+        "full_workspace_cpu_min_ms process={} source={} final_vertices={vertices:?} frames={} levels=8 max_grid=128x96 confidence_map=absent",
         timings[0].iter().copied().fold(f64::INFINITY, f64::min),
-        timings[1].iter().copied().fold(f64::INFINITY, f64::min)
+        timings[1].iter().copied().fold(f64::INFINITY, f64::min),
+        *FRAMES
     );
 }
 
@@ -1532,7 +1542,7 @@ fn production_region_extraction_runs_on_its_worker_and_paints_when_ready() {
 #[ignore = "explicit long-stack CPU paint+tessellation benchmark; not GPU FPS"]
 fn benchmark_long_stack_pointer_sweeps() {
     let mut summary = Vec::new();
-    for frames in [FRAMES, 1_500, 6_000] {
+    for frames in [*FRAMES, 1_500, 6_000] {
         let built = Instant::now();
         let fixture = Fixture::with_frames(frames);
         let build_s = built.elapsed().as_secs_f64();
