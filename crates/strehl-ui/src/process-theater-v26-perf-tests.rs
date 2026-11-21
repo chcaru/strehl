@@ -1563,3 +1563,31 @@ fn benchmark_long_stack_pointer_sweeps() {
         println!("long_stack_cpu_min_ms frames={frames} process={process:.3} source={source:.3}");
     }
 }
+
+#[test]
+fn the_stack_station_opts_out_of_the_inspection_workspace_animation() {
+    let fixture = Fixture::new();
+    let surfaces = fixture.surfaces();
+    for instant in [false, true] {
+        let (mut field, _, time) = settle(&fixture, &surfaces, false);
+        field.instant_inspection = instant;
+        field.set_inspection(Some(40), None);
+        fixture.paint(&mut field, &surfaces, time + 0.01, Pos2::ZERO);
+        if instant {
+            assert_eq!(
+                field.inspection_mix, 1.0,
+                "no relayout animation in the Stack station"
+            );
+        } else {
+            assert!(
+                field.inspection_mix > 0.0 && field.inspection_mix < 1.0,
+                "the engine room keeps its 0.24 s workspace animation"
+            );
+        }
+        field.set_inspection(None, None);
+        fixture.paint(&mut field, &surfaces, time + 0.02, Pos2::ZERO);
+        if instant {
+            assert_eq!(field.inspection_mix, 0.0);
+        }
+    }
+}

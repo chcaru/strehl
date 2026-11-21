@@ -104,6 +104,9 @@ mod session_workspace;
 mod source_browser;
 #[path = "source-preview.rs"]
 mod source_preview;
+#[cfg(test)]
+#[path = "stack-flow-tests.rs"]
+mod stack_flow_tests;
 #[path = "stack-map.rs"]
 mod stack_map;
 #[cfg(test)]

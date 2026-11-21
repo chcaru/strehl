@@ -120,6 +120,8 @@ pub(crate) struct FilmMarks {
 
 #[derive(Default)]
 pub(crate) struct Filmstrip {
+    /// Textures belong to one run; another run's plane 20 is not this one's.
+    epoch: Option<u64>,
     planes: usize,
     slots: Vec<Slot>,
     /// Kept share per slot and level; None is "no map".
@@ -166,6 +168,13 @@ impl Filmstrip {
     /// Adopt textures the browser already published. `photos` are native
     /// contacts; `canonical` are scrub/overview/image tiers.
     pub(crate) fn sync(&mut self, epoch: u64, photos: &[SourcePhoto], canonical: &[SourcePhoto]) {
+        if self.epoch != Some(epoch) {
+            self.epoch = Some(epoch);
+            for slot in &mut self.slots {
+                slot.native = None;
+                slot.bridge = None;
+            }
+        }
         let mut used: usize = self
             .slots
             .iter()

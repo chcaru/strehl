@@ -661,7 +661,14 @@ impl SourceBrowser {
         };
         // A large image may satisfy its canonical overview, but it cannot
         // satisfy a contact-lane request after the small texture was evicted.
+        // A decoded image waiting for its upload poll is not missing.
         !cache.contains_key(&index)
+            && !self
+                .deferred
+                .as_ref()
+                .is_some_and(|(deferred, deferred_kind, _)| {
+                    *deferred == index && *deferred_kind == kind
+                })
             && !(kind == Kind::Overview && self.images.contains_key(&index))
             && !(kind == Kind::Scrub && self.scrub_failures.contains(&index))
             && !(kind == Kind::Sparse && self.sparse_failures.contains(&index))

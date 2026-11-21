@@ -103,6 +103,14 @@ fn slots_adopt_published_textures_and_never_downgrade_a_bridge() {
     // A different width keeps the textures of planes that remain.
     strip.layout(1332.0, 299);
     assert!(strip.slots[2].native.is_some());
+    // A new run drops every texture: its plane 38 is another photograph.
+    strip.sync(7, &[], &[]);
+    assert!(
+        strip
+            .slots
+            .iter()
+            .all(|slot| slot.native.is_none() && slot.bridge.is_none())
+    );
 }
 
 fn archive(planes: usize) -> AdmissionArchive {
