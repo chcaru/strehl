@@ -1,6 +1,14 @@
 //! Native Capture workspace: camera controls, preview and PC storage in one tab.
+//!
+//! The model behind the Studio 2 Capture station lives here and in its
+//! modules: the typed host state (`capture-host.rs`), the pre-flight list
+//! that alone decides Start (`capture-preflight.rs`), the test shot
+//! (`capture-test-shot.rs`), calibration and engine jobs with their time
+//! limits (`capture-tools.rs`), the checker's per-plane records
+//! (`capture-follow.rs`) and the connection cadence (`capture-client.rs`).
+//! The calls the shell makes are listed at [`CaptureWorkspace::poll_background`].
 use crate::{
-    capture_client::{Config, Connection, Snapshot},
+    capture_client::{Cadence, Config, Connection, Snapshot, host::HostPhase},
     theme::{ACCENT, AMBER, BG, GREEN, INK, MUTED, PANEL},
 };
 use eframe::egui::{self, RichText};
@@ -13,14 +21,33 @@ use std::{
 use strehl_capture::{
     model::{Plan, Roi},
     power::Outlet,
-    session::{Command, CommandRequest},
+    session::{Command, CommandRequest, PositionsKind},
 };
 #[path = "capture-follow.rs"]
-mod follow;
+pub(crate) mod follow;
+#[path = "capture-preflight.rs"]
+pub(crate) mod preflight;
 #[path = "capture-schedule.rs"]
 mod schedule_ui;
+#[path = "capture-test-shot.rs"]
+pub(crate) mod test_shot;
 #[path = "capture-tools.rs"]
-mod tools;
+pub(crate) mod tools;
+
+/// Failure red, the Studio 2 palette's `#e5604c`. LOCAL STAND-IN: the shell
+/// adds a red token to `theme.rs`; replace this constant with it then.
+const FAULT_RED: egui::Color32 = egui::Color32::from_rgb(0xe5, 0x60, 0x4c);
+
+/// A camera action that waits for a second click.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum Confirm {
+    /// Stop the running sequence.
+    Stop,
+    /// Disconnect the camera.
+    Disconnect,
+    /// Shut the camera down and switch its outlet off.
+    ShutDown,
+}
 
 pub(crate) struct CaptureWorkspace {
     config: Config,
@@ -72,6 +99,23 @@ pub(crate) struct CaptureWorkspace {
     compact_estimate: tools::Slot,
     compact_apply: tools::Slot,
     compact_confirm: bool,
+    /// A test shot at the current focus (Studio 2, 7.4).
+    test_shot: test_shot::TestShot,
+    /// Waiting for the camera to connect, and what became of the last wait.
+    connect_wait: Option<tools::ConnectWait>,
+    connect_note: Option<String>,
+    /// The camera action waiting for its confirming click.
+    pub confirm: Option<Confirm>,
+    /// Whether the shell shows the Capture station; `None` until the shell
+    /// says, when [`Self::show`] having run since the last poll stands in.
+    station_open: Option<bool>,
+    shown: bool,
+    /// A host sequence never followed: a calibration survey or a test shot
+    /// the desktop stopped waiting for, still being written.
+    unfollowed_sequence: Option<u64>,
+    /// The last success notice read (`Snapshot::notice_id`).
+    notice_read: u64,
+    selected_stopped: usize,
 }
 impl CaptureWorkspace {
     pub fn new(path: Option<PathBuf>) -> Self {
@@ -121,15 +165,38 @@ impl CaptureWorkspace {
             compact_estimate: Default::default(),
             compact_apply: Default::default(),
             compact_confirm: false,
+            test_shot: test_shot::TestShot::Idle,
+            connect_wait: None,
+            connect_note: None,
+            confirm: None,
+            station_open: None,
+            shown: false,
+            unfollowed_sequence: None,
+            notice_read: 0,
+            selected_stopped: 0,
         }
     }
     fn calibrating(&self) -> bool {
-        !matches!(
-            self.calibration,
-            tools::Calibration::Idle | tools::Calibration::Done(_) | tools::Calibration::Failed(_)
+        self.calibration.running()
+    }
+    /// The light warmup a capture waits through when the host manages power.
+    fn warmup(s: &Snapshot) -> Duration {
+        Duration::from_secs(
+            s.host
+                .power
+                .as_ref()
+                .filter(|p| p.manage_stack)
+                .and_then(|p| p.warmup_seconds)
+                .unwrap_or(0),
         )
     }
-    /// Advances the step calibration and the background engine jobs.
+    /// The survey's capture time limit: [`tools::SURVEY_TIMEOUT`] plus the
+    /// light warmup.
+    fn survey_deadline(s: &Snapshot, now: Instant) -> Instant {
+        now + tools::SURVEY_TIMEOUT + Self::warmup(s)
+    }
+    /// Advances the step calibration, the test shot, the connect wait and the
+    /// background engine jobs; gives up any wait past its time limit.
     fn poll_tools(&mut self) {
         self.step_report.poll();
         self.compact_estimate.poll();
@@ -138,20 +205,50 @@ impl CaptureWorkspace {
             return;
         };
         let s = connection.snapshot();
+        let now = Instant::now();
+        if let Some(run) = self.test_shot.poll(&s, now) {
+            connection.mark_test_run(run);
+        }
+        // A survey or test shot the desktop stopped waiting for is kept out
+        // of the lists once its folder is known (it is not deleted).
+        if self.unfollowed_sequence.is_some() && self.unfollowed_sequence == s.host.sequence_id {
+            let run = if s.host.phase.capturing() {
+                s.in_progress.as_ref().map(|r| r.folder.clone())
+            } else {
+                s.host.last_receipt_run()
+            };
+            if let Some(run) = run {
+                connection.mark_test_run(run);
+            }
+        }
+        if let Some(wait) = &mut self.connect_wait
+            && let Some(outcome) = wait.poll(&s, now)
+        {
+            self.connect_note = match outcome {
+                tools::ConnectOutcome::Connected => None,
+                tools::ConnectOutcome::Failed(why) => Some(why),
+                tools::ConnectOutcome::TimedOut => Some(format!(
+                    "The camera did not connect within {} s. Check its switch, the USB cable and USB Remote Shoot mode, then connect again.",
+                    tools::CONNECT_TIMEOUT.as_secs()
+                )),
+            };
+            self.connect_wait = None;
+        }
         use tools::Calibration as C;
         let state = std::mem::replace(&mut self.calibration, C::Idle);
-        let idle = s.state["busy"] != true && s.state["editable"] == true;
-        let shots = s.state["shots_per_plane"].as_u64();
+        let host = &s.host;
+        let idle = !host.busy && host.editable;
+        let shots = host.shots_per_plane;
         // The camera went away while the calibration waited for it (switched
         // off, or an older controller's "manage power" after the survey):
         // waiting for it would never end.
-        let gone = s.state["connected"] == false && s.state["busy"] != true;
+        let gone = !host.connected && !host.busy;
         self.calibration = match state {
             C::Switching { .. } if gone => C::Failed(
                 "The camera switched off during the calibration: turn it on and calibrate again"
                     .into(),
             ),
-            C::Restoring { mut result } if gone => {
+            C::Restoring { mut result, .. } if gone => {
                 let summary = result["summary"].as_str().unwrap_or("").to_owned();
                 result["summary"] = json!(format!(
                     "{summary} The camera switched off before four-shot could be set again: set it when the camera is back."
@@ -162,8 +259,9 @@ impl CaptureWorkspace {
                 restore_four,
                 positions,
                 round,
+                ..
             } if idle && shots == Some(1) => {
-                let sequence = s.state["sequence_id"].as_u64().unwrap_or(0) + 1;
+                let sequence = host.sequence_id.unwrap_or(0) + 1;
                 let spacing = positions
                     .windows(2)
                     .map(|w| w[0].abs_diff(w[1]))
@@ -175,6 +273,7 @@ impl CaptureWorkspace {
                         // "Manage power" would switch the camera off after the
                         // survey, before a second survey or four-shot is set again.
                         keep_power_on: true,
+                        kind: PositionsKind::Positions,
                     })
                     .and_then(|r| self.submit(r))
                 {
@@ -183,6 +282,7 @@ impl CaptureWorkspace {
                         sequence,
                         round,
                         spacing,
+                        deadline: Self::survey_deadline(&s, now),
                     },
                     Err(e) => C::Failed(format!("{e:#}")),
                 }
@@ -192,52 +292,51 @@ impl CaptureWorkspace {
                 sequence,
                 round,
                 spacing,
-            } if s.state["sequence_id"].as_u64() == Some(sequence) && s.state["busy"] != true => {
-                match s.state["phase"].as_str() {
-                    Some("complete") => {
-                        let run = s.state["storage"]["receipt"]["path"]
-                            .as_str()
-                            .and_then(|p| std::path::Path::new(p).parent())
-                            .map(|p| {
-                                PathBuf::from(p.to_string_lossy().trim_start_matches(r"\\?\"))
-                            });
-                        match (run, &self.engine) {
-                            (Some(run), Some(engine)) => {
-                                match tools::EngineJob::start(
-                                    engine,
-                                    vec!["focus-step".into(), run.clone().into_os_string()],
-                                ) {
-                                    Ok(job) => C::Measuring {
-                                        restore_four,
-                                        run,
-                                        job,
-                                        round,
-                                        spacing,
-                                    },
-                                    Err(e) => C::Failed(format!("{e:#}")),
-                                }
+                deadline,
+            } if host.sequence_id == Some(sequence) && !host.busy => match host.phase {
+                HostPhase::Complete => {
+                    let run = host.last_receipt_run();
+                    match (run, &self.engine) {
+                        (Some(run), Some(engine)) => {
+                            match tools::EngineJob::start(
+                                engine,
+                                vec!["focus-step".into(), run.clone().into_os_string()],
+                            ) {
+                                Ok(job) => C::Measuring {
+                                    restore_four,
+                                    run,
+                                    job,
+                                    round,
+                                    spacing,
+                                    deadline: now + tools::MEASURE_TIMEOUT,
+                                    ended: None,
+                                },
+                                Err(e) => C::Failed(format!("{e:#}")),
                             }
-                            (None, _) => C::Failed("The survey's folder was not reported".into()),
-                            (_, None) => C::Failed("The Strehl engine was not found".into()),
                         }
+                        (None, _) => C::Failed("The survey's folder was not reported".into()),
+                        (_, None) => C::Failed("The Strehl engine was not found".into()),
                     }
-                    Some("stopped" | "fault" | "disconnected") => {
-                        C::Failed("The survey did not finish".into())
-                    }
-                    _ => C::Capturing {
-                        restore_four,
-                        sequence,
-                        round,
-                        spacing,
-                    },
                 }
-            }
+                HostPhase::Stopped | HostPhase::Fault | HostPhase::Disconnected => {
+                    C::Failed("The survey did not finish".into())
+                }
+                _ => C::Capturing {
+                    restore_four,
+                    sequence,
+                    round,
+                    spacing,
+                    deadline,
+                },
+            },
             C::Measuring {
                 restore_four,
                 run,
                 mut job,
                 round,
                 spacing,
+                deadline,
+                ended,
             } => match job.poll() {
                 None => C::Measuring {
                     restore_four,
@@ -245,15 +344,20 @@ impl CaptureWorkspace {
                     job,
                     round,
                     spacing,
+                    deadline,
+                    ended,
                 },
                 Some(result) => {
-                    // The survey's RAWs served their purpose: free the disk.
+                    // The survey's RAWs served their purpose (or the
+                    // measurement was ended): free the disk. The engine has
+                    // been reaped by now.
                     if run.join("manifest.json").is_file() && run.join("events.jsonl").is_file() {
                         let _ = std::fs::remove_dir_all(&run);
                     }
-                    match result {
-                        Err(e) => C::Failed(format!("{e:#}")),
-                        Ok(v) => {
+                    match (ended, result) {
+                        (Some(why), _) => C::Failed(why),
+                        (None, Err(e)) => C::Failed(format!("{e:#}")),
+                        (None, Ok(v)) => {
                             let width = v["width"].as_f64();
                             let again = match width {
                                 None => Some(spacing.saturating_mul(4)),
@@ -262,7 +366,7 @@ impl CaptureWorkspace {
                                 }
                                 _ => None,
                             };
-                            let (start, end) = plan_bounds(&s);
+                            let (start, end) = host.plan_bounds();
                             match again.filter(|_| round == 0) {
                                 Some(spacing) => C::Switching {
                                     restore_four,
@@ -273,13 +377,17 @@ impl CaptureWorkspace {
                                         tools::SURVEY_PLANES,
                                     ),
                                     round: 1,
+                                    deadline: now + tools::SWITCH_TIMEOUT,
                                 },
                                 None if restore_four => {
                                     let r = s
                                         .request(Command::PixelShift { shots: 4 })
                                         .and_then(|r| self.submit(r));
                                     match r {
-                                        Ok(()) => C::Restoring { result: v },
+                                        Ok(()) => C::Restoring {
+                                            result: v,
+                                            deadline: now + tools::SWITCH_TIMEOUT,
+                                        },
                                         Err(e) => C::Failed(format!("{e:#}")),
                                     }
                                 }
@@ -289,15 +397,24 @@ impl CaptureWorkspace {
                     }
                 }
             },
-            C::Restoring { result } if idle && shots == Some(4) => C::Done(result),
+            C::Restoring { result, .. } if idle && shots == Some(4) => C::Done(result),
             other => other,
         };
+        // A survey left running when the calibration gave up is not followed.
+        let survey = self.calibration.survey_sequence();
+        self.calibration.expire(now);
+        if survey.is_some()
+            && self.calibration.survey_sequence().is_none()
+            && matches!(self.calibration, C::Failed(_))
+        {
+            self.unfollowed_sequence = survey;
+        }
     }
     /// Starts a step calibration: single RAWs across the middle of the marked
     /// range, measured on this PC, then the camera's pixel shift as it was.
     fn start_calibration(&mut self, s: &Snapshot) {
-        let restore_four = s.state["shots_per_plane"] == 4;
-        let (start, end) = plan_bounds(s);
+        let restore_four = s.host.shots_per_plane == Some(4);
+        let (start, end) = s.host.plan_bounds();
         let positions =
             tools::survey_positions(start, end, tools::SURVEY_SPACING, tools::SURVEY_PLANES);
         if restore_four {
@@ -307,7 +424,17 @@ impl CaptureWorkspace {
             restore_four,
             positions,
             round: 0,
+            deadline: Instant::now() + tools::SWITCH_TIMEOUT,
         };
+    }
+    /// Stops waiting for the calibration at whatever stage it is in (see
+    /// [`tools::Calibration::stop`]). A survey being captured is left to
+    /// finish on the host and is not followed.
+    pub fn stop_calibration(&mut self) {
+        if let Some(sequence) = self.calibration.survey_sequence() {
+            self.unfollowed_sequence = Some(sequence);
+        }
+        self.calibration.stop("Calibration stopped");
     }
     /// `calibrate_step` from the control interface.
     pub fn calibrate(&mut self) -> anyhow::Result<()> {
@@ -318,14 +445,12 @@ impl CaptureWorkspace {
             .snapshot();
         anyhow::ensure!(!self.calibrating(), "A calibration is running");
         anyhow::ensure!(self.engine.is_some(), "The Strehl engine was not found");
+        anyhow::ensure!(!self.test_shot.running(), "A test shot is running");
         anyhow::ensure!(
-            s.fresh() && s.state["editable"] == true && !s.pending,
+            s.fresh() && s.host.editable && !s.pending,
             "The camera is not ready"
         );
-        anyhow::ensure!(
-            s.state["start_set"] == true && s.state["end_set"] == true,
-            "Mark the start and end first"
-        );
+        anyhow::ensure!(s.host.bounds_set(), "Mark the start and end first");
         self.start_calibration(&s);
         match self.error.take() {
             Some(e) => {
@@ -382,31 +507,28 @@ impl CaptureWorkspace {
         }
         Ok(())
     }
-    /// Calibration, focus-step and compaction state for snapshots.
+    /// Calibration, focus-step, compaction and test-shot state for snapshots.
     fn tools_public(&self) -> Value {
         use tools::Calibration as C;
-        let (stage, result) = match &self.calibration {
-            C::Idle => ("idle", Value::Null),
-            C::Switching { .. } => ("switching", Value::Null),
-            C::Capturing { .. } => ("capturing", Value::Null),
-            C::Measuring { .. } => ("measuring", Value::Null),
-            C::Restoring { result } => ("restoring", result.clone()),
-            C::Done(v) => ("done", v.clone()),
-            C::Failed(e) => ("failed", json!({"error":e})),
+        let now = Instant::now();
+        let result = match &self.calibration {
+            C::Restoring { result, .. } | C::Done(result) => result.clone(),
+            C::Failed(e) => json!({"error":e}),
+            _ => Value::Null,
         };
-        let slot = |s: &tools::Slot| {
-            json!({"running":s.running(),"folder":s.folder,
-                "result":match &s.result {Some(Ok(v))=>v.clone(),Some(Err(e))=>json!({"error":e}),None=>Value::Null}})
-        };
-        json!({"calibration":{"stage":stage,"result":result},
-            "focus_step":slot(&self.step_report),
-            "compact_estimate":slot(&self.compact_estimate),
-            "compact":slot(&self.compact_apply)})
+        json!({"calibration":{"stage":self.calibration.stage(),"result":result,
+                "gives_up_seconds":self.calibration.gives_up_in(now).map(|d| d.as_secs_f64())},
+            "focus_step":self.step_report.public(),
+            "compact_estimate":self.compact_estimate.public(),
+            "compact":self.compact_apply.public(),
+            "test_shot":self.test_shot.public(now),
+            "connect_wait":self.connect_wait.as_ref().map(|w| json!({"gives_up_seconds":w.gives_up_in(now).as_secs_f64()})),
+            "connect_note":self.connect_note})
     }
     fn calibration_ui(&mut self, ui: &mut egui::Ui, s: &Snapshot, editable: bool) {
         use tools::Calibration as C;
-        let bounds = s.state["start_set"] == true && s.state["end_set"] == true;
-        let busy = self.calibrating();
+        let bounds = s.host.bounds_set();
+        let busy = self.calibrating() || self.test_shot.running();
         ui.horizontal(|ui| {
             if ui
                 .add_enabled(
@@ -418,31 +540,27 @@ impl CaptureWorkspace {
             {
                 self.start_calibration(s);
             }
-            match &self.calibration {
-                C::Switching { .. } | C::Restoring { .. } => {
-                    ui.spinner();
-                    ui.small("Setting the camera…");
-                    if ui
-                        .small_button("Stop waiting")
-                        .on_hover_text("Ends the calibration here; the camera is left as it is")
-                        .clicked()
-                    {
-                        self.calibration = match std::mem::replace(&mut self.calibration, C::Idle)
-                        {
-                            C::Restoring { result } => C::Done(result),
-                            _ => C::Failed("Calibration stopped".into()),
-                        };
-                    }
+            let label = match &self.calibration {
+                C::Switching { .. } | C::Restoring { .. } => Some("Setting the camera…"),
+                C::Capturing { .. } => Some("Surveying…"),
+                C::Measuring { ended: Some(_), .. } => Some("Stopping…"),
+                C::Measuring { .. } => Some("Measuring…"),
+                _ => None,
+            };
+            if let Some(label) = label {
+                ui.spinner();
+                ui.small(label);
+                if let Some(left) = self.calibration.gives_up_in(Instant::now()) {
+                    ui.small(format!("gives up in {} s", left.as_secs()));
+                    ui.ctx().request_repaint_after(Duration::from_secs(1));
                 }
-                C::Capturing { .. } => {
-                    ui.spinner();
-                    ui.small("Surveying…");
+                if ui
+                    .small_button("Stop waiting")
+                    .on_hover_text("Ends the calibration here; the camera is left as it is. A survey being captured finishes on the camera and is not checked.")
+                    .clicked()
+                {
+                    self.stop_calibration();
                 }
-                C::Measuring { .. } => {
-                    ui.spinner();
-                    ui.small("Measuring…");
-                }
-                _ => {}
             }
         });
         match &self.calibration {
@@ -451,13 +569,16 @@ impl CaptureWorkspace {
                 if let Some(step) = v["suggested_step"].as_u64().map(|n| n as u16) {
                     let range = self.confirmed_plan.start.abs_diff(self.confirmed_plan.end);
                     let planes = u64::from(range / step.max(1)) + 1;
-                    let shots = if s.state["shots_per_plane"] == 4 {
+                    let shots = if s.host.shots_per_plane == Some(4) {
                         4
                     } else {
                         1
                     };
-                    let estimate = s.state["exposure"]["shutter"]
-                        .as_u64()
+                    let estimate = s
+                        .host
+                        .exposure
+                        .as_ref()
+                        .and_then(|e| e.shutter)
                         .and_then(|shutter| {
                             strehl_capture::timing::initial_plane(
                                 shutter,
@@ -508,8 +629,21 @@ impl CaptureWorkspace {
             return;
         };
         let s = connection.snapshot();
-        let capturing = matches!(s.state["phase"].as_str(), Some("capturing" | "paused"));
-        let current = s.in_progress.as_ref();
+        // Live while the station is shown or a sequence runs; 1 Hz otherwise.
+        let open = self.station_open.unwrap_or(self.shown);
+        self.shown = false;
+        connection.set_cadence(Cadence::choose(open, s.host.phase.active()));
+        let capturing = s.host.phase.capturing();
+        // A run the desktop knows is not a stack: a test shot (by its
+        // manifest, or one this desktop took), a survey, or a sequence it
+        // stopped waiting for.
+        let not_a_stack = s.in_progress.as_ref().is_some_and(|r| r.test)
+            || self.test_shot.running()
+            || self.calibrating()
+            || (self.unfollowed_sequence.is_some()
+                && self.unfollowed_sequence == s.host.sequence_id
+                && capturing);
+        let current = s.in_progress.as_ref().filter(|_| !not_a_stack);
         if let Some(f) = &mut self.follower {
             f.poll();
             if f.running() {
@@ -541,11 +675,11 @@ impl CaptureWorkspace {
             .follow_refused
             .as_ref()
             .is_some_and(|(r, _)| *r == run.folder);
-        // A calibration survey is measured and deleted, never followed.
+        // A calibration survey is measured and deleted, never followed; nor
+        // is a test shot (`not_a_stack` above).
         if self.follow_enabled
             && fresh
             && !refused
-            && !self.calibrating()
             && (capturing || run.idle < follow::ABANDONED)
             && let Some(engine) = engine
         {
@@ -577,6 +711,7 @@ impl CaptureWorkspace {
             }
         }
     }
+
     pub fn snapshot(&self) -> Value {
         let mut value = self
             .connection
@@ -651,6 +786,7 @@ impl CaptureWorkspace {
     }
     pub fn show(&mut self, ctx: &egui::Context, can_import: bool) {
         self.activate(ctx);
+        self.shown = true;
         let s = self
             .connection
             .as_ref()
@@ -658,12 +794,11 @@ impl CaptureWorkspace {
             .unwrap_or_default();
         self.observe_focus(&s);
         self.painted_ready = (!s.receiver.is_null() || s.receiver_error.is_some())
-            && ((s.observed.is_some()
-                && (s.preview.is_some() || s.state["preview"]["available"] != true))
+            && ((s.observed.is_some() && (s.preview.is_some() || !s.host.preview.available))
                 || s.connection_error.is_some()
                 || self.config.controller.is_empty());
-        if let Ok(plan) = serde_json::from_value(s.state["plan"].clone()) {
-            self.sync_plan(plan, s.state["plan_revision"].as_u64().unwrap_or(0));
+        if let Some(plan) = s.host.plan.clone() {
+            self.sync_plan(plan, s.host.plan_revision.unwrap_or(0));
         }
         if !self.folder_dirty {
             self.folder_draft = s.receiver["folder"].as_str().unwrap_or_default().into();
@@ -772,12 +907,16 @@ impl CaptureWorkspace {
                     if self.peaking {
                         ui.add(egui::Slider::new(&mut self.peak_threshold, 6..=40).text("Threshold"));
                     }
-                    ui.add_enabled_ui(
-                        s.fresh() && s.state["editable"] == true && !s.pending,
-                        |ui| {
-                            ui.toggle_value(&mut self.select_roi, "Select subject");
-                        },
-                    );
+                    if let Some((_, levels)) = &s.levels {
+                        ui.small(format!(
+                            "{:.1} % clipped · {}",
+                            100.0 * levels.clipped_share,
+                            crate::capture_aids::PreviewLevels::CAUTION
+                        ));
+                    }
+                    ui.add_enabled_ui(s.fresh() && s.host.editable && !s.pending, |ui| {
+                        ui.toggle_value(&mut self.select_roi, "Select subject");
+                    });
                 });
                 self.preview_ui(ui, &s);
             });
@@ -850,8 +989,13 @@ impl CaptureWorkspace {
         }
     }
     fn observe_focus(&mut self, s: &Snapshot) {
-        let phase = s.state["phase"].as_str().unwrap_or_default();
-        if !s.fresh() || !matches!(phase, "ready" | "complete" | "stopped" | "moving") {
+        let host = &s.host;
+        if !s.fresh()
+            || !matches!(
+                host.phase,
+                HostPhase::Ready | HostPhase::Complete | HostPhase::Stopped | HostPhase::Moving
+            )
+        {
             self.focus_pending = None;
             self.focus_flight = None;
         }
@@ -862,14 +1006,12 @@ impl CaptureWorkspace {
                 self.error = Some(
                     "Focus move was not confirmed. Check the camera before scrubbing again.".into(),
                 );
-            } else if s.state["camera_revision"]
-                .as_u64()
-                .is_some_and(|r| r > revision)
-                && s.state["editable"] == true
+            } else if host.camera_revision.is_some_and(|r| r > revision)
+                && host.editable
                 && !s.pending
             {
                 self.focus_flight = None;
-                if s.state["position"].as_u64() != Some(target as u64) {
+                if host.position != Some(target) {
                     self.focus_pending = None;
                     self.error = Some(
                         "Focus did not reach the slider target; move was not repeated.".into(),
@@ -879,23 +1021,23 @@ impl CaptureWorkspace {
         }
         if self.focus_pending.is_none()
             && self.focus_flight.is_none()
-            && let Some(p) = s.state["position"].as_u64()
+            && let Some(p) = host.position
         {
-            self.focus_target = p as u16;
-            if self.focus_anchor.is_none_or(|a| a.abs_diff(p as u16) > 128) {
-                self.focus_anchor = Some(p as u16);
+            self.focus_target = p;
+            if self.focus_anchor.is_none_or(|a| a.abs_diff(p) > 128) {
+                self.focus_anchor = Some(p);
             }
         }
     }
     fn flush_focus(&mut self, s: &Snapshot) {
-        if self.focus_flight.is_some() || s.pending || !s.fresh() || s.state["editable"] != true {
+        if self.focus_flight.is_some() || s.pending || !s.fresh() || !s.host.editable {
             return;
         }
         if let Some(target) = self.focus_pending.take() {
-            if s.state["position"].as_u64() == Some(target as u64) {
+            if s.host.position == Some(target) {
                 return;
             }
-            let revision = s.state["camera_revision"].as_u64().unwrap_or(0);
+            let revision = s.host.camera_revision.unwrap_or(0);
             let result = s
                 .request(Command::Focus { target })
                 .and_then(|r| self.submit(r));
@@ -906,11 +1048,12 @@ impl CaptureWorkspace {
         }
     }
     fn scrub_ui(&mut self, ui: &mut egui::Ui, s: &Snapshot) {
-        let phase = s.state["phase"].as_str().unwrap_or_default();
+        let host = &s.host;
         let enabled = s.fresh()
-            && s.state["connected"] == true
-            && (s.state["editable"] == true
-                || (matches!(phase, "ready" | "moving") && self.focus_flight.is_some()));
+            && host.connected
+            && (host.editable
+                || (matches!(host.phase, HostPhase::Ready | HostPhase::Moving)
+                    && self.focus_flight.is_some()));
         ui.add_enabled_ui(enabled, |ui| {
             ui.horizontal(|ui| {
                 for (value, text) in [(0, "Fine"), (1, "Marked range"), (2, "Full lens")] {
@@ -918,14 +1061,14 @@ impl CaptureWorkspace {
                         .selectable_value(&mut self.focus_range, value, text)
                         .clicked()
                     {
-                        self.focus_anchor = s.state["position"].as_u64().map(|p| p as u16);
+                        self.focus_anchor = s.host.position;
                     }
                 }
             });
             let anchor = self.focus_anchor.unwrap_or(self.focus_target);
             let (lo, hi) = match self.focus_range {
                 0 => (anchor.saturating_sub(128), anchor.saturating_add(128)),
-                1 if s.state["start_set"] == true && s.state["end_set"] == true => (
+                1 if s.host.bounds_set() => (
                     self.draft.start.min(self.draft.end).saturating_sub(16),
                     self.draft.start.max(self.draft.end).saturating_add(16),
                 ),
@@ -946,7 +1089,7 @@ impl CaptureWorkspace {
         });
     }
     fn connection_ui(&mut self, ui: &mut egui::Ui, s: &Snapshot) {
-        let connected = s.state["connected"] == true;
+        let connected = s.host.connected;
         ui.horizontal(|ui| {
             ui.colored_label(
                 if s.fresh() { GREEN } else { AMBER },
@@ -956,12 +1099,12 @@ impl CaptureWorkspace {
                     "○  Pi offline"
                 },
             );
-            if s.state["demo"] == true {
+            if s.host.demo {
                 ui.label(RichText::new("SIMULATOR").color(AMBER));
             }
         });
         ui.label(
-            RichText::new(s.state["camera_model"].as_str().unwrap_or(if connected {
+            RichText::new(s.host.camera_model.as_deref().unwrap_or(if connected {
                 "Camera connected"
             } else {
                 "Camera not connected"
@@ -969,26 +1112,43 @@ impl CaptureWorkspace {
             .strong()
             .size(18.0),
         );
+        let can_disconnect = s.fresh() && connected && s.host.editable && !s.pending;
+        if !can_disconnect && self.confirm == Some(Confirm::Disconnect) {
+            self.confirm = None;
+        }
         ui.horizontal(|ui| {
             if ui
                 .add_enabled(
-                    s.fresh() && !connected && !s.pending,
+                    s.fresh() && !connected && !s.pending && self.connect_wait.is_none(),
                     egui::Button::new("Connect camera"),
                 )
                 .clicked()
             {
-                self.command(s, Command::Connect {});
+                self.connect_camera(s, Command::Connect {});
             }
-            if ui
-                .add_enabled(
-                    s.fresh() && connected && s.state["editable"] == true && !s.pending,
-                    egui::Button::new("Disconnect"),
-                )
+            if self.confirm == Some(Confirm::Disconnect) {
+                if ui
+                    .add_enabled(can_disconnect, egui::Button::new("Disconnect now"))
+                    .clicked()
+                {
+                    self.confirm = None;
+                    self.command(s, Command::Disconnect {});
+                }
+                if ui.button("Keep connected").clicked() {
+                    self.confirm = None;
+                }
+            } else if ui
+                .add_enabled(can_disconnect, egui::Button::new("Disconnect…"))
+                .on_hover_text("Asks before releasing the camera")
                 .clicked()
             {
-                self.command(s, Command::Disconnect {});
+                self.confirm = Some(Confirm::Disconnect);
             }
         });
+        if self.confirm == Some(Confirm::Disconnect) {
+            ui.small("Release the camera? Marks and the subject region are cleared.");
+        }
+        self.connect_wait_ui(ui);
         if ui
             .add_enabled(
                 !self.config.controller.is_empty(),
@@ -1017,60 +1177,117 @@ impl CaptureWorkspace {
             ui.colored_label(AMBER, error);
         }
     }
-    fn power_ui(&mut self, ui: &mut egui::Ui, s: &Snapshot) {
-        let power = &s.state["power"];
-        if !power.is_object() {
-            return;
+    /// Sends a connect (or power-on and connect) and waits for the camera,
+    /// with a time limit and Stop waiting.
+    fn connect_camera(&mut self, s: &Snapshot, command: Command) {
+        let result = s.request(command).and_then(|r| self.submit(r));
+        if result.is_ok() {
+            self.connect_wait = Some(tools::ConnectWait::new(Instant::now()));
+            self.connect_note = None;
         }
-        let idle = s.fresh() && !s.pending && power["available"] == true;
+        self.record(result);
+    }
+    fn connect_wait_ui(&mut self, ui: &mut egui::Ui) {
+        if let Some(wait) = &self.connect_wait {
+            let left = wait.gives_up_in(Instant::now());
+            let mut stop = false;
+            ui.horizontal_wrapped(|ui| {
+                ui.spinner();
+                ui.small(format!(
+                    "Waiting for the camera · gives up in {} s",
+                    left.as_secs()
+                ));
+                stop = ui
+                    .small_button("Stop waiting")
+                    .on_hover_text("Stops waiting here; nothing is sent to the camera")
+                    .clicked();
+            });
+            ui.ctx().request_repaint_after(Duration::from_secs(1));
+            if stop {
+                self.stop_waiting_for_camera();
+            }
+        } else if let Some(note) = &self.connect_note {
+            ui.colored_label(AMBER, note);
+        }
+    }
+    fn power_ui(&mut self, ui: &mut egui::Ui, s: &Snapshot) {
+        let Some(power) = &s.host.power else {
+            return;
+        };
+        let idle = s.fresh() && !s.pending && power.available;
+        if self.confirm == Some(Confirm::ShutDown) && !(idle && power.can_stop_camera) {
+            self.confirm = None;
+        }
         egui::CollapsingHeader::new("Studio power")
             .default_open(true)
             .show(ui, |ui| {
-                for (name, device, on_label, off_label) in [
-                    ("light", Outlet::Light, "Light on", "Light off"),
+                for (p, device, on_label, off_label) in [
+                    (&power.light, Outlet::Light, "Light on", "Light off"),
                     (
-                        "camera",
+                        &power.camera,
                         Outlet::Camera,
                         "Power on & connect",
                         "Shut down camera",
                     ),
                 ] {
-                    let p = &power[name];
-                    let state = p["on"].as_bool();
-                    ui.label(match (state, p["watts"].as_f64()) {
+                    let state = p.on;
+                    ui.label(match (state, p.watts) {
                         (Some(on), Some(w)) => {
                             format!("{device:?} {} · {w:.1} W", if on { "on" } else { "off" })
                         }
                         _ => format!(
                             "{device:?} · {}",
-                            p["error"].as_str().unwrap_or("Waiting for outlet")
+                            p.error.as_deref().unwrap_or("Waiting for outlet")
                         ),
                     });
                     ui.horizontal_wrapped(|ui| {
                         for (on, label) in [(true, on_label), (false, off_label)] {
                             let allowed = match device {
                                 Outlet::Light => state != Some(on),
-                                Outlet::Camera => {
-                                    power[if on {
-                                        "can_start_camera"
-                                    } else {
-                                        "can_stop_camera"
-                                    }] == true
+                                Outlet::Camera if on => power.can_start_camera,
+                                Outlet::Camera => power.can_stop_camera,
+                            };
+                            let shut_down = device == Outlet::Camera && !on;
+                            if shut_down && self.confirm == Some(Confirm::ShutDown) {
+                                if ui
+                                    .add_enabled(idle && allowed, egui::Button::new("Shut down now"))
+                                    .clicked()
+                                {
+                                    self.confirm = None;
+                                    self.command(s, Command::Power { device, on });
                                 }
+                                if ui.button("Keep it on").clicked() {
+                                    self.confirm = None;
+                                }
+                                continue;
+                            }
+                            let label = if shut_down {
+                                format!("{label}…")
+                            } else {
+                                label.to_owned()
                             };
                             if ui
                                 .add_enabled(idle && allowed, egui::Button::new(label))
                                 .clicked()
                             {
-                                self.command(s, Command::Power { device, on });
+                                if shut_down {
+                                    self.confirm = Some(Confirm::ShutDown);
+                                } else if device == Outlet::Camera && on {
+                                    self.connect_camera(s, Command::Power { device, on });
+                                } else {
+                                    self.command(s, Command::Power { device, on });
+                                }
                             }
                         }
                     });
+                    if device == Outlet::Camera && self.confirm == Some(Confirm::ShutDown) {
+                        ui.small("Restore the camera's settings, put it in standby and switch its outlet off?");
+                    }
                 }
-                let mut enabled = power["manage_stack"] == true;
+                let mut enabled = power.manage_stack;
                 if ui
                     .add_enabled(
-                        idle && power["can_manage"] == true,
+                        idle && power.can_manage,
                         egui::Checkbox::new(
                             &mut enabled,
                             "Warm light at start, power both off after saving",
@@ -1080,11 +1297,11 @@ impl CaptureWorkspace {
                 {
                     self.command(s, Command::PowerPlan { enabled });
                 }
-                if let Some(e) = power["error"].as_str() {
+                if let Some(e) = &power.error {
                     ui.colored_label(AMBER, e);
                 }
-                if s.state["schedule"].is_object() {
-                    let saved = power["warmup_seconds"].as_u64().unwrap_or(5) as u32;
+                if s.host.schedule.is_some() {
+                    let saved = power.warmup_seconds.unwrap_or(5) as u32;
                     let mut secs = self.warmup_edit.unwrap_or(saved);
                     ui.horizontal_wrapped(|ui| {
                         ui.label("Light warmup");
@@ -1114,13 +1331,11 @@ impl CaptureWorkspace {
         ui.label(RichText::new("Focus bounds").strong());
         ui.label(format!(
             "Position  {}",
-            s.state["position"]
-                .as_u64()
-                .map_or("—".into(), |p| p.to_string())
+            s.host.position.map_or("—".into(), |p| p.to_string())
         ));
         self.scrub_ui(ui, s);
         let editable = s.fresh()
-            && s.state["editable"] == true
+            && s.host.editable
             && !s.pending
             && self.focus_pending.is_none()
             && self.focus_flight.is_none();
@@ -1130,21 +1345,22 @@ impl CaptureWorkspace {
                     if ui.small_button(label).clicked(){self.command(s,Command::Jog{delta});}
                 }
             });
-            for (start,label,key) in [(true,"Start","start_set"),(false,"End","end_set")] {
+            for (start,label,set) in [(true,"Start",s.host.start_set),(false,"End",s.host.end_set)] {
                 ui.horizontal(|ui| {
                     let position=if start{self.draft.start}else{self.draft.end};
-                    ui.label(format!("{label}  {}",if s.state[key]==true{position.to_string()}else{"not set".into()}));
+                    ui.label(format!("{label}  {}",if set{position.to_string()}else{"not set".into()}));
                     if ui.button(format!("Mark {label}")).clicked(){self.command(s,Command::Mark{start});}
-                    if ui.add_enabled(s.state[key]==true,egui::Button::new("Go")).clicked(){self.command(s,Command::Go{start});}
+                    if ui.add_enabled(set,egui::Button::new("Go")).clicked(){self.command(s,Command::Go{start});}
                 });
             }
             ui.small("Move focus until the first and last details are sharp, then mark each bound.");
             ui.add_space(8.0);
-            let supported = s.state["pixel_shift_options"].as_array().is_some_and(|a| a.contains(&json!(4)));
-            let mut shift = s.state["shots_per_plane"] == 4;
+            let supported = s.host.offers_four_shot();
+            let mut shift = s.host.shots_per_plane == Some(4);
             if ui.add_enabled(supported, egui::Checkbox::new(&mut shift, "4-shot pixel shift")).on_hover_text("Four RAW exposures at each focus position. Requires a compatible camera and matching Pi driver.").changed() {
                 self.command(s, Command::PixelShift { shots: if shift {4} else {1} });
             }
+            self.test_shot_ui(ui, s);
             egui::Grid::new("capture-plan").num_columns(2).spacing([10.0,8.0]).show(ui,|ui| {
                 ui.label("Step size");self.draft_dirty|=ui.add(egui::DragValue::new(&mut self.draft.step).range(1..=65535)).changed();ui.end_row();
                 ui.label("Settle time");self.draft_dirty|=ui.add(egui::DragValue::new(&mut self.draft.settle_ms).range(100..=30000).suffix(" ms")).changed();ui.end_row();
@@ -1165,24 +1381,80 @@ impl CaptureWorkspace {
                     if ui.button("Discard edits").clicked(){self.draft_dirty=false;}
                 });
             }
-            let bounds=s.state["start_set"]==true && s.state["end_set"]==true;
-            if ui.add_enabled(bounds && s.state["preview"]["fresh"]==true,egui::Button::new("Survey focus within these bounds")).clicked(){self.command(s,Command::Survey{});}
+            let bounds=s.host.bounds_set();
+            if ui.add_enabled(bounds && s.host.preview.fresh,egui::Button::new("Survey focus within these bounds")).clicked(){self.command(s,Command::Survey{});}
             ui.small("Survey uses the selected subject region to suggest tighter bounds. Set a broad range first.");
-            if let Some(suggestion)=s.state["suggestion"].as_object() {
-                ui.label(suggestion.get("explanation").and_then(Value::as_str).unwrap_or("Focus survey finished"));
-                if ui.add_enabled(s.state["suggestion"]["clipped"]!=true,egui::Button::new("Use suggested bounds")).clicked(){self.command(s,Command::ApplyBounds{});}
+            if let Some(suggestion)=&s.host.suggestion {
+                ui.label(suggestion.explanation.as_deref().unwrap_or("Focus survey finished"));
+                if ui.add_enabled(!suggestion.clipped,egui::Button::new("Use suggested bounds")).clicked(){self.command(s,Command::ApplyBounds{});}
             }
-            if let Some(ratios)=s.state["magnifier_ratios"].as_array().filter(|r|!r.is_empty()) {
+            if !s.host.magnifier_ratios.is_empty() {
                 egui::CollapsingHeader::new("Camera magnifier").show(ui,|ui| {
-                    ui.horizontal_wrapped(|ui| {for ratio in ratios.iter().filter_map(Value::as_u64) {
+                    ui.horizontal_wrapped(|ui| {for &ratio in &s.host.magnifier_ratios {
                         if ui.button(if ratio==0{"Off".into()}else{format!("{:.1}×",ratio as f32/10.0)}).clicked(){
-                            let roi: Roi=serde_json::from_value(s.state["roi"].clone()).unwrap_or_default();
-                            self.command(s,Command::Magnify{ratio:ratio as u32,x:((roi.x+roi.width/2.0)*639.0).round() as u16,y:((roi.y+roi.height/2.0)*479.0).round() as u16});
+                            let roi: Roi=s.host.roi.unwrap_or_default();
+                            self.command(s,Command::Magnify{ratio,x:((roi.x+roi.width/2.0)*639.0).round() as u16,y:((roi.y+roi.height/2.0)*479.0).round() as u16});
                         }
                     }});
                 });
             }
         });
+    }
+    /// One exposure at the current focus, read on the RAW: its clipped share
+    /// and shadow level.
+    fn test_shot_ui(&mut self, ui: &mut egui::Ui, s: &Snapshot) {
+        use test_shot::TestShot as T;
+        let ready = s.fresh()
+            && s.host.editable
+            && !s.pending
+            && s.host.position.is_some()
+            && !self.calibrating()
+            && !self.test_shot.running();
+        let mut stop = false;
+        ui.horizontal_wrapped(|ui| {
+            if ui
+                .add_enabled(ready, egui::Button::new("Test shot"))
+                .on_hover_text("One exposure at the current focus, saved on this PC and read on the RAW: how much clips and where the shadows sit. It is not checked, listed or opened as a stack.")
+                .clicked()
+            {
+                let result = self.test_shot();
+                self.record(result);
+            }
+            match &self.test_shot {
+                T::Capturing { .. } | T::Reading { .. } => {
+                    ui.spinner();
+                    ui.small(if matches!(self.test_shot, T::Reading { .. }) {
+                        "Reading the RAW…".to_owned()
+                    } else {
+                        format!(
+                            "Taking a test shot · gives up in {} s",
+                            self.test_shot
+                                .gives_up_in(Instant::now())
+                                .unwrap_or_default()
+                                .as_secs()
+                        )
+                    });
+                    ui.ctx().request_repaint_after(Duration::from_secs(1));
+                    stop = matches!(self.test_shot, T::Capturing { .. })
+                        && ui.small_button("Stop waiting").clicked();
+                }
+                T::Done { levels, .. } => {
+                    ui.small(format!(
+                        "RAW: {:.2} % clipped · shadows at {:.1} % · median {:.1} % of the range",
+                        100.0 * levels.clipped_share,
+                        100.0 * levels.shadow_level,
+                        100.0 * levels.median_level
+                    ));
+                }
+                T::Failed(e) => {
+                    ui.colored_label(AMBER, e);
+                }
+                T::Idle => {}
+            }
+        });
+        if stop {
+            self.stop_test_shot();
+        }
     }
     fn storage_ui(&mut self, ui: &mut egui::Ui, s: &Snapshot) {
         ui.label(RichText::new("Storage on this PC").strong());
@@ -1274,14 +1546,12 @@ impl CaptureWorkspace {
             }
         });
         ui.small("Strehl opens .ARW.straw directly. Changes apply to new stacks.");
-        if let Some(receipt) = s.state["storage"]["receipt"].as_object() {
-            if let Some(rate) = receipt.get("wire_MB_per_second").and_then(Value::as_f64) {
+        if let Some(receipt) = &s.host.storage.receipt {
+            if let Some(rate) = receipt.wire_mb_per_second {
                 ui.label(format!("Last transfer  {rate:.1} MB/s on Wi-Fi"));
             }
-            if let (Some(raw), Some(stored)) = (
-                receipt.get("bytes").and_then(Value::as_f64),
-                receipt.get("storage_bytes").and_then(Value::as_f64),
-            ) && raw > 0.0
+            if let (Some(raw), Some(stored)) = (receipt.bytes, receipt.storage_bytes)
+                && raw > 0.0
             {
                 ui.label(format!("Space saved  {:.0}%", 100.0 * (1.0 - stored / raw)));
             }
@@ -1304,12 +1574,9 @@ impl CaptureWorkspace {
         .on_hover_text("Open the finished capture in Projects and start the stack with your current settings. Skipped while another stack or import is running.");
         // Error correction is the camera host's setting; its verdicts come
         // from this checker, so it needs the checker on.
-        let supported = s.state["error_correction"].is_boolean();
-        let active = matches!(
-            s.state["phase"].as_str(),
-            Some("capturing" | "paused" | "scanning")
-        );
-        let mut correct = s.state["error_correction"] == true;
+        let supported = s.host.error_correction.is_some();
+        let active = s.host.phase.active();
+        let mut correct = s.host.error_correction == Some(true);
         if ui
             .add_enabled(
                 supported && s.fresh() && !s.pending && !active && (self.follow_enabled || correct),
@@ -1324,16 +1591,16 @@ impl CaptureWorkspace {
         {
             self.command(s, Command::ErrorCorrection { enabled: correct });
         }
-        if s.state["error_correction"] == true && !self.follow_enabled {
+        if s.host.error_correction == Some(true) && !self.follow_enabled {
             ui.colored_label(
                 AMBER,
                 "Error correction needs the checks above; without them it turns itself off after the first plane.",
             );
         }
-        let saved = s.state["saved"].as_u64();
+        let saved = s.host.saved;
         match &self.follower {
             Some(f) => {
-                let p = &f.progress;
+                let p = f.progress();
                 let name = f.run.file_name().unwrap_or_default().to_string_lossy();
                 let counts = format!(
                     "{} planes checked{}",
@@ -1423,10 +1690,61 @@ impl CaptureWorkspace {
             ui.small(note);
         }
     }
+    /// Captures that ended early, listed as "stopped · N planes" and opened
+    /// like any folder (Studio 2, D13).
+    fn stopped_ui(&mut self, ui: &mut egui::Ui, s: &Snapshot, can_import: bool) {
+        if s.stopped.is_empty() {
+            return;
+        }
+        ui.add_space(8.0);
+        ui.label(RichText::new("Stopped captures").strong());
+        self.selected_stopped = self.selected_stopped.min(s.stopped.len() - 1);
+        let name = |run: &crate::capture_client::StoppedCapture| {
+            format!(
+                "{} · {}",
+                run.folder.file_name().unwrap_or_default().to_string_lossy(),
+                run.label()
+            )
+        };
+        crate::theme::Dropdown::from_id_salt("capture-stopped")
+            .width(ui.available_width() - 15.0)
+            .selected_text(name(&s.stopped[self.selected_stopped]))
+            .show_ui(ui, |ui| {
+                for (i, run) in s.stopped.iter().enumerate() {
+                    ui.selectable_value(&mut self.selected_stopped, i, name(run));
+                }
+            });
+        let run = &s.stopped[self.selected_stopped];
+        ui.small(format!(
+            "{} RAWs on this PC{}{}",
+            run.frames,
+            if run.unverified > 0 {
+                format!(" · {} without a matching receipt", run.unverified)
+            } else {
+                String::new()
+            },
+            if run.outcome == "uncertain" {
+                " · ended by a fault"
+            } else {
+                ""
+            }
+        ));
+        if ui
+            .add_enabled(
+                can_import && !s.pending,
+                egui::Button::new("Open in Projects"),
+            )
+            .clicked()
+        {
+            let result = self.import_stopped(self.selected_stopped);
+            self.record(result);
+        }
+    }
     fn completed_ui(&mut self, ui: &mut egui::Ui, s: &Snapshot, can_import: bool) {
         ui.label(RichText::new("Completed captures").strong());
         if s.completed.is_empty() {
             ui.small("Completed, durably saved stacks will appear here.");
+            self.stopped_ui(ui, s, can_import);
             return;
         }
         self.selected_stack = self.selected_stack.min(s.completed.len() - 1);
@@ -1487,10 +1805,19 @@ impl CaptureWorkspace {
             );
         }
         if self.step_report.running() && self.step_report.folder.as_deref() == Some(&folder) {
+            let mut cancel = false;
             ui.horizontal(|ui| {
                 ui.spinner();
-                ui.small("Measuring…");
+                ui.small(format!(
+                    "Measuring… {} s",
+                    self.step_report.elapsed().unwrap_or_default().as_secs()
+                ));
+                cancel = ui.small_button("Cancel").clicked();
             });
+            ui.ctx().request_repaint_after(Duration::from_secs(1));
+            if cancel {
+                self.cancel_focus_step();
+            }
         }
         match self.step_report.for_folder(&folder) {
             Some(Ok(v)) => {
@@ -1517,6 +1844,7 @@ impl CaptureWorkspace {
             );
         }
         if busy && self.compact_estimate.folder.as_deref() == Some(&folder) {
+            let mut cancel = false;
             ui.horizontal(|ui| {
                 ui.spinner();
                 ui.small(if self.compact_apply.running() {
@@ -1524,7 +1852,11 @@ impl CaptureWorkspace {
                 } else {
                     "Estimating…"
                 });
+                cancel = self.compact_estimate.running() && ui.small_button("Cancel").clicked();
             });
+            if cancel {
+                self.cancel_compact_estimate();
+            }
         }
         if let Some(Ok(v)) = self.compact_apply.for_folder(&folder) {
             let (before, after) = (
@@ -1586,25 +1918,19 @@ impl CaptureWorkspace {
                 None => {}
             }
         }
+        self.stopped_ui(ui, s, can_import);
     }
     fn sequence_ui(&mut self, ui: &mut egui::Ui, s: &Snapshot) {
-        let phase = s.state["phase"].as_str().unwrap_or("disconnected");
-        let active = matches!(phase, "capturing" | "paused" | "scanning");
-        let total = (if active {
-            &s.state["total"]
+        let host = &s.host;
+        let phase = host.phase;
+        let active = phase.active();
+        let total = if active && host.total > 0 {
+            host.total
         } else {
-            &s.state["planned"]
-        })
-        .as_u64()
-        .filter(|v| *v > 0)
-        .or_else(|| s.state["planned"].as_u64())
-        .unwrap_or(0);
-        let complete = if active {
-            s.state["completed"].as_u64().unwrap_or(0)
-        } else {
-            0
+            host.planned.unwrap_or(0)
         };
-        let shots = s.state["shots_per_plane"].as_u64().unwrap_or(1);
+        let complete = if active { host.completed } else { 0 };
+        let shots = host.shots();
         ui.horizontal(|ui| {
             ui.heading("Capture studio");
             ui.label(
@@ -1615,19 +1941,27 @@ impl CaptureWorkspace {
                 })
                 .color(ACCENT),
             );
-            ui.colored_label(if s.fresh() { GREEN } else { AMBER }, phase.to_uppercase());
+            ui.colored_label(
+                if phase == HostPhase::Fault {
+                    FAULT_RED
+                } else if s.fresh() {
+                    GREEN
+                } else {
+                    AMBER
+                },
+                phase.as_str().to_uppercase(),
+            );
         });
-        ui.label(
-            s.state["message"]
-                .as_str()
-                .unwrap_or("Connect the Pi to begin"),
-        );
+        ui.label(host.message.as_deref().unwrap_or("Connect the Pi to begin"));
+        if let Some(e) = &s.host_error {
+            ui.colored_label(FAULT_RED, e);
+        }
         // The camera's USB link, while it is connected (round-3 performance
         // plan, C1): a body that fell back to USB 2.0 captures at about half
         // speed and says nothing else.
-        if s.state["connected"] == true
-            && let Some(warning) = s.state["usb_speed_mbps"]
-                .as_u64()
+        if host.connected
+            && let Some(warning) = host
+                .usb_speed_mbps
                 .and_then(|mbps| strehl_capture::worker::usb_link_warning(mbps as u32))
         {
             ui.colored_label(AMBER, format!("{warning}."));
@@ -1635,15 +1969,15 @@ impl CaptureWorkspace {
         if let Some(error) = self.error.as_ref().or(s.command_error.as_ref()) {
             ui.colored_label(AMBER, error);
         }
-        let failure = &s.state["failure"];
-        if failure.is_object() {
+        if let Some(failure) = &host.failure {
             ui.colored_label(
-                AMBER,
-                failure["message"]
-                    .as_str()
+                FAULT_RED,
+                failure
+                    .message
+                    .as_deref()
                     .unwrap_or("Capture needs attention"),
             );
-            let uncertain = failure["exposure_uncertain"] == true;
+            let uncertain = failure.exposure_uncertain;
             if uncertain {
                 ui.checkbox(
                     &mut self.acknowledge_uncertain,
@@ -1666,37 +2000,20 @@ impl CaptureWorkspace {
                 self.acknowledge_uncertain = false;
             }
         }
-        let capacity_error = if s.state["demo"] == true {
-            None
-        } else if let Some(n) = s.state["planned"].as_u64() {
-            strehl_capture::capacity::check(
-                s.receiver["free_bytes"].as_u64(),
-                n as usize * shots as usize,
-                s.state["raw_max_bytes"]
-                    .as_u64()
-                    .unwrap_or(strehl_capture::transport::MAX_RAW),
-            )
-            .err()
-            .map(|e| e.to_string())
-        } else {
-            None
-        };
-        let start = s.fresh()
-            && s.state["editable"] == true
-            && s.state["start_set"] == true
-            && s.state["end_set"] == true
-            && s.state["plan_error"].is_null()
-            && !self.draft_dirty
-            && self.focus_pending.is_none()
-            && self.focus_flight.is_none()
-            && capacity_error.is_none()
-            && (s.receiver["ok"] == true || s.state["demo"] == true);
+        let capacity_error = preflight::capacity_error(s);
+        // The single source of truth for Start (P0 item 2).
+        let blockers = preflight::start_blockers(s, self);
+        let start = blockers.is_empty();
+        let can_stop = s.fresh() && active && !s.pending && host.pending_control != 2;
+        if !can_stop && self.confirm == Some(Confirm::Stop) {
+            self.confirm = None;
+        }
         ui.horizontal_wrapped(|ui| {
             if ui
                 .add_enabled(
-                    start && !s.pending && !self.schedule_ui.editing(),
+                    start,
                     egui::Button::new(
-                        RichText::new(if s.state["schedule"]["job"]["stage"] == "armed" {
+                        RichText::new(if host.schedule_stage() == Some("armed") {
                             "Start stack now"
                         } else {
                             "Start stack"
@@ -1709,16 +2026,25 @@ impl CaptureWorkspace {
             {
                 self.command(s, Command::Start {});
             }
-            if s.state["schedule"].is_object()
-                && !matches!(
-                    s.state["schedule"]["job"]["stage"].as_str(),
-                    Some("armed" | "running")
-                )
+            if let Some(first) = blockers.first()
+                && !active
+            {
+                ui.label(RichText::new(&first.sentence).color(MUTED))
+                    .on_hover_text(
+                        blockers
+                            .iter()
+                            .map(|b| format!("{}: {}", b.chip, b.sentence))
+                            .collect::<Vec<_>>()
+                            .join("\n"),
+                    );
+            }
+            if host.schedule.is_some()
+                && !matches!(host.schedule_stage(), Some("armed" | "running"))
                 && ui.button("Schedule stack…").clicked()
             {
                 self.schedule_ui.open(s);
             }
-            if phase == "paused" {
+            if phase == HostPhase::Paused {
                 if ui
                     .add_enabled(s.fresh() && !s.pending, egui::Button::new("Resume"))
                     .clicked()
@@ -1728,23 +2054,32 @@ impl CaptureWorkspace {
             } else if ui
                 .add_enabled(
                     s.fresh()
-                        && phase == "capturing"
+                        && phase == HostPhase::Capturing
                         && !s.pending
-                        && s.state["pending_control"] != 1,
+                        && host.pending_control != 1,
                     egui::Button::new("Pause"),
                 )
                 .clicked()
             {
                 self.command(s, Command::Pause {});
             }
-            if ui
-                .add_enabled(
-                    s.fresh() && active && !s.pending && s.state["pending_control"] != 2,
-                    egui::Button::new("Stop"),
-                )
+            if self.confirm == Some(Confirm::Stop) {
+                if ui
+                    .add_enabled(can_stop, egui::Button::new("Stop now"))
+                    .clicked()
+                {
+                    self.confirm = None;
+                    self.command(s, Command::Stop {});
+                }
+                if ui.button("Keep going").clicked() {
+                    self.confirm = None;
+                }
+            } else if ui
+                .add_enabled(can_stop, egui::Button::new("Stop…"))
+                .on_hover_text("Asks before stopping the sequence")
                 .clicked()
             {
-                self.command(s, Command::Stop {});
+                self.confirm = Some(Confirm::Stop);
             }
             if s.pending {
                 ui.spinner();
@@ -1755,28 +2090,38 @@ impl CaptureWorkspace {
                     "{} / {} planes · {} RAWs saved",
                     complete,
                     total,
-                    s.state["storage"]["saved_frames"].as_u64().unwrap_or(0)
+                    host.storage.saved_frames.unwrap_or(0)
                 )
             } else {
                 format!("{total} planes · {} RAWs planned", total * shots)
             });
         });
-        if let Some(cmd) = self.schedule_ui.show(ui, s, start && !s.pending) {
+        if self.confirm == Some(Confirm::Stop) {
+            ui.small(if shots > 1 {
+                "Stop the stack? The current pixel-shift group finishes, and every plane taken so far is kept."
+            } else {
+                "Stop the stack? Every plane taken so far is kept."
+            });
+        }
+        if let Some(cmd) = self
+            .schedule_ui
+            .show(ui, s, preflight::can_schedule(&blockers))
+        {
             self.command(s, cmd);
         }
         if let Some(error) = &capacity_error {
             ui.colored_label(AMBER, error);
         }
-        if let Some(bytes) = s.state["storage_required_bytes"].as_u64() {
+        if let Some(bytes) = host.storage_required_bytes {
             ui.small(storage_line(
-                total as u64 * shots,
+                total * shots,
                 bytes,
                 &s.stored,
-                s.state["camera_model"].as_str(),
+                host.camera_model.as_deref(),
                 &s.receiver,
             ));
         }
-        if let Some(error) = s.state["plan_error"].as_str() {
+        if let Some(error) = &host.plan_error {
             ui.colored_label(AMBER, error);
         }
         let percent = if total > 0 {
@@ -1786,16 +2131,17 @@ impl CaptureWorkspace {
         };
         ui.add(egui::ProgressBar::new(percent.clamp(0.0, 1.0)).desired_height(4.0));
         ui.horizontal_wrapped(|ui| {
+            let timer = host.timer.as_ref();
             if active {
                 ui.label(format!(
                     "Elapsed {}",
-                    duration(s.state["timer"]["elapsed"].as_f64())
+                    duration(timer.and_then(|t| t.elapsed))
                 ));
             }
             let remaining = if active {
-                s.state["timer"]["remaining"].as_f64()
+                timer.and_then(|t| t.remaining)
             } else {
-                s.state["initial_seconds"].as_f64()
+                host.initial_seconds
             };
             ui.label(format!(
                 "{} {}",
@@ -1806,7 +2152,7 @@ impl CaptureWorkspace {
                 },
                 duration(remaining)
             ));
-            if let Some(queued) = s.state["storage"]["pending_frames"].as_u64() {
+            if let Some(queued) = host.storage.pending_frames {
                 ui.label(format!("{queued} RAWs awaiting PC"));
             }
             if shots > 1 && active {
@@ -1818,14 +2164,14 @@ impl CaptureWorkspace {
         if let Some(error) = s
             .preview_error
             .as_deref()
-            .or_else(|| s.state["preview"]["error"].as_str())
+            .or(s.host.preview.error.as_deref())
         {
             // Decoder errors are independent of focus controls.
             if !error.is_empty() {
                 ui.colored_label(AMBER, error);
             }
         }
-        if s.state["preview"]["fresh"] != true && self.texture.is_some() {
+        if !s.host.preview.fresh && self.texture.is_some() {
             ui.colored_label(AMBER, "Last preview · waiting for a fresh camera frame");
         }
         let Some((_, texture)) = &self.texture else {
@@ -1846,7 +2192,7 @@ impl CaptureWorkspace {
                 );
                 let r = response.rect;
                 if self.peaking
-                    && s.state["preview"]["fresh"] == true
+                    && s.host.preview.fresh
                     && let Some((generation, _, peaks)) = &self.peak_texture
                     && self.texture.as_ref().is_some_and(|(g, _)| g == generation)
                 {
@@ -1857,7 +2203,7 @@ impl CaptureWorkspace {
                         egui::Color32::WHITE,
                     );
                 }
-                if self.select_roi && s.fresh() && s.state["editable"] == true && !s.pending {
+                if self.select_roi && s.fresh() && s.host.editable && !s.pending {
                     if response.drag_started() {
                         self.roi_start = response.interact_pointer_pos();
                     }
@@ -1889,10 +2235,178 @@ impl CaptureWorkspace {
             });
     }
 }
-/// The marked start and end, as the camera host holds them.
-fn plan_bounds(s: &Snapshot) -> (u16, u16) {
-    let at = |k: &str| s.state["plan"][k].as_u64().unwrap_or(0).min(65535) as u16;
-    (at("start"), at("end"))
+/// Calls for the Studio 2 shell and the Capture station. Until the shell
+/// wires them, the current Capture tab does not need them all.
+#[allow(dead_code)]
+impl CaptureWorkspace {
+    // ---- Calls for the shell (Studio 2, P6; P0 items 8 and 9) ----------
+    //
+    // Every frame, on every station:
+    //   capture.set_station_open(route == Capture);
+    //   capture.poll_background(ctx, engine);        // instead of poll_follow
+    // When the Capture station is shown: capture.show(ctx, can_import).
+    // For the status bar and the notice tray:
+    //   capture.status_line(), capture.unread_notice(), capture.cadence().
+
+    /// Keeps the Pi connection up whenever capture is configured, not only
+    /// while Capture is open (P0 item 8), then runs [`Self::poll_follow`].
+    /// Polling is 1 Hz with the station closed and no sequence running, and
+    /// 5 Hz otherwise ([`Cadence`]). Tests and headless control should pass
+    /// an isolated `--capture-settings` file: with the owner's settings this
+    /// connects to the real Pi (reads only; it sends no camera command).
+    pub fn poll_background(&mut self, ctx: &egui::Context, engine: Option<&std::path::Path>) {
+        if !self.config.controller.trim().is_empty() {
+            self.activate(ctx);
+        }
+        self.poll_follow(engine);
+    }
+    /// Whether the shell shows the Capture station. Until it is called the
+    /// workspace takes [`Self::show`] having run since the last poll.
+    pub fn set_station_open(&mut self, open: bool) {
+        self.station_open = Some(open);
+    }
+    /// The connection's polling cadence, once connected.
+    pub fn cadence(&self) -> Option<Cadence> {
+        self.connection.as_ref().map(Connection::cadence)
+    }
+    /// The newest success notice ("Request accepted", "Connection saved",
+    /// ...), once: `None` after it was read, until a new one (P0 item 9).
+    pub fn unread_notice(&mut self) -> Option<String> {
+        let s = self.connection.as_ref()?.snapshot();
+        if s.notice_id == self.notice_read {
+            return None;
+        }
+        self.notice_read = s.notice_id;
+        s.notice
+    }
+    /// A short line for the status bar while a sequence runs or the
+    /// desktop's own camera work does; `None` when idle.
+    pub fn status_line(&self) -> Option<String> {
+        let s = self.connection.as_ref()?.snapshot();
+        let host = &s.host;
+        if host.phase.active() {
+            let what = if host.phase == HostPhase::Scanning {
+                "Surveying".to_owned()
+            } else {
+                format!(
+                    "Capturing {} / {} planes",
+                    host.completed,
+                    host.total.max(host.completed)
+                )
+            };
+            let left = host
+                .timer
+                .as_ref()
+                .and_then(|t| t.remaining)
+                .map(|r| format!(" · {} left", duration(Some(r))))
+                .unwrap_or_default();
+            let paused = if host.phase == HostPhase::Paused {
+                " · paused"
+            } else {
+                ""
+            };
+            return Some(format!("{what}{left}{paused}"));
+        }
+        if self.calibrating() {
+            return Some(format!("Calibrating step · {}", self.calibration.stage()));
+        }
+        if self.test_shot.running() {
+            return Some("Test shot".into());
+        }
+        (host.phase == HostPhase::Fault).then(|| "Camera needs attention".into())
+    }
+    /// Every reason Start is unavailable now ([`preflight::start_blockers`]).
+    pub fn start_blockers(&self) -> Vec<preflight::Blocker> {
+        let s = self
+            .connection
+            .as_ref()
+            .map(Connection::snapshot)
+            .unwrap_or_default();
+        preflight::start_blockers(&s, self)
+    }
+    /// The capture checker's records, each plane's journal line among them.
+    pub fn follow_progress(&self) -> Option<&follow::Progress> {
+        self.follower.as_ref().map(follow::Follower::progress)
+    }
+    /// Takes a test shot at the current focus: one position, power kept on,
+    /// marked `kind: "test"` when the host supports it. Its run is never
+    /// followed, listed or handed to the library; its RAW's clipped share and
+    /// shadow level are read on a worker (`capture.tools.test_shot`).
+    pub fn test_shot(&mut self) -> anyhow::Result<()> {
+        let s = self
+            .connection
+            .as_ref()
+            .ok_or_else(|| anyhow::anyhow!("Open Capture first"))?
+            .snapshot();
+        anyhow::ensure!(!self.calibrating(), "A calibration is running");
+        anyhow::ensure!(!self.test_shot.running(), "A test shot is running");
+        anyhow::ensure!(
+            s.fresh() && s.host.editable && !s.pending,
+            "The camera is not ready"
+        );
+        let position = s
+            .host
+            .position
+            .ok_or_else(|| anyhow::anyhow!("The focus position is unknown"))?;
+        let kind = if s.host.capabilities.test_shot {
+            PositionsKind::Test
+        } else {
+            PositionsKind::Positions
+        };
+        let request = s.request(Command::CapturePositions {
+            positions: vec![position],
+            // Managed power would switch the rig off after one exposure.
+            keep_power_on: true,
+            kind,
+        })?;
+        let sequence = s.host.sequence_id.unwrap_or(0) + 1;
+        self.submit(request)?;
+        self.test_shot = test_shot::TestShot::Capturing {
+            sequence,
+            deadline: Instant::now() + test_shot::TEST_SHOT_TIMEOUT + Self::warmup(&s),
+            folder: None,
+        };
+        Ok(())
+    }
+    /// Stops waiting for a test shot; a run still being written is not
+    /// followed.
+    pub fn stop_test_shot(&mut self) {
+        if let Some(sequence) = self.test_shot.sequence() {
+            self.unfollowed_sequence = Some(sequence);
+        }
+        self.test_shot.stop();
+    }
+    /// Stops waiting for the camera to connect. Nothing is sent: the host
+    /// keeps its own limit.
+    pub fn stop_waiting_for_camera(&mut self) {
+        if self.connect_wait.take().is_some() {
+            self.connect_note = Some("Stopped waiting for the camera".into());
+        }
+    }
+    /// Ends a running focus-step measurement (P0 item 7).
+    pub fn cancel_focus_step(&mut self) {
+        self.step_report.cancel();
+    }
+    /// Ends a running compaction estimate (P0 item 7). The compaction itself
+    /// is not offered a cancel: it is safe to interrupt, but it is the
+    /// owner's explicit action.
+    pub fn cancel_compact_estimate(&mut self) {
+        self.compact_estimate.cancel();
+    }
+    /// Opens a stopped capture from `capture.stopped` in Projects, like any
+    /// folder (Studio 2, D13).
+    pub fn import_stopped(&mut self, index: usize) -> anyhow::Result<()> {
+        let c = self
+            .connection
+            .as_ref()
+            .ok_or_else(|| anyhow::anyhow!("Open Capture first"))?;
+        let s = c.snapshot();
+        let run = s
+            .stopped
+            .get(index)
+            .ok_or_else(|| anyhow::anyhow!("Stopped capture unavailable"))?;
+        c.handoff(run.folder.clone())
+    }
 }
 
 fn duration(seconds: Option<f64>) -> String {
@@ -1932,6 +2446,10 @@ fn storage_line(
         _ => format!("{raws} RAWs · {worst}; compression savings are extra"),
     }
 }
+
+#[cfg(test)]
+#[path = "capture-workspace-tests.rs"]
+mod station_tests;
 
 #[cfg(test)]
 mod tests {
@@ -2019,12 +2537,19 @@ mod tests {
     }
     use super::*;
     fn ready() -> Snapshot {
-        Snapshot {
+        let mut s = Snapshot {
             online: true,
             observed: Some(Instant::now()),
-            state: json!({"phase":"ready","editable":true,"connected":true,"position":30000,"camera_revision":10}),
             ..Default::default()
-        }
+        };
+        s.set_state(json!({"phase":"ready","editable":true,"connected":true,"position":30000,"camera_revision":10}));
+        s
+    }
+    /// Changes one field of the host's state, typed reading included.
+    fn set(s: &mut Snapshot, key: &str, value: Value) {
+        let mut state = s.state.clone();
+        state[key] = value;
+        s.set_state(state);
     }
     #[test]
     fn scrub_coalesces_intent_and_drops_it_on_failure_or_sequence_start() {
@@ -2035,15 +2560,15 @@ mod tests {
         assert_eq!(ui.focus_target, 30000);
         ui.focus_flight = Some((30001, 10, Instant::now()));
         ui.focus_pending = Some(30010); // Newest slider intent replaces intermediate targets.
-        s.state["phase"] = json!("moving");
-        s.state["editable"] = json!(false);
+        set(&mut s, "phase", json!("moving"));
+        set(&mut s, "editable", json!(false));
         ui.observe_focus(&s);
         assert_eq!(ui.focus_pending, Some(30010));
         assert!(ui.focus_flight.is_some());
-        s.state["phase"] = json!("ready");
-        s.state["editable"] = json!(true);
-        s.state["camera_revision"] = json!(11);
-        s.state["position"] = json!(30001);
+        set(&mut s, "phase", json!("ready"));
+        set(&mut s, "editable", json!(true));
+        set(&mut s, "camera_revision", json!(11));
+        set(&mut s, "position", json!(30001));
         ui.observe_focus(&s);
         assert!(ui.focus_flight.is_none());
         assert_eq!(ui.focus_pending, Some(30010));
@@ -2054,7 +2579,7 @@ mod tests {
         assert!(ui.focus_pending.is_none() && ui.focus_flight.is_none());
         s.command_error = None;
         ui.focus_pending = Some(30020);
-        s.state["phase"] = json!("capturing");
+        set(&mut s, "phase", json!("capturing"));
         ui.observe_focus(&s);
         assert!(ui.focus_pending.is_none());
     }
@@ -2065,8 +2590,8 @@ mod tests {
         let temp = tempfile::tempdir().unwrap();
         let mut ui = CaptureWorkspace::new(Some(temp.path().join("config.json")));
         let mut s = ready();
-        s.state["start_set"] = json!(true);
-        s.state["end_set"] = json!(true);
+        set(&mut s, "start_set", json!(true));
+        set(&mut s, "end_set", json!(true));
         ui.focus_target = 30000;
         ui.focus_anchor = Some(30000);
         ui.focus_range = 1;

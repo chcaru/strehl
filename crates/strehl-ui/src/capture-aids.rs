@@ -44,6 +44,67 @@ impl Peaking {
     }
 }
 
+/// A channel code at or above this counts as clipped in a camera JPEG:
+/// decoders clamp at 255, and JPEG ringing leaves clipped areas at 254-255.
+pub(crate) const PREVIEW_CLIP_CODE: u8 = 254;
+
+/// Levels of the camera's live JPEG, computed beside [`Peaking::analyze`]
+/// from the same image on the client thread. The camera has already applied
+/// its tone curve, white balance and JPEG coding: an estimate of exposure,
+/// not the RAW's levels (a test shot reads those; `capture-test-shot.rs`).
+#[derive(Clone, Debug, PartialEq)]
+pub(crate) struct PreviewLevels {
+    /// Pixels per Rec. 709 luma code of the sRGB values, 0-255.
+    pub histogram: [u32; 256],
+    pub pixels: u64,
+    /// Share of pixels with any channel at or above [`PREVIEW_CLIP_CODE`].
+    pub clipped_share: f32,
+}
+
+impl PreviewLevels {
+    /// Shown beside every display of these levels.
+    pub const CAUTION: &'static str = "estimate from the camera preview, not the RAW";
+
+    pub fn analyze(image: &ColorImage) -> Self {
+        let mut histogram = [0u32; 256];
+        let mut clipped = 0u64;
+        for p in &image.pixels {
+            let luma = 0.2126 * p.r() as f32 + 0.7152 * p.g() as f32 + 0.0722 * p.b() as f32;
+            histogram[(luma.round() as usize).min(255)] += 1;
+            if p.r().max(p.g()).max(p.b()) >= PREVIEW_CLIP_CODE {
+                clipped += 1;
+            }
+        }
+        let pixels = image.pixels.len() as u64;
+        Self {
+            histogram,
+            pixels,
+            clipped_share: if pixels == 0 {
+                0.0
+            } else {
+                clipped as f32 / pixels as f32
+            },
+        }
+    }
+
+    /// The luma code below which `share` of the pixels fall (0-1), or
+    /// `None` for an empty image.
+    pub fn percentile(&self, share: f32) -> Option<u8> {
+        if self.pixels == 0 {
+            return None;
+        }
+        let target = (share.clamp(0.0, 1.0) as f64 * self.pixels as f64).ceil() as u64;
+        let mut seen = 0u64;
+        for (code, count) in self.histogram.iter().enumerate() {
+            seen += u64::from(*count);
+            if seen >= target.max(1) {
+                return Some(code as u8);
+            }
+        }
+        Some(255)
+    }
+}
+
 pub(crate) fn phone_qr(link: &str) -> anyhow::Result<ColorImage> {
     use qrcode::{QrCode, types::Color};
     let code = QrCode::with_error_correction_level(link, qrcode::EcLevel::M)?;
@@ -81,6 +142,37 @@ mod tests {
         let peak = Peaking::analyze(&image);
         assert!(count(&peak, 18) > 0);
         assert!(count(&peak, 40) < count(&peak, 18));
+    }
+    /// Flat grey fills one bin and clips nothing; a white half clips half
+    /// the frame whichever channel is at the top; a saturated primary is
+    /// clipped though its luma is low.
+    #[test]
+    fn preview_levels_count_luma_and_clipped_channels() {
+        let mut image = ColorImage::filled([40, 10], Color32::from_gray(127));
+        let flat = PreviewLevels::analyze(&image);
+        assert_eq!(flat.pixels, 400);
+        assert_eq!(flat.histogram[127], 400);
+        assert_eq!(flat.clipped_share, 0.0);
+        assert_eq!(flat.percentile(0.01), Some(127));
+        assert_eq!(flat.percentile(0.99), Some(127));
+        for y in 0..10 {
+            for x in 20..40 {
+                image.pixels[y * 40 + x] = Color32::WHITE;
+            }
+        }
+        let half = PreviewLevels::analyze(&image);
+        assert_eq!(half.histogram[255], 200);
+        assert!((half.clipped_share - 0.5).abs() < 1e-6);
+        assert_eq!(half.percentile(0.25), Some(127));
+        assert_eq!(half.percentile(0.75), Some(255));
+        image.pixels[0] = Color32::from_rgb(0, 0, 255);
+        let blue = PreviewLevels::analyze(&image);
+        assert!(blue.clipped_share > half.clipped_share);
+        assert_eq!(blue.histogram[18], 1, "a clipped blue has a low luma");
+        assert_eq!(
+            PreviewLevels::analyze(&ColorImage::filled([0, 0], Color32::BLACK)).percentile(0.5),
+            None
+        );
     }
     #[test]
     fn qr_has_black_modules_and_complete_quiet_zone() {
