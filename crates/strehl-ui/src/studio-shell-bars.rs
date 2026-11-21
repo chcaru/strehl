@@ -475,6 +475,7 @@ impl StrehlApp {
                     ("Focus mode", Some("F"), PaletteCommand::FocusMode),
                     ("Agent", None, PaletteCommand::Agent),
                     ("Activity log", None, PaletteCommand::ActivityLog),
+                    ("Project tree", None, PaletteCommand::ProjectTree),
                     ("Reset layout", None, PaletteCommand::ResetLayout),
                 ] {
                     let response = ui.add(
@@ -522,6 +523,15 @@ impl StrehlApp {
                 target: CrumbTarget::Library,
             }];
             let station = self.shell.navigator.station();
+            // A subject page: Library / subject (its collection is on the page).
+            if let Route::Subject(id) = self.shell.navigator.route()
+                && let Some(subject) = self.catalog.node(*id)
+            {
+                segments.push(Crumb {
+                    label: subject.name.clone(),
+                    target: CrumbTarget::Room,
+                });
+            }
             if station != Station::Library && station != Station::Capture {
                 if let Some(id) = self.active_stack {
                     let mut chain = Vec::new();
@@ -691,11 +701,14 @@ impl StrehlApp {
                 self.run_palette_command(&ctx, command);
             }
             Some(PaletteCommandOrCrumb::Crumb(target)) => match target {
-                CrumbTarget::Library => self.go_station(Station::Library),
+                CrumbTarget::Library => {
+                    self.navigate(Route::Library(super::studio_route::LibraryView::All))
+                }
                 CrumbTarget::Container(id) => {
                     self.catalog.selected = Some(id);
-                    self.go_station(Station::Library);
+                    self.navigate(Route::Library(super::studio_route::LibraryView::All));
                 }
+                CrumbTarget::Room if self.shell.navigator.station() == Station::Library => {}
                 CrumbTarget::Room => self.set_room(Room::Photograph),
                 CrumbTarget::Stack(_) | CrumbTarget::Render(_) => {}
             },
@@ -944,7 +957,9 @@ impl StrehlApp {
         );
         let ui = &mut strip;
         ui.spacing_mut().item_spacing = egui::vec2(6.0, 0.0);
-        for (keys, text) in hints(self.shell.navigator.station()) {
+        let route = self.shell.navigator.route();
+        let tip = tip(route);
+        for (keys, text) in hints(route) {
             for key in *keys {
                 w::key_cap(ui, key);
             }
@@ -970,6 +985,9 @@ impl StrehlApp {
                 );
             }
             ui.add_space(12.0);
+            if let Some(tip) = tip {
+                ui.label(egui::RichText::new(tip).size(scale::HINT).color(t.ink3));
+            }
             for (fact, strong) in self.photo_facts().into_iter().rev() {
                 ui.label(
                     egui::RichText::new(fact)
@@ -1078,6 +1096,8 @@ impl StrehlApp {
             Entry::new(Group::Actions, "Agent", PaletteCommand::Agent).icon(Icon::Agent),
             Entry::new(Group::Actions, "Activity log", PaletteCommand::ActivityLog)
                 .icon(Icon::Activity),
+            Entry::new(Group::Actions, "Project tree", PaletteCommand::ProjectTree)
+                .icon(Icon::Folder),
             Entry::new(Group::Actions, "Preferences…", PaletteCommand::Preferences)
                 .icon(Icon::Adjust),
             Entry::new(Group::Actions, "Reset layout", PaletteCommand::ResetLayout)
@@ -1191,6 +1211,7 @@ impl StrehlApp {
             }
             PaletteCommand::Agent => self.open_drawer_only(Drawer::Agent),
             PaletteCommand::ActivityLog => self.open_drawer_only(Drawer::Activity),
+            PaletteCommand::ProjectTree => self.open_project_tree(),
             PaletteCommand::Rig => {
                 if self.shell.focus {
                     self.shell.focus = false;
@@ -1346,13 +1367,29 @@ fn station_purpose(station: Station) -> &'static str {
     }
 }
 
+/// A standing reassurance at the right of the hint bar (the mockups).
+fn tip(route: &Route) -> Option<&'static str> {
+    match route {
+        Route::Library(_) => Some("Reorganising the library never moves your source photographs"),
+        Route::Subject(_) => Some(
+            "Scale comes from the lens data recorded in the RAW; correct it once per lens if needed",
+        ),
+        _ => None,
+    }
+}
+
 /// The keys that apply on each station (appendix C), for the hint bar.
-fn hints(station: Station) -> &'static [(&'static [&'static str], &'static str)] {
-    match station {
+fn hints(route: &Route) -> &'static [(&'static [&'static str], &'static str)] {
+    match route.station() {
+        _ if matches!(route, Route::Subject(_)) => &[
+            (&["Enter"], "open the stack"),
+            (&["N"], "new stack of this subject"),
+        ],
         Station::Library => &[
             (&["Ctrl", "K"], "go to anything"),
-            (&["Ctrl", "O"], "open photos"),
-            (&["F"], "focus"),
+            (&["Enter"], "open"),
+            (&["F2"], "rename"),
+            (&["Drop"], "folders here to make subjects"),
         ],
         Station::Capture => &[(&["Ctrl", "K"], "go to anything"), (&["F"], "focus")],
         Station::Stack => &[

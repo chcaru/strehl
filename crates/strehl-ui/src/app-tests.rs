@@ -2444,6 +2444,7 @@ fn process_workspace(
     size: [f32; 2],
     time: f64,
 ) -> egui::FullOutput {
+    app.on_stack_station();
     ctx.run(
         RawInput {
             screen_rect: Some(Rect::from_min_size(
@@ -2463,11 +2464,14 @@ fn process_workspace(
 #[test]
 fn process_replaces_the_small_dock_with_the_actual_full_workspace() {
     // A real stored output is the geometry witness. The primary photograph
-    // must dominate the new process canvas, with no settings dock competing.
+    // must dominate the new process canvas, with no settings dock competing:
+    // the Stack station's engine room, which has no inspector.
     for size in [[1060.0, 720.0], [1440.0, 940.0]] {
         let ctx = Context::default();
         theme::install(&ctx);
         let mut app = app();
+        app.go_station(super::studio_route::Station::Stack);
+        app.set_room(super::studio_route::Room::Engine);
         app.stack = Some(stack(259));
         app.activity = true;
         app.recorded = true;
@@ -2515,9 +2519,14 @@ fn process_replaces_the_small_dock_with_the_actual_full_workspace() {
             })
             .max_by(|a, b| a.width().total_cmp(&b.width()))
             .expect("actual output must be in the process scene");
+        // The canvas below the Studio 2 chrome: top bar 44, control strip
+        // 36, hint bar 24. The stage magnifies in whole steps and is bound by
+        // its height here, so a 7:5 photograph that fills a quarter of the
+        // height spans a fifth of a 1060-point width.
+        let canvas = [size[0], size[1] - 44.0 - 36.0 - 24.0];
         assert!(
-            bounds.width() > size[0] * 0.25 && bounds.height() > size[1] * 0.25,
-            "the actual output must occupy the photo stage, not a small endpoint: {bounds:?}"
+            bounds.width() > canvas[0] * 0.2 && bounds.height() > canvas[1] * 0.25,
+            "the actual output must occupy the photo stage, not a small endpoint: {bounds:?} at {size:?}"
         );
         // Selecting Photos is an actual negative arm with the same capture.
         app.process_view = false;

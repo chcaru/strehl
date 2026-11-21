@@ -26,12 +26,13 @@ fn fixture() -> (StrehlApp, jobs::tests::TestDirectory) {
     app.output = files.path().join("results");
     app.controls.settings.frame_limit = Some(2);
     app.controls.exposure = Some(0.75);
-    app.sidebar = Some(workspace::Sidebar::Projects);
     app.ensure_project_stack();
     app.catalog
         .node_mut(app.active_stack.unwrap())
         .unwrap()
         .name = "Petal study".into();
+    // The project tree with its launch panel, beside the process view.
+    app.show_project_tree_beside_process();
     (app, files)
 }
 
@@ -59,7 +60,8 @@ fn paint(
         },
     )
 }
-/// Text in the Library's left pane, below the top bar.
+/// Text in the inspector (the Project tree drawer, or a station's pane),
+/// below the top bar.
 fn text(out: &egui::FullOutput, needle: &str) -> egui::Rect {
     out.shapes
         .iter()
@@ -67,8 +69,8 @@ fn text(out: &egui::FullOutput, needle: &str) -> egui::Rect {
             egui::Shape::Text(t) if t.galley.text() == needle => Some(t.visual_bounding_rect()),
             _ => None,
         })
-        .find(|rect| rect.top() > 44.0 && rect.left() < 340.0)
-        .unwrap_or_else(|| panic!("missing sidebar text: {needle}"))
+        .find(|rect| rect.top() > 44.0 && rect.left() > 1060.0 - 440.0)
+        .unwrap_or_else(|| panic!("missing inspector text: {needle}"))
 }
 /// Text anywhere in the frame.
 fn anywhere(out: &egui::FullOutput, needle: &str) -> egui::Rect {
@@ -158,15 +160,16 @@ fn local_stack_command_freezes_request_and_second_click_cannot_stop_or_duplicate
     );
     app.sidebar = None;
     let running = paint(&mut app, &ctx, 0.3, vec![]);
-    let library = station(&running, "LIBRARY");
-    click(&mut app, &ctx, library, 0.4);
-    assert_eq!(app.sidebar, Some(workspace::Sidebar::Projects));
-    click(&mut app, &ctx, library, 0.5);
+    let stack_station = station(&running, "STACK");
+    click(&mut app, &ctx, stack_station, 0.4);
+    assert_eq!(app.sidebar, Some(workspace::Sidebar::Adjust));
+    click(&mut app, &ctx, stack_station, 0.5);
     assert_eq!(app.started, Some(started));
     assert!(
         !app.job.as_ref().unwrap().is_cancelling(),
         "repeated station clicks reveal the running stack without cancelling it"
     );
+    app.open_project_tree();
     let stop = text(&paint(&mut app, &ctx, 0.6, vec![]), "Stop");
     assert!(
         stop.left() > action.right(),
@@ -175,9 +178,9 @@ fn local_stack_command_freezes_request_and_second_click_cannot_stop_or_duplicate
     click(&mut app, &ctx, stop.center(), 0.7);
     assert!(app.job.as_ref().unwrap().is_cancelling());
     app.sidebar = None;
-    click(&mut app, &ctx, library, 0.8);
-    assert_eq!(app.sidebar, Some(workspace::Sidebar::Projects));
-    text(&paint(&mut app, &ctx, 0.9, vec![]), "STOPPING");
+    click(&mut app, &ctx, stack_station, 0.8);
+    assert_eq!(app.sidebar, Some(workspace::Sidebar::Adjust));
+    text(&paint(&mut app, &ctx, 0.9, vec![]), "Stopping…");
 }
 
 #[test]
@@ -254,7 +257,7 @@ fn adjust_keeps_launch_above_scrolling_recipe_and_cancelled_import_preserves_cur
         anywhere(&paint(&mut app, &ctx, 0.4, vec![]), "Stack 2 photos"),
         at
     );
-    app.sidebar = Some(workspace::Sidebar::Projects);
+    app.show_project_tree_beside_process();
     let previous_source = app.stack.as_ref().unwrap().directory.clone();
     let active = app.active_stack;
     let recipe = app.controls.settings.clone();

@@ -15,6 +15,16 @@ const MAX_WAIT: Duration = Duration::from_secs(60);
 const FRAME_DELAY: Duration = Duration::from_millis(16);
 
 pub(crate) fn run_offscreen(launch: LaunchOptions) -> Result<()> {
+    run_offscreen_with(launch, |_, _| {})
+}
+
+/// `run_offscreen`, calling `before_frame` with the app and the frame time
+/// before every frame: tests use it to stand in for live state (a capture on
+/// the rig) that has no launch option.
+pub(crate) fn run_offscreen_with(
+    launch: LaunchOptions,
+    mut before_frame: impl FnMut(&mut StrehlApp, f64),
+) -> Result<()> {
     let started = Instant::now();
     let deadline = started + MAX_WAIT;
     let destination = launch
@@ -71,10 +81,11 @@ pub(crate) fn run_offscreen(launch: LaunchOptions) -> Result<()> {
                 egui::Pos2::ZERO,
                 egui::vec2(size[0] as f32, size[1] as f32),
             );
+            let time = started.elapsed().as_secs_f64();
             let mut raw = egui::RawInput {
                 screen_rect: Some(screen),
                 max_texture_side: Some(max_texture_side as usize),
-                time: Some(started.elapsed().as_secs_f64()),
+                time: Some(time),
                 predicted_dt: FRAME_DELAY.as_secs_f32(),
                 focused: true, // This is virtual egui input, never OS focus.
                 ..Default::default()
@@ -86,6 +97,7 @@ pub(crate) fn run_offscreen(launch: LaunchOptions) -> Result<()> {
                 viewport.minimized = Some(false);
                 viewport.focused = Some(true);
             }
+            before_frame(&mut app, time);
             eframe::App::raw_input_hook(&mut app, &ctx, &mut raw);
             let output = ctx.run(raw, |ctx| {
                 let paint_started = Instant::now();

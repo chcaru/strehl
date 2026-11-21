@@ -35,6 +35,8 @@ pub(crate) struct LibraryPalette {
     pub info: Color32,
     /// The dark plate under a badge on a picture.
     pub plate: Color32,
+    /// Capitals on the plate: light in every theme.
+    pub plate_ink: Color32,
 }
 impl LibraryPalette {
     pub(crate) const fn graphite() -> Self {
@@ -55,6 +57,32 @@ impl LibraryPalette {
             bad: Color32::from_rgb(0xe5, 0x60, 0x4c),
             info: Color32::from_rgb(0x8a, 0xb4, 0xe8),
             plate: Color32::from_rgba_premultiplied(7, 7, 7, 209),
+            plate_ink: Color32::from_rgb(0xe9, 0xe6, 0xde),
+        }
+    }
+}
+impl LibraryPalette {
+    /// The palette for the theme in effect (Graphite, Instrument, Lightbox).
+    /// The picture plate stays a dark veil in every theme: it sits on photographs.
+    pub(crate) fn from_tokens(t: &crate::studio_theme::Tokens) -> Self {
+        Self {
+            bg: t.bg,
+            panel: t.panel,
+            raised: t.raised,
+            control: t.control,
+            line: t.line,
+            line_2: t.line2,
+            ink: t.ink,
+            ink_2: t.ink2,
+            ink_3: t.ink3,
+            accent: t.accent,
+            accent_ink: t.accent_ink,
+            ok: t.ok,
+            warn: t.warn,
+            bad: t.bad,
+            info: t.info,
+            plate: Self::graphite().plate,
+            plate_ink: Self::graphite().plate_ink,
         }
     }
 }
@@ -422,7 +450,7 @@ pub(crate) fn badge(
     let ink = if accent {
         palette.accent_ink
     } else {
-        palette.ink
+        palette.plate_ink
     };
     let galley = caps_galley(painter, label, 9.5, ink);
     let mark_width = if mark_kind.is_some() { 14.0 } else { 0.0 };

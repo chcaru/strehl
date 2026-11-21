@@ -127,10 +127,12 @@ fn every_route_matches_the_reference_chrome_rectangles() {
     ] {
         let ctx = context();
         let mut app = app();
-        app.apply_launch_route(route);
+        app.apply_launch_route(route, None);
+        let mut out = None;
         for time in 0..3 {
-            frame(&mut app, &ctx, time as f64 * 0.05, vec![]);
+            out = Some(frame(&mut app, &ctx, time as f64 * 0.05, vec![]));
         }
+        let out = out.unwrap();
         assert_rect(
             panel(&ctx, "studio-top"),
             [0.0, 0.0, 1680.0, 44.0],
@@ -158,8 +160,13 @@ fn every_route_matches_the_reference_chrome_rectangles() {
             );
         }
         if station == Station::Library {
-            let nav = panel(&ctx, "library-nav").expect("the Library's left pane");
-            assert_eq!((nav.left(), nav.top()), (0.0, 44.0));
+            // The station draws its own 232 px list; no shell panes.
+            let list = texts(&out)
+                .into_iter()
+                .find(|(text, rect)| text == "All subjects" && rect.right() < 232.0)
+                .expect("the Library's own left list");
+            assert!(list.1.top() > 44.0);
+            assert!(panel(&ctx, "studio-inspector").is_none());
         }
     }
 }

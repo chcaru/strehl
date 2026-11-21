@@ -593,6 +593,15 @@ fn needs_you_lists_collections_search_and_sort_select_the_right_subjects() {
             "Subject 014"
         ]
     );
+    // The subject on the rig leads the recent sort.
+    let on_rig = model
+        .cards
+        .iter()
+        .find(|c| c.name == "Subject 009")
+        .unwrap()
+        .id;
+    let first = model.select(LibraryFilter::All, "", LibrarySort::Recent, Some(on_rig))[0];
+    assert_eq!(model.cards[first].name, "Subject 009");
     assert_eq!(
         pick(LibraryFilter::All, "", LibrarySort::Size)[..2],
         ["Subject 015", "Subject 014"]

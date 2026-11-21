@@ -65,6 +65,8 @@ pub(crate) struct RigSummary {
     pub receiver_error: Option<String>,
     pub connection_error: Option<String>,
     pub command_error: Option<String>,
+    /// The run folder the receiver is writing now.
+    pub in_progress: Option<std::path::PathBuf>,
 }
 
 fn text(value: &Value) -> Option<String> {
@@ -118,6 +120,7 @@ impl RigSummary {
             receiver_error: text(&snapshot["receiver_error"]),
             connection_error: text(&snapshot["connection_error"]),
             command_error: text(&snapshot["command_error"]),
+            in_progress: text(&snapshot["in_progress"]["folder"]).map(std::path::PathBuf::from),
         }
     }
     /// A slow-link warning while the camera is connected.

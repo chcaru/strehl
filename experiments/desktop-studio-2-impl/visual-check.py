@@ -26,6 +26,11 @@ RUN = r"C:\Users\chris\Pictures\Strehl\strehl-1793781369068-68052-3"
 # name: (extra arguments, reference image)
 ROUTES = {
     "library": (["--route", "library"], "library.png"),
+    "library-instrument": (["--route", "library", "--theme", "instrument"], "library.png"),
+    "library-lightbox": (["--route", "library", "--theme", "lightbox"], "library.png"),
+    # Without a name: the open stack's subject, else the most developed one.
+    "subject": (["--route", "subject"], "subject.png"),
+    "subject-lightbox": (["--route", "subject", "--theme", "lightbox"], "subject.png"),
     "stack": (["--open-run", RUN, "--route", "stack"], "stack.png"),
     "engine": (["--open-run", RUN, "--route", "engine"], "engine-room.png"),
     "develop": (["--open-run", RUN, "--route", "develop"], "develop.png"),
