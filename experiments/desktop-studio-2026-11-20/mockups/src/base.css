@@ -51,6 +51,11 @@ body.actual .stage-wrap { overflow: auto; }
 .pin { position: absolute; z-index: 30; margin: -9px 0 0 -9px; pointer-events: none; }
 .pin.in { left: 0; top: 0; }
 body.nopins .pin { display: none; }
+body.bare { background: #000; }
+body.bare .proto-bar, body.bare .screen-head, body.bare .notes, body.bare #dump { display: none; }
+body.bare .screen { padding: 0; }
+body.bare .stage-wrap { max-width: none; margin: 0; box-shadow: none; overflow: visible; }
+body.bare .app * { transition: none !important; }
 
 /* document-style pages (overview, variants, system) */
 .page { max-width: 1240px; margin: 0 auto; }

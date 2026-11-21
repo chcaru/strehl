@@ -16,6 +16,8 @@
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var clamp = function (v, a, b) { return Math.max(a, Math.min(b, v)); };
   document.body.classList.add("js");
+  /* ?bare=1 shows only the 1680 x 1050 stage at 1:1, for reference renders (render-reference.py) */
+  if (new URLSearchParams(location.search).get("bare")) { document.body.classList.add("bare", "actual", "nopins"); }
 
   /* ---------- navigation and scaling ---------- */
   var screens = $$(".screen");
@@ -636,4 +638,22 @@
       if (photo) { probe(photo, uv); app.dataset.hover = "on"; }
     }
   });
+
+  /* ?dump=1 appends the stage rectangles of the main parts of the open screen as JSON */
+  if (qs.get("dump")) {
+    var parts = { top: ".top", brand: ".brand", crumbs: ".crumbs", stations: ".stations", top_right: ".top .right", control_strip: ".cstrip",
+      canvas: ".canvas", photograph: ".canvas .photo", two_up: ".twoup", core_sample: ".cs", peek: ".peek", rail: ".rail", rail_head: ".rail-head",
+      rail_chart: ".rail-svg", filmstrip: ".film", film_frame: ".film div", inspector: ".insp", inspector_tabs: ".tabs", inspector_body: ".insp-body",
+      inspector_foot: ".insp-foot", tools: ".tools", sidebar: ".side", library: ".lib", subject_left: ".sleft", subject_right: ".sright",
+      pipeline: ".pipe", engine_grid: ".egrid", headline: ".headline", proof: ".proofbox", latest_plane: ".latest", hint_bar: ".hint",
+      button: ".btn", button_large: ".btn.lg", segment: ".seg", toggle: ".toggle", slider: ".slider", check_row: ".check" };
+    var stage = $(".screen.on .stage"), origin = stage ? stage.getBoundingClientRect() : null, found = {};
+    Object.keys(parts).forEach(function (name) {
+      var el = stage && $$(parts[name], stage).filter(function (e) { return e.offsetParent !== null; })[0];
+      if (!el) { return; }
+      var r = el.getBoundingClientRect();
+      found[name] = [Math.round(r.left - origin.left), Math.round(r.top - origin.top), Math.round(r.width), Math.round(r.height)];
+    });
+    var pre = document.createElement("pre"); pre.id = "dump"; pre.textContent = JSON.stringify(found); document.body.appendChild(pre);
+  }
 })();

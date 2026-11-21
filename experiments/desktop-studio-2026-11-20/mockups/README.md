@@ -52,6 +52,19 @@ photograph, hover and click the rail, hold, scrub, arrow keys, the detail-size s
 lens keys, popovers on another screen) and prints PASS or FAIL per check. It needs the pictures and data: with placeholders
 the probe has nothing to read. It does not judge appearance.
 
+## Reference renders for implementation
+
+```powershell
+python experiments/desktop-studio-2026-11-20/mockups/render-reference.py
+```
+
+Writes `outputs/reference/NAME.png`, 25 screen states at 1680 × 1050 showing only the application
+stage at 1:1, and `outputs/reference/metrics.json`, the rectangle of each main part (top bar,
+control strip, canvas, photograph, rail, filmstrip, inspector, hint bar, buttons and so on) in
+stage pixels. The [implementation plan](../../../docs/proposals/2026-11-desktop-studio-2-implementation.md)
+compares offscreen renders of the application against them. Two query parameters make this
+possible: `?bare=1` shows the stage alone, and `&dump=1` appends the rectangles as JSON.
+
 ## Pictures and data
 
 The pictures are the owner's captures and are not committed. `outputs/` is ignored by Git.
@@ -84,6 +97,7 @@ and a camera-JPEG composite cannot predict the RAW merge's detail or noise.
 | `build.py` | Wraps each screen in the shared shell, inlines styles, script, icons, pictures and data |
 | `make-assets.py` | Builds the pictures and the illustrative data into `outputs/assets` |
 | `check-interactions.py`, `src/check.html` | Drive the built mockup with synthetic events and report PASS or FAIL |
+| `render-reference.py` | Reference images and layout rectangles for implementation |
 | `src/index.html` | Page template and the prototype bar |
 | `src/base.css` | Themes, shell and shared components |
 | `src/screens.css` | Per-screen layout |

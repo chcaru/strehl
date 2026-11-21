@@ -1,8 +1,11 @@
 # Strehl Studio 2: the desktop re-formed around the life of a photograph and the depth of a stack
 
-**Status:** Proposal, second iteration (2026-11-21). Nothing here is built. The mockups are
-design intent, not application code. Section 13 records what the owner asked for after the first
-iteration and what changed.
+**Status:** Spec (locked 2026-11-21). The owner approved the design ("looks solid. lock in the
+plan"). Implementation follows [the implementation plan](2026-11-desktop-studio-2-implementation.md),
+which also corrects points this document could not know: the default GPU render emits no
+per-plane admission maps, long stacks' logs exceed the reopen limit, and nothing reads
+magnification. Where the two differ, the implementation plan wins. Section 13 records the
+owner's feedback between iterations.
 **Date:** 2026-11-20, revised 2026-11-21.
 **Owner's question:** the desktop began as a focus stacker and now also captures, diagnoses,
 edits and exports. Take stock of the whole flow, interface and experience, and propose how to
@@ -427,9 +430,9 @@ down.
   with its depth signature, lifecycle and size; under an open stack, the lineage from renders
   to versions to exports; "Shoot again with these settings"; a journal of what was done with
   which settings.
-- **Scale.** Magnification is in the lens data; with the pixel pitch it gives micrometres per
-  pixel, which gives a scale bar and a step size in micrometres. How reliable the recorded
-  magnification is with a teleconverter fitted is UNVERIFIED; the value is editable per lens.
+- **Scale.** Micrometres per pixel give a scale bar and a step size in micrometres. Locked as a
+  per-lens calibration (a micrometre slide, or magnification and pixel pitch entered once):
+  nothing in the code reads magnification from the RAW (implementation plan, D12).
 - **Missing sources** are a card state with "locate…", which relinks instead of creating a
   second stack.
 - **Storage review:** stacks by size with their options (compact, with the measured estimate;
@@ -650,6 +653,9 @@ and a full-size file leave in one action.
   suggestions carry Apply and Dismiss; the consent text lists the real scope, capture included.
 
 ## 10. Decisions for the owner
+
+Locked on 2026-11-21 as recommended, with D6, D7 and three new decisions (D11 typeface, D12 scale,
+D13 extending a stack) refined in [the implementation plan, section 2](2026-11-desktop-studio-2-implementation.md#2-locked-decisions).
 
 | # | Decision | Recommendation |
 | --- | --- | --- |
