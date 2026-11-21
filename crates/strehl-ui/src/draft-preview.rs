@@ -696,8 +696,11 @@ impl Incremental {
         }
     }
     /// A plane's preview, already decoded (`index` counts from the first
-    /// plane offered).
+    /// plane offered). A plane off the kept subsample is not added.
     fn add_image(&mut self, image: PreviewImage, index: usize, path: PathBuf) -> Result<()> {
+        if !index.is_multiple_of(self.stride) {
+            return Ok(());
+        }
         let size = image.size;
         ensure!(
             size.iter().all(|&side| side >= 80),
@@ -1131,6 +1134,15 @@ mod tests {
         assert_eq!(proof.frames.len(), MAX_FRAMES / 2 + 1);
         assert!(proof.frames.iter().all(|f| f.source_index % 2 == 0));
         assert_eq!(proof.frames[0].source_index, 0);
+        let kept = proof.frames.len();
+        proof
+            .add_image(
+                scene_image(160, 120, 0.0, 0.0, 0.0),
+                MAX_FRAMES + 1,
+                PathBuf::new(),
+            )
+            .unwrap();
+        assert_eq!(proof.frames.len(), kept, "an odd plane is not kept");
         // An odd plane is skipped unread (a missing file would warn).
         let cancel = AtomicBool::new(false);
         proof
