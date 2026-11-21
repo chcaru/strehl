@@ -52,14 +52,18 @@ fn a_slow_link_a_stopped_receiver_or_a_fault_needs_a_look() {
 }
 
 #[test]
-fn a_capture_in_flight_shows_its_count() {
+fn a_capture_in_flight_shows_the_light_and_its_count_only_without_one() {
     let mut state = ready_state();
     state["phase"] = json!("capturing");
     state["completed"] = json!(61);
     state["total"] = json!(96);
-    let rig = RigSummary::from_snapshot(&online(state));
+    let rig = RigSummary::from_snapshot(&online(state.clone()));
     assert_eq!(rig.lamp(), Lamp::Busy);
-    assert_eq!(rig.headline(), ("A7CR".into(), "61 / 96".into()));
+    // The activity shows the count; the rig says the light.
+    assert_eq!(rig.headline(), ("A7CR".into(), "light 41 W".into()));
+    let mut dark = RigSummary::from_snapshot(&online(state));
+    dark.light = Default::default();
+    assert_eq!(dark.headline(), ("A7CR".into(), "61 / 96".into()));
 }
 
 #[test]

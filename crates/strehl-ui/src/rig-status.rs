@@ -163,10 +163,19 @@ impl RigSummary {
         match self.lamp() {
             Lamp::Unknown => ("Rig".into(), "not connected".into()),
             Lamp::Offline => ("Rig".into(), "offline".into()),
+            // The capture's count is the activity's to show; the rig says
+            // what only it knows, the light (the mockups' "light 41 W").
             _ if self.capturing() => (
                 self.camera_name().unwrap_or_else(|| "Camera".into()),
-                match (self.completed, self.planned) {
-                    (Some(done), Some(total)) => format!("{done} / {total}"),
+                match (
+                    self.light.on,
+                    self.light.watts,
+                    self.completed,
+                    self.planned,
+                ) {
+                    (Some(true), Some(watts), _, _) => format!("light {watts:.0} W"),
+                    (Some(false), ..) => "light off".into(),
+                    (_, _, Some(done), Some(total)) => format!("{done} / {total}"),
                     _ => self.phase.clone().unwrap_or_default(),
                 },
             ),

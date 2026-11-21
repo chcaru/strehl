@@ -2976,7 +2976,9 @@ impl StrehlApp {
             }
             ctx.request_repaint();
         }
-        let chrome = if self.shell.focus {
+        let chrome = if self.glance_covers_window() {
+            self.glance_chrome_alpha(ctx)
+        } else if self.shell.focus {
             self.focus_chrome_alpha(ctx)
         } else {
             1.0
