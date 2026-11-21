@@ -48,6 +48,10 @@ mod session;
 mod session_import;
 #[path = "app-session-output.rs"]
 mod session_output;
+#[path = "studio-route.rs"]
+pub(crate) mod studio_route;
+#[path = "studio-shell.rs"]
+mod studio_shell;
 #[cfg(test)]
 #[path = "app-tests.rs"]
 mod tests;
@@ -225,6 +229,8 @@ pub struct StrehlApp {
     metadata_requested: bool,
     headless_shutdown: bool,
     agent_session_out: Option<PathBuf>,
+    /// The Studio 2 frame: route, notices, palette, preferences.
+    shell: studio_shell::Shell,
 }
 
 impl StrehlApp {
@@ -240,12 +246,29 @@ impl StrehlApp {
     }
     fn from_launch(max_texture_side: u32, launch: LaunchOptions) -> Self {
         let isolated_state = launch.headless || launch.offscreen || launch.catalog.is_some();
+        // An interactive launch that names no pane or document reopens the
+        // station the owner last used.
+        let launch_route = launch.route;
+        let restore_station = launch_route.is_none()
+            && !(launch.headless
+                || launch.offscreen
+                || launch.agent
+                || launch.edit
+                || launch.export
+                || launch.projects
+                || launch.capture
+                || launch.preview.is_some()
+                || launch.workbench.is_some()
+                || launch.probe_at.is_some()
+                || launch.open_run.is_some()
+                || launch.source.is_some());
         let catalog = crate::workspace_history::Catalog::load(
             launch
                 .catalog
                 .clone()
                 .or_else(crate::workspace_history::default_path),
         );
+        let shell = studio_shell::Shell::new(&launch, catalog.path.as_deref());
         let mut app = Self {
             session_ui: crate::session_workspace::SessionUi::default(),
             ordinary_recipe: None,
@@ -348,6 +371,7 @@ impl StrehlApp {
             metadata_requested: launch.metadata,
             headless_shutdown: false,
             agent_session_out: launch.agent_session_out,
+            shell,
         };
         if isolated_state {
             app.editor.recovery_root = app
@@ -465,6 +489,13 @@ impl StrehlApp {
         if launch.capture {
             app.process_view = true;
             app.sidebar = Some(workspace::Sidebar::Capture);
+        }
+        // Adopt the launch flags above, then apply an explicit route.
+        app.sync_route();
+        if let Some(route) = launch_route {
+            app.apply_launch_route(route);
+        } else if restore_station {
+            app.restore_station();
         }
         app
     }
@@ -900,9 +931,9 @@ impl StrehlApp {
                     }
                     self.log(&format!(
                         "Job: {}\nOutput: {}\nLog: {}",
-                        directory.display(),
-                        output.display(),
-                        log.display()
+                        crate::display_path::display_path(&directory),
+                        crate::display_path::display_path(&output),
+                        crate::display_path::display_path(&log)
                     ));
                 }
                 RenderEvent::Log(text) => {
@@ -940,9 +971,9 @@ impl StrehlApp {
                             self.status = "Stack saved".into();
                             self.log(&format!(
                                 "Saved {}\nJob: {}\nLog: {}",
-                                output.display(),
-                                directory.display(),
-                                log.display()
+                                crate::display_path::display_path(&output),
+                                crate::display_path::display_path(&directory),
+                                crate::display_path::display_path(&log)
                             ));
                             self.result = Some(output.clone());
                             self.refresh_session_outputs(&directory);
@@ -956,7 +987,7 @@ impl StrehlApp {
                             self.status = "Cancelled".into();
                             self.log(&format!(
                                 "Cancelled. Activity retained in {}",
-                                directory.display()
+                                crate::display_path::display_path(&directory)
                             ));
                         }
                         RenderOutcome::Failed { directory, message } => {
@@ -965,7 +996,10 @@ impl StrehlApp {
                                 self.persist_catalog();
                             }
                             if let Some(path) = directory {
-                                self.log(&format!("Job: {}", path.display()));
+                                self.log(&format!(
+                                    "Job: {}",
+                                    crate::display_path::display_path(&path)
+                                ));
                             }
                             self.progress.mark_failed();
                             self.status = "Stack stopped".into();
@@ -1355,7 +1389,7 @@ impl StrehlApp {
                                         .clicked()
                                         && let Some(path) = &self.result
                                     {
-                                        ui.ctx().copy_text(path.display().to_string());
+                                        ui.ctx().copy_text(crate::display_path::display_path(path));
                                     }
                                 }
                             });
@@ -1414,7 +1448,7 @@ impl StrehlApp {
             .size(11.0)
             .color(MUTED),
         )
-        .on_hover_text(self.output.display().to_string());
+        .on_hover_text(crate::display_path::display_path(&self.output));
         if ui
             .add_enabled(
                 self.job.is_none() && !self.picker_active(),
@@ -2393,7 +2427,8 @@ impl StrehlApp {
             );
         }
     }
-    fn show_process(&mut self, ctx: &egui::Context) {
+    fn show_process(&mut self, ui: &mut egui::Ui) {
+        let ctx = &ui.ctx().clone();
         if let (Some(session), Some(scan)) = (&self.controls.settings.session, &self.stack) {
             self.session_ui.groups = session.groups(scan).unwrap_or_default();
         }
@@ -2405,18 +2440,11 @@ impl StrehlApp {
             });
         self.process_space
             .set_session_summary(self.session_ui.summary.as_ref());
+        // The editor's tool follows this in `tick`, not here.
         let edit_enabled = self.sidebar == Some(workspace::Sidebar::Edit)
             && self.editor.loaded.is_some()
             && self.editor.path == self.result
             && self.progress.stage == Stage::Complete;
-        if !edit_enabled {
-            self.editor.cancel_geometry();
-            self.editor
-                .set_tool(crate::edit_workspace::DrawingTool::Navigate);
-        } else if self.editor.tool == crate::edit_workspace::DrawingTool::Navigate {
-            self.editor
-                .set_tool(crate::edit_workspace::DrawingTool::Select);
-        }
         let export_focus = self.sidebar == Some(workspace::Sidebar::Export)
             && self.editor.loaded.is_some()
             && self.editor.path == self.result
@@ -2494,9 +2522,8 @@ impl StrehlApp {
                 .then(|| self.editor.photo_paint())
                 .flatten(),
         );
-        let response = egui::CentralPanel::default()
-            .frame(egui::Frame::new().fill(BG))
-            .show(ctx, |ui| {
+        let response = {
+            {
                 let input = process_space::Input {
                     progress: &self.progress,
                     frame_count: count,
@@ -2536,8 +2563,8 @@ impl StrehlApp {
                     }
                 }
                 response
-            })
-            .inner;
+            }
+        };
         let response = Self::parent_process_response(response, view_scope.as_ref());
         if let Some(index) = response.camera_metadata {
             self.inspect_camera_metadata(index, ctx);
@@ -2577,35 +2604,6 @@ impl StrehlApp {
         }
         if response.open_sources {
             self.inspect_frame(self.process_inspection().unwrap_or(self.selected));
-        }
-    }
-    fn workspace(&mut self, ctx: &egui::Context) {
-        self.navigation_rail(ctx);
-        if self.sidebar == Some(workspace::Sidebar::Capture) {
-            let can_import = self.job.is_none()
-                && self.scan.is_none()
-                && self.replay.is_none()
-                && self.session_import.is_none()
-                && !self.picker_active();
-            self.capture.show(ctx, can_import);
-            return;
-        }
-        self.sidebar(ctx);
-        if self.process_view {
-            if self.stack.is_none()
-                && !self.activity
-                && self.expected_run.is_none()
-                && self.result.is_none()
-            {
-                self.welcome_workspace(ctx);
-            } else {
-                self.show_process(ctx);
-            }
-        } else {
-            self.inspector(ctx);
-            self.filmstrip(ctx);
-            self.stack_ribbon(ctx);
-            self.canvas(ctx);
         }
     }
     fn process_capture_count(&self) -> usize {
@@ -2711,11 +2709,20 @@ impl StrehlApp {
                     .visible_sources
                     .iter()
                     .all(|i| self.browser.has_thumbnail(*i) || self.browser.error(*i).is_some()));
+        let station = self.shell.navigator.station();
         let ready = ready
             && (self.sidebar != Some(workspace::Sidebar::Capture)
                 || self.capture.ready_for_screenshot())
             && (self.sidebar != Some(workspace::Sidebar::Projects)
                 || !self.project_explorer.preview_pending())
+            // Develop and Export show the photograph they act on.
+            && (!matches!(
+                station,
+                studio_route::Station::Develop | studio_route::Station::Export
+            ) || self.result.is_none()
+                || self.editor.loaded.is_some()
+                || self.editor.error.is_some())
+
             && (!self.bracket_browser.active() || self.bracket_browser.settled(now))
             && (!self.process_view
                 || self.process_contacts().iter().all(|i| {
@@ -2823,7 +2830,7 @@ impl StrehlApp {
     }
     fn update_workspace(&mut self, ctx: &egui::Context) {
         self.updates += 1;
-        self.poll_capture(ctx);
+        self.tick(ctx);
         let image_domain = (self.epoch, self.process_view, self.picker_active());
         let domain_changed = ctx.data_mut(|data| {
             let id = egui::Id::new("image-gesture-workspace-domain");
@@ -2838,6 +2845,7 @@ impl StrehlApp {
         self.poll_editing(ctx);
         self.poll_agent(ctx);
         self.handle_close(ctx);
+        self.observe_notices();
         // Windows can deliver a tiny drawable area during minimize/restore.
         // Laying out that transient area clamps egui's remembered pane widths
         // and can produce negative child sizes. Continue consuming engine work
@@ -2851,6 +2859,7 @@ impl StrehlApp {
             return;
         }
         self.undo_shortcuts(ctx);
+        self.shell_shortcuts(ctx);
         if !ctx.wants_keyboard_input() && !self.picker_active() {
             if ctx.input(|i| i.modifiers.command && i.key_pressed(egui::Key::O))
                 && self.job.is_none()
@@ -2879,8 +2888,9 @@ impl StrehlApp {
                 }
             }
         }
-        self.status_bar(ctx);
+        self.shell_bars(ctx);
         self.workspace(ctx);
+        self.shell_overlays(ctx);
         if self.camera_metadata.is_open() && self.controls.settings.session.is_some() {
             let index = self.preview_target();
             if self
@@ -2915,7 +2925,12 @@ impl StrehlApp {
             }
             ctx.request_repaint();
         }
-        crate::window_chrome::finish(ctx, self.picker_active());
+        let chrome = if self.shell.focus {
+            self.focus_chrome_alpha(ctx)
+        } else {
+            1.0
+        };
+        crate::window_chrome::finish_with(ctx, self.picker_active(), chrome);
         if let Some(edited) = self.catalog_edit_pending {
             if edited.elapsed() >= Duration::from_millis(300)
                 && !ctx.input(|i| i.pointer.any_down())
@@ -2967,6 +2982,8 @@ impl eframe::App for StrehlApp {
         );
     }
     fn on_exit(&mut self) {
+        self.save_pending_draft();
+        self.flush_preferences();
         if let Err(error) = self.editor.ensure_saved_on_close() {
             eprintln!("Saving photo edits: {error:#}");
         }
@@ -3037,10 +3054,6 @@ fn cache_image(ctx: &egui::Context, image: PreviewImage) -> CachedImage {
 }
 fn install_viewer(viewer: &mut Viewer, image: &CachedImage) {
     viewer.install(&image.texture, image.source_size, image.overview);
-}
-fn dot(ui: &mut egui::Ui, color: Color32) {
-    let (r, _) = ui.allocate_exact_size(egui::vec2(7.0, 14.0), egui::Sense::hover());
-    ui.painter().circle_filled(r.center(), 2.5, color);
 }
 fn elapsed(t: Duration) -> String {
     format!("{:02}:{:02}", t.as_secs() / 60, t.as_secs() % 60)

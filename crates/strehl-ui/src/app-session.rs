@@ -215,7 +215,7 @@ impl StrehlApp {
                                     if ui.add_enabled(pass.directories.len() > 1, egui::Button::new("×").small()).on_hover_text("Remove folder segment").clicked() { edit = Some(LayoutEdit::RemoveSegment(i, segment)); }
                                     if ui.add_enabled(segment + 1 < pass.directories.len(), egui::Button::new("↓").small()).on_hover_text("Move folder segment later").clicked() { edit = Some(LayoutEdit::MoveSegment(i, segment, segment + 1)); }
                                     if ui.add_enabled(segment > 0, egui::Button::new("↑").small()).on_hover_text("Move folder segment earlier").clicked() { edit = Some(LayoutEdit::MoveSegment(i, segment, segment - 1)); }
-                                    ui.add_sized([ui.available_width().max(40.0), 18.0], egui::Label::new(RichText::new(format!("{}  {}", segment + 1, directory.file_name().unwrap_or_default().to_string_lossy())).size(10.0).color(MUTED)).truncate()).on_hover_text(directory.display().to_string());
+                                    ui.add_sized([ui.available_width().max(40.0), 18.0], egui::Label::new(RichText::new(format!("{}  {}", segment + 1, directory.file_name().unwrap_or_default().to_string_lossy())).size(10.0).color(MUTED)).truncate()).on_hover_text(crate::display_path::display_path(directory));
                                 });
                             });
                         }

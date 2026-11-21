@@ -7,10 +7,14 @@ use std::path::Path;
 
 pub(super) const MAX_FRAMES: usize = 4096;
 const MAX_CELLS: usize = 4096;
-const BLUE: Color32 = Color32::from_rgb(38, 99, 161);
-const ORANGE: Color32 = Color32::from_rgb(190, 94, 42);
-const NEUTRAL: Color32 = Color32::from_rgb(238, 240, 241);
-const GRID: Color32 = Color32::from_rgb(205, 212, 220);
+// The app's palette (the window no longer forces egui's light visuals):
+// negative values and series in the info blue, positive and the selection in
+// the warn orange, zero at the raised surface.
+const BLUE: Color32 = crate::studio_theme::GRAPHITE.info;
+const ORANGE: Color32 = crate::studio_theme::GRAPHITE.warn;
+const NEUTRAL: Color32 = crate::studio_theme::GRAPHITE.control;
+const GRID: Color32 = crate::studio_theme::GRAPHITE.line2;
+const LABEL: Color32 = crate::studio_theme::GRAPHITE.ink3;
 
 #[derive(Debug)]
 pub(super) struct Cell {
@@ -312,7 +316,7 @@ impl ViewState {
                     painter.rect_stroke(
                         cell_rect.shrink(0.5),
                         0.0,
-                        Stroke::new(1.5_f32, Color32::BLACK),
+                        Stroke::new(1.5_f32, crate::studio_theme::GRAPHITE.ink),
                         egui::StrokeKind::Inside,
                     );
                 }
@@ -412,7 +416,7 @@ fn plot(
     );
     let graph = rect.shrink2(Vec2::new(34.0, 18.0));
     let painter = ui.painter_at(rect);
-    painter.rect_filled(rect, 4.0, Color32::from_rgb(247, 249, 251));
+    painter.rect_filled(rect, 0.0, crate::studio_theme::GRAPHITE.bg);
     let low = values.iter().flatten().copied().reduce(f64::min);
     let high = values.iter().flatten().copied().reduce(f64::max);
     let (Some(low), Some(high)) = (low, high) else {
@@ -421,7 +425,7 @@ fn plot(
             egui::Align2::CENTER_CENTER,
             "No recorded values",
             egui::FontId::proportional(13.0),
-            Color32::DARK_GRAY,
+            LABEL,
         );
         return None;
     };
@@ -441,14 +445,14 @@ fn plot(
         egui::Align2::LEFT_TOP,
         format!("{high:.0}"),
         egui::FontId::monospace(10.0),
-        Color32::DARK_GRAY,
+        LABEL,
     );
     painter.text(
         rect.left_bottom() - Vec2::new(-2.0, 2.0),
         egui::Align2::LEFT_BOTTOM,
         format!("{low:.0}"),
         egui::FontId::monospace(10.0),
-        Color32::DARK_GRAY,
+        LABEL,
     );
     for (i, value) in values.iter().enumerate() {
         let Some(value) = value else {

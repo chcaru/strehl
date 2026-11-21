@@ -436,10 +436,10 @@ impl StrehlApp {
                 theme::caption(ui, "Recovery copy saved");
                 if ui
                     .button("Copy path")
-                    .on_hover_text(path.display().to_string())
+                    .on_hover_text(crate::display_path::display_path(path))
                     .clicked()
                 {
-                    ui.ctx().copy_text(path.display().to_string());
+                    ui.ctx().copy_text(crate::display_path::display_path(path));
                 }
             });
         }
