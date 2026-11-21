@@ -1305,6 +1305,7 @@ pub(super) fn region_statistics(
     let mut sum = 0.0f64;
     let mut maximum = f32::NEG_INFINITY;
     let mut over_white = 0u64;
+    let prepared = recipe.prepare();
     for (i, pixel) in image.pixels.as_chunks::<3>().0.iter().enumerate() {
         let uv = [
             ((i % image.width as usize) as f32 + 0.5) / image.width as f32,
@@ -1313,7 +1314,7 @@ pub(super) fn region_statistics(
         if region.weight(uv, 0.0) <= 0.0 {
             continue;
         }
-        let rgb = recipe.apply_pixel([pixel[0], pixel[1], pixel[2]], uv);
+        let rgb = prepared.apply_pixel([pixel[0], pixel[1], pixel[2]], uv);
         let y = 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
         count += 1;
         sum += f64::from(y);
