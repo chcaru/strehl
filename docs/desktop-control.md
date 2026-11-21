@@ -219,7 +219,8 @@ interactive workspace and follow the [desktop build guide](desktop-build.md).
 ## Check the UI without opening a window
 
 Native Capture is available through `launch --capture --capture-settings PATH`
-and `screenshot --capture --capture-settings PATH --png PATH`. The settings file
+and `screenshot --route capture --capture-settings PATH --png PATH` (or the older
+`--capture`). The settings file
 contains pairing credentials; do not include it in reports. Capture screenshots
 read live state/preview but never initiate an exposure. `open_capture` selects
 the tab in an existing session. Snapshots expose sanitized `capture` state,
@@ -307,25 +308,63 @@ presentation. The normal interactive `--screenshot` option remains available.
 `--route` opens a Studio 2 station: `library`, `subject`, `capture`, `stack`,
 `engine` (the Stack station's engine room), `develop` or `export`. It is applied
 after the launch's document is opened, so `--open-run DIR --route develop`
-renders that run's photograph in Develop. Until catalog format 2 adds subjects,
-`subject` opens the Library. `--theme graphite|instrument|lightbox` sets the
-theme for that render only; the owner's Preferences (`studio.json` beside the
-catalog) are never written by offscreen or headless runs. The older
-`--edit`, `--export` and `--projects` flags are forwarded too and open the
-Develop, Export and Library stations.
+renders that run's photograph in Develop. `subject:NAME` or `subject:ID` opens
+that subject's page (the name is matched without regard to case); a plain
+`subject` opens the open stack's subject, else the subject with the most renders.
+`--theme graphite|instrument|lightbox` sets the theme for that render only; the
+owner's Preferences (`studio.json` beside the catalog) are never written by
+offscreen or headless runs. The older `--edit`, `--export` and `--projects` flags
+are forwarded too and open the Develop, Export and Library stations.
+
+More of the shell and the stations can be drawn without input:
+
+| Option | What it draws |
+| --- | --- |
+| `--overlay projects` | the project tree drawer over the station |
+| `--overlay activity` / `agent` | the Activity log or Agent drawer |
+| `--overlay palette` / `preferences` | the command palette, or Preferences |
+| `--plane-hold N` | the Stack station holding plane N (from 1) beside the photograph |
+| `--capture-fixture plan` / `flight` / `glance` | Capture from a fabricated state (a synthetic subject); no camera host is reached |
+
+The helper's `screenshot` forwards all of them; `--route` alone is enough to
+name what to render (no `--source` or `--open-run` needed for `library`,
+`subject` or `capture`).
 
 ```powershell
-python scripts/strehl-control.py --exe $exe screenshot --open-run 'C:\Users\me\Pictures\Strehl\strehl-run' --catalog 'C:\scratch\catalog.json' --route stack --theme graphite --size 1680x1050 --png 'C:\scratch\stack.png'
+python scripts/strehl-control.py --exe $exe screenshot --open-run 'C:\Users\me\Pictures\Strehl\strehl-run' --catalog 'C:\scratch\catalog.json' --route stack --plane-hold 150 --theme graphite --size 1680x1050 --png 'C:\scratch\stack.png'
 $renderExit = $LASTEXITCODE
 if ($renderExit -ne 0) { throw "Offscreen render failed: $renderExit" }
+python scripts/strehl-control.py --exe $exe screenshot --catalog 'C:\scratch\catalog-2.json' --route 'subject:Blue weevil' --overlay projects --png 'C:\scratch\subject.png'
 ```
 
 The executable accepts the same options directly with `--offscreen-screenshot
-PNG`. Readiness also waits for the photograph on Develop and Export. Snapshots
-carry additive `route` (`key`, `station`, `drawer`, `focus`), `notices` (the 16
-newest, with `severity`, `source`, `read` and `resolved`) and `activities` (what
-is running, with its `phase`, `done`, `total` and whether it can be stopped);
-`status` and `error` keep their meaning.
+PNG`. Readiness waits for the photograph on Develop and Export, for the Library's
+pictures and source checks, and on Capture for the station's state and the top
+bar's rig lamp to agree. Use a copy of a catalog for every render: an offscreen
+run may save the catalog it was given.
+
+To draw Capture against a camera host without a camera, run the host's simulator
+on this PC with scratch settings: `strehl-capture-headless --config host.json
+--demo`, where `host.json` names `bind` `127.0.0.1:PORT`, a 48-hex-digit
+`pairing_key`, a private `lan` such as `10.0.0.0/24` and scratch folders for the
+journal and transfer state. Point a scratch `--capture-settings` file at
+`http://127.0.0.1:PORT` with the same key and LAN, and a `receiver_config` path in
+scratch. The simulator never opens a camera or transfers a RAW; `capture_command`
+requests (`connect`, `focus`, `mark`, `settings`, `capture_positions` with `kind`
+`test`, `start`) then change the state the next render shows.
+
+Snapshots carry additive `route` (`key`, `station`, `drawer`, `focus`), `notices`
+(the 16 newest, with `severity`, `source`, `read` and `resolved`) and `activities`
+(`current`: what runs and waits, with `kind`, `state`, `phase`, `done`, `total`,
+`eta_seconds`, `queued` and whether it can be stopped; `history`; `queue_paused`);
+`status` and `error` keep their meaning. Catalog entries in `projects` have the
+`kind` `Subject` for subjects and a `subject` for the subject a stack belongs to.
+`create_subject` (`name`, `parent_id`), `move_node` (`id`, `parent_id`) and
+`set_subject_meta` organise the Library; `import_stack` with a `parent_id` puts the
+new stack there, named after its folder (a camera folder such as `100MSDCF` takes
+its parent folder's name), and without one creates a project called `name`.
+`export` adds the format's extension (`.jpg`, `.tiff`, `.png`, `.avif`) to a
+`file_name` that has none.
 
 ## Export an independent-view bundle
 
