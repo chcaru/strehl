@@ -213,6 +213,9 @@ pub struct PipelineProgress {
     /// The evidence file the engine named (`event=evidence-file`), a plain
     /// file name inside the run's folder, with its format version.
     pub(crate) evidence_file: Option<(String, u32)>,
+    /// Its live side file (`event=live-file`): the newest generation's
+    /// coefficient maps and coarse preview.
+    pub(crate) live_file: Option<(String, u32)>,
     /// Maps taken from the evidence file, and records refused at ingestion.
     pub(crate) evidence_records: usize,
     pub(crate) evidence_refused: usize,
@@ -738,14 +741,20 @@ impl PipelineProgress {
             self.diagnostic_event(fields);
             return;
         }
-        if field("event") == Some("evidence-file") {
-            // The engine's per-plane maps are in this file, not in the log.
+        if let Some(event @ ("evidence-file" | "live-file")) = field("event") {
+            // The engine's per-plane and live stack maps are in these files,
+            // not in the log.
             if let (Some(path), Some(version)) = (
                 field("path"),
                 field("version").and_then(|value| value.parse::<u32>().ok()),
             ) && crate::evidence_file::named_path(std::path::Path::new(""), path).is_some()
             {
-                self.evidence_file = Some((path.to_owned(), version));
+                let named = Some((path.to_owned(), version));
+                if event == "evidence-file" {
+                    self.evidence_file = named;
+                } else {
+                    self.live_file = named;
+                }
             }
             return;
         }

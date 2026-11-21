@@ -1324,6 +1324,11 @@ fn run_process(
         evidence: log.parent().map(|directory| {
             crate::evidence_file::EvidenceTail::new(directory.join(crate::evidence_file::FILE_NAME))
         }),
+        live: log.parent().map(|directory| {
+            crate::evidence_file::LiveTail::new(
+                directory.join(crate::evidence_file::LIVE_FILE_NAME),
+            )
+        }),
         ..LiveLogReader::default()
     };
     loop {
@@ -1359,6 +1364,8 @@ struct LiveLogReader {
     disconnected: bool,
     /// The run's evidence file, followed by its length beside the log.
     evidence: Option<crate::evidence_file::EvidenceTail>,
+    /// Its live side file, re-read whole when the engine replaces it.
+    live: Option<crate::evidence_file::LiveTail>,
     pending_evidence: Option<Box<crate::evidence_file::EvidenceBatch>>,
 }
 
@@ -1422,6 +1429,21 @@ impl LiveLogReader {
             };
             self.pending_evidence = batch.map(Box::new);
             if !more {
+                if !self.flush_evidence(sender) {
+                    return false;
+                }
+                // The newest live generation, once the evidence is caught up.
+                let live = self
+                    .live
+                    .as_mut()
+                    .and_then(crate::evidence_file::LiveTail::poll);
+                self.pending_evidence = live.map(|live| {
+                    Box::new(crate::evidence_file::EvidenceBatch {
+                        header: None,
+                        records: Vec::new(),
+                        live: Some(live),
+                    })
+                });
                 return self.flush_evidence(sender);
             }
         }
@@ -2199,7 +2221,7 @@ pub(crate) mod tests {
             panic!("the held batch follows the log");
         };
         assert_eq!(batch.records.len(), 1);
-        assert_eq!(batch.header.frames_total, 3);
+        assert_eq!(batch.header.as_ref().unwrap().frames_total, 3);
         // Growth is followed by length; nothing is read twice.
         let mut file = OpenOptions::new()
             .append(true)

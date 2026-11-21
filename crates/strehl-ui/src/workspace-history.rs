@@ -1076,6 +1076,14 @@ pub(crate) fn reopen(run: Run) -> Task<(Run, PipelineProgress)> {
                 "Replay cancelled"
             );
         }
+        // Its newest coefficient maps and coarse preview, after the evidence.
+        if let Some((name, version)) = progress.live_file.clone()
+            && version == crate::evidence_file::LIVE_VERSION
+            && let Some(path) = crate::evidence_file::named_path(&run.directory, &name)
+            && let Ok(live) = crate::evidence_file::read_live(&path)
+        {
+            progress.ingest_live(live);
+        }
         if run.status == "Saved" {
             anyhow::ensure!(
                 run.output.is_file(),

@@ -290,10 +290,10 @@ was re-rendered with the final engine (folder `runs\b7-final`). The PNGs are not
 
 ## Open issues for the orchestrator
 
-1. **CPU-fold logs are still large** (0.53 MB a plane, about 0.76 GB at 1,444 planes),
+1. (Resolved in round 2.) **CPU-fold logs are still large** (0.53 MB a plane, about 0.76 GB at 1,444 planes),
    mostly the 512 x 384 live preview as hex. Moving the stack maps to the file (kind 1 is
    reserved) or thinning the preview would bring CPU logs in line with the GPU's 6 MB.
-2. **`verify-ui-progress.py` alignment checks are stale at `61effa01b`.**
+2. (Resolved in round 2.) **`verify-ui-progress.py` alignment checks are stale at `61effa01b`.**
    - The streaming alignment no longer reports a `pyramids` phase. Use `--merge-only` until
      they are updated.
    - Its base-support check assumed the plain-mean base; it now follows the engine's banner.
@@ -303,3 +303,147 @@ was re-rendered with the final engine (folder `runs\b7-final`). The PNGs are not
    machine would be needed to confirm wall-clock fold time at better than 1 % directly.
 5. **Merge order:** `pipeline.rs`, `jobs.rs`, `app.rs`, `main.rs` and the milestone row
    carry small additive hunks that other phases also edit.
+
+## Round 2: the stack's live maps, and long stacks in the desktop
+
+Second task, 2026-11-21, on the integration branch at `82ccbfd45`. Commits:
+
+- `a27c282e7` engine;
+- `a91588ade` desktop reader;
+- `379d36aab` archive scans;
+- `027e3d1ec` verifier.
+
+Commands are as in round 1, plus `p2-stack-compare.py` (independent decoders of both forms of
+the stack maps) and `p2-desktop-measure.py` (a native window driven only through the control
+interface, on a catalog copy, with `LOCALAPPDATA` pointed into scratch for renders).
+
+Engines:
+
+- "before" is the integration head `82ccbfd45` (sha256 `94412618…`);
+- "after" is `a27c282e7` (`ec0cffda…`).
+
+Desktops:
+
+- `a91588ade` (`6c6cf6f6…`);
+- `379d36aab` (`76711aa7…`), used for the reopen measurements after the fixes.
+
+### The stack's live maps leave the log
+
+The log still carried each accepted generation's stack maps as hex: 16 averaging and coefficient
+maps and a 512 x 384 coarse preview. The desktop needs every generation only for the averaging
+history and the revision trace, and only the newest coefficient maps and preview. So now:
+
+- `evidence.strehl` kind 1 holds each generation's averaging maps (bits after a `u32` accepted
+  count);
+- kind 6 holds each preview's bytes at the desktop's 64 x 48 revision lattice, with min and max;
+- `live.strehl` holds the newest generation's coefficient maps and whole preview. It is gathered
+  per generation and published whole by a rename. The last rename is retried for half a second
+  if a reader holds the file;
+- the log names it (`event=live-file path=live.strehl version=1`) and keeps only the
+  reconstruction.
+
+The desktop reads kind 1 into the history and the ring, and kind 6 into the revision trace only.
+It reads the live file into the live view and the ring, tailing it by size and time during a
+render and reading it once on reopen. Old logs' hex lines parse as before.
+
+MEASURED, same input and fold, before and after:
+
+| Run | Render log | Evidence file | Live file |
+| --- | --- | --- | --- |
+| 299 planes, CPU fold | 157,177,745 B -> 1,099,408 B | 41,188,562 -> 44,484,738 B | 194,335 B |
+| 299 planes, GPU fold | 2,944,674 -> 858,548 B | 2,472,248 -> 2,516,344 B | 194,335 B |
+| 1,444 planes, CPU fold | 758,439,948 -> 5,260,490 B | 61,661,732 -> 77,580,388 B | 194,335 B |
+| 1,444 planes, GPU fold | 6,522,416 -> 4,072,898 B | 11,939,108 -> 11,983,204 B | 194,335 B |
+
+MEASURED identity, `p2-stack-compare.py`, before's hex against after's files:
+
+- 299 planes, CPU fold: all 2,392 averaging maps; all 299 previews at the revision lattice, with
+  min and max; and the final preview and its 8 coefficient maps, byte for byte.
+- 1,444 planes, CPU fold: 11,552 averaging maps and 1,444 previews, the same way.
+- GPU fold: the 4 chunk-end generations.
+- The plane maps (`p2-evidence-compare.py`) are unchanged.
+
+VERIFIED by a desktop test: the revision trace from samples equals the trace from whole previews
+(29 summaries and the latest field, bit for bit).
+
+MEASURED output bytes. Result and master SHA-256 are equal before and after, on, off and
+placebo, on both folds:
+
+- 299 planes: `a801db89…`, `9fd75ace…`;
+- 1,444 planes: `7fc03ae4…`, `edd7d809…`.
+
+The result TIFF differs from round 1's `61effa01b` hash by 6 container bytes. Its pixel array and
+the master are identical (MEASURED, 3-plane render), and the integration head without this work
+already shows it. So it comes from another phase's merge, not from P2.
+
+`verify-ui-progress.py` now passes in full (alignment, merge and bytes) on the current engine, 3
+planes, CPU fold: on, off and placebo `49afb7d0…`. Its two stale alignment checks are fixed
+(below). Byte-freeze on `027e3d1ec`: 5 passed, all five frozen renders HOLD (MEASURED).
+
+### Long stacks in the desktop
+
+**Process-view paint.** MEASURED, `benchmark_finished_workspace_pointer_sweeps`, release, ms per
+frame of CPU paint plus tessellation. The fixture now takes `STREHL_UI_BENCH_FRAMES`.
+
+| Captures | Before the fixes (`a91588ade`) | After (`379d36aab`) |
+| --- | --- | --- |
+| 130 | process 1.26-1.39, source 0.43-0.56 | process 0.82-1.08, source 0.40-0.48 |
+| 1,444 | process 8.98-11.49, source 2.86-4.01 | process 2.97-4.57, source 2.40-3.26 |
+
+The baseline at `61effa01b` was 1.28-1.32. Temporary section timers (not committed) found two
+scans over every retained mask in each frame or pointer move:
+
+- the fingerprint read each capture at the pin through a search and a new sample geometry. It
+  went from 3.16 to 0.05 ms with `AdmissionArchive::samples_at`, which finds a level's nearest
+  site once;
+- the region probe recounted each capture's window through two searches and a map insert. It
+  went from 1.9 to 1.0 ms with `window_counts_all` and an in-place ordered merge.
+
+Remaining at 1,444: the probe's recount, about 1 ms whenever the pointer crosses a sample cell
+(it counts every capture by design), and the source view's 2.4 ms. Neither is attributed further.
+
+**Reopen.** MEASURED; native window; snapshots every 0.25 s; host load 21-51 % from other agents.
+"Shown" means `photo_ready`.
+
+| Run | Fully observed | Shown | UI p50 / p95 / max ms, after fixes | UI p50, before fixes |
+| --- | --- | --- | --- | --- |
+| 299, GPU | 0.40 s | 0.85 s | 1.10 / 1.64 / 12.5 | 2.12 |
+| 299, CPU, after | 0.39 s | 0.83 s | 1.39 / 1.87 / 18.0 | 2.44 |
+| 299, CPU, before (hex log, 157 MB) | 1.38 s | 1.38 s | 1.40 / 1.87 / 14.0 | 2.83 |
+| 1,444, GPU | 0.42 s | 0.86 s | 1.48 / 2.11 / 14.5 | 8.07 |
+| 1,444, CPU, after | 0.91 s | 1.39 s | 1.73 / 3.06 / 16.2 | 8.23 |
+| 1,444, CPU, before (hex log, 758 MB) | 5.39 s | 5.88 s | 1.33 / 1.95 / 14.0 | 6.64 |
+
+- Resident memory after reopen: 669-701 MiB. The first reopen of a session takes it from 228 to
+  669 MiB, mostly the photograph and its tiers.
+- Reopen replays on a worker. The two frames over 16 ms (18.0 and 16.2 ms) are single frames at
+  the swap.
+
+**Live 1,444-plane GPU render.** MEASURED; native window; desktop `379d36aab`. Two renders, at 78
+and 99 % host load including the render.
+
+| Stage | Frames | p95 ms | Max ms | Frames over 16 ms |
+| --- | --- | --- | --- | --- |
+| Merge (evidence streaming) | 4,033 / 5,322 | 5.72 / 4.67 | 36.3 / 19.6 | 16 / 4 |
+| Rendering | 505 / 175 | 5.51 / 5.34 | 21.6 / 16.5 | 4 / 1 |
+
+A diagnostic build (timers in `app.rs`, not committed) logged no frame in which event ingestion
+took more than 2 ms, nor any in which the process-surface cache did, during the second render.
+Ingest is not the cause of the slow frames (MEASURED). The 13-20 ms merge frames are paint work.
+The plan's P3 items cover the candidates: region extraction on the paint path, uncached timeline
+lanes, and the Image tier's upload on the UI thread. 47-91 ms frames also occur at stack start,
+before any evidence.
+
+### Verifier: the two stale checks
+
+MEASURED at `61effa01b`: both fail the same way there. Both are now fixed:
+
+- **The pyramids phase and per-frame pyramid events.** The streaming solve builds each plane's
+  pyramid with its plane, so they are required only when the whole-stack reference reports the
+  phase. Pyramid events without the phase are refused.
+- **The single `solved` result.** A render that aligns first and then loads the solve for its fold
+  (the lateral-CA refinement) reports a second `cache` result. The fresh solve ends at the first
+  result. Later results must be cache reads that repeat it exactly, with no other alignment work
+  after it.
+- Commissioned with a valid streamed run and four negative controls.
+- The base-band check follows the engine's `base band :` banner (round 1).

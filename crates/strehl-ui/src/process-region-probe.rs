@@ -193,6 +193,15 @@ struct Evidence {
 
 type EvidenceKey = (usize, usize);
 
+/// An archive window count (admitted, observed) as a sample count; a window
+/// outside the lattice counts nothing.
+fn sample_count(count: Option<(usize, usize)>) -> SampleCount {
+    count.map_or_else(SampleCount::default, |(admitted, observed)| SampleCount {
+        admitted,
+        observed,
+    })
+}
+
 /// At most this many (level, plane) windows are recounted in one frame. A
 /// longer recount runs over several frames into a staging list while the
 /// previous complete window stays on screen; it then replaces it at once,
@@ -285,13 +294,31 @@ impl EvidenceStore {
             evidence.window = window;
         }
     }
-    /// Update every entry of one level in place, in frame order.
-    fn recount(&mut self, level: usize, mut update: impl FnMut(usize, &mut Evidence)) {
-        if let Some((_, frames)) = self.levels.iter_mut().find(|(slot, _)| *slot == level) {
-            for (key, evidence) in frames.iter_mut().flatten() {
-                update(key.1, evidence);
+    /// Give every retained entry of one level its count in a new window,
+    /// from the archive's ordered pass; returns the entries updated.
+    fn recount(
+        &mut self,
+        level: usize,
+        window: Option<SampleWindow>,
+        counts: impl Iterator<Item = (usize, AdmissionMeta, Option<(usize, usize)>)>,
+    ) -> usize {
+        let Some((_, frames)) = self.levels.iter_mut().find(|(slot, _)| *slot == level) else {
+            return 0;
+        };
+        let mut updated = 0;
+        for (frame, meta, count) in counts {
+            if frame >= frames.len() {
+                break;
+            }
+            if let Some((_, evidence)) = &mut frames[frame]
+                && evidence.meta == meta
+            {
+                evidence.count = sample_count(count);
+                evidence.window = window;
+                updated += 1;
             }
         }
+        updated
     }
     fn retain(&mut self, mut keep: impl FnMut(&EvidenceKey, &mut Evidence) -> bool) {
         for (_, frames) in &mut self.levels {
@@ -778,50 +805,43 @@ impl RegionProbe {
             }
             self.spatial_dirty = true;
             self.window_revision = self.window_revision.wrapping_add(1);
+            // One ordered pass over the level's masks (P2): no per-capture
+            // search at long-stack sizes. Each reading lands in its dense slot.
+            let lattice = window.map(|window| (window.columns, window.rows));
+            let counts = archive.window_counts_all(level, lattice);
             if !receipts_changed && self.evidence.frames(level).is_some() {
                 // Same receipts, new window: recount in place with each
                 // entry's own receipt, without revalidating it.
-                self.evidence.recount(level, |frame, evidence| {
-                    evidence.count = window.map_or_else(SampleCount::default, |window| {
-                        window.archive_counts(archive, level, frame)
-                    });
-                    evidence.window = window;
-                });
+                let _read = self.evidence.recount(level, window, counts);
                 #[cfg(test)]
                 {
-                    self.readings += self
-                        .evidence
-                        .range((level, 0)..=(level, usize::MAX))
-                        .count();
+                    self.readings += _read;
                 }
                 continue;
             }
-            for frame in archive.frames(level).filter(|&frame| frame < frame_count) {
-                if self
-                    .evidence
-                    .get(&(level, frame))
-                    .is_some_and(|evidence| evidence.window == window)
+            for (frame, meta, count) in counts {
+                if frame >= frame_count {
+                    break;
+                }
+                if meta.extent != analysis_extent
+                    || self
+                        .evidence
+                        .get(&(level, frame))
+                        .is_some_and(|evidence| evidence.window == window && evidence.meta == meta)
                 {
                     continue;
                 }
-                if let Some(meta) = archive.metadata(level, frame)
-                    && meta.extent == analysis_extent
+                self.evidence.insert(
+                    (level, frame),
+                    Evidence {
+                        meta,
+                        window,
+                        count: sample_count(count),
+                    },
+                );
+                #[cfg(test)]
                 {
-                    let count = window.map_or_else(SampleCount::default, |window| {
-                        window.archive_counts(archive, level, frame)
-                    });
-                    self.evidence.insert(
-                        (level, frame),
-                        Evidence {
-                            meta,
-                            window,
-                            count,
-                        },
-                    );
-                    #[cfg(test)]
-                    {
-                        self.readings += 1;
-                    }
+                    self.readings += 1;
                 }
             }
         }

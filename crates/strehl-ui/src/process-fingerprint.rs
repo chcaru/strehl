@@ -112,17 +112,16 @@ fn row_name(level: usize, base: bool, geometry: Option<OutputGeometry>) -> Strin
 }
 fn cells(layout: Layout, archive: &AdmissionArchive, pin: Pos2) -> Vec<Vec<Cell>> {
     let mut rows = vec![vec![Cell::default(); layout.columns]; layout.rows];
-    // Iterate retained observations, never every possible frame×scale position.
+    // Iterate retained observations, never every possible frame×scale
+    // position; each level's nearest site is found once (`samples_at`).
     for (level, row) in rows.iter_mut().enumerate() {
-        for frame in archive
-            .frames(level)
-            .filter(|&frame| frame < layout.captures)
+        for (frame, admitted) in archive
+            .samples_at(level, [pin.x, pin.y])
+            .filter(|&(frame, _)| frame < layout.captures)
         {
-            if let Some(admitted) = archive.sample(level, frame, [pin.x, pin.y]) {
-                let cell = &mut row[layout.column(frame)];
-                cell.observed += 1;
-                cell.admitted += usize::from(admitted);
-            }
+            let cell = &mut row[layout.column(frame)];
+            cell.observed += 1;
+            cell.admitted += usize::from(admitted);
         }
     }
     rows

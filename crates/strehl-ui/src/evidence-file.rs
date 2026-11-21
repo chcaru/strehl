@@ -8,10 +8,24 @@
 //!   `u16 lattice_w, u16 lattice_h, u32 extent_w, u32 extent_h` (the level's
 //!   coefficient grid; level 0's is the analysis domain), `u32 frames_total`.
 //! - Records: `u32 frame, u8 level, u8 kind, u16 reserved, u32 sequence,
-//!   u32 payload_len`, then the payload. Kinds 0 (gate support) and 1
-//!   (averaging) carry one bit per lattice site, row-major, least significant
-//!   bit first. Kinds 2 (focus energy) and 3 (gate floor) carry `f32 min,
-//!   f32 max` and one quantised byte per site: the bytes the hex lines carried.
+//!   u32 payload_len`, then the payload.
+//!   - Kind 0, a plane's gate support: one bit per lattice site, row-major,
+//!     least significant bit first.
+//!   - Kinds 2 (focus energy) and 3 (gate floor): `f32 min, f32 max` and one
+//!     quantised byte per site, the bytes the hex lines carried.
+//!   - Kind 1, the stack's averaging map after an accepted plane: `u32
+//!     folded`, then kind 0's bits.
+//!   - Kind 6, that generation's coarse preview sampled at the revision
+//!     lattice (`process-revision.rs`): `u32 folded, u16 preview_w, u16
+//!     preview_h, u16 w, u16 h, f32 min, f32 max`, then `w x h` bytes. The
+//!     revision trace needs every generation, but only these samples.
+//!
+//! The newest generation's coefficient maps and full preview, which views
+//! only show newest, are in a side file the engine replaces whole
+//! (`live.strehl`, [`LiveTail`], [`decode_live`]): `"STRHLIV1"`, `u32
+//! version`, `u32 frames_total`, `u32 records`, then records framed as
+//! above, kinds 4 (coefficient) and 5 (preview), payload `u32 folded, u16
+//! w, u16 h, f32 min, f32 max` and `w x h` bytes.
 //!
 //! A set gate-support bit means the sampled kernel weight was positive at that
 //! site, not that the plane won it or supplied a measured share of the blend.
@@ -33,6 +47,15 @@ use std::sync::atomic::{AtomicBool, Ordering};
 /// The file's name inside a run's folder; the engine's log line names it too.
 pub(crate) const FILE_NAME: &str = "evidence.strehl";
 pub(crate) const VERSION: u32 = 1;
+/// The live side file's name, beside the evidence file.
+pub(crate) const LIVE_FILE_NAME: &str = "live.strehl";
+pub(crate) const LIVE_VERSION: u32 = 1;
+const LIVE_MAGIC: [u8; 8] = *b"STRHLIV1";
+/// The largest live file read: a 512 x 384 preview and 64 levels of
+/// 128 x 96 coefficients, with framing, fit several times over.
+const MAX_LIVE_BYTES: u64 = 8 << 20;
+/// The revision lattice (`process-revision.rs` `WIDTH`, `HEIGHT`).
+const REVISION_LATTICE: [usize; 2] = [64, 48];
 const MAGIC: [u8; 8] = *b"STRHEVD1";
 const MAX_LEVELS: usize = 64;
 const MAX_FRAMES: usize = 65_536;
@@ -65,11 +88,31 @@ impl EvidenceHeader {
 }
 
 /// One decoded map, prepared off the UI thread: its display packet and, for
-/// gate support, its bits packed as the admission archive keeps them.
+/// binary kinds, its bits packed as the archive and history keep them.
 #[derive(Clone, Debug)]
 pub(crate) struct EvidenceRecord {
     pub surface: DiagnosticSurface,
     pub packed: Option<PackedMask>,
+    pub role: Role,
+}
+
+/// Where a record's map belongs.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum Role {
+    /// A plane's own map (kinds 0, 2, 3).
+    Plane,
+    /// The stack's averaging map after an accepted plane (kind 1).
+    Averaging,
+    /// A preview's revision sample (kind 6): for the revision trace only,
+    /// never displayed as the preview.
+    RevisionSample,
+}
+
+/// The newest generation's coefficient maps and coarse preview.
+#[derive(Clone, Debug)]
+pub(crate) struct LiveSet {
+    pub frames_total: usize,
+    pub surfaces: Vec<DiagnosticSurface>,
 }
 
 #[derive(Clone, Debug)]
@@ -79,11 +122,13 @@ pub(crate) struct PackedMask {
     pub on: u64,
 }
 
-/// Records decoded together, with the header they belong to.
+/// Records decoded together, with the header they belong to, and possibly
+/// a newer live generation.
 #[derive(Clone, Debug)]
 pub(crate) struct EvidenceBatch {
-    pub header: EvidenceHeader,
+    pub header: Option<EvidenceHeader>,
     pub records: Vec<EvidenceRecord>,
+    pub live: Option<LiveSet>,
 }
 
 /// Incremental decoder over the file's bytes in order.
@@ -278,6 +323,68 @@ impl EvidenceDecoder {
                         pixels,
                     ),
                     packed: Some(PackedMask { bits, on }),
+                    role: Role::Plane,
+                })
+            }
+            1 => {
+                let folded = u32_at(payload.get(..4)?, 0) as usize;
+                let (packed, pixels) = unpack(&payload[4..], sites)?;
+                if folded == 0 || folded > header.frames_total {
+                    return None;
+                }
+                let mut packet = surface(
+                    DiagnosticKind::Averaging,
+                    DiagnosticScale::Linear,
+                    0.0,
+                    1.0,
+                    pixels,
+                );
+                packet.scope = DiagnosticScope::Stack;
+                packet.folded = folded;
+                Some(EvidenceRecord {
+                    surface: packet,
+                    packed: Some(packed),
+                    role: Role::Averaging,
+                })
+            }
+            6 => {
+                if payload.len() < 20 {
+                    return None;
+                }
+                let folded = u32_at(payload, 0) as usize;
+                let [pw, ph, w, h] = [4, 6, 8, 10].map(|at| u16_at(payload, at));
+                let (min, max) = (f32_at(payload, 12), f32_at(payload, 16));
+                if folded == 0
+                    || folded > header.frames_total
+                    || pw == 0
+                    || ph == 0
+                    || pw > 512
+                    || ph > 384
+                    || revision_lattice(pw, ph) != [w, h]
+                    || payload.len() != 20 + w * h
+                    || !min.is_finite()
+                    || !max.is_finite()
+                    || min > max
+                {
+                    return None;
+                }
+                Some(EvidenceRecord {
+                    surface: DiagnosticSurface {
+                        sequence,
+                        frame,
+                        level,
+                        kind: DiagnosticKind::Preview,
+                        scope: DiagnosticScope::Stack,
+                        scale: DiagnosticScale::Linear,
+                        width: w,
+                        height: h,
+                        min,
+                        max,
+                        pixels: payload[20..].to_vec().into(),
+                        folded,
+                    },
+                    packed: None,
+                    role: Role::RevisionSample,
                 })
             }
             2 | 3 => {
@@ -296,13 +403,168 @@ impl EvidenceDecoder {
                 Some(EvidenceRecord {
                     surface: surface(kind, DiagnosticScale::Log, min, max, payload[8..].to_vec()),
                     packed: None,
+                    role: Role::Plane,
                 })
             }
-            // Kind 1 (the stack's averaging maps) is reserved: those maps stay
-            // in the log with their folded counts. Unknown kinds are skipped.
+            // Unknown kinds are skipped.
             _ => None,
         }
     }
+}
+
+/// The revision lattice of a `width x height` preview, as
+/// `process-revision.rs` `compare` derives it.
+fn revision_lattice(width: usize, height: usize) -> [usize; 2] {
+    let [mw, mh] = REVISION_LATTICE;
+    let scale = (mw as f64 / width as f64)
+        .min(mh as f64 / height as f64)
+        .min(1.0);
+    [
+        (width as f64 * scale).floor().max(1.0) as usize,
+        (height as f64 * scale).floor().max(1.0) as usize,
+    ]
+}
+
+/// A binary payload's bits, packed for the archive, and its 0/255 pixels;
+/// `None` if its length or tail bits disagree with `sites`.
+fn unpack(payload: &[u8], sites: usize) -> Option<(PackedMask, Vec<u8>)> {
+    if payload.len() != sites.div_ceil(8)
+        || !sites.is_multiple_of(8) && payload[sites / 8] >> (sites % 8) != 0
+    {
+        return None;
+    }
+    let mut bits: Box<MaskBits> = Box::new([0; WORDS]);
+    let mut pixels = vec![0u8; sites];
+    let mut on = 0;
+    for (index, pixel) in pixels.iter_mut().enumerate() {
+        if payload[index / 8] & (1 << (index % 8)) != 0 {
+            *pixel = 255;
+            bits[index / 64] |= 1 << (index % 64);
+            on += 1;
+        }
+    }
+    Some((PackedMask { bits, on }, pixels))
+}
+
+/// Decode a whole live file. A file that does not parse completely yields
+/// nothing: the engine publishes it whole, so a partial one is never shown.
+pub(crate) fn decode_live(bytes: &[u8]) -> Result<LiveSet, String> {
+    if bytes.len() < 20 || bytes[..8] != LIVE_MAGIC {
+        return Err("not a Strehl live file".into());
+    }
+    let version = u32_at(bytes, 8);
+    if version != LIVE_VERSION {
+        return Err(format!("live format version {version} is not supported"));
+    }
+    let frames_total = u32_at(bytes, 12) as usize;
+    let count = u32_at(bytes, 16) as usize;
+    if frames_total == 0 || frames_total > MAX_FRAMES || count > 256 {
+        return Err("live header out of range".into());
+    }
+    let mut surfaces = Vec::with_capacity(count);
+    let mut at = 20;
+    while at < bytes.len() {
+        let head = bytes.get(at..at + RECORD_HEAD).ok_or("torn live record")?;
+        let length = u32_at(head, 12) as usize;
+        let payload = bytes
+            .get(at + RECORD_HEAD..at + RECORD_HEAD + length)
+            .ok_or("torn live record")?;
+        at += RECORD_HEAD + length;
+        let (frame, level, kind) = (u32_at(head, 0) as usize, head[4] as usize, head[5]);
+        let sequence = u64::from(u32_at(head, 8));
+        if payload.len() < 16 {
+            return Err("short live record".into());
+        }
+        let folded = u32_at(payload, 0) as usize;
+        let [w, h] = [4, 6].map(|at| u16_at(payload, at));
+        let (min, max) = (f32_at(payload, 8), f32_at(payload, 12));
+        let (kind, scale, limit) = match kind {
+            4 => (
+                DiagnosticKind::Coefficient,
+                DiagnosticScale::Symmetric,
+                SAMPLE_LIMIT,
+            ),
+            5 => (DiagnosticKind::Preview, DiagnosticScale::Linear, [512, 384]),
+            _ => return Err(format!("live record of kind {kind}")),
+        };
+        if frame >= frames_total
+            || level >= MAX_LEVELS
+            || sequence == 0
+            || folded == 0
+            || folded > frames_total
+            || w == 0
+            || h == 0
+            || w > limit[0]
+            || h > limit[1]
+            || payload.len() != 16 + w * h
+            || !min.is_finite()
+            || !max.is_finite()
+            || min > max
+        {
+            return Err("live record out of range".into());
+        }
+        surfaces.push(DiagnosticSurface {
+            sequence,
+            frame,
+            level,
+            kind,
+            scope: DiagnosticScope::Stack,
+            scale,
+            width: w,
+            height: h,
+            min,
+            max,
+            pixels: payload[16..].to_vec().into(),
+            folded,
+        });
+    }
+    if surfaces.len() != count {
+        return Err("live record count disagrees".into());
+    }
+    Ok(LiveSet {
+        frames_total,
+        surfaces,
+    })
+}
+
+/// A run's live file, re-read whenever its length or time changes: the
+/// engine replaces it whole after each accepted generation.
+pub(crate) struct LiveTail {
+    path: PathBuf,
+    seen: Option<(u64, Option<std::time::SystemTime>)>,
+}
+
+impl LiveTail {
+    pub(crate) fn new(path: PathBuf) -> Self {
+        Self { path, seen: None }
+    }
+
+    /// The live set, if the file changed since the last successful read. A
+    /// missing or unreadable file is retried later, never an error.
+    pub(crate) fn poll(&mut self) -> Option<LiveSet> {
+        let metadata = std::fs::metadata(&self.path).ok()?;
+        let stamp = (metadata.len(), metadata.modified().ok());
+        if self.seen == Some(stamp) || stamp.0 > MAX_LIVE_BYTES {
+            return None;
+        }
+        let set = std::fs::read(&self.path)
+            .ok()
+            .and_then(|bytes| decode_live(&bytes).ok())?;
+        self.seen = Some(stamp);
+        Some(set)
+    }
+}
+
+/// Read a run's live file once (reopen).
+pub(crate) fn read_live(path: &Path) -> anyhow::Result<LiveSet> {
+    let mut file = File::open(path)?;
+    anyhow::ensure!(
+        file.metadata()?.len() <= MAX_LIVE_BYTES,
+        "The live file exceeds its bound"
+    );
+    let mut bytes = Vec::new();
+    file.read_to_end(&mut bytes)?;
+    decode_live(&bytes).map_err(anyhow::Error::msg)
 }
 
 /// A run's evidence file followed by its length, as `capture-follow.rs`
@@ -357,11 +619,11 @@ impl EvidenceTail {
         let mut records = Vec::new();
         self.decoder.feed(&bytes[..read], &mut records);
         let more = length > self.offset;
-        let batch = self
-            .decoder
-            .header()
-            .cloned()
-            .map(|header| EvidenceBatch { header, records });
+        let batch = self.decoder.header().cloned().map(|header| EvidenceBatch {
+            header: Some(header),
+            records,
+            live: None,
+        });
         Ok((batch.filter(|batch| !batch.records.is_empty()), more))
     }
 
