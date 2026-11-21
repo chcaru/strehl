@@ -327,3 +327,156 @@ fn plane_hold_from_launch_holds_once_the_planes_are_known() {
     assert_eq!(app.stack_station.lens.held(), Some(64));
     assert_eq!(app.stack_station.launch_hold, None);
 }
+
+/// A finished app on any synthetic length (level-major maps, as the engine's
+/// archive retains them) or, with `STREHL_UI_BENCH_RUN_LOG`, a real render's
+/// log streamed into the pipeline (read-only).
+fn benchmark_app(ctx: &egui::Context, planes: usize, log: Option<&std::path::Path>) -> StrehlApp {
+    let mut app = finished_app(ctx);
+    if let Some(log) = log {
+        app.progress = crate::pipeline::PipelineProgress::default();
+        let text = std::fs::read(log).expect("render log");
+        for chunk in text.split(|&byte| byte == b'\n') {
+            if let Ok(line) = std::str::from_utf8(chunk) {
+                app.progress.ingest(&format!("{line}\n"));
+            }
+        }
+        app.progress.mark_complete();
+        let frames = app.progress.frames_total.unwrap_or(0);
+        app.stack = Some(StackScan {
+            directory: PathBuf::from("real-bracket"),
+            frames: (0..frames)
+                .map(|index| FrameFile {
+                    path: PathBuf::from(format!("real-{index}.arw")),
+                    bytes: 42,
+                })
+                .collect(),
+            total_bytes: 42 * frames as u64,
+        });
+        return app;
+    }
+    if planes == PLANES {
+        return app;
+    }
+    app.progress.admission_archive = Default::default();
+    app.progress.frames_total = Some(planes);
+    app.progress.placed = Some(planes);
+    let mut sequence = 0;
+    for level in 0..8 {
+        let spacing = 1usize << level;
+        let width = ANALYSIS[0].div_ceil(spacing).min(128);
+        let height = ANALYSIS[1].div_ceil(spacing).min(96);
+        for plane in 0..planes {
+            sequence += 1;
+            let centre = (plane as f32 + 0.5) / planes as f32;
+            let pixels: Vec<u8> = (0..width * height)
+                .map(|index| {
+                    let x = (index % width) as f32 / width as f32;
+                    if (x - centre).abs() < 0.05 + 0.02 * level as f32 && (index + plane) % 7 != 0 {
+                        255
+                    } else {
+                        0
+                    }
+                })
+                .collect();
+            app.progress.admission_archive.ingest(
+                &DiagnosticSurface {
+                    sequence,
+                    frame: plane,
+                    level,
+                    kind: DiagnosticKind::GateSupport,
+                    scope: DiagnosticScope::Frame,
+                    scale: DiagnosticScale::Linear,
+                    width,
+                    height,
+                    min: 0.0,
+                    max: 1.0,
+                    folded: 1,
+                    pixels: pixels.into(),
+                },
+                ANALYSIS,
+            );
+        }
+    }
+    app.stack = Some(StackScan {
+        directory: PathBuf::from("bench-bracket"),
+        frames: (0..planes)
+            .map(|index| FrameFile {
+                path: PathBuf::from(format!("bench-{index}.arw")),
+                bytes: 42,
+            })
+            .collect(),
+        total_bytes: 42 * planes as u64,
+    });
+    app
+}
+
+#[test]
+#[ignore = "explicit Stack station CPU paint+tessellation benchmark; not GPU FPS"]
+fn benchmark_stack_station_pointer_sweeps() {
+    let real = std::env::var_os("STREHL_UI_BENCH_RUN_LOG").map(PathBuf::from);
+    let mut cases: Vec<(String, usize, Option<PathBuf>)> = vec![
+        ("synthetic".into(), PLANES, None),
+        ("synthetic".into(), 1_500, None),
+        ("synthetic".into(), 6_000, None),
+    ];
+    if let Some(log) = real {
+        cases.push(("real".into(), 0, Some(log)));
+    }
+    for (kind, planes, log) in cases {
+        let ctx = context();
+        let built = std::time::Instant::now();
+        let mut app = benchmark_app(&ctx, planes, log.as_deref());
+        let build_s = built.elapsed().as_secs_f64();
+        let planes = app.stack_planes();
+        let mut time = 0.0;
+        for _ in 0..3 {
+            time += 1.0 / 120.0;
+            frame(&mut app, &ctx, time, vec![]);
+        }
+        assert!(app.stack_station_view(), "the station owns the canvas");
+        let mut sweep = |app: &mut StrehlApp, at: &dyn Fn(f32) -> Pos2, reverse: bool| -> f64 {
+            let start = std::time::Instant::now();
+            for step in 0..120 {
+                time += 1.0 / 120.0;
+                let phase = if reverse { 119 - step } else { step } as f32 / 119.0;
+                let output = frame(app, &ctx, time, moved(at(phase)));
+                std::hint::black_box(ctx.tessellate(output.shapes, output.pixels_per_point));
+            }
+            start.elapsed().as_secs_f64() * 1000.0 / 120.0
+        };
+        let photo = |phase: f32| {
+            egui::pos2(
+                128.0 + 1076.0 * (0.1 + 0.8 * phase),
+                94.0 + 718.0 * (0.3 + 0.4 * phase),
+            )
+        };
+        let rail = |phase: f32| egui::pos2(20.0 + phase * 1292.0, 905.0);
+        let mut photo_ms = Vec::new();
+        let mut rail_ms = Vec::new();
+        for round in 0..4 {
+            photo_ms.push(sweep(&mut app, &photo, round % 2 == 1));
+            rail_ms.push(sweep(&mut app, &rail, round % 2 == 1));
+        }
+        // Held: stepping through planes with the arrow key, two-up painted.
+        app.stack_station.lens.hold(planes / 2);
+        let start = std::time::Instant::now();
+        for _ in 0..120 {
+            time += 1.0 / 120.0;
+            let output = frame(&mut app, &ctx, time, key(egui::Key::ArrowRight, false));
+            std::hint::black_box(ctx.tessellate(output.shapes, output.pixels_per_point));
+        }
+        let held_ms = start.elapsed().as_secs_f64() * 1000.0 / 120.0;
+        let min = |values: &[f64]| values.iter().copied().fold(f64::INFINITY, f64::min);
+        println!(
+            "stack_station_cpu_ms_per_frame kind={kind} planes={planes} maps={} dropped={} build_s={build_s:.1} photo={photo_ms:?} rail={rail_ms:?} held_step={held_ms:.3}",
+            app.progress.admission_archive.len(),
+            app.progress.admission_archive.dropped(),
+        );
+        println!(
+            "stack_station_cpu_min_ms kind={kind} planes={planes} photo={:.3} rail={:.3} held_step={held_ms:.3}",
+            min(&photo_ms),
+            min(&rail_ms)
+        );
+    }
+}

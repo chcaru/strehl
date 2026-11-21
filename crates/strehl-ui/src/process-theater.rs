@@ -100,9 +100,10 @@ pub(crate) struct ProcessTheater {
     source_relation_reveal: Option<(f64, f32, bool)>,
     source_relation_axis: Option<SourceRelationAxis>,
     source_admission: source_admission::SourceAdmissionCache,
-    dense_admission: crate::process_admission_regions::DenseAdmissionCache,
     // Single-capture regions are extracted on a worker, never during paint.
     dense_regions: crate::process_admission_regions::DenseRegionWorker,
+    // Pinned ranges are built on a worker too.
+    dense_selections: crate::process_admission_regions::DenseSelectionWorker,
     source_region_painter: crate::process_admission_regions::DenseRegionPainter,
     source_selection_painter: crate::process_admission_regions::DenseSelectionPainter,
     source_drag: Option<(Pos2, Pos2, f32)>,
@@ -185,11 +186,19 @@ impl Default for ProcessTheater {
             source_relation_reveal: None,
             source_relation_axis: None,
             source_admission: Default::default(),
-            dense_admission: Default::default(),
             dense_regions: {
                 #[allow(unused_mut)]
                 let mut worker = crate::process_admission_regions::DenseRegionWorker::default();
                 // Legacy paint-exact tests; `v26_perf_tests` covers the worker.
+                #[cfg(test)]
+                {
+                    worker.inline = true;
+                }
+                worker
+            },
+            dense_selections: {
+                #[allow(unused_mut)]
+                let mut worker = crate::process_admission_regions::DenseSelectionWorker::default();
                 #[cfg(test)]
                 {
                     worker.inline = true;
@@ -737,7 +746,7 @@ impl ProcessTheater {
     /// Region extraction is pending on its worker.
     #[allow(dead_code)] // Read by the Stack station (stage 2).
     pub(crate) fn region_pending(&self) -> bool {
-        self.dense_regions.pending()
+        self.dense_regions.pending() || self.dense_selections.pending()
     }
 
     /// The timeline temporarily owns inspection even with Edit open. Canvas
@@ -2740,7 +2749,8 @@ impl ProcessTheater {
                 .analysis_size
                 .or(input.progress.plane_size)
                 .and_then(|extent| {
-                    self.dense_admission.selection_with_current(
+                    self.dense_selections.selection(
+                        ui.ctx(),
                         &input.progress.admission_archive,
                         [input.epoch, input.progress.diagnostic_epoch],
                         self.participation.spans(),
@@ -3437,7 +3447,8 @@ impl ProcessTheater {
         {
             let settings = crate::process_admission_regions::RegionSettings::read(ui.ctx());
             if self.participation.has_ranges() {
-                if let Some(selection) = self.dense_admission.selection_with_current(
+                if let Some(selection) = self.dense_selections.selection(
+                    ui.ctx(),
                     &input.progress.admission_archive,
                     [input.epoch, input.progress.diagnostic_epoch],
                     self.participation.spans(),
