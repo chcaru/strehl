@@ -59,21 +59,27 @@ pub(crate) struct PreviewLevels {
     pub pixels: u64,
     /// Share of pixels with any channel at or above [`PREVIEW_CLIP_CODE`].
     pub clipped_share: f32,
+    /// The clipped pixels (1) of the `size` image, for the clipping overlay.
+    pub clip: Vec<u8>,
+    pub size: [usize; 2],
 }
 
 impl PreviewLevels {
     /// Shown beside every display of these levels.
     pub const CAUTION: &'static str = "estimate from the camera preview, not the RAW";
+    /// The short form, beside the histogram.
+    pub const CAUTION_SHORT: &'static str = "estimate, not the RAW";
 
     pub fn analyze(image: &ColorImage) -> Self {
         let mut histogram = [0u32; 256];
         let mut clipped = 0u64;
+        let mut clip = Vec::with_capacity(image.pixels.len());
         for p in &image.pixels {
             let luma = 0.2126 * p.r() as f32 + 0.7152 * p.g() as f32 + 0.0722 * p.b() as f32;
             histogram[(luma.round() as usize).min(255)] += 1;
-            if p.r().max(p.g()).max(p.b()) >= PREVIEW_CLIP_CODE {
-                clipped += 1;
-            }
+            let hot = p.r().max(p.g()).max(p.b()) >= PREVIEW_CLIP_CODE;
+            clipped += u64::from(hot);
+            clip.push(u8::from(hot));
         }
         let pixels = image.pixels.len() as u64;
         Self {
@@ -84,7 +90,20 @@ impl PreviewLevels {
             } else {
                 clipped as f32 / pixels as f32
             },
+            clip,
+            size: image.size,
         }
+    }
+
+    /// The clipped pixels painted `color`, the rest transparent.
+    pub fn clip_overlay(&self, color: Color32) -> ColorImage {
+        let mut out = ColorImage::filled(self.size, Color32::TRANSPARENT);
+        for (pixel, hot) in out.pixels.iter_mut().zip(&self.clip) {
+            if *hot != 0 {
+                *pixel = color;
+            }
+        }
+        out
     }
 
     /// The luma code below which `share` of the pixels fall (0-1), or
@@ -168,6 +187,10 @@ mod tests {
         image.pixels[0] = Color32::from_rgb(0, 0, 255);
         let blue = PreviewLevels::analyze(&image);
         assert!(blue.clipped_share > half.clipped_share);
+        let overlay = blue.clip_overlay(Color32::RED);
+        assert_eq!(overlay.pixels[0], Color32::RED);
+        assert_eq!(overlay.pixels[1], Color32::TRANSPARENT);
+        assert_eq!(overlay.pixels[39], Color32::RED, "white is clipped");
         assert_eq!(blue.histogram[18], 1, "a clipped blue has a low luma");
         assert_eq!(
             PreviewLevels::analyze(&ColorImage::filled([0, 0], Color32::BLACK)).percentile(0.5),

@@ -20,7 +20,11 @@ use std::{
     io::{Read, Seek, SeekFrom, Write},
     path::{Path, PathBuf},
     process::{Command, Stdio},
-    sync::mpsc,
+    sync::{
+        Arc, Mutex,
+        atomic::{AtomicBool, Ordering},
+        mpsc,
+    },
     time::{Duration, Instant},
 };
 
@@ -58,6 +62,8 @@ pub(crate) struct Progress {
     pub align_pairs: u64,
     /// Planes taken again during the capture (error correction).
     pub retaken: usize,
+    /// The planes taken again (more than one group recorded).
+    pub retaken_planes: BTreeSet<u64>,
     /// Each plane's last journal line, by plane: its `verdict`, `reason`,
     /// `retake`, `target`, `group_id`, member `names`, `seconds` and
     /// `align_seconds` as the engine wrote them. The newest
@@ -161,6 +167,7 @@ impl JournalReader {
                 let groups = self.groups.entry(plane).or_default();
                 if groups.insert(group.to_owned()) && groups.len() == 2 {
                     p.retaken += 1;
+                    p.retaken_planes.insert(plane);
                 }
             }
             let new = Counted::of(v);
@@ -209,26 +216,157 @@ pub(crate) enum State {
 
 pub(crate) struct Follower {
     pub run: PathBuf,
-    journal: PathBuf,
-    lock: PathBuf,
     pub log: PathBuf,
     child: Option<crate::jobs::OwnedChild>,
     /// Another process (another Strehl window, or `strehl follow`) holds the
     /// run's lock: this one only shows its progress.
     pub observing: bool,
     pub state: State,
-    reader: JournalReader,
-    /// The journal's length at the last read; a read is skipped while it
-    /// is unchanged.
-    journal_len: Option<u64>,
+    /// The journal reader thread's output (spec 5.2: the UI thread reads no
+    /// file while a capture is followed).
+    shared: Arc<ReaderShared>,
+    progress: Arc<Progress>,
+    revision: u64,
+    /// The checker's exit, once seen; the state follows when the reader has
+    /// read the journal to its end.
+    exit: Option<std::process::ExitStatus>,
     polled: Option<Instant>,
     pub started: Instant,
     /// Set once the finished capture was offered to Projects.
     pub offered: bool,
     /// Error correction: each checked group's verdict goes to this PC's
     /// receiver, where the camera host reads it.
+    relaying: bool,
+}
+
+/// What the journal reader thread publishes.
+#[derive(Default)]
+struct Published {
+    progress: Arc<Progress>,
+    revision: u64,
+    /// The checker exited and its journal was read to the end.
+    drained: bool,
+    /// The engine's own error line, read from its log after it exited.
+    error: Option<String>,
+    /// Observing: the other checker's lock was released.
+    released: bool,
+}
+
+#[derive(Default)]
+struct ReaderShared {
+    out: Mutex<Published>,
+    /// Set by the UI when the checker exited: read to the end, then stop.
+    exited: AtomicBool,
+    /// Set when the follower is stopped or dropped.
+    stop: AtomicBool,
+}
+
+/// The paths the reader thread needs.
+struct ReaderPaths {
+    journal: PathBuf,
+    lock: PathBuf,
+    log: PathBuf,
+    observing: bool,
+}
+
+/// Hands the new groups' verdicts to the relay (error correction).
+fn send_verdicts(
+    relay: &Option<mpsc::Sender<Vec<Value>>>,
+    relayed: &mut HashSet<String>,
+    lines: Vec<Value>,
+) {
+    let Some(relay) = relay else { return };
+    let fresh: Vec<Value> = lines
+        .into_iter()
+        .filter_map(verdict)
+        .filter(|v| relayed.insert(v["group_id"].as_str().unwrap_or_default().to_owned()))
+        .collect();
+    if !fresh.is_empty() {
+        let _ = relay.send(fresh);
+    }
+}
+
+/// Reads the journal as it grows, relays verdicts and watches the lock, on
+/// its own thread. Publishes a new progress whenever lines arrive.
+fn reader_thread(
+    paths: ReaderPaths,
+    shared: Arc<ReaderShared>,
     relay: Option<mpsc::Sender<Vec<Value>>>,
-    relayed: HashSet<String>,
+) {
+    let mut reader = JournalReader::default();
+    let mut relayed = HashSet::new();
+    let mut revision = 0u64;
+    loop {
+        if shared.stop.load(Ordering::SeqCst) {
+            return;
+        }
+        let exited = shared.exited.load(Ordering::SeqCst);
+        let before = reader.offset();
+        loop {
+            let (lines, more) = read_chunk(&paths.journal, &mut reader);
+            send_verdicts(&relay, &mut relayed, lines);
+            if !more {
+                break;
+            }
+        }
+        let mut changed = reader.offset() != before;
+        if exited {
+            let last = reader.flush();
+            send_verdicts(&relay, &mut relayed, last);
+            revision += 1;
+            let mut out = shared.out.lock().unwrap();
+            out.progress = Arc::new(reader.progress().clone());
+            out.revision = revision;
+            out.error = last_error(&paths.log);
+            out.drained = true;
+            return;
+        }
+        let released = paths.observing && !locked_elsewhere(&paths.lock);
+        if released {
+            changed = true;
+        }
+        if changed {
+            revision += 1;
+            let mut out = shared.out.lock().unwrap();
+            out.progress = Arc::new(reader.progress().clone());
+            out.revision = revision;
+            out.released = released;
+        }
+        if released {
+            return;
+        }
+        std::thread::sleep(POLL);
+    }
+}
+
+/// Reads up to [`JOURNAL_STEP`] new bytes of `journal` into `reader`;
+/// returns the complete lines read and whether more remain. A journal
+/// shorter than what was read (rewritten) is read again from its start.
+fn read_chunk(journal: &Path, reader: &mut JournalReader) -> (Vec<Value>, bool) {
+    let Some(len) = fs::metadata(journal).map(|m| m.len()).ok() else {
+        return (Vec::new(), false);
+    };
+    if len < reader.offset() {
+        *reader = JournalReader::default();
+    }
+    if len == reader.offset() {
+        return (Vec::new(), false);
+    }
+    let Ok(mut file) = fs::File::open(journal) else {
+        return (Vec::new(), false);
+    };
+    let mut chunk = Vec::new();
+    if file.seek(SeekFrom::Start(reader.offset())).is_err()
+        || file
+            .take(JOURNAL_STEP.min(len - reader.offset()))
+            .read_to_end(&mut chunk)
+            .is_err()
+        || chunk.is_empty()
+    {
+        return (Vec::new(), false);
+    }
+    let lines = reader.feed(&chunk);
+    (lines, reader.offset() < len)
 }
 
 /// The journal lines the camera host needs, keyed by group: the checker's
@@ -303,56 +441,63 @@ impl Follower {
             .context("Locating the capture checker's journal")?;
         let lock = strehl_cli::follow_lock_path(&journal);
         let log = journal.with_extension("log");
+        let observing = locked_elsewhere(&lock);
         let mut follower = Self {
             run: run.to_owned(),
+            log: log.clone(),
+            child: None,
+            observing,
+            state: State::Running,
+            shared: Arc::new(ReaderShared::default()),
+            progress: Arc::new(Progress::default()),
+            revision: 0,
+            exit: None,
+            polled: None,
+            started: Instant::now(),
+            // The other checker's own window opens the finished capture.
+            offered: observing,
+            relaying: false,
+        };
+        let mut relay_sender = None;
+        if !observing {
+            let mut command = command(engine, run, &cache)?;
+            let mut out = fs::OpenOptions::new()
+                .create(true)
+                .append(true)
+                .open(&log)
+                .with_context(|| format!("Opening {}", log.display()))?;
+            writeln!(
+                out,
+                "\nStrehl desktop: following {}\nProgram: {:?}\nArguments: {:?}\nInherited STREHL_* overrides removed; STREHL_CACHE_DIR set to the shared engine cache {}.",
+                run.display(),
+                command.get_program(),
+                command.get_args().collect::<Vec<_>>(),
+                cache.display()
+            )?;
+            command
+                .stdin(Stdio::null())
+                .stdout(out.try_clone()?)
+                .stderr(out);
+            let child = command
+                .spawn()
+                .context("Starting the engine's capture checker")?;
+            follower.child = Some(crate::jobs::OwnedChild(child));
+            relay_sender = relay
+                .zip(run.file_name().and_then(|n| n.to_str()))
+                .map(|(config, name)| relay_thread(config, name.to_owned()));
+            follower.relaying = relay_sender.is_some();
+        }
+        let paths = ReaderPaths {
             journal,
             lock,
             log,
-            child: None,
-            observing: false,
-            state: State::Running,
-            reader: JournalReader::default(),
-            journal_len: None,
-            polled: None,
-            started: Instant::now(),
-            offered: false,
-            relay: None,
-            relayed: HashSet::new(),
+            observing,
         };
-        if locked_elsewhere(&follower.lock) {
-            // The other checker's own window opens the finished capture.
-            follower.observing = true;
-            follower.offered = true;
-            follower.read_journal();
-            return Ok(follower);
-        }
-        let log = &follower.log;
-        let mut command = command(engine, run, &cache)?;
-        let mut out = fs::OpenOptions::new()
-            .create(true)
-            .append(true)
-            .open(log)
-            .with_context(|| format!("Opening {}", log.display()))?;
-        writeln!(
-            out,
-            "\nStrehl desktop: following {}\nProgram: {:?}\nArguments: {:?}\nInherited STREHL_* overrides removed; STREHL_CACHE_DIR set to the shared engine cache {}.",
-            run.display(),
-            command.get_program(),
-            command.get_args().collect::<Vec<_>>(),
-            cache.display()
-        )?;
-        command
-            .stdin(Stdio::null())
-            .stdout(out.try_clone()?)
-            .stderr(out);
-        let child = command
-            .spawn()
-            .context("Starting the engine's capture checker")?;
-        follower.child = Some(crate::jobs::OwnedChild(child));
-        follower.relay = relay
-            .zip(run.file_name().and_then(|n| n.to_str()))
-            .map(|(config, name)| relay_thread(config, name.to_owned()));
-        follower.read_journal();
+        let shared = follower.shared.clone();
+        std::thread::Builder::new()
+            .name("strehl-follow-journal".into())
+            .spawn(move || reader_thread(paths, shared, relay_sender))
+            .context("Starting the journal reader")?;
         Ok(follower)
     }
 
@@ -362,55 +507,67 @@ impl Follower {
 
     /// What the checker has recorded so far, with each plane's journal line.
     pub fn progress(&self) -> &Progress {
-        self.reader.progress()
+        &self.progress
     }
 
-    /// Reads new journal lines and notices the checker's exit. Cheap enough
-    /// for every frame: it does real work at most five times a second, and
-    /// reads at most [`JOURNAL_STEP`] new bytes (sooner while catching up).
+    /// The same, shared: a clone costs one reference count, not the planes.
+    pub fn progress_arc(&self) -> Arc<Progress> {
+        self.progress.clone()
+    }
+
+    /// Takes the reader thread's newest progress and notices the checker's
+    /// exit. Reads no file: a lock and a process status only, at most five
+    /// times a second.
     pub fn poll(&mut self) {
-        let behind = self
-            .journal_len
-            .is_some_and(|len| len > self.reader.offset());
-        if !behind && self.polled.is_some_and(|t| t.elapsed() < POLL) {
+        if self.polled.is_some_and(|t| t.elapsed() < POLL) {
             return;
         }
         self.polled = Some(Instant::now());
+        let (drained, released, error) = {
+            let out = self.shared.out.lock().unwrap();
+            if out.revision != self.revision {
+                self.progress = out.progress.clone();
+                self.revision = out.revision;
+            }
+            (out.drained, out.released, out.error.clone())
+        };
         if self.observing {
-            self.read_journal();
-            if self.running() && !locked_elsewhere(&self.lock) {
+            if self.running() && released {
                 self.state = State::Stopped("Checked by another Strehl window or process".into());
             }
             return;
         }
-        // The exit is read first so the journal read after it is complete.
-        let exited = self
-            .child
-            .as_mut()
-            .map(|child| child.0.try_wait())
-            .transpose();
-        self.read_journal();
-        match exited {
-            Ok(Some(Some(status))) => {
-                self.child = None;
-                // Everything the checker wrote, its last line included.
-                while self.read_journal() {}
-                let last = self.reader.flush();
-                self.relay(last);
-                self.state = if status.success() {
-                    State::Finished
-                } else {
-                    State::Failed(
-                        last_error(&self.log)
-                            .unwrap_or_else(|| format!("The capture checker stopped ({status})")),
-                    )
-                };
+        if self.exit.is_none() {
+            match self
+                .child
+                .as_mut()
+                .map(|child| child.0.try_wait())
+                .transpose()
+            {
+                Ok(Some(Some(status))) => {
+                    self.child = None;
+                    self.exit = Some(status);
+                    self.shared.exited.store(true, Ordering::SeqCst);
+                }
+                Ok(_) => {}
+                Err(e) => {
+                    self.child = None;
+                    self.shared.stop.store(true, Ordering::SeqCst);
+                    self.state = State::Failed(format!("Checking the capture checker: {e}"));
+                }
             }
-            Ok(_) => {}
-            Err(e) => {
-                self.child = None;
-                self.state = State::Failed(format!("Checking the capture checker: {e}"));
-            }
+        }
+        if let Some(status) = self.exit
+            && drained
+            && self.running()
+        {
+            self.state = if status.success() {
+                State::Finished
+            } else {
+                State::Failed(
+                    error.unwrap_or_else(|| format!("The capture checker stopped ({status})")),
+                )
+            };
         }
     }
 
@@ -418,56 +575,9 @@ impl Follower {
     pub fn stop(&mut self, reason: &str) {
         // Dropping the owned child ends it and waits.
         self.child = None;
+        self.shared.stop.store(true, Ordering::SeqCst);
         if self.running() {
             self.state = State::Stopped(reason.into());
-        }
-    }
-
-    /// Reads up to [`JOURNAL_STEP`] new bytes of the journal; `true` while
-    /// more remain. A journal shorter than what was read (rewritten) is read
-    /// again from its start.
-    fn read_journal(&mut self) -> bool {
-        let Some(len) = fs::metadata(&self.journal).map(|m| m.len()).ok() else {
-            return false;
-        };
-        self.journal_len = Some(len);
-        if len < self.reader.offset() {
-            self.reader = JournalReader::default();
-        }
-        if len == self.reader.offset() {
-            return false;
-        }
-        let Ok(mut file) = fs::File::open(&self.journal) else {
-            return false;
-        };
-        let mut chunk = Vec::new();
-        if file.seek(SeekFrom::Start(self.reader.offset())).is_err()
-            || file
-                .take(JOURNAL_STEP.min(len - self.reader.offset()))
-                .read_to_end(&mut chunk)
-                .is_err()
-            || chunk.is_empty()
-        {
-            return false;
-        }
-        let lines = self.reader.feed(&chunk);
-        self.relay(lines);
-        self.reader.offset() < len
-    }
-
-    /// Error correction: hands the new groups' verdicts to the receiver.
-    fn relay(&mut self, lines: Vec<Value>) {
-        let Some(relay) = &self.relay else { return };
-        let fresh: Vec<Value> = lines
-            .into_iter()
-            .filter_map(verdict)
-            .filter(|v| {
-                self.relayed
-                    .insert(v["group_id"].as_str().unwrap_or_default().to_owned())
-            })
-            .collect();
-        if !fresh.is_empty() {
-            let _ = relay.send(fresh);
         }
     }
 
@@ -484,7 +594,13 @@ impl Follower {
             "attention":self.progress().attention,"retake_positions":self.progress().retake,
             "align_pairs":self.progress().align_pairs,"retaken":self.progress().retaken,
             "planes_kept":self.progress().planes.len(),
-            "relaying_verdicts":self.relay.is_some()})
+            "relaying_verdicts":self.relaying})
+    }
+}
+
+impl Drop for Follower {
+    fn drop(&mut self) {
+        self.shared.stop.store(true, Ordering::SeqCst);
     }
 }
 
@@ -542,6 +658,7 @@ mod tests {
                 retake: vec![90, 110],
                 align_pairs: 6,
                 retaken: 0,
+                retaken_planes: BTreeSet::new(),
                 planes: BTreeMap::new(),
             }
         );
@@ -579,6 +696,7 @@ mod tests {
         assert_eq!(reader.offset(), whole.len() as u64);
         let p = reader.progress();
         assert_eq!((p.retaken, p.passed), (1, 3));
+        assert_eq!(p.retaken_planes.iter().copied().collect::<Vec<_>>(), [2]);
         assert_eq!(p.plane(1).unwrap()["seconds"], 1.5);
         assert_eq!(p.plane(2).unwrap()["group_id"], "g2b");
         // The relayed verdicts are the same whichever way it was read.
@@ -655,6 +773,53 @@ mod tests {
             envs.get(std::ffi::OsStr::new("RAYON_NUM_THREADS")),
             Some(&None)
         );
+    }
+
+    /// The journal is read on its own thread: lines appear in the published
+    /// progress as they are written, and after the checker's exit the last
+    /// line (without its newline) and the engine's error line are read.
+    #[test]
+    fn the_journal_is_read_off_the_ui_thread() {
+        let dir = tempfile::tempdir().unwrap();
+        let journal = dir.path().join("run.jsonl");
+        let log = dir.path().join("run.log");
+        fs::write(&log, "plane 1 : pass\nError: the disk filled\n").unwrap();
+        fs::write(&journal, "{\"plane\":1,\"verdict\":\"pass\"}\n").unwrap();
+        let shared = Arc::new(ReaderShared::default());
+        let paths = ReaderPaths {
+            journal: journal.clone(),
+            lock: dir.path().join("run.lock"),
+            log,
+            observing: false,
+        };
+        let thread_shared = shared.clone();
+        let handle = std::thread::spawn(move || reader_thread(paths, thread_shared, None));
+        let wait = |want: usize| {
+            let end = Instant::now() + Duration::from_secs(10);
+            loop {
+                let checked = shared.out.lock().unwrap().progress.checked;
+                if checked >= want {
+                    return checked;
+                }
+                assert!(Instant::now() < end, "only {checked} planes read");
+                std::thread::sleep(Duration::from_millis(20));
+            }
+        };
+        assert_eq!(wait(1), 1);
+        let mut f = fs::OpenOptions::new().append(true).open(&journal).unwrap();
+        f.write_all(b"{\"plane\":2,\"verdict\":\"pass\"}\n{\"plane\":3,\"verdict\"")
+            .unwrap();
+        assert_eq!(wait(2), 2, "the torn line waits");
+        f.write_all(b":\"decoded\"}").unwrap();
+        shared.exited.store(true, Ordering::SeqCst);
+        handle.join().unwrap();
+        let out = shared.out.lock().unwrap();
+        assert!(out.drained);
+        assert_eq!(
+            out.progress.checked, 3,
+            "the last line counts once finished"
+        );
+        assert_eq!(out.error.as_deref(), Some("the disk filled"));
     }
 
     #[test]

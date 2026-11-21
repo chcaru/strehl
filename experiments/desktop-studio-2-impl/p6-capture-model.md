@@ -142,9 +142,8 @@ except where a placebo is listed above):
 - A test shot's run (one RAW group, about 125 MB single shot, 500 MB four-shot)
   stays on disk, unlisted; a survey the user stopped waiting for is hidden but
   not deleted. Deleting them would need the owner's decision.
-- `capture-follow.rs` still reads the journal on the UI thread (now at most
-  64 KiB a poll instead of the whole file); moving it to the client thread is
-  left to the in-flight screen.
+- (Resolved in the Capture UI stage below: the follow journal is now read on
+  its own thread.)
 - The proof's 256 MiB resident budget held 322 synthetic 480 x 320 previews
   (MEASURED, about 0.8 MB a frame), so thinning starts there rather than at 512.
 - The proof's cost beside the checker during a real capture is unmeasured
@@ -155,3 +154,71 @@ except where a placebo is listed above):
   `set_station_open`, `status_line` and `unread_notice` into `app.rs`; the red
   theme token; the agent commands for the test shot, stopped imports and cancels;
   the milestone ledger row.
+
+## Capture UI, stage 1 (2026-11-21)
+
+The Capture station's screens, built as self-contained modules that take
+their inputs as parameters and return intents, to be composed into the P1
+shell in stage 2. Look: the locked mockups (`capture-plan.html`,
+`flight.html`, `glance.html`, `base.css`, `screens.css`): square corners,
+hairlines, tracked capitals, drawn status marks, through a
+`CapturePalette` (graphite by default; P1's tokens map onto it in one place).
+
+| Module | What | API |
+| --- | --- | --- |
+| `capture-style.rs` | Palette, drawn marks (lamp, triangle, diamond, ring, half), tracked capitals, square buttons, toggles, links, chips, bars, fields; Sony ISO and shutter codes (`iso_label`, `shutter_label`) | `CapturePalette`, `Mark`, `button`, `toggle`, `option`, `field`, ... |
+| `capture-preflight.rs` (view) | The chip strip: Rig, Light, Exposure, Bounds, Step, Disk, Receiver (Schedule while open), each met or unmet from `start_blockers`; "Ready" and the plan's summary, or the first blocker | `strip_chips(s, blockers) -> Vec<StripChip>`, `strip_ui(ui, chips, blockers, summary, palette) -> Option<Fix>` |
+| `capture-plan.rs` | The inspector: subject and stack name; four numbered steps with ready numerals; ISO and shutter pickers; test shot with its RAW levels; Start/End and Mark here; Calibrate step with its stage and "gives up in"; the step table (overlap = sharp width / step, planes as `Plan::positions()` counts them, minutes by `timing::initial_plane` + `initial_setup` + warmup, gigabytes by `StoredRaws::expected` or `capacity::required`; rows below focus-step's EDGE 3.6 marked); the staircase; 4-shot and settle; the four after-switches; footer "Ends about", disk line, Start stack (disabled with the first blocker) and Schedule | `PlanView::show(ui, &PlanInputs, palette) -> Vec<PlanIntent>`; pure `step_rows`, `plane_count`, `stack_seconds`, `rig_summary`, `test_shot_sentence`, `calibration_sentence`, `footer_lines`, `strip_summary` |
+| `capture-rail.rs` | The focus rail: survey profile bars (median of the 24 tiles, interpolated to one bar per plan step), planned or flight ticks pooled to 2 px, accent Start/End handles (drag to move a bound), the lens, hover, jog buttons, survey links; keys Left/Right 1, Shift 16, S/E | `FocusRail::show(ui, &RailInputs, palette) -> Vec<RailIntent>`; one cached `Arc<Mesh>` keyed on survey, plan, ticks revision, rect and scale |
+| `capture-flight.rs` | Headline (plane, bar, left, ends, pace, RAWs taken); the proof; the latest plane; the last five planes from the journal with verdict marks; health (transfer, checks, disk, rig); when-it-finishes switches; Pause/Resume, Stop… (confirm), Glance; G and Space | `canvas(ui, &FlightInputs, palette)`, `inspector(...) -> Vec<FlightIntent>`; pure `headline`, `health`, `recent_planes`, `flight_ticks`, `needs_you` |
+| `capture-glance.rs` | Full-screen status: colour bar (green fine, amber needs you, red stopped, blue done), dial with one tick per plane (pooled to 180), time left and ends, four health lines, next-step sentence, Esc | `show(ui, &GlanceInputs, palette) -> bool` (back); pure `glance_state`, `next_sentence`, `glance_lines` |
+| `capture-live.rs` | Live view: Fit/100 %, peaking with threshold, clipping overlay (from the preview's clip mask, computed on the client thread), thirds grid, subject box with corner marks (drag to redraw), magnifier (cycles the host's ratios), estimate panel with the histogram "estimate, not the RAW" and the exposure | `LiveView::show(ui, s, palette) -> Vec<LiveIntent>`; textures uploaded only on a new preview generation |
+| `capture-station.rs` | The composition and the intents applied through the workspace's checks: settings, exposure, marks, test shot, calibration, switches, Start (re-checked against `start_blockers`), Stop (confirmed), a dragged bound (focus there, then mark once the lens arrived; 20 s limit), survey links, ROI, magnifier; the proof (`ProofJob::for_run` tails the run's receipts, one RAW a plane); recovery, connection and schedule windows | `station_strip`, `station_canvas`, `station_rail`, `station_inspector`, `station_glance`, `glance_open`, `open_glance`, `station_mode`, `station_hints`, `take_open_rig`, `take_show_plane` |
+
+Also: the follow journal is now read on its own thread (`capture-follow.rs`,
+spec 5.2): the UI takes the published `Arc<Progress>` and polls only the
+checker's exit; `ProofJob::for_run(run, shots)` follows a capture's receipts
+on the proof's below-normal thread.
+
+Until the shell composes them, `STREHL_CAPTURE_STATION=1` (or `glance`) lays
+the station out inside today's Capture tab (control strip 36 px, canvas, rail
+135 px or 127 px in flight, inspector 348 px).
+
+### Commands and results (stage 1)
+
+| Command | Result |
+| --- | --- |
+| `cargo test --locked -p strehl-ui` | MEASURED: Compiling strehl-ui; 1127 passed, 0 failed, 18 ignored |
+| `cargo clippy --locked -p strehl-ui --all-targets --no-deps -- -D warnings` | MEASURED: Checking strehl-ui; exit 0 |
+| `cargo fmt -p strehl-ui -- --check` | MEASURED: no difference |
+| Offscreen renders (`strehl-ui --capture --capture-settings <scratch> --catalog <scratch> --size 1680x1050 --offscreen-screenshot`, `STREHL_CAPTURE_STATION=1` / `glance`) against `strehl-capture-headless --demo` on 127.0.0.1 (the host's simulator: no camera, light or Pi) | VERIFIED by eye against `capture-plan.png`, `capture-flight.png` and `glance.png`: the plan inspector, strip, rail, live view, flight headline, health column and glance lay out as the mockups. Renders not kept (scratch, deleted). The chrome around them is today's app, not P1's |
+
+Tests added: intents from clicks (plan: Start, Test shot, marks, a table row,
+a switch, Calibrate; flight: Stop… asks, Stop now, Keep going, Pause, Glance;
+G opens glance), blocked Start sends nothing, the first blocker beside Start,
+rail keys (and none in flight, without the keyboard or when not editable),
+zero rail rebuilds on pointer motion and on lens moves in plan mode, one
+rebuild per changed plan or plane state, ticks pooled to 2 px at 6,000 planes,
+dragging a handle (MoveBound) and a click (Focus), live-view uploads only on a
+new preview, drawing a subject box, the photo rectangle (1160 x 773 in the
+mockup's canvas), glance states and Escape, the dial bounded at 180 ticks, the
+station applying each intent as the host's command, a dragged bound reached
+then marked, the step table against the host's rules (`plane_count` equals
+`Plan::positions().len()`), the follow journal read on its thread, the proof's
+run tail (one RAW a plane, the end reported once).
+
+### Open issues (stage 1)
+
+- Composition into the P1 shell (stage 2): frames, top bar, hint bar
+  (`station_hints`), rig popover (`take_open_rig`), "Show" of a retaken plane
+  (`take_show_plane`), the activity tray, and the theme tokens.
+- Fonts: the mockups use Bahnschrift; the screens use the app's face (D11 and
+  P1 decide). Letter spacing follows the mockup.
+- The subject and stack name are held by the plan view only; naming the
+  captured stack and the catalog's subjects belong to P4.
+- "Tell my phone" and a 2 min power-down grace are in the mockup but have no
+  host support; not shown.
+- The proof is fed from the receiver's receipts while a capture is written
+  with the receiver on this PC; a card-only capture has no proof.
+- Flight in the simulator shows no proof or checks (no receiver, no RAWs); the
+  proof, the checks and the health lines need the rig test of the main list.

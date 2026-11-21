@@ -822,6 +822,16 @@ pub struct ProofJob {
 #[allow(dead_code)]
 impl ProofJob {
     pub fn start() -> Self {
+        Self::spawn(None)
+    }
+    /// A proof of the capture being written to `run`: its worker reads the
+    /// run's transfer receipts and offers the first RAW of each plane that
+    /// arrives (`shots` RAWs a plane), and makes a last update when the
+    /// capture's `result.json` appears.
+    pub fn for_run(run: PathBuf, shots: u64) -> Self {
+        Self::spawn(Some(RunTail::new(run, shots)))
+    }
+    fn spawn(tail: Option<RunTail>) -> Self {
         let (sender, inputs) = mpsc::channel();
         let (events, receiver) = mpsc::sync_channel(4);
         let cancelled = Arc::new(AtomicBool::new(false));
@@ -831,7 +841,7 @@ impl ProofJob {
             .name("strehl-capture-proof".into())
             .spawn(move || {
                 lower_thread_priority();
-                proof_worker(&inputs, &events, &worker_cancelled);
+                proof_worker(&inputs, &events, &worker_cancelled, tail);
             })
         {
             let _ = failed.try_send(ProofEvent::Failed(format!(
@@ -877,6 +887,7 @@ fn proof_worker(
     inputs: &Receiver<ProofInput>,
     events: &mpsc::SyncSender<ProofEvent>,
     cancelled: &AtomicBool,
+    mut tail: Option<RunTail>,
 ) {
     let mut proof = Incremental::default();
     loop {
@@ -884,6 +895,13 @@ fn proof_worker(
             return;
         }
         let mut finish = false;
+        if let Some(run) = &mut tail {
+            let (paths, ended) = run.poll();
+            for path in paths {
+                add_frame(&mut proof, &path, cancelled, events);
+            }
+            finish |= ended;
+        }
         match inputs.recv_timeout(Duration::from_millis(250)) {
             Ok(ProofInput::Frame(path)) => {
                 add_frame(&mut proof, &path, cancelled, events);
@@ -918,6 +936,87 @@ fn proof_worker(
             // nothing, it reads the newest of what is queued.
             let _ = events.try_send(event);
         }
+    }
+}
+
+/// Follows a capture's transfer receipts: one RAW a plane, in arrival order.
+#[allow(dead_code)]
+struct RunTail {
+    run: PathBuf,
+    shots: u64,
+    offset: u64,
+    partial: Vec<u8>,
+    planes: BTreeSet<u64>,
+    ended: bool,
+}
+
+#[allow(dead_code)]
+impl RunTail {
+    fn new(run: PathBuf, shots: u64) -> Self {
+        Self {
+            run,
+            shots: shots.max(1),
+            offset: 0,
+            partial: Vec::new(),
+            planes: BTreeSet::new(),
+            ended: false,
+        }
+    }
+    /// The new planes' files, and whether the capture has just ended (its
+    /// result written and every receipt read).
+    fn poll(&mut self) -> (Vec<PathBuf>, bool) {
+        use std::io::{Read, Seek, SeekFrom};
+        let mut out = Vec::new();
+        let receipts = self.run.join("transfer-receipts.jsonl");
+        let len = std::fs::metadata(&receipts).map_or(0, |m| m.len());
+        if len > self.offset
+            && let Ok(mut file) = std::fs::File::open(&receipts)
+            && file.seek(SeekFrom::Start(self.offset)).is_ok()
+        {
+            let mut chunk = Vec::new();
+            if file
+                .take((len - self.offset).min(1 << 20))
+                .read_to_end(&mut chunk)
+                .is_ok()
+            {
+                self.offset += chunk.len() as u64;
+                self.partial.extend_from_slice(&chunk);
+                if let Some(end) = self.partial.iter().rposition(|b| *b == b'\n') {
+                    let rest = self.partial.split_off(end + 1);
+                    let lines = std::mem::replace(&mut self.partial, rest);
+                    for line in lines.split(|b| *b == b'\n') {
+                        if let Some(path) = self.plane_file(line) {
+                            out.push(path);
+                        }
+                    }
+                }
+            }
+        }
+        let ended = !self.ended && self.offset >= len && self.run.join("result.json").is_file();
+        self.ended |= ended;
+        (out, ended)
+    }
+    /// The stored file of a receipt line, if it is the first RAW seen of
+    /// its plane.
+    fn plane_file(&mut self, line: &[u8]) -> Option<PathBuf> {
+        let r: serde_json::Value = serde_json::from_slice(line).ok()?;
+        if r["ok"] != true || r["durable"] != true {
+            return None;
+        }
+        let name = r["logical_name"].as_str()?;
+        let ordinal: u64 = name
+            .strip_prefix("frame-")?
+            .strip_suffix(".ARW")?
+            .parse()
+            .ok()?;
+        let plane = ordinal.checked_sub(1)? / self.shots;
+        if !self.planes.insert(plane) {
+            return None;
+        }
+        Some(self.run.join(match r["storage_encoding"].as_str() {
+            Some("identity") | None => name.to_owned(),
+            Some(_) => format!("{name}.straw"),
+        }))
     }
 }
 
@@ -1228,6 +1327,44 @@ mod tests {
         for (received, used, seconds) in times.iter().step_by(16) {
             println!("  at {received:>3} planes: {used:>3} used, {seconds:.3} s");
         }
+    }
+
+    /// The run tail offers the first RAW of each plane as its receipt
+    /// arrives, skips the other members and undurable receipts, and reports
+    /// the end once the result is written.
+    #[test]
+    fn the_run_tail_offers_one_raw_a_plane() {
+        let dir = tempfile::tempdir().unwrap();
+        let mut tail = RunTail::new(dir.path().to_path_buf(), 4);
+        assert_eq!(tail.poll(), (vec![], false));
+        let receipt = |n: u64, durable: bool| {
+            format!(
+                "{{\"logical_name\":\"frame-{n:06}.ARW\",\"ok\":true,\"durable\":{durable},\"storage_encoding\":\"strehl-archive-v2\"}}\n"
+            )
+        };
+        let mut text =
+            String::from("{\"logical_name\":\"manifest.json\",\"ok\":true,\"durable\":true}\n");
+        for n in 1..=6 {
+            text.push_str(&receipt(n, n != 5));
+        }
+        std::fs::write(dir.path().join("transfer-receipts.jsonl"), &text).unwrap();
+        let (paths, ended) = tail.poll();
+        assert!(!ended);
+        assert_eq!(
+            paths,
+            [
+                dir.path().join("frame-000001.ARW.straw"),
+                dir.path().join("frame-000006.ARW.straw")
+            ],
+            "plane 1 from its first member; plane 2 from member 6 (5 was not durable)"
+        );
+        text.push_str(&receipt(9, true));
+        std::fs::write(dir.path().join("transfer-receipts.jsonl"), &text).unwrap();
+        std::fs::write(dir.path().join("result.json"), b"{}").unwrap();
+        let (paths, ended) = tail.poll();
+        assert_eq!(paths, [dir.path().join("frame-000009.ARW.straw")]);
+        assert!(ended);
+        assert_eq!(tail.poll(), (vec![], false), "the end is reported once");
     }
 
     /// A TIFF container holding one camera JPEG, as a RAW's embedded preview.

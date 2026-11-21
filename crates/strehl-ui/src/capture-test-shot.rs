@@ -161,6 +161,8 @@ pub(crate) enum TestShot {
     Done {
         folder: PathBuf,
         levels: RawLevels,
+        /// When its levels were read.
+        taken: std::time::SystemTime,
     },
     Failed(String),
 }
@@ -257,7 +259,11 @@ impl TestShot {
                 }
             }
             Self::Reading { folder, task } => match task.receiver.try_recv() {
-                Ok(Ok(levels)) => Self::Done { folder, levels },
+                Ok(Ok(levels)) => Self::Done {
+                    folder,
+                    levels,
+                    taken: std::time::SystemTime::now(),
+                },
                 Ok(Err(e)) => Self::Failed(e),
                 Err(std::sync::mpsc::TryRecvError::Empty) => Self::Reading { folder, task },
                 Err(std::sync::mpsc::TryRecvError::Disconnected) => {
@@ -273,7 +279,7 @@ impl TestShot {
         let (folder, levels, error) = match self {
             Self::Capturing { folder, .. } => (folder.clone(), Value::Null, None),
             Self::Reading { folder, .. } => (Some(folder.clone()), Value::Null, None),
-            Self::Done { folder, levels } => (Some(folder.clone()), levels.public(), None),
+            Self::Done { folder, levels, .. } => (Some(folder.clone()), levels.public(), None),
             Self::Failed(e) => (None, Value::Null, Some(e.clone())),
             Self::Idle => (None, Value::Null, None),
         };
