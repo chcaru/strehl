@@ -188,7 +188,26 @@ path.
   index can add subjects when catalog format 2 lands); P5 activities and the queue (replace
   `activities()`); P6 the Capture station (stop owning the body); P7 Develop and Export
   (tools strip, footer actions).
-- Remaining `display_path` sites in other phases' files (listed above).
+- ~~Remaining `display_path` sites~~: done in the polish pass (below).
 - Merge note: `main.rs`, `app-agent.rs` and `project-explorer.rs` also changed on the
   integration branch (P4, P7); the P1 hunks are small and not on the same lines as of
   `97120a109`.
+
+## Stage 2 and the polish pass
+
+- The Library route is P4's station (`app-station-library.rs`); today's project tree is the
+  Project tree drawer (brand menu, palette, `--overlay projects`).
+- Drawers open over a station and no longer rewrite its legacy flags, so Develop keeps
+  editing under the tree; code that shows project-tree features reads `projects_visible()`.
+  They are painted through `theme::follow_theme`, which recolours the Graphite token colours
+  their legacy code uses into the theme in effect (Lightbox, Instrument). Stations that still
+  paint legacy are drawn in the Graphite scope as before.
+- Breadcrumbs follow the mockups: Library / subject / stack / render, then the version (Develop,
+  Export, while the recipe is the saved or restored one) or Engine room; Capture shows the
+  plan's subject and stack, then New stack or Capturing. In a narrow window the middle
+  segments fold into one ellipsis.
+- The top bar's right end has a fixed budget between the stations and the window buttons;
+  see `fit_right_cluster` for the order in which its parts give way. The activity reads
+  "Capturing 61 / 96 · 3:18 left" (no repeated kind); the rig says the light during a capture.
+- Glance hides the window buttons until the pointer reaches the corner.
+- `--overlay projects|activity|agent|palette|preferences`; `visual-check.py --size`.
