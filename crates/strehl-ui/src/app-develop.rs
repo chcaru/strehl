@@ -32,19 +32,45 @@ pub(super) struct DepthRepair {
     started: Instant,
     run: Option<crate::workspace_history::Run>,
     stack: Option<crate::workspace_history::NodeId>,
+    pub(super) route: RepairRoute,
+    /// The whole-stack re-render a region-only rebuild falls back to if it
+    /// stops, with its library record.
+    fallback: Option<(RenderRequest, crate::workspace_history::Run)>,
+}
+
+/// How a depth repair rebuilds (implementation plan E4).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub(super) enum RepairRoute {
+    /// Only the painted regions, against the open render's master: their
+    /// frames alone are decoded and every other pixel keeps its bytes.
+    Region,
+    /// The whole stack again, and why the region-only rebuild was not used.
+    Full(String),
 }
 
 impl DepthRepair {
     pub(super) fn status(&self) -> String {
         let seconds = self.started.elapsed().as_secs();
-        match self.progress.source_repair {
-            Some(repair) if !repair.finished => format!(
-                "Rebuilding area {} of {} · {} s",
-                repair.region + 1,
-                repair.regions,
-                seconds
-            ),
-            _ => format!("Re-stacking · {seconds} s"),
+        let area = match self.progress.source_repair {
+            Some(repair) if !repair.finished && repair.regions > 1 => {
+                format!(" · area {} of {}", repair.region + 1, repair.regions)
+            }
+            _ => String::new(),
+        };
+        match self.route {
+            RepairRoute::Region => format!("Rebuilding the painted area only{area} · {seconds} s"),
+            RepairRoute::Full(_) => format!("Re-stacking the whole stack{area} · {seconds} s"),
+        }
+    }
+
+    /// Why the whole stack is re-stacked, or what the region-only rebuild keeps.
+    pub(super) fn detail(&self) -> String {
+        match &self.route {
+            RepairRoute::Region => {
+                "Region-only: only the painted frames are read; the rest of the photograph keeps its pixels"
+                    .into()
+            }
+            RepairRoute::Full(why) => format!("Whole stack: {why}"),
         }
     }
 }
@@ -592,7 +618,7 @@ impl StrehlApp {
         };
         self.editor.commit_edit();
         let recipe = self.editor.recipe.clone();
-        let run = crate::workspace_history::Run {
+        let mut run = crate::workspace_history::Run {
             directory: PathBuf::new(),
             source: stack.directory.clone(),
             output: PathBuf::new(),
@@ -621,8 +647,8 @@ impl StrehlApp {
             pinned: false,
             imported: None,
         };
-        let job = jobs::start_render(RenderRequest {
-            executable: engine,
+        let full = RenderRequest {
+            executable: engine.clone(),
             source: stack.directory.clone(),
             output_parent: self.output.clone(),
             exposure_ev: self.controls.exposure,
@@ -631,7 +657,22 @@ impl StrehlApp {
             settings: self.controls.settings.clone(),
             retain_master: true,
             recipe: Some(recipe.clone()),
-        });
+        };
+        let (job, route, fallback) = match self.region_only_source(&engine, &recipe) {
+            Ok((original, request)) => {
+                let fallback = (full, run.clone());
+                run.label = run.label.replace("· repaired", "· region repaired");
+                run.settings = request.settings.clone();
+                run.exposure = request.exposure_ev;
+                run.gate = request.pyramid_gate;
+                (
+                    jobs::start_render_with(request, Some(original)),
+                    RepairRoute::Region,
+                    Some(fallback),
+                )
+            }
+            Err(why) => (jobs::start_render(full), RepairRoute::Full(why), None),
+        };
         self.edit_pane.develop.repair = Some(DepthRepair {
             job,
             progress: PipelineProgress::default(),
@@ -640,9 +681,107 @@ impl StrehlApp {
             started: Instant::now(),
             run: Some(run),
             stack: self.active_stack,
+            route,
+            fallback,
         });
         self.edit_pane.develop.notice = None;
         Ok(())
+    }
+
+    /// The open render, when a region-only rebuild can repair it: its
+    /// master, photograph, log and warp map, and the request its own
+    /// settings make. Otherwise why the whole stack must be re-stacked.
+    pub(super) fn region_only_source(
+        &self,
+        engine: &Path,
+        recipe: &DevelopmentRecipe,
+    ) -> Result<(jobs::RegionOnlySource, RenderRequest), String> {
+        let result = self.result.as_ref().ok_or("no render is open")?;
+        let run = self
+            .catalog
+            .runs
+            .iter()
+            .find(|run| run.owns_output(result))
+            .ok_or("the open render is not in the library")?;
+        if run.status != "Saved" {
+            return Err(format!("its render is {}", run.status.to_lowercase()));
+        }
+        if run.settings.session.is_some() || run.settings.temporal_energy {
+            return Err("its render is a session or uses temporal smoothing".into());
+        }
+        let stack = self
+            .stack
+            .as_ref()
+            .ok_or("its source photos are not open")?;
+        let master = self
+            .editor
+            .loaded
+            .as_ref()
+            .map(|loaded| loaded.source.clone())
+            .filter(|master| master != &run.output && master.is_file())
+            .ok_or("its render kept no linear master")?;
+        if !run.output.is_file() || !run.log.is_file() {
+            return Err("its photograph or render log is missing".into());
+        }
+        // Renders before the shared engine cache kept their alignment in
+        // their own folder; later ones find it in the shared cache.
+        let warp_map = std::fs::read_dir(run.directory.join("cache"))
+            .ok()
+            .map(|entries| {
+                entries
+                    .flatten()
+                    .map(|entry| entry.path())
+                    .filter(|path| path.to_string_lossy().ends_with(".warpmap.txt"))
+                    .collect::<Vec<_>>()
+            })
+            .filter(|maps| maps.len() == 1)
+            .and_then(|mut maps| maps.pop());
+        let mut settings = run.settings.clone();
+        // A second pass over every frame; the repaired render has none.
+        settings.confidence_map = false;
+        Ok((
+            jobs::RegionOnlySource {
+                master,
+                photo: run.output.clone(),
+                log: run.log.clone(),
+                warp_map,
+            },
+            RenderRequest {
+                executable: engine.to_path_buf(),
+                source: stack.directory.clone(),
+                output_parent: self.output.clone(),
+                exposure_ev: run.exposure,
+                pyramid_gate: run.gate,
+                worker_threads: Some(self.controls.workers),
+                settings,
+                retain_master: true,
+                recipe: Some(recipe.clone()),
+            },
+        ))
+    }
+
+    /// The repair in the activity tray, saying which rebuild runs.
+    pub(super) fn report_depth_repair(&self, activities: &mut crate::activity::Activities) {
+        let Some(repair) = &self.edit_pane.develop.repair else {
+            return;
+        };
+        let mut status = crate::activity::ActivityStatus::new(
+            crate::activity::ActivityKind::Repair,
+            "depth-repair",
+            match repair.route {
+                RepairRoute::Region => "Depth repair · painted area only".to_owned(),
+                RepairRoute::Full(_) => "Depth repair · whole stack".to_owned(),
+            },
+            crate::activity::Lane::Heavy,
+        )
+        .with_phase(repair.status())
+        .with_cancel(crate::activity::CancelMode::Cooperative);
+        status.facts = repair.detail();
+        if let Some(r) = repair.progress.source_repair {
+            status.done = Some(r.completed as u64);
+            status.total = Some((r.last + 1 - r.first) as u64);
+        }
+        activities.report(status);
     }
 
     pub(super) fn cancel_depth_repair(&mut self) {
@@ -718,6 +857,30 @@ impl StrehlApp {
                             if let Some(path) = &directory {
                                 self.catalog.finish(path, "Failed");
                                 self.persist_catalog();
+                            }
+                            // A region-only rebuild that stops falls back to
+                            // the whole stack, and says so.
+                            if let (RepairRoute::Region, Some((full, run))) =
+                                (&repair.route, repair.fallback)
+                            {
+                                self.edit_pane.develop.notice = Some(format!(
+                                    "Rebuilding only the painted area stopped ({message}); \
+                                     re-stacking the whole stack instead."
+                                ));
+                                self.edit_pane.develop.repair = Some(DepthRepair {
+                                    job: jobs::start_render(full),
+                                    progress: PipelineProgress::default(),
+                                    document: repair.document,
+                                    recipe: repair.recipe,
+                                    started: Instant::now(),
+                                    run: Some(run),
+                                    stack: repair.stack,
+                                    route: RepairRoute::Full(format!(
+                                        "the region-only rebuild stopped: {message}"
+                                    )),
+                                    fallback: None,
+                                });
+                                break;
                             }
                             self.edit_pane.develop.notice =
                                 Some(format!("The depth repair stopped: {message}"));

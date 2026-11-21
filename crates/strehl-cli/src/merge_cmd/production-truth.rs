@@ -108,6 +108,7 @@ fn fixture_options(out: PathBuf) -> MergeOptions {
         linear_master: None,
         sensor_master: Default::default(),
         region_recipe: None,
+        region_only: None,
         dir: PathBuf::from("M194-NO-SUCH-RAW-DIRECTORY"),
         out: Some(out),
         limit: None,
@@ -378,6 +379,9 @@ mod independent;
 
 #[path = "region-repair-tests.rs"]
 mod region_repair_tests;
+
+#[path = "region-only-tests.rs"]
+mod region_only_tests;
 
 // Private output-coordinate and interpolation commissioning. These ignored
 // tests use generated CFA sources and never participate in the product CLI.

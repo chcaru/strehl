@@ -91,6 +91,8 @@ pub(crate) mod gatefloor;
 pub(crate) mod halo;
 #[path = "merge_cmd/optical-restore.rs"]
 mod optical_restore;
+#[path = "merge_cmd/region-only.rs"]
+mod region_only;
 #[path = "merge_cmd/region-repair.rs"]
 mod region_repair;
 #[path = "merge_cmd/self-flat.rs"]
@@ -181,12 +183,22 @@ use crate::stack::{
     roi_green, srgb_encode,
 };
 
+/// A region-only repair's original: the linear master and the photograph an
+/// earlier render of the same stack wrote (implementation plan E4).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RegionOnly {
+    pub master: PathBuf,
+    pub photo: PathBuf,
+}
+
 pub struct MergeOptions {
     pub dir: PathBuf,
     pub out: Option<PathBuf>,
     pub linear_master: Option<PathBuf>,
     pub sensor_master: sensor_master::Request,
     pub region_recipe: Option<PathBuf>,
+    /// Rebuild only `region_recipe`'s regions against this original.
+    pub region_only: Option<RegionOnly>,
     pub limit: Option<usize>,
     /// Apply the sRGB transfer curve **and** the camera's colour matrix.
     /// For looking at, NOT for measuring.
@@ -9307,6 +9319,22 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     // Measured once, before the lateral-CA preview, so the preview measures
     // the channels the render will actually use.
     let _axial = axial_colour::install_if_requested(opts)?;
+    // An earlier render's refinement, reused: no preview pass, and the
+    // render gathers exactly as that render did (a region-only repair).
+    let reused = ca_refine::reused()?;
+    ensure!(
+        opts.region_only.is_none()
+            || reused.is_some()
+            || !(ca_refine::requested()? && ca_refine::applicable(opts)?),
+        "region-only repair reuses the original render's lateral-CA refinement: pass \
+         --reuse-ca-from with its render log (or --refine-ca off)"
+    );
+    if let Some(reused) = reused {
+        ca_refine::install_reused(&reused);
+        let out = run_pyramid_final(opts);
+        strehl_core::optics::set_ca_refinement(None);
+        return out;
+    }
     if ca_refine::requested()? && ca_refine::applicable(opts)? {
         return ca_refine::run_refined(opts);
     }
@@ -9555,6 +9583,8 @@ mod ca_refine {
     use strehl_core::optics::{CaRefinement, ChannelRefinement};
 
     pub(super) const ENV: &str = "STREHL_REFINE_CA";
+    /// The render log of an earlier render whose refinement is reused.
+    pub(super) const REUSE_ENV: &str = "STREHL_REUSE_CA_FROM";
     /// A refinement beyond these bounds is refused, not applied: the
     /// residuals measured across the corpus were at most ~250 ppm and 0.35 px.
     const MAX_SCALE: f64 = 1000e-6;
@@ -9725,6 +9755,143 @@ mod ca_refine {
     }
 
     /// End the preview and take what its writer measured.
+    /// The refinement to the last bit, for `--reuse-ca-from`: red then blue,
+    /// each scale, x and y translation.
+    pub(super) fn exact_line(r: &CaRefinement) -> String {
+        format!(
+            "                  exact red {:?} {:?} {:?} blue {:?} {:?} {:?} (scale, tx, ty)",
+            r.red.scale,
+            r.red.translation.0,
+            r.red.translation.1,
+            r.blue.scale,
+            r.blue.translation.0,
+            r.blue.translation.1
+        )
+    }
+
+    /// What an earlier render did about lateral CA, read from its log.
+    #[derive(Debug, Clone, Copy, PartialEq)]
+    pub(super) struct Reused {
+        pub refinement: Option<CaRefinement>,
+        /// The log carried the refinement to the last bit (`exact_line`),
+        /// not only the rounded `measured` lines of older renders.
+        pub exact: bool,
+    }
+
+    pub(super) fn reused() -> Result<Option<Reused>> {
+        let Some(path) = std::env::var_os(REUSE_ENV).filter(|v| !v.is_empty()) else {
+            return Ok(None);
+        };
+        let file = std::fs::File::open(&path)
+            .with_context(|| format!("opening {}", Path::new(&path).display()))?;
+        parse_reused(std::io::BufReader::new(file))
+            .with_context(|| {
+                format!(
+                    "reading the CA refinement of {}",
+                    Path::new(&path).display()
+                )
+            })
+            .map(Some)
+    }
+
+    /// The first refinement decision in a render log. A log without one
+    /// measured nothing (no profile, refinement off), which is reused as none.
+    pub(super) fn parse_reused(mut log: impl std::io::BufRead) -> Result<Reused> {
+        let parse_fit = |line: &str| -> Option<ChannelRefinement> {
+            let t = line.split_once("t (")?.1;
+            let (pair, rest) = t.split_once(')')?;
+            let (x, y) = pair.split_once(',')?;
+            let ppm = rest.split_once("scale ")?.1.split_once(" ppm")?.0;
+            Some(ChannelRefinement {
+                scale: ppm.trim().parse::<f64>().ok()? * 1e-6,
+                translation: (x.trim().parse().ok()?, y.trim().parse().ok()?),
+            })
+        };
+        let (mut red, mut blue) = (None, None);
+        let mut decided: Option<Reused> = None;
+        let mut raw = Vec::new();
+        loop {
+            raw.clear();
+            if log.read_until(b'\n', &mut raw)? == 0 {
+                break;
+            }
+            let line = String::from_utf8_lossy(&raw);
+            if let Some(found) = decided {
+                // The exact line follows the decision, if the render wrote it.
+                if let Some(values) = line.split_once(" exact red ") {
+                    let v: Vec<f64> = values
+                        .1
+                        .split_whitespace()
+                        .filter(|t| *t != "blue")
+                        .take(6)
+                        .map(str::parse)
+                        .collect::<Result<_, _>>()
+                        .context("the exact CA refinement line does not parse")?;
+                    anyhow::ensure!(v.len() == 6, "the exact CA refinement line is short");
+                    return Ok(Reused {
+                        refinement: Some(CaRefinement {
+                            red: ChannelRefinement {
+                                scale: v[0],
+                                translation: (v[1], v[2]),
+                            },
+                            blue: ChannelRefinement {
+                                scale: v[3],
+                                translation: (v[4], v[5]),
+                            },
+                        }),
+                        exact: true,
+                    });
+                }
+                return Ok(found);
+            }
+            if !line.contains("CA refinement") && !line.starts_with("                  ") {
+                continue;
+            }
+            if line.contains("measured red t (") {
+                red = parse_fit(&line);
+            } else if line.contains("measured blue t (") {
+                blue = parse_fit(&line);
+            } else if line.contains("NOT APPLIED") {
+                return Ok(Reused {
+                    refinement: None,
+                    exact: true,
+                });
+            } else if line.contains("APPLIED on top of the profile") {
+                let (Some(red), Some(blue)) = (red, blue) else {
+                    anyhow::bail!("the log applied a CA refinement it did not state");
+                };
+                decided = Some(Reused {
+                    refinement: Some(CaRefinement { red, blue }),
+                    exact: false,
+                });
+            }
+        }
+        Ok(decided.unwrap_or(Reused {
+            refinement: None,
+            exact: true,
+        }))
+    }
+
+    pub(super) fn install_reused(reused: &Reused) {
+        match &reused.refinement {
+            None => eprintln!(
+                "CA refinement   : REUSED -- the earlier render applied none; no preview pass"
+            ),
+            Some(r) => {
+                eprintln!(
+                    "CA refinement   : REUSED from the earlier render ({}); no preview pass",
+                    if reused.exact {
+                        "exact"
+                    } else {
+                        "rounded as its log printed it"
+                    }
+                );
+                eprintln!("{}", exact_line(r));
+            }
+        }
+        strehl_core::optics::set_ca_refinement(reused.refinement);
+    }
+
     pub(super) fn end_preview() -> Option<Residual> {
         crate::ui_progress::set_muted(false);
         STRIDE.store(0, Ordering::Relaxed);
@@ -9765,10 +9932,12 @@ mod ca_refine {
                     eprintln!(
                         "                  APPLIED on top of the profile for the render below"
                     );
-                    Some(CaRefinement {
+                    let refinement = CaRefinement {
                         red: c(&r.red),
                         blue: c(&r.blue),
-                    })
+                    };
+                    eprintln!("{}", exact_line(&refinement));
+                    Some(refinement)
                 } else {
                     eprintln!(
                         "                  NOT APPLIED -- beyond the bounds ({:.0} ppm, {MAX_TRANSLATION} px)",
@@ -9807,6 +9976,7 @@ fn a_default_temporal_render_passes_the_temporal_preflight() {
 
 /// The environment twin of `--refine-ca`.
 pub const REFINE_CA_ENV: &str = ca_refine::ENV;
+pub const REUSE_CA_ENV: &str = ca_refine::REUSE_ENV;
 
 fn run_pyramid_prepared_with_sensor(
     opts: &MergeOptions,
@@ -10200,6 +10370,37 @@ fn run_pyramid_prepared_with_sensor(
             .build()
             .context("building Pyramid execution pool")?,
     );
+    // E4: only the repair pass, against the original render's master. No
+    // ordinary fold, so no frame outside the regions' ranges is decoded.
+    if let Some(plan) = &opts.region_only {
+        let refused = region_only::refusals(opts, temporal_active, _frames.is_some());
+        ensure!(
+            refused.is_empty(),
+            "region-only repair is not possible here: {}",
+            refused.join("; ")
+        );
+        return region_only::render(region_only::Inputs {
+            opts,
+            plan,
+            repairs: &repairs,
+            cx: region_repair::RepairContext {
+                source,
+                domain,
+                config: cfg,
+                levels,
+                noise: &noise,
+                warps,
+                defect,
+                per_chunk,
+                progress: progress.observer(),
+            },
+            pool: &pool,
+            wb,
+            xyz_to_cam: xyz_to_cam.as_ref(),
+            exposure,
+            progress: &progress,
+        });
+    }
     let (mut worker, gpu_line) = BandWorker::for_route(
         domain,
         cfg,

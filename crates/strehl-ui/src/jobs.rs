@@ -429,6 +429,19 @@ pub struct RenderRequest {
     pub recipe: Option<strehl_edit::DevelopmentRecipe>,
 }
 
+/// The original render a region-only depth repair rebuilds against
+/// (implementation plan E4): its linear master, photograph and log.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct RegionOnlySource {
+    pub master: PathBuf,
+    pub photo: PathBuf,
+    /// Its render log, for the lateral-CA refinement it measured.
+    pub log: PathBuf,
+    /// The run's own warp map, where it kept one in its folder; otherwise
+    /// the engine finds the stack's map in the shared cache.
+    pub warp_map: Option<PathBuf>,
+}
+
 #[derive(Debug)]
 pub enum RenderEvent {
     Started {
@@ -488,6 +501,15 @@ impl Drop for RenderJob {
 }
 
 pub fn start_render(request: RenderRequest) -> RenderJob {
+    start_render_with(request, None)
+}
+
+/// A render, or with `region_only` a depth repair that rebuilds only the
+/// recipe's painted regions against that original render.
+pub fn start_render_with(
+    request: RenderRequest,
+    region_only: Option<RegionOnlySource>,
+) -> RenderJob {
     let (sender, receiver) = mpsc::sync_channel(EVENT_CAPACITY);
     let cancelled = Arc::new(AtomicBool::new(false));
     let closing = Arc::new(AtomicBool::new(false));
@@ -497,7 +519,7 @@ pub fn start_render(request: RenderRequest) -> RenderJob {
     let worker = match thread::Builder::new()
         .name("strehl-render".into())
         .spawn(move || {
-            let outcome = run_render(&request, &worker_cancelled, &sender);
+            let outcome = run_render(&request, region_only.as_ref(), &worker_cancelled, &sender);
             // Logs use try_send and can fill the queue. The terminal state must
             // eventually be delivered while the UI is alive, yet allow Drop to join.
             deliver_terminal(&sender, outcome, &worker_closing);
@@ -541,10 +563,11 @@ fn deliver_terminal(
 
 fn run_render(
     request: &RenderRequest,
+    region_only: Option<&RegionOnlySource>,
     cancelled: &Arc<AtomicBool>,
     sender: &SyncSender<RenderEvent>,
 ) -> RenderOutcome {
-    if request.settings.session.is_some() {
+    if request.settings.session.is_some() && region_only.is_none() {
         return session::run_session_render(request, cancelled, sender);
     }
     let mut job_directory = None;
@@ -602,6 +625,15 @@ fn run_render(
         }
         let mut command = render_command(request, &source, &partial)?;
         command.env("STREHL_CACHE_DIR", &cache);
+        if let Some(original) = region_only {
+            ensure!(
+                request.recipe.is_some()
+                    && request.retain_master
+                    && request.settings.session.is_none(),
+                "A region-only repair needs its recipe, a retained master and an ordinary stack"
+            );
+            region_only_arguments(&mut command, original, &directory)?;
+        }
         let mut log_file = OpenOptions::new()
             .append(true)
             .create_new(true)
@@ -628,6 +660,17 @@ fn run_render(
                 "off"
             }
         )?;
+        if let Some(original) = region_only {
+            writeln!(
+                log_file,
+                "Region-only repair: only the painted regions are rebuilt, against {}; alignment {}.\n",
+                original.master.display(),
+                match &original.warp_map {
+                    Some(map) => format!("from {}", map.display()),
+                    None => "from the shared engine cache".into(),
+                }
+            )?;
+        }
         command.stdout(Stdio::from(log_file.try_clone()?));
         command.stderr(Stdio::from(log_file));
         command.stdin(Stdio::null());
@@ -734,6 +777,29 @@ fn validate_settings(request: &RenderRequest) -> Result<()> {
         !request.executable.as_os_str().is_empty(),
         "Choose the Strehl engine executable"
     );
+    Ok(())
+}
+
+/// The engine arguments of a region-only repair, and its alignment: the
+/// original run's warp map copied into the new run's folder, so the engine
+/// reads that copy and never writes the original run or a capture sidecar.
+pub(crate) fn region_only_arguments(
+    command: &mut Command,
+    original: &RegionOnlySource,
+    directory: &Path,
+) -> Result<()> {
+    command
+        .arg("--region-only-master")
+        .arg(&original.master)
+        .arg("--region-only-photo")
+        .arg(&original.photo)
+        .arg("--reuse-ca-from")
+        .arg(&original.log);
+    if let Some(map) = &original.warp_map {
+        let copy = directory.join("original.warpmap.txt");
+        fs::copy(map, &copy).context("Copying the original render's warp map")?;
+        command.env("STREHL_WARPMAP", &copy);
+    }
     Ok(())
 }
 
@@ -1503,6 +1569,52 @@ pub(crate) mod tests {
     use super::*;
     use std::ffi::OsStr;
 
+    #[test]
+    fn a_region_only_repair_names_its_original_and_reads_a_copy_of_its_warp_map() {
+        let dir = tempfile::tempdir().unwrap();
+        let original = dir.path().join("original");
+        let fresh = dir.path().join("fresh");
+        fs::create_dir_all(original.join("cache")).unwrap();
+        fs::create_dir_all(&fresh).unwrap();
+        let map = original.join("cache").join("stack-0011.warpmap.txt");
+        fs::write(&map, b"warp map of the original run").unwrap();
+        let source = RegionOnlySource {
+            master: original.join("master.tiff"),
+            photo: original.join("result.tiff"),
+            log: original.join("render.log"),
+            warp_map: Some(map.clone()),
+        };
+        let mut command = Command::new("strehl");
+        region_only_arguments(&mut command, &source, &fresh).unwrap();
+        let args: Vec<&OsStr> = command.get_args().collect();
+        for (flag, value) in [
+            ("--region-only-master", &source.master),
+            ("--region-only-photo", &source.photo),
+            ("--reuse-ca-from", &source.log),
+        ] {
+            let at = args.iter().position(|a| *a == OsStr::new(flag)).unwrap();
+            assert_eq!(args[at + 1], value.as_os_str(), "{flag}");
+        }
+        let copy = fresh.join("original.warpmap.txt");
+        let warp: Vec<_> = command
+            .get_envs()
+            .filter(|(k, _)| *k == OsStr::new("STREHL_WARPMAP"))
+            .collect();
+        assert_eq!(
+            warp,
+            vec![(OsStr::new("STREHL_WARPMAP"), Some(copy.as_os_str()))]
+        );
+        assert_eq!(fs::read(&copy).unwrap(), fs::read(&map).unwrap());
+        // Without a map of its own, the shared cache's is used: no override.
+        let mut command = Command::new("strehl");
+        let shared = RegionOnlySource {
+            warp_map: None,
+            ..source
+        };
+        region_only_arguments(&mut command, &shared, &fresh).unwrap();
+        assert_eq!(command.get_envs().count(), 0);
+    }
+
     pub(crate) struct TestDirectory(PathBuf);
 
     impl TestDirectory {
@@ -1788,7 +1900,7 @@ pub(crate) mod tests {
         let (sender, receiver) = mpsc::sync_channel(EVENT_CAPACITY);
         let drain = thread::spawn(move || receiver.iter().count());
         let started = std::time::Instant::now();
-        let outcome = run_render(&request, &Arc::new(AtomicBool::new(false)), &sender);
+        let outcome = run_render(&request, None, &Arc::new(AtomicBool::new(false)), &sender);
         drop(sender);
         drain.join().unwrap();
         let seconds = started.elapsed().as_secs_f64();

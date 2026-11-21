@@ -38,6 +38,8 @@ pub(crate) enum ActivityKind {
     /// Reading a bracket or reopening a saved render (additive to the plan's
     /// list: they hold the workspace while they run).
     Open,
+    /// Develop's depth repair: the painted area only, or the whole stack.
+    Repair,
 }
 impl ActivityKind {
     /// The snapshot's name for the kind.
@@ -55,6 +57,7 @@ impl ActivityKind {
             Self::Metadata => "metadata",
             Self::Import => "import",
             Self::Open => "open",
+            Self::Repair => "repair",
         }
     }
     pub(crate) fn label(self) -> &'static str {
@@ -71,6 +74,7 @@ impl ActivityKind {
             Self::Metadata => "Camera metadata",
             Self::Import => "Open completed session",
             Self::Open => "Open",
+            Self::Repair => "Depth repair",
         }
     }
 }
