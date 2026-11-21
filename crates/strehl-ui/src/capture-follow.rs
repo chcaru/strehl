@@ -17,7 +17,7 @@ use serde_json::{Value, json};
 use std::{
     collections::{BTreeMap, BTreeSet, HashSet},
     fs,
-    io::Write,
+    io::{Read, Seek, SeekFrom, Write},
     path::{Path, PathBuf},
     process::{Command, Stdio},
     sync::mpsc,
@@ -31,6 +31,15 @@ pub(crate) const ABANDONED: Duration = Duration::from_secs(600);
 /// arrives, so the journal is read often and the checker polls quickly.
 const POLL: Duration = Duration::from_millis(200);
 const FOLLOW_INTERVAL_MS: &str = "250";
+
+/// The most planes whose journal lines [`Progress::planes`] keeps: above a
+/// 6,000-plane stack. Beyond it the lowest planes are dropped first; the
+/// counts still cover every plane.
+pub(crate) const MAX_PLANE_RECORDS: usize = 8192;
+/// The most journal bytes one poll reads. A plane's line is under 2 KiB,
+/// so a restarted desktop catches up with a long run in a few seconds while
+/// no frame waits on a large read.
+const JOURNAL_STEP: u64 = 64 * 1024;
 
 /// What the checker has recorded for a run so far.
 #[derive(Clone, Debug, Default, PartialEq)]
@@ -49,47 +58,144 @@ pub(crate) struct Progress {
     pub align_pairs: u64,
     /// Planes taken again during the capture (error correction).
     pub retaken: usize,
+    /// Each plane's last journal line, by plane: its `verdict`, `reason`,
+    /// `retake`, `target`, `group_id`, member `names`, `seconds` and
+    /// `align_seconds` as the engine wrote them. The newest
+    /// [`MAX_PLANE_RECORDS`] planes.
+    pub planes: BTreeMap<u64, Value>,
 }
 
-/// Reads the checker's journal: one JSON line per checked group, a later
-/// line for a plane (its retake) replacing an earlier one, as the stack
-/// uses the plane's last group.
-pub(crate) fn progress(journal: &str) -> Progress {
-    let mut planes = BTreeMap::new();
-    let mut groups: BTreeMap<u64, BTreeSet<String>> = BTreeMap::new();
-    for line in journal.lines() {
-        if let Ok(v) = serde_json::from_str::<Value>(line)
-            && let Some(plane) = v["plane"].as_u64()
-        {
-            if let Some(group) = v["group_id"].as_str() {
-                groups.entry(plane).or_default().insert(group.to_owned());
-            }
-            planes.insert(plane, v);
-        }
+/// For the in-flight screen's last planes and rail (Studio 2, 7.4).
+#[allow(dead_code)]
+impl Progress {
+    /// The journal line of `plane`, if kept.
+    pub fn plane(&self, plane: u64) -> Option<&Value> {
+        self.planes.get(&plane)
     }
-    let mut p = Progress {
-        retaken: groups.values().filter(|g| g.len() > 1).count(),
-        ..Progress::default()
-    };
-    for v in planes.values() {
+    /// The newest `n` planes (highest plane numbers), newest first.
+    pub fn latest(&self, n: usize) -> impl Iterator<Item = (&u64, &Value)> {
+        self.planes.iter().rev().take(n)
+    }
+}
+
+/// What one plane's last line adds to the counts.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+struct Counted {
+    checked: bool,
+    passed: bool,
+    attention: bool,
+    /// The plane's focus position, when it is worth taking again.
+    retake: Option<u64>,
+    align_pairs: u64,
+}
+
+impl Counted {
+    fn of(v: &Value) -> Self {
         let verdict = v["verdict"].as_str().unwrap_or("");
-        if verdict != "incomplete" {
-            p.checked += 1;
+        Self {
+            checked: verdict != "incomplete",
+            passed: verdict == "pass",
+            attention: verdict != "pass" && verdict != "decoded",
+            retake: v["target"].as_u64().filter(|_| v["retake"] == true),
+            align_pairs: v["align_pairs"].as_u64().unwrap_or(0),
         }
-        if verdict == "pass" {
-            p.passed += 1;
-        } else if verdict != "decoded" {
-            p.attention += 1;
-        }
-        if v["retake"] == true
-            && let Some(target) = v["target"].as_u64()
-        {
-            p.retake.push(target);
-        }
-        p.align_pairs += v["align_pairs"].as_u64().unwrap_or(0);
     }
-    p.retake.sort_unstable();
-    p
+}
+
+/// Reads the checker's journal as it grows: one JSON line per checked
+/// group, a later line for a plane (its retake) replacing an earlier one, as
+/// the stack uses the plane's last group. Only complete lines are taken; a
+/// line still being written is kept and read again with its end. The
+/// [`Progress`] is kept up to date line by line: reading a new line costs
+/// the same at plane 10 as at plane 6,000.
+#[derive(Default)]
+pub(crate) struct JournalReader {
+    /// Bytes of the journal consumed.
+    offset: u64,
+    /// The start of a line whose end has not been written yet.
+    partial: Vec<u8>,
+    progress: Progress,
+    /// Every plane's contribution to the counts (small; never dropped).
+    counted: BTreeMap<u64, Counted>,
+    /// The groups recorded per plane: more than one means it was retaken.
+    groups: BTreeMap<u64, BTreeSet<String>>,
+}
+
+impl JournalReader {
+    /// Takes the next bytes of the journal; returns the complete lines read,
+    /// parsed (the caller relays their verdicts).
+    pub fn feed(&mut self, bytes: &[u8]) -> Vec<Value> {
+        self.offset += bytes.len() as u64;
+        self.partial.extend_from_slice(bytes);
+        let Some(end) = self.partial.iter().rposition(|b| *b == b'\n') else {
+            return Vec::new();
+        };
+        let rest = self.partial.split_off(end + 1);
+        let complete = std::mem::replace(&mut self.partial, rest);
+        let lines: Vec<Value> = complete
+            .split(|b| *b == b'\n')
+            .filter_map(|line| serde_json::from_slice::<Value>(line).ok())
+            .collect();
+        self.take(&lines);
+        lines
+    }
+    /// The last line, once the journal is known to be finished, even without
+    /// its newline.
+    pub fn flush(&mut self) -> Vec<Value> {
+        let line = std::mem::take(&mut self.partial);
+        let lines: Vec<Value> = serde_json::from_slice::<Value>(&line)
+            .ok()
+            .into_iter()
+            .collect();
+        self.take(&lines);
+        lines
+    }
+    fn take(&mut self, lines: &[Value]) {
+        let p = &mut self.progress;
+        let mut retakes_changed = false;
+        for v in lines {
+            let Some(plane) = v["plane"].as_u64() else {
+                continue;
+            };
+            if let Some(group) = v["group_id"].as_str() {
+                let groups = self.groups.entry(plane).or_default();
+                if groups.insert(group.to_owned()) && groups.len() == 2 {
+                    p.retaken += 1;
+                }
+            }
+            let new = Counted::of(v);
+            let old = self.counted.insert(plane, new).unwrap_or_default();
+            p.checked = p.checked + usize::from(new.checked) - usize::from(old.checked);
+            p.passed = p.passed + usize::from(new.passed) - usize::from(old.passed);
+            p.attention = p.attention + usize::from(new.attention) - usize::from(old.attention);
+            p.align_pairs = p.align_pairs + new.align_pairs - old.align_pairs;
+            retakes_changed |= new.retake != old.retake;
+            p.planes.insert(plane, v.clone());
+            if p.planes.len() > MAX_PLANE_RECORDS {
+                p.planes.pop_first();
+            }
+        }
+        if retakes_changed {
+            p.retake = self.counted.values().filter_map(|c| c.retake).collect();
+            p.retake.sort_unstable();
+        }
+    }
+    pub fn offset(&self) -> u64 {
+        self.offset
+    }
+    /// The counts over every plane read, and the newest planes' lines.
+    pub fn progress(&self) -> &Progress {
+        &self.progress
+    }
+}
+
+/// Reads a whole journal (see [`JournalReader`]).
+#[cfg(test)]
+pub(crate) fn progress(journal: &str) -> Progress {
+    let mut reader = JournalReader::default();
+    reader.feed(journal.as_bytes());
+    reader.flush();
+    reader.progress
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -111,7 +217,9 @@ pub(crate) struct Follower {
     /// run's lock: this one only shows its progress.
     pub observing: bool,
     pub state: State,
-    pub progress: Progress,
+    reader: JournalReader,
+    /// The journal's length at the last read; a read is skipped while it
+    /// is unchanged.
     journal_len: Option<u64>,
     polled: Option<Instant>,
     pub started: Instant,
@@ -125,16 +233,21 @@ pub(crate) struct Follower {
 
 /// The journal lines the camera host needs, keyed by group: the checker's
 /// verdict on each checked group.
+#[cfg(test)]
 pub(crate) fn verdicts(journal: &str) -> Vec<Value> {
     journal
         .lines()
         .filter_map(|line| serde_json::from_str::<Value>(line).ok())
-        .filter(|v| v["group_id"].is_string() && v["verdict"].is_string())
-        .map(|v| {
-            json!({"group_id":v["group_id"],"plane":v["plane"],"verdict":v["verdict"],
-                "retake":v["retake"] == true,"reason":v["reason"]})
-        })
+        .filter_map(verdict)
         .collect()
+}
+
+/// One journal line's verdict for the camera host, if it checked a group.
+fn verdict(v: Value) -> Option<Value> {
+    (v["group_id"].is_string() && v["verdict"].is_string()).then(|| {
+        json!({"group_id":v["group_id"],"plane":v["plane"],"verdict":v["verdict"],
+            "retake":v["retake"] == true,"reason":v["reason"]})
+    })
 }
 
 /// Posts verdicts in order, retrying briefly: the camera host waits for them.
@@ -198,7 +311,7 @@ impl Follower {
             child: None,
             observing: false,
             state: State::Running,
-            progress: Progress::default(),
+            reader: JournalReader::default(),
             journal_len: None,
             polled: None,
             started: Instant::now(),
@@ -247,10 +360,19 @@ impl Follower {
         self.state == State::Running
     }
 
+    /// What the checker has recorded so far, with each plane's journal line.
+    pub fn progress(&self) -> &Progress {
+        self.reader.progress()
+    }
+
     /// Reads new journal lines and notices the checker's exit. Cheap enough
-    /// for every frame: it does real work at most twice a second.
+    /// for every frame: it does real work at most five times a second, and
+    /// reads at most [`JOURNAL_STEP`] new bytes (sooner while catching up).
     pub fn poll(&mut self) {
-        if self.polled.is_some_and(|t| t.elapsed() < POLL) {
+        let behind = self
+            .journal_len
+            .is_some_and(|len| len > self.reader.offset());
+        if !behind && self.polled.is_some_and(|t| t.elapsed() < POLL) {
             return;
         }
         self.polled = Some(Instant::now());
@@ -271,8 +393,10 @@ impl Follower {
         match exited {
             Ok(Some(Some(status))) => {
                 self.child = None;
-                self.journal_len = None;
-                self.read_journal();
+                // Everything the checker wrote, its last line included.
+                while self.read_journal() {}
+                let last = self.reader.flush();
+                self.relay(last);
                 self.state = if status.success() {
                     State::Finished
                 } else {
@@ -299,26 +423,51 @@ impl Follower {
         }
     }
 
-    fn read_journal(&mut self) {
-        let len = fs::metadata(&self.journal).map(|m| m.len()).ok();
-        if len.is_none() || len == self.journal_len {
-            return;
+    /// Reads up to [`JOURNAL_STEP`] new bytes of the journal; `true` while
+    /// more remain. A journal shorter than what was read (rewritten) is read
+    /// again from its start.
+    fn read_journal(&mut self) -> bool {
+        let Some(len) = fs::metadata(&self.journal).map(|m| m.len()).ok() else {
+            return false;
+        };
+        self.journal_len = Some(len);
+        if len < self.reader.offset() {
+            self.reader = JournalReader::default();
         }
-        if let Ok(text) = fs::read_to_string(&self.journal) {
-            self.progress = progress(&text);
-            self.journal_len = len;
-            if let Some(relay) = &self.relay {
-                let fresh: Vec<Value> = verdicts(&text)
-                    .into_iter()
-                    .filter(|v| {
-                        self.relayed
-                            .insert(v["group_id"].as_str().unwrap_or_default().to_owned())
-                    })
-                    .collect();
-                if !fresh.is_empty() {
-                    let _ = relay.send(fresh);
-                }
-            }
+        if len == self.reader.offset() {
+            return false;
+        }
+        let Ok(mut file) = fs::File::open(&self.journal) else {
+            return false;
+        };
+        let mut chunk = Vec::new();
+        if file.seek(SeekFrom::Start(self.reader.offset())).is_err()
+            || file
+                .take(JOURNAL_STEP.min(len - self.reader.offset()))
+                .read_to_end(&mut chunk)
+                .is_err()
+            || chunk.is_empty()
+        {
+            return false;
+        }
+        let lines = self.reader.feed(&chunk);
+        self.relay(lines);
+        self.reader.offset() < len
+    }
+
+    /// Error correction: hands the new groups' verdicts to the receiver.
+    fn relay(&mut self, lines: Vec<Value>) {
+        let Some(relay) = &self.relay else { return };
+        let fresh: Vec<Value> = lines
+            .into_iter()
+            .filter_map(verdict)
+            .filter(|v| {
+                self.relayed
+                    .insert(v["group_id"].as_str().unwrap_or_default().to_owned())
+            })
+            .collect();
+        if !fresh.is_empty() {
+            let _ = relay.send(fresh);
         }
     }
 
@@ -331,9 +480,10 @@ impl Follower {
         };
         json!({"run":self.run,"state":state,"message":message,"log":self.log,"observing":self.observing,
             "seconds":self.started.elapsed().as_secs_f64(),
-            "checked":self.progress.checked,"passed":self.progress.passed,
-            "attention":self.progress.attention,"retake_positions":self.progress.retake,
-            "align_pairs":self.progress.align_pairs,"retaken":self.progress.retaken,
+            "checked":self.progress().checked,"passed":self.progress().passed,
+            "attention":self.progress().attention,"retake_positions":self.progress().retake,
+            "align_pairs":self.progress().align_pairs,"retaken":self.progress().retaken,
+            "planes_kept":self.progress().planes.len(),
             "relaying_verdicts":self.relay.is_some()})
     }
 }
@@ -379,8 +529,12 @@ mod tests {
             r#"{"plane":5,"target":130,"verdict":"decoded","retake":false,"align_pairs":3}"#,
         ]
         .join("\n");
+        let p = progress(&journal);
         assert_eq!(
-            progress(&journal),
+            Progress {
+                planes: BTreeMap::new(),
+                ..p.clone()
+            },
             Progress {
                 checked: 4,
                 passed: 2,
@@ -388,9 +542,67 @@ mod tests {
                 retake: vec![90, 110],
                 align_pairs: 6,
                 retaken: 0,
+                planes: BTreeMap::new(),
             }
         );
         assert_eq!(progress(""), Progress::default());
+        // Each plane keeps its last line, as the stack uses its last group.
+        assert_eq!(p.planes.len(), 5);
+        assert_eq!(p.plane(3).unwrap()["verdict"], "pass");
+        assert_eq!(p.plane(2).unwrap()["reason"], "x");
+        let newest: Vec<u64> = p.latest(2).map(|(k, _)| *k).collect();
+        assert_eq!(newest, [5, 4]);
+    }
+
+    /// Lines arriving in pieces give the same progress as the whole journal;
+    /// a torn line waits for its end, and the last line counts once the
+    /// journal is finished.
+    #[test]
+    fn the_journal_reads_incrementally_as_it_is_written() {
+        let lines = [
+            r#"{"plane":1,"target":100,"group_id":"g1","verdict":"pass","retake":false,"seconds":1.5}"#,
+            r#"{"plane":2,"target":110,"group_id":"g2","verdict":"demote","reason":"x","retake":true}"#,
+            r#"{"plane":2,"target":110,"group_id":"g2b","verdict":"pass","retake":false}"#,
+            r#"{"plane":3,"target":120,"group_id":"g3","verdict":"pass","retake":false}"#,
+        ];
+        let whole = lines.join("\n");
+        let mut reader = JournalReader::default();
+        let mut seen = Vec::new();
+        for piece in whole.as_bytes().chunks(17) {
+            seen.extend(reader.feed(piece));
+        }
+        assert_eq!(seen.len(), 3, "the last line has no newline yet");
+        assert_eq!(reader.progress().checked, 2);
+        seen.extend(reader.flush());
+        assert_eq!(seen.len(), 4);
+        assert_eq!(*reader.progress(), progress(&whole));
+        assert_eq!(reader.offset(), whole.len() as u64);
+        let p = reader.progress();
+        assert_eq!((p.retaken, p.passed), (1, 3));
+        assert_eq!(p.plane(1).unwrap()["seconds"], 1.5);
+        assert_eq!(p.plane(2).unwrap()["group_id"], "g2b");
+        // The relayed verdicts are the same whichever way it was read.
+        let relayed: Vec<Value> = seen.into_iter().filter_map(verdict).collect();
+        assert_eq!(relayed, verdicts(&whole));
+    }
+
+    /// The per-plane records are bounded; the counts still cover every plane.
+    #[test]
+    fn plane_records_are_bounded_and_keep_the_newest() {
+        let mut journal = String::new();
+        for plane in 1..=(MAX_PLANE_RECORDS as u64 + 10) {
+            journal.push_str(&format!(
+                "{{\"plane\":{plane},\"target\":{plane},\"verdict\":\"decoded\",\"retake\":false}}\n"
+            ));
+        }
+        let p = progress(&journal);
+        assert_eq!(p.checked, MAX_PLANE_RECORDS + 10);
+        assert_eq!(p.planes.len(), MAX_PLANE_RECORDS);
+        assert!(p.plane(10).is_none() && p.plane(11).is_some());
+        assert_eq!(
+            *p.planes.keys().next_back().unwrap(),
+            MAX_PLANE_RECORDS as u64 + 10
+        );
     }
 
     #[test]

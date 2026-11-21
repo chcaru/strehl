@@ -194,6 +194,15 @@ impl Session {
         };
         state["schedule"] = json!(schedule);
         state["error_correction"] = json!(s.error_correction);
+        // What this controller accepts beyond the original protocol. A
+        // desktop reads a flag before sending the field it names; an older
+        // controller has no `capabilities`, which means none of them.
+        state["capabilities"] = json!({
+            // `capture_positions` with `kind: "test"` (H2).
+            "test_shot": true,
+            // `exposure.mode` and `exposure.problem` (H1).
+            "exposure_check": true,
+        });
         state
     }
     pub fn dispatch(&self, request: CommandRequest) -> Result<()> {
@@ -497,12 +506,18 @@ impl Session {
                             root: c.root.clone(),
                             positions: None,
                             keep_power_on: false,
+                            test: false,
                         });
                     }
                     Command::CapturePositions {
                         positions,
                         keep_power_on,
+                        kind,
                     } => {
+                        ensure!(
+                            kind != PositionsKind::Test || positions.len() == 1,
+                            "A test shot is one focus position"
+                        );
                         // Bursts (one position repeated) and retakes of chosen
                         // planes, with the plan's settle/approach and direction.
                         let mut plan = c.plan.clone();
@@ -517,6 +532,7 @@ impl Session {
                             root: c.root.clone(),
                             positions: Some(positions),
                             keep_power_on,
+                            test: kind == PositionsKind::Test,
                         });
                     }
                     Command::Exposure { iso, shutter } => {
@@ -586,7 +602,30 @@ fn exposure_summary(status: &Value) -> Value {
             "shutter_options": props["ShutterSpeed"]["allowed"],
             "writable": props["IsoSensitivity"]["writable"] == true
                 && props["ShutterSpeed"]["writable"] == true,
+            // H1 (Studio 2): the program and the reason the settings cannot
+            // start a stack, by the rule every capture checks, so a
+            // controller can say so before Start.
+            "mode": crate::worker::exposure_mode(status),
+            "problem": crate::worker::exposure_problem(status),
         }),
+    }
+}
+
+/// What a `capture_positions` run is for; its manifest's `capture_kind`.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum PositionsKind {
+    /// A burst or retakes of chosen planes (`capture_kind` "positions").
+    #[default]
+    Positions,
+    /// One exposure to judge the settings (`capture_kind` "test"). A desktop
+    /// does not check it while it is written, list it among the stacks or
+    /// hand it to the library, and error correction does not hold it.
+    Test,
+}
+impl PositionsKind {
+    pub fn is_positions(&self) -> bool {
+        *self == Self::Positions
     }
 }
 
@@ -664,6 +703,11 @@ pub enum Command {
         /// every other request.
         #[serde(default, skip_serializing_if = "std::ops::Not::not")]
         keep_power_on: bool,
+        /// What the run is for (H2, Studio 2). Omitted for an ordinary burst
+        /// or retake, so older controllers accept those; send `test` only to
+        /// a controller whose state has `capabilities.test_shot`.
+        #[serde(default, skip_serializing_if = "PositionsKind::is_positions")]
+        kind: PositionsKind,
     },
     /// Manual ISO and shutter as the camera's property values.
     Exposure {
@@ -699,6 +743,7 @@ mod tests {
         let plain = Command::CapturePositions {
             positions: vec![1],
             keep_power_on: false,
+            kind: PositionsKind::Positions,
         };
         assert_eq!(
             serde_json::to_value(&plain).unwrap(),
@@ -707,8 +752,138 @@ mod tests {
         let kept = Command::CapturePositions {
             positions: vec![1],
             keep_power_on: true,
+            kind: PositionsKind::Positions,
         };
         assert_eq!(serde_json::to_value(&kept).unwrap()["keep_power_on"], true);
+    }
+    /// H2: the test kind is additive. Old requests (no `kind`) still parse as
+    /// an ordinary burst, an ordinary burst serialises without the field (so
+    /// an older controller, whose commands deny unknown fields, accepts it),
+    /// and only a test shot names its kind.
+    #[test]
+    fn capture_positions_kind_is_omitted_unless_a_test_shot() {
+        let old: Command =
+            serde_json::from_value(json!({"op":"capture_positions","positions":[5]})).unwrap();
+        assert!(matches!(
+            old,
+            Command::CapturePositions {
+                kind: PositionsKind::Positions,
+                ..
+            }
+        ));
+        let burst = Command::CapturePositions {
+            positions: vec![5],
+            keep_power_on: false,
+            kind: PositionsKind::Positions,
+        };
+        assert_eq!(
+            serde_json::to_value(&burst).unwrap(),
+            json!({"op":"capture_positions","positions":[5]})
+        );
+        let test = Command::CapturePositions {
+            positions: vec![5],
+            keep_power_on: true,
+            kind: PositionsKind::Test,
+        };
+        assert_eq!(
+            serde_json::to_value(&test).unwrap(),
+            json!({"op":"capture_positions","positions":[5],"keep_power_on":true,"kind":"test"})
+        );
+        let parsed: Command =
+            serde_json::from_value(json!({"op":"capture_positions","positions":[5],"kind":"test"}))
+                .unwrap();
+        assert!(matches!(
+            parsed,
+            Command::CapturePositions {
+                kind: PositionsKind::Test,
+                ..
+            }
+        ));
+        assert!(
+            serde_json::from_value::<Command>(
+                json!({"op":"capture_positions","positions":[5],"kind":"stack"})
+            )
+            .is_err(),
+            "an unknown kind is refused, not taken as a burst"
+        );
+    }
+    /// H1 and H2 in state: the capability flags, and the exposure program
+    /// with the problem the pre-capture check would raise.
+    #[test]
+    fn state_reports_capabilities_and_the_exposure_problem_before_start() {
+        let temp = tempfile::tempdir().unwrap();
+        let session = Session::new(
+            Arc::new(Worker::new(PathBuf::new(), true)),
+            Arc::new(Mutex::new(Controls::new(temp.path().into()))),
+            true,
+        );
+        let state = session.state();
+        assert_eq!(state["capabilities"]["test_shot"], true);
+        assert_eq!(state["capabilities"]["exposure_check"], true);
+        assert!(state["exposure"].is_null(), "no camera, no exposure");
+        session
+            .dispatch(request(&session, "connect-h1", Command::Connect {}))
+            .unwrap();
+        until(&session, |s| s.phase == Phase::Ready && !s.command_pending);
+        let state = session.state();
+        assert_eq!(state["exposure"]["mode"], "M");
+        assert!(state["exposure"]["problem"].is_null());
+        let mut status = session.worker.snapshot().status;
+        status["properties"]["ExposureProgramMode"]["value"] = json!(3);
+        let summary = exposure_summary(&status);
+        assert_eq!(summary["mode"], "A");
+        assert_eq!(
+            summary["problem"],
+            "Set the camera to M (manual exposure) before starting a stack"
+        );
+        status["properties"]["ExposureProgramMode"]["value"] = json!(1);
+        status["properties"]["ShutterSpeed"]["value"] = json!(0);
+        assert_eq!(
+            exposure_summary(&status)["problem"],
+            "Choose a timed shutter exposure; Bulb is not supported"
+        );
+    }
+    /// A test shot is one position, journalled as `capture_kind` "test".
+    #[test]
+    fn a_test_shot_is_one_position_marked_test_in_its_manifest() {
+        let temp = tempfile::tempdir().unwrap();
+        let session = Session::new(
+            Arc::new(Worker::new(PathBuf::new(), true)),
+            Arc::new(Mutex::new(Controls::new(temp.path().into()))),
+            true,
+        );
+        session
+            .dispatch(request(&session, "connect-h2", Command::Connect {}))
+            .unwrap();
+        until(&session, |s| s.phase == Phase::Ready && !s.command_pending);
+        let two = Command::CapturePositions {
+            positions: vec![60600, 60601],
+            keep_power_on: true,
+            kind: PositionsKind::Test,
+        };
+        assert!(
+            session
+                .dispatch(request(&session, "test-two", two))
+                .is_err()
+        );
+        let one = Command::CapturePositions {
+            positions: vec![60600],
+            keep_power_on: true,
+            kind: PositionsKind::Test,
+        };
+        session
+            .dispatch(request(&session, "test-shot-1", one))
+            .unwrap();
+        let done = until(&session, |s| {
+            s.phase == Phase::Complete && !s.command_pending
+        });
+        assert_eq!(done.completed, 1);
+        let manifest: Value = serde_json::from_slice(
+            &std::fs::read(done.journal.unwrap().join("manifest.json")).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(manifest["capture_kind"], "test");
+        assert_eq!(manifest["focus_positions"], json!([60600]));
     }
     #[test]
     fn absolute_focus_and_mode_selection_refresh_estimates_and_reject_stale_requests() {

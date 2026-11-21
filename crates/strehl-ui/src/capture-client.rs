@@ -6,11 +6,15 @@ use reqwest::blocking::{Client, Response};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::{
-    collections::BTreeMap,
+    collections::{BTreeMap, BTreeSet},
     io::Read,
     net::IpAddr,
     path::{Path, PathBuf},
-    sync::{Arc, Mutex, mpsc},
+    sync::{
+        Arc, Mutex,
+        atomic::{AtomicU8, Ordering},
+        mpsc,
+    },
     time::{Duration, Instant},
 };
 use strehl_capture::{
@@ -18,6 +22,10 @@ use strehl_capture::{
     receiver::{ReceiverConfig, save_json},
     session::{Command, CommandRequest},
 };
+
+#[path = "capture-host.rs"]
+pub(crate) mod host;
+use host::HostState;
 
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(default, deny_unknown_fields)]
@@ -102,12 +110,40 @@ impl Config {
     }
 }
 
-#[derive(Clone, Serialize)]
+#[derive(Clone, Debug, Serialize)]
 pub(crate) struct CompletedStack {
     pub folder: PathBuf,
     pub frames: usize,
     pub planes: usize,
     pub shots_per_plane: usize,
+}
+/// A registered run that ended before its plan did: its `result.json` says
+/// `stopped` (an orderly Stop) or `uncertain` (a fault). Listed beside the
+/// completed stacks (Studio 2, D13) and opened like any folder; nothing
+/// about it is promoted to "complete".
+#[derive(Clone, Debug, PartialEq, Serialize)]
+pub(crate) struct StoppedCapture {
+    pub folder: PathBuf,
+    /// `stopped` or `uncertain`.
+    pub outcome: String,
+    /// Focal planes the camera completed (`completed_camera_events`).
+    pub planes: usize,
+    /// RAWs on this PC with a durable receipt and their recorded length.
+    pub frames: usize,
+    /// RAWs whose receipt is missing, not durable or whose file changed.
+    pub unverified: usize,
+    pub shots_per_plane: usize,
+    pub message: Option<String>,
+}
+impl StoppedCapture {
+    /// "stopped · N planes".
+    pub fn label(&self) -> String {
+        format!(
+            "stopped · {} plane{}",
+            self.planes,
+            if self.planes == 1 { "" } else { "s" }
+        )
+    }
 }
 /// The newest run registered with this PC's receiver while it has no
 /// `result.json`: the capture being written now, or one that ended without
@@ -116,6 +152,9 @@ pub(crate) struct CompletedStack {
 pub(crate) struct InProgress {
     pub folder: PathBuf,
     pub idle: Duration,
+    /// A test shot (manifest `capture_kind` "test", or a run this desktop
+    /// took as one on a host without the capture kind): never followed.
+    pub test: bool,
 }
 /// What a past capture's RAWs took on disk: the newest registered run of
 /// each camera model with RAW receipts. The basis of the capture screen's
@@ -242,20 +281,38 @@ fn stored_by_model(config_path: &Path, cache: &mut StoredCache) -> Result<Vec<St
 pub(crate) struct Snapshot {
     pub in_progress: Option<InProgress>,
     pub stored: Vec<StoredRaws>,
+    /// The host's state as sent: passed through to the agent snapshot.
     pub state: Value,
+    /// [`Self::state`], typed (see `capture-host.rs`). Set together with it
+    /// by [`Self::set_state`].
+    pub host: HostState,
+    /// The state could not be read as [`HostState`]; `host` is then the
+    /// default (disconnected, nothing editable).
+    pub host_error: Option<String>,
     pub online: bool,
     pub observed: Option<Instant>,
     pub connection_error: Option<String>,
     pub command_error: Option<String>,
+    /// The last success notice ("Request accepted"); see [`Self::notice_id`].
     pub notice: Option<String>,
+    /// Counts notices set, so a reader can tell a new one from one it saw.
+    pub notice_id: u64,
     pub pending: bool,
     pub receiver: Value,
     pub receiver_error: Option<String>,
     pub completed: Vec<CompletedStack>,
+    /// Stopped and uncertain captures, newest first.
+    pub stopped: Vec<StoppedCapture>,
     pub preview: Option<(u64, Arc<egui::ColorImage>)>,
     pub peaking: Option<(u64, Arc<crate::capture_aids::Peaking>)>,
+    /// The live JPEG's histogram and clipped share, from the same image as
+    /// `peaking` (an estimate, not the RAW).
+    pub levels: Option<(u64, Arc<crate::capture_aids::PreviewLevels>)>,
     pub preview_error: Option<String>,
     pub handoff: Option<PathBuf>,
+    /// Test shots this desktop took (bounded): kept out of the lists even
+    /// on a host whose manifests cannot say so.
+    pub test_runs: BTreeSet<PathBuf>,
 }
 impl Snapshot {
     pub fn fresh(&self) -> bool {
@@ -268,55 +325,168 @@ impl Snapshot {
         json!({"online":self.fresh(),"state":self.state,"pending":self.pending,
             "connection_error":self.connection_error,"command_error":self.command_error,"notice":self.notice,
             "receiver":self.receiver,"receiver_error":self.receiver_error,"completed":self.completed,
+            "stopped":self.stopped,"host_state_error":self.host_error,
             "preview":self.preview.as_ref().map(|(generation,image)|json!({"generation":generation,"width":image.width(),"height":image.height()})),
+            "preview_levels":self.levels.as_ref().map(|(generation,l)|json!({"generation":generation,"clipped_share":l.clipped_share,
+                "median":l.percentile(0.5),"caution":crate::capture_aids::PreviewLevels::CAUTION})),
             "preview_error":self.preview_error,"stored_raws":self.stored,
             "in_progress":self.in_progress.as_ref().map(|r| json!({"folder":r.folder,"idle_seconds":r.idle.as_secs_f64()}))})
+    }
+    /// Replaces the host's state and its typed reading together.
+    pub fn set_state(&mut self, state: Value) {
+        match HostState::parse(&state) {
+            Ok(host) => {
+                self.host = host;
+                self.host_error = None;
+            }
+            Err(e) => {
+                self.host = HostState::default();
+                self.host_error = Some(format!(
+                    "The camera host sent a state this desktop cannot read ({e}); update the desktop or the host"
+                ));
+            }
+        }
+        self.state = state;
     }
     pub fn request(&self, command: Command) -> Result<CommandRequest> {
         ensure!(
             self.fresh(),
             "Reconnect to the Pi before sending a camera command"
         );
+        if let Some(e) = &self.host_error {
+            anyhow::bail!("{e}");
+        }
         Ok(CommandRequest {
             id: strehl_capture::lan::new_key()?,
-            camera_revision: self.state["camera_revision"]
-                .as_u64()
+            camera_revision: self
+                .host
+                .camera_revision
                 .context("Missing camera revision")?,
-            plan_revision: self.state["plan_revision"]
-                .as_u64()
-                .context("Missing plan revision")?,
-            sequence_id: self.state["sequence_id"]
-                .as_u64()
-                .context("Missing sequence")?,
+            plan_revision: self.host.plan_revision.context("Missing plan revision")?,
+            sequence_id: self.host.sequence_id.context("Missing sequence")?,
             command,
         })
     }
+    fn set_notice(&mut self, notice: &str) {
+        self.notice = Some(notice.into());
+        self.notice_id += 1;
+    }
 }
+
+/// How often the client asks the camera host for its state, and whether it
+/// fetches the live preview (Studio 2, section 7.4). The shell chooses it
+/// through [`Cadence::choose`]; the client's loop waits this long between
+/// polls, so a command or a cadence change is answered at once.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum Cadence {
+    /// The Capture station is closed and no sequence runs: 1 Hz, no preview.
+    Background,
+    /// A sequence runs with the station closed: 5 Hz, no preview.
+    Sequence,
+    /// The Capture station is open: 5 Hz with the live preview.
+    Live,
+}
+impl Cadence {
+    pub fn choose(station_open: bool, sequence_running: bool) -> Self {
+        match (station_open, sequence_running) {
+            (true, _) => Self::Live,
+            (false, true) => Self::Sequence,
+            (false, false) => Self::Background,
+        }
+    }
+    pub fn interval(self) -> Duration {
+        match self {
+            Self::Background => Duration::from_millis(1000),
+            Self::Sequence | Self::Live => Duration::from_millis(200),
+        }
+    }
+    pub fn preview(self) -> bool {
+        self == Self::Live
+    }
+    fn code(self) -> u8 {
+        match self {
+            Self::Background => 0,
+            Self::Sequence => 1,
+            Self::Live => 2,
+        }
+    }
+    fn from_code(code: u8) -> Self {
+        match code {
+            0 => Self::Background,
+            1 => Self::Sequence,
+            _ => Self::Live,
+        }
+    }
+}
+
+/// Test shots remembered by the desktop, so a host without the capture kind
+/// cannot list them; the newest few are enough.
+const TEST_RUNS_KEPT: usize = 32;
+
 enum Work {
     Command(CommandRequest),
     Configure(Config),
     StartReceiver,
-    Storage { folder: PathBuf, compress_raw: bool },
+    Storage {
+        folder: PathBuf,
+        compress_raw: bool,
+    },
     Handoff(PathBuf),
+    /// The cadence changed: poll now rather than at the old interval's end.
+    /// Not a request: it neither waits for nor sets `pending`.
+    Cadence,
 }
 pub(crate) struct Connection {
     shared: Arc<Mutex<Snapshot>>,
     sender: mpsc::SyncSender<Work>,
+    /// [`Cadence`], read by the client thread before every wait.
+    cadence: Arc<AtomicU8>,
 }
 impl Connection {
     pub fn start(config: Config, path: PathBuf, ctx: egui::Context) -> Result<Self> {
         let shared = Arc::new(Mutex::new(Snapshot::default()));
         let (sender, receiver) = mpsc::sync_channel(2);
         let output = shared.clone();
+        // Live until told otherwise: the cadence today's screen always had.
+        let cadence = Arc::new(AtomicU8::new(Cadence::Live.code()));
+        let thread_cadence = cadence.clone();
         std::thread::Builder::new()
             .name("strehl-capture-client".into())
             .spawn(move || {
-                if let Err(error) = run(config, path, &output, receiver, &ctx) {
+                if let Err(error) = run(config, path, &output, receiver, &thread_cadence, &ctx) {
                     output.lock().unwrap().connection_error = Some(format!("{error:#}"));
                     ctx.request_repaint();
                 }
             })?;
-        Ok(Self { shared, sender })
+        Ok(Self {
+            shared,
+            sender,
+            cadence,
+        })
+    }
+    pub fn cadence(&self) -> Cadence {
+        Cadence::from_code(self.cadence.load(Ordering::Relaxed))
+    }
+    /// Sets how often the host is polled; a change wakes the client.
+    pub fn set_cadence(&self, cadence: Cadence) {
+        if self.cadence.swap(cadence.code(), Ordering::Relaxed) != cadence.code() {
+            // Best effort: a full channel already wakes the client.
+            let _ = self.sender.try_send(Work::Cadence);
+        }
+    }
+    /// Keeps a run that is not a stack (a test shot this desktop took, or a
+    /// calibration survey it stopped waiting for) out of the completed and
+    /// stopped lists and out of following, whatever its manifest says.
+    pub fn mark_test_run(&self, folder: PathBuf) {
+        let mut s = self.shared.lock().unwrap();
+        s.test_runs.insert(folder);
+        while s.test_runs.len() > TEST_RUNS_KEPT {
+            let first = s.test_runs.iter().next().cloned().unwrap();
+            s.test_runs.remove(&first);
+        }
+        let runs = s.test_runs.clone();
+        s.completed.retain(|c| !runs.contains(&c.folder));
+        s.stopped.retain(|c| !runs.contains(&c.folder));
     }
     pub fn snapshot(&self) -> Snapshot {
         self.shared.lock().unwrap().clone()
@@ -352,6 +522,44 @@ impl Connection {
             folder,
             compress_raw,
         })
+    }
+}
+
+/// What a [`Connection::detached`] was asked to send.
+#[cfg(test)]
+pub(crate) struct TestInbox(mpsc::Receiver<Work>);
+
+#[cfg(test)]
+impl TestInbox {
+    /// The next camera command sent, if any.
+    pub fn command(&self) -> Option<CommandRequest> {
+        loop {
+            match self.0.try_recv().ok()? {
+                Work::Command(request) => return Some(request),
+                _ => continue,
+            }
+        }
+    }
+}
+
+#[cfg(test)]
+impl Connection {
+    /// A connection without a client thread, showing `snapshot`; what it is
+    /// asked to send waits in the inbox.
+    pub fn detached(snapshot: Snapshot) -> (Self, TestInbox) {
+        let (sender, receiver) = mpsc::sync_channel(8);
+        (
+            Self {
+                shared: Arc::new(Mutex::new(snapshot)),
+                sender,
+                cadence: Arc::new(AtomicU8::new(Cadence::Live.code())),
+            },
+            TestInbox(receiver),
+        )
+    }
+    /// Replaces the snapshot, as the client thread would after a poll.
+    pub fn replace(&self, snapshot: Snapshot) {
+        *self.shared.lock().unwrap() = snapshot;
     }
 }
 
@@ -480,6 +688,7 @@ fn run(
     path: PathBuf,
     output: &Arc<Mutex<Snapshot>>,
     requests: mpsc::Receiver<Work>,
+    cadence: &AtomicU8,
     ctx: &egui::Context,
 ) -> Result<()> {
     let client = client()?;
@@ -487,11 +696,14 @@ fn run(
     let mut receiver_due = Instant::now();
     let mut history_due = Instant::now();
     let mut stored_cache = StoredCache::new();
+    let mut kind_cache = KindCache::new();
     let mut last_preview = None;
     loop {
-        match requests.recv_timeout(Duration::from_millis(200)) {
+        let pace = Cadence::from_code(cadence.load(Ordering::Relaxed));
+        match requests.recv_timeout(pace.interval()) {
             Err(mpsc::RecvTimeoutError::Disconnected) => return Ok(()),
             Err(mpsc::RecvTimeoutError::Timeout) => {}
+            Ok(Work::Cadence) => {}
             Ok(work) => {
                 let result = (|| -> Result<&str> {
                     match work {
@@ -508,7 +720,7 @@ fn run(
                                 reply.get("state").filter(|v| v["camera_revision"].is_u64())
                             {
                                 let mut s = output.lock().unwrap();
-                                s.state = live.clone();
+                                s.set_state(live.clone());
                                 s.observed = Some(Instant::now());
                                 s.online = true;
                                 s.connection_error = None;
@@ -522,7 +734,7 @@ fn run(
                             configured = true;
                             last_preview = None;
                             let mut s = output.lock().unwrap();
-                            s.state = Value::Null;
+                            s.set_state(Value::Null);
                             s.preview = None;
                             s.online = false;
                             Ok("Connection saved")
@@ -546,21 +758,30 @@ fn run(
                             Ok("Storage saved for new stacks; active stacks keep their destination")
                         }
                         Work::Handoff(folder) => {
+                            let tests = output.lock().unwrap().test_runs.clone();
+                            let registered = registered_runs(&config.receiver_config)?;
                             ensure!(
-                                completed_stacks(&config.receiver_config)?
-                                    .iter()
-                                    .any(|s| s.folder == folder),
-                                "Choose a completed stack registered with this receiver"
+                                registered.contains(&folder) && !tests.contains(&folder),
+                                "Choose a capture registered with this receiver"
                             );
+                            let notice = if verify_completed(&folder).is_ok() {
+                                "Completed capture ready for Projects"
+                            } else {
+                                verify_stopped(&folder).context(
+                                    "Choose a completed or stopped capture registered with this receiver",
+                                )?;
+                                "Stopped capture ready for Projects"
+                            };
                             output.lock().unwrap().handoff = Some(folder);
-                            Ok("Completed capture ready for Projects")
+                            Ok(notice)
                         }
+                        Work::Cadence => Ok("Cadence changed"),
                     }
                 })();
                 let mut s = output.lock().unwrap();
                 s.pending = false;
                 match result {
-                    Ok(notice) => s.notice = Some(notice.into()),
+                    Ok(notice) => s.set_notice(notice),
                     Err(e) => s.command_error = Some(format!("{e:#}")),
                 }
                 receiver_due = Instant::now();
@@ -582,14 +803,16 @@ fn run(
             }) {
                 Ok(state) => {
                     let generation = state["preview"]["generation"].as_u64();
+                    let available = state["preview"]["available"] == true;
                     {
                         let mut s = output.lock().unwrap();
-                        s.state = state.clone();
+                        s.set_state(state);
                         s.online = true;
                         s.observed = Some(Instant::now());
                         s.connection_error = None;
                     }
-                    if state["preview"]["available"] == true && generation != last_preview {
+                    // No preview is fetched while nobody shows it.
+                    if pace.preview() && available && generation != last_preview {
                         let preview = (|| -> Result<egui::ColorImage> {
                             let bytes = read_response(
                                 client
@@ -617,10 +840,15 @@ fn run(
                             .as_ref()
                             .ok()
                             .map(crate::capture_aids::Peaking::analyze);
+                        let levels = preview
+                            .as_ref()
+                            .ok()
+                            .map(crate::capture_aids::PreviewLevels::analyze);
                         let mut s = output.lock().unwrap();
                         match preview {
                             Ok(image) => {
                                 s.peaking = peaks.map(|p| (generation.unwrap_or(0), Arc::new(p)));
+                                s.levels = levels.map(|l| (generation.unwrap_or(0), Arc::new(l)));
                                 s.preview = Some((generation.unwrap_or(0), Arc::new(image)));
                                 s.preview_error = None;
                                 last_preview = generation;
@@ -637,7 +865,11 @@ fn run(
             }
         }
         if Instant::now() >= receiver_due {
-            let in_progress = in_progress_run(&config.receiver_config).unwrap_or(None);
+            let tests = output.lock().unwrap().test_runs.clone();
+            let mut in_progress = in_progress_run(&config.receiver_config).unwrap_or(None);
+            if let Some(run) = &mut in_progress {
+                run.test = tests.contains(&run.folder) || is_test_run(&run.folder, &mut kind_cache);
+            }
             output.lock().unwrap().in_progress = in_progress;
             let result = receiver_config(&config)
                 .and_then(|(settings, url)| get_json(&client, &url, "/api/status", &settings.key));
@@ -655,11 +887,14 @@ fn run(
             receiver_due = Instant::now() + Duration::from_secs(2);
         }
         if Instant::now() >= history_due {
-            let completed = completed_stacks(&config.receiver_config).unwrap_or_default();
+            let tests = output.lock().unwrap().test_runs.clone();
+            let (completed, stopped) =
+                finished_captures(&config.receiver_config, &tests).unwrap_or_default();
             let stored =
                 stored_by_model(&config.receiver_config, &mut stored_cache).unwrap_or_default();
             let mut s = output.lock().unwrap();
             s.completed = completed;
+            s.stopped = stopped;
             s.stored = stored;
             drop(s);
             history_due = Instant::now() + Duration::from_secs(5);
@@ -686,6 +921,10 @@ pub(crate) fn verify_completed(folder: &Path) -> Result<CompletedStack> {
     );
     let manifest: Value =
         serde_json::from_slice(&read_file(&folder.join("manifest.json"), 4 * 1024 * 1024)?)?;
+    ensure!(
+        manifest["capture_kind"] != "test",
+        "A test shot is not a stack"
+    );
     let planes = manifest["focus_positions"]
         .as_array()
         .context("Missing focal planes")?
@@ -754,6 +993,103 @@ pub(crate) fn verify_completed(folder: &Path) -> Result<CompletedStack> {
         shots_per_plane: shots,
     })
 }
+/// The relaxed check for a capture that ended early (see [`StoppedCapture`]):
+/// its result says `stopped` or `uncertain`, it is not a test shot, the
+/// camera completed at least one plane, and at least one RAW has a durable
+/// receipt with its file at the recorded length. Unlike
+/// [`verify_completed`] it does not require every planned plane or a
+/// gapless set of RAWs; it counts what it could not verify instead.
+pub(crate) fn verify_stopped(folder: &Path) -> Result<StoppedCapture> {
+    let result: Value = serde_json::from_slice(&read_file(&folder.join("result.json"), 65536)?)?;
+    let outcome = result["outcome"].as_str().unwrap_or_default().to_owned();
+    ensure!(
+        matches!(outcome.as_str(), "stopped" | "uncertain"),
+        "Not a stopped capture"
+    );
+    let manifest: Value =
+        serde_json::from_slice(&read_file(&folder.join("manifest.json"), 4 * 1024 * 1024)?)?;
+    ensure!(
+        manifest["capture_kind"] != "test",
+        "A test shot is not a stack"
+    );
+    let planes = result["completed_camera_events"].as_u64().unwrap_or(0) as usize;
+    ensure!(planes > 0, "No focal plane was captured");
+    let shots = manifest["camera"]["pixel_shift_shots"]
+        .as_u64()
+        .or_else(|| manifest["pixel_shift_shots"].as_u64())
+        .unwrap_or(1) as usize;
+    let canonical = folder.canonicalize()?;
+    let (mut frames, mut unverified) = (0, 0);
+    let mut seen = BTreeSet::new();
+    for line in read_file(&folder.join("transfer-receipts.jsonl"), 64 * 1024 * 1024)?
+        .split(|b| *b == b'\n')
+        .filter(|l| !l.is_empty())
+    {
+        let Ok(r) = serde_json::from_slice::<Value>(line) else {
+            unverified += 1;
+            continue;
+        };
+        let Some(name) = r["logical_name"].as_str().filter(|n| n.ends_with(".ARW")) else {
+            continue;
+        };
+        if !seen.insert(name.to_owned()) {
+            continue;
+        }
+        let stored = match r["storage_encoding"].as_str() {
+            Some("strehl-archive-v1" | "strehl-archive-v2") => format!("{name}.straw"),
+            Some("identity") | None => name.to_owned(),
+            _ => {
+                unverified += 1;
+                continue;
+            }
+        };
+        let file = folder.join(stored);
+        let expected = r["storage_bytes"].as_u64().or_else(|| r["bytes"].as_u64());
+        let good = r["durable"] == true
+            && r["ok"] == true
+            && r["sha256"].as_str().is_some_and(|h| h.len() == 64)
+            && file
+                .canonicalize()
+                .is_ok_and(|f| f.parent() == Some(canonical.as_path()))
+            && expected.is_some_and(|n| n > 0 && file.metadata().is_ok_and(|m| m.len() == n));
+        if good {
+            frames += 1;
+        } else {
+            unverified += 1;
+        }
+    }
+    ensure!(frames > 0, "No RAW of this capture is saved on this PC");
+    Ok(StoppedCapture {
+        folder: folder.to_owned(),
+        outcome,
+        planes,
+        frames,
+        unverified,
+        shots_per_plane: shots,
+        message: result["message"].as_str().map(str::to_owned),
+    })
+}
+/// Whether a run's manifest names it a test shot, cached per folder (a
+/// manifest never changes once written).
+type KindCache = BTreeMap<PathBuf, bool>;
+fn is_test_run(folder: &Path, cache: &mut KindCache) -> bool {
+    if let Some(known) = cache.get(folder) {
+        return *known;
+    }
+    let Some(manifest) = read_file(&folder.join("manifest.json"), 4 * 1024 * 1024)
+        .ok()
+        .and_then(|b| serde_json::from_slice::<Value>(&b).ok())
+    else {
+        // Not written yet: ask again next time.
+        return false;
+    };
+    let test = manifest["capture_kind"] == "test";
+    if cache.len() > 64 {
+        cache.clear();
+    }
+    cache.insert(folder.to_owned(), test);
+    test
+}
 /// The receiver's existing run folders, most recently active first.
 /// Identifiers do not order runs: most are `stack-<unix ms>-<pid>`, but a
 /// hand-named run (`stack-wifi-check-...`) sorts after all of them.
@@ -805,19 +1141,37 @@ pub(crate) fn in_progress_run(config_path: &Path) -> Result<Option<InProgress>> 
     let idle = changed
         .and_then(|t| t.elapsed().ok())
         .unwrap_or(Duration::ZERO);
-    Ok(Some(InProgress { folder, idle }))
+    Ok(Some(InProgress {
+        folder,
+        idle,
+        test: false,
+    }))
 }
-fn completed_stacks(config_path: &Path) -> Result<Vec<CompletedStack>> {
-    let mut completed = Vec::new();
+/// Up to eight completed stacks and eight stopped captures among the newest
+/// registered runs, newest first; never a run in `tests`.
+fn finished_captures(
+    config_path: &Path,
+    tests: &BTreeSet<PathBuf>,
+) -> Result<(Vec<CompletedStack>, Vec<StoppedCapture>)> {
+    let (mut completed, mut stopped) = (Vec::new(), Vec::new());
     for folder in registered_runs(config_path)? {
-        if let Ok(stack) = verify_completed(&folder) {
-            completed.push(stack);
+        if tests.contains(&folder) {
+            continue;
         }
-        if completed.len() == 8 {
+        if completed.len() < 8
+            && let Ok(stack) = verify_completed(&folder)
+        {
+            completed.push(stack);
+        } else if stopped.len() < 8
+            && let Ok(run) = verify_stopped(&folder)
+        {
+            stopped.push(run);
+        }
+        if completed.len() == 8 && stopped.len() == 8 {
             break;
         }
     }
-    Ok(completed)
+    Ok((completed, stopped))
 }
 
 #[cfg(test)]
@@ -848,16 +1202,219 @@ mod tests {
         let mut s = Snapshot {
             online: true,
             observed: Some(Instant::now()),
-            state: json!({"camera_revision":7,"plan_revision":9,"sequence_id":4}),
             ..Default::default()
         };
+        s.set_state(json!({"camera_revision":7,"plan_revision":9,"sequence_id":4}));
         let a = s.request(Command::Start {}).unwrap();
-        s.state["camera_revision"] = json!(8);
+        s.set_state(json!({"camera_revision":8,"plan_revision":9,"sequence_id":4}));
         assert_eq!(a.camera_revision, 7);
         assert_eq!(a.plan_revision, 9);
         assert_eq!(a.sequence_id, 4);
+        assert_eq!(s.request(Command::Start {}).unwrap().camera_revision, 8);
         s.online = false;
         assert!(s.request(Command::Start {}).is_err());
+    }
+    /// A state the desktop cannot read sends nothing: the typed state falls
+    /// back to "disconnected" and every request names the problem.
+    #[test]
+    fn an_unreadable_host_state_refuses_every_request() {
+        let mut s = Snapshot {
+            online: true,
+            observed: Some(Instant::now()),
+            ..Default::default()
+        };
+        s.set_state(
+            json!({"camera_revision":7,"plan_revision":9,"sequence_id":4,"editable":"yes"}),
+        );
+        assert!(s.host_error.as_deref().unwrap().contains("cannot read"));
+        assert!(!s.host.editable && s.host.camera_revision.is_none());
+        assert_eq!(s.state["editable"], "yes", "the raw state passes through");
+        let error = s.request(Command::Start {}).unwrap_err().to_string();
+        assert!(error.contains("cannot read"), "{error}");
+        s.set_state(json!({"camera_revision":7,"plan_revision":9,"sequence_id":4,"editable":true}));
+        assert!(s.host_error.is_none() && s.host.editable);
+        assert!(s.public()["host_state_error"].is_null());
+    }
+    #[test]
+    fn cadence_is_slow_only_with_the_station_closed_and_nothing_running() {
+        assert_eq!(Cadence::choose(false, false), Cadence::Background);
+        assert_eq!(Cadence::choose(false, true), Cadence::Sequence);
+        assert_eq!(Cadence::choose(true, false), Cadence::Live);
+        assert_eq!(Cadence::choose(true, true), Cadence::Live);
+        assert_eq!(Cadence::Background.interval(), Duration::from_secs(1));
+        assert_eq!(Cadence::Sequence.interval(), Duration::from_millis(200));
+        assert!(Cadence::Live.preview() && !Cadence::Sequence.preview());
+        for c in [Cadence::Background, Cadence::Sequence, Cadence::Live] {
+            assert_eq!(Cadence::from_code(c.code()), c);
+        }
+    }
+    /// A run folder with `n` RAW receipts (single shot), its manifest and
+    /// result; `kind` is the manifest's capture kind.
+    fn run_folder(
+        root: &Path,
+        name: &str,
+        outcome: &str,
+        planned: usize,
+        done: usize,
+        kind: &str,
+    ) -> PathBuf {
+        let folder = root.join(name);
+        std::fs::create_dir(&folder).unwrap();
+        save_json(
+            &folder.join("manifest.json"),
+            &json!({"focus_positions":(0..planned).collect::<Vec<_>>(),"camera":{"pixel_shift_shots":1},
+                "capture_kind":kind}),
+        )
+        .unwrap();
+        let verification = if outcome == "uncertain" {
+            "partial-see-transfer-receipts"
+        } else {
+            "pc-durable-sha256"
+        };
+        save_json(
+            &folder.join("result.json"),
+            &json!({"outcome":outcome,"raw_file_verification":verification,
+                "completed_camera_events":done,"message":"Stopped by request"}),
+        )
+        .unwrap();
+        let receipts: Vec<String> = (1..=done)
+            .map(|n| {
+                let name = format!("frame-{n:06}.ARW");
+                std::fs::write(folder.join(format!("{name}.straw")), b"fixture").unwrap();
+                json!({"logical_name":name,"ok":true,"durable":true,"sha256":"a".repeat(64),
+                    "storage_bytes":7,"storage_encoding":"strehl-archive-v2"})
+                .to_string()
+            })
+            .collect();
+        std::fs::write(folder.join("transfer-receipts.jsonl"), receipts.join("\n")).unwrap();
+        std::fs::write(folder.join("events.jsonl"), b"{}\n").unwrap();
+        std::thread::sleep(Duration::from_millis(20));
+        folder
+    }
+    /// The listing rules over real runs, read only: every run folder under
+    /// `STREHL_CAPTURE_RUNS` is judged complete, stopped, test or neither.
+    /// `cargo test -p strehl-ui real_runs_are_listed -- --ignored --nocapture`
+    #[test]
+    #[ignore = "reads real capture folders named by STREHL_CAPTURE_RUNS"]
+    fn real_runs_are_listed() {
+        let root = PathBuf::from(std::env::var_os("STREHL_CAPTURE_RUNS").unwrap());
+        let mut seen = BTreeMap::<String, usize>::new();
+        for entry in std::fs::read_dir(&root).unwrap() {
+            let folder = entry.unwrap().path();
+            if !folder.join("result.json").is_file() {
+                continue;
+            }
+            let verdict = match (verify_completed(&folder), verify_stopped(&folder)) {
+                (Ok(c), _) => format!("complete ({} planes)", c.planes),
+                (Err(_), Ok(s)) => {
+                    println!(
+                        "{}: {} · {} RAWs, {} unverified ({})",
+                        folder.display(),
+                        s.label(),
+                        s.frames,
+                        s.unverified,
+                        s.outcome
+                    );
+                    format!("{} ({})", s.label(), s.outcome)
+                }
+                (Err(c), Err(s)) => format!("neither: {c:#} / {s:#}"),
+            };
+            *seen.entry(verdict).or_default() += 1;
+        }
+        for (verdict, n) in seen {
+            println!("{n:>4}  {verdict}");
+        }
+    }
+    /// Stopped and uncertain captures are listed beside the completed ones
+    /// with what was verified; a complete run is never "stopped", a stopped
+    /// run is never "complete", and test shots are in neither list.
+    #[test]
+    fn stopped_captures_are_listed_and_test_shots_are_not() {
+        let dir = tempfile::tempdir().unwrap();
+        let config = dir.path().join("receiver.json");
+        let complete = run_folder(dir.path(), "stack-1", "complete", 3, 3, "plan");
+        let stopped = run_folder(dir.path(), "stack-2", "stopped", 10, 4, "plan");
+        let uncertain = run_folder(dir.path(), "stack-3", "uncertain", 10, 2, "plan");
+        let empty = run_folder(dir.path(), "stack-4", "stopped", 10, 0, "plan");
+        let test = run_folder(dir.path(), "stack-5", "complete", 1, 1, "test");
+        let old_host_test = run_folder(dir.path(), "stack-6", "complete", 1, 1, "positions");
+        let registry: BTreeMap<String, Value> = [
+            &complete,
+            &stopped,
+            &uncertain,
+            &empty,
+            &test,
+            &old_host_test,
+        ]
+        .iter()
+        .map(|f| {
+            (
+                f.file_name().unwrap().to_string_lossy().into_owned(),
+                json!({ "folder": f }),
+            )
+        })
+        .collect();
+        save_json(&config.with_extension("runs.json"), &registry).unwrap();
+
+        assert!(verify_completed(&complete).is_ok());
+        assert!(
+            verify_stopped(&complete).is_err(),
+            "complete is not stopped"
+        );
+        assert!(
+            verify_completed(&stopped).is_err(),
+            "stopped is not complete"
+        );
+        let s = verify_stopped(&stopped).unwrap();
+        assert_eq!((s.planes, s.frames, s.unverified), (4, 4, 0));
+        assert_eq!(s.label(), "stopped · 4 planes");
+        assert_eq!(s.outcome, "stopped");
+        let u = verify_stopped(&uncertain).unwrap();
+        assert_eq!((u.outcome.as_str(), u.planes), ("uncertain", 2));
+        assert!(verify_stopped(&empty).is_err(), "nothing captured");
+        let error = verify_completed(&test).unwrap_err().to_string();
+        assert!(error.contains("test shot"), "{error}");
+
+        // A file that changed after its receipt is counted, not trusted.
+        std::fs::write(stopped.join("frame-000002.ARW.straw"), b"truncated!").unwrap();
+        let s = verify_stopped(&stopped).unwrap();
+        assert_eq!((s.frames, s.unverified), (3, 1));
+
+        // The desktop remembers a test shot taken on an older host.
+        let tests: BTreeSet<PathBuf> = [old_host_test.clone()].into_iter().collect();
+        let (completed, listed) = finished_captures(&config, &tests).unwrap();
+        let names = |f: &[PathBuf]| -> Vec<String> {
+            f.iter()
+                .map(|f| f.file_name().unwrap().to_string_lossy().into_owned())
+                .collect()
+        };
+        assert_eq!(
+            names(
+                &completed
+                    .iter()
+                    .map(|c| c.folder.clone())
+                    .collect::<Vec<_>>()
+            ),
+            ["stack-1"]
+        );
+        assert_eq!(
+            names(&listed.iter().map(|c| c.folder.clone()).collect::<Vec<_>>()),
+            ["stack-3", "stack-2"],
+            "newest first"
+        );
+        let (completed, _) = finished_captures(&config, &BTreeSet::new()).unwrap();
+        assert_eq!(
+            completed.len(),
+            2,
+            "without the memory, a positions run is listed"
+        );
+
+        // A test shot in progress is recognised from its manifest.
+        let mut cache = KindCache::new();
+        assert!(is_test_run(&test, &mut cache));
+        assert!(!is_test_run(&stopped, &mut cache));
+        assert!(!is_test_run(&dir.path().join("missing"), &mut cache));
+        assert_eq!(cache.len(), 2, "a missing manifest is asked again");
     }
     #[test]
     fn completed_handoff_requires_every_pixel_shift_member_and_durable_result() {

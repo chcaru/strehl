@@ -7,13 +7,23 @@
 //! M86/M103 for direct graph registration; M173's capture audit also distinguishes
 //! camera JPEGs from measurement RAWs. The focus response is a blend weight only:
 //! noise/sharpening can increase it, so it is never an acceptance metric.
+//!
+//! Two uses share the registration and blend. [`start_draft_preview`] builds
+//! one composite of a finished bracket. [`ProofJob`] builds the in-flight
+//! proof of a capture (Studio 2, 7.4) as its planes arrive: each frame is
+//! decoded and its pyramid built once, measured pairs are kept, and the
+//! global solve and blend run again every [`PROOF_EVERY_PLANES`] new planes or
+//! [`PROOF_EVERY`], on one below-normal-priority thread. Every display of it
+//! says it is from the camera previews, not the RAW stack: for the reason
+//! above it cannot predict the RAW merge.
 
-use std::collections::BTreeSet;
-use std::path::PathBuf;
+use std::collections::{BTreeMap, BTreeSet};
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::mpsc::{self, Receiver};
 use std::thread;
+use std::time::{Duration, Instant};
 
 use anyhow::{Context, Result, ensure};
 use strehl_core::align::{
@@ -136,9 +146,56 @@ pub fn start_draft_preview(paths: Vec<PathBuf>) -> DraftJob {
 
 struct Frame {
     source_index: usize,
+    path: PathBuf,
     rgba: Vec<u8>,
     luma: Vec<f32>,
     pyramid: AlignPyramid,
+}
+
+/// Measured pairs by the frames' source indices; `None` for a pair that
+/// did not register, so it is not measured again.
+type EdgeCache = BTreeMap<(usize, usize), Option<AlignEdge>>;
+
+/// One camera preview made ready for registration and blending, with its
+/// reduced geometry and the bytes it keeps resident.
+fn prepare(
+    image: crate::preview::PreviewImage,
+    source_index: usize,
+    path: PathBuf,
+    config: &AlignConfig,
+) -> Result<(Frame, PlaneGeometry, usize)> {
+    ensure!(
+        image.size.iter().all(|&side| side >= 80),
+        "A camera preview is too small to register reliably; RAW stacking remains available"
+    );
+    let [width, height] = image.size;
+    let luma: Vec<f32> = image
+        .rgba
+        .as_chunks::<4>()
+        .0
+        .iter()
+        .map(|p| 0.2126 * p[0] as f32 + 0.7152 * p[1] as f32 + 0.0722 * p[2] as f32)
+        .collect();
+    let reduced = downsample(
+        PlaneRef::new(&luma, width, height).context("Invalid camera preview pixels")?,
+        2,
+    )
+    .context("Camera preview is too small for registration")?;
+    let pyramid = AlignPyramid::build(reduced.as_ref(), config)
+        .context("Building the draft registration pyramid")?;
+    let geometry = reduced.as_ref().geometry();
+    let bytes = image.rgba.len() + reduced.data.len() * 4 + pyramid.samples() * 4;
+    Ok((
+        Frame {
+            source_index,
+            path,
+            rgba: image.rgba,
+            luma: reduced.data,
+            pyramid,
+        },
+        geometry,
+        bytes,
+    ))
 }
 
 fn check_cancelled(cancelled: &AtomicBool) -> Result<()> {
@@ -217,34 +274,14 @@ fn build(
                 } else {
                     size = Some(image.size);
                 }
-                let [width, height] = image.size;
-                let luma: Vec<f32> = image
-                    .rgba
-                    .as_chunks::<4>()
-                    .0
-                    .iter()
-                    .map(|p| 0.2126 * p[0] as f32 + 0.7152 * p[1] as f32 + 0.0722 * p[2] as f32)
-                    .collect();
-                let reduced = downsample(
-                    PlaneRef::new(&luma, width, height).context("Invalid camera preview pixels")?,
-                    2,
-                )
-                .context("Camera preview is too small for registration")?;
-                let pyramid = AlignPyramid::build(reduced.as_ref(), &config)
-                    .context("Building the draft registration pyramid")?;
-                let geom = reduced.as_ref().geometry();
+                let (frame, geom, bytes) = prepare(image, source_index, path.clone(), &config)?;
                 geometry = Some(geom);
-                resident += image.rgba.len() + reduced.data.len() * 4 + pyramid.samples() * 4;
+                resident += bytes;
                 ensure!(
                     resident <= RESIDENT_LIMIT,
                     "This bracket exceeds the JPEG draft's 256 MiB source budget. RAW stacking remains available."
                 );
-                frames.push(Frame {
-                    source_index,
-                    rgba: image.rgba,
-                    luma: reduced.data,
-                    pyramid,
-                });
+                frames.push(frame);
             }
             Err(error) => {
                 check_cancelled(cancelled)?;
@@ -261,9 +298,51 @@ fn build(
         "Fewer than two frames have usable camera JPEGs; RAW stacking remains available"
     );
     let geometry = geometry.context("No camera preview geometry")?;
-    let [width, height] = size.context("No camera preview dimensions")?;
+    let size = size.context("No camera preview dimensions")?;
     let (placement, edges, cycle_rank) =
         register(&frames, geometry, &config, cancelled, &mut progress)?;
+    compose(
+        &frames,
+        &placement,
+        size,
+        Composed {
+            considered: paths.len(),
+            alignment_edges: edges,
+            cycle_rank,
+            warnings,
+        },
+        cancelled,
+        &mut progress,
+    )
+}
+
+/// What [`compose`] reports beside the picture.
+struct Composed {
+    /// Frames the composite stands for: the 90 % registration floor and the
+    /// omitted count are over these.
+    considered: usize,
+    alignment_edges: usize,
+    cycle_rank: usize,
+    warnings: Vec<String>,
+}
+
+/// The reference (the middle connected frame), the transforms into it, the
+/// coverage floor and the blend.
+fn compose(
+    frames: &[Frame],
+    placement: &[Option<Similarity>],
+    size: [usize; 2],
+    report: Composed,
+    cancelled: &AtomicBool,
+    progress: &mut impl FnMut(DraftStage, usize, usize),
+) -> Result<DraftPreview> {
+    let [width, height] = size;
+    let Composed {
+        considered,
+        alignment_edges,
+        cycle_rank,
+        mut warnings,
+    } = report;
     let reference = (0..frames.len())
         .filter(|&i| placement[i].is_some())
         .min_by_key(|&i| i.abs_diff(frames.len() / 2))
@@ -282,35 +361,34 @@ fn build(
     }
     let aligned_frames = transforms.iter().filter(|t| t.is_some()).count();
     ensure!(
-        aligned_frames * 10 >= paths.len() * 9,
-        "Only {aligned_frames}/{} camera previews could be registered. A JPEG composite would omit too much of this bracket; RAW stacking remains available.",
-        paths.len()
+        aligned_frames * 10 >= considered * 9,
+        "Only {aligned_frames}/{considered} camera previews could be registered. A JPEG composite would omit too much of this bracket; RAW stacking remains available."
     );
-    let skipped_frames = paths.len() - aligned_frames;
+    let skipped_frames = considered - aligned_frames;
     if skipped_frames > 0 {
         warnings.push(format!(
             "The JPEG draft omits {skipped_frames} source frames"
         ));
     }
     let rgba = blend(
-        &frames,
+        frames,
         &transforms,
         PlaneGeometry { width, height },
         cancelled,
-        &mut progress,
+        progress,
     )?;
     Ok(DraftPreview {
         image: PreviewImage {
-            path: paths[frames[reference].source_index].clone(),
+            path: frames[reference].path.clone(),
             source_size: [width as u32, height as u32],
             size: [width, height],
             rgba,
             is_overview: true,
         },
-        source_frames: paths.len(),
+        source_frames: considered,
         aligned_frames,
         skipped_frames,
-        alignment_edges: edges,
+        alignment_edges,
         cycle_rank,
         reference_frame: frames[reference].source_index,
         warnings,
@@ -321,6 +399,26 @@ fn register(
     frames: &[Frame],
     geometry: PlaneGeometry,
     config: &AlignConfig,
+    cancelled: &AtomicBool,
+    progress: &mut impl FnMut(DraftStage, usize, usize),
+) -> Result<(Vec<Option<Similarity>>, usize, usize)> {
+    register_cached(
+        frames,
+        geometry,
+        config,
+        &mut EdgeCache::new(),
+        cancelled,
+        progress,
+    )
+}
+
+/// [`register`], measuring only the pairs `cache` does not hold (keyed by
+/// source index, so a frame keeps its pairs when others are dropped).
+fn register_cached(
+    frames: &[Frame],
+    geometry: PlaneGeometry,
+    config: &AlignConfig,
+    cache: &mut EdgeCache,
     cancelled: &AtomicBool,
     progress: &mut impl FnMut(DraftStage, usize, usize),
 ) -> Result<(Vec<Option<Similarity>>, usize, usize)> {
@@ -337,15 +435,22 @@ fn register(
     progress(DraftStage::Aligning, 0, pairs.len());
     for (done, &(i, j)) in pairs.iter().enumerate() {
         check_cancelled(cancelled)?;
-        let frame = |index: usize| AlignFrame {
-            plane: PlaneRef::from_geometry(&frames[index].luma, geometry).unwrap(),
-            pyramid: &frames[index].pyramid,
-        };
-        if let Ok(fit) = align_pair(frame(i), frame(j), &spots, config) {
-            let transform = fit.similarity();
-            if sane_transform(transform, geometry) {
-                edges.push(AlignEdge::from_stage(i, j, &fit));
-            }
+        let key = (frames[i].source_index, frames[j].source_index);
+        let measured = *cache.entry(key).or_insert_with(|| {
+            let frame = |index: usize| AlignFrame {
+                plane: PlaneRef::from_geometry(&frames[index].luma, geometry).unwrap(),
+                pyramid: &frames[index].pyramid,
+            };
+            align_pair(frame(i), frame(j), &spots, config)
+                .ok()
+                .filter(|fit| sane_transform(fit.similarity(), geometry))
+                .map(|fit| AlignEdge::from_stage(i, j, &fit))
+        });
+        if let Some(mut edge) = measured {
+            // The pair's positions in this frame list.
+            edge.i = i;
+            edge.j = j;
+            edges.push(edge);
         }
         progress(DraftStage::Aligning, done + 1, pairs.len());
     }
@@ -500,6 +605,360 @@ fn blend(
     Ok(rgba)
 }
 
+// The in-flight proof below is built for the Capture station (Studio 2,
+// P6), which feeds it; until then nothing in the desktop starts one.
+/// The proof is solved and blended again after this many new planes...
+#[allow(dead_code)]
+pub const PROOF_EVERY_PLANES: usize = 4;
+/// ...or this long after the last update with at least one new plane.
+#[allow(dead_code)]
+pub const PROOF_EVERY: Duration = Duration::from_secs(5);
+/// Shown with every display of the proof.
+#[allow(dead_code)]
+pub const PROOF_CAUTION: &str = "from the camera previews, not the RAW stack";
+
+/// The in-flight proof's frames and measured pairs, kept between updates.
+/// Above [`MAX_FRAMES`] planes (or the resident budget) it keeps every
+/// second plane of those it had, and so on: an even subsample, plane 0 and
+/// its pairs always among them.
+#[allow(dead_code)]
+pub(crate) struct Incremental {
+    config: AlignConfig,
+    frames: Vec<Frame>,
+    /// Frames offered, kept or not.
+    received: usize,
+    /// One plane in `stride` is kept.
+    stride: usize,
+    size: Option<[usize; 2]>,
+    geometry: Option<PlaneGeometry>,
+    resident: usize,
+    edges: EdgeCache,
+    warnings: Vec<String>,
+    /// Kept frames since the last update.
+    fresh: usize,
+    last_update: Option<Instant>,
+    revision: u64,
+}
+
+/// One proof: the composite, and how it stands for the capture so far.
+#[allow(dead_code)]
+pub struct ProofUpdate {
+    pub draft: DraftPreview,
+    /// Planes offered so far.
+    pub received: usize,
+    /// Planes in the composite's registration (an even subsample above 512).
+    pub used: usize,
+    /// One plane in `stride` was used.
+    pub stride: usize,
+    /// Counts updates: a new one replaces the shown proof.
+    pub revision: u64,
+}
+
+impl Default for Incremental {
+    fn default() -> Self {
+        Self {
+            config: draft_config(),
+            frames: Vec::new(),
+            received: 0,
+            stride: 1,
+            size: None,
+            geometry: None,
+            resident: 0,
+            edges: EdgeCache::new(),
+            warnings: Vec::new(),
+            fresh: 0,
+            last_update: None,
+            revision: 0,
+        }
+    }
+}
+
+#[allow(dead_code)]
+impl Incremental {
+    /// Offers the next plane's file: its camera preview is read only when
+    /// the plane is one of the kept subsample.
+    pub fn add_path(&mut self, path: &Path, cancelled: &AtomicBool) -> Result<()> {
+        let index = self.received;
+        self.received += 1;
+        if !index.is_multiple_of(self.stride) {
+            return Ok(());
+        }
+        match load_draft_source(path, DRAFT_SIDE, cancelled) {
+            Ok(image) => self.add_image(image, index, path.to_path_buf()),
+            Err(error) => {
+                check_cancelled(cancelled)?;
+                self.warnings.push(format!(
+                    "Plane {} has no usable camera preview: {error}",
+                    index + 1
+                ));
+                Ok(())
+            }
+        }
+    }
+    /// A plane's preview, already decoded (`index` counts from the first
+    /// plane offered). A plane off the kept subsample is not added.
+    fn add_image(&mut self, image: PreviewImage, index: usize, path: PathBuf) -> Result<()> {
+        if !index.is_multiple_of(self.stride) {
+            return Ok(());
+        }
+        let size = image.size;
+        ensure!(
+            size.iter().all(|&side| side >= 80),
+            "A camera preview is too small to register reliably"
+        );
+        if let Some(expected) = self.size {
+            ensure!(
+                size == expected,
+                "Camera previews have different dimensions; a reliable JPEG proof is unavailable"
+            );
+        }
+        let (frame, geometry, bytes) = prepare(image, index, path, &self.config)?;
+        self.size = Some(size);
+        self.geometry = Some(geometry);
+        self.resident += bytes;
+        self.frames.push(frame);
+        self.fresh += 1;
+        while self.frames.len() > MAX_FRAMES || self.resident > RESIDENT_LIMIT {
+            self.thin();
+        }
+        Ok(())
+    }
+    /// Keeps every second kept plane (twice the stride) and their pairs.
+    fn thin(&mut self) {
+        self.stride *= 2;
+        let stride = self.stride;
+        let before = self.frames.len();
+        self.frames
+            .retain(|f| f.source_index.is_multiple_of(stride));
+        self.edges
+            .retain(|(i, j), _| i.is_multiple_of(stride) && j.is_multiple_of(stride));
+        self.resident = self.resident * self.frames.len() / before.max(1);
+    }
+    /// Whether an update is due: four new planes, or five seconds since the
+    /// last with one new plane.
+    pub fn due(&self, now: Instant) -> bool {
+        self.frames.len() >= 2
+            && (self.fresh >= PROOF_EVERY_PLANES
+                || (self.fresh > 0
+                    && self
+                        .last_update
+                        .is_none_or(|t| now.duration_since(t) >= PROOF_EVERY)))
+    }
+    /// Solves the registration again over every kept frame (measuring only
+    /// new pairs) and blends.
+    pub fn update(&mut self, cancelled: &AtomicBool) -> Result<ProofUpdate> {
+        self.fresh = 0;
+        self.last_update = Some(Instant::now());
+        ensure!(
+            self.frames.len() >= 2,
+            "The proof needs two planes with camera previews"
+        );
+        let geometry = self.geometry.context("No camera preview geometry")?;
+        let size = self.size.context("No camera preview dimensions")?;
+        let mut progress = |_: DraftStage, _: usize, _: usize| {};
+        let (placement, edges, cycle_rank) = register_cached(
+            &self.frames,
+            geometry,
+            &self.config,
+            &mut self.edges,
+            cancelled,
+            &mut progress,
+        )?;
+        let mut draft = compose(
+            &self.frames,
+            &placement,
+            size,
+            Composed {
+                considered: self.frames.len(),
+                alignment_edges: edges,
+                cycle_rank,
+                warnings: self.warnings.clone(),
+            },
+            cancelled,
+            &mut progress,
+        )?;
+        draft.source_frames = self.received;
+        if self.stride > 1 {
+            draft.warnings.push(format!(
+                "The proof uses one plane in {} of the {} so far",
+                self.stride, self.received
+            ));
+        }
+        self.revision += 1;
+        Ok(ProofUpdate {
+            draft,
+            received: self.received,
+            used: self.frames.len(),
+            stride: self.stride,
+            revision: self.revision,
+        })
+    }
+}
+
+/// What the proof's worker reports.
+#[allow(dead_code)]
+pub enum ProofEvent {
+    Updated(Box<ProofUpdate>),
+    /// This update failed; the last proof still stands.
+    Failed(String),
+}
+
+#[allow(dead_code)]
+enum ProofInput {
+    Frame(PathBuf),
+    /// An update now, if any plane is new (the capture ended).
+    Finish,
+}
+
+/// The in-flight proof, built on its own below-normal-priority thread.
+/// Dropping it ends the thread after its current step.
+#[allow(dead_code)]
+pub struct ProofJob {
+    sender: mpsc::Sender<ProofInput>,
+    receiver: Receiver<ProofEvent>,
+    cancelled: Arc<AtomicBool>,
+}
+
+#[allow(dead_code)]
+impl ProofJob {
+    pub fn start() -> Self {
+        let (sender, inputs) = mpsc::channel();
+        let (events, receiver) = mpsc::sync_channel(4);
+        let cancelled = Arc::new(AtomicBool::new(false));
+        let worker_cancelled = Arc::clone(&cancelled);
+        let failed = events.clone();
+        if let Err(error) = thread::Builder::new()
+            .name("strehl-capture-proof".into())
+            .spawn(move || {
+                lower_thread_priority();
+                proof_worker(&inputs, &events, &worker_cancelled);
+            })
+        {
+            let _ = failed.try_send(ProofEvent::Failed(format!(
+                "Starting the proof worker: {error}"
+            )));
+        }
+        Self {
+            sender,
+            receiver,
+            cancelled,
+        }
+    }
+    /// Offers the next plane's RAW (its embedded camera preview is read).
+    /// `false` once the worker has ended.
+    pub fn add_frame(&self, path: PathBuf) -> bool {
+        self.sender.send(ProofInput::Frame(path)).is_ok()
+    }
+    /// Asks for an update with every plane offered so far.
+    pub fn finish(&self) {
+        let _ = self.sender.send(ProofInput::Finish);
+    }
+    /// The newest event, if any; older updates are superseded.
+    pub fn poll(&self) -> Option<ProofEvent> {
+        let mut latest = None;
+        while let Ok(event) = self.receiver.try_recv() {
+            latest = Some(event);
+        }
+        latest
+    }
+    pub fn cancel(&self) {
+        self.cancelled.store(true, Ordering::Relaxed);
+    }
+}
+
+impl Drop for ProofJob {
+    fn drop(&mut self) {
+        self.cancel();
+    }
+}
+
+#[allow(dead_code)]
+fn proof_worker(
+    inputs: &Receiver<ProofInput>,
+    events: &mpsc::SyncSender<ProofEvent>,
+    cancelled: &AtomicBool,
+) {
+    let mut proof = Incremental::default();
+    loop {
+        if cancelled.load(Ordering::Relaxed) {
+            return;
+        }
+        let mut finish = false;
+        match inputs.recv_timeout(Duration::from_millis(250)) {
+            Ok(ProofInput::Frame(path)) => {
+                add_frame(&mut proof, &path, cancelled, events);
+                // Take every plane already queued, so one update covers them.
+                loop {
+                    match inputs.try_recv() {
+                        Ok(ProofInput::Frame(path)) => {
+                            add_frame(&mut proof, &path, cancelled, events)
+                        }
+                        Ok(ProofInput::Finish) => finish = true,
+                        Err(_) => break,
+                    }
+                }
+            }
+            Ok(ProofInput::Finish) => finish = true,
+            Err(mpsc::RecvTimeoutError::Timeout) => {}
+            // The job was dropped, which cancels it.
+            Err(mpsc::RecvTimeoutError::Disconnected) => return,
+        }
+        if cancelled.load(Ordering::Relaxed) {
+            return;
+        }
+        if proof.due(Instant::now()) || (finish && proof.fresh > 0 && proof.frames.len() >= 2) {
+            let event = match proof.update(cancelled) {
+                Ok(update) => ProofEvent::Updated(Box::new(update)),
+                Err(error) => ProofEvent::Failed(format!("{error:#}")),
+            };
+            if cancelled.load(Ordering::Relaxed) {
+                return;
+            }
+            // A full queue means the UI has not read the last one: replace
+            // nothing, it reads the newest of what is queued.
+            let _ = events.try_send(event);
+        }
+    }
+}
+
+#[allow(dead_code)]
+fn add_frame(
+    proof: &mut Incremental,
+    path: &Path,
+    cancelled: &AtomicBool,
+    events: &mpsc::SyncSender<ProofEvent>,
+) {
+    if cancelled.load(Ordering::Relaxed) {
+        return;
+    }
+    if let Err(error) = proof.add_path(path, cancelled)
+        && !cancelled.load(Ordering::Relaxed)
+    {
+        let _ = events.try_send(ProofEvent::Failed(format!("{error:#}")));
+    }
+}
+
+/// The proof runs below the desktop's and the receiver's priority, so it
+/// never competes with the capture's own work.
+#[cfg(windows)]
+#[allow(dead_code)]
+fn lower_thread_priority() {
+    #[link(name = "kernel32")]
+    unsafe extern "system" {
+        fn GetCurrentThread() -> *mut std::ffi::c_void;
+        fn SetThreadPriority(thread: *mut std::ffi::c_void, priority: i32) -> i32;
+    }
+    const THREAD_PRIORITY_BELOW_NORMAL: i32 = -1;
+    // SAFETY: the calling thread's pseudo-handle and a documented priority
+    // value; no memory is shared.
+    unsafe {
+        SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
+    }
+}
+#[cfg(not(windows))]
+#[allow(dead_code)]
+fn lower_thread_priority() {}
+
 fn srgb_to_linear(value: f32) -> f32 {
     if value <= 0.04045 {
         value / 12.92
@@ -534,10 +993,306 @@ mod tests {
         .unwrap();
         Frame {
             source_index,
+            path: PathBuf::new(),
             rgba,
             luma,
             pyramid,
         }
+    }
+
+    /// A textured scene shifted by `(dx, dy)` and scaled by `1 + g`, as an
+    /// RGBA camera preview of `width` x `height`.
+    fn scene_image(width: usize, height: usize, dx: f64, dy: f64, g: f64) -> PreviewImage {
+        let mut rgba = Vec::with_capacity(width * height * 4);
+        let (cx, cy) = (width as f64 / 2.0, height as f64 / 2.0);
+        for y in 0..height {
+            for x in 0..width {
+                let (sx, sy) = (
+                    (x as f64 - cx) / (1.0 + g) + cx - dx,
+                    (y as f64 - cy) / (1.0 + g) + cy - dy,
+                );
+                let v = 120.0
+                    + 30.0 * (sx / 9.1 + sy / 13.7).sin()
+                    + 25.0 * (sx / 21.3 - sy / 7.9).cos()
+                    + 18.0 * (sx / 5.3).sin() * (sy / 8.6).cos();
+                let v = v.round().clamp(0.0, 255.0) as u8;
+                rgba.extend_from_slice(&[v, v.saturating_sub(10), v / 2 + 40, 255]);
+            }
+        }
+        PreviewImage {
+            path: PathBuf::from("synthetic"),
+            source_size: [width as u32, height as u32],
+            size: [width, height],
+            rgba,
+            is_overview: false,
+        }
+    }
+
+    fn drift(i: usize) -> (f64, f64, f64) {
+        let t = i as f64;
+        (0.9 * t, -0.6 * t, 0.002 * t)
+    }
+
+    /// The proof built plane by plane, its pairs measured once and kept, is
+    /// the composite a fresh registration of the same frames makes; it is
+    /// due at two planes, then every four new planes.
+    #[test]
+    fn the_incremental_proof_matches_a_fresh_registration_of_its_frames() {
+        let (w, h) = (480, 320);
+        let cancel = AtomicBool::new(false);
+        let mut proof = Incremental::default();
+        let now = Instant::now();
+        for i in 0..2 {
+            let (dx, dy, g) = drift(i);
+            proof
+                .add_image(
+                    scene_image(w, h, dx, dy, g),
+                    i,
+                    PathBuf::from(format!("p{i}")),
+                )
+                .unwrap();
+            proof.received += 1;
+        }
+        assert!(proof.due(now), "the first proof needs only two planes");
+        let first = proof.update(&cancel).unwrap();
+        assert_eq!((first.used, first.revision), (2, 1));
+        let measured_after_first = proof.edges.len();
+        for i in 2..9 {
+            let (dx, dy, g) = drift(i);
+            proof
+                .add_image(
+                    scene_image(w, h, dx, dy, g),
+                    i,
+                    PathBuf::from(format!("p{i}")),
+                )
+                .unwrap();
+            proof.received += 1;
+            let due = proof.due(Instant::now());
+            assert_eq!(due, proof.fresh >= PROOF_EVERY_PLANES, "plane {i}");
+            if due {
+                proof.update(&cancel).unwrap();
+            }
+        }
+        assert!(proof.fresh > 0, "plane 9 is not due yet");
+        let last = proof.update(&cancel).unwrap();
+        assert_eq!((last.used, last.received, last.stride), (9, 9, 1));
+        assert_eq!(last.draft.aligned_frames, 9);
+        assert!(proof.edges.len() > measured_after_first);
+        // The same frames, registered from nothing.
+        let config = draft_config();
+        let frames: Vec<Frame> = (0..9)
+            .map(|i| {
+                let (dx, dy, g) = drift(i);
+                prepare(
+                    scene_image(w, h, dx, dy, g),
+                    i,
+                    PathBuf::from(format!("p{i}")),
+                    &config,
+                )
+                .unwrap()
+                .0
+            })
+            .collect();
+        let geometry = proof.geometry.unwrap();
+        let (placement, edges, cycle_rank) =
+            register(&frames, geometry, &config, &cancel, &mut |_, _, _| {}).unwrap();
+        let fresh = compose(
+            &frames,
+            &placement,
+            [w, h],
+            Composed {
+                considered: 9,
+                alignment_edges: edges,
+                cycle_rank,
+                warnings: Vec::new(),
+            },
+            &cancel,
+            &mut |_, _, _| {},
+        )
+        .unwrap();
+        assert_eq!(fresh.reference_frame, last.draft.reference_frame);
+        assert_eq!(fresh.alignment_edges, last.draft.alignment_edges);
+        assert!(
+            fresh.image.rgba == last.draft.image.rgba,
+            "kept pairs must give the fresh registration's composite"
+        );
+    }
+
+    /// Above 512 planes the proof keeps an even subsample: every second
+    /// plane, the first always among them, and the planes it skips are not
+    /// read at all.
+    #[test]
+    fn a_long_capture_is_subsampled_evenly() {
+        let mut proof = Incremental::default();
+        for i in 0..=MAX_FRAMES {
+            proof
+                .add_image(scene_image(160, 120, 0.0, 0.0, 0.0), i, PathBuf::new())
+                .unwrap();
+            proof.received += 1;
+        }
+        assert_eq!(proof.stride, 2);
+        assert_eq!(proof.frames.len(), MAX_FRAMES / 2 + 1);
+        assert!(proof.frames.iter().all(|f| f.source_index % 2 == 0));
+        assert_eq!(proof.frames[0].source_index, 0);
+        let kept = proof.frames.len();
+        proof
+            .add_image(
+                scene_image(160, 120, 0.0, 0.0, 0.0),
+                MAX_FRAMES + 1,
+                PathBuf::new(),
+            )
+            .unwrap();
+        assert_eq!(proof.frames.len(), kept, "an odd plane is not kept");
+        // An odd plane is skipped unread (a missing file would warn).
+        let cancel = AtomicBool::new(false);
+        proof
+            .add_path(Path::new("missing-odd.ARW"), &cancel)
+            .unwrap();
+        assert!(proof.warnings.is_empty());
+        proof
+            .add_path(Path::new("missing-even.ARW"), &cancel)
+            .unwrap();
+        assert_eq!(proof.warnings.len(), 1, "{:?}", proof.warnings);
+        assert_eq!(proof.received, MAX_FRAMES + 3);
+    }
+
+    #[test]
+    fn the_proof_is_due_after_four_planes_or_five_seconds() {
+        let mut proof = Incremental::default();
+        let start = Instant::now();
+        proof
+            .add_image(scene_image(160, 120, 0.0, 0.0, 0.0), 0, PathBuf::new())
+            .unwrap();
+        assert!(!proof.due(start), "one plane is not a proof");
+        proof
+            .add_image(scene_image(160, 120, 0.0, 0.0, 0.0), 1, PathBuf::new())
+            .unwrap();
+        assert!(proof.due(start));
+        proof.fresh = 0;
+        proof.last_update = Some(start);
+        proof
+            .add_image(scene_image(160, 120, 0.0, 0.0, 0.0), 2, PathBuf::new())
+            .unwrap();
+        assert!(!proof.due(start + Duration::from_secs(1)));
+        assert!(proof.due(start + PROOF_EVERY));
+        for i in 3..6 {
+            proof
+                .add_image(scene_image(160, 120, 0.0, 0.0, 0.0), i, PathBuf::new())
+                .unwrap();
+        }
+        assert!(proof.due(start + Duration::from_secs(1)), "four new planes");
+    }
+
+    /// The proof's cost through a 512-plane capture at the A7CR preview size
+    /// (480 x 320 at `DRAFT_SIDE`): every update as it falls due. Run with
+    /// `cargo test --release -p strehl-ui proof_update_cost -- --ignored --nocapture`.
+    #[test]
+    #[ignore = "benchmark: prints the proof's update times"]
+    fn proof_update_cost() {
+        let cancel = AtomicBool::new(false);
+        let mut proof = Incremental::default();
+        let (mut times, mut peak) = (Vec::new(), 0usize);
+        let started = Instant::now();
+        for i in 0..512 {
+            let t = i as f64 / 64.0;
+            proof
+                .add_image(
+                    scene_image(480, 320, 1.5 * t.sin(), 0.8 * t, 0.001 * t),
+                    i,
+                    PathBuf::new(),
+                )
+                .unwrap();
+            proof.received += 1;
+            peak = peak.max(proof.resident);
+            if proof.fresh >= PROOF_EVERY_PLANES || (proof.revision == 0 && proof.frames.len() >= 2)
+            {
+                let at = Instant::now();
+                let update = proof.update(&cancel).unwrap();
+                times.push((update.received, update.used, at.elapsed().as_secs_f64()));
+            }
+        }
+        let worst = times.iter().map(|t| t.2).fold(0.0, f64::max);
+        let last = times.last().unwrap();
+        println!(
+            "proof: {} updates in {:.1} s; worst update {:.3} s; last update {:.3} s over {} of {} planes (stride {}); peak resident {:.0} MiB; pairs kept {}",
+            times.len(),
+            started.elapsed().as_secs_f64(),
+            worst,
+            last.2,
+            last.1,
+            last.0,
+            proof.stride,
+            peak as f64 / 1048576.0,
+            proof.edges.len()
+        );
+        for (received, used, seconds) in times.iter().step_by(16) {
+            println!("  at {received:>3} planes: {used:>3} used, {seconds:.3} s");
+        }
+    }
+
+    /// A TIFF container holding one camera JPEG, as a RAW's embedded preview.
+    fn preview_file(path: &Path, image: &PreviewImage) {
+        let rgb: Vec<u8> = image
+            .rgba
+            .as_chunks::<4>()
+            .0
+            .iter()
+            .flat_map(|p| [p[0], p[1], p[2]])
+            .collect();
+        let mut jpeg = Vec::new();
+        image::codecs::jpeg::JpegEncoder::new_with_quality(&mut jpeg, 95)
+            .encode(
+                &rgb,
+                image.size[0] as u32,
+                image.size[1] as u32,
+                image::ExtendedColorType::Rgb8,
+            )
+            .unwrap();
+        let mut bytes = vec![0_u8; 128];
+        bytes[..8].copy_from_slice(&[b'I', b'I', 42, 0, 8, 0, 0, 0]);
+        bytes[8..10].copy_from_slice(&2_u16.to_le_bytes());
+        for (i, (tag, value)) in [(513_u16, 128_u32), (514, jpeg.len() as u32)]
+            .into_iter()
+            .enumerate()
+        {
+            let entry = &mut bytes[10 + 12 * i..22 + 12 * i];
+            entry[..2].copy_from_slice(&tag.to_le_bytes());
+            entry[2..4].copy_from_slice(&4_u16.to_le_bytes());
+            entry[4..8].copy_from_slice(&1_u32.to_le_bytes());
+            entry[8..12].copy_from_slice(&value.to_le_bytes());
+        }
+        bytes.extend(jpeg);
+        std::fs::write(path, bytes).unwrap();
+    }
+
+    /// The worker end to end: planes offered as files arrive as proofs, the
+    /// last covering every plane once the capture is finished.
+    #[test]
+    fn the_proof_job_reads_planes_as_they_arrive() {
+        let dir = tempfile::tempdir().unwrap();
+        let job = ProofJob::start();
+        let deadline = Instant::now() + Duration::from_secs(60);
+        let mut latest = None;
+        for i in 0..6 {
+            let (dx, dy, g) = drift(i);
+            let path = dir.path().join(format!("frame-{i:06}.ARW"));
+            preview_file(&path, &scene_image(480, 320, dx, dy, g));
+            assert!(job.add_frame(path));
+        }
+        job.finish();
+        while latest.as_ref().is_none_or(|u: &ProofUpdate| u.used < 6) {
+            assert!(Instant::now() < deadline, "no proof of six planes");
+            match job.poll() {
+                Some(ProofEvent::Updated(update)) => latest = Some(*update),
+                Some(ProofEvent::Failed(error)) => panic!("{error}"),
+                None => std::thread::sleep(Duration::from_millis(20)),
+            }
+        }
+        let update = latest.unwrap();
+        assert_eq!((update.received, update.stride), (6, 1));
+        assert_eq!(update.draft.aligned_frames, 6);
+        assert_eq!(update.draft.image.size, [480, 320]);
+        assert!(PROOF_CAUTION.contains("not the RAW"));
     }
 
     #[test]

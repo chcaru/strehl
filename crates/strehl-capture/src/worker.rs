@@ -131,6 +131,10 @@ pub enum Action {
         positions: Option<Vec<u16>>,
         /// Managed power wakes the camera and light but leaves them on.
         keep_power_on: bool,
+        /// A test shot (H2, Studio 2): the manifest says `capture_kind`
+        /// "test", so the PC neither follows nor lists it as a stack, and
+        /// error correction does not hold it for a check nobody makes.
+        test: bool,
     },
     Exposure {
         iso: u64,
@@ -716,6 +720,7 @@ fn run(
                             root,
                             positions,
                             keep_power_on,
+                            test,
                         } => {
                             ensure!(
                                 s.lock().unwrap().phase.can_edit(),
@@ -741,6 +746,7 @@ fn run(
                                     positions,
                                     options,
                                     warmup: power.as_ref().map_or(0, |rig| rig.warmup_seconds()),
+                                    test,
                                 },
                             )?;
                         }
@@ -802,6 +808,7 @@ fn run(
                                     positions: None,
                                     options: recipe.power,
                                     warmup: recipe.warmup_seconds,
+                                    test: false,
                                 },
                             )?;
                         }
@@ -935,6 +942,7 @@ struct StackRun {
     positions: Option<Vec<u16>>,
     options: StackPower,
     warmup: u32,
+    test: bool,
 }
 fn run_stack(
     camera: &mut Option<Box<dyn Camera>>,
@@ -955,13 +963,21 @@ fn run_stack(
         );
     }
     let lamp = rig.filter(|_| p.light_on).map(|r| (r, run.warmup));
+    ensure!(
+        !run.test || run.positions.is_some(),
+        "A test shot is one focus position"
+    );
+    let explicit = run.positions.map(|positions| Explicit {
+        positions,
+        test: run.test,
+    });
     capture(
         camera.as_mut().context("Connect a camera first")?.as_mut(),
         s,
         control,
         run.plan,
         run.root,
-        run.positions,
+        explicit,
         lamp,
     )?;
     // Both writes follow the final durable journal receipt. Attempt the other
@@ -992,25 +1008,38 @@ fn run_stack(
     }
     Ok(())
 }
+/// Focus positions given with a capture: a burst, retakes or a test shot.
+struct Explicit {
+    positions: Vec<u16>,
+    /// A test shot (H2): one position, journalled as `capture_kind` "test".
+    test: bool,
+}
 fn capture(
     c: &mut dyn Camera,
     s: &Shared,
     control: &AtomicU8,
     plan: Plan,
     root: PathBuf,
-    explicit: Option<Vec<u16>>,
+    explicit: Option<Explicit>,
     managed: Option<(&RigPower, u32)>,
 ) -> Result<()> {
     plan.validate()?;
-    let kind = if explicit.is_some() {
+    let test = explicit.as_ref().is_some_and(|e| e.test);
+    ensure!(
+        !test || explicit.as_ref().is_some_and(|e| e.positions.len() == 1),
+        "A test shot is one focus position"
+    );
+    let kind = if test {
+        "test"
+    } else if explicit.is_some() {
         "positions"
     } else {
         "plan"
     };
     let positions = match explicit {
-        Some(positions) => {
-            validate_positions(&plan, &positions)?;
-            positions
+        Some(e) => {
+            validate_positions(&plan, &e.positions)?;
+            e.positions
         }
         None => plan.positions()?,
     };
@@ -1060,7 +1089,9 @@ fn capture(
     let mut completed = 0;
     let mut light_requested = false;
     // Error correction needs the PC's checker, so only a run stored there.
-    let mut verify = host && s.lock().unwrap().error_correction;
+    // A test shot is never checked there: holding it for a verdict would
+    // only add the 15 s wait before error correction gives up.
+    let mut verify = host && !test && s.lock().unwrap().error_correction;
     let result = (|| -> Result<bool> {
         if let Some((rig, warmup)) = managed {
             update(s, |v| {
@@ -1523,19 +1554,37 @@ pub fn validate_positions(plan: &Plan, positions: &[u16]) -> Result<()> {
     Ok(())
 }
 
+/// Why the camera's exposure settings cannot start a stack, or `None`: M
+/// mode, a fixed ISO and a timed shutter. The one rule behind both the check
+/// before every capture and survey ([`validate_exposure`]) and the state's
+/// `exposure.problem` (H1, Studio 2), so a controller can show it before Start.
+pub fn exposure_problem(status: &Value) -> Option<&'static str> {
+    if property(status, "ExposureProgramMode") != Some(1) {
+        return Some("Set the camera to M (manual exposure) before starting a stack");
+    }
+    if !property(status, "IsoSensitivity").is_some_and(|v| v & 0x00ff_ffff != 0x00ff_ffff) {
+        return Some("Choose fixed ISO before starting a stack");
+    }
+    if !property(status, "ShutterSpeed").is_some_and(|v| v != 0) {
+        return Some("Choose a timed shutter exposure; Bulb is not supported");
+    }
+    None
+}
+/// The camera's exposure program as a letter (`M`, `P`, `A`, `S`), `other`
+/// for any other program, or `None` when the camera does not report one.
+pub fn exposure_mode(status: &Value) -> Option<&'static str> {
+    property(status, "ExposureProgramMode").map(|mode| match mode {
+        1 => "M",
+        2 => "P",
+        3 => "A",
+        4 => "S",
+        _ => "other",
+    })
+}
 fn validate_exposure(status: &Value) -> Result<()> {
-    ensure!(
-        property(status, "ExposureProgramMode") == Some(1),
-        "Set the camera to M (manual exposure) before starting a stack"
-    );
-    ensure!(
-        property(status, "IsoSensitivity").is_some_and(|v| v & 0x00ff_ffff != 0x00ff_ffff),
-        "Choose fixed ISO before starting a stack"
-    );
-    ensure!(
-        property(status, "ShutterSpeed").is_some_and(|v| v != 0),
-        "Choose a timed shutter exposure; Bulb is not supported"
-    );
+    if let Some(problem) = exposure_problem(status) {
+        bail!(problem);
+    }
     Ok(())
 }
 fn validate_capture(reply: &Value) -> Result<()> {
@@ -1887,6 +1936,14 @@ mod tests {
         }
     }
     fn checked_run(camera: &mut Checked, error_correction: bool) -> (Snapshot, String) {
+        checked_positions(camera, error_correction, None, false)
+    }
+    fn checked_positions(
+        camera: &mut Checked,
+        error_correction: bool,
+        positions: Option<Vec<u16>>,
+        test: bool,
+    ) -> (Snapshot, String) {
         let temp = tempfile::tempdir().unwrap();
         let shared = Arc::new(Mutex::new(Snapshot {
             error_correction,
@@ -1904,7 +1961,7 @@ mod tests {
             &AtomicU8::new(RUN),
             plan,
             temp.path().into(),
-            None,
+            positions.map(|positions| Explicit { positions, test }),
             None,
         )
         .unwrap();
@@ -1944,6 +2001,68 @@ mod tests {
         assert_eq!(journal.matches("\"event\":\"retake_focus\"").count(), 1);
         assert!(journal.contains("\"group\":\"ptp-test-2\""));
         assert_eq!(journal.matches("\"event\":\"capture_buffered\"").count(), 4);
+    }
+    /// A test shot (H2) is never held for a check: the PC does not follow
+    /// it, so asking would only wait out error correction's 15 s. The same
+    /// position as a burst is asked, so the switch is what spares it.
+    #[test]
+    fn a_test_shot_is_not_held_for_a_check() {
+        let mut camera = Checked::new(vec![], true);
+        let (s, journal) = checked_positions(&mut camera, true, Some(vec![60001]), true);
+        assert_eq!((camera.captures, s.completed), (1, 1));
+        assert!(camera.asked.is_empty(), "{:?}", camera.asked);
+        assert!(!journal.contains("error_correction_off"));
+        let mut camera = Checked::new(vec![], true);
+        let (_, _) = checked_positions(&mut camera, true, Some(vec![60001]), false);
+        assert_eq!(camera.asked, ["ptp-test-1"], "a burst is checked");
+        // A test shot is one position, refused before any focus move.
+        let mut camera = Checked::new(vec![], true);
+        let shared = Arc::new(Mutex::new(Snapshot::default()));
+        let temp = tempfile::tempdir().unwrap();
+        let error = capture(
+            &mut camera,
+            &shared,
+            &AtomicU8::new(RUN),
+            Plan {
+                start: 60000,
+                end: 60002,
+                ..Plan::default()
+            },
+            temp.path().into(),
+            Some(Explicit {
+                positions: vec![60000, 60001],
+                test: true,
+            }),
+            None,
+        )
+        .unwrap_err();
+        assert!(error.to_string().contains("one focus position"));
+        assert!(camera.focuses.is_empty());
+        assert_eq!(std::fs::read_dir(temp.path()).unwrap().count(), 0);
+    }
+    /// H1: the state's problem is the check's own message, rule by rule.
+    #[test]
+    fn exposure_problem_names_the_first_rule_the_check_enforces() {
+        let mut demo = Demo::default();
+        let status = demo.status().unwrap();
+        assert_eq!(exposure_problem(&status), None);
+        assert_eq!(exposure_mode(&status), Some("M"));
+        for (key, value, mode) in [
+            ("ExposureProgramMode", 2, Some("P")),
+            ("IsoSensitivity", 0x00ff_ffff, Some("M")),
+            ("ShutterSpeed", 0, Some("M")),
+        ] {
+            let mut bad = status.clone();
+            bad["properties"][key]["value"] = json!(value);
+            let problem = exposure_problem(&bad).unwrap();
+            assert_eq!(
+                validate_exposure(&bad).unwrap_err().to_string(),
+                problem,
+                "{key}"
+            );
+            assert_eq!(exposure_mode(&bad), mode);
+        }
+        assert_eq!(exposure_mode(&Value::Null), None);
     }
     #[test]
     fn error_correction_never_holds_the_next_plane_for_a_check() {
@@ -2083,6 +2202,7 @@ mod tests {
                 root: temp.path().into(),
                 positions: Some(vec![60605; 3]),
                 keep_power_on: false,
+                test: false,
             },
         )
         .unwrap();
@@ -2305,6 +2425,7 @@ mod tests {
                 root: temp.path().to_owned(),
                 positions: None,
                 keep_power_on: false,
+                test: false,
             },
         )
         .unwrap();
@@ -2350,6 +2471,7 @@ mod tests {
                 root: temp.path().to_owned(),
                 positions: None,
                 keep_power_on: false,
+                test: false,
             },
         )
         .unwrap();
@@ -2418,6 +2540,7 @@ mod tests {
                     root: temp.path().into(),
                     positions: None,
                     keep_power_on: false,
+                    test: false,
                 },
             )
             .unwrap();
@@ -2434,6 +2557,7 @@ mod tests {
                         root: temp.path().into(),
                         positions: None,
                         keep_power_on: false,
+                        test: false,
                     }
                 )
                 .is_err()
@@ -2474,6 +2598,7 @@ mod tests {
                     root: temp.path().into(),
                     positions: None,
                     keep_power_on: false,
+                    test: false,
                 },
             )
             .unwrap();
