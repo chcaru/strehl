@@ -42,6 +42,8 @@ open station, and the window's last undo.
 | Ctrl Z / Ctrl Shift Z | everywhere | undo and redo the latest change, whichever pane made it |
 | Ctrl O | everywhere | open source photos |
 | Enter, F2 | Library | open the selected subject; rename it |
+| Ctrl click, Shift click, Ctrl A | Library, a subject | select subjects or stacks; Escape clears |
+| Delete | Library, a subject | delete what is selected (it asks first) |
 | Enter, N | a subject | open the stack; new stack of this subject |
 | Hover, click | Stack | hover the photograph for a core sample, the depth rail for a plane; click to pin the sample or hold the plane |
 | ← → | Stack | step a held plane; Escape lets it go |
@@ -69,6 +71,22 @@ log open in the inspector over the station you are on; **Close** returns it.
    Collections and subjects are library objects: reorganising them never moves
    your source photographs. The storage card at the bottom shows the capture
    volume's free space; **Review storage…** opens Capture.
+
+   Right-click a card or list row to open, rename, stack, **Move to
+   collection**, **Merge into** another subject, show its photographs or renders
+   in Explorer, or **Delete…**; a stack row on a subject page has the same menu
+   with **Move to subject**. Ctrl click or Shift click selects several, and the
+   bar along the bottom moves, merges or deletes them; cards can also be dragged
+   onto a collection. **Delete…** asks first and says what happens: the
+   subjects and stacks leave the library at once, with their renders, versions
+   and export records (Ctrl Z puts them back). Files are deleted only if you
+   tick them: Strehl's render folders, and separately the source photographs,
+   which need a second confirmation. Each goes to the Recycle Bin when the bin
+   can hold it, and is otherwise deleted permanently; the confirmation says
+   which before anything happens. Only files the stack recorded go (in a
+   capture folder, also its records), and a folder only once nothing else is in
+   it. Stacks that are stacking, waiting or being captured stay, the open
+   stack keeps its files, and a capture without its result is never deleted.
 2. **A subject.** Its page shows the picture, notes, **Optics and scale** (camera,
    lens, magnification and the scale bar's calibration; **Set optics and
    scale…**), what is on disk, every stack with its renders and versions, and a

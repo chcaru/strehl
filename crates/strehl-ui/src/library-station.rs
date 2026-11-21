@@ -14,6 +14,7 @@
 )]
 use crate::{
     jobs::Task,
+    library_menu::{self as menu, BarAction, ContextMenu, MenuEntry, MenuOutcome, Selection},
     library_paint::{self as paint, ButtonStyle, Glyph, LibraryPalette, Mark},
     library_previews::{LibraryPreviews, TILE_SIDE},
     workspace_history::{
@@ -96,6 +97,32 @@ pub(crate) enum LibraryIntent {
     /// Stack every stack of this subject that has no render yet, through
     /// the stack queue.
     QueueSubject(NodeId),
+    /// Ask to delete these subjects and stacks: the confirmation dialog says
+    /// what leaves the library and, if chosen, what is deleted on disk.
+    Delete(Vec<NodeId>),
+    /// Move stacks into a subject.
+    MoveStacks {
+        stacks: Vec<NodeId>,
+        subject: NodeId,
+    },
+    /// Move stacks into a new subject beside the first one's subject.
+    MoveStacksToNewSubject(Vec<NodeId>),
+    /// Move subjects into a collection.
+    MoveSubjects {
+        subjects: Vec<NodeId>,
+        collection: NodeId,
+    },
+    /// Move subjects into a new collection.
+    MoveSubjectsToNewCollection(Vec<NodeId>),
+    /// Merge `others` into `into`: their stacks move to it and they leave.
+    MergeSubjects {
+        into: NodeId,
+        others: Vec<NodeId>,
+    },
+    /// Show a subject's or a stack's photographs folder in Explorer.
+    ShowSources(NodeId),
+    /// Show a subject's or a stack's newest render folder in Explorer.
+    ShowRenders(NodeId),
 }
 
 /// The running capture, as the shell describes it.
@@ -133,6 +160,8 @@ pub(crate) struct LibraryInputs<'a> {
     pub signatures: Option<&'a HashMap<NodeId, Vec<f32>>>,
     /// A stack is rendering: stacking more waits in the queue.
     pub stacking: bool,
+    /// Files being deleted: (folders done, folders).
+    pub deleting: Option<(usize, usize)>,
 }
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
@@ -270,7 +299,7 @@ impl LibraryModel {
             // The chosen picture, then the newest stacks' renders, then sources.
             let mut by_activity = stacks.clone();
             by_activity.sort_by_key(|id| {
-                std::cmp::Reverse(index.stacks.get(id).map_or(0, |life| life.last_activity))
+                std::cmp::Reverse(index.stacks.get(id).map_or(0, |life| life.last_dated()))
             });
             let mut pictures: Vec<(PathBuf, bool)> = meta
                 .and_then(|m| m.hero.clone())
@@ -301,8 +330,11 @@ impl LibraryModel {
                 }
             }
             pictures.truncate(6);
-            let last = if summary.last_activity > 0 {
-                summary.last_activity
+            // Its stacks' own dates (renders, versions, exports, captures);
+            // the subject's creation only when they record none. Never now.
+            let dated = summary.last_activity.max(summary.captured_at);
+            let last = if dated > 0 {
+                dated
             } else {
                 meta.map_or(0, |m| m.created)
             };
@@ -519,6 +551,28 @@ pub(crate) struct LibraryStation {
     /// List rows painted in the last frame (their signatures are wanted).
     painted: Vec<NodeId>,
     sparks: paint::SparkCache,
+    /// Ctrl or Shift click, Ctrl A: what bulk actions apply to.
+    pub selection: Selection,
+    /// The right-click menu (or the selection bar's), while open.
+    context: Option<ContextMenu>,
+    /// A press that dismissed the menu is not also a click on a card.
+    swallow_click: bool,
+    /// The first card painted last frame (offscreen menus open on it).
+    first_card: Option<(NodeId, Rect)>,
+}
+
+/// Subjects dragged from the grid towards a collection.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub(crate) struct DraggedSubjects(pub Vec<NodeId>);
+
+/// What a card or list row reported this frame.
+#[derive(Clone, Debug, PartialEq)]
+enum CardAction {
+    Intent(LibraryIntent),
+    /// A primary click, with the modifiers held.
+    Click(NodeId, egui::Modifiers),
+    /// A secondary click: the context menu at the pointer.
+    Menu(NodeId, Pos2),
 }
 
 impl LibraryStation {
@@ -577,7 +631,52 @@ impl LibraryStation {
             let list = model.select(self.filter, &self.query, self.sort, rig);
             self.list = Some((list_key, list));
             self.stats.list_builds += 1;
+            // Only what is shown stays selected (a removal, a filter).
+            if !self.selection.is_empty() {
+                let visible = self.visible();
+                self.selection.retain_in(&visible);
+            }
         }
+    }
+
+    /// Offscreen look checks: open the first card's menu, with its first
+    /// submenu when `sub`. False until a card has been painted.
+    pub(crate) fn launch_menu(
+        &mut self,
+        ctx: &egui::Context,
+        catalog: &Catalog,
+        sub: bool,
+    ) -> bool {
+        let Some((id, rect)) = self.first_card else {
+            return false;
+        };
+        let targets = self.selection.targets(id);
+        let mut open = ContextMenu::new(
+            ctx,
+            rect.center(),
+            menu::subject_menu(catalog, &targets, menu::SubjectFlags::default()),
+        );
+        if sub {
+            open.open_sub = open
+                .entries
+                .iter()
+                .position(|e| matches!(e, MenuEntry::Sub { .. }));
+        }
+        self.context = Some(open);
+        true
+    }
+    /// Offscreen look checks: select the first `count` cards shown.
+    pub(crate) fn launch_select(&mut self, count: usize) -> bool {
+        let visible = self.visible();
+        if visible.is_empty() {
+            return false;
+        }
+        self.selection.set(&visible[..count.min(visible.len())]);
+        true
+    }
+    /// The open menu's entries (tests).
+    pub(crate) fn menu_entries(&self) -> Option<&[MenuEntry]> {
+        self.context.as_ref().map(|c| c.entries.as_slice())
     }
 
     pub(crate) fn show(&mut self, ui: &mut Ui, inputs: LibraryInputs<'_>) -> Option<LibraryIntent> {
@@ -590,6 +689,7 @@ impl LibraryStation {
             storage,
             signatures,
             stacking,
+            deleting,
         } = inputs;
         let ctx = ui.ctx().clone();
         previews.poll(&ctx);
@@ -602,7 +702,22 @@ impl LibraryStation {
         let main = Rect::from_min_max(Pos2::new(side.right(), area.top()), area.max);
         let mut intent = None;
         let now = timestamp();
-        intent = intent.or(self.side_list(ui, side, palette, rig, storage));
+        // The context menu first: a press outside it closes it and is not
+        // also a click on the card beneath.
+        if let Some(open) = self.context.as_mut() {
+            match open.show(&ctx, palette, "library") {
+                MenuOutcome::Open => {}
+                MenuOutcome::Closed => {
+                    self.context = None;
+                    self.swallow_click = true;
+                }
+                MenuOutcome::Chosen(chosen) => {
+                    self.context = None;
+                    intent = Some(chosen);
+                }
+            }
+        }
+        intent = intent.or(self.side_list(ui, side, palette, rig, (storage, deleting)));
         intent = intent.or(self.header(ui, main, palette));
         let mut top = main.top() + PAD_TOP + 28.0 + 18.0;
         if let Some(rig) = rig {
@@ -613,11 +728,17 @@ impl LibraryStation {
             intent = intent.or(rig_strip(ui, strip, rig, palette));
             top = strip.bottom() + 18.0;
         }
+        let bar = (!self.selection.is_empty()).then(|| {
+            Rect::from_min_max(
+                Pos2::new(main.left(), main.bottom() - menu::BAR_HEIGHT),
+                main.max,
+            )
+        });
         let grid = Rect::from_min_max(
             Pos2::new(main.left() + PAD_X, top),
-            Pos2::new(main.right() - PAD_X, main.bottom()),
+            Pos2::new(main.right() - PAD_X, bar.map_or(main.bottom(), |b| b.top())),
         );
-        intent = intent.or(self.grid(
+        let action = self.grid(
             ui,
             grid,
             previews,
@@ -625,11 +746,110 @@ impl LibraryStation {
             rig,
             (now, stacking),
             signatures,
-        ));
+        );
+        let flags = menu::SubjectFlags {
+            stacking,
+            capturing: rig_subject,
+        };
+        match action {
+            Some(CardAction::Intent(found)) => intent = intent.or(Some(found)),
+            Some(CardAction::Click(id, modifiers)) if !self.swallow_click => {
+                let visible = self.visible();
+                self.selected = Some(id);
+                if !self.selection.click(id, modifiers, &visible) {
+                    self.selection.clear();
+                    intent = intent.or(Some(LibraryIntent::OpenSubject(id)));
+                }
+            }
+            Some(CardAction::Menu(id, at)) => {
+                self.selected = Some(id);
+                let targets = self.selection.targets(id);
+                self.context = Some(ContextMenu::new(
+                    &ctx,
+                    at,
+                    menu::subject_menu(catalog, &targets, flags),
+                ));
+            }
+            Some(CardAction::Click(..)) | None => {}
+        }
+        if self.swallow_click && !ui.input(|i| i.pointer.any_down()) {
+            self.swallow_click = false;
+        }
+        if let Some(bar) = bar {
+            intent = intent.or(self.selection_bar(ui, bar, catalog, palette));
+        }
+        dragged_label(ui, palette);
         intent = intent.or(self.menu(ui, palette));
         intent = intent.or(self.keys(ui));
         intent = intent.or(self.drops(ui, main, palette));
+        // A menu opened this pass is shown in it (its sizing pass).
+        if let Some(open) = self.context.as_mut().filter(|c| c.is_new(&ctx)) {
+            let _ = open.show(&ctx, palette, "library");
+        }
         intent
+    }
+
+    /// The selected subjects' actions along the bottom of the grid.
+    fn selection_bar(
+        &mut self,
+        ui: &mut Ui,
+        bar: Rect,
+        catalog: &Catalog,
+        palette: &LibraryPalette,
+    ) -> Option<LibraryIntent> {
+        let count = self.selection.len();
+        let caption = paint::plural(count, "subject selected", "subjects selected");
+        let move_to = BarAction {
+            label: "Move to collection",
+            style: ButtonStyle::Outline,
+        };
+        let merge = BarAction {
+            label: "Merge into one",
+            style: ButtonStyle::Outline,
+        };
+        let delete = BarAction {
+            label: "Delete…",
+            style: ButtonStyle::Danger,
+        };
+        let several = [move_to, merge, delete];
+        let actions: &[BarAction<'_>] = if count > 1 {
+            &several
+        } else {
+            &[several[0], several[2]]
+        };
+        let (index, button) =
+            menu::selection_bar(ui, bar, "library-selection", &caption, actions, palette)?;
+        if index == actions.len() {
+            self.selection.clear();
+            return None;
+        }
+        // Only a click copies the selection.
+        let ids = self.selection.ids().to_vec();
+        match actions[index].label {
+            "Delete…" => Some(LibraryIntent::Delete(ids)),
+            label => {
+                // The same choices as the right-click menu's submenu, as a
+                // menu above the button.
+                let entries = menu::subject_menu(catalog, &ids, menu::SubjectFlags::default());
+                let items = entries.into_iter().find_map(|e| match e {
+                    MenuEntry::Sub { label: l, items } if l == label => Some(items),
+                    _ => None,
+                })?;
+                let entries: Vec<MenuEntry> = items
+                    .into_iter()
+                    .map(|item| {
+                        let label = if item.detail.is_empty() {
+                            item.label
+                        } else {
+                            format!("{} · {}", item.label, item.detail)
+                        };
+                        MenuEntry::item(label, item.intent)
+                    })
+                    .collect();
+                self.context = Some(ContextMenu::above(ui.ctx(), button, entries));
+                None
+            }
+        }
     }
 
     fn side_list(
@@ -638,7 +858,7 @@ impl LibraryStation {
         side: Rect,
         palette: &LibraryPalette,
         rig: Option<&RigCapture>,
-        storage: Option<&StorageCard>,
+        (storage, deleting): (Option<&StorageCard>, Option<(usize, usize)>),
     ) -> Option<LibraryIntent> {
         let painter = ui.painter().clone();
         painter.rect_filled(side, CornerRadius::ZERO, palette.panel);
@@ -678,7 +898,7 @@ impl LibraryStation {
                    count: Option<usize>,
                    on: bool,
                    accent: bool|
-         -> bool {
+         -> egui::Response {
             let rect = Rect::from_min_size(
                 Pos2::new(side.left(), *y),
                 Vec2::new(side.width() - 1.0, 30.0),
@@ -734,7 +954,16 @@ impl LibraryStation {
                     None,
                 );
             }
-            response.clicked()
+            response
+        };
+        // A collection row takes subjects dragged from the grid.
+        let drop_target = |response: &egui::Response| -> Option<Vec<NodeId>> {
+            if response.dnd_hover_payload::<DraggedSubjects>().is_some() {
+                paint::outline(&painter, response.rect.shrink(1.0), 1.0, palette.accent);
+            }
+            response
+                .dnd_release_payload::<DraggedSubjects>()
+                .map(|dragged| dragged.0.clone())
         };
         let filter = self.filter;
         if row(
@@ -746,7 +975,9 @@ impl LibraryStation {
             Some(model.cards.len()),
             filter == LibraryFilter::All,
             false,
-        ) {
+        )
+        .clicked()
+        {
             chosen = Some(LibraryFilter::All);
         }
         if row(
@@ -758,7 +989,9 @@ impl LibraryStation {
             Some(usize::from(rig.is_some())),
             filter == LibraryFilter::OnRig,
             rig.is_some(),
-        ) {
+        )
+        .clicked()
+        {
             chosen = Some(LibraryFilter::OnRig);
         }
         y += 14.0;
@@ -803,7 +1036,9 @@ impl LibraryStation {
                 Some(count),
                 filter == value,
                 false,
-            ) {
+            )
+            .clicked()
+            {
                 chosen = Some(value);
             }
         }
@@ -817,7 +1052,7 @@ impl LibraryStation {
                 break;
             }
             let value = LibraryFilter::Collection(collection.id);
-            if row(
+            let response = row(
                 ui,
                 &mut y,
                 &format!("collection-{}", collection.id),
@@ -826,12 +1061,19 @@ impl LibraryStation {
                 Some(collection.subjects),
                 filter == value,
                 false,
-            ) {
+            );
+            if let Some(subjects) = drop_target(&response) {
+                intent = Some(LibraryIntent::MoveSubjects {
+                    subjects,
+                    collection: collection.id,
+                });
+            }
+            if response.clicked() {
                 chosen = Some(value);
             }
         }
-        if y + 30.0 <= limit
-            && row(
+        if y + 30.0 <= limit {
+            let response = row(
                 ui,
                 &mut y,
                 "new-collection",
@@ -840,14 +1082,27 @@ impl LibraryStation {
                 None,
                 false,
                 false,
-            )
-        {
-            intent = Some(LibraryIntent::NewCollection);
+            );
+            if let Some(subjects) = drop_target(&response) {
+                intent = Some(LibraryIntent::MoveSubjectsToNewCollection(subjects));
+            } else if response.clicked() {
+                intent = Some(LibraryIntent::NewCollection);
+            }
         }
         if let Some(filter) = chosen {
             self.filter = filter;
         }
         let review = storage_card(ui, side, model.source_bytes, storage, palette);
+        if let Some((done, total)) = deleting {
+            paint::caps(
+                &painter,
+                Pos2::new(side.left() + 16.0, side.bottom() - 172.0),
+                Align2::LEFT_CENTER,
+                &format!("Deleting · {done} of {total} folders"),
+                10.5,
+                palette.accent,
+            );
+        }
         intent.or(review)
     }
 
@@ -1131,8 +1386,9 @@ impl LibraryStation {
         rig: Option<&RigCapture>,
         (now, stacking): (u64, bool),
         signatures: Option<&HashMap<NodeId, Vec<f32>>>,
-    ) -> Option<LibraryIntent> {
+    ) -> Option<CardAction> {
         self.painted.clear();
+        self.first_card = None;
         let (Some(model), Some((list_key, list))) = (&self.model, &self.list) else {
             return None;
         };
@@ -1170,6 +1426,8 @@ impl LibraryStation {
         let sources = &self.sources;
         let sparks = &mut self.sparks;
         let painted_rows = &mut self.painted;
+        let marked = &self.selection;
+        let first_card = &mut self.first_card;
         let mut offset = self.last_offset;
         ui.scope_builder(egui::UiBuilder::new().max_rect(grid), |ui| {
             egui::ScrollArea::vertical()
@@ -1205,13 +1463,23 @@ impl LibraryStation {
                                 capturing: rig_subject == Some(card.id),
                                 moved,
                                 selected: selected == Some(card.id),
+                                marked: marked.contains(card.id),
                                 now,
                                 stacking,
                             };
+                            if first_card.is_none() {
+                                *first_card = Some((card.id, rect));
+                            }
                             let found = match view {
-                                LibraryView::Grid => {
-                                    paint_card(ui, rect, card, texture.as_ref(), state, palette)
-                                }
+                                LibraryView::Grid => paint_card(
+                                    ui,
+                                    rect,
+                                    card,
+                                    texture.as_ref(),
+                                    state,
+                                    palette,
+                                    marked,
+                                ),
                                 LibraryView::List => {
                                     painted_rows.push(card.id);
                                     let signature =
@@ -1224,6 +1492,7 @@ impl LibraryStation {
                                         state,
                                         palette,
                                         (sparks, signature),
+                                        marked,
                                     )
                                 }
                             };
@@ -1267,14 +1536,14 @@ impl LibraryStation {
         self.last_offset = offset;
         self.stats.cards_painted = painted;
         self.stats.prefetched = prefetched;
-        if let Some(LibraryIntent::OpenSubject(id)) = &intent {
+        if let Some(CardAction::Intent(LibraryIntent::OpenSubject(id))) = &intent {
             self.selected = Some(*id);
         }
         intent
     }
 
     fn keys(&mut self, ui: &mut Ui) -> Option<LibraryIntent> {
-        if ui.ctx().wants_keyboard_input() || self.menu_open {
+        if ui.ctx().wants_keyboard_input() || self.menu_open || self.context.is_some() {
             return None;
         }
         let (left, right, up, down, enter, rename) = ui.input(|i| {
@@ -1287,13 +1556,39 @@ impl LibraryStation {
                 i.key_pressed(Key::F2),
             )
         });
-        if !(left || right || up || down || enter || rename) {
+        let (delete, all, escape) = ui.input(|i| {
+            (
+                i.key_pressed(Key::Delete),
+                i.modifiers.command && i.key_pressed(Key::A),
+                i.key_pressed(Key::Escape),
+            )
+        });
+        if !(left || right || up || down || enter || rename || delete || all || escape) {
+            return None;
+        }
+        if escape {
+            self.selection.clear();
             return None;
         }
         // Only a key press walks the list.
         let visible = self.visible();
         if visible.is_empty() {
             return None;
+        }
+        if all {
+            self.selection.set(&visible);
+            return None;
+        }
+        if delete {
+            let targets = if self.selection.is_empty() {
+                self.selected
+                    .filter(|id| visible.contains(id))
+                    .into_iter()
+                    .collect()
+            } else {
+                self.selection.ids().to_vec()
+            };
+            return (!targets.is_empty()).then_some(LibraryIntent::Delete(targets));
         }
         let columns = match self.view {
             LibraryView::Grid => {
@@ -1656,36 +1951,59 @@ fn rig_strip(
 struct CardState {
     capturing: bool,
     moved: Option<NodeId>,
+    /// The keyboard cursor.
     selected: bool,
+    /// In the multi-selection.
+    marked: bool,
     now: u64,
     /// A stack is rendering (the menu says "Stack next").
     stacking: bool,
 }
 
-/// Right-click on a subject with stacks to stack: stack them now, or next
-/// in the queue while another stack renders.
-fn stack_menu(
+/// A card's or row's pointer input: a click with its modifiers, the context
+/// menu (right-click), or the start of a drag towards a collection.
+fn card_input(
+    ui: &Ui,
     response: &egui::Response,
     card: &SubjectCard,
-    state: CardState,
-) -> Option<LibraryIntent> {
-    if card.summary.to_stack == 0 || state.capturing {
-        return None;
+    marked: &Selection,
+) -> Option<CardAction> {
+    if response.drag_started() {
+        response.dnd_set_drag_payload(DraggedSubjects(marked.targets(card.id)));
     }
-    let mut intent = None;
-    response.context_menu(|ui| {
-        let what = paint::plural(card.summary.to_stack, "stack", "stacks");
-        let label = if state.stacking {
-            format!("Stack next · {what}")
-        } else {
-            format!("Stack · {what}")
-        };
-        if ui.button(label).clicked() {
-            intent = Some(LibraryIntent::QueueSubject(card.id));
-            ui.close();
-        }
-    });
-    intent
+    if response.secondary_clicked() {
+        let at = response
+            .interact_pointer_pos()
+            .unwrap_or_else(|| response.rect.center());
+        return Some(CardAction::Menu(card.id, at));
+    }
+    (response.clicked() || response.double_clicked())
+        .then(|| CardAction::Click(card.id, ui.input(|i| i.modifiers)))
+}
+
+/// While subjects are dragged: what a drop on a collection would move.
+fn dragged_label(ui: &Ui, palette: &LibraryPalette) {
+    let Some(dragged) = egui::DragAndDrop::payload::<DraggedSubjects>(ui.ctx()) else {
+        return;
+    };
+    let Some(at) = ui.ctx().pointer_latest_pos() else {
+        return;
+    };
+    let painter = ui.ctx().layer_painter(egui::LayerId::new(
+        egui::Order::Tooltip,
+        egui::Id::new("library-drag"),
+    ));
+    let label = format!(
+        "Move {} to a collection",
+        paint::plural(dragged.0.len(), "subject", "subjects")
+    );
+    let galley = paint::caps_galley(&painter, &label, 10.5, palette.plate_ink);
+    let rect = Rect::from_min_size(
+        at + Vec2::new(14.0, 10.0),
+        galley.size() + Vec2::new(16.0, 10.0),
+    );
+    painter.rect_filled(rect, CornerRadius::ZERO, palette.plate);
+    painter.galley(rect.min + Vec2::new(8.0, 5.0), galley, palette.plate_ink);
 }
 
 /// The four bars' colours and the next-step words for a subject.
@@ -1772,14 +2090,15 @@ fn paint_card(
     texture: Option<&TextureHandle>,
     state: CardState,
     palette: &LibraryPalette,
-) -> Option<LibraryIntent> {
+    marked: &Selection,
+) -> Option<CardAction> {
     if !ui.is_rect_visible(rect) {
         return None;
     }
     let response = ui.interact(
         rect,
         ui.id().with(("library-card", card.id)),
-        Sense::click(),
+        Sense::click_and_drag(),
     );
     let painter = ui.painter().clone();
     let picture = Rect::from_min_size(rect.min, Vec2::new(rect.width(), PICTURE));
@@ -1787,7 +2106,7 @@ fn paint_card(
     if let Some(texture) = texture {
         LibraryPreviews::paint_cover(&painter, picture, texture);
     }
-    if state.capturing {
+    if state.capturing || state.marked {
         paint::outline(&painter, picture, 1.5, palette.accent);
     } else if response.hovered() || state.selected {
         paint::outline(
@@ -1800,6 +2119,9 @@ fn paint_card(
                 palette.ink_3
             },
         );
+    }
+    if state.marked {
+        menu::tick(&painter, picture.min, palette);
     }
     if let Some((mark, label, accent)) = card_badge(card, state) {
         paint::badge(
@@ -1846,12 +2168,9 @@ fn paint_card(
     if let Some(stack) = state.moved
         && locate_link(ui, &painter, words_rect, card.id, palette)
     {
-        return Some(LibraryIntent::Locate(stack));
+        return Some(CardAction::Intent(LibraryIntent::Locate(stack)));
     }
-    if let Some(intent) = stack_menu(&response, card, state) {
-        return Some(intent);
-    }
-    (response.clicked() || response.double_clicked()).then_some(LibraryIntent::OpenSubject(card.id))
+    card_input(ui, &response, card, marked)
 }
 
 /// "locate the sources…" as a link; true when clicked.
@@ -1878,6 +2197,7 @@ fn locate_link(
     link.clicked()
 }
 
+#[allow(clippy::too_many_arguments)]
 fn paint_row(
     ui: &mut Ui,
     rect: Rect,
@@ -1886,15 +2206,27 @@ fn paint_row(
     state: CardState,
     palette: &LibraryPalette,
     (sparks, signature): (&mut paint::SparkCache, Option<&[f32]>),
-) -> Option<LibraryIntent> {
+    marked: &Selection,
+) -> Option<CardAction> {
     if !ui.is_rect_visible(rect) {
         return None;
     }
     let rect = Rect::from_min_size(rect.min, Vec2::new(rect.width(), LIST_ROW));
-    let response = ui.interact(rect, ui.id().with(("library-row", card.id)), Sense::click());
+    let response = ui.interact(
+        rect,
+        ui.id().with(("library-row", card.id)),
+        Sense::click_and_drag(),
+    );
     let painter = ui.painter().clone();
-    if response.hovered() || state.selected {
+    if response.hovered() || state.selected || state.marked {
         painter.rect_filled(rect, CornerRadius::ZERO, palette.raised);
+    }
+    if state.marked {
+        painter.rect_filled(
+            Rect::from_min_size(rect.min, Vec2::new(2.0, rect.height())),
+            CornerRadius::ZERO,
+            palette.accent,
+        );
     }
     paint::hline(
         &painter,
@@ -1907,8 +2239,11 @@ fn paint_row(
     if let Some(texture) = texture {
         LibraryPreviews::paint_cover(&painter, picture, texture);
     }
-    if state.capturing {
+    if state.capturing || state.marked {
         paint::outline(&painter, picture, 1.5, palette.accent);
+    }
+    if state.marked {
+        menu::tick(&painter, picture.min, palette);
     }
     let x = picture.right() + 16.0;
     paint::text(
@@ -1944,7 +2279,7 @@ fn paint_row(
     if let Some(stack) = state.moved
         && locate_link(ui, &painter, words_rect, card.id, palette)
     {
-        return Some(LibraryIntent::Locate(stack));
+        return Some(CardAction::Intent(LibraryIntent::Locate(stack)));
     }
     if let Some((mark, label, accent)) = card_badge(card, state) {
         paint::badge(
@@ -1964,12 +2299,7 @@ fn paint_row(
     if spark.left() > words_rect.right() + 16.0 {
         paint::spark(&painter, spark, sparks, card.id, signature, palette);
     }
-    if let Some(intent) = stack_menu(&response, card, state) {
-        return Some(intent);
-    }
-    response
-        .clicked()
-        .then_some(LibraryIntent::OpenSubject(card.id))
+    card_input(ui, &response, card, marked)
 }
 
 #[cfg(test)]

@@ -111,6 +111,8 @@ struct Harness {
     waiting: Vec<NodeId>,
     busy: bool,
     rig: Option<RigCapture>,
+    /// Held while the next frames run (Ctrl or Shift clicks).
+    modifiers: Modifiers,
 }
 impl Harness {
     fn new() -> Self {
@@ -128,6 +130,7 @@ impl Harness {
             running: None,
             waiting: Vec::new(),
             busy: false,
+            modifiers: Modifiers::NONE,
         }
     }
     fn frame(
@@ -150,9 +153,11 @@ impl Harness {
             running,
             waiting,
             busy,
+            modifiers,
         } = self;
         let input = RawInput {
             events,
+            modifiers: *modifiers,
             time: Some(time),
             screen_rect: Some(Rect::from_min_size(Pos2::ZERO, Vec2::new(WIDTH, HEIGHT))),
             ..Default::default()
@@ -525,4 +530,211 @@ fn rightmost(output: &egui::FullOutput, needle: &str) -> Option<Pos2> {
             _ => None,
         })
         .max_by(|a, b| a.x.total_cmp(&b.x).then(b.y.total_cmp(&a.y)))
+}
+
+fn press_with(
+    harness: &mut Harness,
+    f: &Fixture,
+    at: Pos2,
+    button: PointerButton,
+    modifiers: Modifiers,
+) -> Option<LibraryIntent> {
+    harness.modifiers = modifiers;
+    harness.time += 1.0;
+    let event = |pressed| Event::PointerButton {
+        pos: at,
+        button,
+        pressed,
+        modifiers,
+    };
+    let (_, first) = harness.frame(f, vec![Event::PointerMoved(at), event(true)]);
+    let (_, second) = harness.frame(f, vec![event(false)]);
+    harness.modifiers = Modifiers::NONE;
+    second.or(first)
+}
+fn key_with(
+    harness: &mut Harness,
+    f: &Fixture,
+    key: egui::Key,
+    modifiers: Modifiers,
+) -> Option<LibraryIntent> {
+    harness.modifiers = modifiers;
+    let (_, intent) = harness.frame(
+        f,
+        vec![Event::Key {
+            key,
+            physical_key: None,
+            pressed: true,
+            repeat: false,
+            modifiers,
+        }],
+    );
+    harness.modifiers = Modifiers::NONE;
+    intent
+}
+
+#[test]
+fn stack_rows_select_with_ctrl_and_shift_and_delete_and_f2_act_on_them() {
+    let f = fixture();
+    let mut harness = Harness::new();
+    harness.frame(&f, vec![]);
+    let (output, _) = harness.frame(&f, vec![]);
+    let lateral = find(&output, "Lateral").unwrap();
+    let dorsal = find(&output, "Dorsal · 2.8×").unwrap();
+    let open_before = harness.page.open;
+    assert_eq!(
+        press_with(
+            &mut harness,
+            &f,
+            lateral,
+            PointerButton::Primary,
+            Modifiers::COMMAND
+        ),
+        None
+    );
+    assert_eq!(
+        harness.page.open, open_before,
+        "a Ctrl click does not open the lineage"
+    );
+    assert_eq!(harness.page.selection.ids(), &[f.lateral]);
+    press_with(
+        &mut harness,
+        &f,
+        dorsal,
+        PointerButton::Primary,
+        Modifiers::SHIFT,
+    );
+    assert_eq!(harness.page.selection.ids().len(), 2);
+    let (output, _) = harness.frame(&f, vec![]);
+    assert!(find(&output, "2 STACKS SELECTED").is_some());
+    let intent = key_with(&mut harness, &f, egui::Key::Delete, Modifiers::NONE);
+    let Some(LibraryIntent::Delete(ids)) = intent else {
+        panic!("{intent:?}")
+    };
+    assert_eq!(ids.len(), 2);
+    assert!(ids.contains(&f.lateral) && ids.contains(&f.dorsal));
+    // Ctrl A takes every stack; Escape clears; then keys act on the open one.
+    key_with(&mut harness, &f, egui::Key::A, Modifiers::COMMAND);
+    assert_eq!(harness.page.selection.ids().len(), 3);
+    key_with(&mut harness, &f, egui::Key::Escape, Modifiers::NONE);
+    assert!(harness.page.selection.is_empty());
+    let open = harness
+        .page
+        .open
+        .expect("the newest rendered stack is open");
+    assert_eq!(
+        key_with(&mut harness, &f, egui::Key::F2, Modifiers::NONE),
+        Some(LibraryIntent::Rename(open))
+    );
+    assert_eq!(
+        key_with(&mut harness, &f, egui::Key::Delete, Modifiers::NONE),
+        Some(LibraryIntent::Delete(vec![open]))
+    );
+}
+
+#[test]
+fn a_stack_rows_menu_moves_it_to_another_subject_or_a_new_one() {
+    let mut f = fixture();
+    let project = f.catalog.nodes[0].id;
+    let beetle = f.catalog.create_subject(project, "Ground beetle").unwrap();
+    let mut harness = Harness::new();
+    harness.frame(&f, vec![]);
+    let (output, _) = harness.frame(&f, vec![]);
+    let lateral = find(&output, "Lateral").unwrap();
+    press_with(
+        &mut harness,
+        &f,
+        lateral,
+        PointerButton::Secondary,
+        Modifiers::NONE,
+    );
+    let entries = harness
+        .page
+        .menu_entries()
+        .expect("the stack's menu")
+        .to_vec();
+    let labels: Vec<&str> = entries
+        .iter()
+        .filter_map(|e| match e {
+            MenuEntry::Item { label, .. } | MenuEntry::Sub { label, .. } => Some(label.as_str()),
+            _ => None,
+        })
+        .collect();
+    assert_eq!(
+        labels,
+        [
+            "Open",
+            "Stack",
+            "Rename…",
+            "Move to subject",
+            "Show photographs in Explorer",
+            "Show renders in Explorer",
+            "Delete…"
+        ]
+    );
+    let items = entries
+        .iter()
+        .find_map(|e| match e {
+            MenuEntry::Sub { items, .. } => Some(items.clone()),
+            _ => None,
+        })
+        .unwrap();
+    // A new subject first; its own subject is not offered.
+    assert_eq!(
+        items[0].intent,
+        LibraryIntent::MoveStacksToNewSubject(vec![f.lateral])
+    );
+    assert_eq!(items.len(), 2, "{items:?}");
+    assert_eq!(
+        items[1].intent,
+        LibraryIntent::MoveStacks {
+            stacks: vec![f.lateral],
+            subject: beetle
+        }
+    );
+    // It never rendered: Show renders is offered but disabled.
+    assert!(entries.contains(&MenuEntry::disabled("Show renders in Explorer")));
+    // Chosen through the pointer.
+    let (output, _) = harness.frame(&f, vec![]);
+    let entry = find(&output, "Move to subject").unwrap();
+    harness.frame(&f, vec![Event::PointerMoved(entry)]);
+    let (output, _) = harness.frame(&f, vec![]);
+    let target = find(&output, "Ground beetle").expect("in the submenu");
+    assert_eq!(
+        press_with(
+            &mut harness,
+            &f,
+            target,
+            PointerButton::Primary,
+            Modifiers::NONE
+        ),
+        Some(LibraryIntent::MoveStacks {
+            stacks: vec![f.lateral],
+            subject: beetle
+        })
+    );
+}
+
+#[test]
+fn right_clicking_the_subjects_picture_offers_the_subjects_own_menu() {
+    let f = fixture();
+    let mut harness = Harness::new();
+    harness.frame(&f, vec![]);
+    let hero = Pos2::new(250.0, 200.0);
+    press_with(
+        &mut harness,
+        &f,
+        hero,
+        PointerButton::Secondary,
+        Modifiers::NONE,
+    );
+    let entries = harness.page.menu_entries().expect("the subject's menu");
+    assert!(
+        !entries
+            .iter()
+            .any(|e| matches!(e, MenuEntry::Item { label, .. } if label == "Open")),
+        "already open"
+    );
+    assert!(entries.iter().any(|e| matches!(e,
+        MenuEntry::Item { intent: Some(LibraryIntent::Delete(ids)), .. } if *ids == vec![f.subject])));
 }

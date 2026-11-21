@@ -61,6 +61,10 @@ mod hdr_display;
 #[path = "image-gesture.rs"]
 mod image_gesture;
 mod jobs;
+#[path = "library-delete.rs"]
+mod library_delete;
+#[path = "library-menu.rs"]
+mod library_menu;
 #[path = "library-paint.rs"]
 mod library_paint;
 #[path = "library-previews.rs"]
@@ -210,9 +214,9 @@ pub struct LaunchOptions {
     pub(crate) route: Option<app::studio_route::LaunchRoute>,
     /// `--route subject:<name or id>`: which subject.
     pub(crate) route_subject: Option<String>,
-    /// `--overlay projects|activity|agent|palette|preferences`: open a
-    /// drawer, the command palette or Preferences over the route (offscreen
-    /// checks of the shell's own surfaces).
+    /// `--overlay projects|activity|agent|palette|preferences|library-*|subject-*`:
+    /// open a drawer, the command palette, Preferences, or a Library menu,
+    /// selection or delete confirmation over the route (offscreen checks).
     pub(crate) overlay: Option<String>,
     /// `--theme`: Graphite, Instrument or Lightbox for this session only.
     pub(crate) theme: Option<studio_theme::ThemeName>,
@@ -475,10 +479,29 @@ fn main() -> eframe::Result {
             if !launch.overlay.as_deref().is_some_and(|v| {
                 matches!(
                     v,
-                    "projects" | "activity" | "agent" | "palette" | "preferences"
+                    "projects"
+                        | "activity"
+                        | "agent"
+                        | "palette"
+                        | "preferences"
+                        | "library-menu"
+                        | "library-menu-move"
+                        | "library-select"
+                        | "library-list"
+                        | "library-delete"
+                        | "library-delete-sources"
+                        | "library-delete-confirm"
+                        | "subject-menu"
+                        | "subject-menu-move"
+                        | "subject-select"
                 )
             }) {
-                eprintln!("Use --overlay projects|activity|agent|palette|preferences");
+                eprintln!(
+                    "Use --overlay projects|activity|agent|palette|preferences|library-menu|\
+                     library-menu-move|library-select|library-list|library-delete|\
+                     library-delete-sources|library-delete-confirm|subject-menu|\
+                     subject-menu-move|subject-select"
+                );
                 std::process::exit(2);
             }
             continue;

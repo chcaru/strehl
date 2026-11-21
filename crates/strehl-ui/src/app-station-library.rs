@@ -58,7 +58,7 @@ struct ImportQueue {
     refused: Vec<String>,
 }
 
-struct RenameDraft {
+pub(super) struct RenameDraft {
     id: NodeId,
     name: String,
     focus: bool,
@@ -76,25 +76,27 @@ type RigKey = (
 
 #[derive(Default)]
 pub(super) struct LibraryState {
-    station: LibraryStation,
-    subject: SubjectPage,
+    pub(super) station: LibraryStation,
+    pub(super) subject: SubjectPage,
     pick: Option<(FolderPick, mpsc::Receiver<Option<Vec<PathBuf>>>)>,
     imports: ImportQueue,
     locate: Option<(NodeId, Task<StackScan>)>,
-    rename: Option<RenameDraft>,
-    target: Option<CaptureTarget>,
-    rig: Option<RigCapture>,
+    pub(super) rename: Option<RenameDraft>,
+    pub(super) target: Option<CaptureTarget>,
+    pub(super) rig: Option<RigCapture>,
     /// The capturing subject's pictures, looked up once per rig change: the
     /// strip shows the subject until a live frame is available.
     rig_pictures: Option<Vec<(PathBuf, bool)>>,
     rig_key: Option<RigKey>,
     storage: Option<StorageCard>,
     storage_task: Option<Task<Option<StorageCard>>>,
-    storage_read: Option<Instant>,
+    pub(super) storage_read: Option<Instant>,
     /// Depth signatures for list rows and stack rows (`depth-signature.rs`).
     signatures: DepthSignatures,
     /// The queue's waiting stacks, refreshed each frame the Library paints.
     waiting: Vec<NodeId>,
+    /// Delete, move, merge and Show in Explorer (`app-library-manage.rs`).
+    pub(super) manage: super::library_manage::ManageState,
 }
 
 impl StrehlApp {
@@ -126,6 +128,7 @@ impl StrehlApp {
             || self.library.station.sources_pending()
             || self.library.storage_task.is_some()
             || self.library.signatures.pending()
+            || self.library_manage_pending()
     }
 
     /// The canvas of the Library station: the subject grid, or a subject page.
@@ -140,11 +143,13 @@ impl StrehlApp {
             }),
             _ => None,
         };
+        self.library_dialog_keys(ui.ctx());
         let running = self
             .job
             .as_ref()
             .and(self.pending_stack.or(self.active_stack));
         let busy = self.job.is_some();
+        let deleting = self.library_deleting();
         let state = &mut self.library;
         state.waiting.clear();
         state.waiting.extend(self.activity_hub.queue.stacks());
@@ -202,6 +207,7 @@ impl StrehlApp {
                     storage: state.storage.as_ref(),
                     signatures: Some(state.signatures.subjects()),
                     stacking: busy,
+                    deleting,
                 },
             ),
         };
@@ -218,10 +224,13 @@ impl StrehlApp {
                 .signatures
                 .want_subjects(state.station.painted_rows().iter().copied()),
         }
-        if let Some(intent) = intent {
+        // The confirmation is modal: what the Library asks meanwhile waits.
+        if let Some(intent) = intent.filter(|_| self.library.manage.dialog.is_none()) {
             self.library_intent(ui.ctx(), intent);
         }
+        self.library_apply_overlay(ui.ctx());
         self.library_rename_window(ui.ctx());
+        self.library_delete_window(ui.ctx());
     }
 
     /// Carry out what the Library or a subject page asked for.
@@ -315,15 +324,7 @@ impl StrehlApp {
                     self.library_notice(Severity::Warning, format!("{error:#}"));
                 }
             }
-            LibraryIntent::Rename(id) => {
-                if let Some(node) = self.catalog.node(id) {
-                    self.library.rename = Some(RenameDraft {
-                        id,
-                        name: node.name.clone(),
-                        focus: true,
-                    });
-                }
-            }
+            LibraryIntent::Rename(id) => self.library_rename(id),
             LibraryIntent::EditSubject { id, name, edit } => {
                 let result = self
                     .project_explorer
@@ -355,6 +356,14 @@ impl StrehlApp {
                     Err(error) => self.library_notice(Severity::Warning, format!("{error:#}")),
                 }
             }
+            intent @ (LibraryIntent::Delete(_)
+            | LibraryIntent::MoveStacks { .. }
+            | LibraryIntent::MoveStacksToNewSubject(_)
+            | LibraryIntent::MoveSubjects { .. }
+            | LibraryIntent::MoveSubjectsToNewCollection(_)
+            | LibraryIntent::MergeSubjects { .. }
+            | LibraryIntent::ShowSources(_)
+            | LibraryIntent::ShowRenders(_)) => self.library_manage(ctx, intent),
             LibraryIntent::ReviewStorage => {
                 // Compaction lives with the completed captures in Capture.
                 self.go_station(Station::Capture);
@@ -367,7 +376,18 @@ impl StrehlApp {
         ctx.request_repaint();
     }
 
-    fn library_notice(&mut self, severity: Severity, text: String) {
+    /// Open the rename window for a collection, subject or stack.
+    pub(super) fn library_rename(&mut self, id: NodeId) {
+        if let Some(node) = self.catalog.node(id) {
+            self.library.rename = Some(RenameDraft {
+                id,
+                name: node.name.clone(),
+                focus: true,
+            });
+        }
+    }
+
+    pub(super) fn library_notice(&mut self, severity: Severity, text: String) {
         self.shell
             .notices
             .push(severity, Source::Library, text, None);
@@ -379,7 +399,7 @@ impl StrehlApp {
         );
     }
 
-    fn library_unique_name(&self, base: &str) -> String {
+    pub(super) fn library_unique_name(&self, base: &str) -> String {
         let taken = |name: &str| self.catalog.nodes.iter().any(|node| node.name == name);
         if !taken(base) {
             return base.into();
@@ -537,6 +557,7 @@ impl StrehlApp {
             }
         }
         self.library_poll_imports(ctx);
+        self.library_poll_manage(ctx);
         self.library_poll_storage(ctx);
         self.library_poll_signatures(ctx);
         self.library_rig();

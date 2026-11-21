@@ -1635,11 +1635,15 @@ fn hints(route: &Route) -> &'static [(&'static [&'static str], &'static str)] {
         _ if matches!(route, Route::Subject(_)) => &[
             (&["Enter"], "open the stack"),
             (&["N"], "new stack of this subject"),
+            (&["Ctrl", "Click"], "select"),
+            (&["Del"], "delete"),
         ],
         Station::Library => &[
             (&["Ctrl", "K"], "go to anything"),
             (&["Enter"], "open"),
             (&["F2"], "rename"),
+            (&["Ctrl", "Click"], "select"),
+            (&["Del"], "delete"),
             (&["Drop"], "folders here to make subjects"),
         ],
         Station::Capture => &[(&["Ctrl", "K"], "go to anything"), (&["F"], "focus")],

@@ -354,6 +354,8 @@ pub(crate) enum ButtonStyle {
     Outline,
     /// Text only.
     Quiet,
+    /// Hairline outline, failure ink: destructive.
+    Danger,
 }
 /// A square button with an optional leading icon; under 25 px tall is small.
 pub(crate) fn button(
@@ -372,10 +374,11 @@ pub(crate) fn button(
         ButtonStyle::Primary => (Some(palette.accent), palette.accent_ink),
         ButtonStyle::Outline => (None, palette.ink),
         ButtonStyle::Quiet => (None, if hovered { palette.ink } else { palette.ink_2 }),
+        ButtonStyle::Danger => (None, palette.bad),
     };
     if let Some(fill) = fill {
         painter.rect_filled(rect, CornerRadius::ZERO, fill);
-    } else if style == ButtonStyle::Outline {
+    } else if matches!(style, ButtonStyle::Outline | ButtonStyle::Danger) {
         inset(
             painter,
             rect,

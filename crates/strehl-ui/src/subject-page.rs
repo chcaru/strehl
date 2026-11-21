@@ -7,6 +7,7 @@
     reason = "the subject page is composed into the shell in P4 stage 2"
 )]
 use crate::{
+    library_menu::{self as menu, BarAction, ContextMenu, MenuEntry, MenuOutcome, Selection},
     library_paint::{self as paint, ButtonStyle, Glyph, LibraryPalette, Mark},
     library_previews::{LibraryPreviews, TILE_SIDE},
     library_station::{LibraryIntent, RigCapture},
@@ -258,6 +259,17 @@ impl SubjectModel {
                     versions,
                 });
             }
+            if life.captured_at > 0 {
+                journal.push(JournalLine {
+                    at: life.captured_at,
+                    mark: Mark::Plain,
+                    text: format!(
+                        "{} captured · {}",
+                        stack_node.name,
+                        paint::plural(draft.sources.len(), "plane", "planes")
+                    ),
+                });
+            }
             let mut pictures: Vec<(PathBuf, bool)> = renders
                 .iter()
                 .rev()
@@ -272,7 +284,7 @@ impl SubjectModel {
                 source: draft.source.clone(),
                 planes: draft.sources.len(),
                 bytes: draft.sources.iter().map(|s| s.bytes).sum(),
-                last: life.last_activity,
+                last: life.last_dated(),
                 life,
                 pictures,
                 renders,
@@ -431,6 +443,27 @@ pub(crate) struct SubjectPage {
     /// Pooled depth signatures: (series identity, width) -> column heights.
     sparks: paint::SparkCache,
     stats: SubjectStats,
+    /// Ctrl or Shift click, Ctrl A: the stacks bulk actions apply to.
+    pub selection: Selection,
+    /// The right-click menu (or the selection bar's), while open.
+    context: Option<ContextMenu>,
+    /// A press that dismissed the menu is not also a click on a row.
+    swallow_click: bool,
+    /// This frame's row input, handled once the rows are painted.
+    row_input: Option<RowInput>,
+    /// The first stack row painted (offscreen menus open on it).
+    first_row: Option<(NodeId, Rect)>,
+}
+
+/// A stack row's pointer input this frame.
+#[derive(Clone, Copy, Debug, PartialEq)]
+enum RowInput {
+    /// Ctrl or Shift click: the selection.
+    Select(NodeId, egui::Modifiers),
+    /// Right-click: the stack's menu.
+    Menu(NodeId, Pos2),
+    /// Right-click on the subject's picture or name: the subject's menu.
+    SubjectMenu(Pos2),
 }
 
 impl SubjectPage {
@@ -462,9 +495,15 @@ impl SubjectPage {
             self.focus_version = None;
             self.editing = None;
             self.sparks.clear();
+            self.selection.clear();
+            self.context = None;
         }
         self.model = SubjectModel::build(catalog, subject, revision);
         self.stats.model_builds += 1;
+        if let Some(model) = &self.model {
+            let ids: Vec<NodeId> = model.stacks.iter().map(|s| s.id).collect();
+            self.selection.retain_in(&ids);
+        }
         if self.open.is_none() {
             // Open the newest stack that has a render.
             self.open = self.model.as_ref().and_then(|m| {
@@ -497,6 +536,21 @@ impl SubjectPage {
             .rect_filled(area, CornerRadius::ZERO, palette.bg);
         let left = Rect::from_min_size(area.min, Vec2::new(LEFT_WIDTH, area.height()));
         let right = Rect::from_min_max(Pos2::new(left.right(), area.top()), area.max);
+        let mut chosen = None;
+        if let Some(open) = self.context.as_mut() {
+            match open.show(&ctx, palette, "subject") {
+                MenuOutcome::Open => {}
+                MenuOutcome::Closed => {
+                    self.context = None;
+                    self.swallow_click = true;
+                }
+                MenuOutcome::Chosen(intent) => {
+                    self.context = None;
+                    chosen = Some(intent);
+                }
+            }
+        }
+        self.row_input = None;
         let Some(model) = self.model.take() else {
             paint::text(
                 ui.painter(),
@@ -509,10 +563,19 @@ impl SubjectPage {
             );
             return Some(LibraryIntent::Back);
         };
-        let mut intent = self.left_column(ui, left, &model, previews, palette);
+        let mut intent = chosen.or(self.left_column(ui, left, &model, previews, palette));
+        let bar = (!self.selection.is_empty()).then(|| {
+            Rect::from_min_max(
+                Pos2::new(right.left(), right.bottom() - menu::BAR_HEIGHT),
+                right.max,
+            )
+        });
         let found = self.right_column(
             ui,
-            right,
+            Rect::from_min_max(
+                right.min,
+                Pos2::new(right.right(), bar.map_or(right.bottom(), |b| b.top())),
+            ),
             &model,
             catalog,
             previews,
@@ -522,9 +585,22 @@ impl SubjectPage {
             (signatures, queue),
         );
         intent = intent.or(found);
+        intent = intent.or(self.row_actions(&ctx, catalog, &model, rig, queue));
+        if self.swallow_click && !ui.input(|i| i.pointer.any_down()) {
+            self.swallow_click = false;
+        }
+        if let Some(bar) = bar {
+            intent = intent.or(self.selection_bar(ui, bar, catalog, palette));
+        }
         intent = intent.or(drops(ui, &model, subject));
+        let keys_free =
+            !ui.ctx().wants_keyboard_input() && self.editing.is_none() && self.context.is_none();
+        if keys_free {
+            intent = intent.or(self.keys(ui, &model));
+        }
         if !ui.ctx().wants_keyboard_input()
             && self.editing.is_none()
+            && self.context.is_none()
             && ui.input(|i| i.key_pressed(egui::Key::N))
         {
             intent = intent.or(Some(LibraryIntent::NewStackFromCamera {
@@ -533,18 +609,198 @@ impl SubjectPage {
             }));
         }
         // Enter opens the stack whose lineage is open, else the first.
-        if !ui.ctx().wants_keyboard_input()
-            && self.editing.is_none()
-            && ui.input(|i| i.key_pressed(egui::Key::Enter))
-        {
+        if keys_free && ui.input(|i| i.key_pressed(egui::Key::Enter)) {
             let stack = self.open.or_else(|| {
                 let first = *model.order(self.order).first()?;
                 Some(model.stacks[first].id)
             });
             intent = intent.or(stack.map(LibraryIntent::OpenStack));
         }
+        // A menu opened this pass is shown in it (its sizing pass).
+        if let Some(open) = self.context.as_mut().filter(|c| c.is_new(&ctx)) {
+            let _ = open.show(&ctx, palette, "subject");
+        }
         self.model = Some(model);
         intent
+    }
+
+    /// Delete, F2, Ctrl A and Escape on the subject's stacks: the selection,
+    /// else the stack whose lineage is open.
+    fn keys(&mut self, ui: &Ui, model: &SubjectModel) -> Option<LibraryIntent> {
+        let (delete, rename, all, escape) = ui.input(|i| {
+            (
+                i.key_pressed(egui::Key::Delete),
+                i.key_pressed(egui::Key::F2),
+                i.modifiers.command && i.key_pressed(egui::Key::A),
+                i.key_pressed(egui::Key::Escape),
+            )
+        });
+        if escape {
+            self.selection.clear();
+        }
+        if all {
+            let ids: Vec<NodeId> = model
+                .order(self.order)
+                .into_iter()
+                .map(|i| model.stacks[i].id)
+                .collect();
+            self.selection.set(&ids);
+        }
+        let targets: Vec<NodeId> = if self.selection.is_empty() {
+            self.open.into_iter().collect()
+        } else {
+            self.selection.ids().to_vec()
+        };
+        if delete && !targets.is_empty() {
+            Some(LibraryIntent::Delete(targets))
+        } else if rename && targets.len() == 1 {
+            Some(LibraryIntent::Rename(targets[0]))
+        } else {
+            None
+        }
+    }
+
+    /// The row input of this frame: selection clicks and the menus.
+    fn row_actions(
+        &mut self,
+        ctx: &egui::Context,
+        catalog: &Catalog,
+        model: &SubjectModel,
+        rig: Option<&RigCapture>,
+        queue: QueueView<'_>,
+    ) -> Option<LibraryIntent> {
+        match self.row_input.take()? {
+            RowInput::Select(id, modifiers) => {
+                if !self.swallow_click {
+                    let order: Vec<NodeId> = model
+                        .order(self.order)
+                        .into_iter()
+                        .map(|i| model.stacks[i].id)
+                        .collect();
+                    self.selection.click(id, modifiers, &order);
+                }
+            }
+            RowInput::Menu(id, at) => {
+                let targets = self.selection.targets(id);
+                let flags = menu::StackFlags {
+                    capturing: rig.is_some_and(|r| r.stack == Some(id)),
+                    queued: queue.running == Some(id) || queue.waiting.contains(&id),
+                    busy: queue.busy,
+                };
+                self.context = Some(ContextMenu::new(
+                    ctx,
+                    at,
+                    menu::stack_menu(catalog, &targets, flags),
+                ));
+            }
+            RowInput::SubjectMenu(at) => {
+                let flags = menu::SubjectFlags {
+                    stacking: queue.busy,
+                    capturing: rig.and_then(|r| r.subject),
+                };
+                let mut entries = menu::subject_menu(catalog, &[model.key.subject], flags);
+                // Already open: the subject page has no "Open".
+                entries.retain(|e| !matches!(e, MenuEntry::Item { label, .. } if label == "Open"));
+                self.context = Some(ContextMenu::new(ctx, at, entries));
+            }
+        }
+        None
+    }
+
+    /// The selected stacks' actions along the bottom of the stack list.
+    fn selection_bar(
+        &mut self,
+        ui: &mut Ui,
+        bar: Rect,
+        catalog: &Catalog,
+        palette: &LibraryPalette,
+    ) -> Option<LibraryIntent> {
+        let caption = paint::plural(self.selection.len(), "stack selected", "stacks selected");
+        let actions = [
+            BarAction {
+                label: "Move to subject",
+                style: ButtonStyle::Outline,
+            },
+            BarAction {
+                label: "Delete…",
+                style: ButtonStyle::Danger,
+            },
+        ];
+        let (index, button) =
+            menu::selection_bar(ui, bar, "subject-selection", &caption, &actions, palette)?;
+        // Only a click copies the selection.
+        let ids = self.selection.ids().to_vec();
+        match index {
+            0 => {
+                let entries = menu::stack_menu(catalog, &ids, menu::StackFlags::default());
+                let items = entries.into_iter().find_map(|e| match e {
+                    MenuEntry::Sub { items, .. } => Some(items),
+                    _ => None,
+                })?;
+                let entries = items
+                    .into_iter()
+                    .map(|item| {
+                        let label = if item.detail.is_empty() {
+                            item.label
+                        } else {
+                            format!("{} · {}", item.label, item.detail)
+                        };
+                        MenuEntry::item(label, item.intent)
+                    })
+                    .collect();
+                self.context = Some(ContextMenu::above(ui.ctx(), button, entries));
+                None
+            }
+            1 => Some(LibraryIntent::Delete(ids)),
+            _ => {
+                self.selection.clear();
+                None
+            }
+        }
+    }
+
+    /// Offscreen look checks: open the first stack row's menu (with its
+    /// first submenu when `sub`), or select the first `count` stacks.
+    pub(crate) fn launch_menu(
+        &mut self,
+        ctx: &egui::Context,
+        catalog: &Catalog,
+        sub: bool,
+    ) -> bool {
+        let Some((id, rect)) = self.first_row else {
+            return false;
+        };
+        let targets = self.selection.targets(id);
+        let mut open = ContextMenu::new(
+            ctx,
+            rect.center(),
+            menu::stack_menu(catalog, &targets, menu::StackFlags::default()),
+        );
+        if sub {
+            open.open_sub = open
+                .entries
+                .iter()
+                .position(|e| matches!(e, MenuEntry::Sub { .. }));
+        }
+        self.context = Some(open);
+        true
+    }
+    pub(crate) fn launch_select(&mut self, count: usize) -> bool {
+        let Some(model) = &self.model else {
+            return false;
+        };
+        let ids: Vec<NodeId> = model
+            .order(self.order)
+            .into_iter()
+            .take(count)
+            .map(|i| model.stacks[i].id)
+            .collect();
+        self.selection.set(&ids);
+        !ids.is_empty()
+    }
+    /// The open menu's entries (tests).
+    pub(crate) fn menu_entries(&self) -> Option<&[MenuEntry]> {
+        self.context.as_ref().map(|c| c.entries.as_slice())
     }
 
     fn left_column(
@@ -586,6 +842,14 @@ impl SubjectPage {
         }
         let hero = Rect::from_min_size(Pos2::new(x0, left.top() + 42.0), Vec2::new(x1 - x0, 304.0));
         painter.rect_filled(hero, CornerRadius::ZERO, palette.raised);
+        let hero_response = ui.interact(hero, ui.id().with("subject-hero"), Sense::click());
+        if hero_response.secondary_clicked() {
+            self.row_input = Some(RowInput::SubjectMenu(
+                hero_response
+                    .interact_pointer_pos()
+                    .unwrap_or_else(|| hero.center()),
+            ));
+        }
         // The chosen picture, else the newest stacks' renders, and only then
         // a source frame (as the Library's card: a capture's first plane is
         // usually far out of focus).
@@ -812,6 +1076,7 @@ impl SubjectPage {
             + model.journal.len() as f32 * JOURNAL_ROW
             + 20.0;
         let body = Rect::from_min_max(Pos2::new(x0, top + 38.0), Pos2::new(x1, right.bottom()));
+        self.first_row = None;
         let mut intent = None;
         let mut painted = 0;
         let now = timestamp();
@@ -967,14 +1232,29 @@ impl SubjectPage {
         let row = Rect::from_min_size(rect.min, Vec2::new(rect.width(), ROW));
         let response = ui.interact(row, ui.id().with(("subject-row", stack.id)), Sense::click());
         let painter = ui.painter().clone();
-        if response.hovered() {
+        let marked = self.selection.contains(stack.id);
+        if self.first_row.is_none() {
+            self.first_row = Some((stack.id, row));
+        }
+        if response.hovered() || marked {
             painter.rect_filled(row, CornerRadius::ZERO, palette.raised);
+        }
+        if marked {
+            painter.rect_filled(
+                Rect::from_min_size(row.min, Vec2::new(2.0, row.height())),
+                CornerRadius::ZERO,
+                palette.accent,
+            );
         }
         paint::hline(&painter, row.left()..=row.right(), row.top(), palette.line);
         let thumb = Rect::from_min_size(row.min + Vec2::new(0.0, 14.0), Vec2::new(132.0, 88.0));
         painter.rect_filled(thumb, CornerRadius::ZERO, palette.raised);
         if let Some(texture) = previews.first_tile(&stack.pictures, TILE_SIDE, stack.id) {
             LibraryPreviews::paint_cover(&painter, thumb, &texture);
+        }
+        if marked {
+            paint::outline(&painter, thumb, 1.5, palette.accent);
+            menu::tick(&painter, thumb.min, palette);
         }
         let button_rect = Rect::from_min_size(
             Pos2::new(row.right() - 112.0, row.center().y - 14.0),
@@ -1123,7 +1403,18 @@ impl SubjectPage {
         {
             intent = intent.or(Some(action));
         }
-        if response.clicked() && intent.is_none() {
+        let modifiers = ui.input(|i| i.modifiers);
+        if response.secondary_clicked() {
+            self.row_input = Some(RowInput::Menu(
+                stack.id,
+                response
+                    .interact_pointer_pos()
+                    .unwrap_or_else(|| row.center()),
+            ));
+        } else if response.clicked() && intent.is_none() && (modifiers.command || modifiers.shift) {
+            self.row_input = Some(RowInput::Select(stack.id, modifiers));
+            return None;
+        } else if response.clicked() && intent.is_none() && !self.swallow_click {
             self.open = if self.open == Some(stack.id) {
                 None
             } else {

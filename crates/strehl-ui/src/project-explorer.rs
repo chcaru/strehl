@@ -3,10 +3,15 @@
 use crate::library_previews as previews;
 use crate::{
     theme::{self, ACCENT, AMBER, GREEN, INK, LINE, MUTED, RAISED},
-    workspace_history::{Catalog, NodeId, NodeKind, ProjectNode, Run, SubjectMeta, timestamp},
+    workspace_history::{
+        Catalog, NodeId, NodeKind, ProjectNode, RemovedRecords, Run, SubjectMeta, timestamp,
+    },
 };
 use eframe::egui::{self, Align2, Color32, FontId, Key, RichText, Sense, Stroke};
-use std::path::{Path, PathBuf};
+use std::{
+    path::{Path, PathBuf},
+    sync::Arc,
+};
 
 #[derive(Clone, Debug)]
 pub(crate) enum ExplorerAction {
@@ -51,6 +56,20 @@ struct Organization {
     nodes: Vec<OrganizedNode>,
     results: Vec<(PathBuf, String, bool)>,
     version_names: Vec<(String, String)>,
+    /// Library removal (an undo entry): put these records back before the
+    /// metadata above is applied.
+    restore: Option<Restored>,
+    /// Library removal again (a redo entry): after the metadata above is
+    /// applied, take these nodes out once more.
+    remove: Vec<NodeId>,
+}
+/// Removed records shared between journal entries; equal only to itself.
+#[derive(Clone)]
+struct Restored(Arc<RemovedRecords>);
+impl PartialEq for Restored {
+    fn eq(&self, other: &Self) -> bool {
+        Arc::ptr_eq(&self.0, &other.0)
+    }
 }
 #[derive(Clone, PartialEq)]
 struct OrganizedNode {
@@ -86,6 +105,8 @@ impl Organization {
                 .iter()
                 .map(|r| (r.directory.clone(), r.label.clone(), r.pinned))
                 .collect(),
+            restore: None,
+            remove: Vec::new(),
         }
     }
     fn apply(&self, catalog: &mut Catalog) {
@@ -435,8 +456,18 @@ impl ProjectExplorer {
         let Some(previous) = self.undo.pop() else {
             return false;
         };
-        self.redo.push(Organization::capture(catalog));
+        let mut counterpart = Organization::capture(catalog);
+        if let Some(restore) = &previous.restore {
+            // A removal: its records go back first, then its metadata.
+            if catalog.restore_nodes(&restore.0).is_err() {
+                self.clear_history();
+                return false;
+            }
+            counterpart.remove = restore.0.ids();
+        }
         previous.apply(catalog);
+        self.redo.push(counterpart);
+        self.note_evidence(catalog);
         self.edit = None;
         self.moving = None;
         self.history_focus = None;
@@ -448,13 +479,68 @@ impl ProjectExplorer {
         let Some(next) = self.redo.pop() else {
             return false;
         };
-        self.undo.push(Organization::capture(catalog));
+        let mut counterpart = Organization::capture(catalog);
         next.apply(catalog);
+        if !next.remove.is_empty() {
+            match catalog.remove_nodes(&next.remove) {
+                Ok(records) => counterpart.restore = Some(Restored(Arc::new(records))),
+                Err(_) => {
+                    counterpart.apply(catalog);
+                    self.clear_history();
+                    return false;
+                }
+            }
+        }
+        self.undo.push(counterpart);
+        self.note_evidence(catalog);
         self.edit = None;
         self.moving = None;
         self.history_focus = None;
         self.history_revision = self.history_revision.wrapping_add(1);
         true
+    }
+    /// Organization edits that also take subjects or stacks out of the
+    /// library: `change` edits (atomically: it changes nothing when it
+    /// fails), then the nodes it names leave through `Catalog::remove_nodes`.
+    /// One undo step puts the records and the metadata back.
+    pub(crate) fn organize_removing<T>(
+        &mut self,
+        catalog: &mut Catalog,
+        change: impl FnOnce(&mut Catalog) -> anyhow::Result<(T, Vec<NodeId>)>,
+    ) -> anyhow::Result<(T, Arc<RemovedRecords>)> {
+        self.sync_evidence(catalog);
+        let mut before = Organization::capture(catalog);
+        let (value, remove) = change(catalog)?;
+        let records = match catalog.remove_nodes(&remove) {
+            Ok(records) => Arc::new(records),
+            Err(error) => {
+                before.apply(catalog);
+                return Err(error);
+            }
+        };
+        before.restore = Some(Restored(records.clone()));
+        self.undo.push(before);
+        if self.undo.len() > 80 {
+            self.undo.remove(0);
+        }
+        self.redo.clear();
+        self.note_evidence(catalog);
+        self.edit = None;
+        self.moving = None;
+        self.history_focus = None;
+        self.history_revision = self.history_revision.wrapping_add(1);
+        self.history_commits = self.history_commits.wrapping_add(1);
+        Ok((value, records))
+    }
+    /// The stacks and renders now in the catalog are the journal's own doing
+    /// (a removal or its undo), not an outside change that ends the history.
+    fn note_evidence(&mut self, catalog: &Catalog) {
+        self.evidence = catalog
+            .nodes
+            .iter()
+            .filter(|n| n.kind == NodeKind::Stack)
+            .map(|n| (n.id, n.revisions.clone()))
+            .collect();
     }
     /// Keep the explorer's result identity synchronized with navigation outside it.
     pub fn select_stack(&mut self, id: NodeId) {

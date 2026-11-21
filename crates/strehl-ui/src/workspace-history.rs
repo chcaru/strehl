@@ -16,13 +16,21 @@ use std::{
 #[path = "photo-history.rs"]
 pub(crate) mod photographs;
 pub(crate) use photographs::{PhotoExport, PhotoOwner, PhotoVersion};
+#[path = "catalog-removal.rs"]
+mod removal;
 #[path = "catalog-subjects.rs"]
 mod subjects;
+#[allow(unused_imports)]
+pub(crate) use removal::{
+    FileCategory, OwnedFiles, OwnedRender, OwnedSources, Refusal, RemovalCounts, RemovalScope,
+    RemovedRecords, path_within,
+};
 #[allow(unused_imports)]
 pub(crate) use subjects::{
     ImportGroup, LibraryIndex, NextStep, Optics, RelocateMismatch, RelocateReport, RunState,
     ScaleCalibration, ScaleSource, SourcesState, StackLifecycle, StepState, SubjectEdit,
-    SubjectMeta, SubjectSummary, default_stack_name, import_plan, is_camera_folder, sources_state,
+    SubjectMeta, SubjectSummary, default_stack_name, import_plan, is_camera_folder,
+    recorded_capture, sources_state,
 };
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]

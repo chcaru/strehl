@@ -209,6 +209,7 @@ impl Harness {
                             storage: storage.as_ref(),
                             signatures: Some(signatures),
                             stacking: *stacking,
+                            deleting: None,
                         },
                     );
                 });
@@ -834,6 +835,7 @@ fn offscreen_list_rows_with_signatures() {
                 storage: None,
                 signatures: Some(&signatures),
                 stacking: true,
+                deleting: None,
             },
         );
         !previews.pending()
