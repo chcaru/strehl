@@ -8,13 +8,17 @@ use std::{fs, time::Duration};
 struct Files(PathBuf);
 impl Files {
     fn new() -> Self {
+        // The clock ticks in 100 ns steps on Windows, so two tests starting
+        // together could share a folder without the counter.
+        static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
         let path = std::env::temp_dir().join(format!(
-            "strehl-workspace-review-{}-{}",
+            "strehl-workspace-review-{}-{}-{}",
             std::process::id(),
             SystemTime::now()
                 .duration_since(UNIX_EPOCH)
                 .unwrap()
-                .as_nanos()
+                .as_nanos(),
+            NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
         ));
         fs::create_dir_all(&path).unwrap();
         Self(path)
