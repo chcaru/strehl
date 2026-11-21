@@ -898,6 +898,24 @@ pub(crate) fn default_path() -> Option<PathBuf> {
         .or_else(|| std::env::var_os("HOME").map(|p| PathBuf::from(p).join(".local/state")))
         .map(|p| p.join("Strehl/projects.json"))
 }
+/// The largest log a reopen replays. An older run's log carries every plane
+/// map as hex (about 0.92 MB a plane, MEASURED), so it keeps the original
+/// 512 MiB bound. A run whose engine wrote its plane maps to the evidence file
+/// keeps only stack maps and events in the log (MEASURED 2.9 MB for 299
+/// planes on the GPU fold, 157 MB on the CPU fold's live view), so its bound
+/// is larger; replay stays a cancellable stream on a worker.
+fn replay_limit(run: &Run) -> u64 {
+    if run
+        .directory
+        .join(crate::evidence_file::FILE_NAME)
+        .is_file()
+    {
+        4 << 30
+    } else {
+        512 << 20
+    }
+}
+
 pub(crate) fn reopen(run: Run) -> Task<(Run, PipelineProgress)> {
     jobs::spawn_task("strehl-reopen", move |cancelled| {
         if let Some(provenance) = &run.imported {
@@ -908,7 +926,7 @@ pub(crate) fn reopen(run: Run) -> Task<(Run, PipelineProgress)> {
         }
         let mut file = std::fs::File::open(&run.log)?;
         anyhow::ensure!(
-            file.metadata()?.len() <= 512 * 1024 * 1024,
+            file.metadata()?.len() <= replay_limit(&run),
             "Saved activity exceeds the replay limit"
         );
         let mut progress = PipelineProgress::default();
@@ -926,6 +944,22 @@ pub(crate) fn reopen(run: Run) -> Task<(Run, PipelineProgress)> {
             }
         }
         progress.finish();
+        // The per-plane maps of a run whose engine wrote them beside the log
+        // (`evidence-file.rs`). A damaged or missing file costs the views
+        // their maps, not the reopen; only cancellation stops it.
+        if let Some((name, version)) = progress.evidence_file.clone()
+            && version == crate::evidence_file::VERSION
+            && let Some(path) = crate::evidence_file::named_path(&run.directory, &name)
+            && path.is_file()
+        {
+            let read = crate::evidence_file::read_into(&path, &cancelled, |header, record| {
+                progress.ingest_evidence(header, record)
+            });
+            anyhow::ensure!(
+                read.is_ok() || !cancelled.load(std::sync::atomic::Ordering::Relaxed),
+                "Replay cancelled"
+            );
+        }
         if run.status == "Saved" {
             anyhow::ensure!(
                 run.output.is_file(),
@@ -952,6 +986,10 @@ mod tests;
 #[cfg(test)]
 #[path = "workspace-history-review-tests.rs"]
 mod review_tests;
+
+#[cfg(test)]
+#[path = "workspace-history-evidence-tests.rs"]
+mod evidence_tests;
 
 #[cfg(test)]
 #[path = "project-catalog-tests.rs"]

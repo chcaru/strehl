@@ -924,6 +924,14 @@ impl StrehlApp {
                     self.log(&text);
                     self.follow_current_frame();
                 }
+                RenderEvent::Evidence(batch) => {
+                    // Decoded on the render job's thread; each map is a copy
+                    // into the archive and the recent ring (plan 5.2).
+                    let crate::evidence_file::EvidenceBatch { header, records } = *batch;
+                    for record in records {
+                        self.progress.ingest_evidence(&header, record);
+                    }
+                }
                 RenderEvent::Finished(outcome) => {
                     self.pending_run = None;
                     self.pending_stack = None;

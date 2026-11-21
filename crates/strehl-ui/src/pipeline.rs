@@ -22,6 +22,11 @@ pub use diagnostics::{
     BandWork, DiagnosticKind, DiagnosticScale, DiagnosticScope, DiagnosticSurface,
     MergeFrameObservation, MergeStep, RenderStep, SampledMaskHistory, WorkState,
 };
+#[allow(
+    unused_imports,
+    reason = "the Stack station (plan P3) reads plane shares"
+)]
+pub use diagnostics::{PlaneShare, ShareSource};
 
 const MAX_LINE_BYTES: usize = 512 * 1024;
 const MAX_EVENTS: usize = 32;
@@ -202,6 +207,18 @@ pub struct PipelineProgress {
     pub(crate) diagnostic_epoch: u64,
     /// Per-position sampled-mask evidence survives recent image-packet eviction.
     pub sampled_mask_history: Vec<SampledMaskHistory>,
+    /// The newest map sequence accepted from the log; the log's own maps
+    /// arrive in sequence order, the evidence file's beside them.
+    last_log_surface: Option<u64>,
+    /// The evidence file the engine named (`event=evidence-file`), a plain
+    /// file name inside the run's folder, with its format version.
+    pub(crate) evidence_file: Option<(String, u32)>,
+    /// Maps taken from the evidence file, and records refused at ingestion.
+    pub(crate) evidence_records: usize,
+    pub(crate) evidence_refused: usize,
+    /// Frames the alignment left unplaced (`event=frame-unplaced`), with the
+    /// engine's reason. They have no maps; a view shows them as refused.
+    pub(crate) unplaced_frames: BTreeMap<usize, String>,
     pub merge_step: Option<MergeStep>,
     pub merge_step_frame: Option<usize>,
     pub merge_step_level: Option<usize>,
@@ -484,6 +501,7 @@ impl PipelineProgress {
                     self.revisions = Default::default();
                     self.live_preview = Default::default();
                     self.diagnostic_surfaces.clear();
+                    self.last_log_surface = None;
                     self.sampled_mask_history.clear();
                 }
                 self.analysis_size = Some(size);
@@ -718,6 +736,29 @@ impl PipelineProgress {
             Some("merge-step" | "band-work" | "render-step" | "diagnostic")
         ) {
             self.diagnostic_event(fields);
+            return;
+        }
+        if field("event") == Some("evidence-file") {
+            // The engine's per-plane maps are in this file, not in the log.
+            if let (Some(path), Some(version)) = (
+                field("path"),
+                field("version").and_then(|value| value.parse::<u32>().ok()),
+            ) && crate::evidence_file::named_path(std::path::Path::new(""), path).is_some()
+            {
+                self.evidence_file = Some((path.to_owned(), version));
+            }
+            return;
+        }
+        if field("event") == Some("frame-unplaced") {
+            if let Some(frame) = field("frame").and_then(|value| value.parse::<usize>().ok())
+                && frame < MAX_FRAME_OBSERVATIONS
+                && self.frames_total.is_none_or(|total| frame < total)
+                && (self.unplaced_frames.len() < MAX_FRAME_OBSERVATIONS
+                    || self.unplaced_frames.contains_key(&frame))
+            {
+                self.unplaced_frames
+                    .insert(frame, field("reason").unwrap_or("unstated").to_owned());
+            }
             return;
         }
         let Some(total) = field("total").and_then(|value| value.parse::<usize>().ok()) else {

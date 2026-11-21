@@ -31,6 +31,8 @@ mod draft_preview;
 #[path = "edit-workspace.rs"]
 mod edit_workspace;
 mod engine;
+#[path = "evidence-file.rs"]
+mod evidence_file;
 #[path = "hdr-display.rs"]
 mod hdr_display;
 #[path = "image-gesture.rs"]
