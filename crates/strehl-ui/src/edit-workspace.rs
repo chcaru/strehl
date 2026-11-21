@@ -866,6 +866,10 @@ pub(crate) fn shape_bounds(shape: &RegionShape) -> [[f32; 2]; 2] {
             ],
         ],
         RegionShape::Rectangle { min, max } => [*min, *max],
+        RegionShape::Stroke { .. } => {
+            let (min, max) = shape.bounds();
+            [min, max]
+        }
         RegionShape::Polygon { points } => {
             points
                 .iter()
@@ -893,6 +897,10 @@ fn outline(shape: &RegionShape) -> Vec<[f32; 2]> {
             .collect(),
         RegionShape::Rectangle { min, max } => vec![*min, [max[0], min[1]], *max, [min[0], max[1]]],
         RegionShape::Polygon { points } => points.clone(),
+        // The spine, out and back; the depth brush (P7c) draws its own mask.
+        RegionShape::Stroke { points, .. } => {
+            points.iter().chain(points.iter().rev()).copied().collect()
+        }
     }
 }
 

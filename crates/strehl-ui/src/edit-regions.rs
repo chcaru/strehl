@@ -713,9 +713,17 @@ fn transform(
                 RegionShape::Polygon { points } => RegionShape::Polygon {
                     points: points.iter().copied().map(shift).collect(),
                 },
+                RegionShape::Stroke { points, radius } => RegionShape::Stroke {
+                    points: points.iter().copied().map(shift).collect(),
+                    radius: *radius,
+                },
             }
         }
         Control::Resize(sides) => {
+            // A stroke is repainted, never stretched into an ellipse.
+            if matches!(shape, RegionShape::Stroke { .. }) {
+                return shape.clone();
+            }
             if let RegionShape::Ellipse { center, radius } = shape {
                 let (mut center, mut radius) = (*center, *radius);
                 for axis in 0..2 {
