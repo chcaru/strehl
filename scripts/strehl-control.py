@@ -191,6 +191,8 @@ def screenshot(args):
         raise ControlError("Screenshot already exists; choose a fresh --png path")
     if not png.parent.is_dir():
         raise ControlError("Create the --png parent directory before rendering")
+    if args.source is None and args.open_run is None and not args.capture and args.route is None:
+        raise ControlError("Name what to render: --source, --open-run, --capture or --route")
     target = args.source or args.open_run
     target = target.resolve(strict=True) if target is not None else None
     if target is not None and not target.is_dir():
@@ -223,6 +225,10 @@ def screenshot(args):
             command.append(flag)
     if args.route is not None:
         command += ["--route", args.route]
+    for option, value in (("--overlay", args.overlay), ("--capture-fixture", args.capture_fixture),
+                          ("--plane-hold", args.plane_hold)):
+        if value is not None:
+            command += [option, str(value)]
     if args.theme is not None:
         command += ["--theme", args.theme]
     if args.output_dir is not None:
@@ -278,6 +284,17 @@ def screenshot(args):
     return 0
 
 
+ROUTES = ("library", "subject", "capture", "stack", "engine", "develop", "export")
+
+
+def route_name(value):
+    name = value.split(":", 1)[0]
+    if name not in ROUTES or (":" in value and name != "subject"):
+        raise argparse.ArgumentTypeError(
+            "use library, subject[:NAME or ID], capture, stack, engine, develop or export")
+    return value
+
+
 def positive_timeout(value):
     seconds = float(value)
     if not math.isfinite(seconds) or not 0 < seconds <= 300:
@@ -294,7 +311,7 @@ def parser():
                         help="bounded launch/control wait in seconds (default: 30)")
     commands = result.add_subparsers(dest="command", required=True)
     capture = commands.add_parser("screenshot", help="render the real workspace offscreen and wait up to 70 seconds")
-    capture_target = capture.add_mutually_exclusive_group(required=True)
+    capture_target = capture.add_mutually_exclusive_group()
     capture_target.add_argument("--source", type=Path, help="source directory to import")
     capture_target.add_argument("--open-run", type=Path, help="completed run already present in --catalog")
     capture_target.add_argument("--capture", action="store_true", help="native Capture tab; no source import")
@@ -309,8 +326,15 @@ def parser():
     capture.add_argument("--output-dir", type=Path, help="generated results and metadata reports")
     capture.add_argument("--catalog", type=Path, help="isolated catalog (default: PNG path with .projects.json)")
     capture.add_argument("--size", metavar="WxH", help="canvas dimensions, for example 1440x940")
-    capture.add_argument("--route", choices=["library", "subject", "capture", "stack", "engine", "develop", "export"],
-                         help="Studio 2 station to open (engine = the Stack station's engine room)")
+    capture.add_argument("--route", type=route_name,
+                         help="Studio 2 station to open: library, subject[:NAME or ID], capture, stack, "
+                              "engine (the Stack station's engine room), develop or export")
+    capture.add_argument("--overlay", choices=["projects", "activity", "agent", "palette", "preferences"],
+                         help="open a drawer, the command palette or Preferences over the station")
+    capture.add_argument("--capture-fixture", choices=["plan", "flight", "glance"],
+                         help="draw Capture from a fabricated state; no camera host is reached")
+    capture.add_argument("--plane-hold", type=int, metavar="N",
+                         help="hold plane N (from 1) on the Stack station")
     capture.add_argument("--theme", choices=["graphite", "instrument", "lightbox"],
                          help="theme for this render only; the owner's Preferences are not changed")
     pane = capture.add_mutually_exclusive_group()

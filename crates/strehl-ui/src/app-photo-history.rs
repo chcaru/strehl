@@ -435,7 +435,7 @@ impl StrehlApp {
                                 Some(&id),
                             );
                         }
-                        self.photo_history.status = Some("Edit version saved in Projects.".into());
+                        self.photo_history.status = Some("Edit version saved.".into());
                         self.photo_history.dirty = true;
                     }
                     Prepared::Unchanged { version_id } => {
@@ -504,7 +504,7 @@ impl StrehlApp {
                     Prepared::Recorded(record) => {
                         self.catalog.add_photo_export(record)?;
                         self.photo_history.dirty = true;
-                        self.photo_history.status = Some("Export recorded in Projects.".into());
+                        self.photo_history.status = Some("Export recorded.".into());
                     }
                     Prepared::Opened => {}
                 }
@@ -561,7 +561,7 @@ impl StrehlApp {
                 self.photo_history
                     .error
                     .as_deref()
-                    .unwrap_or("Review the failed action in Projects")
+                    .unwrap_or("Review the failed action in the project tree")
             );
         }
         if self.photo_history.dirty {
@@ -584,7 +584,7 @@ impl StrehlApp {
                 self.open_save_edit_version();
             }
             if super::editing::controls::action_button(ui, "Versions", width)
-                .on_hover_text("Browse this photograph’s versions and exports in Projects")
+                .on_hover_text("Browse this photograph’s versions and exports in the project tree")
                 .clicked()
             {
                 if let Some(path) = self.editor.path.as_ref() {

@@ -238,6 +238,11 @@ impl StrehlApp {
         }
         self.navigate(route.route(self.active_stack, self.result.clone()));
     }
+    /// The top bar's rig reads the capture client four times a second; a
+    /// screenshot of Capture waits until its lamp says what the station says.
+    pub(super) fn rig_status_current(&self) -> bool {
+        RigSummary::from_snapshot(&self.capture.snapshot()).lamp() == self.shell.rig.lamp()
+    }
     /// The project tree is on screen: the Library's legacy flag, or its
     /// drawer over another station.
     pub(super) fn projects_visible(&self) -> bool {

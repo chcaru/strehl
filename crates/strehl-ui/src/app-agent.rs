@@ -760,7 +760,17 @@ impl StrehlApp {
                 )
                 .map_err(anyhow::Error::msg)?;
                 let resolved = serde_json::to_value(&settings)?;
-                self.start_tracked_export(destination.join(file_name), settings)?;
+                // A name without an extension gets the format's, as Export's own files do.
+                let mut target = destination.join(&file_name);
+                if target.extension().is_none() {
+                    target.set_extension(match settings.format {
+                        strehl_edit::ExportFormat::Avif => "avif",
+                        strehl_edit::ExportFormat::Tiff => "tiff",
+                        strehl_edit::ExportFormat::Png => "png",
+                        strehl_edit::ExportFormat::Jpeg => "jpg",
+                    });
+                }
+                self.start_tracked_export(target, settings)?;
                 return Ok(json!({"state":"queued","operation":"export","settings":resolved}));
             }
             Undo {} => {
