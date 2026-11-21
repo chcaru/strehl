@@ -210,15 +210,20 @@ metadata's `cancel` is `pub(crate)`. The view-bundle export reports bytes copied
 - A waiting stack shows "about N s" only when the running render is the same stack (its seed);
   an estimate for any queued stack needs its previous log read on a worker at enqueue (not
   built).
-- In the end-to-end run the seeded estimate appeared in the merge and the write but not while
-  the resumed stack aligned (Preparing); whether the seed arrived late or a 3-frame log lacks
-  the stage lines for a whole-render estimate is UNVERIFIED.
+- Closed after the merge (`studio2/p4-signatures`): no time left while a resumed stack
+  aligned. Cause (MEASURED with a probe on a headless release run): the earlier render's log
+  was 1.6 MB, so its `frames` line fell outside the seed's 1 MiB tail; the seed arrived 2 ms
+  after the start but had no plane count, and the estimate before the merge needs one. Fix: a
+  seed's plane count falls back to its `folded` count, and every engine stage event's `total`
+  now sets the count. Test: `a_seed_without_its_frames_line_still_estimates_before_the_merge`
+  (fails without the fix).
 - The live rate needs 8 frames over at least 1 s; very fast stacks finish their merge first
   and show time left only from a seed.
-- Queueing from the UI: Ctrl+Enter and the palette's Start while a stack runs, and the agent.
-  The Stack station's disabled Start button (P3) and a Library "Queue" action (P4 stage 2) can
-  call `queue_stack(id)` / `queue_while_running()`; not added here.
-- A capture that finishes while a stack runs still reports that stacking is blocked rather than
-  queueing it (`app-workspace.rs` follow path).
+- Queueing from the UI: Ctrl+Enter and the palette's Start while a stack runs, the agent, and
+  (after the merge) the subject page's Stack / Stack next and the Library's right-click. The
+  Stack station's disabled Start button (P3) can call `queue_while_running()`.
+- Closed after the merge: a capture that finishes while a stack renders is read on a worker,
+  becomes a catalog stack in its plan's subject with the open recipe (as the follow would have
+  stacked it) and joins the queue; the capture note says so.
 - Whether a borderless-windowed game reports a Quiet state is still UNVERIFIED; switching Quiet
   off in Preferences or the tray removes the hold.

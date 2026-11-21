@@ -375,3 +375,69 @@ fn benchmark_activities_frame_and_tray_pointer_sweep() {
         frame_us, tray_ms
     );
 }
+
+#[test]
+fn a_capture_finishing_while_a_stack_renders_waits_in_the_queue() {
+    let (mut app, files) = queue_fixture();
+    // Keep it waiting so the test reads the queue, not the next render.
+    app.activity_hub.queue.paused = true;
+    app.controls.exposure = Some(0.4);
+    let folder = files.path().join("bee-7").join("112MSDCF");
+    std::fs::create_dir_all(&folder).unwrap();
+    for index in 0..4 {
+        std::fs::write(folder.join(format!("DSC{index:05}.ARW")), [index as u8; 64]).unwrap();
+    }
+    let stacks_before = app
+        .catalog
+        .nodes
+        .iter()
+        .filter(|n| n.kind == crate::workspace_history::NodeKind::Stack)
+        .count();
+    app.queue_finished_capture(folder.clone());
+    assert_eq!(
+        app.capture.follow_note.as_deref(),
+        Some("112MSDCF is checked; it is stacked when the queue reaches it.")
+    );
+    let mut activities = Activities::default();
+    activities.begin();
+    app.report_activities(&mut activities, None);
+    assert!(
+        activities
+            .statuses()
+            .iter()
+            .any(|s| s.title == "Reading 112MSDCF to queue it"),
+        "the read shows in the tray while it runs"
+    );
+    let ctx = egui::Context::default();
+    let deadline = Instant::now() + Duration::from_secs(5);
+    while app.activity_hub.queue.is_empty() {
+        assert!(Instant::now() < deadline, "{:?}", app.capture.follow_note);
+        let _ = ctx.run(egui::RawInput::default(), |ctx| app.activities_frame(ctx));
+        std::thread::sleep(Duration::from_millis(5));
+    }
+    let stack = app.activity_hub.queue.stacks().next().unwrap();
+    let node = app.catalog.node(stack).unwrap();
+    let draft = node.stack.as_ref().unwrap();
+    assert_eq!(
+        std::fs::canonicalize(&draft.source).unwrap(),
+        std::fs::canonicalize(&folder).unwrap()
+    );
+    assert_eq!(draft.sources.len(), 4);
+    assert_eq!(
+        draft.exposure,
+        Some(0.4),
+        "the recipe the follow would have used"
+    );
+    assert_eq!(
+        app.catalog
+            .nodes
+            .iter()
+            .filter(|n| n.kind == crate::workspace_history::NodeKind::Stack)
+            .count(),
+        stacks_before + 1
+    );
+    assert_eq!(
+        app.capture.follow_note.as_deref(),
+        Some("112MSDCF waits in the stack queue.")
+    );
+}

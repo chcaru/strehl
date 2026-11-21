@@ -33,6 +33,22 @@ pub(super) struct ActivityHub {
     rendering: Option<FrozenRequest>,
     /// Bytes copied by the view-bundle export in flight.
     pub bundle_progress: Option<std::sync::Arc<crate::session_import::BundleProgress>>,
+    /// Captures that finished while a stack rendered, read on workers
+    /// before they join the queue.
+    capture_scans: Vec<CaptureScan>,
+}
+
+/// A finished capture on its way into the stack queue: where it goes and
+/// the recipe the follow would have stacked it with.
+struct CaptureScan {
+    folder: PathBuf,
+    parent: crate::workspace_history::NodeId,
+    name: String,
+    settings: jobs::RenderSettings,
+    exposure: Option<f32>,
+    gate: Option<f32>,
+    workers: usize,
+    task: Task<StackScan>,
 }
 
 impl ActivityHub {
@@ -86,6 +102,7 @@ impl ActivityHub {
             render: None,
             rendering: None,
             bundle_progress: None,
+            capture_scans: Vec::new(),
         }
     }
     /// A render is starting (`launch_render`, from Start or the queue).
@@ -110,6 +127,7 @@ impl StrehlApp {
                 Err(mpsc::TryRecvError::Empty) => {}
             }
         }
+        self.poll_capture_scans();
         self.activity_hub.quiet.enabled = self.shell.prefs.quiet;
         let gate = StartGate {
             heavy_busy: self.job.is_some() || self.activity_hub.activities.heavy_busy(),
@@ -207,6 +225,82 @@ impl StrehlApp {
         self.pending_run = Some(run);
         self.activity_hub.running_queue = Some(item.id);
         self.launch_render(request);
+    }
+
+    /// A capture finished while a stack renders: read it, make its catalog
+    /// stack with the open recipe (as the follow would have stacked it) and
+    /// queue it, so it is stacked when the queue reaches it (plan 6.6).
+    pub(super) fn queue_finished_capture(&mut self, folder: PathBuf) {
+        let (subject, name) = self.capture_destination(&folder);
+        let parent = match subject
+            .or_else(|| self.capture_parent.take())
+            .or_else(|| self.catalog.selected_container())
+        {
+            Some(id) => id,
+            None => match self.catalog.create_project("Captures") {
+                Ok(id) => id,
+                Err(error) => {
+                    self.capture.follow_note = Some(format!("Not queued: {error:#}"));
+                    return;
+                }
+            },
+        };
+        let mut settings = self.controls.settings.clone();
+        settings.session = None;
+        self.capture.follow_note = Some(format!(
+            "{} is checked; it is stacked when the queue reaches it.",
+            display_name(&folder)
+        ));
+        let task = jobs::scan_stack(folder.clone());
+        self.activity_hub.capture_scans.push(CaptureScan {
+            folder,
+            parent,
+            name,
+            settings,
+            exposure: self.controls.exposure,
+            gate: self.controls.gate,
+            workers: self.controls.workers,
+            task,
+        });
+    }
+
+    fn poll_capture_scans(&mut self) {
+        let mut index = 0;
+        while index < self.activity_hub.capture_scans.len() {
+            let result = match self.activity_hub.capture_scans[index]
+                .task
+                .receiver
+                .try_recv()
+            {
+                Ok(result) => result,
+                Err(mpsc::TryRecvError::Empty) => {
+                    index += 1;
+                    continue;
+                }
+                Err(mpsc::TryRecvError::Disconnected) => Err("the reader stopped".into()),
+            };
+            let item = self.activity_hub.capture_scans.remove(index);
+            let outcome = result.map_err(anyhow::Error::msg).and_then(|scan| {
+                anyhow::ensure!(!scan.frames.is_empty(), "no RAW photographs");
+                let draft = crate::workspace_history::StackDraft::from_scan(
+                    &scan,
+                    item.settings,
+                    item.exposure,
+                    item.gate,
+                    item.workers,
+                );
+                let id = self.catalog.create_stack(item.parent, &item.name, draft)?;
+                self.persist_catalog();
+                self.queue_stack(id)
+            });
+            let name = display_name(&item.folder);
+            self.capture.follow_note = Some(match outcome {
+                Ok(_) => format!("{name} waits in the stack queue."),
+                Err(error) => format!(
+                    "{name} is checked but was not queued ({error:#}). Open it from the captures list to stack it."
+                ),
+            });
+        }
     }
 
     /// Start (the shortcut or the palette) while a stack renders: queue the
@@ -528,6 +622,14 @@ impl StrehlApp {
             status.stack = Some(item.stack);
             activities.report(status);
         }
+        for item in &self.activity_hub.capture_scans {
+            activities.report(ActivityStatus::new(
+                ActivityKind::Open,
+                &format!("capture-scan:{}", item.folder.display()),
+                format!("Reading {} to queue it", display_name(&item.folder)),
+                Lane::Background,
+            ));
+        }
         if self.scan.is_some() {
             activities.report(ActivityStatus::new(
                 ActivityKind::Open,
@@ -685,6 +787,14 @@ impl StrehlApp {
             log,
         }
     }
+}
+
+fn display_name(folder: &std::path::Path) -> String {
+    folder
+        .file_name()
+        .unwrap_or_default()
+        .to_string_lossy()
+        .into_owned()
 }
 
 #[cfg(test)]

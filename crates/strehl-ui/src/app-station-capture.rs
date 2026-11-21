@@ -74,20 +74,31 @@ impl StrehlApp {
     /// created beside the selected one) and its stack name, or P4's default
     /// name for the folder.
     fn capture_names(&mut self, folder: &std::path::Path) {
+        let (subject, stack) = self.capture_destination(folder);
+        self.session_ui.pending_name = Some(stack);
+        if let Some(id) = subject {
+            self.capture_parent = Some(id);
+        }
+    }
+
+    /// The plan's subject for `folder` (found by name, or created beside the
+    /// selected one; None when the plan names none) and the stack's name.
+    pub(super) fn capture_destination(
+        &mut self,
+        folder: &std::path::Path,
+    ) -> (Option<NodeId>, String) {
         let (subject, stack) = self.capture.names_for(folder).unwrap_or_default();
         let stack = if stack.trim().is_empty() {
             crate::workspace_history::default_stack_name(folder)
         } else {
             stack.trim().to_owned()
         };
-        self.session_ui.pending_name = Some(stack);
         let subject = subject.trim();
         if subject.is_empty() {
-            return;
+            return (None, stack);
         }
         if let Some(id) = self.capture_find_subject(subject) {
-            self.capture_parent = Some(id);
-            return;
+            return (Some(id), stack);
         }
         // A new subject sits in the selected project or folder.
         let container = self.catalog.selected_container().and_then(|id| {
@@ -111,16 +122,19 @@ impl StrehlApp {
                 Ok(id) => id,
                 Err(error) => {
                     self.capture.error = Some(error.to_string());
-                    return;
+                    return (None, stack);
                 }
             },
         };
         match self.catalog.create_subject(parent, subject) {
             Ok(id) => {
-                self.capture_parent = Some(id);
                 self.persist_catalog();
+                (Some(id), stack)
             }
-            Err(error) => self.capture.error = Some(error.to_string()),
+            Err(error) => {
+                self.capture.error = Some(error.to_string());
+                (None, stack)
+            }
         }
     }
 
@@ -158,7 +172,16 @@ impl StrehlApp {
             // It opens itself only when that interrupts nothing: no operation
             // in flight, and either Capture is open or no other bracket is.
             let capture_open = self.shell.navigator.station() == Station::Capture;
-            if busy || !(capture_open || self.stack.is_none()) {
+            let only_stacking = self.job.is_some()
+                && self.scan.is_none()
+                && self.replay.is_none()
+                && self.session_import.is_none()
+                && !self.picker_active();
+            if only_stacking {
+                // A stack is rendering: this capture waits in the stack queue
+                // and is stacked when the queue reaches it (plan 6.6).
+                self.queue_finished_capture(folder);
+            } else if busy || !(capture_open || self.stack.is_none()) {
                 self.capture.follow_note = Some(format!(
                     "{name} is checked. Open it from the captures list to stack it."
                 ));

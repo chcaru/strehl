@@ -59,6 +59,14 @@ impl StageTimes {
             .filter(|v| v.is_finite() && *v > 0.0)
             .or(Some(per_frame).filter(|v| v.is_finite() && *v > 0.0))
     }
+    /// The pass's plane count: its `frames` line, else the folded count (a
+    /// log longer than the seed's tail loses its `frames` line, not its
+    /// summary).
+    pub(crate) fn planes(&self) -> Option<usize> {
+        self.frames
+            .or(self.folded.map(|(_, of, ..)| of))
+            .filter(|&n| n > 0)
+    }
     /// A whole render of `planes` at this pass's rates (seconds).
     pub(crate) fn estimate(&self, planes: usize) -> Option<f64> {
         let fold = self.per_frame()? * planes as f64;
@@ -240,14 +248,15 @@ impl EtaTracker {
                 .split_whitespace()
                 .find_map(|word| word.strip_prefix(name)?.strip_prefix('='))
         };
-        if event.starts_with("stage name=read ") {
-            self.restart();
-        } else if event.starts_with("stage ") {
+        if event.starts_with("stage ") {
+            if event.starts_with("stage name=read ") {
+                self.restart();
+            }
+            // Every stage names the plane count, so the estimate before the
+            // merge knows it too.
+            self.total = field("total").and_then(|n| n.parse().ok()).or(self.total);
             match field("name") {
-                Some("merge") => {
-                    self.phase = Phase::Merge;
-                    self.total = field("total").and_then(|n| n.parse().ok()).or(self.total);
-                }
+                Some("merge") => self.phase = Phase::Merge,
                 Some("render") => {
                     self.phase = Phase::Writing;
                     self.writing_since = Some(now);
@@ -298,7 +307,7 @@ impl EtaTracker {
                 let remaining = total.saturating_sub(self.processed) as f64 * rate;
                 (remaining - since_last).max(0.0) + tail
             }
-            Phase::Preparing => self.seed?.estimate(self.total.or(self.seed?.frames)?)?,
+            Phase::Preparing => self.seed?.estimate(self.total.or(self.seed?.planes())?)?,
         };
         Some(Duration::from_secs_f64(seconds))
     }

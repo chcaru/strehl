@@ -131,10 +131,10 @@ fn time_left_comes_from_the_seed_until_the_live_rate_is_trustworthy() {
     tracker.ingest("folded          : 299 / 299 frames in 70.0 s (0.23 s per frame, 32 execution threads)\ncollapse+write  : 1.0 s\ntotal           : 71.0 s", now);
     assert_eq!(tracker.phase(), Phase::Done);
     assert_eq!(tracker.eta(now), Some(Duration::ZERO));
-    // A new pass starts over.
+    // A new pass starts over, with the plane count its first stage names.
     tracker.ingest("STREHL_UI_PROGRESS event=stage name=read total=299", now);
     assert_eq!(tracker.phase(), Phase::Preparing);
-    assert_eq!(tracker.processed(), (0, None));
+    assert_eq!(tracker.processed(), (0, Some(299)));
 }
 
 #[test]
@@ -176,4 +176,33 @@ fn durations_read_as_people_say_them() {
     ] {
         assert_eq!(spoken(Duration::from_secs(seconds)), words);
     }
+}
+
+/// A real render log of 1.6 MB put its `frames` line before the seed's 1 MiB
+/// tail: the seed then had rates but no plane count, and the resumed stack
+/// showed no time left until its merge began (P5 end-to-end run).
+#[test]
+fn a_seed_without_its_frames_line_still_estimates_before_the_merge() {
+    let seed = seed_from(
+        "folded          : 3 / 3 frames in 0.6 s (0.21 s per frame, 3 execution threads)\n\
+         collapse+write  : 0.6 s\n\
+         total           : 1.3 s\n",
+    )
+    .expect("a complete pass");
+    assert_eq!((seed.frames, seed.planes()), (None, Some(3)));
+    let now = Instant::now();
+    let mut tracker = EtaTracker::new(Some(seed));
+    assert_eq!(tracker.phase(), Phase::Preparing);
+    let eta = tracker.eta(now).expect("an estimate while aligning");
+    assert!(close(eta.as_secs_f64(), 3.0 * 0.2 + 0.6), "{eta:?}");
+    // The stages name the plane count of this render: a 299-plane variant.
+    tracker.ingest(
+        "STREHL_UI_PROGRESS event=stage name=read total=299\n\
+         STREHL_UI_PROGRESS event=stage name=alignment total=299\n",
+        now,
+    );
+    assert_eq!(tracker.phase(), Phase::Preparing);
+    let eta = tracker.eta(now).unwrap();
+    assert!(close(eta.as_secs_f64(), 299.0 * 0.2 + 0.6), "{eta:?}");
+    assert_eq!(tracker.processed(), (0, Some(299)));
 }
