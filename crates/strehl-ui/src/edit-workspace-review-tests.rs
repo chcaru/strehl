@@ -213,6 +213,7 @@ fn viewport_refinement_keeps_overview_and_drops_a_superseded_recipe() {
             true,
         )?;
         Ok(DevelopedPreview {
+            histogram: None,
             snapshot: old_snapshot,
             revision: old_revision,
             before: false,

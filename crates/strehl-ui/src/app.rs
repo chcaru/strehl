@@ -28,6 +28,8 @@ mod agent;
 #[cfg(test)]
 #[path = "app-destination-tests.rs"]
 mod destination_tests;
+#[path = "app-develop.rs"]
+mod develop;
 #[path = "app-editing.rs"]
 mod editing;
 #[path = "app-export.rs"]

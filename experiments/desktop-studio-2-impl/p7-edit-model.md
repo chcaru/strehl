@@ -172,3 +172,63 @@ Commands were run in `C:\w\p7` with `CARGO_BUILD_JOBS=8`, never `-q`.
 - Export presets: wire the library into the Export station, persist per-subject
   destinations, and run a batch through `available_path` (files are never overwritten).
   The Archive preset is a copy of master and recipe, which the station implements.
+
+## UI stage 1: Develop and Export parts (2026-11-21)
+
+Built as self-contained parts for the Studio 2 shell (P1 is still in another lane): each
+takes its inputs as parameters and returns intents. Nothing is composed into the shell
+yet; that is stage 2. Branch `studio2/p7-edit` after merging the integration branch
+(`251928367`).
+
+| Part | File | API |
+| --- | --- | --- |
+| Palette and widgets | `crates/strehl-ui/src/develop-style.rs` | `StudioPalette::GRAPHITE` (base.css tokens); `caps`, `sect`, `seg`, `slider`, `toggle`, `checkbox`, `button`, `link`, `tag`, `mark`, `tabs`, `icon`. Swapping in P1's tokens is one constructor |
+| Develop station | `develop-station.rs` | `tools_strip`, `tool_shortcut`, `control_strip(view, canvas, rail)`, `inspector(panel, view, rows)`, `DevelopCanvas::overlay`; `DevelopIntent`; `DepthRail` trait with `RangeFallback` |
+| Layers | `develop-layers.rs` | `layer_rows`, `apply_layer_intent`, `layers_panel`; `LayerIntent::{Select, SetVisible, Remove, MoveTo}` |
+| Export station | `export-station.rs` | `inspector`, `control_strip`, `history_table`; `ExportIntent`; `plan_batch`, `run_batch`, `BatchProgress::snapshot` |
+| App glue | `app-develop.rs` | `show_develop_{tools,strip,inspector}`, `show_export_{inspector,strip,history}`, `start_depth_repair`, `start_export_batch`, `develop_can_export`, `repair_export_note` |
+
+Behaviour that changed in today's desktop:
+
+- **P7c.** "Re-stack with source changes" became "Rebuild in the background": the
+  repair runs as its own render job (`DevelopApp::repair`), `self.job` stays free, the
+  photograph stays loaded and editable, and Export stays enabled. While the repair is
+  pending, exports use `EditorState::export_recipe` (the live tone with the repairs the
+  master holds, `with_baked_repairs`) and the pane says so. On completion the live
+  recipe is written beside the new render (never over an existing sidecar) and the
+  repaired render opens. VERIFIED by `app::develop::tests::a_pending_depth_repair_keeps_the_photograph_and_export_enabled`.
+- **Looks.** Recalculate keeps the Amount (it reset to 1.00); a double-click on the
+  chosen look resets to that look; each look has a one-line description.
+- **Loops.** `adaptive-effect.rs`, `edit-magic.rs` and `app-agent.rs` prepare the
+  recipe once per loop (`developed_pixel_prepared`, `display_pixel_prepared`).
+
+Model additions for the UI (strehl-edit): `enabled` on `Heal`, `Backdrop` and
+`ScaleBar` (the Layers eye; omitted when true, so recipes keep their bytes); a dark
+backdrop key (`BackdropKey::Dark`, clean to black, as in the mockup's "clean to black
+below 1.2 %"); `with_baked_repairs`; public prepared pixel accessors. The freeze tests
+still pass (VERIFIED).
+
+Performance (5.2/5.4), by construction (ARGUED; no 5.3 measurement for this stage):
+the histogram is computed on the preview worker from a 256 px development; the split
+view's "before" is one SDR overview per photograph, developed and uploaded on a worker,
+so slider drags never redevelop it; the station parts draw shapes only. VERIFIED by
+test: pointer-only motion over the inspector raises no intent.
+
+Tests (VERIFIED): `cargo test --locked -p strehl-ui` 1143 passed, 0 failed, 19 ignored;
+clippy `-D warnings` and `cargo fmt --check` clean for strehl-ui. New tests cover the
+scope switch, layer ordering (tone order moves, repair-blend list order does not),
+intents from inspector clicks, the depth brush, the depth repair flow, batch progress
+and never-overwrite naming.
+
+Open for stage 2 and later:
+
+- Composition into the P1 shell, and the offscreen visual comparison at 1680 x 1050
+  against `develop*.png` and `export.png` (10.2); not done here.
+- The depth rail is the `RangeFallback` (two plane fields) until the Stack station's
+  rail implements `DepthRail`.
+- The HDR/SDR switch is stored (`prefer_sdr`); the presenter has no force-SDR call yet.
+  The Clipping toggle is state only.
+- Split view: the "before" side is the SDR overview (soft when zoomed past it).
+- No camera-preview fill inside a painted stroke (optional, not built); the repair is a
+  full re-stack in the background until E4/P7d.
+- Archive files from a batch are not recorded in the export history.

@@ -63,7 +63,7 @@ impl EditorState {
     }
 
     pub fn owns_canvas(&self, ctx: &egui::Context) -> bool {
-        self.tool != DrawingTool::Navigate
+        (self.tool != DrawingTool::Navigate || self.develop.owns_pointer())
             && !ctx.input(|i| i.key_down(Key::Space) || i.modifiers.alt)
     }
 
@@ -98,6 +98,14 @@ impl EditorState {
             self.region_interaction.navigation_press = self.tool == DrawingTool::Select && !hit;
         }
         let active = self.region_interaction.gesture.is_some();
+        if self.develop.owns_pointer() {
+            // A Develop tool (crop, picker, brush, heal, note) or the split
+            // grip has the pointer; panning waits for Space or Alt.
+            let owns = self.owns_canvas(ctx);
+            self.region_interaction.ownership_frame = Some(frame);
+            self.region_interaction.owns_pointer = owns;
+            return owns;
+        }
         let owns = self.owns_canvas(ctx)
             && !self.region_interaction.navigation_press
             && (active || pressed || !wheel)
@@ -105,6 +113,49 @@ impl EditorState {
         self.region_interaction.ownership_frame = Some(frame);
         self.region_interaction.owns_pointer = owns;
         owns
+    }
+
+    /// Surround, split view, crop frame, scale bar and the Develop tools.
+    /// Returns true when a Develop tool owns this frame's pointer input.
+    fn develop_overlay(&mut self, ui: &mut egui::Ui, image: Rect, clip: Rect) -> bool {
+        let Some(loaded) = self.loaded.as_ref() else {
+            return false;
+        };
+        if self.develop.surround_chosen {
+            let colour = self.develop.surround.colour();
+            let painter = ui.painter().with_clip_rect(clip);
+            for band in [
+                Rect::from_min_max(clip.min, egui::pos2(clip.right(), image.top())),
+                Rect::from_min_max(egui::pos2(clip.left(), image.bottom()), clip.max),
+                Rect::from_min_max(
+                    egui::pos2(clip.left(), image.top()),
+                    egui::pos2(image.left(), image.bottom()),
+                ),
+                Rect::from_min_max(
+                    egui::pos2(image.right(), image.top()),
+                    egui::pos2(clip.right(), image.bottom()),
+                ),
+            ] {
+                if band.is_positive() {
+                    painter.rect_filled(band, 0.0, colour);
+                }
+            }
+        }
+        let palette = crate::develop_station::style::StudioPalette::GRAPHITE;
+        let before = self
+            .before_overview
+            .as_ref()
+            .filter(|b| std::sync::Arc::ptr_eq(&b.image, &loaded.image))
+            .map(|b| (&b.texture, b.uv));
+        let view = crate::develop_station::CanvasView {
+            palette: &palette,
+            recipe: &self.recipe,
+            image_size: [loaded.image.width, loaded.image.height],
+            um_per_px: self.um_per_px,
+            before,
+        };
+        self.develop.overlay(ui, image, clip, &view);
+        self.develop.owns_pointer()
     }
 
     pub fn select_photograph(&mut self) {
@@ -149,6 +200,10 @@ impl EditorState {
         if self.region_interaction.tool != self.tool {
             self.cancel_geometry();
             self.region_interaction.tool = self.tool;
+        }
+        if self.develop_overlay(ui, image, clip) {
+            self.paint_regions(ui, image, image.intersect(clip));
+            return;
         }
         if !text_owned && ui.input(|i| i.key_pressed(Key::Escape)) {
             let active = self.region_interaction.gesture.is_some()

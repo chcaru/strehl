@@ -32,6 +32,17 @@ pub(crate) struct DevelopedPreview {
     pub before: bool,
     pub hdr: bool,
     pub prepared: crate::photo_viewport::PreparedPhoto,
+    /// Luminance histogram of the same development, for the Develop inspector.
+    pub histogram: Option<Arc<crate::develop_station::Histogram>>,
+}
+
+/// The split view's "before": one SDR overview per photograph, developed
+/// and uploaded on a worker. It does not depend on edits, so it is never
+/// redeveloped while a slider moves.
+pub(crate) struct BeforeOverview {
+    pub image: Arc<LinearImage>,
+    pub texture: TextureHandle,
+    pub uv: [[f32; 2]; 2],
 }
 
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
@@ -96,6 +107,14 @@ pub(crate) struct EditorState {
     recovery_files: BTreeMap<PathBuf, PathBuf>,
     recovered_from_disk: BTreeSet<PathBuf>,
     pub(crate) recovery_root: Option<PathBuf>,
+    /// Develop tools on the canvas; kept across photographs.
+    pub(crate) develop: crate::develop_station::DevelopCanvas,
+    /// Histogram of the painted development.
+    pub(crate) histogram: Option<Arc<crate::develop_station::Histogram>>,
+    pub(crate) before_overview: Option<BeforeOverview>,
+    before_task: Option<Task<BeforeOverview>>,
+    /// The subject's scale calibration, set by the app for the overlay.
+    pub(crate) um_per_px: Option<f64>,
 }
 
 impl EditorState {
@@ -132,6 +151,15 @@ impl EditorState {
             .is_some_and(|(_, _, job)| job.recipe() != &self.recipe)
         {
             self.development = None;
+        }
+        let recipe = self.export_recipe();
+        if recipe != self.recipe {
+            // A pending depth repair: export what the master holds.
+            let loaded = self.loaded.as_ref()?;
+            return Some(
+                DevelopmentJob::new(loaded.image.clone(), loaded.preview.clone(), recipe)
+                    .with_coverage(loaded.coverage.clone()),
+            );
         }
         self.development_job(false)
     }
@@ -216,11 +244,16 @@ impl EditorState {
         let last_export = self.last_export.take();
         self.viewport.reset();
         let viewport = std::mem::take(&mut self.viewport);
+        let mut develop = std::mem::take(&mut self.develop);
+        develop.reset_document();
+        let um_per_px = self.um_per_px;
         *self = Self {
             show_regions: true,
             exporting,
             last_export,
             viewport,
+            develop,
+            um_per_px,
             error,
             recoveries,
             recovery_files,
@@ -464,6 +497,9 @@ impl EditorState {
                         && preview.hdr == hdr =>
                 {
                     self.painted_side = preview.prepared.size[0].max(preview.prepared.size[1]);
+                    if !preview.before {
+                        self.histogram = preview.histogram.clone();
+                    }
                     self.texture = Some(self.viewport.publish_overview(
                         ctx,
                         crate::photo_viewport::Identity {
@@ -532,12 +568,21 @@ impl EditorState {
                     hdr,
                     true,
                 )?;
+                // A 256 px development is enough for 64 bins.
+                let histogram = job
+                    .image(true)
+                    .render_region_sdr8(job.recipe(), [0.0, 0.0], [1.0, 1.0], 256)
+                    .ok()
+                    .map(|(_, _, rgb)| {
+                        Arc::new(crate::develop_station::Histogram::from_rgb8(&rgb))
+                    });
                 Ok(DevelopedPreview {
                     snapshot,
                     revision,
                     before,
                     hdr,
                     prepared,
+                    histogram,
                 })
             }));
         }
@@ -551,6 +596,7 @@ impl EditorState {
                 hdr,
             },
         );
+        self.poll_before_overview(ctx, max_texture_side);
         if let Some(result) = self
             .exporting
             .as_ref()
@@ -607,6 +653,7 @@ impl EditorState {
         }
         if self.loading.is_some()
             || self.developing.is_some()
+            || self.before_task.is_some()
             || self.exporting.is_some()
             || self.preset.is_some()
             || self.saving.is_some()
@@ -778,6 +825,271 @@ impl EditorState {
         }));
         self.error = None;
         Ok(())
+    }
+}
+
+impl EditorState {
+    /// Develop the split view's "before" once per photograph, off the UI
+    /// thread, uploading its texture in the worker.
+    fn poll_before_overview(&mut self, ctx: &egui::Context, max_texture_side: u32) {
+        if let Some(result) = self
+            .before_task
+            .as_ref()
+            .and_then(|task| task.receiver.try_recv().ok())
+        {
+            self.before_task = None;
+            if let Ok(overview) = result
+                && self
+                    .loaded
+                    .as_ref()
+                    .is_some_and(|loaded| Arc::ptr_eq(&loaded.image, &overview.image))
+            {
+                self.before_overview = Some(overview);
+            }
+        }
+        let wanted = self.develop.compare == crate::develop_station::Compare::Split;
+        let Some(loaded) = self.loaded.as_ref().filter(|_| wanted) else {
+            return;
+        };
+        let current = self
+            .before_overview
+            .as_ref()
+            .is_some_and(|b| Arc::ptr_eq(&b.image, &loaded.image));
+        if current || self.before_task.is_some() {
+            return;
+        }
+        let image = loaded.image.clone();
+        let job = DevelopmentJob::new(
+            loaded.image.clone(),
+            loaded.preview.clone(),
+            DevelopmentRecipe::default(),
+        )
+        .with_coverage(loaded.coverage.clone());
+        let ctx = ctx.clone();
+        self.before_task = Some(spawn_task("strehl-develop-before", move |cancelled| {
+            let overview = job.image(true);
+            let mut stride = 1u32;
+            while overview.width.max(overview.height).div_ceil(stride) > max_texture_side.max(1) {
+                stride *= 2;
+            }
+            let prepared = crate::photo_viewport::prepare_job(
+                &job,
+                true,
+                strehl_edit::DisplayRegionRequest {
+                    min: [0, 0],
+                    max: [overview.width, overview.height],
+                    stride,
+                },
+                &cancelled,
+                None,
+                false,
+                true,
+            )?;
+            let picture = prepared
+                .sdr
+                .ok_or_else(|| anyhow::anyhow!("The before overview produced no picture"))?;
+            let texture = ctx.load_texture("develop-before", picture, egui::TextureOptions::LINEAR);
+            ctx.request_repaint();
+            Ok(BeforeOverview {
+                image,
+                texture,
+                uv: prepared.uv,
+            })
+        }));
+    }
+
+    /// The recipe the current master can export now: the live recipe, or,
+    /// while a depth repair waits for its re-stack, the live tone with the
+    /// repairs the master holds (`with_baked_repairs`).
+    pub(crate) fn export_recipe(&self) -> DevelopmentRecipe {
+        match &self.loaded {
+            Some(loaded) if loaded.image.validate_source_repairs(&self.recipe).is_err() => self
+                .recipe
+                .with_baked_repairs(loaded.image.baked_recipe.as_ref()),
+            _ => self.recipe.clone(),
+        }
+    }
+
+    /// True when the recipe holds repairs the master does not.
+    pub(crate) fn repairs_pending(&self) -> bool {
+        self.loaded
+            .as_ref()
+            .is_some_and(|loaded| loaded.image.validate_source_repairs(&self.recipe).is_err())
+    }
+
+    /// Apply a Develop intent that changes the recipe, through the undo
+    /// journal. Returns false for intents the app handles (looks, versions,
+    /// export, the re-stack, the white-balance sample).
+    pub(crate) fn apply_develop(
+        &mut self,
+        intent: &crate::develop_station::DevelopIntent,
+        time: f64,
+    ) -> anyhow::Result<bool> {
+        use crate::develop_station::{Compare, DevelopIntent as I};
+        let before = self.recipe.clone();
+        match intent {
+            I::SelectTool(tool) => {
+                self.develop.tool = *tool;
+                self.set_tool(match tool {
+                    crate::develop_station::DevelopTool::Region => [
+                        DrawingTool::Select,
+                        DrawingTool::Ellipse,
+                        DrawingTool::Rectangle,
+                        DrawingTool::Polygon,
+                        DrawingTool::Lasso,
+                        DrawingTool::MagicLasso,
+                    ][self.develop.region_drawing.min(5)],
+                    crate::develop_station::DevelopTool::Move => DrawingTool::Navigate,
+                    _ => DrawingTool::Select,
+                });
+            }
+            I::SetCompare(compare) => {
+                self.develop.compare = *compare;
+                self.before = *compare == Compare::Before;
+            }
+            I::SetSurround(surround) => {
+                self.develop.surround = *surround;
+                self.develop.surround_chosen = true;
+            }
+            I::RegionDrawing(index) => {
+                self.develop.tool = crate::develop_station::DevelopTool::Region;
+                self.develop.region_drawing = (*index).min(5);
+                self.set_tool(
+                    [
+                        DrawingTool::Select,
+                        DrawingTool::Ellipse,
+                        DrawingTool::Rectangle,
+                        DrawingTool::Polygon,
+                        DrawingTool::Lasso,
+                        DrawingTool::MagicLasso,
+                    ][self.develop.region_drawing],
+                );
+            }
+            I::ToggleClipping => self.develop.clipping = !self.develop.clipping,
+            I::SetBrush { size_px, feather } => {
+                if self.develop.tool == crate::develop_station::DevelopTool::Heal {
+                    self.develop.heal_px = *size_px;
+                } else {
+                    self.develop.brush_px = *size_px;
+                }
+                self.develop.brush_feather = *feather;
+            }
+            I::SetScope(scope) => {
+                self.commit_edit();
+                self.selected = scope
+                    .clone()
+                    .filter(|id| self.recipe.regions.iter().any(|r| &r.id == id));
+            }
+            I::Adjust(field, value) => {
+                let index = self
+                    .selected
+                    .as_ref()
+                    .and_then(|id| self.recipe.regions.iter().position(|r| &r.id == id));
+                let adjustments = match index {
+                    Some(i) => &mut self.recipe.regions[i].adjustments,
+                    None => &mut self.recipe.global,
+                };
+                field.set(adjustments, *value);
+                if self.recipe != before {
+                    self.before = false;
+                    self.begin_edit(before, time);
+                }
+            }
+            I::SetCrop(crop) => {
+                let mut next = self.recipe.clone();
+                next.crop = *crop;
+                self.replace(next)?;
+            }
+            I::SetScaleBar(bar) => {
+                let mut next = self.recipe.clone();
+                next.scale_bar = *bar;
+                self.replace(next)?;
+            }
+            I::SetBackdrop(backdrop) => {
+                let mut next = self.recipe.clone();
+                next.backdrop = *backdrop;
+                self.replace(next)?;
+            }
+            I::AddHeal(heal) => {
+                heal.validate()?;
+                let mut next = self.recipe.clone();
+                next.heals.push(*heal);
+                self.replace(next)?;
+            }
+            I::PaintStroke {
+                points,
+                radius,
+                feather,
+            } => {
+                let shape = RegionShape::stroke_from_path(points, *radius);
+                let range = self.develop.repair_range;
+                let id = self.add_region(shape)?;
+                let mut next = self.recipe.clone();
+                if let Some(region) = next.regions.iter_mut().find(|r| r.id == id) {
+                    let repairs = before
+                        .regions
+                        .iter()
+                        .filter(|r| r.source_range.is_some())
+                        .count();
+                    region.name = format!("Depth repair {}", repairs + 1);
+                    region.feather = feather.clamp(0.0, 1.0);
+                    region.source_range =
+                        range.map(|(first, last)| strehl_edit::SourceRange { first, last });
+                }
+                self.replace(next)?;
+                self.selected = Some(id);
+            }
+            I::SetRepairRange(first, last) => {
+                self.develop.repair_range = Some((*first, *last));
+                let selected = self.selected.clone();
+                let mut next = self.recipe.clone();
+                if let Some(region) = next
+                    .regions
+                    .iter_mut()
+                    .find(|r| Some(&r.id) == selected.as_ref() && r.source_range.is_some())
+                {
+                    region.source_range = Some(strehl_edit::SourceRange {
+                        first: *first,
+                        last: *last,
+                    });
+                    self.replace(next)?;
+                }
+            }
+            I::AddNote(at) => {
+                let shape = RegionShape::Ellipse {
+                    center: *at,
+                    radius: [0.012, 0.018],
+                };
+                let notes = self
+                    .recipe
+                    .regions
+                    .iter()
+                    .filter(|r| {
+                        crate::develop_station::layers::region_kind(r)
+                            == crate::develop_station::layers::LayerKind::Note
+                    })
+                    .count();
+                let id = self.add_region(shape)?;
+                let mut next = self.recipe.clone();
+                if let Some(region) = next.regions.iter_mut().find(|r| r.id == id) {
+                    region.name = format!("Note {}", notes + 1);
+                    region.note = "Note".into();
+                    region.feather = 0.0;
+                }
+                self.replace(next)?;
+            }
+            I::Layer(layer) => {
+                use crate::develop_station::layers::{LayerId, LayerIntent, apply_layer_intent};
+                if let LayerIntent::Select(LayerId::Region(id)) = layer {
+                    self.commit_edit();
+                    self.selected = Some(id.clone());
+                } else if let Some(next) = apply_layer_intent(&self.recipe, layer)? {
+                    self.replace(next)?;
+                }
+            }
+            _ => return Ok(false),
+        }
+        Ok(true)
     }
 }
 
