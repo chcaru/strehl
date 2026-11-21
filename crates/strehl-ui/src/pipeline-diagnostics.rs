@@ -621,9 +621,28 @@ impl PipelineProgress {
             self.evidence_refused += 1;
             return;
         }
+        use crate::evidence_file::Role;
         let packet = record.surface;
+        // The log's domain when it has named one, as for the hex maps;
+        // otherwise the file's own analysis extent.
+        let extent = self
+            .analysis_size
+            .or(self.plane_size)
+            .unwrap_or(header.analysis_extent());
+        if record.role == Role::RevisionSample {
+            // Only the revision trace reads these samples; the displayed
+            // preview comes whole from the live file.
+            self.revisions.observe(&packet, extent);
+            self.evidence_records += 1;
+            return;
+        }
         if let Some(packed) = &record.packed {
-            if packet.kind != DiagnosticKind::GateSupport
+            let binary = match record.role {
+                Role::Plane => packet.kind == DiagnosticKind::GateSupport,
+                Role::Averaging => packet.kind == DiagnosticKind::Averaging,
+                Role::RevisionSample => false,
+            };
+            if !binary
                 || self
                     .sampled_mask_history
                     .first()
@@ -632,13 +651,20 @@ impl PipelineProgress {
                 self.evidence_refused += 1;
                 return;
             }
+            // Capture order for a plane's masks, accepted-prefix order for
+            // the stack's averaging masks, as for the hex maps.
+            let index = if packet.kind == DiagnosticKind::GateSupport {
+                packet.frame
+            } else {
+                packet.folded - 1
+            };
             let samples = (packet.width * packet.height) as u64;
             if let Some(history) = self
                 .sampled_mask_history
                 .iter_mut()
                 .find(|history| history.level == packet.level && history.kind == packet.kind)
             {
-                history.record_counted(packet.frame, packed.on, samples);
+                history.record_counted(index, packed.on, samples);
             } else {
                 let mut history = SampledMaskHistory {
                     level: packet.level,
@@ -646,20 +672,62 @@ impl PipelineProgress {
                     total,
                     bins: vec![SampledMaskBin::default(); total.min(MAX_MASK_BINS)],
                 };
-                history.record_counted(packet.frame, packed.on, samples);
+                history.record_counted(index, packed.on, samples);
                 self.sampled_mask_history.push(history);
             }
-            // The log's domain when it has named one, as for the hex maps;
-            // otherwise the file's own analysis extent.
-            let extent = self
-                .analysis_size
-                .or(self.plane_size)
-                .unwrap_or(header.analysis_extent());
-            self.admission_archive
-                .ingest_packed(&packet, extent, &packed.bits);
+            if packet.kind == DiagnosticKind::GateSupport {
+                self.admission_archive
+                    .ingest_packed(&packet, extent, &packed.bits);
+            }
         }
         self.evidence_records += 1;
         self.retain_surface(packet);
+    }
+
+    /// The newest generation's coefficient maps and coarse preview from the
+    /// run's live file. Like the evidence file's maps they never advance the
+    /// stage; the preview reaches the live view and the recent ring, the
+    /// coefficient maps the ring. Older or repeated sequences change nothing.
+    pub(crate) fn ingest_live(&mut self, live: crate::evidence_file::LiveSet) {
+        let total = live.frames_total;
+        if total == 0
+            || total > super::MAX_FRAME_OBSERVATIONS
+            || self.frames_total.is_some_and(|known| known != total)
+        {
+            self.evidence_refused += 1;
+            return;
+        }
+        for packet in live.surfaces {
+            if self
+                .diagnostic_surfaces
+                .iter()
+                .any(|old| old.sequence == packet.sequence && old.kind == packet.kind)
+            {
+                continue;
+            }
+            if packet.kind == DiagnosticKind::Preview {
+                self.live_preview.observe(
+                    &packet,
+                    total,
+                    self.analysis_size.or(self.plane_size),
+                    self.analysis_origin.unwrap_or([0, 0]),
+                );
+            }
+            self.evidence_records += 1;
+            self.retain_surface(packet);
+        }
+    }
+
+    /// Everything one render-job event carries, in file order.
+    pub(crate) fn ingest_evidence_batch(&mut self, batch: crate::evidence_file::EvidenceBatch) {
+        if let Some(header) = batch.header {
+            for record in batch.records {
+                self.ingest_evidence(&header, record);
+            }
+        }
+        if let Some(live) = batch.live {
+            self.ingest_live(live);
+        }
     }
 
     /// The admitted share of `frame` at `level` for views that draw one value

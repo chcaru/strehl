@@ -263,3 +263,240 @@ fn a_log_can_name_only_a_file_inside_its_run() {
         assert_eq!(named_path(run, name), None, "{name}");
     }
 }
+
+/// A preview's revision sample record (kind 6), taken at the lattice the
+/// desktop's `compare` uses, by this test's own sampler.
+pub(crate) fn sample_payload(
+    folded: u32,
+    size: [usize; 2],
+    range: (f32, f32),
+    full: &[u8],
+) -> Vec<u8> {
+    let [pw, ph] = size;
+    let scale = (64.0 / pw as f64).min(48.0 / ph as f64).min(1.0);
+    let (w, h) = (
+        ((pw as f64 * scale).floor() as usize).max(1),
+        ((ph as f64 * scale).floor() as usize).max(1),
+    );
+    let mut payload = folded.to_le_bytes().to_vec();
+    for value in [pw, ph, w, h] {
+        payload.extend((value as u16).to_le_bytes());
+    }
+    payload.extend(range.0.to_le_bytes());
+    payload.extend(range.1.to_le_bytes());
+    for y in 0..h {
+        for x in 0..w {
+            let sx = ((2 * x + 1) * pw / (2 * w)).min(pw - 1);
+            let sy = ((2 * y + 1) * ph / (2 * h)).min(ph - 1);
+            payload.push(full[sy * pw + sx]);
+        }
+    }
+    payload
+}
+
+/// One live record: frame, level, kind, sequence, folded, size, range, bytes.
+pub(crate) type LiveRecord = (u32, u8, u8, u32, u32, [usize; 2], (f32, f32), Vec<u8>);
+
+/// A live file of `records`, by this test's own writer.
+pub(crate) fn live_bytes(frames: u32, records: &[LiveRecord]) -> Vec<u8> {
+    let mut bytes = b"STRHLIV1".to_vec();
+    bytes.extend(LIVE_VERSION.to_le_bytes());
+    bytes.extend(frames.to_le_bytes());
+    bytes.extend((records.len() as u32).to_le_bytes());
+    for (frame, level, kind, sequence, folded, size, range, pixels) in records {
+        let mut payload = folded.to_le_bytes().to_vec();
+        payload.extend((size[0] as u16).to_le_bytes());
+        payload.extend((size[1] as u16).to_le_bytes());
+        payload.extend(range.0.to_le_bytes());
+        payload.extend(range.1.to_le_bytes());
+        payload.extend_from_slice(pixels);
+        bytes.extend(record_bytes(*frame, *level, *kind, *sequence, &payload));
+    }
+    bytes
+}
+
+pub(crate) fn preview_pixels(generation: usize, [w, h]: [usize; 2]) -> Vec<u8> {
+    (0..w * h)
+        .map(|i| ((i * 7 + i / w * 3 + generation * 11 * (i % 5)) % 251) as u8)
+        .collect()
+}
+
+#[test]
+fn stack_records_decode_as_averaging_maps_and_revision_samples() {
+    let mut bytes = header_bytes(&[([13, 7], [900, 600])], 3);
+    let sites: Vec<bool> = (0..91).map(|i| i % 3 == 0).collect();
+    let mut averaging = 2u32.to_le_bytes().to_vec();
+    averaging.extend(support_payload(&sites));
+    bytes.extend(record_bytes(1, 0, 1, 4, &averaging));
+    let full = preview_pixels(1, [300, 210]);
+    bytes.extend(record_bytes(
+        1,
+        0,
+        6,
+        5,
+        &sample_payload(2, [300, 210], (1.0, 9.0), &full),
+    ));
+    // A sample whose lattice disagrees with its preview is skipped.
+    let mut wrong = sample_payload(2, [300, 210], (1.0, 9.0), &full);
+    wrong[8] = 63;
+    bytes.extend(record_bytes(1, 0, 6, 6, &wrong));
+    // So is an averaging map that claims more accepted planes than exist.
+    let mut beyond = 4u32.to_le_bytes().to_vec();
+    beyond.extend(support_payload(&sites));
+    bytes.extend(record_bytes(1, 0, 1, 7, &beyond));
+    let mut out = Vec::new();
+    let mut decoder = EvidenceDecoder::default();
+    decoder.feed(&bytes, &mut out);
+    assert_eq!((out.len(), decoder.skipped()), (2, 2));
+    let map = &out[0];
+    assert_eq!(map.role, Role::Averaging);
+    assert_eq!(
+        (map.surface.kind, map.surface.scope, map.surface.folded),
+        (DiagnosticKind::Averaging, DiagnosticScope::Stack, 2)
+    );
+    assert_eq!(map.packed.as_ref().unwrap().on, 31);
+    let sample = &out[1];
+    assert_eq!(sample.role, Role::RevisionSample);
+    assert_eq!((sample.surface.width, sample.surface.height), (64, 44));
+    assert_eq!(
+        (
+            sample.surface.min,
+            sample.surface.max,
+            sample.surface.folded
+        ),
+        (1.0, 9.0, 2)
+    );
+}
+
+#[test]
+fn revision_samples_give_the_full_previews_revision_trace() {
+    // The trace the desktop computes from whole previews, against the one
+    // it computes from the engine's samples: the same summaries.
+    let size = [300, 210];
+    let mut full_field = crate::process_revision::RevisionField::default();
+    let mut sampled = crate::process_revision::RevisionField::default();
+    let mut decoder = EvidenceDecoder::default();
+    let mut out = Vec::new();
+    decoder.feed(&header_bytes(&[([13, 7], [900, 600])], 40), &mut out);
+    for generation in 1..=30u32 {
+        let pixels = preview_pixels(generation as usize, size);
+        let range = (generation as f32, 400.0 + generation as f32);
+        let preview = DiagnosticSurface {
+            sequence: u64::from(generation) * 10,
+            frame: generation as usize,
+            level: 1,
+            kind: DiagnosticKind::Preview,
+            scope: DiagnosticScope::Stack,
+            scale: DiagnosticScale::Linear,
+            width: size[0],
+            height: size[1],
+            min: range.0,
+            max: range.1,
+            pixels: pixels.clone().into(),
+            folded: generation as usize,
+        };
+        full_field.observe(&preview, [900, 600]);
+        let payload = sample_payload(generation, size, range, &pixels);
+        decoder.feed(
+            &record_bytes(generation, 0, 6, generation * 10, &payload),
+            &mut out,
+        );
+        let sample = out.pop().unwrap();
+        sampled.observe(&sample.surface, [900, 600]);
+    }
+    let summary = |field: &crate::process_revision::RevisionField| {
+        field
+            .history()
+            .iter()
+            .map(|r| {
+                (
+                    r.sequence,
+                    [r.from, r.to, r.from_frame, r.to_frame],
+                    [r.changed_samples, r.total_samples],
+                    r.range_dn.map(f32::to_bits),
+                )
+            })
+            .collect::<Vec<_>>()
+    };
+    assert_eq!(summary(&full_field).len(), 29);
+    assert!(
+        summary(&full_field).iter().any(|r| r.2[0] > 0),
+        "revisions must occur"
+    );
+    assert_eq!(summary(&sampled), summary(&full_field));
+    let (a, b) = (full_field.latest().unwrap(), sampled.latest().unwrap());
+    assert_eq!((a.width, a.height), (b.width, b.height));
+    assert_eq!(
+        a.signed_dn.iter().map(|v| v.to_bits()).collect::<Vec<_>>(),
+        b.signed_dn.iter().map(|v| v.to_bits()).collect::<Vec<_>>()
+    );
+}
+
+#[test]
+fn the_live_file_is_read_whole_when_replaced_and_partial_files_are_refused() {
+    let directory = crate::jobs::tests::TestDirectory::new("live-tail");
+    let path = directory.path().join(LIVE_FILE_NAME);
+    let mut tail = LiveTail::new(path.clone());
+    assert!(tail.poll().is_none(), "no file yet");
+    let preview = preview_pixels(3, [300, 210]);
+    let first = live_bytes(
+        5,
+        &[
+            (2, 0, 4, 8, 3, [13, 7], (-4.0, 6.0), vec![9; 91]),
+            (2, 1, 5, 9, 3, [300, 210], (1.0, 9.0), preview.clone()),
+        ],
+    );
+    std::fs::write(&path, &first).unwrap();
+    let set = tail.poll().unwrap();
+    assert_eq!(set.frames_total, 5);
+    assert_eq!(set.surfaces.len(), 2);
+    let coefficient = &set.surfaces[0];
+    assert_eq!(
+        (
+            coefficient.kind,
+            coefficient.scale,
+            coefficient.folded,
+            coefficient.min
+        ),
+        (
+            DiagnosticKind::Coefficient,
+            DiagnosticScale::Symmetric,
+            3,
+            -4.0
+        )
+    );
+    let shown = &set.surfaces[1];
+    assert_eq!(
+        (shown.kind, shown.width, shown.height),
+        (DiagnosticKind::Preview, 300, 210)
+    );
+    assert_eq!(&shown.pixels[..], &preview[..]);
+    assert!(tail.poll().is_none(), "unchanged");
+    // A newer generation replaces it whole.
+    let second = live_bytes(
+        5,
+        &[(
+            4,
+            1,
+            5,
+            20,
+            5,
+            [300, 210],
+            (1.0, 9.0),
+            preview_pixels(5, [300, 210]),
+        )],
+    );
+    std::fs::write(&path, &second).unwrap();
+    assert_eq!(tail.poll().unwrap().surfaces[0].folded, 5);
+    // A cut or miscounted file shows nothing, and is read again later.
+    let mut miscounted = second.clone();
+    miscounted[16] = 2;
+    for broken in [&second[..second.len() - 1], &miscounted[..]] {
+        assert!(decode_live(broken).is_err());
+    }
+    std::fs::write(&path, &second[..second.len() - 7]).unwrap();
+    assert!(tail.poll().is_none());
+    std::fs::write(&path, &first).unwrap();
+    assert_eq!(tail.poll().unwrap().surfaces.len(), 2);
+    assert!(read_live(&path).is_ok());
+}
