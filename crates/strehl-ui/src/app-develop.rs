@@ -57,6 +57,9 @@ pub(super) struct DevelopApp {
     /// The repaired render, opened once the editor is idle.
     repair_ready: Option<Task<PathBuf>>,
     pub(super) notice: Option<String>,
+    notice_shown: Option<String>,
+    /// The theme's palette, refreshed each frame the station draws.
+    pub(super) palette: StudioPalette,
     carry: Option<Task<DevelopmentRecipe>>,
     /// Set by the Export… intent; the shell routes to the Export station.
     pub(super) export_requested: bool,
@@ -81,6 +84,7 @@ pub(super) struct ExportApp {
     checking: Option<Task<Vec<HistoryCheck>>>,
     folder: Option<Task<Option<PathBuf>>>,
     pub(super) error: Option<String>,
+    error_shown: Option<String>,
 }
 
 pub(super) struct RunningBatch {
@@ -187,7 +191,7 @@ impl StrehlApp {
         ) -> R,
     ) -> Option<R> {
         let loaded = self.editor.loaded.as_ref()?;
-        let palette = StudioPalette::GRAPHITE;
+        let palette = self.edit_pane.develop.palette;
         let (_, _, um_per_px) = self.develop_subject();
         let (look, look_amount) = self.look_state();
         let versions = self.develop_versions();
@@ -254,7 +258,9 @@ impl StrehlApp {
             um_per_px,
             image_size: [loaded.image.width, loaded.image.height],
             hdr_photo: loaded.image.origin == strehl_edit::ImageOrigin::SceneLinear,
+            hdr_available: self.editor.viewport.hdr_available(loaded.image.origin),
             hdr_display: self.editor.viewport.hdr_active(loaded.image.origin),
+            display: self.develop_display_lines(),
             can_export: self.develop_can_export(),
         };
         let canvas = &self.editor.develop;
@@ -262,9 +268,10 @@ impl StrehlApp {
         Some(show(&view, &rows, panel, canvas))
     }
 
-    /// The tools strip, for the shell's 44 px column.
+    /// The tools strip, for the shell's 44 px column, with the Develop keys.
     pub(super) fn show_develop_tools(&mut self, ui: &mut egui::Ui) {
-        let palette = StudioPalette::GRAPHITE;
+        self.edit_pane.develop.palette = StudioPalette::of(ui.ctx());
+        let palette = self.edit_pane.develop.palette;
         let mut intents = Vec::new();
         if let Some(tool) = station::tools_strip(ui, &palette, self.editor.develop.tool) {
             intents.push(DevelopIntent::SelectTool(tool));
@@ -272,25 +279,75 @@ impl StrehlApp {
         if let Some(tool) = station::tool_shortcut(ui.ctx()) {
             intents.push(DevelopIntent::SelectTool(tool));
         }
+        intents.extend(station::view_shortcuts(ui.ctx(), &self.editor.develop));
         let time = ui.input(|i| i.time);
         self.handle_develop_intents(intents, time);
     }
 
-    /// The control strip, for the shell's 36 px row above the canvas.
+    /// The control strip, drawn into the shell's 36 px row.
     pub(super) fn show_develop_strip(&mut self, ui: &mut egui::Ui) {
+        self.edit_pane.develop.palette = StudioPalette::of(ui.ctx());
+        let intents = self
+            .with_develop_view(|view, _, _, canvas| station::control_strip(ui, view, canvas))
+            .unwrap_or_default();
+        let time = ui.input(|i| i.time);
+        self.handle_develop_intents(intents, time);
+    }
+
+    /// The rail slot while the depth brush is out. `RangeFallback` stands in
+    /// for the Stack station's depth rail, which implements `DepthRail`.
+    pub(super) fn show_develop_rail(&mut self, ui: &mut egui::Ui) {
         let intents = self
             .with_develop_view(|view, _, _, canvas| {
-                station::control_strip(ui, view, canvas, &mut RangeFallback)
+                station::depth_rail(ui, view, canvas, &mut RangeFallback)
             })
             .unwrap_or_default();
         let time = ui.input(|i| i.time);
         self.handle_develop_intents(intents, time);
     }
 
-    /// The inspector, for the shell's 348 px column.
-    pub(super) fn show_develop_inspector(&mut self, ui: &mut egui::Ui) {
+    /// The inspector's tab captions and the open tab.
+    pub(super) fn develop_tab_labels(
+        &mut self,
+    ) -> Option<([(station::InspectorTab, String); 3], station::InspectorTab)> {
+        self.with_develop_view(|view, rows, panel, _| (station::tab_labels(view, rows), panel.tab))
+    }
+
+    /// The open tab, for a body the caller pads and scrolls.
+    pub(super) fn show_develop_tab(&mut self, ui: &mut egui::Ui) -> Vec<DevelopIntent> {
+        self.with_develop_view(|view, rows, panel, _| station::tab_contents(ui, panel, view, rows))
+            .unwrap_or_default()
+    }
+
+    /// What the display reports, for Develop's Display group.
+    fn develop_display_lines(&self) -> Vec<String> {
+        let Some(presenter) = &self.editor.viewport.presenter else {
+            return Vec::new();
+        };
+        let display = presenter.status();
+        let mut lines = vec![
+            if display.active {
+                "Display · HDR active".to_owned()
+            } else {
+                "Display · SDR".to_owned()
+            },
+            display.monitor.clone(),
+            display.reason.clone(),
+        ];
+        if display.active {
+            lines.push(format!(
+                "{:.0} nits white · {:.0} nits peak",
+                display.sdr_white_nits, display.peak_nits
+            ));
+        }
+        lines.retain(|line| !line.is_empty());
+        lines
+    }
+
+    /// The inspector footer: Export… and Save version.
+    pub(super) fn show_develop_footer(&mut self, ui: &mut egui::Ui) {
         let intents = self
-            .with_develop_view(|view, rows, panel, _| station::inspector(ui, panel, view, rows))
+            .with_develop_view(|view, _, _, _| station::inspector_footer(ui, view))
             .unwrap_or_default();
         let time = ui.input(|i| i.time);
         self.handle_develop_intents(intents, time);
@@ -398,7 +455,7 @@ impl StrehlApp {
             DevelopIntent::OpenVersion(id) if !id.is_empty() => self.restore_edit_version(id)?,
             DevelopIntent::CarryVersion(id) if !id.is_empty() => self.carry_version(id)?,
             DevelopIntent::Export => self.edit_pane.develop.export_requested = true,
-            DevelopIntent::SetHdr(on) => self.editor.develop.prefer_sdr = !on,
+            DevelopIntent::SetHdr(on) => self.editor.viewport.prefer_sdr = !on,
             _ => {}
         }
         Ok(())
@@ -430,6 +487,28 @@ impl StrehlApp {
 
     /// Per frame, from `poll_editing`.
     pub(super) fn poll_develop(&mut self, ctx: &egui::Context) {
+        let develop = &mut self.edit_pane.develop;
+        if develop.notice.is_some() && develop.notice != develop.notice_shown {
+            develop.notice_shown = develop.notice.clone();
+            let text = develop.notice.clone().unwrap_or_default();
+            self.shell.notices.push(
+                crate::notices::Severity::Warning,
+                crate::notices::Source::Develop,
+                text,
+                None,
+            );
+        }
+        let station = &mut self.export_pane.station;
+        if station.error.is_some() && station.error != station.error_shown {
+            station.error_shown = station.error.clone();
+            let text = station.error.clone().unwrap_or_default();
+            self.shell.notices.push(
+                crate::notices::Severity::Warning,
+                crate::notices::Source::Export,
+                text,
+                None,
+            );
+        }
         let (_, _, um_per_px) = self.develop_subject();
         self.editor.um_per_px = um_per_px;
         let intents = self.editor.develop.take_intents();
@@ -695,7 +774,7 @@ impl StrehlApp {
     ) -> Option<R> {
         let library = self.export_pane.station.library.clone()?;
         let loaded = self.editor.loaded.as_ref()?;
-        let palette = StudioPalette::GRAPHITE;
+        let palette = self.edit_pane.develop.palette;
         let (subject_key, subject_name, um_per_px) = self.develop_subject();
         let size = self
             .editor
@@ -737,16 +816,43 @@ impl StrehlApp {
                 .map(|b| b.progress.snapshot()),
             can_export: self.develop_can_export(),
             note,
+            view_bundle: self
+                .view_bundle_source()
+                .map(|_| self.view_bundle_export.is_some()),
         };
         let panel = &mut self.export_pane.station.panel;
         Some(show(&view, panel))
     }
 
     pub(super) fn show_export_inspector(&mut self, ui: &mut egui::Ui) {
+        self.edit_pane.develop.palette = StudioPalette::of(ui.ctx());
         let intents = self
-            .with_export_view(|view, panel| exporting::inspector(ui, panel, view))
+            .with_export_view(|view, panel| exporting::inspector_body(ui, panel, view))
             .unwrap_or_default();
         self.handle_export_intents(ui.ctx(), intents);
+    }
+
+    pub(super) fn show_export_footer(&mut self, ui: &mut egui::Ui) {
+        let intents = self
+            .with_export_view(|view, _| exporting::inspector_footer(ui, view))
+            .unwrap_or_default();
+        self.handle_export_intents(ui.ctx(), intents);
+    }
+
+    /// The selected preset, for the canvas preview: its settings, if an image.
+    pub(super) fn export_preview_settings(&self) -> Option<strehl_edit::ExportSettings> {
+        let station = &self.export_pane.station;
+        let library = station.library.as_ref()?;
+        let preset = station
+            .panel
+            .selected
+            .as_ref()
+            .and_then(|id| library.presets.iter().find(|p| &p.id == id))
+            .or_else(|| library.ticked().next())?;
+        match &preset.output {
+            presets::PresetOutput::Image(image) => Some(image.settings.clone()),
+            presets::PresetOutput::Archive => None,
+        }
     }
 
     pub(super) fn show_export_strip(&mut self, ui: &mut egui::Ui) {
@@ -1080,6 +1186,16 @@ impl StrehlApp {
             ExportIntent::CopyPath(path) => ctx.copy_text(path.display().to_string()),
             ExportIntent::ExportTicked => self.start_export_batch(None)?,
             ExportIntent::ExportAgain(id) => self.start_export_batch(Some(id))?,
+            ExportIntent::ExportViewBundle => {
+                if !self.picker_active() && self.view_bundle_export.is_none() {
+                    self.pick(Dialog::ViewBundleExport);
+                }
+            }
+            ExportIntent::CancelViewBundle => {
+                if let Some(task) = &self.view_bundle_export {
+                    task.cancel();
+                }
+            }
             ExportIntent::CancelBatch => {
                 if let Some(batch) = &self.export_pane.station.batch {
                     batch

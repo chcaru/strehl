@@ -1362,11 +1362,17 @@ fn hints(station: Station) -> &'static [(&'static [&'static str], &'static str)]
             (&["Ctrl", "K"], "go to anything"),
         ],
         Station::Develop => &[
+            (&["B"], "depth brush"),
+            (&["[", "]"], "brush size"),
+            (&["\\"], "before and after"),
             (&["Ctrl", "Z"], "undo"),
+            (&["F"], "focus"),
+        ],
+        Station::Export => &[
+            (&["Ctrl", "E"], "export the ticked presets"),
             (&["F"], "focus"),
             (&["Ctrl", "K"], "go to anything"),
         ],
-        Station::Export => &[(&["F"], "focus"), (&["Ctrl", "K"], "go to anything")],
     }
 }
 

@@ -141,7 +141,7 @@ impl EditorState {
                 }
             }
         }
-        let palette = crate::develop_station::style::StudioPalette::GRAPHITE;
+        let palette = crate::develop_station::style::StudioPalette::of(ui.ctx());
         let before = self
             .before_overview
             .as_ref()
@@ -153,6 +153,11 @@ impl EditorState {
             image_size: [loaded.image.width, loaded.image.height],
             um_per_px: self.um_per_px,
             before,
+            clipping: self
+                .clip_overlay
+                .as_ref()
+                .filter(|o| std::sync::Arc::ptr_eq(&o.image, &loaded.image))
+                .map(|o| &o.texture),
         };
         self.develop.overlay(ui, image, clip, &view);
         self.develop.owns_pointer()

@@ -3,7 +3,7 @@
 **Status:** results note for the model half of phase P7 of
 [the implementation plan](../../docs/proposals/2026-11-desktop-studio-2-implementation.md)
 (sections 7.5, 7.6, 9 P7, P0 item 11). Branch `studio2/p7-edit`, based on `61effa01b`.
-No screens were built; the Develop and Export stations come later on this model.
+The Develop and Export stations were built on this model in UI stages 1 and 2 (below).
 **Date:** 2026-11-21. **Evidence labels** as in `AGENTS.md`.
 
 ## What was built
@@ -232,3 +232,112 @@ Open for stage 2 and later:
 - No camera-preview fill inside a painted stroke (optional, not built); the repair is a
   full re-stack in the background until E4/P7d.
 - Archive files from a batch are not recorded in the export history.
+
+## UI stage 2: Develop and Export in the shell (2026-11-21)
+
+Composed into the P1 shell after merging the integration branch (`82ccbfd45`). The
+composition lives in `crates/strehl-ui/src/app-station-develop.rs`; the shell's Develop and
+Export arms are one-line calls into it.
+
+| Shell slot | Develop | Export |
+| --- | --- | --- |
+| Tools (44 px) | `tools_strip`, 9 tools; keys B, M, C, W, H, D, R, S, N; `[` `]` brush size, `\` before/after | none |
+| Control strip (36 px) | The tool's options (inline sliders), then After/Before/Split, surround, HDR/SDR, Clipping | Preview of the ticked presets, output size and estimate; Fit / Actual pixels |
+| Rail | Depth rail while the depth brush is out (`RAIL_HEAD` + 34 px) | Exports of this photograph (152 px) |
+| Canvas | `show_process`; overlays through the editor (brush, crop, heal, backdrop, scale bar, split, clipping) | `show_process`, then the selected preset's crop outline and scale bar |
+| Inspector tabs | Adjust, Layers · n, Versions · n | Export |
+| Inspector body | `tab_contents`, plus today's controls kept reachable (below) | Presets, preset editor, In every file, Name and place, View bundle |
+| Footer (53 px) | Export… (chevron) and Save version | Export N files with its time estimate, or the batch with Cancel |
+| Hint bar | B depth brush, `[ ]` brush size, `\` before and after, Ctrl Z, F | Ctrl E export the ticked presets, F, Ctrl K |
+
+The palette is `StudioPalette::from_tokens(studio_theme::tokens(ctx))`, so Graphite,
+Instrument and Lightbox all work; `station_paints_legacy` is false for both stations.
+
+**The depth rail hook.** `show_develop_rail` passes `RangeFallback` (two plane fields) to
+`station::depth_rail`. The Stack station's rail (P3) plugs in by implementing `DepthRail`
+(`show(ui, palette, range, planes) -> Option<(first, last)>`) and replacing `RangeFallback`
+in that one call; the head and the strip's "Take from planes …" stay.
+
+**The HDR/SDR switch and Clipping work.** `ViewportRefinement::prefer_sdr` makes
+`hdr_active` false while `hdr_available` stays true; the switch is shown only for an HDR
+photograph on an HDR display. Clipping builds a 1024 px mask on a worker once per edit
+(never while a button is held), uploads it there, and paints it over the photograph;
+VERIFIED by `clipping_builds_its_overlay_on_a_worker_and_clears_it`.
+
+**Today's controls that the mockup has no place for** stay reachable, so nothing was lost
+with the old Edit and Export panes: Adjust ends with "Look in detail" (the adaptive panel:
+treatment, where it changes, analysis notes), "Saved looks" (develop presets, Import XMP,
+reset) and "Source evidence" (for a selected region); Layers ends with "Regions in
+detail" (rename, duplicate, enable, source planes, shapes). They paint with the Graphite
+constants, so on a light theme they sit in a Graphite well (`legacy_inset`). Retained
+recipes and the editor's errors show at the top of the body; Display (status, peak and
+reference white) was rebuilt on tokens. `edit_panel` and `export_panel` are no longer
+called by the app (`expect(dead_code)` outside tests); they remain for their tests and as
+the benchmark baseline.
+
+### Offscreen comparison (1680 x 1050)
+
+`visual-check.py` against `develop.png`, `develop-layers.png`, `develop-versions.png` and
+`export.png`, plus Instrument and Lightbox renders of both stations (a temporary,
+uncommitted hook opened the Layers and Versions tabs and the depth brush):
+
+- Develop: tools, control strip, tabs, Adjust (scope, histogram, looks, Light, Colour,
+  groups) and footer match the mockup's geometry and type. Layers and Versions match
+  (this photograph has no layers, so Layers shows its empty state). The depth brush
+  shows the strip and the rail head with `RangeFallback`.
+- Export: presets with ticks, the Web preset editor, In every file, Name and place, the
+  footer and the history table under the canvas match.
+- Lightbox and Instrument: every station part is legible and ruled; the canvas stays
+  dark (the theater paints its own ground).
+- **Differs (not P7's file):** the canvas is still the theater, which keeps its contributions
+  strip and filmstrip under the photograph and its "PHOTOGRAPH / EDIT" caption; on Export
+  the theater is not in its focused layout in the offscreen render (also on the
+  integration branch). The mockup shows the photograph alone. This needs a
+  photograph-only mode in `process-theater.rs` (the Stack lane's file).
+
+### Measurements (release, MEASURED)
+
+Host: Ryzen 9 9950X3D (32 logical), CPU load 1 % at the end; build `82ccbfd45` plus this
+stage's changes; `--test-threads=1`.
+
+`benchmark_develop_and_export_pointer_sweeps` (CPU paint + tessellation, 6 rounds of 120
+frames, 96 x 64 photograph):
+
+| Arm | ms per frame |
+| --- | --- |
+| Shell, Develop | 0.142 – 0.152 |
+| Shell, Export | 0.140 – 0.154 |
+| Panel only, Studio 2 Develop inspector | 0.112 – 0.116 |
+| Panel only, today's Edit pane | 0.141 – 0.162 |
+
+The fixture has no captures, so these are not comparable with P0's 1.28–1.32 ms process
+view; the like-for-like comparison is the last two rows (no regression).
+
+`benchmark_develop_latency_on_a_real_master` (a copy of the weevil run, 7032 x 4688,
+overview 1600 x 1067; canvas driven through `request_view` / `draw_overlay` as
+`show_process` does):
+
+| Measurement | Result |
+| --- | --- |
+| Slider drag to updated overview (40 steps at 60 Hz) | median 36.6, p95 86.1, max 114.6 ms |
+| Frame time during the drag | median 0.19, p95 0.35, max 9.8 ms |
+| Histogram per overview (256 px, on the preview worker) | median 0.74, p95 0.95 ms |
+| Release to sharp patch at 6x | 124 ms |
+| Pointer sweep at fit, After | median 0.15, p95 0.23 ms per frame |
+| Split handle drag | median 0.08, p95 0.20 ms per frame; 0 viewport jobs, revision unchanged |
+
+The overview pipeline is the stage 1 code that today's pane also uses; the histogram adds
+0.74 ms (about 2 %) to each overview. Pointer-only motion over both stations changes no
+recipe, history, library, tab, outbox or batch (VERIFIED by
+`pointer_only_motion_over_develop_and_export_changes_nothing`).
+
+Tests (VERIFIED): `cargo test --locked -p strehl-ui` 1264 passed, 0 failed, 23 ignored;
+clippy `-D warnings` and `cargo fmt --check` clean for strehl-ui.
+
+Open:
+
+- The theater's photograph-only mode (above), and Export's focused canvas.
+- The depth rail is `RangeFallback` until P3's rail implements `DepthRail`.
+- "Compare with full size" (Export strip) is not built, so it is not shown.
+- `edit_panel` / `export_panel` and their helpers can be deleted once the benchmark
+  baseline is no longer wanted.

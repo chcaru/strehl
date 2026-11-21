@@ -551,17 +551,13 @@ impl StrehlApp {
                 control_strip: true,
                 ..none
             },
-            Station::Develop | Station::Export => StationLayout {
-                inspector: true,
-                control_strip: true,
-                ..none
-            },
+            Station::Develop | Station::Export => self.develop_layout(station),
         }
     }
     /// True while a station still paints with the Graphite constants. On a
     /// light theme it is then drawn in the Graphite scope.
-    pub(super) fn station_paints_legacy(&self, _station: Station) -> bool {
-        true
+    pub(super) fn station_paints_legacy(&self, station: Station) -> bool {
+        !matches!(station, Station::Develop | Station::Export)
     }
 
     /// The station body: every panel below the top bar and above the hint bar.
@@ -709,11 +705,19 @@ impl StrehlApp {
         }
     }
     /// The 44 px tool strip. No station has tools yet (Develop's arrive in P7).
-    pub(super) fn station_tools(&mut self, _ui: &mut egui::Ui, _station: Station) {}
+    pub(super) fn station_tools(&mut self, ui: &mut egui::Ui, station: Station) {
+        if station == Station::Develop {
+            self.develop_tools(ui);
+        }
+    }
     /// The rail and filmstrip slot. The depth rail arrives in P3.
-    pub(super) fn station_rail(&mut self, _ui: &mut egui::Ui, _station: Station) {}
+    pub(super) fn station_rail(&mut self, ui: &mut egui::Ui, station: Station) {
+        if matches!(station, Station::Develop | Station::Export) {
+            self.develop_rail(ui, station);
+        }
+    }
     /// The canvas: today's process view, or the welcome page with nothing open.
-    pub(super) fn station_canvas(&mut self, ui: &mut egui::Ui, _station: Station) {
+    pub(super) fn station_canvas(&mut self, ui: &mut egui::Ui, station: Station) {
         if self.stack.is_none()
             && !self.activity
             && self.expected_run.is_none()
@@ -722,6 +726,9 @@ impl StrehlApp {
             self.welcome_workspace(ui);
         } else {
             self.show_process(ui);
+        }
+        if matches!(station, Station::Develop | Station::Export) {
+            self.develop_canvas_overlay(ui, station);
         }
     }
 
@@ -769,37 +776,7 @@ impl StrehlApp {
                     }
                 });
             }
-            Station::Develop => {
-                w::caps(ui, "Develop");
-                self.document_caption(ui, &t);
-                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    let ready = self.editor.loaded.is_some();
-                    if ui
-                        .add(w::Button::quiet("Fit").small().enabled(ready))
-                        .on_hover_text("Fit the photograph to the canvas")
-                        .clicked()
-                    {
-                        self.editor.fit_view_requested = true;
-                    }
-                    let mut large = self.edit_photo_focus;
-                    w::segmented(
-                        ui,
-                        "studio-develop-room",
-                        &mut large,
-                        &[(true, "Photograph"), (false, "With instruments")],
-                    );
-                    self.edit_photo_focus = large;
-                });
-            }
-            Station::Export => {
-                w::caps(ui, "Export");
-                self.document_caption(ui, &t);
-                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    if w::link(ui, "Back to Develop", false).clicked() {
-                        self.go_station(Station::Develop);
-                    }
-                });
-            }
+            Station::Develop | Station::Export => self.develop_strip(ui, station),
             Station::Library | Station::Capture => {}
         }
     }
@@ -961,18 +938,13 @@ impl StrehlApp {
                     }
                 }
             }
-            Station::Develop => {
-                w::tab(ui, "Develop", true, None);
-            }
-            Station::Export => {
-                w::tab(ui, "Export", true, None);
-            }
+            Station::Develop | Station::Export => self.develop_tabs(ui, station),
             Station::Library | Station::Capture => {}
         }
     }
 
     fn station_has_footer(&self, station: Station) -> bool {
-        matches!(station, Station::Stack | Station::Develop)
+        matches!(station, Station::Stack | Station::Develop | Station::Export)
     }
 
     /// The inspector body for a station. Today: Adjust and Review on Stack,
@@ -1010,8 +982,7 @@ impl StrehlApp {
                     self.scrolling_pane(ui, "Review", |app, ui| app.review_panel(ui))
                 }
             },
-            Station::Develop => self.edit_panel(ui),
-            Station::Export => self.export_panel(ui),
+            Station::Develop | Station::Export => self.develop_inspector_body(ui, station),
             Station::Library | Station::Capture => {}
         }
     }
@@ -1020,20 +991,7 @@ impl StrehlApp {
     pub(super) fn station_inspector_footer(&mut self, ui: &mut egui::Ui, station: Station) {
         match station {
             Station::Stack => self.stack_footer(ui),
-            Station::Develop => {
-                let ready = self.editor.loaded.is_some();
-                if ui
-                    .add(
-                        w::Button::primary("Export this photograph")
-                            .chevron()
-                            .wide()
-                            .enabled(ready),
-                    )
-                    .clicked()
-                {
-                    self.go_station(Station::Export);
-                }
-            }
+            Station::Develop | Station::Export => self.develop_footer(ui, station),
             _ => {}
         }
     }

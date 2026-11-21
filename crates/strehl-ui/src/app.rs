@@ -50,6 +50,8 @@ mod session;
 mod session_import;
 #[path = "app-session-output.rs"]
 mod session_output;
+#[path = "app-station-develop.rs"]
+mod station_develop;
 #[path = "studio-route.rs"]
 pub(crate) mod studio_route;
 #[path = "studio-shell.rs"]

@@ -244,7 +244,9 @@ fn view<'a>(
         um_per_px: Some(2.0),
         image_size: [7032, 4688],
         hdr_photo: true,
+        hdr_available: false,
         hdr_display: false,
+        display: Vec::new(),
         can_export: true,
     }
 }

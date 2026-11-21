@@ -307,6 +307,8 @@ struct Pending {
 #[derive(Default)]
 pub(super) struct ViewportRefinement {
     pub presenter: Option<PhotoPresenter>,
+    /// Develop's HDR/SDR switch: present an HDR photograph as SDR.
+    pub prefer_sdr: bool,
     paint: Option<PhotoPaint>,
     identity: Option<Identity>,
     desired: Option<Demand>,
@@ -416,6 +418,11 @@ impl ViewportRefinement {
         }
     }
     pub fn hdr_active(&self, origin: strehl_edit::ImageOrigin) -> bool {
+        !self.prefer_sdr && self.hdr_available(origin)
+    }
+
+    /// The display can present this photograph in HDR, switched on or not.
+    pub fn hdr_available(&self, origin: strehl_edit::ImageOrigin) -> bool {
         origin == strehl_edit::ImageOrigin::SceneLinear
             && self.presenter.as_ref().is_some_and(|p| p.status().active)
     }
