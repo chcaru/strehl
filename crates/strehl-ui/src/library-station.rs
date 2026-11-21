@@ -1879,4 +1879,4 @@ pub(crate) mod tests;
 
 #[cfg(test)]
 #[path = "library-visual-tests.rs"]
-mod visual_tests;
+pub(crate) mod visual_tests;

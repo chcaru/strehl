@@ -250,7 +250,7 @@ fn offscreen_library_and_subject_pictures() {
 }
 
 /// Paint `draw` until it reports ready (and at least a few frames), then save.
-fn render(destination: &Path, mut draw: impl FnMut(&mut Ui) -> bool) -> Result<()> {
+pub(crate) fn render(destination: &Path, mut draw: impl FnMut(&mut Ui) -> bool) -> Result<()> {
     let deadline = Instant::now() + Duration::from_secs(120);
     let config = crate::hdr_display::configuration();
     let instance = wait_until(config.wgpu_setup.new_instance(), deadline)?;

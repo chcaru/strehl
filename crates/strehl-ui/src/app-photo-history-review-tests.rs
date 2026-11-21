@@ -57,6 +57,7 @@ fn close_waits_for_history_and_surfaces_worker_failure_instead_of_silently_closi
         let mut app = isolated_app();
         let (release, wait) = mpsc::channel::<()>();
         app.photo_history.pending = Some(Pending {
+            export: None,
             durable: true,
             guard: None,
             task: jobs::spawn_task("history-close-review", move |_| {

@@ -21,6 +21,8 @@ use crate::{
     viewer::Viewer,
     workbench::{SourcePhoto, Workbench, WorkbenchMode},
 };
+#[path = "app-activities.rs"]
+mod activities;
 #[path = "app-adaptive.rs"]
 mod adaptive;
 #[path = "app-agent.rs"]

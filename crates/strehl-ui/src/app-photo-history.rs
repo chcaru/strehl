@@ -30,6 +30,9 @@ enum Prepared {
     Opened,
 }
 struct Pending {
+    /// The export chain's destination and phase (1 prepare, 3 record), for
+    /// the activity tray; None for version operations.
+    export: Option<(PathBuf, u8)>,
     durable: bool,
     guard: Option<Guard>,
     task: Task<Prepared>,
@@ -80,6 +83,27 @@ impl StrehlApp {
             .take(128)
             .collect();
         serde_json::json!({"busy":self.photo_history_busy(),"error":self.photo_history.error,"status":self.photo_history.status,"versions":versions,"exports":exports,"list_limit":{"versions":64,"exports":128}})
+    }
+
+    /// The export chain's phase for the activity tray (Studio 2 P5): 1
+    /// preparing the version, 2 writing the file, 3 recording it; with the
+    /// destination.
+    pub(super) fn export_phase(&self) -> Option<(u8, PathBuf)> {
+        if let Some(delivery) = &self.photo_history.delivery {
+            return Some((
+                if self.editor.exporting.is_some() {
+                    2
+                } else {
+                    3
+                },
+                delivery.path.clone(),
+            ));
+        }
+        self.photo_history
+            .pending
+            .as_ref()
+            .and_then(|pending| pending.export.clone())
+            .map(|(path, phase)| (phase, path))
     }
 
     pub(super) fn photo_history_busy(&self) -> bool {
@@ -160,6 +184,7 @@ impl StrehlApp {
         let source = guard.source.clone();
         let recipe = self.editor.recipe.clone();
         self.photo_history.pending = Some(Pending {
+            export: None,
             durable: true,
             guard: None,
             task: jobs::spawn_task("strehl-save-version", move |cancelled| {
@@ -204,6 +229,7 @@ impl StrehlApp {
         let source = guard.source.clone();
         let current = self.editor.recipe.clone();
         self.photo_history.pending = Some(Pending {
+            export: None,
             durable: true,
             guard: Some(guard),
             task: jobs::spawn_task("strehl-restore-version", move |cancelled| {
@@ -275,6 +301,7 @@ impl StrehlApp {
                 .collect::<String>()
         );
         self.photo_history.pending = Some(Pending {
+            export: Some((path.clone(), 1)),
             durable: true,
             guard: Some(guard),
             task: jobs::spawn_task("strehl-export-version", move |cancelled| {
@@ -307,6 +334,7 @@ impl StrehlApp {
                     Err(anyhow::anyhow!("Wait for photograph history to finish."))
                 } else {
                     self.photo_history.pending = Some(Pending {
+                        export: None,
                         durable: false,
                         guard: None,
                         task: jobs::spawn_task("strehl-reveal-path", move |_| {
@@ -337,6 +365,7 @@ impl StrehlApp {
             .cloned()
             .ok_or_else(|| anyhow::anyhow!("This export is no longer available."))?;
         self.photo_history.pending = Some(Pending {
+            export: None,
             durable: false,
             guard: None,
             task: jobs::spawn_task("strehl-open-export", move |cancelled| {
@@ -494,6 +523,7 @@ impl StrehlApp {
             let delivery = self.photo_history.delivery.take().unwrap();
             if self.editor.last_export.as_ref() == Some(&delivery.path) {
                 self.photo_history.pending = Some(Pending {
+                    export: Some((delivery.path.clone(), 3)),
                     durable: true,
                     guard: None,
                     task: jobs::spawn_task("strehl-record-export", move |cancelled| {
