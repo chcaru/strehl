@@ -13,17 +13,20 @@ use std::time::SystemTime;
 use eframe::egui::{self, Align2, Rect, Sense, Stroke, Ui};
 use serde_json::Value;
 
+use super::guide::{self, DetailKept, GuideTab, Tone};
 use super::preflight::{Blocker, Check, Fix};
+use super::rig_settings::{self, RigEditor, RigValues};
 use super::style::{self, ButtonKind, CapturePalette, Mark};
 use crate::capture_client::Snapshot;
 use crate::capture_workspace::test_shot::RawLevels;
 
 /// Steps offered in the table besides the plan's and the calibrated one.
 pub(crate) const CANDIDATE_STEPS: [u16; 4] = [5, 7, 10, 16];
-/// Overlap below which fine detail measurably drops between planes:
-/// `strehl focus-step`'s EDGE (step = width / 3.6 lost 2-3 % of detail
-/// amplitude on the scarab stack). Rows below it are marked.
-pub(crate) const DETAIL_LIMIT: f64 = strehl_cli::focus_step_cmd::EDGE;
+/// Overlap below which fine detail measurably drops between planes: the
+/// measured knee at about width / 5 (`guide::KNEE`; the step-curve runs of
+/// 2026-11-20, which refined `strehl focus-step`'s EDGE of width / 3.6).
+/// Rows below it are marked.
+pub(crate) const DETAIL_LIMIT: f64 = guide::KNEE;
 /// Settle times offered, in milliseconds.
 pub(crate) const SETTLE_CHOICES: [u32; 6] = [250, 500, 1000, 1500, 2000, 3000];
 
@@ -44,6 +47,9 @@ pub(crate) struct CalibrationView {
 pub(crate) struct TestShotView {
     pub stage: &'static str,
     pub levels: Option<RawLevels>,
+    /// The ISO and shutter codes it was taken at (the guidance scales its
+    /// levels to other settings).
+    pub exposure: Option<(u64, u64)>,
     pub taken: Option<SystemTime>,
     pub error: Option<String>,
 }
@@ -94,6 +100,16 @@ pub(crate) enum PlanIntent {
     StopCalibration,
     SetStep(u16),
     SetSettle(u32),
+    /// The plan's approach, in focus units.
+    SetApproach(u16),
+    /// The plan's exposure timeout, in seconds.
+    SetCaptureTimeout(u32),
+    /// The light warm-up before a managed stack, in seconds.
+    SetWarmup(u32),
+    /// Start and End from the bounds survey.
+    UseSurveyBounds,
+    /// The comparison panel ("What changes") at a section.
+    OpenGuide(GuideTab),
     SetFourShot(bool),
     SetCheck(bool),
     SetRetake(bool),
@@ -121,6 +137,8 @@ pub(crate) struct StepRow {
     pub current: bool,
     /// Beyond the measured detail limit (overlap below [`DETAIL_LIMIT`]).
     pub risk: bool,
+    /// Fine detail kept, read between the two measured stacks.
+    pub detail: Option<DetailKept>,
 }
 
 /// The inspector's own state: the names being typed and open pickers.
@@ -128,6 +146,13 @@ pub(crate) struct StepRow {
 pub(crate) struct PlanView {
     pub subject: String,
     pub stack_name: String,
+    /// The Rig step's settings are open.
+    pub rig_open: bool,
+    rig: RigEditor,
+    /// The comparison panel, when open, at its section.
+    pub guide: Option<GuideTab>,
+    /// A step typed into the table's last row.
+    pub custom_step: String,
 }
 
 /// How many planes `Plan::positions()` gives for these bounds and step,
@@ -141,19 +166,33 @@ pub(crate) fn plane_count(start: u16, end: u16, step: u16) -> usize {
 /// Seconds a stack of `planes` takes by the host's own formula (initial
 /// plane x planes + setup + warmup), when the shutter is known.
 pub(crate) fn stack_seconds(s: &Snapshot, planes: usize, settle_ms: u32) -> Option<f64> {
-    let host = &s.host;
-    let shutter = host.exposure.as_ref()?.shutter?;
-    let plane = strehl_capture::timing::initial_plane(shutter, settle_ms, host.shots())?;
-    let warmup = host
+    let shutter = s.host.exposure.as_ref()?.shutter?;
+    stack_seconds_at(s, planes, settle_ms, shutter)
+}
+
+/// The light warm-up a stack waits through: the host's, when it manages
+/// power.
+pub(crate) fn managed_warmup(s: &Snapshot) -> u64 {
+    s.host
         .power
         .as_ref()
         .filter(|p| p.manage_stack)
         .and_then(|p| p.warmup_seconds)
-        .unwrap_or(0);
+        .unwrap_or(0)
+}
+
+/// [`stack_seconds`] at another shutter code.
+pub(crate) fn stack_seconds_at(
+    s: &Snapshot,
+    planes: usize,
+    settle_ms: u32,
+    shutter: u64,
+) -> Option<f64> {
+    let plane = strehl_capture::timing::initial_plane(shutter, settle_ms, s.host.shots())?;
     Some(
         (plane.mul_f64(planes as f64)
             + strehl_capture::timing::initial_setup(settle_ms)
-            + std::time::Duration::from_secs(warmup))
+            + std::time::Duration::from_secs(managed_warmup(s)))
         .as_secs_f64(),
     )
 }
@@ -191,9 +230,9 @@ pub(crate) fn step_rows(
     calibration: &Value,
 ) -> Vec<StepRow> {
     let host = &s.host;
-    let (Some(plan), true) = (host.plan.as_ref(), host.bounds_set()) else {
+    if host.plan.is_none() || !host.bounds_set() {
         return Vec::new();
-    };
+    }
     let width = calibration["width"].as_f64();
     let mut steps: Vec<u16> = CANDIDATE_STEPS.to_vec();
     if let Some(suggested) = calibration["suggested_step"].as_u64() {
@@ -202,26 +241,47 @@ pub(crate) fn step_rows(
     steps.push(step.max(1));
     steps.sort_unstable();
     steps.dedup();
-    let per_raw = expected_per_raw(s);
-    let shots = host.shots() as usize;
     steps
         .into_iter()
-        .map(|candidate| {
-            let planes = plane_count(plan.start, plan.end, candidate);
-            let overlap = width.map(|w| w / f64::from(candidate));
-            StepRow {
-                step: candidate,
-                overlap,
-                planes,
-                seconds: stack_seconds(s, planes, settle_ms),
-                bytes: per_raw
-                    .map(|b| b * (planes * shots) as u64)
-                    .or_else(|| worst_bytes(s, planes * shots)),
-                current: candidate == step,
-                risk: overlap.is_some_and(|o| o < DETAIL_LIMIT),
-            }
-        })
+        .map(|candidate| step_row(s, candidate, step, settle_ms, width))
         .collect()
+}
+
+/// One step's row (the table's, or a typed step's).
+pub(crate) fn step_row(
+    s: &Snapshot,
+    candidate: u16,
+    step: u16,
+    settle_ms: u32,
+    width: Option<f64>,
+) -> StepRow {
+    let (start, end) = s.host.plan_bounds();
+    let shots = s.host.shots() as usize;
+    let planes = plane_count(start, end, candidate);
+    let overlap = width.map(|w| w / f64::from(candidate.max(1)));
+    StepRow {
+        step: candidate,
+        overlap,
+        planes,
+        seconds: stack_seconds(s, planes, settle_ms),
+        bytes: expected_per_raw(s)
+            .map(|b| b * (planes * shots) as u64)
+            .or_else(|| worst_bytes(s, planes * shots)),
+        current: candidate == step,
+        risk: overlap.is_some_and(|o| o < DETAIL_LIMIT),
+        detail: overlap.map(guide::detail_kept),
+    }
+}
+
+/// A typed step: a whole number of focus units from 1 to 65535.
+pub(crate) fn parse_step(text: &str) -> Result<u16, String> {
+    let text = text.trim();
+    match text.parse::<u32>() {
+        Ok(v) if (1..=65535).contains(&v) => Ok(v as u16),
+        Ok(_) => Err("A step is 1-65535 focus units".into()),
+        Err(_) if text.is_empty() => Err(String::new()),
+        Err(_) => Err("Type a whole number of focus units".into()),
+    }
 }
 
 /// The rig's one line: camera, link, light.
@@ -405,9 +465,16 @@ impl PlanView {
                         ui.spacing_mut().item_spacing.y = 0.0;
                         self.names(ui, inputs.subjects, palette, &mut out);
                         ui.add_space(10.0);
-                        rig_step(ui, inputs, palette, &mut out);
+                        rig_step(
+                            ui,
+                            inputs,
+                            &mut self.rig_open,
+                            &mut self.rig,
+                            palette,
+                            &mut out,
+                        );
                         exposure_step(ui, inputs, palette, &mut out);
-                        depth_step(ui, inputs, &rows, palette, &mut out);
+                        depth_step(ui, inputs, &rows, &mut self.custom_step, palette, &mut out);
                         after_step(ui, inputs, palette, &mut out);
                         ui.add_space(4.0);
                         if style::link(ui, "Captures, storage and connection…", true, palette)
@@ -419,6 +486,11 @@ impl PlanView {
             },
         );
         footer(ui, foot, inputs, &rows, palette, &mut out);
+        for intent in &out {
+            if let PlanIntent::OpenGuide(tab) = intent {
+                self.guide = Some(*tab);
+            }
+        }
         out
     }
 
@@ -454,6 +526,9 @@ impl PlanView {
                         .background_color(palette.bg)
                         .margin(egui::Margin::symmetric(9, 4));
                     let r = ui.add(edit);
+                    if r.lost_focus() {
+                        consume_enter(ui);
+                    }
                     ui.painter().rect_stroke(
                         r.rect,
                         0.0,
@@ -551,7 +626,7 @@ fn title(ui: &mut Ui, name: &str, palette: &CapturePalette, action: impl FnOnce(
 }
 
 fn note(ui: &mut Ui, text: &str, palette: &CapturePalette) {
-    let mut job = style::job(text, 12.5, palette.ink2, 0.0);
+    let mut job = style::job(&guide::unbreak(text), 12.5, palette.ink2, 0.0);
     job.wrap.max_width = ui.available_width();
     ui.label(job);
 }
@@ -559,6 +634,8 @@ fn note(ui: &mut Ui, text: &str, palette: &CapturePalette) {
 fn rig_step(
     ui: &mut Ui,
     inputs: &PlanInputs<'_>,
+    open: &mut bool,
+    editor: &mut RigEditor,
     palette: &CapturePalette,
     out: &mut Vec<PlanIntent>,
 ) {
@@ -571,19 +648,40 @@ fn rig_step(
     ];
     let ready = !has(inputs.blockers, &rig_checks);
     let s = inputs.s;
+    let values = RigValues::read(s, inputs.settle_ms, inputs.switches.check);
     step(ui, 1, ready, palette, |ui| {
         title(ui, "Rig", palette, |ui| {
-            if !s.host.connected && s.fresh() {
-                if style::button(ui, "Connect", ButtonKind::Plain, 22.0, !s.pending, palette)
+            ui.spacing_mut().item_spacing.x = 10.0;
+            if disclosure(ui, "Settings", *open, palette)
+                .on_hover_text(
+                    "Approach, settle, exposure timeout, light warm-up, power and error correction",
+                )
+                .clicked()
+            {
+                *open = !*open;
+            }
+            if !s.host.connected
+                && s.fresh()
+                && style::button(ui, "Connect", ButtonKind::Plain, 22.0, !s.pending, palette)
                     .clicked()
-                {
-                    out.push(PlanIntent::Connect);
-                }
-            } else if style::link(ui, "Rig…", true, palette).clicked() {
-                out.push(PlanIntent::OpenRig);
+            {
+                out.push(PlanIntent::Connect);
             }
         });
         note(ui, &rig_summary(s), palette);
+        let line = rig_settings::summary(&values);
+        if !line.is_empty() && !*open {
+            let mut job = style::job(&line, 12.0, palette.ink3, 0.0);
+            job.wrap.max_width = ui.available_width();
+            if ui
+                .add(egui::Label::new(job).sense(Sense::click()))
+                .on_hover_cursor(egui::CursorIcon::PointingHand)
+                .on_hover_text("Change the rig settings")
+                .clicked()
+            {
+                *open = true;
+            }
+        }
         if let Some(b) = inputs
             .blockers
             .iter()
@@ -603,6 +701,76 @@ fn rig_step(
             {
                 out.push(PlanIntent::Fix(fix));
             }
+        }
+        if *open {
+            editor.show(ui, &values, s.host.plan.as_ref(), palette, out);
+        }
+    });
+}
+
+/// A tracked-capitals link with a drawn chevron: down when closed, up when
+/// open.
+fn disclosure(ui: &mut Ui, label: &str, open: bool, palette: &CapturePalette) -> egui::Response {
+    let galley = ui
+        .painter()
+        .layout_job(style::caps_job(label, 10.5, palette.ink2));
+    let size = galley.size() + egui::vec2(14.0, 0.0);
+    let (rect, response) = ui.allocate_exact_size(size, Sense::click());
+    let color = if response.hovered() {
+        palette.ink
+    } else {
+        palette.ink2
+    };
+    ui.painter().galley(rect.min, galley, color);
+    let c = egui::pos2(rect.right() - 4.0, rect.center().y);
+    let (a, b) = if open { (2.0, -2.0) } else { (-2.0, 2.0) };
+    let stroke = Stroke::new(1.2_f32, color);
+    ui.painter()
+        .line_segment([c + egui::vec2(-3.5, a), c + egui::vec2(0.0, b)], stroke);
+    ui.painter()
+        .line_segment([c + egui::vec2(0.0, b), c + egui::vec2(3.5, a)], stroke);
+    response.on_hover_cursor(egui::CursorIcon::PointingHand)
+}
+
+/// A line of guidance in its tone, and under it the change it offers and
+/// the way to the comparison panel.
+fn guidance(
+    ui: &mut Ui,
+    line: Option<&guide::Line>,
+    more: Option<GuideTab>,
+    enabled: bool,
+    palette: &CapturePalette,
+    out: &mut Vec<PlanIntent>,
+) {
+    let action = line.and_then(|l| l.action.clone());
+    ui.horizontal_wrapped(|ui| {
+        ui.spacing_mut().item_spacing = egui::vec2(10.0, 2.0);
+        if let Some(line) = line {
+            let color = match line.tone {
+                Tone::Note => palette.ink2,
+                Tone::Good => palette.ok,
+                Tone::Warn => palette.warn,
+            };
+            ui.add(
+                egui::Label::new(
+                    egui::RichText::new(guide::unbreak(&line.text))
+                        .size(12.0)
+                        .color(color),
+                )
+                .wrap(),
+            );
+        }
+        if let Some((label, intent)) = action
+            && style::link(ui, label, enabled, palette).clicked()
+        {
+            out.push(intent);
+        }
+        if let Some(tab) = more
+            && style::link(ui, "What changes", true, palette)
+                .on_hover_text("Compare the choices: noise, detail, time and disk")
+                .clicked()
+        {
+            out.push(PlanIntent::OpenGuide(tab));
         }
     });
 }
@@ -692,7 +860,35 @@ fn exposure_step(
         if let Some(line) = test_shot_sentence(&inputs.test_shot) {
             note(ui, &line, palette);
         }
+        if let Some(e) = exposure {
+            let m = guide::metered(&inputs.test_shot);
+            let advice = guide::advise(e, m.as_ref());
+            let rows = guide::exposure_rows(
+                s,
+                inputs.settle_ms,
+                marked_planes(s, inputs.step),
+                m.as_ref(),
+                &advice,
+            );
+            let line = guide::exposure_line(&advice, &rows);
+            guidance(
+                ui,
+                line.as_ref(),
+                Some(GuideTab::Exposure),
+                editable && e.writable,
+                palette,
+                out,
+            );
+        }
     });
+}
+
+/// The planes of the marked range at `step`, once both bounds are set.
+pub(crate) fn marked_planes(s: &Snapshot, step: u16) -> Option<usize> {
+    s.host.bounds_set().then(|| {
+        let (start, end) = s.host.plan_bounds();
+        plane_count(start, end, step.max(1))
+    })
 }
 
 /// A picker field: the value with a chevron; a click lists `options`.
@@ -735,6 +931,7 @@ fn depth_step(
     ui: &mut Ui,
     inputs: &PlanInputs<'_>,
     rows: &[StepRow],
+    custom: &mut String,
     palette: &CapturePalette,
     out: &mut Vec<PlanIntent>,
 ) {
@@ -836,12 +1033,52 @@ fn depth_step(
                 });
             }
         });
+        if let Some(line) = guide::bounds_line(s, inputs.step, inputs.settle_ms) {
+            ui.add_space(2.0);
+            guidance(ui, Some(&line), None, editable, palette, out);
+        }
         ui.add_space(6.0);
         if !rows.is_empty() {
-            if let Some(step) = step_table(ui, rows, editable, palette) {
+            let width = inputs.calibration.result["width"].as_f64();
+            let typed = parse_step(custom);
+            let custom_row = typed
+                .as_ref()
+                .ok()
+                .map(|&v| step_row(s, v, inputs.step, inputs.settle_ms, width));
+            if let Some(step) = step_table(ui, rows, custom_row.as_ref(), custom, editable, palette)
+            {
                 out.push(PlanIntent::SetStep(step));
             }
+            match (&typed, custom_row.as_ref()) {
+                (Ok(v), Some(row)) if !row.current => {
+                    ui.horizontal(|ui| {
+                        if style::link(ui, &format!("Use step {v}"), editable, palette).clicked() {
+                            out.push(PlanIntent::SetStep(*v));
+                        }
+                        style::text(ui, "or press Enter", 11.5, palette.ink3);
+                    });
+                }
+                (Err(e), _) if !e.is_empty() => {
+                    style::text(ui, e, 11.5, palette.warn);
+                }
+                _ => {}
+            }
+            ui.add_space(4.0);
             overlap_diagram(ui, inputs, palette);
+            ui.add_space(4.0);
+            let line = guide::Line {
+                text: guide::step_line(rows, &inputs.calibration),
+                tone: Tone::Note,
+                action: None,
+            };
+            guidance(
+                ui,
+                Some(&line),
+                Some(GuideTab::Step),
+                editable,
+                palette,
+                out,
+            );
         }
         ui.add_space(6.0);
         ui.horizontal(|ui| {
@@ -858,7 +1095,7 @@ fn depth_step(
                     74.0,
                     None,
                     &format!("{} ms", inputs.settle_ms),
-                    false,
+                    true,
                     if editable {
                         Sense::click()
                     } else {
@@ -868,14 +1105,11 @@ fn depth_step(
                 );
                 egui::Popup::menu(&r)
                     .id(egui::Id::new("capture-settle"))
+                    .width(300.0)
+                    .align(egui::RectAlign::BOTTOM_END)
                     .show(|ui| {
-                        for ms in SETTLE_CHOICES {
-                            if ui
-                                .selectable_label(ms == inputs.settle_ms, format!("{ms} ms"))
-                                .clicked()
-                            {
-                                out.push(PlanIntent::SetSettle(ms));
-                            }
+                        if let Some(ms) = settle_menu(ui, inputs, palette) {
+                            out.push(PlanIntent::SetSettle(ms));
                         }
                     });
                 style::text(ui, "Settle", 13.0, palette.ink3);
@@ -884,10 +1118,67 @@ fn depth_step(
     });
 }
 
-/// The step table; a click on a row chooses its step.
+/// The settle choices with what each costs and what the rig measured.
+fn settle_menu(ui: &mut Ui, inputs: &PlanInputs<'_>, palette: &CapturePalette) -> Option<u32> {
+    ui.set_width(300.0);
+    let rows = guide::settle_rows(
+        inputs.s,
+        marked_planes(inputs.s, inputs.step),
+        inputs.settle_ms,
+    );
+    let cols = [
+        guide::Col {
+            head: "Settle",
+            left: true,
+        },
+        guide::Col {
+            head: "A plane",
+            left: false,
+        },
+        guide::Col {
+            head: "Stack",
+            left: false,
+        },
+        guide::Col {
+            head: "Passed",
+            left: false,
+        },
+    ];
+    let table: Vec<guide::Row> = rows
+        .iter()
+        .map(|r| guide::Row {
+            cells: vec![
+                format!("{} ms", r.ms),
+                r.plane.map_or("—".into(), |p| format!("{p:.1} s")),
+                r.stack.map_or("—".into(), style::minutes),
+                r.still.unwrap_or("—").into(),
+            ],
+            current: r.current,
+            ..Default::default()
+        })
+        .collect();
+    let chosen = guide::ruled_table(ui, "settle-menu", &cols, &table, true, palette);
+    let mut job = style::job(
+        "Up to 500 ms is free: the lens moves while the last RAW is fetched. The plane after the approach always settles 2 s. Passed: groups the checker accepted in a still room (measured; † before that rule).",
+        11.0,
+        palette.ink3,
+        0.0,
+    );
+    job.wrap.max_width = ui.available_width();
+    ui.label(job);
+    if chosen.is_some() {
+        ui.close();
+    }
+    chosen.map(|i| rows[i].ms)
+}
+
+/// The step table; a click on a row chooses its step. Its last row takes a
+/// typed step and shows what it would give; Enter there chooses it.
 fn step_table(
     ui: &mut Ui,
     rows: &[StepRow],
+    custom: Option<&StepRow>,
+    custom_text: &mut String,
     editable: bool,
     palette: &CapturePalette,
 ) -> Option<u16> {
@@ -895,7 +1186,7 @@ fn step_table(
     let cols = [0.0, 0.36, 0.56, 0.78, 1.0];
     let row_h = 25.0;
     let (rect, _) = ui.allocate_exact_size(
-        egui::vec2(width, 18.0 + row_h * rows.len() as f32),
+        egui::vec2(width, 18.0 + row_h * (rows.len() + 1) as f32),
         Sense::hover(),
     );
     let p = ui.painter();
@@ -912,6 +1203,59 @@ fn step_table(
         style::paint_job(p, pos, anchor, style::caps_job(head, 9.5, palette.ink3));
     }
     let mut chosen = None;
+    let paint_cells = |p: &egui::Painter, r: Rect, row: &StepRow, step_cell: bool| {
+        let color = if row.risk {
+            palette.warn
+        } else if row.current {
+            palette.ink
+        } else {
+            palette.ink2
+        };
+        let tracking = if row.current { 0.25 } else { 0.0 };
+        let cell = |text: &str, f: f32, left: bool| {
+            let inset = if row.current { 6.0 } else { 0.0 };
+            let (pos, anchor) = if left {
+                (egui::pos2(x(f) + inset, r.center().y), Align2::LEFT_CENTER)
+            } else {
+                (
+                    egui::pos2(x(f) - if f >= 1.0 { inset } else { 0.0 }, r.center().y),
+                    Align2::RIGHT_CENTER,
+                )
+            };
+            style::paint_job(p, pos, anchor, style::job(text, 12.0, color, tracking))
+        };
+        if step_cell {
+            cell(&row.step.to_string(), 0.0, true);
+        }
+        let overlap = row
+            .overlap
+            .map_or("—".into(), |o| format!("{:.0}×", o.floor().max(0.0)));
+        let ov = cell(
+            &overlap,
+            cols[1] - if row.risk { 0.035 } else { 0.0 },
+            false,
+        );
+        if row.risk {
+            style::mark(
+                p,
+                egui::pos2(ov.right() + 7.0, r.center().y),
+                Mark::Warn,
+                7.0,
+                palette,
+            );
+        }
+        cell(&row.planes.to_string(), cols[2], false);
+        cell(
+            &row.seconds.map_or("—".into(), style::minutes),
+            cols[3],
+            false,
+        );
+        cell(
+            &row.bytes.map_or("—".into(), style::gigabytes),
+            cols[4],
+            false,
+        );
+    };
     for (i, row) in rows.iter().enumerate() {
         let r = Rect::from_min_size(
             egui::pos2(rect.left(), rect.top() + 18.0 + row_h * i as f32),
@@ -943,60 +1287,82 @@ fn step_table(
                 p.rect_filled(r, 0.0, palette.raised);
             }
         }
-        let color = if row.risk {
-            palette.warn
-        } else if row.current {
-            palette.ink
-        } else {
-            palette.ink2
+        paint_cells(p, r, row, true);
+        let response = match &row.detail {
+            Some(d) => response.on_hover_text(format!(
+                "Step {}: about {} of fine detail kept (estimate from two measured stacks){}",
+                row.step,
+                guide::detail_label(d),
+                if row.risk {
+                    "; coarser than width / 5 loses detail between planes"
+                } else {
+                    ""
+                }
+            )),
+            None => response,
         };
-        let tracking = if row.current { 0.25 } else { 0.0 };
-        let cell = |text: &str, f: f32, left: bool| {
-            let inset = if row.current { 6.0 } else { 0.0 };
-            let (pos, anchor) = if left {
-                (egui::pos2(x(f) + inset, r.center().y), Align2::LEFT_CENTER)
-            } else {
-                (
-                    egui::pos2(x(f) - if f >= 1.0 { inset } else { 0.0 }, r.center().y),
-                    Align2::RIGHT_CENTER,
-                )
-            };
-            style::paint_job(p, pos, anchor, style::job(text, 12.0, color, tracking))
-        };
-        cell(&row.step.to_string(), 0.0, true);
-        let overlap = row
-            .overlap
-            .map_or("—".into(), |o| format!("{:.0}×", o.floor().max(0.0)));
-        let ov = cell(
-            &overlap,
-            cols[1] - if row.risk { 0.035 } else { 0.0 },
-            false,
-        );
-        if row.risk {
-            style::mark(
-                p,
-                egui::pos2(ov.right() + 7.0, r.center().y),
-                Mark::Warn,
-                7.0,
-                palette,
-            );
-        }
-        cell(&row.planes.to_string(), cols[2], false);
-        cell(
-            &row.seconds.map_or("—".into(), style::minutes),
-            cols[3],
-            false,
-        );
-        cell(
-            &row.bytes.map_or("—".into(), style::gigabytes),
-            cols[4],
-            false,
-        );
         if response.clicked() && !row.current {
             chosen = Some(row.step);
         }
     }
+    // The typed step.
+    let r = Rect::from_min_size(
+        egui::pos2(rect.left(), rect.top() + 18.0 + row_h * rows.len() as f32),
+        egui::vec2(width, row_h),
+    );
+    style::hairline(ui.painter(), r.left_top(), r.right_top(), palette.line);
+    style::hairline(
+        ui.painter(),
+        r.left_bottom(),
+        r.right_bottom(),
+        palette.line,
+    );
+    let field = Rect::from_min_size(
+        egui::pos2(r.left(), r.top() + 2.5),
+        egui::vec2((width * 0.18).clamp(44.0, 64.0), row_h - 5.0),
+    );
+    let mut edit_ui = ui.new_child(egui::UiBuilder::new().max_rect(field));
+    let edit = egui::TextEdit::singleline(custom_text)
+        .id(ui.id().with("capture-step-custom"))
+        .desired_width(field.width())
+        .hint_text("other")
+        .font(egui::FontId::proportional(12.0))
+        .text_color(palette.ink)
+        .background_color(palette.bg)
+        .vertical_align(egui::Align::Center)
+        .margin(egui::Margin::symmetric(4, 1))
+        .interactive(editable)
+        .char_limit(5);
+    let response = edit_ui.add_sized(field.size(), edit);
+    ui.painter().rect_stroke(
+        field,
+        0.0,
+        Stroke::new(
+            1.0_f32,
+            if response.has_focus() {
+                palette.accent
+            } else {
+                palette.line2
+            },
+        ),
+        egui::StrokeKind::Inside,
+    );
+    let response = response.on_hover_text("Type any step in focus units; Enter uses it");
+    custom_text.retain(|c| c.is_ascii_digit());
+    let entered = response.lost_focus() && consume_enter(ui);
+    if let Some(row) = custom {
+        paint_cells(ui.painter(), r, row, false);
+        if entered && editable && !row.current {
+            chosen = Some(row.step);
+        }
+    }
     chosen
+}
+
+/// Takes an Enter that ended typing in a field, so the station's Enter
+/// (Start stack) does not see it.
+pub(crate) fn consume_enter(ui: &Ui) -> bool {
+    ui.input_mut(|i| i.consume_key(egui::Modifiers::NONE, egui::Key::Enter))
 }
 
 /// Seven overlapping slices: how many planes keep a point sharp at the
@@ -1120,24 +1486,28 @@ fn footer(
     );
     let s = inputs.s;
     let (ends, disk) = footer_lines(s, rows);
+    let armed = super::schedule_ui::armed_label(s);
     ui.scope_builder(
         egui::UiBuilder::new().max_rect(foot.shrink2(egui::vec2(16.0, 12.0))),
         |ui| {
             ui.horizontal(|ui| {
-                let mut job = style::job("Ends about ", 12.5, palette.ink2, 0.0);
-                if let Some(ends) = &ends {
-                    job.append(
-                        ends,
-                        0.0,
-                        egui::TextFormat {
-                            font_id: egui::FontId::proportional(12.5),
-                            color: palette.ink,
-                            ..Default::default()
-                        },
-                    );
-                } else {
-                    job = style::job("", 12.5, palette.ink2, 0.0);
-                }
+                let job = match (&armed, &ends) {
+                    (Some(armed), _) => style::job(armed, 12.5, palette.accent, 0.0),
+                    (None, Some(ends)) => {
+                        let mut job = style::job("Ends about ", 12.5, palette.ink2, 0.0);
+                        job.append(
+                            ends,
+                            0.0,
+                            egui::TextFormat {
+                                font_id: egui::FontId::proportional(12.5),
+                                color: palette.ink,
+                                ..Default::default()
+                            },
+                        );
+                        job
+                    }
+                    (None, None) => style::job("", 12.5, palette.ink2, 0.0),
+                };
                 ui.label(job);
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                     style::text(ui, &disk, 12.5, palette.ink2);
@@ -1168,12 +1538,19 @@ fn footer(
                 if r.clicked() {
                     out.push(PlanIntent::Start);
                 }
+                // An armed schedule opens the dialog to see or cancel it.
+                let armed_now = s.host.schedule_stage() == Some("armed");
                 let can_schedule = s.host.schedule.is_some()
-                    && !matches!(s.host.schedule_stage(), Some("armed" | "running"))
-                    && super::preflight::can_schedule(inputs.blockers);
+                    && (armed_now
+                        || (s.host.schedule_stage() != Some("running")
+                            && super::preflight::can_schedule(inputs.blockers)));
                 if style::button_sized(
                     ui,
-                    "Schedule…",
+                    if armed_now {
+                        "Scheduled…"
+                    } else {
+                        "Schedule…"
+                    },
                     ButtonKind::Plain,
                     egui::vec2(106.0, 36.0),
                     can_schedule,

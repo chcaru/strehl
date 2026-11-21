@@ -156,6 +156,7 @@ fn lines_say_what_the_rig_test_shot_and_calibration_found() {
     let line = test_shot_sentence(&TestShotView {
         stage: "done",
         levels: Some(levels),
+        exposure: None,
         taken: None,
         error: None,
     })
@@ -336,4 +337,258 @@ fn a_blocked_plan_does_not_start() {
     let palette = CapturePalette::default();
     assert_eq!(color("3"), Some(palette.ink3), "Depth is not ready");
     assert_eq!(color("1"), Some(palette.ok), "the rig is");
+}
+
+/// One frame at an inspector width, scrolled to the top.
+fn frame_at(
+    ctx: &egui::Context,
+    view: &mut PlanView,
+    input: &PlanInputs<'_>,
+    width: f32,
+    events: Vec<Event>,
+) -> (FullOutput, Vec<PlanIntent>) {
+    let time = CLOCK.with(|c| {
+        c.set(c.get() + 0.05);
+        c.get()
+    });
+    let mut intents = Vec::new();
+    let raw = RawInput {
+        screen_rect: Some(Rect::from_min_size(Pos2::ZERO, egui::vec2(width, 1400.0))),
+        time: Some(time),
+        events,
+        ..Default::default()
+    };
+    let palette = CapturePalette::default();
+    let out = ctx.run(raw, |ctx| {
+        egui::CentralPanel::default()
+            .frame(egui::Frame::NONE)
+            .show(ctx, |ui| intents = view.show(ui, input, &palette));
+    });
+    (out, intents)
+}
+
+fn press_at(
+    ctx: &egui::Context,
+    view: &mut PlanView,
+    input: &PlanInputs<'_>,
+    at: Pos2,
+) -> Vec<PlanIntent> {
+    let press = |pressed| Event::PointerButton {
+        pos: at,
+        button: PointerButton::Primary,
+        pressed,
+        modifiers: Default::default(),
+    };
+    let mut all = frame_at(
+        ctx,
+        view,
+        input,
+        348.0,
+        vec![Event::PointerMoved(at), press(true)],
+    )
+    .1;
+    all.extend(frame_at(ctx, view, input, 348.0, vec![press(false)]).1);
+    all
+}
+
+fn tested(highlight: f64) -> TestShotView {
+    TestShotView {
+        stage: "done",
+        levels: Some(RawLevels {
+            path: "frame-000001.ARW".into(),
+            camera: "ILCE-7CR".into(),
+            iso: Some(100.0),
+            black: 512.0,
+            white: 15360.0,
+            samples: 10,
+            clipped_share: 0.0,
+            shadow_level: 0.012,
+            median_level: 0.2,
+            highlight_level: highlight,
+        }),
+        exposure: Some((100, 65544)),
+        taken: None,
+        error: None,
+    }
+}
+
+/// Nothing the plan draws runs past the inspector, at its narrowest (300
+/// px) and default width, with the rig settings open and a test shot read.
+#[test]
+fn nothing_runs_past_the_inspector() {
+    let ctx = egui::Context::default();
+    crate::theme::install(&ctx);
+    let mut state = ready();
+    state["suggestion"] = json!({"start":37000,"end":37764,"supported_tiles":20,"clipped":false});
+    let s = snapshot(state);
+    let mut input = inputs(&s, &[]);
+    input.test_shot = tested(0.97);
+    for width in [300.0, 348.0, 440.0] {
+        let mut view = PlanView {
+            rig_open: true,
+            custom_step: "12".into(),
+            ..Default::default()
+        };
+        frame_at(&ctx, &mut view, &input, width, vec![]);
+        let (out, _) = frame_at(&ctx, &mut view, &input, width, vec![]);
+        let mut seen = 0;
+        for shape in &out.shapes {
+            if let egui::Shape::Text(t) = &shape.shape {
+                if t.galley.text().is_empty() {
+                    continue;
+                }
+                seen += 1;
+                let r = t.visual_bounding_rect();
+                assert!(
+                    r.right() <= width + 0.5 && r.left() >= -0.5,
+                    "at {width}: '{}' runs past the inspector: {r:?}",
+                    t.galley.text()
+                );
+            }
+        }
+        assert!(seen > 60, "the plan drew its text ({seen})");
+    }
+}
+
+/// The rig's settings open from its step; the summary names them.
+#[test]
+fn the_rig_settings_open_from_the_rig_step() {
+    let ctx = egui::Context::default();
+    crate::theme::install(&ctx);
+    let s = snapshot(ready());
+    let input = inputs(&s, &[]);
+    let mut view = PlanView::default();
+    let (out, _) = frame_at(&ctx, &mut view, &input, 348.0, vec![]);
+    assert!(text_at(&out, "Approach 128 · settle 500 ms · warm-up 5 s").is_some());
+    let at = text_at(&out, "SETTINGS").expect("the Rig step's settings link");
+    press_at(&ctx, &mut view, &input, at);
+    assert!(view.rig_open);
+    let (out, _) = frame_at(&ctx, &mut view, &input, 348.0, vec![]);
+    for label in [
+        "Approach",
+        "Settle",
+        "Exposure timeout",
+        "Light warm-up",
+        "Manage power",
+        "Error correction",
+    ] {
+        assert!(text_at(&out, label).is_some(), "{label}");
+    }
+}
+
+/// The exposure guidance applies its suggestion, and "What changes" opens
+/// the comparison at its section.
+#[test]
+fn guidance_applies_and_opens_the_comparison() {
+    let ctx = egui::Context::default();
+    crate::theme::install(&ctx);
+    let s = snapshot(ready());
+    let mut input = inputs(&s, &[]);
+    // 97 % at 1/8 s: 1/10 s keeps the highlights under 90 %.
+    input.test_shot = tested(0.97);
+    let mut view = PlanView::default();
+    let (out, _) = frame_at(&ctx, &mut view, &input, 348.0, vec![]);
+    let apply = text_at(&out, "APPLY").expect("the suggestion's action");
+    assert_eq!(
+        press_at(&ctx, &mut view, &input, apply),
+        [PlanIntent::Exposure {
+            iso: 100,
+            shutter: 65546
+        }]
+    );
+    let (out, _) = frame_at(&ctx, &mut view, &input, 348.0, vec![]);
+    let more = text_at(&out, "WHAT CHANGES").expect("the comparison link");
+    assert_eq!(
+        press_at(&ctx, &mut view, &input, more),
+        [PlanIntent::OpenGuide(GuideTab::Exposure)]
+    );
+    assert_eq!(view.guide, Some(GuideTab::Exposure));
+}
+
+/// A typed step shows what it gives in the table's last row and is chosen
+/// with Enter or its link; letters are not kept.
+#[test]
+fn a_typed_step_is_previewed_and_chosen() {
+    let ctx = egui::Context::default();
+    crate::theme::install(&ctx);
+    let s = snapshot(ready());
+    let input = inputs(&s, &[]);
+    let mut view = PlanView {
+        custom_step: "12".into(),
+        ..Default::default()
+    };
+    let (out, _) = frame_at(&ctx, &mut view, &input, 348.0, vec![]);
+    // 664 units at 12: 57 planes, as the host counts them.
+    let planes = plane_count(37_100, 37_764, 12).to_string();
+    assert_eq!(planes, "57");
+    assert!(text_at(&out, &planes).is_some(), "the typed row's planes");
+    let link = text_at(&out, "USE STEP 12").expect("the typed step's link");
+    assert_eq!(
+        press_at(&ctx, &mut view, &input, link),
+        [PlanIntent::SetStep(12)]
+    );
+    // Typed with Enter.
+    let field = text_at(&out, "12").expect("the typed step");
+    press_at(&ctx, &mut view, &input, field);
+    let key = |key| Event::Key {
+        key,
+        physical_key: None,
+        pressed: true,
+        repeat: false,
+        modifiers: Default::default(),
+    };
+    frame_at(
+        &ctx,
+        &mut view,
+        &input,
+        348.0,
+        vec![key(egui::Key::End), Event::Text("x4".into())],
+    );
+    assert_eq!(view.custom_step, "124", "digits only");
+    let (_, sent) = frame_at(&ctx, &mut view, &input, 348.0, vec![key(egui::Key::Enter)]);
+    assert_eq!(sent, [PlanIntent::SetStep(124)]);
+}
+
+/// Enter that ends typing in a field is the field's: the station, which
+/// reads Enter after the plan as Start stack, does not see it.
+#[test]
+fn enter_in_a_field_is_not_start() {
+    let ctx = egui::Context::default();
+    crate::theme::install(&ctx);
+    let s = snapshot(ready());
+    let input = inputs(&s, &[]);
+    let mut view = PlanView {
+        custom_step: "12".into(),
+        ..Default::default()
+    };
+    let (out, _) = frame_at(&ctx, &mut view, &input, 348.0, vec![]);
+    let field = text_at(&out, "12").unwrap();
+    press_at(&ctx, &mut view, &input, field);
+    let enter = Event::Key {
+        key: egui::Key::Enter,
+        physical_key: None,
+        pressed: true,
+        repeat: false,
+        modifiers: Default::default(),
+    };
+    let palette = CapturePalette::default();
+    let mut station_saw_enter = None;
+    let _ = ctx.run(
+        RawInput {
+            screen_rect: Some(Rect::from_min_size(Pos2::ZERO, egui::vec2(348.0, 1400.0))),
+            events: vec![enter],
+            ..Default::default()
+        },
+        |ctx| {
+            egui::CentralPanel::default()
+                .frame(egui::Frame::NONE)
+                .show(ctx, |ui| {
+                    let sent = view.show(ui, &input, &palette);
+                    assert_eq!(sent, [PlanIntent::SetStep(12)]);
+                    // What the station reads next.
+                    station_saw_enter = Some(ui.input(|i| i.key_pressed(egui::Key::Enter)));
+                });
+        },
+    );
+    assert_eq!(station_saw_enter, Some(false));
 }

@@ -221,7 +221,8 @@ pub struct LaunchOptions {
     /// `--depth-brush`: Develop opens with the depth brush out (offscreen
     /// checks of the rail it shares with the Stack station).
     pub(crate) depth_brush: bool,
-    /// `--capture-fixture plan|flight|glance`: the Capture station from a
+    /// `--capture-fixture plan|flight|glance` (`plan+rig`, `plan+guide`,
+    /// `plan+schedule`... with a panel open): the Capture station from a
     /// fabricated state (offscreen checks); nothing reaches a camera.
     pub(crate) capture_fixture: Option<String>,
 }
@@ -503,7 +504,7 @@ fn main() -> eframe::Result {
             if !launch
                 .capture_fixture
                 .as_deref()
-                .is_some_and(|v| matches!(v, "plan" | "flight" | "glance"))
+                .is_some_and(|v| matches!(v.split('+').next(), Some("plan" | "flight" | "glance")))
             {
                 eprintln!("Use --capture-fixture plan|flight|glance");
                 std::process::exit(2);
