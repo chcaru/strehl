@@ -84,9 +84,18 @@ From the phase agents (release, alternated binaries; details in their notes):
 - **Reopen at 1,444 planes:** fully observed in 0.42 s (GPU).
 - **Develop:** slider to updated overview median 36.6 ms.
 
+### Pi deploy (2026-11-21, after the desktop install)
+
+At the owner's request the controller and bridge were cross-built from `b186a4da6` (`wsl -u root bash experiments/capture-implementation-2026-11-20/build-pi.sh`; strehl-capture compiled) and installed with `python experiments/capture-implementation-2026-11-20/deploy.py install <folder>`. The one host commit since the last install is `8ea93f2c9` (H1, H2).
+
+- Installed SHA-256: `strehl-capture-headless` bd5a6726...bb80b, `strehl-sony-ptp` 1c4d1ada...d76 (equal to the build; full values and the state before in `pi-install-1795291285.json` and `pi-install-input-1795291285.json`). Backup of the previous binaries on the Pi: `/root/strehl-before-round4-1795291285` (the script's fixed prefix); roll back with `deploy.py rollback <backup>`.
+- VERIFIED with the camera connected (USB 5000 Mbit/s, dial in M, ISO 100): `capabilities` = `{exposure_check: true, test_shot: true}`; `exposure.mode` `M`, `exposure.problem` null.
+- The restart reset manage power to off; it needs a connected camera to switch on, so the camera was powered on, manage power set on, and the camera switched off. Left as found: camera and light off, manage power on, error correction off. The plan bounds reset to 0 (before the install neither bound was set).
+- No test shot was taken; nothing was written to the capture folder.
+
 ### Not done, or not yet verified
 
-- **Rig test of host changes H1 and H2 (test shot, exposure check):** nothing was deployed to the Pi, and the camera, light and Pi were not touched. The desktop still works with the current host because it sends the new fields only when the host advertises them.
+- **Rig test of host changes H1 and H2 (test shot, exposure check):** the host was deployed to the Pi on 2026-11-21 (see below), but the rig test (P6 notes, items 2-6) has not been run. The desktop works with the old and the new host because it sends the new fields only when the host advertises them.
 - **The depth lens (P8):** E5 is built and off by default. It costs 24-35× the render's time, and usable coverage is 3.8 % of pixels on the weevil and none on the 1,444-plane bracket. The evidence policy needs its own look first.
 - **Still over budget:**
   - Engine room at 6,000 planes: 1.33-1.5× of its 130-plane cost against a 1.25× budget.

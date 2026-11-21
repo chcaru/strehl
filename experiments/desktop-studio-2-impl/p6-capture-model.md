@@ -122,10 +122,10 @@ except where a placebo is listed above):
 - Levels: preview histogram and clip share; RAW levels against black and
   white; the first durable RAW of a run; the test shot's stages.
 
-## Needs a Pi deploy and a rig test (not done: no Pi, camera or light touched)
+## Needs a rig test (the Pi deploy is done)
 
-1. Deploy the host (H1, H2) to the Pi (cross-built in WSL as root) and restart
-   the controller; switch "manage power" back on afterwards.
+1. Done 2026-11-21: deployed the host (H1, H2) to the Pi and restarted the
+   controller; manage power switched back on (see the README's "Pi deploy").
 2. With manage power on, on a structured subject: check `exposure.mode` and
    `exposure.problem` with the dial in A and M, fixed and auto ISO, Bulb; take a
    test shot (single and four-shot): its manifest says `test`, it is not followed,
