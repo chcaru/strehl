@@ -236,10 +236,93 @@ Totals: `cargo test --locked -p strehl-ui`: 1,104 passed, 18 ignored (VERIFIED, 
 7. Swap `evidence_revision` for P2's evidence-file revision if P2 adds one; raise nothing here.
 8. Repeat the full-app checks (spec 10.1 items 6 to 9) and the offscreen renders (10.2).
 
+## Stage 2: the composed station
+
+Merged the integration branch twice (`00f1e810e`, then `91ebd7e70` with every other station);
+conflicts kept both sides. The station lives in `app-station-stack.rs` (`StackStation`, one field
+on `StrehlApp`); the Stack arms in `studio-shell.rs` call into it.
+
+### What is wired
+
+- **Layout:** control strip 36, canvas, rail 190 (head 30, chart 84, filmstrip 75) and the
+  inspector, per appendix B; the photograph at 128, 94, 1076, 718 (tested).
+- **Control strip:** lens switch (Photograph, Plane; Depth, Soft spots and Alignment shown but
+  off until their evidence exists), detail size 2 to 256 underlined in the spectrum, the hold note
+  with Esc, Fit / 100 %, and the render pair.
+- **Canvas:** the photograph through the same HDR presenter and detail patches as Develop
+  (`editor.photo_paint`, `request_view`), wheel zoom about the pointer, drag pan, double-click
+  fit. The plane lens: peek (dimmed photograph, kept region with fill, contour and 7 px sample
+  dots, the 372 x 276 card with the plane's camera preview and approximate outline), hold (the
+  two-up and eight size maps; a size map sets the detail size), keys 1-5, Left/Right, Shift,
+  Escape, Space for the clean photograph. The core sample live under the pointer, pinned by a
+  click, Show the plane holds its leader, Repair here opens Develop.
+- **Rail:** head (title, plane count, keys, reading), the depth rail with hover and head markers
+  and the core sample's dashed line, and the filmstrip (textures from `SourceBrowser` only, its
+  frames warmed as visible contacts).
+- **Inspector:** Checks (verdict, tally, check rows with marks only where the threshold is a fact,
+  spec D4), Recipe (today's Adjust controls), Renders (the stack's renders; click reopens one).
+  Footer: Develop this render, Render again; while a stack runs, Stop and Queue a render (P5's
+  `queue_while_running`).
+- **Evidence:** kept shares from P2's `plane_share`; a pooled `Bin` source is labelled
+  approximate on the peek card and the two-up.
+- **Engine room (E):** today's process view with its 0.24 s animation, also shown while a render
+  has not finished. The old process view no longer shows in the photograph room.
+- **Themes:** palettes from `studio_theme::tokens`; `station_paints_legacy(Stack)` is false in the
+  photograph room, true in the engine room.
+- **Offscreen:** `--route stack --open-run <run>`; `--plane-hold N` holds plane N.
+- **Develop hook:** `station_stack::DevelopRangeRail { station: &mut self.stack_station,
+  progress: &self.progress }` implements P7's `develop_station::DepthRail` from the real rail
+  (pooled kept share at the finest size, the range shaded, drag to choose). P7 replaces
+  `&mut RangeFallback` in `app-develop.rs` with it.
+- **Develop and Export canvas:** `ProcessTheater::photograph_only`, set by `station_canvas` for
+  both: the photograph alone in the standalone layout (no journey, timeline, instruments,
+  captions, legend, review strip or Scene button; diagnostics suppressed), `edit_mapping`
+  unchanged for P7's overlay. Verified offscreen on `develop` and `export`.
+- **Open issues closed:** bounded recounts (`RECOUNT_BUDGET`, 4,096 windows per frame, double
+  buffered, newest window after the current one); pinned ranges off the paint path
+  (`DenseSelectionWorker`); readiness while the station owns the canvas (`set_station_busy`).
+
+### Offscreen comparison (release, 1680 x 1050, the 299-plane weevil run)
+
+`visual-check.py ... stack stack-plane-held stack-instrument stack-lightbox engine` (the new
+`stack-plane-held` route uses `--plane-hold 128`), each looked at in full beside its reference:
+
+| Screen | Verdict |
+| --- | --- |
+| `stack` | Matches the chrome and slots: strip, photograph rectangle, rail head, chart, scale, 17 frames with marks, Checks tab, footer, hint keys. Data is real, so bars, brackets and checks differ from the illustrative mockup; no scale rule (no calibration, D12). |
+| `stack-plane-held` | Matches: captions, two-up at 16, 186, 643 x 429, eight size maps with kept shares, held frame and head marker. |
+| `stack-instrument`, `stack-lightbox` | Render natively in their tokens (paper panels, dark surround on Lightbox). |
+| `engine` | Today's process view in the engine room, as intended. |
+
+### Performance (stage 2)
+
+MEASURED with `perf/run-p3-stage2.sh` (baseline P0 binary and the stage-2 binary `8f92802ac`,
+interleaved; CPU load 0 to 13 %; outputs in `perf/p3-stage2/`). Minimum ms per frame, CPU paint
+plus tessellation (GPU excluded).
+
+| Measurement | Baseline | Stage 2 |
+| --- | --- | --- |
+| Engine room, 130 planes, process view | 1.245, 1.251, 1.332 | 0.736, 0.708, 0.732 |
+| Engine room, 130 planes, source view | 0.443, 0.464, 0.474 | 0.394, 0.394, 0.408 |
+| Stack station, photograph sweep (live core sample): 130 / 1,500 / 6,000 synthetic | n/a | 0.173-0.175 / 0.355-0.365 / 0.512-0.547 |
+| Stack station, rail sweep (peek): 130 / 1,500 / 6,000 | n/a | 0.116-0.126 / 0.113-0.121 / 0.116-0.140 |
+| Stack station, held arrow steps: 130 / 1,500 / 6,000 | n/a | 0.138-0.149 / 0.129-0.140 / 0.133-0.146 |
+| Stack station, the real 1,444-plane render (11,552 maps, log streamed read-only): photo / rail / held | n/a | 0.426 / 0.168 / 0.182 |
+| Engine room, 6,000 synthetic planes (48,000 maps): process / source | n/a | 2.63-3.81 / 2.19-3.15 |
+| Resident warming, 299 real RAWs | 1,464.6, 1,463.3 ms | 1,467.5, 1,452.0 ms |
+| 1,444 real RAWs: both tiers / sparse-only sweeps / reopen | n/a | 2,387 ms / never blank, worst one plane / 632 ms |
+
+The 6,000-plane fixtures now keep all 48,000 maps (P2's cap). Against spec 5.3's 1.25 x budget:
+the station's rail and held steps are flat with length (1.0-1.1 x); its photograph sweep is 3.0 x
+its own 130-plane figure, and 0.41 x the baseline's 130-plane process view. The engine room's
+process view still grows with length (timeline region lane; the probe is bounded). Live render
+frame times (`check-display-performance.py` during a render) were not measured: it needs the
+desktop window and a full render on the owner's machine.
+
 ## Open issues
 
 - Long-stack paint budget (spec 5.3: 6,000 planes within 1.25 × the 130-plane figure) is not met
-  by the existing engine-room theater. MEASURED above. The cost is the pointer's region: each
+  by the engine-room theater's timeline (the region probe is now bounded; stage 2 above). MEASURED above. The cost is the pointer's region: each
   time it crosses a sample cell, the timeline's region lane and the region probe recount every
   plane at the level (inherently O(planes); DERIVED from the code paths and the measured scaling,
   not profiled); constant factors are reduced here. Design for
@@ -247,8 +330,11 @@ Totals: `cargo test --locked -p strehl-ui`: 1,104 passed, 18 ignored (VERIFIED, 
   complete series shown until the new one completes, the newest window started only after the
   current one finishes), so frame cost is bounded at any length while the display stays
   consistent. P2's raised archive cap (65,536 maps) increases this cost at coarse levels.
-- `DenseAdmissionCache::selection` and `selection_with_current` (pinned ranges) still extract on
-  the paint path; only single-capture regions moved to the worker.
+- Pinned ranges moved to `DenseSelectionWorker` in stage 2; the synchronous cache remains as the
+  tests' reference.
+- Peek saturation (75 %) is not applied: it needs a presenter uniform and an SDR path; brightness
+  is dimmed.
+- The engine-room timeline's region lane still recounts every plane per window crossing.
 - The lane mesh adds 3,640 tessellated vertices at 130 captures (circles tessellated without
   egui's prepared discs, which `FontsView` does not expose in egui 0.33). MEASURED; paint time
   still fell.

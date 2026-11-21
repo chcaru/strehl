@@ -2139,6 +2139,7 @@ impl ProcessTheater {
         // Reuse the existing caption lane. Evidence must never resize the
         // photograph at TIFF arrival or steal room from a compact comparison.
         self.review_strip_visible = final_owned
+            && !self.photograph_only
             && footer >= 53.0
             && rect.width() >= 230.0
             && input.progress.bands.is_some();
@@ -2165,12 +2166,17 @@ impl ProcessTheater {
                 }
             }
         }
-        let image_box = Rect::from_min_max(
-            rect.min + egui::vec2(10.0, if self.edit_workspace { 28.0 } else { 36.0 }),
-            // Reserve the diagnostic caption from the first camera frame.
-            // Its later contents cannot shrink the live image at TIFF arrival.
-            rect.max - egui::vec2(10.0, footer),
-        );
+        let image_box = if self.photograph_only {
+            // Develop and Export: no caption above, no legend below.
+            rect.shrink(10.0)
+        } else {
+            Rect::from_min_max(
+                rect.min + egui::vec2(10.0, if self.edit_workspace { 28.0 } else { 36.0 }),
+                // Reserve the diagnostic caption from the first camera frame.
+                // Its later contents cannot shrink the live image at TIFF arrival.
+                rect.max - egui::vec2(10.0, footer),
+            )
+        };
         let navigable = self.output_space(input).is_some() || input.standalone_photo();
         if final_owned && navigable {
             self.requested_view = None;
@@ -2185,7 +2191,7 @@ impl ProcessTheater {
             if !self.annotating_canvas() {
                 self.final_modifier(ui, rect, image_box, input);
             }
-            if !input.standalone_photo() && !self.edit_workspace {
+            if !input.standalone_photo() && !self.edit_workspace && !self.photograph_only {
                 self.result_photo.legend(
                     ui,
                     Rect::from_min_size(

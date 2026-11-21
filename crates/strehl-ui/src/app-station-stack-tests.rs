@@ -499,6 +499,9 @@ fn develop_and_export_show_the_photograph_alone_and_the_footer_offers_render_aga
             "CAPTURE / ADMITTED SAMPLES",
             "PHOTOGRAPH / EDIT",
             "YOUR PHOTOGRAPH",
+            "Confidence",
+            "Regional repairs applied",
+            "FALLBACK",
         ] {
             assert!(
                 !shown.iter().any(|text| text.contains(legacy)),
