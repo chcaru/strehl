@@ -13,6 +13,7 @@ use tiff::{
 };
 
 use crate::DevelopmentRecipe;
+use crate::recipe::PixelRecipe;
 
 pub(crate) struct IccBytes<'a>(pub(crate) &'a [u8]);
 impl tiff::encoder::TiffValue for IccBytes<'_> {
@@ -105,6 +106,15 @@ impl LinearImage {
         Ok(())
     }
 
+    /// Dimensions and sample count only; no scan of the samples.
+    pub(crate) fn validate_extent(&self) -> Result<()> {
+        ensure!(
+            self.pixels.len() == image_samples(self.width, self.height)?,
+            "RGB sample count does not match image dimensions"
+        );
+        Ok(())
+    }
+
     /// Area-averaged linear preview. Never resizes an already-developed SDR view.
     pub fn preview(&self, max_edge: u32) -> Self {
         let max_edge = max_edge.max(1);
@@ -152,9 +162,13 @@ impl LinearImage {
     pub fn render_sdr8(&self, recipe: &DevelopmentRecipe) -> Result<Vec<u8>> {
         self.validate()?;
         recipe.validate()?;
+        if let Some(staged) = self.with_neighbourhood(recipe) {
+            return staged.render_sdr8(&recipe.without_neighbourhood());
+        }
+        let prepared = recipe.prepare();
         let mut result = vec![0u8; self.pixels.len()];
         result.par_chunks_mut(3).enumerate().for_each(|(i, out)| {
-            let rgb = self.display_pixel(i, recipe);
+            let rgb = self.display_at(i, &prepared);
             for c in 0..3 {
                 out[c] = (rgb[c] * 255.0 + 0.5) as u8;
             }
@@ -165,9 +179,13 @@ impl LinearImage {
     pub fn render_sdr16(&self, recipe: &DevelopmentRecipe) -> Result<Vec<u16>> {
         self.validate()?;
         recipe.validate()?;
+        if let Some(staged) = self.with_neighbourhood(recipe) {
+            return staged.render_sdr16(&recipe.without_neighbourhood());
+        }
+        let prepared = recipe.prepare();
         let mut result = vec![0u16; self.pixels.len()];
         result.par_chunks_mut(3).enumerate().for_each(|(i, out)| {
-            let rgb = self.display_pixel(i, recipe);
+            let rgb = self.display_at(i, &prepared);
             for c in 0..3 {
                 out[c] = (rgb[c] * 65535.0 + 0.5) as u16;
             }
@@ -205,11 +223,33 @@ impl LinearImage {
         let scale = rw.max(rh) as f32 / max_edge.max(1) as f32;
         let width = (rw as f32 / scale.max(1.0)).round().max(1.0) as u32;
         let height = (rh as f32 / scale.max(1.0)).round().max(1.0) as u32;
+        let prepared = recipe.prepare();
         let mut rgb = vec![0u8; (width * height * 3) as usize];
+        if recipe.has_neighbourhood() {
+            // Stage only the sampled rows, each with its halo.
+            let stage = crate::Neighbourhood::new(self, recipe);
+            rgb.par_chunks_mut(width as usize * 3)
+                .enumerate()
+                .for_each(|(row, line)| {
+                    let y = y0 + (row as u32 * rh / height);
+                    let staged = stage.region([x0, y, x1.max(x0 + 1), y + 1]);
+                    for (col, p) in line.chunks_mut(3).enumerate() {
+                        let x = x0 + (col as u32 * rw / width);
+                        let i = ((x - x0) * 3) as usize;
+                        let raw = [staged[i], staged[i + 1], staged[i + 2]];
+                        let (_, uv) = self.raw_uv((y * self.width + x) as usize);
+                        let c = self.display_sample(raw, uv, &prepared);
+                        for ch in 0..3 {
+                            p[ch] = (c[ch] * 255.0 + 0.5) as u8;
+                        }
+                    }
+                });
+            return Ok((width, height, rgb));
+        }
         rgb.par_chunks_mut(3).enumerate().for_each(|(i, p)| {
             let x = x0 + ((i % width as usize) as u32 * rw / width);
             let y = y0 + ((i / width as usize) as u32 * rh / height);
-            let c = self.display_pixel((y * self.width + x) as usize, recipe);
+            let c = self.display_at((y * self.width + x) as usize, &prepared);
             for ch in 0..3 {
                 p[ch] = (c[ch] * 255.0 + 0.5) as u8;
             }
@@ -245,22 +285,40 @@ impl LinearImage {
     /// Values above reference white remain above 1, as in native HDR display.
     /// `i` must address a pixel in this image, just as for `display_pixel`.
     pub fn developed_pixel(&self, i: usize, recipe: &DevelopmentRecipe) -> [f32; 3] {
+        self.developed_at(i, recipe)
+    }
+
+    /// Source pixel `i` and its pixel-centre normalized coordinate.
+    #[inline]
+    pub(crate) fn raw_uv(&self, i: usize) -> ([f32; 3], [f32; 2]) {
         let p = &self.pixels[i * 3..i * 3 + 3];
         let uv = [
             ((i % self.width as usize) as f32 + 0.5) / self.width as f32,
             ((i / self.width as usize) as f32 + 0.5) / self.height as f32,
         ];
-        self.developed_sample([p[0], p[1], p[2]], uv, recipe)
+        ([p[0], p[1], p[2]], uv)
     }
 
-    pub(crate) fn developed_sample(
+    #[inline]
+    pub(crate) fn developed_at<R: PixelRecipe + ?Sized>(&self, i: usize, recipe: &R) -> [f32; 3] {
+        let (raw, uv) = self.raw_uv(i);
+        self.developed_sample(raw, uv, recipe)
+    }
+
+    #[inline]
+    pub(crate) fn display_at<R: PixelRecipe + ?Sized>(&self, i: usize, recipe: &R) -> [f32; 3] {
+        let (raw, uv) = self.raw_uv(i);
+        self.display_sample(raw, uv, recipe)
+    }
+
+    pub(crate) fn developed_sample<R: PixelRecipe + ?Sized>(
         &self,
         raw: [f32; 3],
         uv: [f32; 2],
-        recipe: &DevelopmentRecipe,
+        recipe: &R,
     ) -> [f32; 3] {
         let base = self.baseline.map_or(raw, |b| b.place(raw));
-        let developed = recipe.apply_pixel(base, uv);
+        let developed = recipe.pixel(base, uv);
         // Match the original SDR midtone style while retaining HDR headroom.
         // The display S-curve is extended with its positive tangent above white;
         // evaluating the cubic there would fold the highlight order backwards.
@@ -287,22 +345,17 @@ impl LinearImage {
     pub fn display_pixel(&self, i: usize, recipe: &DevelopmentRecipe) -> [f32; 3] {
         // Baseline stays fixed while editing. Exposure is applied after its placement
         // so an auto-tone cannot silently cancel a commanded exposure adjustment.
-        let p = &self.pixels[i * 3..i * 3 + 3];
-        let uv = [
-            ((i % self.width as usize) as f32 + 0.5) / self.width as f32,
-            ((i / self.width as usize) as f32 + 0.5) / self.height as f32,
-        ];
-        self.display_sample([p[0], p[1], p[2]], uv, recipe)
+        self.display_at(i, recipe)
     }
 
-    pub(crate) fn display_sample(
+    pub(crate) fn display_sample<R: PixelRecipe + ?Sized>(
         &self,
         raw: [f32; 3],
         uv: [f32; 2],
-        recipe: &DevelopmentRecipe,
+        recipe: &R,
     ) -> [f32; 3] {
         let base = self.baseline.map_or(raw, |b| b.place(raw));
-        let rgb = recipe.apply_pixel(base, uv);
+        let rgb = recipe.pixel(base, uv);
         let rgb = if self.baseline.is_some() {
             gamut_map(rgb)
         } else {
@@ -350,7 +403,7 @@ pub(crate) fn srgb_encode(v: f32) -> f32 {
         1.055 * v.powf(1.0 / 2.4) - 0.055
     }
 }
-fn srgb_decode(v: f32) -> f32 {
+pub(crate) fn srgb_decode(v: f32) -> f32 {
     if v <= 0.04045 {
         v / 12.92
     } else {

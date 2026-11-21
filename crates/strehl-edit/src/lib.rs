@@ -7,6 +7,8 @@ mod color;
 #[path = "display-region.rs"]
 mod display_region;
 mod export;
+#[path = "export-pipeline.rs"]
+mod export_pipeline;
 mod icc;
 mod image;
 #[path = "learned-asset.rs"]
@@ -21,11 +23,21 @@ pub mod learned_scene;
 pub mod learned_scene_asset;
 #[path = "learned-store.rs"]
 pub mod learned_store;
+mod metadata;
+mod neighbourhood;
 mod publish;
 mod recipe;
+mod resample;
 #[path = "scalar-tiff.rs"]
 mod scalar_tiff;
+#[path = "scale-bar.rs"]
+mod scale_bar;
+mod sharpen;
+#[path = "white-balance.rs"]
+mod white_balance;
 mod xmp;
+
+pub(crate) use recipe::bounded as recipe_bounded;
 
 pub use adaptive::{
     AdaptiveChange, AdaptiveIntent, AdaptiveStatistics, AdaptiveSuggestion, HighlightDiagnosis,
@@ -35,15 +47,24 @@ pub use avif::{HdrExportReport, export_hdr_avif};
 pub use color::OutputColorSpace;
 pub use display_region::{DisplayRegion, DisplayRegionRequest};
 pub use export::{
-    ExportFormat, ExportReport, ExportSettings, export_image, export_image_with_coverage,
+    ExportExtras, ExportFormat, ExportReport, ExportSettings, export_image, export_image_with,
+    export_image_with_coverage,
 };
 pub use image::{
     DisplayBaseline, ImageOrigin, LinearImage, load_tiff, load_tiff_thumbnail, save_linear_tiff,
     save_sdr_tiff,
 };
+pub use metadata::{ExportDateTime, ExportMetadata};
+pub use neighbourhood::Neighbourhood;
 pub use recipe::{
-    AdaptiveParameters, AdaptiveToneRange, Adjustments, DevelopmentRecipe, HdrSettings,
-    MAX_SPATIAL_TREATMENTS, RegionAdjustment, RegionShape, SourceRange, SpatialTreatment,
+    AdaptiveParameters, AdaptiveToneRange, Adjustments, Backdrop, Crop, DevelopmentRecipe,
+    HdrSettings, Heal, MAX_HEALS, MAX_RECIPE_STROKE_POINTS, MAX_SPATIAL_TREATMENTS,
+    MAX_STROKE_POINTS, PreparedRecipe, PreparedShape, RegionAdjustment, RegionShape, ScaleBar,
+    ScaleBarCorner, ScaleBarStyle, SourceRange, SpatialTreatment,
 };
+pub use resample::{Resize, ResizeFilter};
 pub use scalar_tiff::{ScalarImage, ScalarSamples, read_scalar_tiff};
+pub use scale_bar::{ScaleBarReport, scale_bar_font};
+pub use sharpen::OutputSharpening;
+pub use white_balance::{WhiteBalancePick, white_balance_from_neutral};
 pub use xmp::{XmpImport, import_xmp};

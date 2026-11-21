@@ -31,6 +31,8 @@ mod draft_preview;
 #[path = "edit-workspace.rs"]
 mod edit_workspace;
 mod engine;
+#[path = "export-presets.rs"]
+mod export_presets;
 #[path = "hdr-display.rs"]
 mod hdr_display;
 #[path = "image-gesture.rs"]

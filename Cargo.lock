@@ -4251,6 +4251,7 @@ dependencies = [
 name = "strehl-edit"
 version = "0.1.0-alpha.6"
 dependencies = [
+ "ab_glyph",
  "anyhow",
  "avif-serialize",
  "image",
