@@ -107,9 +107,19 @@ At the owner's request the controller and bridge were cross-built from `b186a4da
   - A JPEG export requested without a colour space gets Rec.2020. This default predates tonight.
 - **egui was not upgraded:** it stays at 0.33. Nothing in the plan needed a newer version, and an upgrade would have collided with seven parallel branches and the vendored egui-wgpu patch.
 
+### Owner feedback round (2026-11-21 afternoon)
+
+The owner's first look at the installed build asked for seven changes. Three agents built them in parallel worktrees (`studio2/fb-library`, `studio2/fb-live`, `studio2/fb-plan`); each branch's note has the decisions, measurements and screenshots:
+
+- [fb-library.md](fb-library.md): Library management (delete with opt-in file removal, undoable removal from the library, move and merge, multi-select, Show in Explorer) and the "today" date of subjects without renders.
+- [fb-live.md](fb-live.md): the depth rail's scale (wheel and slider), subject-box handles, and an antialiased Live View panel with a focus trace.
+- [fb-plan.md](fb-plan.md): rig settings in the inspector, a typed step, settings guidance ("What changes"), and the rebuilt Schedule dialog in local time.
+
+Merged into `main` (merge `3dde6668a`; one conflict, the route table in `visual-check.py`, kept both sides). On the merged tree: `cargo test --locked -p strehl-ui` 1,468 passed, 0 failed, 36 ignored; clippy `-D warnings` and fmt clean (VERIFIED, Compiling/Checking strehl-ui seen). Package `desktop-abbe71158bdff1c4` built with `scripts/package-desktop.ps1`; all 62 `visual-check.py` routes rendered from the packaged `Strehl.exe` on a catalog copy and were looked at (VERIFIED). No host change: the Pi needs no redeploy. Nothing in this round was tried on the rig.
+
 ### Package and install
 
 - A source-inclusive package of `191e4fadb` was built with `scripts/package-desktop.ps1` (build id `desktop-2b8da1787c8409c4`). Five routes rendered offscreen from the packaged `Strehl.exe` on a copy of the catalog (VERIFIED).
-- **It is not installed.** The session's permission check refused the in-place install (stopping the receiver and replacing the installed desktop), so the owner's install, receiver and catalog are unchanged. Installing is a manual step for the owner.
+- The session's permission check first refused the in-place install. The owner then asked for it, and it was installed on 2026-11-21 at 11:34 (backup `%LOCALAPPDATA%\Programs\Strehl-backup-20261121-pre-studio2`, catalog copy `projects.pre-studio2-20261121.json`; 9 files hash-verified; receiver restarted).
 - The first save after installing converts the catalog to format 2 and writes a verified format-1 backup beside it. Older builds refuse format 2, so downgrading means restoring that backup.
 - No receiver or RAW-archive change was needed: the archive codec did not change. The receiver runs from the installed desktop, so updating the desktop updates it.
