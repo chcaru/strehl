@@ -12,6 +12,13 @@
 //!   per lattice site, row-major, least significant bit first, unused tail
 //!   bits zero. Kinds 2 (focus energy) and 3 (gate floor) carry `f32 min,
 //!   f32 max` and one quantised byte per site: the bytes the hex lines carried.
+//! - `strehl stack --focus-evidence` (plan E5) appends a compact focus field
+//!   at the end, on level 0's lattice with frame 0: kinds 4 (focus depth) and
+//!   5 (focus share) carry `f32 min, f32 max` and one byte per site, kind 6
+//!   (focus summary) at most [`MAX_SUMMARY_BYTES`]. Their sequences are the
+//!   largest, after every plane map. Readers that predate them skip unknown
+//!   kinds; every payload stays under their framing limit (`8 + 128 x 96`).
+//!   See `merge_cmd/focus-evidence.rs` for their meaning.
 //!
 //! Every accepted plane gets its gate-support maps. The float kinds are kept
 //! for at most [`MAX_FLOAT_PLANES`] planes spread evenly through the stack
@@ -41,7 +48,13 @@ pub(crate) enum Kind {
     GateSupport = 0,
     FocusEnergy = 2,
     GateFloor = 3,
+    FocusDepth = 4,
+    FocusShare = 5,
+    FocusSummary = 6,
 }
+
+/// The longest focus summary payload.
+pub(crate) const MAX_SUMMARY_BYTES: usize = 1090;
 
 impl Kind {
     pub(crate) fn of(name: &str) -> Option<Self> {
@@ -195,15 +208,16 @@ impl Writer {
             return false;
         };
         let sites = lattice[0] * lattice[1];
-        let expected = match kind {
-            Kind::GateSupport => sites.div_ceil(8),
-            Kind::FocusEnergy | Kind::GateFloor => 8 + sites,
+        let fits = match kind {
+            Kind::GateSupport => payload.len() == sites.div_ceil(8),
+            Kind::FocusEnergy | Kind::GateFloor => payload.len() == 8 + sites,
+            // The focus field is one whole-run map on level 0's lattice.
+            Kind::FocusDepth | Kind::FocusShare => {
+                level == 0 && frame == 0 && payload.len() == 8 + sites
+            }
+            Kind::FocusSummary => level == 0 && frame == 0 && payload.len() <= MAX_SUMMARY_BYTES,
         };
-        if self.failed
-            || frame >= self.header.frames
-            || payload.len() != expected
-            || sequence > u32::MAX as u64
-        {
+        if self.failed || frame >= self.header.frames || !fits || sequence > u32::MAX as u64 {
             return false;
         }
         out.extend((frame as u32).to_le_bytes());
@@ -230,6 +244,39 @@ impl Writer {
             return false;
         }
         true
+    }
+}
+
+/// The focus field's records, written in one call to `directory`'s evidence
+/// file: appended to the file this process created there, or to a new file
+/// with `header` (a render without the desktop's progress). `records` gets
+/// level 0's lattice and returns `(kind, payload)` in order; their sequences
+/// are the largest the format holds, after every plane map.
+pub(crate) fn write_focus(
+    directory: &Path,
+    header: Header,
+    records: impl FnOnce([usize; 2]) -> Vec<(Kind, Vec<u8>)>,
+) -> Result<PathBuf, String> {
+    let joined = CREATED
+        .lock()
+        .unwrap_or_else(|e| e.into_inner())
+        .iter()
+        .find(|(known, _)| *known == directory.join(FILE_NAME))
+        .map(|(_, header)| header.clone());
+    let (mut writer, _) = Writer::open(directory, joined.unwrap_or(header))?;
+    let lattice = writer.header.levels[0].0;
+    let records = records(lattice);
+    let first = u32::MAX as u64 + 1 - records.len() as u64;
+    let mut bytes = Vec::new();
+    for (index, (kind, payload)) in records.iter().enumerate() {
+        if !writer.encode(0, 0, *kind, first + index as u64, payload, &mut bytes) {
+            return Err(format!("the evidence file cannot hold a {kind:?} record"));
+        }
+    }
+    if writer.write(&bytes) {
+        Ok(writer.path)
+    } else {
+        Err(format!("writing {} failed", writer.path.display()))
     }
 }
 

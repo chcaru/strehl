@@ -15,6 +15,8 @@ mod image_out;
 /// memory 7.4 -> 8.1 GB. It changes addresses, never arithmetic.
 pub type EngineAllocator = mimalloc::MiMalloc;
 pub const ENGINE_ALLOCATOR: EngineAllocator = mimalloc::MiMalloc;
+#[path = "focus-pass.rs"]
+pub mod focus_pass;
 #[cfg(feature = "research-lens-warp")]
 #[path = "lens-research.rs"]
 mod lens_research;
@@ -59,7 +61,6 @@ pub mod session_reconstruction_sampling;
 #[cfg(feature = "multi-stack")]
 #[path = "session-reproducibility.rs"]
 mod session_reproducibility;
-#[cfg(feature = "multi-stack")]
 #[path = "session-sampling.rs"]
 pub mod session_sampling;
 #[path = "follow-cmd.rs"]
@@ -720,6 +721,20 @@ enum Command {
         #[arg(long, value_name = "PATH")]
         confidence_map: Option<PathBuf>,
 
+        /// After the photograph is written, read the RAWs again and save a
+        /// compact focus field -- which part of the range each area came
+        /// from, as an order of planes, not a distance -- in the run's
+        /// evidence file (`evidence.strehl`, beside --out), with a usable
+        /// flag and, when it is not usable, why. Off by default.
+        ///
+        /// NOT FREE: a second and third decode of every frame and a
+        /// full-resolution focus measure, after the render. PYRAMID BACKEND
+        /// ONLY. `STREHL_FOCUS_EVIDENCE=on|off|placebo` does the same for a
+        /// harness; this flag wins. `STREHL_FOCUS_EVIDENCE_MEMORY_GIB`
+        /// bounds its memory (default 16).
+        #[arg(long)]
+        focus_evidence: bool,
+
         /// Fit and apply a per-frame affine photometric gain before the focus
         /// measure. ON BY DEFAULT since V-TONE. Pass `off` for the old merge.
         ///
@@ -1152,6 +1167,7 @@ where
             index_map,
             n_eff_map,
             confidence_map,
+            focus_evidence,
             photometric,
             target_n_eff,
             stats,
@@ -1425,6 +1441,9 @@ where
 
             if let Some(completion) = single_pass_completion.as_ref() {
                 completion.prepare_alignment()?;
+            }
+            if focus_evidence {
+                merge_cmd::focus_evidence::request();
             }
             merge_cmd::run(&MergeOptions {
                 dir,

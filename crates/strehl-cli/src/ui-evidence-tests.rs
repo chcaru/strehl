@@ -403,3 +403,75 @@ fn unplaced_frames_are_named_with_a_single_token_reason() {
     off.unplaced_frames(&warps);
     assert!(lines.lock().unwrap().is_empty());
 }
+
+/// The focus field joins the file the render created (its own header, even
+/// when the caller's differs), after every plane map, at level 0's lattice
+/// with the largest sequences; without a render file it makes one. Records
+/// the format cannot hold are refused whole.
+#[test]
+fn focus_records_join_the_render_file_with_the_last_sequences() {
+    let scratch = Scratch::new("focus");
+    let header = Header {
+        levels: vec![([13, 7], [900, 600]), ([7, 4], [450, 300])],
+        frames: 3,
+    };
+    let (mut writer, _) = Writer::open(&scratch.0, header.clone()).unwrap();
+    assert!(writer.append(2, 1, Kind::GateSupport, 9, &[0; 4]));
+    drop(writer);
+    let other = Header {
+        levels: vec![([5, 5], [50, 50])],
+        frames: 3,
+    };
+    let path = write_focus(&scratch.0, other.clone(), |lattice| {
+        assert_eq!(lattice, [13, 7], "the render's level 0");
+        vec![
+            (Kind::FocusSummary, vec![1; 40]),
+            (Kind::FocusDepth, vec![0; 8 + 91]),
+            (Kind::FocusShare, vec![0; 8 + 91]),
+        ]
+    })
+    .unwrap();
+    let (lattices, _, records) = read(&path);
+    assert_eq!(lattices, vec![[13, 7], [7, 4]]);
+    let identities: Vec<_> = records
+        .iter()
+        .map(|(f, l, k, s, p)| (*f, *l, *k, *s, p.len()))
+        .collect();
+    assert_eq!(
+        identities,
+        [
+            (2, 1, 0, 9, 4),
+            (0, 0, 6, u32::MAX - 2, 40),
+            (0, 0, 4, u32::MAX - 1, 99),
+            (0, 0, 5, u32::MAX, 99),
+        ]
+    );
+    // Every payload fits the framing limit of readers that predate them.
+    assert!(records.iter().all(|r| r.4.len() <= 8 + 128 * 96));
+    // A depth map of another lattice is refused, and nothing is written.
+    let before = std::fs::metadata(&path).unwrap().len();
+    assert!(
+        write_focus(&scratch.0, other.clone(), |_| vec![
+            (Kind::FocusSummary, vec![1; 40]),
+            (Kind::FocusDepth, vec![0; 8 + 25]),
+        ])
+        .is_err()
+    );
+    assert!(
+        write_focus(&scratch.0, other.clone(), |_| vec![(
+            Kind::FocusSummary,
+            vec![0; MAX_SUMMARY_BYTES + 1]
+        )])
+        .is_err()
+    );
+    assert_eq!(std::fs::metadata(&path).unwrap().len(), before);
+    // A folder this process made no file in gets one with the caller's grid.
+    let fresh = Scratch::new("focus-fresh");
+    let path = write_focus(&fresh.0, other, |lattice| {
+        assert_eq!(lattice, [5, 5]);
+        vec![(Kind::FocusSummary, vec![0; 66])]
+    })
+    .unwrap();
+    let (lattices, frames, records) = read(&path);
+    assert_eq!((lattices, frames, records.len()), (vec![[5, 5]], 3, 1));
+}

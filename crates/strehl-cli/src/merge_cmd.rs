@@ -81,6 +81,8 @@ mod decode_ahead;
 #[path = "merge_cmd/depth-guide.rs"]
 mod depth_guide;
 pub(crate) mod dump;
+#[path = "merge_cmd/focus-evidence.rs"]
+pub(crate) mod focus_evidence;
 #[path = "merge_cmd/fold-trace.rs"]
 mod fold_trace;
 #[path = "merge_cmd/frame-refine.rs"]
@@ -3169,6 +3171,12 @@ pub fn run(opts: &MergeOptions) -> Result<()> {
     align_cmd::native_gpu_integration::gpu_gather_enabled()?;
     preflight_soft_kernel()?;
     preflight_cover_backend_support(opts.backend, opts.cover)?;
+    if focus_evidence::mode()? != focus_evidence::Mode::Off {
+        ensure!(
+            opts.backend == MergeBackend::Pyramid,
+            "focus evidence requires --merge pyramid"
+        );
+    }
     match opts.backend {
         MergeBackend::Pyramid => run_pyramid(opts),
         MergeBackend::Estimator => run_estimator(opts),
@@ -9308,9 +9316,13 @@ fn run_pyramid(opts: &MergeOptions) -> Result<()> {
     // the channels the render will actually use.
     let _axial = axial_colour::install_if_requested(opts)?;
     if ca_refine::requested()? && ca_refine::applicable(opts)? {
-        return ca_refine::run_refined(opts);
+        ca_refine::run_refined(opts)?;
+    } else {
+        run_pyramid_final(opts)?;
     }
-    run_pyramid_final(opts)
+    // After the photograph is written, never before: it reads, and changes
+    // nothing the render made.
+    focus_evidence::run_pending(opts)
 }
 
 /// Whether the fold keeps alternate frames in separate half-stack
@@ -9490,6 +9502,17 @@ fn run_pyramid_attempt(opts: &MergeOptions) -> Result<()> {
     // default", contradicting the function it cites.
     let defect_request = crate::stack::defect_request_from_env()?;
     let defect_plan = crate::stack::defect_preflight(&defect_request, &noise, &paths)?;
+    // The focus pass reads the render's own frames, placements, grids and
+    // noise model, after the photograph is written (not for a preview).
+    let focus_inputs = (focus_evidence::mode()? != focus_evidence::Mode::Off
+        && !ca_refine::preview_active())
+    .then(|| focus_evidence::Inputs {
+        paths: paths.clone(),
+        map: alignment.as_ref().map(|(map, _, _)| map.clone()),
+        domain,
+        sizes: sizes.clone(),
+        noise: noise.clone(),
+    });
     let source = RawPyramidSource {
         paths: &paths,
         #[cfg(feature = "research-lens-warp")]
@@ -9522,6 +9545,11 @@ fn run_pyramid_attempt(opts: &MergeOptions) -> Result<()> {
     );
     if let Some(line) = stack_groups.as_ref().and_then(|g| g.journal_line()) {
         eprintln!("{line}");
+    }
+    if rendered.is_ok()
+        && let Some(inputs) = focus_inputs
+    {
+        focus_evidence::remember(inputs);
     }
     rendered
 }
