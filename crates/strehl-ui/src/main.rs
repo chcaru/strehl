@@ -22,6 +22,8 @@ mod capture_client;
 #[path = "capture-workspace.rs"]
 mod capture_workspace;
 mod controls;
+#[path = "depth-rail.rs"]
+mod depth_rail;
 #[path = "develop-presets.rs"]
 mod develop_presets;
 #[path = "development-job.rs"]
@@ -41,6 +43,8 @@ mod photo_coverage;
 #[path = "photo-viewport.rs"]
 mod photo_viewport;
 mod pipeline;
+#[path = "plane-lens.rs"]
+mod plane_lens;
 mod preview;
 #[path = "process-admission-regions.rs"]
 mod process_admission_regions;

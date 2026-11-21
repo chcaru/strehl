@@ -1467,3 +1467,39 @@ fn benchmark_finished_workspace_pointer_sweeps() {
         timings[1].iter().copied().fold(f64::INFINITY, f64::min)
     );
 }
+
+#[test]
+fn production_region_extraction_runs_on_its_worker_and_paints_when_ready() {
+    let fixture = Fixture::new();
+    let surfaces = fixture.surfaces();
+    let (mut field, _, mut time) = settle(&fixture, &surfaces, true);
+    // The production worker: nothing extracts during paint.
+    field.dense_regions = crate::process_admission_regions::DenseRegionWorker::default();
+    let first = fixture.paint(&mut field, &surfaces, time, Pos2::ZERO);
+    assert!(
+        region_fill_meshes(&first, 36).is_empty(),
+        "the first paint after a cache loss cannot have extracted a region"
+    );
+    assert!(field.region_pending() || field.dense_regions.started > 0);
+    let mut painted = false;
+    for _ in 0..500 {
+        time += 0.01;
+        std::thread::sleep(std::time::Duration::from_millis(2));
+        let output = fixture.paint(&mut field, &surfaces, time, Pos2::ZERO);
+        if region_fill_meshes(&output, 36).len() == 1 {
+            painted = true;
+            break;
+        }
+    }
+    assert!(painted, "the worker's region must reach the photograph");
+    let started = field.dense_regions.started;
+    for _ in 0..5 {
+        time += 0.01;
+        let output = fixture.paint(&mut field, &surfaces, time, Pos2::ZERO);
+        assert_eq!(region_fill_meshes(&output, 36).len(), 1);
+    }
+    assert_eq!(
+        field.dense_regions.started, started,
+        "a ready region starts no further work"
+    );
+}
