@@ -318,7 +318,7 @@ fn work_that_cannot_stop_offers_no_stop_and_dismiss_removes_a_notice() {
         find(&output, "STOP").is_none(),
         "compaction runs to its end"
     );
-    let dismiss = find(&output, "Dismiss").unwrap();
+    let dismiss = find(&output, "DISMISS").unwrap();
     harness.click(&activities, (true, false), dismiss);
     assert_eq!(harness.notices.len(), 0);
     let (output, _) = harness.frame(&activities, (true, false), vec![]);

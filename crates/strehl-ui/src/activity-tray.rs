@@ -324,8 +324,7 @@ pub(crate) fn tray(ui: &mut Ui, inputs: TrayInputs<'_>) -> Option<TrayAction> {
             &notice.text,
             &detail,
             |ui| {
-                if ui
-                    .add(w::Button::quiet("Dismiss").small())
+                if w::link(ui, "Dismiss", false)
                     .on_hover_text("Remove this notice")
                     .clicked()
                 {
@@ -446,22 +445,25 @@ fn row_with(
     detail: &str,
     controls: impl FnOnce(&mut Ui),
 ) -> egui::Rect {
-    const CONTROLS: f32 = 112.0;
+    // The controls share the title line; the detail runs the full width
+    // under it, as in the mockup.
+    const CONTROLS: f32 = 120.0;
+    const TITLE_LINE: f32 = 21.0;
     let frame = egui::Frame::NONE
         .inner_margin(egui::Margin {
             left: 14,
             right: 14,
-            top: 10,
+            top: 11,
             bottom: 12,
         })
         .show(ui, |ui| {
             let width = ui.available_width();
             ui.set_width(width);
             ui.horizontal_top(|ui| {
-                ui.spacing_mut().item_spacing = egui::vec2(0.0, 3.0);
-                ui.add_space(4.0);
+                ui.spacing_mut().item_spacing = egui::vec2(0.0, 0.0);
+                ui.add_space(2.0);
                 let (slot, _) =
-                    ui.allocate_exact_size(egui::vec2(w::MARK_SLOT, 16.0), egui::Sense::hover());
+                    ui.allocate_exact_size(egui::vec2(w::MARK_SLOT, 17.0), egui::Sense::hover());
                 match lead {
                     Lead::Mark(mark) => w::paint_mark(ui.painter(), slot.center(), mark, t),
                     Lead::Number(place) => {
@@ -475,21 +477,41 @@ fn row_with(
                     }
                 }
                 ui.add_space(14.0);
-                let text_width = (width - 18.0 - w::MARK_SLOT - CONTROLS).max(80.0);
+                let text_width = (width - 16.0 - w::MARK_SLOT).max(120.0);
                 ui.allocate_ui_with_layout(
                     egui::vec2(text_width, 0.0),
                     egui::Layout::top_down(egui::Align::Min),
                     |ui| {
-                        ui.set_max_width(text_width);
-                        ui.spacing_mut().item_spacing = egui::vec2(0.0, 3.0);
-                        ui.add(
-                            egui::Label::new(
-                                egui::RichText::new(title)
-                                    .font(w::font(ui, Face::Strong, scale::BODY))
-                                    .color(t.ink),
-                            )
-                            .wrap(),
-                        );
+                        ui.set_width(text_width);
+                        ui.spacing_mut().item_spacing = egui::vec2(0.0, 2.0);
+                        ui.horizontal_top(|ui| {
+                            ui.spacing_mut().item_spacing = egui::vec2(8.0, 0.0);
+                            let title_width = (text_width - CONTROLS).max(80.0);
+                            ui.allocate_ui_with_layout(
+                                egui::vec2(title_width, 0.0),
+                                egui::Layout::top_down(egui::Align::Min),
+                                |ui| {
+                                    ui.set_max_width(title_width);
+                                    ui.add(
+                                        egui::Label::new(
+                                            egui::RichText::new(title)
+                                                .font(w::font(ui, Face::Strong, scale::BODY))
+                                                .color(t.ink),
+                                        )
+                                        .wrap(),
+                                    );
+                                },
+                            );
+                            // Centred on a one-line title, as in the mockup.
+                            ui.allocate_ui_with_layout(
+                                egui::vec2(ui.available_width(), TITLE_LINE),
+                                egui::Layout::right_to_left(egui::Align::Center),
+                                |ui| {
+                                    ui.spacing_mut().item_spacing = egui::vec2(10.0, 0.0);
+                                    controls(ui)
+                                },
+                            );
+                        });
                         if !detail.is_empty() {
                             ui.add(
                                 egui::Label::new(
@@ -502,10 +524,6 @@ fn row_with(
                         }
                     },
                 );
-                ui.with_layout(egui::Layout::right_to_left(egui::Align::Min), |ui| {
-                    ui.spacing_mut().item_spacing = egui::vec2(8.0, 0.0);
-                    controls(ui)
-                });
             });
         });
     let rect = frame.response.rect;

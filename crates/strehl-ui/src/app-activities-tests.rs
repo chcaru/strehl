@@ -279,3 +279,99 @@ fn stop_in_the_tray_reaches_each_owner_and_never_stops_a_capture_unasked() {
         super::super::studio_route::Station::Capture
     );
 }
+
+/// Release benchmark (`cargo test --release -- --ignored benchmark_activities`):
+/// the per-frame activities pass with a paused two-stack queue and a full
+/// history, and the open tray painted and tessellated under a pointer sweep.
+#[test]
+#[ignore = "explicit release benchmark of the activities frame and the open tray"]
+fn benchmark_activities_frame_and_tray_pointer_sweep() {
+    let (mut app, _files) = queue_fixture();
+    for index in 0..250 {
+        app.activity_hub.activities.record(HistoryEntry {
+            kind: ActivityKind::Export,
+            title: format!("Export · {index}"),
+            stack: None,
+            outcome: "done".into(),
+            summary: "weevil-web.jpg".into(),
+            finished: crate::workspace_history::timestamp(),
+            took_seconds: Some(3.0),
+            action: None,
+            log: None,
+        });
+    }
+    let stack = app.active_stack.unwrap();
+    app.activity_hub.queue.paused = true;
+    app.queue_stack(stack).unwrap();
+    app.controls.exposure = Some(1.5);
+    app.save_active_draft();
+    app.queue_stack(stack).unwrap();
+    for index in 0..8 {
+        app.shell.notices.push(
+            crate::notices::Severity::Done,
+            crate::notices::Source::Export,
+            format!("Exported {index}"),
+            None,
+        );
+    }
+    let ctx = egui::Context::default();
+    crate::theme::install(&ctx);
+    for _ in 0..20 {
+        app.activities_frame(&ctx);
+    }
+    let mut frame_us = Vec::new();
+    for _ in 0..6 {
+        let start = Instant::now();
+        for _ in 0..2000 {
+            app.activities_frame(&ctx);
+        }
+        frame_us.push(start.elapsed().as_secs_f64() * 1e6 / 2000.0);
+    }
+    assert_eq!(app.activity_hub.activities.waiting().count(), 2);
+    let mut tray_ms = Vec::new();
+    let mut time = 0.0;
+    for sweep in 0..6 {
+        let start = Instant::now();
+        for step in 0..80 {
+            time += 1.0 / 120.0;
+            let phase = if sweep % 2 == 0 { step } else { 79 - step } as f32 / 79.0;
+            let at = egui::pos2(40.0 + phase * 380.0, 20.0 + phase * 600.0);
+            let hub = &app.activity_hub;
+            let notices = &mut app.shell.notices;
+            let output = ctx.run(
+                egui::RawInput {
+                    screen_rect: Some(egui::Rect::from_min_size(
+                        egui::Pos2::ZERO,
+                        egui::vec2(1680.0, 1050.0),
+                    )),
+                    time: Some(time),
+                    events: vec![egui::Event::PointerMoved(at)],
+                    ..Default::default()
+                },
+                |ctx| {
+                    egui::CentralPanel::default().show(ctx, |ui| {
+                        crate::activity_tray::tray(
+                            ui,
+                            crate::activity_tray::TrayInputs {
+                                activities: &hub.activities,
+                                notices,
+                                status: "Ready",
+                                quiet: true,
+                                quiet_holds: false,
+                                now: Instant::now(),
+                                unix: crate::workspace_history::timestamp(),
+                            },
+                        );
+                    });
+                },
+            );
+            let primitives = ctx.tessellate(output.shapes, output.pixels_per_point);
+            std::hint::black_box(primitives);
+        }
+        tray_ms.push(start.elapsed().as_secs_f64() * 1000.0 / 80.0);
+    }
+    eprintln!(
+        "activities frame: {:.2?} us/frame; open tray paint+tessellate: {:.3?} ms/frame",
+        frame_us, tray_ms
+    );
+}

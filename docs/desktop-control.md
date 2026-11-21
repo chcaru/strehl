@@ -155,6 +155,14 @@ organization, and exports. A queued result does not establish completion; poll
 snapshots and inspect the requested output. The MCP tool catalog exposes the
 full current schema and command descriptions.
 
+Stacks also wait in a serial queue. `queue_stack` queues a catalog stack with
+its saved recipe and starts it when no other stack runs; `remove_queued_stack`,
+`move_queued_stack` and `resume_queue` manage it. The same render is never
+queued twice behind itself. The snapshot key `activities` lists running and
+waiting work with phase, counts and time left, the recent history, and
+`queue_paused`. A queue restored after a restart waits for `resume_queue`;
+`start_stack` still answers as before and is refused while a stack runs.
+
 Imports are constrained to explicit grants. Commands do not grant arbitrary
 filesystem access. Metadata cannot accept an arbitrary source or output path.
 Exports use the configured destination and do not overwrite existing files.
