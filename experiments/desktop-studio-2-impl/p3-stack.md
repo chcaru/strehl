@@ -418,4 +418,6 @@ reach 25 to 44 ms; not attributed (open).
 - Peek saturation (75 %): the presenter's `Parameters` uniform could take a look vector, but the
   SDR path draws through egui images and would have to route through the shader; not contained
   in the time. Brightness is still dimmed.
-- DevelopRangeRail offscreen check: no launch option selects the depth brush offscreen; not done.
+- DevelopRangeRail (done, `14773d8a7`): offscreen with `--depth-brush` on the 299 run, the rail
+  drew the kept-share series and the brush range correctly but in a fixed 280 px box beside a
+  stale caption; it now spans the slot. VERIFIED by a second offscreen render (crop inspected).
