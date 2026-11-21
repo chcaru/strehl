@@ -24,6 +24,8 @@ mod capture_workspace;
 mod controls;
 #[path = "develop-presets.rs"]
 mod develop_presets;
+#[path = "develop-station.rs"]
+mod develop_station;
 #[path = "development-job.rs"]
 mod development_job;
 #[path = "draft-preview.rs"]
@@ -33,6 +35,8 @@ mod edit_workspace;
 mod engine;
 #[path = "export-presets.rs"]
 mod export_presets;
+#[path = "export-station.rs"]
+mod export_station;
 #[path = "hdr-display.rs"]
 mod hdr_display;
 #[path = "image-gesture.rs"]
