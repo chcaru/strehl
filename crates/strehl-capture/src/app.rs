@@ -528,6 +528,7 @@ impl App {
                         plan: settings.plan.clone(),
                         root: settings.root.clone(),
                         positions: None,
+                        keep_power_on: false,
                     },
                 );
             }

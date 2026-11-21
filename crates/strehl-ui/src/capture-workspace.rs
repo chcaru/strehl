@@ -142,7 +142,22 @@ impl CaptureWorkspace {
         let state = std::mem::replace(&mut self.calibration, C::Idle);
         let idle = s.state["busy"] != true && s.state["editable"] == true;
         let shots = s.state["shots_per_plane"].as_u64();
+        // The camera went away while the calibration waited for it (switched
+        // off, or an older controller's "manage power" after the survey):
+        // waiting for it would never end.
+        let gone = s.state["connected"] == false && s.state["busy"] != true;
         self.calibration = match state {
+            C::Switching { .. } if gone => C::Failed(
+                "The camera switched off during the calibration: turn it on and calibrate again"
+                    .into(),
+            ),
+            C::Restoring { mut result } if gone => {
+                let summary = result["summary"].as_str().unwrap_or("").to_owned();
+                result["summary"] = json!(format!(
+                    "{summary} The camera switched off before four-shot could be set again: set it when the camera is back."
+                ));
+                C::Done(result)
+            }
             C::Switching {
                 restore_four,
                 positions,
@@ -155,7 +170,12 @@ impl CaptureWorkspace {
                     .next()
                     .unwrap_or(1);
                 match s
-                    .request(Command::CapturePositions { positions })
+                    .request(Command::CapturePositions {
+                        positions,
+                        // "Manage power" would switch the camera off after the
+                        // survey, before a second survey or four-shot is set again.
+                        keep_power_on: true,
+                    })
                     .and_then(|r| self.submit(r))
                 {
                     Ok(()) => C::Capturing {
@@ -402,6 +422,17 @@ impl CaptureWorkspace {
                 C::Switching { .. } | C::Restoring { .. } => {
                     ui.spinner();
                     ui.small("Setting the camera…");
+                    if ui
+                        .small_button("Stop waiting")
+                        .on_hover_text("Ends the calibration here; the camera is left as it is")
+                        .clicked()
+                    {
+                        self.calibration = match std::mem::replace(&mut self.calibration, C::Idle)
+                        {
+                            C::Restoring { result } => C::Done(result),
+                            _ => C::Failed("Calibration stopped".into()),
+                        };
+                    }
                 }
                 C::Capturing { .. } => {
                     ui.spinner();

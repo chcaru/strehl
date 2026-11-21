@@ -1,0 +1,43 @@
+{
+ "shots_before": 4,
+ "stages": [
+  [
+   0.5,
+   "switching"
+  ],
+  [
+   1.7,
+   "capturing"
+  ],
+  [
+   67.1,
+   "restoring"
+  ],
+  [
+   68.3,
+   "done"
+  ]
+ ],
+ "result": {
+  "oversampling": 0.875,
+  "planes": 25,
+  "spacing": 8.0,
+  "suggested_step": 7,
+  "summary": "Detail stays sharp over about 50 focus units; this run's step of 8 suits it (suggested 7).",
+  "tiles": 14652,
+  "tiles_measured": 1127,
+  "width": 50.00675351474638,
+  "width_p10": 30.336744629508757,
+  "width_p90": 64.40864672854514
+ },
+ "survey_runs_left": [],
+ "shots_after": 4,
+ "plan_after": {
+  "approach": 128,
+  "capture_timeout_s": 120,
+  "end": 41600,
+  "settle_ms": 500,
+  "start": 40500,
+  "step": 1
+ }
+}

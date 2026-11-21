@@ -202,6 +202,30 @@ difference that remains is edge-shaped: the alignment, refitted on the quantised
 places frames up to 0.13 px differently (median 0.01 px; phase correlation over 40
 windows), which moves edges, not detail. Crops at 200 %: no visible difference.
 
+## Fix: "Calibrate step" hung with "manage power" on (2026-11-20 evening)
+
+The owner's first calibration took its 25 RAWs and then showed "Setting the camera…" for
+minutes. Cause (VERIFIED from the controller's state): with "manage power" on, the survey
+was an ordinary managed capture, so the controller switched the camera and light off at its
+end. The desktop then waited for an idle camera, either to survey again or to set four-shot
+back, and that never came. The `calibrate-e2e.py` run earlier in the day had passed with
+manage power off.
+
+- `capture_positions` takes `keep_power_on` (left out on the wire when false, so older
+  requests and `follow` are unchanged): managed power still wakes the camera and light for
+  the capture but leaves them on afterwards. The desktop's calibration sends it.
+- The desktop stops waiting if the camera disconnects: before a survey it fails with a
+  message, and while setting four-shot back it shows the result with a note. A "Stop
+  waiting" button ends either wait.
+- `build-pi.sh` no longer copies stale binaries when the cross-build fails (it had
+  hidden a "cargo: command not found": run it with `wsl -u root`).
+
+VERIFIED on the rig with manage power on, after installing the controller and desktop:
+`keep-power-e2e.py` (2 RAWs: camera still connected and editable afterwards, light on);
+`calibrate-e2e.py` through the installed desktop
+(`evidence/calibrate-e2e-managed-power.json`): switching, capturing, restoring and done in
+68 s, four-shot before and after, survey deleted, suggested step 7 as in the morning run.
+
 ## Not built, and what is next
 
 - The last RAW of a group fetched during the next group's first exposure (5.65 s to about
@@ -220,5 +244,5 @@ windows), which moves edges, not detail. Crops at 200 %: no visible difference.
 `build-pi.sh`, `clean-runs.py` (deletes only named test runs made on 2026-11-20); the
 follow-up's `exposure-quality.py`, `exposure-analyse.py`, `exposure-levels.py`,
 `step-curve.ps1`, `step-curve-analyse.py`, `compare-compact.ps1`, `compact-final-compare.py`,
-`compact-shift.py`, `make-charts.py`; the lab
+`compact-shift.py`, `make-charts.py`; the calibration fix's `keep-power-e2e.py`; the lab
 script `../capture-pipeline-2026-11-20/ptp-lab/l11-return.txt`; results in `evidence/`.

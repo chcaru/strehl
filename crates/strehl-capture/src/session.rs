@@ -496,9 +496,13 @@ impl Session {
                             plan: c.plan.clone(),
                             root: c.root.clone(),
                             positions: None,
+                            keep_power_on: false,
                         });
                     }
-                    Command::CapturePositions { positions } => {
+                    Command::CapturePositions {
+                        positions,
+                        keep_power_on,
+                    } => {
                         // Bursts (one position repeated) and retakes of chosen
                         // planes, with the plan's settle/approach and direction.
                         let mut plan = c.plan.clone();
@@ -512,6 +516,7 @@ impl Session {
                             plan,
                             root: c.root.clone(),
                             positions: Some(positions),
+                            keep_power_on,
                         });
                     }
                     Command::Exposure { iso, shutter } => {
@@ -653,6 +658,12 @@ pub enum Command {
     /// Capture the listed focus positions (repeat one for a burst).
     CapturePositions {
         positions: Vec<u16>,
+        /// With "manage power" on, still wake the camera and light but leave
+        /// them on afterwards: the step calibration's survey is followed by
+        /// more camera work. Omitted when false, so older controllers accept
+        /// every other request.
+        #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+        keep_power_on: bool,
     },
     /// Manual ISO and shutter as the camera's property values.
     Exposure {
@@ -674,6 +685,31 @@ pub enum Command {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn capture_positions_keeps_power_only_when_asked_and_stays_compatible() {
+        let old: Command =
+            serde_json::from_value(json!({"op":"capture_positions","positions":[1,2]})).unwrap();
+        assert!(matches!(
+            old,
+            Command::CapturePositions {
+                keep_power_on: false,
+                ..
+            }
+        ));
+        let plain = Command::CapturePositions {
+            positions: vec![1],
+            keep_power_on: false,
+        };
+        assert_eq!(
+            serde_json::to_value(&plain).unwrap(),
+            json!({"op":"capture_positions","positions":[1]})
+        );
+        let kept = Command::CapturePositions {
+            positions: vec![1],
+            keep_power_on: true,
+        };
+        assert_eq!(serde_json::to_value(&kept).unwrap()["keep_power_on"], true);
+    }
     #[test]
     fn absolute_focus_and_mode_selection_refresh_estimates_and_reject_stale_requests() {
         let temp = tempfile::tempdir().unwrap();

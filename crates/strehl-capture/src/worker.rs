@@ -129,6 +129,8 @@ pub enum Action {
         /// Explicit focus positions (burst or retake), approached in the plan's
         /// direction. `None` captures the plan's own positions.
         positions: Option<Vec<u16>>,
+        /// Managed power wakes the camera and light but leaves them on.
+        keep_power_on: bool,
     },
     Exposure {
         iso: u64,
@@ -713,16 +715,21 @@ fn run(
                             plan,
                             root,
                             positions,
+                            keep_power_on,
                         } => {
                             ensure!(
                                 s.lock().unwrap().phase.can_edit(),
                                 "A sequence is already active"
                             );
-                            let options = if s.lock().unwrap().manage_power {
+                            let mut options = if s.lock().unwrap().manage_power {
                                 StackPower::managed()
                             } else {
                                 StackPower::default()
                             };
+                            if keep_power_on {
+                                options.light_off = false;
+                                options.camera_off = false;
+                            }
                             run_stack(
                                 &mut camera,
                                 &s,
@@ -2075,6 +2082,7 @@ mod tests {
                 plan,
                 root: temp.path().into(),
                 positions: Some(vec![60605; 3]),
+                keep_power_on: false,
             },
         )
         .unwrap();
@@ -2296,6 +2304,7 @@ mod tests {
                 },
                 root: temp.path().to_owned(),
                 positions: None,
+                keep_power_on: false,
             },
         )
         .unwrap();
@@ -2340,6 +2349,7 @@ mod tests {
                 },
                 root: temp.path().to_owned(),
                 positions: None,
+                keep_power_on: false,
             },
         )
         .unwrap();
@@ -2407,6 +2417,7 @@ mod tests {
                     plan: plan.clone(),
                     root: temp.path().into(),
                     positions: None,
+                    keep_power_on: false,
                 },
             )
             .unwrap();
@@ -2422,6 +2433,7 @@ mod tests {
                         plan: plan.clone(),
                         root: temp.path().into(),
                         positions: None,
+                        keep_power_on: false,
                     }
                 )
                 .is_err()
@@ -2461,6 +2473,7 @@ mod tests {
                     plan,
                     root: temp.path().into(),
                     positions: None,
+                    keep_power_on: false,
                 },
             )
             .unwrap();
