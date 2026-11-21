@@ -424,3 +424,118 @@ fn source_repair_retains_cropped_gauge_and_records_only_applied_master_recipe() 
     let plain = strehl_edit::load_tiff(opts.linear_master.as_ref().unwrap()).unwrap();
     assert!(plain.baked_recipe.is_none());
 }
+
+#[test]
+fn source_repair_accepts_a_depth_brush_stroke_and_blends_only_under_it() {
+    // A Stroke (the depth brush's mask) is an ordinary repair region to the
+    // engine: preflight accepts it, the blend touches only its support, and
+    // inside it the result is the permitted sources' own reconstruction.
+    let dir = work_dir("source-repair-stroke");
+    let frames: Vec<_> = (0..6).map(|k| fixture_frame(96, 72, k * 11)).collect();
+    let mut source = FixtureSource::new(frames);
+    source.fail_at = Some(0);
+    let domain = PyramidDomain::whole(source.frames[0].geometry());
+    let geom = domain.analysis();
+    let levels = source.frames[0].levels;
+    let noise = profile::noise_model_for(&source.frames[0].camera, source.frames[0].iso, levels);
+    let cfg = MergeConfig {
+        gate: 1e15,
+        ..config()
+    };
+    let mut r = region(2, 4);
+    r.shape = RegionShape::stroke_from_path(
+        &(0..200)
+            .map(|k| {
+                let t = k as f32 / 199.0;
+                [0.15 + 0.7 * t, 0.5 + 0.25 * (t * 6.0).sin()]
+            })
+            .collect::<Vec<_>>(),
+        [0.06, 0.08],
+    );
+    r.feather = 0.5;
+    let path = saved_recipe(&dir, "stroke", vec![r.clone()]);
+    let text = fs::read_to_string(&path).unwrap();
+    assert!(
+        text.contains("\"kind\": \"stroke\""),
+        "recipe file carries the stroke"
+    );
+    let repairs = Repairs::load(Some(&path)).unwrap();
+    repairs.preflight(6, domain, None, None).unwrap();
+
+    let mut oracle = BandWorker::new(domain, cfg);
+    for k in 2..=4 {
+        assert!(oracle.fold(&source, k, levels, &noise, None, None).unwrap());
+    }
+    let expected = oracle
+        .merge
+        .finish(&mut Workspace::new(oracle.merge.sizes()));
+    for calls in &source.calls {
+        calls.store(0, Ordering::SeqCst);
+    }
+    let before: Vec<Vec<f32>> = (0..4)
+        .map(|c| {
+            (0..geom.pixels())
+                .map(|i| 7000.0 + c as f32 * 50.0 + (i % 11) as f32)
+                .collect()
+        })
+        .collect();
+    let mut actual = before.clone();
+    repairs
+        .apply(
+            &mut actual,
+            RepairContext {
+                source: &source,
+                domain,
+                config: cfg,
+                levels,
+                noise: &noise,
+                warps: None,
+                defect: None,
+                per_chunk: 2,
+                progress: None,
+            },
+        )
+        .unwrap();
+    assert_eq!(source.counts(), vec![0, 0, 1, 1, 1, 0]);
+    let (mut outside, mut inside, mut feather) = (0, 0, 0);
+    for c in 0..4 {
+        for i in 0..geom.pixels() {
+            let uv = [
+                ((i % geom.width) * 2 + c % 2) as f32 / (geom.width * 2) as f32
+                    + 0.25 / geom.width as f32,
+                ((i / geom.width) * 2 + c / 2) as f32 / (geom.height * 2) as f32
+                    + 0.25 / geom.height as f32,
+            ];
+            let weight = r.shape.weight(uv, r.feather);
+            if weight == 0.0 {
+                outside += 1;
+                assert_eq!(actual[c][i].to_bits(), before[c][i].to_bits());
+            } else {
+                if weight == 1.0 {
+                    inside += 1;
+                } else {
+                    feather += 1;
+                }
+                let want = before[c][i] * (1.0 - weight) + expected[c][i] * weight;
+                assert!((actual[c][i] - want).abs() < 0.01, "CFA {c} sample {i}");
+            }
+        }
+    }
+    assert!(
+        outside > 100 && inside > 100 && feather > 100,
+        "{outside} {inside} {feather}"
+    );
+
+    // A dab smaller than the CFA lattice contains no sample centre: refused.
+    let mut empty = region(0, 0);
+    empty.shape = RegionShape::Stroke {
+        points: vec![[0.0, 0.0]],
+        radius: [0.0001, 0.0001],
+    };
+    let path = saved_recipe(&dir, "stroke-empty", vec![empty]);
+    let error = Repairs::load(Some(&path))
+        .unwrap()
+        .preflight(6, domain, None, None)
+        .unwrap_err();
+    assert!(error.to_string().contains("no output sample"), "{error}");
+}

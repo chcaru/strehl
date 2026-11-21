@@ -247,6 +247,9 @@ fn uv(x: usize, y: usize, c: usize, geom: PlaneGeometry) -> [f32; 2] {
 }
 
 fn has_samples(region: &RegionAdjustment, geom: PlaneGeometry) -> bool {
+    // Prepared weights are bit-identical to `RegionShape::weight` and cull by
+    // bounding box, which keeps a depth-brush stroke (many segments) cheap.
+    let shape = region.shape.prepare();
     let (min, max) = region.shape.bounds();
     let x0 = (min[0] * geom.width as f32).floor().max(0.0) as usize;
     let y0 = (min[1] * geom.height as f32).floor().max(0.0) as usize;
@@ -254,7 +257,7 @@ fn has_samples(region: &RegionAdjustment, geom: PlaneGeometry) -> bool {
     let y1 = (max[1] * geom.height as f32).ceil().min(geom.height as f32) as usize;
     (y0..y1).any(|y| {
         (x0..x1).any(|x| {
-            (0..BAND_PLANES).any(|c| region.shape.weight(uv(x, y, c, geom), region.feather) > 0.0)
+            (0..BAND_PLANES).any(|c| shape.weight(uv(x, y, c, geom), region.feather) > 0.0)
         })
     })
 }
@@ -273,14 +276,13 @@ fn blend(
         repaired.iter().flatten().all(|v| v.is_finite()),
         "repair reconstruction contains nonfinite values"
     );
+    let shape = region.shape.prepare();
     for (c, (dst, src)) in original.iter_mut().zip(repaired).enumerate() {
         dst.par_iter_mut()
             .zip(src)
             .enumerate()
             .for_each(|(i, (v, &r))| {
-                let w = region
-                    .shape
-                    .weight(uv(i % geom.width, i / geom.width, c, geom), region.feather);
+                let w = shape.weight(uv(i % geom.width, i / geom.width, c, geom), region.feather);
                 if w >= 1.0 {
                     *v = r;
                 } else if w > 0.0 && v.to_bits() != r.to_bits() {

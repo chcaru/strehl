@@ -82,6 +82,9 @@ pub fn run(args: &DevelopArgs) -> Result<()> {
         },
         quality: args.quality.unwrap_or(recipe.hdr.quality),
         speed: args.speed.unwrap_or(recipe.hdr.speed),
+        // This command's TIFFs have always carried the recipe; keep them.
+        embed_recipe: format == ExportFormat::Tiff,
+        ..Default::default()
     };
     settings.validate()?;
     let image = load_tiff(&args.input)?;
