@@ -1,7 +1,9 @@
 # Strehl Studio 2: implementation plan
 
-**Status:** Spec (locked 2026-11-21). The owner approved the design after three mockup
-iterations and two polish passes ("looks solid. lock in the plan").
+**Status:** Implemented 2026-11-21 (P0-P7; P8's engine half only). See the
+[implementation log and outcome](../../experiments/desktop-studio-2-impl/README.md). The spec was
+locked on 2026-11-21: the owner approved the design after three mockup iterations and two polish
+passes ("looks solid. lock in the plan").
 **Date:** 2026-11-21.
 **Owner's request:** "lock in the plan and produce a detailed writeup for another agent to carry
 implementation forward with. it should be rust based as the current desktop app is." And: "it's

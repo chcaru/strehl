@@ -47,3 +47,53 @@ The resident benchmark accepts 12 to 512 RAWs, so long stacks need P3's extended
 - Dispatched: Stack station composition plus a photograph-only canvas for Develop/Export (P3); shell polish (P1 agent); depth signatures and queue actions (P4/P5 agent); E5 focus evidence, measured first (P6 agent); E4 region-only depth repair behind a measured gate (P7 agent); CPU-fold log size and large-stack measurements (P2).
 - 06:48: merged the Stack station (P3 stage 2): the photograph room with plane lens, two-up size maps, core sample, depth rail and filmstrip; the engine room keeps the old process view; Develop and Export now draw the photograph alone. MEASURED by P3 (release, binaries alternated): engine-room process view 1.25-1.33 → 0.71-0.74 ms per frame at 130 planes; the station's photograph sweep 0.17 / 0.36 / 0.51-0.55 ms at 130 / 1,500 / 6,000 planes; on the real 1,444-plane render 0.43 ms. Develop's depth brush now uses the Stack station's rail (`b2924be80`). One timing-dependent filmstrip test failed once in a parallel run; P3 is making it deterministic.
 - 07:20-07:42: merged the shell polish (breadcrumbs, a fixed-width top-bar status end, glance, drawers in every theme), depth signatures with Stack / Stack next, captures that finish during a render joining the queue, and E4 region-only depth repair (the desktop falls back to a full re-stack when a render does not qualify). The 6-byte result-TIFF difference P2 reported is the build stamp (`-dirty`) in tag 305, by design; pixels and master are identical (MEASURED). On the merged tree (`82b090279`): strehl-ui 1,375 passed, strehl-core 1,018 passed, engine byte-freeze 5 of 5, export freeze 2 of 2, clippy and fmt clean (MEASURED).
+- 08:10-08:35: merged E5 focus evidence (off by default) and the Stack station's round 3 with P2's round 2 inside it; resolved the evidence format by hand so every record kind is numbered once (0-9, a table in `ui-evidence.rs`). On the merged tree: strehl-ui 1,385 passed, engine evidence and focus tests 55 passed, clippy and fmt clean (MEASURED). Final benchmark run below.
+
+## Outcome
+
+All phases P0-P7 are built and composed. P8 is built only as far as its measure-first engine half: the measurements say not to build the depth lens yet. Each phase's results note has its commands and numbers. The milestone ledger rows are marked.
+
+### What the owner gets
+
+- **Five stations in one shell:** Library, Capture, Stack, Develop and Export, with a top bar, hint bar, Ctrl K palette, Preferences, notices, the activity tray, focus mode (F) and the engine room (E). Three themes are built from one set of tokens: Graphite (the default), Instrument and Lightbox.
+- **Library:** catalog format 2 groups stacks into subjects. The first save writes a verified backup of the format-1 file. The Library has a subject grid and subject pages with lineage, depth signatures, Locate for moved sources, and Stack / Stack next.
+- **Stack:** the photograph comes first. It has the plane lens (hover to peek; hold for a two-up view with eight size maps), the core sample, the depth rail, the filmstrip with bar charts, and checks, recipe and renders.
+- **Develop and Export:**
+  - tools strip, scope, layers, versions, crop, white-balance pick, scale bar, heal, backdrop, depth brush on the Stack rail;
+  - presets and batch export with history;
+  - the recipe goes into TIFFs only when switched on.
+- **Depth repair** runs in the background. The photograph stays open and Export keeps working. A render that qualifies is repaired region-only (E4): about 7 s instead of 15 s, with pixels outside the region bit-identical (MEASURED).
+- **Capture:** plan with start blockers, test shot, focus rail, step table, in-flight proof, glance and stopped captures. Host changes H1 and H2 are additive and compatible both ways.
+- **Activities:** one registry feeds the top bar and the tray. A serial stack queue is persisted, restored paused after a restart, and given a time-left estimate. Quiet mode holds heavy work while a full-screen program runs.
+- **Evidence for every render (E1):** the GPU fold now writes per-plane maps, so reopening a 1,444-plane run shows 1,444 of 1,444 planes observed; the previous desktop showed none. The render log at 1,444 planes on the CPU fold fell from 758 MB to 5 MB (MEASURED).
+
+### Final measurements (MEASURED)
+
+Build `8e8531a43`, release, same script as the baseline, CPU load 1 % at start. Files in `perf/final/`.
+
+| Measurement | Baseline `61effa01b` | Final |
+| --- | --- | --- |
+| Process-view pointer sweep, 130 captures | 1.28-1.32 ms per frame | 0.600-0.624 ms per frame |
+| Source-view pointer sweep | 0.45-0.48 ms per frame | 0.320-0.322 ms per frame |
+| 299 real RAWs, resident warming | 1,443.6 ms | 1,439.1 ms (warm assertions pass) |
+
+From the phase agents (release, alternated binaries; details in their notes):
+
+- **Stack station photograph sweep:** 0.122 ms at 130 planes and 0.137-0.141 ms at 6,000, which is within the 1.25× budget.
+- **Live 1,444-plane GPU render:** no UI frame over 16 ms while maps stream in (longest 15.2 ms, p95 1.0).
+- **Reopen at 1,444 planes:** fully observed in 0.42 s (GPU).
+- **Develop:** slider to updated overview median 36.6 ms.
+
+### Not done, or not yet verified
+
+- **Rig test of host changes H1 and H2 (test shot, exposure check):** nothing was deployed to the Pi, and the camera, light and Pi were not touched. The desktop still works with the current host because it sends the new fields only when the host advertises them.
+- **The depth lens (P8):** E5 is built and off by default. It costs 24-35× the render's time, and usable coverage is 3.8 % of pixels on the weevil and none on the 1,444-plane bracket. The evidence policy needs its own look first.
+- **Still over budget:**
+  - Engine room at 6,000 planes: 1.33-1.5× of its 130-plane cost against a 1.25× budget.
+  - At the start of a 1,444-plane render, about 10 frames of 25-44 ms occur during alignment; the cause is not found.
+  - Peek saturation is only a darkening.
+- **Not built:** H3; Trim sources (decision D9); "Tell my phone" and the power-down grace, which the host does not support.
+- **Agent interface:**
+  - `import_stack` ignores `name` when `parent_id` is given.
+  - A JPEG export requested without a colour space gets Rec.2020. This default predates tonight.
+- **egui was not upgraded:** it stays at 0.33. Nothing in the plan needed a newer version, and an upgrade would have collided with seven parallel branches and the vendored egui-wgpu patch.
