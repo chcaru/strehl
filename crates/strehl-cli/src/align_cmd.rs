@@ -2462,6 +2462,7 @@ pub(crate) fn load_or_solve_observed(
                             map.placed_count(),
                             map.refused_count(),
                         );
+                        progress.unplaced_frames(&map);
                     }
                     return Ok(Some((map, "sidecar")));
                 }
@@ -2502,6 +2503,7 @@ pub(crate) fn load_or_solve_observed(
             map.placed_count(),
             map.refused_count(),
         );
+        progress.unplaced_frames(&map);
     }
     Ok(Some((map, "solved")))
 }

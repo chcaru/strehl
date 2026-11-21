@@ -490,12 +490,39 @@ fn level(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) 
     }
 }
 
+// The desktop's per-plane admission map of a level's weights: bit j of
+// word i is `weight > 0` at lattice site 16 i + j, sampled at the nearest
+// coefficient exactly as the CPU observer samples it (`ui-diagnostics.rs`:
+// source = min((2 s + 1) n / (2 m), n - 1) on each axis). Sixteen bits a
+// word, stored as an exact f32 integer, so no payload is a float bit
+// pattern. Reads weights only; nothing here reaches an accumulator.
+fn support_word(i: u32, weight: u32, w: u32, h: u32, dst: u32, lw: u32, lh: u32) {
+    let n = lw * lh;
+    var bits = 0u;
+    for (var j = 0u; j < 16u; j = j + 1u) {
+        let s = i * 16u + j;
+        if (s >= n) { break; }
+        let sx = min(((2u * (s % lw) + 1u) * w) / (2u * lw), w - 1u);
+        let sy = min(((2u * (s / lw) + 1u) * h) / (2u * lh), h - 1u);
+        if (work[weight + sy * w + sx] > 0.0) {
+            bits = bits | (1u << j);
+        }
+    }
+    work[dst + i] = f32(bits);
+}
+
 // accumulate_level, soft-power: a = (weight, den, n, planes | 0x100 adds den),
-// b = plane level offsets (work), c = num offsets (acc), d = usum offsets (acc).
+// b = plane level offsets (work), c = num offsets (acc), d = usum offsets (acc),
+// e = the level's admission map (dst, lattice w, lattice h, level w), lattice
+// w 0 for none. The weights are complete before this dispatch, so its first
+// threads also sample the map: no dispatch or barrier of its own.
 @compute @workgroup_size(256)
 fn accum(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
     let i = gid(id, nwg);
     if (i >= p.a.z) { return; }
+    if (p.e.y != 0u && i * 16u < p.e.y * p.e.z) {
+        support_word(i, p.a.x, p.e.w, p.a.z / p.e.w, p.e.x, p.e.y, p.e.z);
+    }
     let w = work[p.a.x + i];
     // a.w: the planes in this dispatch (at most four), | 0x100 on the
     // dispatch that also adds the shared weight to den (the first of a

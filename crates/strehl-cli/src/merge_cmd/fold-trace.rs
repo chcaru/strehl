@@ -33,9 +33,12 @@ pub(super) enum Step {
     DeviceDrain,
     /// Reading the chunk's totals back from the device (`finish_chunk`).
     Finish,
+    /// The desktop's per-plane admission maps: collecting the GPU fold's
+    /// read-backs and writing their records (`emit_gpu_support`).
+    Evidence,
 }
 
-const STEPS: usize = 13;
+const STEPS: usize = 14;
 const NAMES: [&str; STEPS] = [
     "fold thread waiting for decodes",
     "upload (stage)",
@@ -50,6 +53,7 @@ const NAMES: [&str; STEPS] = [
     "  of which members 2-4",
     "device draining queued fold work",
     "totals read back",
+    "admission maps (collect, write)",
 ];
 
 static ON: AtomicBool = AtomicBool::new(false);

@@ -5,6 +5,8 @@ use super::{PipelineProgress, Stage};
 use std::sync::Arc;
 
 const MAX_MASK_BINS: usize = 1024;
+/// The recent display ring's length (`MAX_SURFACES` in `process-scales.rs`).
+const MAX_RECENT_SURFACES: usize = 384;
 
 /// Durable aggregate of actual nearest-sampled binary masks. The bitset records
 /// exact observed positions within this bin (at most 64, because total ≤ 65,536).
@@ -45,15 +47,49 @@ impl SampledMaskHistory {
         (bin * self.total).div_ceil(bins)..((bin + 1) * self.total).div_ceil(bins)
     }
     fn record(&mut self, index: usize, pixels: &[u8]) {
+        let on = pixels.iter().filter(|&&value| value == 255).count() as u64;
+        self.record_counted(index, on, pixels.len() as u64);
+    }
+    fn record_counted(&mut self, index: usize, on: u64, samples: u64) {
         let bin = index * self.bins.len() / self.total;
         let bit = 1u64 << (index - self.range(bin).start);
         let sample = &mut self.bins[bin];
         if sample.observed & bit == 0 {
             sample.observed |= bit;
-            sample.on_samples += pixels.iter().filter(|&&value| value == 255).count() as u64;
-            sample.samples += pixels.len() as u64;
+            sample.on_samples += on;
+            sample.samples += samples;
         }
     }
+}
+
+/// One plane's admitted share at one level: sampled lattice sites whose gate
+/// weight was positive, over all sampled sites. It is support at the noise
+/// gate, not the plane's share of the blend.
+#[cfg_attr(
+    not(test),
+    allow(dead_code, reason = "the Stack station (plan P3) reads plane shares")
+)]
+#[derive(Clone, Debug, PartialEq)]
+pub struct PlaneShare {
+    pub share: f32,
+    pub source: ShareSource,
+}
+
+#[cfg_attr(
+    not(test),
+    allow(dead_code, reason = "the Stack station (plan P3) reads plane shares")
+)]
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum ShareSource {
+    /// The plane's own retained map.
+    Map,
+    /// No retained map: the pooled history bin holding this plane, which
+    /// covers `frames` and pools the `observed` maps actually received in
+    /// them. An approximation for this plane; label it as such.
+    Bin {
+        frames: std::ops::Range<usize>,
+        observed: usize,
+    },
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -385,10 +421,7 @@ impl PipelineProgress {
                     (width, height)
                 };
                 if sequence == 0
-                    || self
-                        .diagnostic_surfaces
-                        .back()
-                        .is_some_and(|old| sequence <= old.sequence)
+                    || self.last_log_surface.is_some_and(|old| sequence <= old)
                     || frame >= total
                     || level >= 64
                     || width == 0
@@ -543,13 +576,127 @@ impl PipelineProgress {
                     self.admission_archive.ingest(&packet, extent);
                     self.revisions.observe(&packet, extent);
                 }
-                if self.diagnostic_surfaces.len() == 384 {
-                    self.diagnostic_surfaces.pop_front();
-                }
-                self.diagnostic_surfaces.push_back(packet);
+                self.last_log_surface = Some(sequence);
+                self.retain_surface(packet);
             }
             _ => (),
         }
+    }
+
+    /// Keep `packet` in the recent display ring, ordered by the engine's
+    /// sequence. The log's stack maps and the evidence file's plane maps
+    /// share that sequence but arrive through two readers; ordering by it
+    /// keeps the ring what one interleaved stream would have left, so a map
+    /// read late never displaces a newer one.
+    fn retain_surface(&mut self, packet: DiagnosticSurface) {
+        let mut position = self
+            .diagnostic_surfaces
+            .partition_point(|old| old.sequence <= packet.sequence);
+        if self.diagnostic_surfaces.len() == MAX_RECENT_SURFACES {
+            if position == 0 {
+                return;
+            }
+            self.diagnostic_surfaces.pop_front();
+            position -= 1;
+        }
+        self.diagnostic_surfaces.insert(position, packet);
+    }
+
+    /// One map from the run's evidence file (`evidence-file.rs`). It is
+    /// retained evidence, not a stage observation: it never advances the
+    /// displayed stage, and a map read after the log has moved on still
+    /// counts. Its validation is the hex lines' (done by the decoder), and it
+    /// reaches the same stores: the admission archive, the per-position
+    /// history and the recent ring.
+    pub(crate) fn ingest_evidence(
+        &mut self,
+        header: &crate::evidence_file::EvidenceHeader,
+        record: crate::evidence_file::EvidenceRecord,
+    ) {
+        let total = header.frames_total;
+        if total == 0
+            || total > super::MAX_FRAME_OBSERVATIONS
+            || self.frames_total.is_some_and(|known| known != total)
+        {
+            self.evidence_refused += 1;
+            return;
+        }
+        let packet = record.surface;
+        if let Some(packed) = &record.packed {
+            if packet.kind != DiagnosticKind::GateSupport
+                || self
+                    .sampled_mask_history
+                    .first()
+                    .is_some_and(|history| history.total != total)
+            {
+                self.evidence_refused += 1;
+                return;
+            }
+            let samples = (packet.width * packet.height) as u64;
+            if let Some(history) = self
+                .sampled_mask_history
+                .iter_mut()
+                .find(|history| history.level == packet.level && history.kind == packet.kind)
+            {
+                history.record_counted(packet.frame, packed.on, samples);
+            } else {
+                let mut history = SampledMaskHistory {
+                    level: packet.level,
+                    kind: packet.kind,
+                    total,
+                    bins: vec![SampledMaskBin::default(); total.min(MAX_MASK_BINS)],
+                };
+                history.record_counted(packet.frame, packed.on, samples);
+                self.sampled_mask_history.push(history);
+            }
+            // The log's domain when it has named one, as for the hex maps;
+            // otherwise the file's own analysis extent.
+            let extent = self
+                .analysis_size
+                .or(self.plane_size)
+                .unwrap_or(header.analysis_extent());
+            self.admission_archive
+                .ingest_packed(&packet, extent, &packed.bits);
+        }
+        self.evidence_records += 1;
+        self.retain_surface(packet);
+    }
+
+    /// The admitted share of `frame` at `level` for views that draw one value
+    /// per plane (the Stack station's depth rail). The plane's own retained
+    /// map when there is one; otherwise its pooled history bin, marked
+    /// [`ShareSource::Bin`]. `None` when nothing was observed for it.
+    ///
+    /// Cost: a binary search, or one bin read; safe per plane per paint only
+    /// through a cache keyed on the archive's revision (plan 5.2).
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "the Stack station (plan P3) reads plane shares")
+    )]
+    pub fn plane_share(&self, level: usize, frame: usize) -> Option<PlaneShare> {
+        if let Some((admitted, total)) = self.admission_archive.counts(level, frame)
+            && total > 0
+        {
+            return Some(PlaneShare {
+                share: admitted as f32 / total as f32,
+                source: ShareSource::Map,
+            });
+        }
+        let history = self.sampled_mask_history.iter().find(|history| {
+            history.level == level && history.kind == DiagnosticKind::GateSupport
+        })?;
+        if frame >= history.total {
+            return None;
+        }
+        let index = frame * history.bins.len() / history.total;
+        let bin = &history.bins[index];
+        (bin.samples > 0).then(|| PlaneShare {
+            share: bin.on_samples as f32 / bin.samples as f32,
+            source: ShareSource::Bin {
+                frames: history.range(index),
+                observed: bin.observations(),
+            },
+        })
     }
 }
 

@@ -5,11 +5,18 @@
 //! distinct from a missing packet. Capture identities never use accepted counts.
 
 use crate::pipeline::{DiagnosticKind, DiagnosticScale, DiagnosticScope, DiagnosticSurface};
+use std::sync::Arc;
 
 const LEVELS: usize = 64;
 pub(crate) const SAMPLE_LIMIT: [usize; 2] = [128, 96];
-const WORDS: usize = SAMPLE_LIMIT[0] * SAMPLE_LIMIT[1] / u64::BITS as usize;
-const MAX_ENTRIES: usize = 8192;
+pub(crate) const WORDS: usize = SAMPLE_LIMIT[0] * SAMPLE_LIMIT[1] / u64::BITS as usize;
+/// Eight levels of 8,192 planes (plan 5.5 item 6): about 1.55 KiB a mask, so
+/// about 100 MiB at the cap plus at most an eighth of growth slack (DERIVED;
+/// MEASURED by `allocated_bytes` in the tests).
+const MAX_ENTRIES: usize = 65_536;
+
+/// One retained mask's sample bits, row-major, least significant bit first.
+pub(crate) type MaskBits = [u64; WORDS];
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(crate) struct AdmissionMeta {
@@ -36,17 +43,16 @@ struct LevelScope {
 
 #[derive(Clone, Debug)]
 struct Mask {
-    level: usize,
     frame: usize,
     meta: AdmissionMeta,
-    bits: [u64; WORDS],
+    bits: MaskBits,
 }
 
 /// A borrowed binary mask with real random skips. Map<Range> would evaluate
 /// its mapping closure for every skipped sample when nth is called, defeating
 /// the small-region reader used while the pointer moves across a photograph.
 pub(crate) struct AdmissionCells<'a> {
-    bits: &'a [u64; WORDS],
+    bits: &'a MaskBits,
     next: usize,
     end: usize,
     #[cfg(test)]
@@ -83,13 +89,19 @@ impl AdmissionCells<'_> {
     }
 }
 
-/// Sorted, fixed-size entries bound the payload and its indexing allocation.
-/// At most 8192 masks are retained (under 14 MiB on the desktop target). New keys
-/// at capacity are explicitly omitted; retained keys may still be refreshed.
-/// Geometry changes clear only that level, never reinterpret its old samples.
+/// Fixed-size entries, sorted by capture within each level, bound the payload
+/// and its indexing allocation. At most [`MAX_ENTRIES`] masks are retained in
+/// all. New keys at capacity are explicitly omitted; retained keys may still be
+/// refreshed. Geometry changes clear only that level, never reinterpret its old
+/// samples.
+///
+/// Each level is its own vector, so a capture-ordered stream appends instead of
+/// shifting every later level's masks, and clones share it: a probe task's copy
+/// copies no masks, and the first later write to a level copies that level.
 #[derive(Clone, Debug)]
 pub(crate) struct AdmissionArchive {
-    entries: Vec<Mask>,
+    levels: [Option<Arc<Vec<Mask>>>; LEVELS],
+    len: usize,
     scopes: [Option<LevelScope>; LEVELS],
     dropped: usize,
     resets: usize,
@@ -99,7 +111,8 @@ pub(crate) struct AdmissionArchive {
 impl Default for AdmissionArchive {
     fn default() -> Self {
         Self {
-            entries: Vec::new(),
+            levels: [const { None }; LEVELS],
+            len: 0,
             scopes: [None; LEVELS],
             dropped: 0,
             resets: 0,
@@ -112,9 +125,44 @@ impl AdmissionArchive {
     /// Call at packet ingestion, before the recent display-packet ring evicts.
     /// Invalid/stale packets cannot erase a previously observed zero or one.
     pub(crate) fn ingest(&mut self, packet: &DiagnosticSurface, extent: [usize; 2]) {
-        if !valid(packet, extent) {
+        if !valid(packet, extent) || !binary_pixels(packet) {
             return;
         }
+        let mut bits = [0; WORDS];
+        for (index, &value) in packet.pixels.iter().enumerate() {
+            if value == 255 {
+                bits[index / 64] |= 1u64 << (index % 64);
+            }
+        }
+        self.store(packet, extent, &bits);
+    }
+
+    /// [`Self::ingest`] for a mask whose bits were packed off the UI thread
+    /// (the evidence file's reader), so its pixels are not scanned again here.
+    /// Bits beyond the packet's samples must be zero, as `counts` relies on.
+    pub(crate) fn ingest_packed(
+        &mut self,
+        packet: &DiagnosticSurface,
+        extent: [usize; 2],
+        bits: &MaskBits,
+    ) {
+        let total = packet.width * packet.height;
+        let tail_clear = bits.iter().enumerate().all(|(word, &value)| {
+            let first = word * 64;
+            if first >= total {
+                value == 0
+            } else if first + 64 > total {
+                value >> (total - first) == 0
+            } else {
+                true
+            }
+        });
+        if valid(packet, extent) && tail_clear {
+            self.store(packet, extent, bits);
+        }
+    }
+
+    fn store(&mut self, packet: &DiagnosticSurface, extent: [usize; 2], bits: &MaskBits) {
         let domain = Domain {
             samples: [packet.width, packet.height],
             extent,
@@ -125,7 +173,9 @@ impl AdmissionArchive {
                 if packet.sequence <= current.last_sequence {
                     return;
                 }
-                self.entries.retain(|entry| entry.level != packet.level);
+                if let Some(level) = self.levels[packet.level].take() {
+                    self.len -= level.len();
+                }
                 *current = LevelScope {
                     domain,
                     start_sequence: packet.sequence,
@@ -148,44 +198,44 @@ impl AdmissionArchive {
                 });
             }
         }
-        let key = (packet.level, packet.frame);
-        let position = self
-            .entries
-            .binary_search_by_key(&key, |entry| (entry.level, entry.frame));
-        if let Ok(index) = position {
-            if packet.sequence <= self.entries[index].meta.sequence {
+        let position = self.levels[packet.level].as_ref().map_or(Err(0), |level| {
+            level.binary_search_by_key(&packet.frame, |entry| entry.frame)
+        });
+        match position {
+            Ok(index) => {
+                let retained = &self.levels[packet.level].as_ref().expect("found level")[index];
+                if packet.sequence <= retained.meta.sequence {
+                    return;
+                }
+            }
+            Err(_) if self.len == MAX_ENTRIES => {
+                self.dropped = self.dropped.saturating_add(1);
                 return;
             }
-        } else if self.entries.len() == MAX_ENTRIES {
-            self.dropped = self.dropped.saturating_add(1);
-            return;
-        }
-        let mut bits = [0; WORDS];
-        for (index, &value) in packet.pixels.iter().enumerate() {
-            if value == 255 {
-                bits[index / 64] |= 1u64 << (index % 64);
-            }
+            Err(_) => (),
         }
         let entry = Mask {
-            level: packet.level,
             frame: packet.frame,
             meta: AdmissionMeta {
                 sequence: packet.sequence,
                 samples: domain.samples,
                 extent: domain.extent,
             },
-            bits,
+            bits: *bits,
         };
+        let room = MAX_ENTRIES - self.len;
+        let level = Arc::make_mut(self.levels[packet.level].get_or_insert_with(Default::default));
         match position {
-            Ok(index) => self.entries[index] = entry,
+            Ok(index) => level[index] = entry,
             Err(index) => {
-                // Doubling is explicit so the allocation never exceeds the cap,
-                // including after removals caused by a level's domain change.
-                if self.entries.len() == self.entries.capacity() {
-                    let capacity = (self.entries.capacity().max(1) * 2).min(MAX_ENTRIES);
-                    self.entries.reserve_exact(capacity - self.entries.len());
+                // Growth is explicit and proportional (an eighth), never past
+                // the global room, so spare capacity stays a small fraction of
+                // the cap and a capture-ordered stream rarely reallocates.
+                if level.len() == level.capacity() {
+                    level.reserve_exact((level.len() / 8).clamp(1, room));
                 }
-                self.entries.insert(index, entry);
+                level.insert(index, entry);
+                self.len += 1;
             }
         }
         self.revision = self.revision.wrapping_add(1);
@@ -291,15 +341,15 @@ impl AdmissionArchive {
     }
 
     pub(crate) fn frames(&self, level: usize) -> impl Iterator<Item = usize> + '_ {
-        let start = self.entries.partition_point(|entry| entry.level < level);
-        self.entries[start..]
-            .iter()
-            .take_while(move |entry| entry.level == level)
-            .map(|entry| entry.frame)
+        self.levels
+            .get(level)
+            .and_then(Option::as_ref)
+            .into_iter()
+            .flat_map(|level| level.iter().map(|entry| entry.frame))
     }
 
     pub(crate) fn len(&self) -> usize {
-        self.entries.len()
+        self.len
     }
 
     /// Capacity omissions count packets, not unique captures or refused inputs.
@@ -312,18 +362,40 @@ impl AdmissionArchive {
         self.resets
     }
 
-    /// Owned data storage, including spare vector capacity and inline state;
-    /// allocator bookkeeping is not included. There are no per-entry allocations.
+    /// Owned data storage, including spare vector capacity, each level's shared
+    /// header and inline state; allocator bookkeeping is not included. There
+    /// are no per-entry allocations.
     #[cfg(test)]
     pub(crate) fn allocated_bytes(&self) -> usize {
-        std::mem::size_of::<Self>() + self.entries.capacity() * std::mem::size_of::<Mask>()
+        std::mem::size_of::<Self>()
+            + self
+                .levels
+                .iter()
+                .flatten()
+                .map(|level| {
+                    2 * std::mem::size_of::<usize>()
+                        + std::mem::size_of::<Vec<Mask>>()
+                        + level.capacity() * std::mem::size_of::<Mask>()
+                })
+                .sum::<usize>()
+    }
+
+    /// Masks the retained vectors can hold without reallocating.
+    #[cfg(test)]
+    pub(crate) fn capacity(&self) -> usize {
+        self.levels
+            .iter()
+            .flatten()
+            .map(|level| level.capacity())
+            .sum()
     }
 
     fn entry(&self, level: usize, frame: usize) -> Option<&Mask> {
-        self.entries
-            .binary_search_by_key(&(level, frame), |entry| (entry.level, entry.frame))
+        let level = self.levels.get(level)?.as_ref()?;
+        level
+            .binary_search_by_key(&frame, |entry| entry.frame)
             .ok()
-            .map(|index| &self.entries[index])
+            .map(|index| &level[index])
     }
 }
 
@@ -342,8 +414,11 @@ fn valid(packet: &DiagnosticSurface, extent: [usize; 2]) -> bool {
         && packet.height > 0
         && packet.height <= SAMPLE_LIMIT[1]
         && packet.pixels.len() == packet.width * packet.height
-        && packet.pixels.iter().all(|value| matches!(value, 0 | 255))
         && !extent.contains(&0)
+}
+
+fn binary_pixels(packet: &DiagnosticSurface) -> bool {
+    packet.pixels.iter().all(|value| matches!(value, 0 | 255))
 }
 
 #[cfg(test)]

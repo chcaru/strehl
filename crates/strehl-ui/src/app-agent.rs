@@ -359,6 +359,9 @@ impl StrehlApp {
                 "hdr_available":self.editor.loaded.as_ref().is_some_and(|p|self.agent_photo_is_current() && p.image.origin==strehl_edit::ImageOrigin::SceneLinear)});
         let diagnostics = json!({"admission_packets":self.progress.admission_archive.len(),
                 "omitted_packets":self.progress.admission_archive.dropped(),
+                "evidence_file":self.progress.evidence_file.as_ref().map(|(name, _)| name),
+                "evidence_maps":self.progress.evidence_records,"evidence_refused":self.progress.evidence_refused,
+                "unplaced_frames":self.progress.unplaced_frames.len(),
                 "confidence":self.progress.confidence.as_ref().map(|p|json!({"compared":p.compared,"total":p.total,
                     "meaning":"folded aligned-observation rank: 0 one-sided, 1000 balanced; ties can also read 0; neither end is a quality grade"})),
                 "alignment":self.progress.alignment,"placed":self.progress.placed,"refused":self.progress.refused,

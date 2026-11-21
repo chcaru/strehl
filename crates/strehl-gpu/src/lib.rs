@@ -140,6 +140,9 @@ struct Layout {
     /// The ensemble null's windows, per level, when the device prepares
     /// frames and the merge has them.
     null: Vec<Option<NullRegion>>,
+    /// The per-plane admission maps' words ([`GpuFold::enable_support`]):
+    /// [`SUPPORT_WORDS`] per level, read back after each fold.
+    support: u32,
     /// Elements per accumulator bank (one storage binding each).
     acc_len: Vec<u64>,
 }
@@ -210,6 +213,7 @@ impl Layout {
                 })
             })
             .collect();
+        let support = take(nl * SUPPORT_WORDS);
         let work_len = work;
         // Accumulator regions fill bank 0, then bank 1 (`ACC_BANK` set in the
         // offset); a region never straddles two.
@@ -292,6 +296,7 @@ impl Layout {
             lo,
             hi,
             null,
+            support,
             acc_len,
         }
     }
@@ -473,9 +478,11 @@ impl Recorder {
     }
 
     /// `accumulate_level` for level `k`: one dispatch per four planes, the
-    /// first also adding the weight to `den` (flag `0x100`). Every
-    /// accumulator element receives exactly one addition per frame.
-    fn accum(&mut self, l: &Layout, weight: u32, k: usize) {
+    /// first also adding the weight to `den` (flag `0x100`) and, with
+    /// `support` (`(dst, lattice w, lattice h)`), sampling the level's
+    /// admission map from the same weights. Every accumulator element
+    /// receives exactly one addition per frame.
+    fn accum(&mut self, l: &Layout, weight: u32, k: usize, support: Option<(u32, u32, u32)>) {
         for first in (0..l.planes).step_by(4) {
             let group = (l.planes - first).min(4);
             let mut b = [0u32; 4];
@@ -487,6 +494,10 @@ impl Recorder {
                 d[j] = l.usum[k * l.planes + p];
             }
             let den = if first == 0 { 0x100 } else { 0 };
+            let e = match support.filter(|_| first == 0) {
+                Some((dst, lw, lh)) => [dst, lw, lh, l.sizes[k].width as u32],
+                None => [0; 4],
+            };
             self.push(
                 Kernel::Accum,
                 Params {
@@ -499,6 +510,7 @@ impl Recorder {
                     b,
                     c,
                     d,
+                    e,
                     ..Default::default()
                 },
                 l.sizes[k].pixels(),
@@ -561,6 +573,8 @@ pub struct GpuFold {
     depth: Option<DepthPlan>,
     /// Which half of `C_CROPS` the next cropped frame's windows go to.
     crop_half: usize,
+    /// [`GpuFold::enable_support`]: per-plane admission maps.
+    support: Option<Support>,
     pub adapter: String,
     pub decorated_results: usize,
 }
@@ -694,6 +708,54 @@ pub struct ScreenCensus {
 
 /// Maximum dispatches one frame records; sizes the parameter buffers.
 const MAX_CALLS: usize = 1024;
+
+/// Lattice sites a per-plane admission map may have: the desktop's 128 x 96
+/// (`ui-diagnostics.rs`, `process-provenance.rs`).
+pub const SUPPORT_SITES_MAX: usize = 128 * 96;
+
+/// Work-arena words per level for its admission map: 16 sites a word.
+const SUPPORT_WORDS: usize = SUPPORT_SITES_MAX.div_ceil(16);
+
+/// Folds whose maps may be in flight before [`GpuFold::collect_support`]
+/// waits for the oldest. The device runs a frame or two behind the host, so
+/// the oldest of these has long finished: the wait is a formality.
+const SUPPORT_RING: usize = 8;
+
+/// Folds whose maps are left in flight before [`GpuFold::collect_support`]
+/// looks at all: polling the device and mapping a read-back cost the host
+/// tens of microseconds each, so a few folds' maps are taken at once.
+const SUPPORT_BATCH: usize = 4;
+
+/// The per-plane admission maps ([`GpuFold::enable_support`]).
+struct Support {
+    /// Per level: the lattice `(w, h)`.
+    lattices: Vec<(u32, u32)>,
+    /// Read-back buffers no longer in flight, reused.
+    pool: Vec<wgpu::Buffer>,
+    /// Folds whose maps are being copied, oldest first.
+    pending: std::collections::VecDeque<PendingSupport>,
+    /// The tag the next fold's maps carry ([`GpuFold::tag_support`]).
+    tag: usize,
+}
+
+struct PendingSupport {
+    tag: usize,
+    buffer: wgpu::Buffer,
+    index: wgpu::SubmissionIndex,
+    /// 0 while mapping, 1 mapped, 2 failed.
+    state: std::sync::Arc<std::sync::atomic::AtomicU8>,
+}
+
+/// One folded frame's admission maps ([`GpuFold::collect_support`]).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct SupportMaps {
+    /// The tag set by [`GpuFold::tag_support`] before the fold.
+    pub tag: usize,
+    /// Per level, `weight > 0` at each lattice site, row-major, least
+    /// significant bit first, `ceil(w * h / 8)` bytes; bits past the last
+    /// site are zero.
+    pub levels: Vec<Vec<u8>>,
+}
 
 /// Room for the depth energies' blur taps in `consts` (`fold.wgsl`'s
 /// `C_TAPS`), both blurs together.
@@ -1242,6 +1304,7 @@ impl GpuFold {
             pending_reset: vec![true],
             depth: None,
             crop_half: 0,
+            support: None,
             adapter: adapter_name,
             decorated_results,
         };
@@ -1441,7 +1504,56 @@ impl GpuFold {
             }
         }
         after(&mut encoder, self);
+        // The fold's admission maps, copied right behind its dispatches into
+        // a read-back buffer the host maps later (`collect_support`); the
+        // next frame may then overwrite the work arena's words.
+        let support_copy = match self.support.as_mut() {
+            Some(support)
+                if rec
+                    .calls
+                    .iter()
+                    .any(|(k, p, _)| *k == Kernel::Accum && p.e[1] != 0) =>
+            {
+                let bytes = (self.layout.sizes.len() * SUPPORT_WORDS * 4) as u64;
+                let device = &self.device;
+                let buffer = support.pool.pop().unwrap_or_else(|| {
+                    device.create_buffer(&wgpu::BufferDescriptor {
+                        label: Some("fold-support-readback"),
+                        size: bytes,
+                        usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
+                        mapped_at_creation: false,
+                    })
+                });
+                encoder.copy_buffer_to_buffer(
+                    &self.work,
+                    u64::from(self.layout.support) * 4,
+                    &buffer,
+                    0,
+                    bytes,
+                );
+                Some(buffer)
+            }
+            _ => None,
+        };
         let index = self.queue.submit([encoder.finish()]);
+        if let (Some(buffer), Some(support)) = (support_copy, self.support.as_mut()) {
+            let state = std::sync::Arc::new(std::sync::atomic::AtomicU8::new(0));
+            let mapped = std::sync::Arc::clone(&state);
+            buffer
+                .slice(..)
+                .map_async(wgpu::MapMode::Read, move |result| {
+                    mapped.store(
+                        if result.is_ok() { 1 } else { 2 },
+                        std::sync::atomic::Ordering::Release,
+                    );
+                });
+            support.pending.push_back(PendingSupport {
+                tag: support.tag,
+                buffer,
+                index: index.clone(),
+                state,
+            });
+        }
         if let Some(prof) = &mut self.profile
             && !rec.calls.is_empty()
         {
@@ -1652,7 +1764,7 @@ impl GpuFold {
                 },
                 px,
             );
-            rec.accum(l, l.weight, k);
+            rec.accum(l, l.weight, k, self.support_target(k));
         }
         // The base band: the coarsest band's weight reduced once, or zero.
         let base = sizes[nb];
@@ -1661,7 +1773,150 @@ impl GpuFold {
         } else {
             rec.fill(l.coarse, base.pixels(), 0.0, false);
         }
-        rec.accum(l, l.coarse, nb);
+        rec.accum(l, l.coarse, nb, self.support_target(nb));
+    }
+
+    /// Where level `k`'s admission map goes and its lattice, when enabled
+    /// (sampled by that level's `accum`).
+    fn support_target(&self, k: usize) -> Option<(u32, u32, u32)> {
+        let (lw, lh) = self.support.as_ref()?.lattices[k];
+        Some((self.layout.support + (k * SUPPORT_WORDS) as u32, lw, lh))
+    }
+
+    /// Emit, after every later fold, each level's admission map: one bit per
+    /// site of `lattices[k]` (that level's `(w, h)`), set where the fold's
+    /// weight is positive, sampled at the nearest coefficient as the CPU
+    /// observer samples it. The maps are copied behind each fold and read
+    /// back without waiting ([`Self::collect_support`]). Only reads are
+    /// added: no accumulator, weight or output changes.
+    pub fn enable_support(&mut self, lattices: &[(usize, usize)]) -> Result<(), String> {
+        let sizes = &self.layout.sizes;
+        if lattices.len() != sizes.len() {
+            return Err(format!(
+                "{} admission lattices for {} levels",
+                lattices.len(),
+                sizes.len()
+            ));
+        }
+        for (k, (&(w, h), s)) in lattices.iter().zip(sizes).enumerate() {
+            if w == 0 || h == 0 || w > s.width || h > s.height || w * h > SUPPORT_SITES_MAX {
+                return Err(format!(
+                    "level {k}'s admission lattice {w} x {h} does not fit its {} x {} grid",
+                    s.width, s.height
+                ));
+            }
+        }
+        self.support = Some(Support {
+            lattices: lattices
+                .iter()
+                .map(|&(w, h)| (w as u32, h as u32))
+                .collect(),
+            pool: Vec::new(),
+            pending: Default::default(),
+            tag: 0,
+        });
+        Ok(())
+    }
+
+    /// Stop producing admission maps; maps not yet collected are dropped.
+    pub fn disable_support(&mut self) {
+        self.support = None;
+    }
+
+    /// The tag the next fold's admission maps carry (the caller's frame).
+    pub fn tag_support(&mut self, tag: usize) {
+        if let Some(support) = self.support.as_mut() {
+            support.tag = tag;
+        }
+    }
+
+    /// The admission maps of folds whose copies have finished, oldest first,
+    /// in fold order. With `wait`, every fold's; otherwise it never waits for
+    /// the device, except for folds more than [`SUPPORT_RING`] behind (which
+    /// the device finished long ago), and looks only once
+    /// [`SUPPORT_BATCH`] folds are in flight.
+    pub fn collect_support(&mut self, wait: bool) -> Result<Vec<SupportMaps>, String> {
+        let Some(support) = self.support.as_mut() else {
+            return Ok(Vec::new());
+        };
+        if support.pending.is_empty() || !wait && support.pending.len() < SUPPORT_BATCH {
+            return Ok(Vec::new());
+        }
+        let target = if wait {
+            support.pending.back()
+        } else {
+            support
+                .pending
+                .len()
+                .checked_sub(SUPPORT_RING + 1)
+                .and_then(|oldest| support.pending.get(oldest))
+        };
+        let polled = match target {
+            Some(target) => self.device.poll(wgpu::PollType::Wait {
+                submission_index: Some(target.index.clone()),
+                timeout: None,
+            }),
+            None => self.device.poll(wgpu::PollType::Poll),
+        };
+        polled.map_err(|e| format!("GPU admission maps: {e:?}"))?;
+        let mut out = Vec::new();
+        Self::drain_support(support, &mut out)?;
+        if wait && !support.pending.is_empty() {
+            // Every copy is done; their mapping callbacks run on this poll.
+            self.device
+                .poll(wgpu::PollType::wait_indefinitely())
+                .map_err(|e| format!("GPU admission maps: {e:?}"))?;
+            Self::drain_support(support, &mut out)?;
+            if !support.pending.is_empty() {
+                return Err("GPU admission maps: a copy did not finish".into());
+            }
+        }
+        Ok(out)
+    }
+
+    /// Move every mapped fold's maps, in order, from `support` to `out`.
+    fn drain_support(support: &mut Support, out: &mut Vec<SupportMaps>) -> Result<(), String> {
+        use std::sync::atomic::Ordering;
+        while let Some(front) = support.pending.front() {
+            match front.state.load(Ordering::Acquire) {
+                0 => break,
+                1 => (),
+                _ => return Err("GPU admission maps: read-back failed".into()),
+            }
+            let pending = support.pending.pop_front().expect("front");
+            let levels = {
+                let view = pending
+                    .buffer
+                    .slice(..)
+                    .get_mapped_range()
+                    .map_err(|e| format!("mapped admission maps: {e:?}"))?;
+                let words: &[f32] = bytemuck::cast_slice(&view[..]);
+                support
+                    .lattices
+                    .iter()
+                    .enumerate()
+                    .map(|(k, &(w, h))| {
+                        let sites = (w * h) as usize;
+                        let own = &words[k * SUPPORT_WORDS..][..sites.div_ceil(16)];
+                        let mut bytes = Vec::with_capacity(2 * own.len());
+                        for &word in own {
+                            let bits = word as u32;
+                            debug_assert_eq!(bits as f32, word, "an exact 16-bit integer");
+                            bytes.extend_from_slice(&(bits as u16).to_le_bytes());
+                        }
+                        bytes.truncate(sites.div_ceil(8));
+                        bytes
+                    })
+                    .collect()
+            };
+            pending.buffer.unmap();
+            support.pool.push(pending.buffer);
+            out.push(SupportMaps {
+                tag: pending.tag,
+                levels,
+            });
+        }
+        Ok(())
     }
 
     /// Size the raw buffer for frames of `samples` u16 each: two frame slots,

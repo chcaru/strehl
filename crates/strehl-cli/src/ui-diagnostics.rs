@@ -2,6 +2,8 @@
 //! returned to the image pipeline, and disabled/placebo runs create no tap.
 
 use super::Progress;
+use super::evidence;
+use std::path::Path;
 use strehl_core::pyramid::{
     AccumulatorObservation, BandMerge, BandObservation, FoldPhase, LevelSize, MergeObserver,
     Pyramid, Workspace,
@@ -20,6 +22,38 @@ pub(super) struct DiagnosticCounts {
     sequence: u64,
     bands: Vec<usize>,
     accumulator_frames: usize,
+    /// This pass's evidence file ([`Progress::begin_evidence`]): its
+    /// per-plane maps go there instead of into the log.
+    evidence: Option<evidence::Writer>,
+}
+
+/// The desktop's lattice for a map of a `size` grid: at most `GRID_WIDTH` x
+/// `GRID_HEIGHT`, aspect preserved, never upsampled. Every map kind but the
+/// preview, the evidence file's header and the GPU fold's admission maps use
+/// it, so all of them sample the same sites.
+pub(crate) fn lattice(size: LevelSize) -> [usize; 2] {
+    lattice_within(size, GRID_WIDTH, GRID_HEIGHT)
+}
+
+fn lattice_within(size: LevelSize, max_width: usize, max_height: usize) -> [usize; 2] {
+    let factor = (max_width as f64 / size.width as f64)
+        .min(max_height as f64 / size.height as f64)
+        .min(1.0);
+    [
+        (size.width as f64 * factor).floor().max(1.0) as usize,
+        (size.height as f64 * factor).floor().max(1.0) as usize,
+    ]
+}
+
+/// The bytes of a map as the log's hex lines carry them.
+fn hex(pixels: &[u8]) -> String {
+    const DIGITS: &[u8; 16] = b"0123456789abcdef";
+    let mut hex = String::with_capacity(pixels.len() * 2);
+    for &pixel in pixels {
+        hex.push(DIGITS[(pixel >> 4) as usize] as char);
+        hex.push(DIGITS[(pixel & 15) as usize] as char);
+    }
+    hex
 }
 
 pub(crate) struct FrameTap<'a> {
@@ -283,16 +317,11 @@ impl Progress {
         if !self.enabled || size.width == 0 || size.height == 0 {
             return;
         }
-        let (max_width, max_height) = if kind == "preview" {
-            (PREVIEW_WIDTH, PREVIEW_HEIGHT)
+        let [width, height] = if kind == "preview" {
+            lattice_within(size, PREVIEW_WIDTH, PREVIEW_HEIGHT)
         } else {
-            (GRID_WIDTH, GRID_HEIGHT)
+            lattice(size)
         };
-        let factor = (max_width as f64 / size.width as f64)
-            .min(max_height as f64 / size.height as f64)
-            .min(1.0);
-        let width = (size.width as f64 * factor).floor().max(1.0) as usize;
-        let height = (size.height as f64 * factor).floor().max(1.0) as usize;
         let mut samples = Vec::with_capacity(width * height);
         for y in 0..height {
             let source_y = ((2 * y + 1) * size.height / (2 * height)).min(size.height - 1);
@@ -322,24 +351,135 @@ impl Progress {
         } else {
             (transform(min), transform(max))
         };
-        let mut hex = String::with_capacity(samples.len() * 2);
-        const DIGITS: &[u8; 16] = b"0123456789abcdef";
-        for sample in samples {
-            let normalized = if hi > lo {
-                (transform(sample) - lo) / (hi - lo)
-            } else {
-                0.0
-            };
-            let pixel = (normalized.clamp(0.0, 1.0) * 255.0).round() as usize;
-            hex.push(DIGITS[pixel >> 4] as char);
-            hex.push(DIGITS[pixel & 15] as char);
-        }
-        let mut counts = self
+        let pixels: Vec<u8> = samples
+            .into_iter()
+            .map(|sample| {
+                let normalized = if hi > lo {
+                    (transform(sample) - lo) / (hi - lo)
+                } else {
+                    0.0
+                };
+                (normalized.clamp(0.0, 1.0) * 255.0).round() as u8
+            })
+            .collect();
+        let mut guard = self
             .diagnostics
             .lock()
             .expect("merge diagnostics lock poisoned");
+        let counts = &mut *guard;
+        // A plane's own maps go to the evidence file when this pass has one;
+        // its float maps only for the planes the file keeps them for.
+        let file_kind = if scope == "frame" {
+            evidence::Kind::of(kind)
+        } else {
+            None
+        };
+        if let (Some(file_kind), Some(writer)) = (file_kind, counts.evidence.as_mut()) {
+            let payload = match file_kind {
+                evidence::Kind::GateSupport => evidence::pack_support(&pixels),
+                _ if !evidence::float_kept(frame, self.total) => return,
+                _ => [&min.to_le_bytes()[..], &max.to_le_bytes(), &pixels].concat(),
+            };
+            let sequence = counts.sequence + 1;
+            if writer.append(frame, level, file_kind, sequence, &payload) {
+                counts.sequence = sequence;
+                return;
+            }
+        }
         counts.sequence += 1;
-        self.emit(format!("event=diagnostic seq={} frame={frame} level={level} kind={kind} scope={scope} scale={scale} width={width} height={height} min={min:e} max={max:e} folded={folded} total={} sampling=nearest data={hex}", counts.sequence,self.total));
+        self.emit(format!("event=diagnostic seq={} frame={frame} level={level} kind={kind} scope={scope} scale={scale} width={width} height={height} min={min:e} max={max:e} folded={folded} total={} sampling=nearest data={}", counts.sequence, self.total, hex(&pixels)));
+    }
+
+    /// Open this pass's evidence file beside `out` (the desktop's run
+    /// folder), with the merge's level grids, and name it in the log. Without
+    /// an output, or if the file cannot be made, the maps stay in the log.
+    pub(crate) fn begin_evidence(&self, sizes: &[LevelSize], out: Option<&Path>) {
+        let Some(out) = out.filter(|_| self.enabled && !sizes.is_empty()) else {
+            return;
+        };
+        let directory = out
+            .parent()
+            .filter(|parent| !parent.as_os_str().is_empty())
+            .unwrap_or(Path::new("."));
+        let header = evidence::Header {
+            levels: sizes
+                .iter()
+                .map(|&size| (lattice(size), [size.width, size.height]))
+                .collect(),
+            frames: self.total,
+        };
+        match evidence::Writer::open(directory, header) {
+            Ok((writer, opened)) => {
+                if opened == evidence::Opened::Created {
+                    self.emit(format!(
+                        "event=evidence-file path={} version={}",
+                        evidence::FILE_NAME,
+                        evidence::VERSION
+                    ));
+                }
+                self.diagnostics
+                    .lock()
+                    .expect("merge diagnostics lock poisoned")
+                    .evidence = Some(writer);
+            }
+            Err(why) => {
+                eprintln!("evidence file   : not written ({why}); per-plane maps stay in this log");
+            }
+        }
+    }
+
+    /// One frame's gate-support maps from the GPU fold: per level, `weight >
+    /// 0` at each of `lattice(sizes[k])`'s sites, packed as the evidence
+    /// file's bits (`strehl_gpu::SupportMaps`). The same records, or the same
+    /// hex lines, the CPU fold's observer gives for its weights.
+    pub(crate) fn gpu_support(&self, frame: usize, levels: &[Vec<u8>], sizes: &[LevelSize]) {
+        if !self.enabled {
+            return;
+        }
+        let mut guard = self
+            .diagnostics
+            .lock()
+            .expect("merge diagnostics lock poisoned");
+        let counts = &mut *guard;
+        // One sequence per level, as the CPU observer numbers them. A frame's
+        // records go to the file in one write; if the file cannot take them,
+        // the same maps stay in the log as hex lines.
+        let first = counts.sequence + 1;
+        counts.sequence += levels.len() as u64;
+        if let Some(writer) = counts.evidence.as_mut() {
+            let mut records = Vec::new();
+            let encoded = levels.iter().enumerate().all(|(level, bits)| {
+                let sequence = first + level as u64;
+                writer.encode(
+                    frame,
+                    level,
+                    evidence::Kind::GateSupport,
+                    sequence,
+                    bits,
+                    &mut records,
+                )
+            });
+            if encoded && writer.write(&records) {
+                return;
+            }
+        }
+        for (level, (bits, &size)) in levels.iter().zip(sizes).enumerate() {
+            let sequence = first + level as u64;
+            let [width, height] = lattice(size);
+            if bits.len() != (width * height).div_ceil(8) {
+                continue;
+            }
+            let pixels: Vec<u8> = (0..width * height)
+                .map(|i| {
+                    if bits[i / 8] & (1 << (i % 8)) != 0 {
+                        255
+                    } else {
+                        0
+                    }
+                })
+                .collect();
+            self.emit(format!("event=diagnostic seq={sequence} frame={frame} level={level} kind=gate-support scope=frame scale=linear width={width} height={height} min={:e} max={:e} folded=1 total={} sampling=nearest data={}", 0.0f32, 1.0f32, self.total, hex(&pixels)));
+        }
     }
 }
 

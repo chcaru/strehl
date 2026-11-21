@@ -40,6 +40,8 @@ mod edit_workspace;
 mod engine;
 #[path = "export-presets.rs"]
 mod export_presets;
+#[path = "evidence-file.rs"]
+mod evidence_file;
 #[path = "hdr-display.rs"]
 mod hdr_display;
 #[path = "image-gesture.rs"]

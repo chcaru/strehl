@@ -2579,6 +2579,7 @@ fn alignment_for_observed(
             map.placed_count(),
             map.refused_count(),
         );
+        progress.unplaced_frames(&map);
     }
     Ok(Some((map, "sidecar-override")))
 }
@@ -5630,8 +5631,10 @@ fn gpu_fold_requested() -> Result<GpuFoldRequest> {
 }
 
 /// Report the stages an external fold passes through, so the desktop's
-/// per-frame progress keeps moving. Band surfaces are not produced: the GPU
-/// does not hand full-resolution fields back.
+/// per-frame progress keeps moving. The fold's per-plane admission maps come
+/// back separately, a frame or two later ([`emit_gpu_support`]); the float
+/// band surfaces are not produced: the GPU does not hand full-resolution
+/// fields back.
 #[cfg(feature = "gpu")]
 fn gpu_fold_phases(tap: &crate::ui_progress::FrameTap<'_>, levels: usize) {
     use strehl_core::pyramid::{FoldPhase, MergeObserver};
@@ -5640,6 +5643,56 @@ fn gpu_fold_phases(tap: &crate::ui_progress::FrameTap<'_>, levels: usize) {
     for k in 0..levels {
         tap.phase(FoldPhase::FoldStarted(k));
         tap.phase(FoldPhase::FoldFinished(k));
+    }
+}
+
+/// Hand the GPU fold's finished admission maps to the desktop observer
+/// (`GpuFold::enable_support`): without waiting for the device, or with
+/// `wait` every fold's (at a chunk's end, before its totals are read). An
+/// observer never fails a render: a read-back error turns the maps off for
+/// the rest of it and says so.
+#[cfg(feature = "gpu")]
+fn emit_gpu_support(
+    gpu: &mut strehl_gpu::GpuFold,
+    progress: &crate::ui_progress::Progress,
+    sizes: &[strehl_core::pyramid::LevelSize],
+    wait: bool,
+) {
+    match fold_trace::time(fold_trace::Step::Evidence, || gpu.collect_support(wait)) {
+        Ok(maps) => {
+            fold_trace::time(fold_trace::Step::Evidence, || {
+                for frame in maps {
+                    progress.gpu_support(frame.tag, &frame.levels, sizes);
+                }
+            });
+        }
+        Err(why) => {
+            gpu.disable_support();
+            eprintln!("evidence file   : the GPU fold's admission maps stopped ({why})");
+        }
+    }
+}
+
+/// The GPU fold's admission maps for the desktop, when it observes: the
+/// lattice of every level, as the CPU observer samples it.
+#[cfg(feature = "gpu")]
+fn enable_gpu_support(worker: &mut BandWorker, progress: &crate::ui_progress::Progress) {
+    if progress.observer().is_none() {
+        return;
+    }
+    let lattices: Vec<(usize, usize)> = worker
+        .merge
+        .sizes()
+        .iter()
+        .map(|&size| {
+            let [w, h] = crate::ui_progress::lattice(size);
+            (w, h)
+        })
+        .collect();
+    if let Some(gpu) = worker.gpu.as_mut()
+        && let Err(why) = gpu.enable_support(&lattices)
+    {
+        eprintln!("evidence file   : the GPU fold's admission maps are off ({why})");
     }
 }
 
@@ -7017,6 +7070,7 @@ impl BandWorker {
             .and_then(|p| p.null_floor())
             .map(|(beta, var)| self.merge.note_external_null_frame(&beta, var));
         let frame_beta = (!self.beta.is_empty()).then_some(self.beta.as_slice());
+        gpu.tag_support(index);
         let merge = &mut self.merge;
         let luma_tap = &mut self.luma_tap;
         let added = fold_trace::time(fold_trace::Step::Add, || {
@@ -7076,6 +7130,7 @@ impl BandWorker {
                 &crate::ui_progress::FrameTap::new(progress, index, self.merge.sizes().len()),
                 self.merge.sizes().len(),
             );
+            emit_gpu_support(gpu, progress, self.merge.sizes(), false);
         }
         Ok(true)
     }
@@ -7379,9 +7434,11 @@ impl BandWorker {
         if let Some(gpu) = self.gpu.as_mut() {
             // The half-stack this frame belongs to (`swap_half`).
             gpu.select_accumulator(target);
+            gpu.tag_support(index);
             gpu.add_frame(&mut self.merge, &refs, &self.var, frame_beta);
-            if let Some(tap) = tap.as_ref() {
+            if let (Some(tap), Some(progress)) = (tap.as_ref(), progress) {
                 gpu_fold_phases(tap, self.merge.sizes().len());
+                emit_gpu_support(gpu, progress, self.merge.sizes(), false);
             }
             return Ok(true);
         }
@@ -7494,9 +7551,11 @@ impl BandWorker {
         if let Some(gpu) = self.gpu.as_mut() {
             // The half-stack this frame belongs to (`swap_half`).
             gpu.select_accumulator(target);
+            gpu.tag_support(index);
             gpu.add_frame(&mut self.merge, &refs, &prep.var, frame_beta);
-            if let Some(tap) = tap.as_ref() {
+            if let (Some(tap), Some(progress)) = (tap.as_ref(), progress) {
                 gpu_fold_phases(tap, self.merge.sizes().len());
+                emit_gpu_support(gpu, progress, self.merge.sizes(), false);
             }
             return;
         }
@@ -10148,6 +10207,12 @@ fn run_pyramid_prepared_with_sensor(
         gpu_prep_refusal(warps, defect_plan.is_some(), levels),
     )?;
     eprintln!("gpu fold        : {gpu_line}");
+    // The desktop's per-plane maps (implementation plan 6.8): the evidence
+    // file beside the output and, under a GPU fold, the device's maps of
+    // each frame's weights. Observers only: nothing here reaches the fold.
+    progress.begin_evidence(worker.merge.sizes(), opts.out.as_deref());
+    #[cfg(feature = "gpu")]
+    enable_gpu_support(&mut worker, &progress);
     // The lateral-colour preview measures depth too, when the render after
     // it will restore: to predict the reference crops that render captures
     // as it folds (plan stage Q18). Device energies only.
@@ -10447,6 +10512,12 @@ fn run_pyramid_prepared_with_sensor(
                     *acc += value;
                 }
                 beta_n += worker.beta_n;
+                // Every fold's admission maps, before the chunk's totals are
+                // read and its stack maps reported.
+                #[cfg(feature = "gpu")]
+                if let (Some(gpu), Some(observer)) = (worker.gpu.as_mut(), progress.observer()) {
+                    emit_gpu_support(gpu, observer, worker.merge.sizes(), true);
+                }
                 // A single-chunk restoration fold leaves its accumulators in
                 // the worker; they are moved out after the fold, so no empty
                 // replacement is allocated beside them. Under a GPU fold the
