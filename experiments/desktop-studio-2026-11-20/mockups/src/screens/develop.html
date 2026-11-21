@@ -3,7 +3,7 @@
 Develop keeps what Edit does well (looks, light, colour, regions, versions) and adds what a macro photograph needs before it leaves: a depth brush that repairs an area from other planes, healing for dust, backdrop clean-up, crop, a scale bar. The depth rail appears when a tool needs it. Hover the photograph to see the rail respond.
 <!--body-->
 <div class="body l-tools-insp">
-  <div class="tools">
+  <div class="tools"><i class="pin in new" style="left:auto;right:-9px;top:150px">1</i>
     <span title="Move and zoom"><svg class="i"><use href="#i-hand"/></svg></span>
     <span title="Crop and straighten"><svg class="i"><use href="#i-crop"/></svg></span>
     <span title="White balance picker"><svg class="i"><use href="#i-picker"/></svg></span>
@@ -17,47 +17,43 @@ Develop keeps what Edit does well (looks, light, colour, regions, versions) and 
     <span title="Note for yourself or an agent"><svg class="i"><use href="#i-note"/></svg></span>
   </div>
   <div class="main">
-    <div class="canvas">
-      <div class="photo" data-probe="0.305,0.655" style="left:88px;top:52px;width:1110px;height:740px">
-        <div class="base im im-hero"></div>
-        <svg class="paint" width="1110" height="740">
-          <path d="M296 452 C318 430 372 436 392 462 C410 486 398 520 366 528 C330 538 292 520 286 492 C283 476 286 462 296 452 Z"/>
-          <circle cx="352" cy="470" r="30" class="brush"/>
-        </svg>
-        <div class="tip glass" style="left:404px;top:432px"><b>Leg joint</b> · taken from planes 116–132<br><span class="dim">preview from the camera previews · repair running, about 12 s</span></div>
-        <div class="scalebar" style="right:26px;bottom:22px;width:118px"><i></i><span>1 mm</span></div>
-      </div>
-      <div class="cbar glass" style="left:14px;top:10px">
-        <span class="row acc" style="gap:6px"><svg class="i"><use href="#i-brush"/></svg><b>Depth brush</b></span>
+    <div class="cstrip"><i class="pin in" style="left:auto;right:240px;top:36px">7</i>
+        <span class="cap" style="color:var(--accent)">Depth brush</span><span class="vr"></span>
         <span class="dim2">Size</span><div class="slider" style="width:80px;margin:0"><i style="left:0;width:40%"></i><b style="left:40%"></b></div>
         <span class="dim2">Feather</span><div class="slider" style="width:80px;margin:0"><i style="left:0;width:55%"></i><b style="left:55%"></b></div>
-        <span class="dim2">Take from</span><span class="chip none acc">planes 116–132</span><span class="dim2">drag on the rail to change</span>
-      </div>
-      <div class="cbar glass" style="right:14px;top:10px">
+        <span class="dim2">Take from</span><b class="acc">planes 116–132</b><span class="dim2">drag on the rail to change</span>
+      <span class="sp"></span>
         <div class="seg"><span class="on">After</span><span>Before</span><span>Split</span></div>
         <span class="swatches"><i style="background:#000"></i><i class="on" style="background:#1c1c1c"></i><i style="background:#777"></i><i style="background:#fff"></i></span>
         <div class="seg"><span class="on">HDR</span><span>SDR</span></div>
         <span class="btn sm quiet">Clipping</span>
+    </div>
+    <div class="canvas center">
+      <div class="photo" data-probe="0.305,0.655">
+        <div class="base im im-hero"></div>
+        <svg class="paint" viewBox="0 0 1110 740" preserveAspectRatio="none">
+          <path d="M296 452 C318 430 372 436 392 462 C410 486 398 520 366 528 C330 538 292 520 286 492 C283 476 286 462 296 452 Z"/>
+          <circle cx="352" cy="470" r="30" class="brush"/>
+        </svg>
+        <div class="tip glass" style="left:36.5%;top:58.5%"><i class="pin in new">2</i><b>Leg joint</b> · taken from planes 116–132<br><span class="dim">preview from the camera previews · repair running, about 12 s</span></div>
+        <div class="scalebar" style="right:2.4%;bottom:3%;width:10.6%"><i class="pin in new" style="left:-14px;top:-6px;display:block;height:18px;background:#0b0b0c">6</i><i></i><span>1 mm</span></div>
       </div>
     </div>
-    <div class="rail" data-rail='{"margins":[[1,55],[212,299]],"ranges":[{"a":116,"b":132,"t":"taken from 116–132"}],"h":72}'>
-      <div class="rail-head"><b>Depth rail</b><span>the trace shows which planes are sharp in the painted area</span>
-        <div class="seg"><span>Ridge</span><span class="on">Filmstrip</span></div>
+    <div class="rail" data-rail='{"margins":[[1,55],[212,299]],"ranges":[{"a":116,"b":132,"t":"taken from 116–132"}],"film":16,"h":88}'>
+      <i class="pin in" style="left:auto;right:9px;top:-9px">3</i><div class="rail-head"><b>Depth rail</b><span class="key"><i class="dash"></i>which planes are sharp in the painted area</span>
         <span class="sp"></span><span class="read mono" data-rest="Drag a range to choose the planes to take from"></span>
       </div>
-      <div class="strip">
-        <div class="im im-plane-00"><span>1</span></div><div class="im im-plane-01"><span>28</span></div><div class="im im-plane-02"><span>55</span></div><div class="im im-plane-03"><span>82</span></div><div class="im im-plane-04 on"><span>109</span></div><div class="im im-plane-05 on"><span>136</span></div><div class="im im-plane-06"><span>164</span></div><div class="im im-plane-07"><span>191</span></div><div class="im im-plane-08"><span>218</span></div><div class="im im-plane-09"><span>245</span></div><div class="im im-plane-10"><span>272</span></div><div class="im im-plane-11"><span>299</span></div>
-      </div>
       <div class="rail-svg"></div>
+      <div class="film"></div>
     </div>
   </div>
   <div class="insp">
     <div class="tabs"><span class="on" data-tab="adjust">Adjust</span><span data-tab="layers">Layers · 5</span><span data-tab="versions">Versions · 2</span></div>
     <div class="insp-body tabpane" data-tab="adjust" style="gap:9px">
-      <div class="scope"><span class="cap">Adjusting</span><div class="seg pick"><span class="on">Whole photograph</span><span>Leg joint</span><span>Glints</span></div></div>
+      <div class="scope"><i class="pin in" style="left:-16px;top:12px">4</i><span class="cap">Adjusting</span><div class="seg pick"><span class="on">Whole photograph</span><span>Leg joint</span><span>Glints</span></div></div>
       <div class="hist"><svg width="318" height="54" viewBox="0 0 318 54" preserveAspectRatio="none"><path d="M0 54 L0 6 C6 2 14 20 22 34 C40 46 70 40 104 36 C140 31 168 22 196 26 C226 30 250 40 282 46 C298 49 310 51 318 52 L318 54 Z" fill="var(--ink-3)" opacity=".8"/><path d="M0 54 C60 50 120 30 170 28 C220 27 270 44 318 53 L318 54 Z" fill="#40e0ff" opacity=".35"/></svg><span class="hl">shadows 38 % below 1 %</span></div>
       <div class="sect"><span class="cap">Look</span><span class="dim2">measured from this photograph</span></div>
-      <div class="looks pickone"><span>Natural</span><span class="on">Signature</span><span>Deep background</span><span>Texture</span><span>Gentle highlights</span><span>Gems and glints</span></div>
+      <div class="looks pickone"><i class="pin in" style="left:-16px;top:14px">5</i><span>Natural</span><span class="on">Signature</span><span>Deep background</span><span>Texture</span><span>Gentle highlights</span><span>Gems and glints</span></div>
       <div class="dim" style="font-size:12px;margin-top:-4px">Signature: stronger local contrast and colour, shadows protected.</div>
       <div class="field"><label>Amount</label><span class="val">1.00</span></div><div class="slider"><i style="left:0;width:100%"></i><b style="left:100%"></b></div>
       <div class="sect"><span class="cap">Light</span></div>
@@ -105,7 +101,6 @@ Develop keeps what Edit does well (looks, light, colour, regions, versions) and 
   </div>
 </div>
 <div class="hint"><span><span class="kbd">B</span>depth brush</span><span><span class="kbd">[</span><span class="kbd">]</span>brush size</span><span><span class="kbd">\</span>before and after</span><span><span class="kbd">Alt</span>inspect the planes under the pointer</span><span class="sp"></span><span><svg class="i" style="width:13px;height:13px;vertical-align:-2px"><use href="#i-undo"/></svg> Undo here steps through develop changes only</span></div>
-<span class="pin new" style="left:46px;top:178px">1</span><span class="pin new" style="left:436px;top:520px">2</span><span class="pin" style="left:640px;top:920px">3</span><span class="pin" style="left:1333px;top:112px">4</span><span class="pin" style="left:1333px;top:262px">5</span><span class="pin new" style="left:1236px;top:790px">6</span><span class="pin" style="left:868px;top:71px">7</span>
 <!--notes-->
 <div class="new"><i>1</i><b>Macro finishing tools.</b> Crop, a white balance picker, healing, backdrop clean-up and a scale bar are absent from both the editing model and the screen today. They are the difference between a stack and a finished plate.</div>
 <div class="new"><i>2</i><b>Depth brush.</b> Today's "Source repair" is a collapsed section that needs a full re-stack and blocks export. Painting an area and choosing its planes on the rail is the same idea made direct: instant preview, then a background rebuild of only that area.</div>

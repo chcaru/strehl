@@ -22,14 +22,17 @@ ORDER = ["overview", "today", "library", "subject", "capture-plan", "flight", "g
          "develop", "export", "variants", "system"]
 SEPARATORS_BEFORE = {"library", "variants"}
 STATIONS = [("capture", "Capture"), ("stack", "Stack"), ("develop", "Develop"), ("export", "Export")]
-GLYPH = {"done": '<span class="gl ok">●</span>', "warn": '<span class="gl warn">▲</span>',
-         "run": '<span class="gl acc">◐</span>', "todo": '<span class="gl dim2">○</span>', "cur": ""}
+GLYPH = {"done": '<i class="gl ok"></i>', "warn": '<i class="gl warn"></i>', "run": '<i class="gl run"></i>',
+         "todo": '<i class="gl idle"></i>', "cur": ""}
+BRAND = ('<svg viewBox="0 0 64 64"><polygon points="8,41 32,27 56,41 32,55" fill="var(--panel)" stroke="var(--accent)" stroke-opacity=".4" stroke-width="3.5"/>'
+         '<polygon points="8,32 32,18 56,32 32,46" fill="var(--panel)" stroke="var(--accent)" stroke-opacity=".7" stroke-width="3.5"/>'
+         '<polygon points="8,23 32,9 56,23 32,37" fill="var(--panel)" stroke="var(--accent)" stroke-width="3.5"/>'
+         '<polygon points="25,23 32,19 39,23 32,27" fill="var(--accent)"/></svg>')
 IMAGE_NAMES = """hero hero-small detail-a detail-b proof-partial lens-depth lens-soft peaking
-plane-00 plane-01 plane-02 plane-03 plane-04 plane-05 plane-06 plane-07 plane-08 plane-09 plane-10 plane-11
-plane-03-large plane-06-large plane-09-large today-process today-capture today-edit today-metadata
+plane-06-large today-process today-capture today-edit today-metadata
 lib-star-sand lib-chia lib-tweezers lib-peacock-ore lib-garnet lib-marigold lib-slide lib-jewel-weevil
 lib-weevil-tan lib-scarab-green lib-elytra-brown lib-bubbles lib-chip lib-weevil-blue lib-bee lib-jewel-beetle
-lib-spotted-beetle lib-weevil-orange lib-white-beetle lib-net-beetle""".split()
+lib-spotted-beetle lib-weevil-orange lib-white-beetle lib-net-beetle""".split() + [f"pl-{i:02d}" for i in range(32)]
 
 
 def icon(name):
@@ -43,7 +46,7 @@ def images_css():
         if path is None:
             missing += 1
             hue = sum(map(ord, name)) % 360
-            rules.append(f".im-{name}{{background-image:linear-gradient(135deg,hsl({hue} 28% 22%),hsl({(hue + 50) % 360} 30% 9%))}}")
+            rules.append(f".im-{name}{{background-image:linear-gradient(135deg,hsl({hue} 18% 20%),hsl({(hue + 50) % 360} 20% 8%))}}")
             continue
         mime = "image/png" if path.suffix == ".png" else "image/jpeg"
         data = base64.b64encode(path.read_bytes()).decode("ascii")
@@ -56,75 +59,71 @@ def topbar(meta):
     names = meta.get("crumbs", [])
     for index, name in enumerate(names):
         cur = ' class="cur"' if index == len(names) - 1 else ""
-        crumbs.append(f"<em>›</em><span{cur}>{name}</span>")
+        crumbs.append(f"<em>/</em><span{cur}>{name}</span>")
     station = meta.get("station")
     states = meta.get("states", {})
-    go = {"capture": "capture", "stack": "stack", "develop": "develop", "export": "export"}
-    parts = [f'<div class="st{" on" if station == "library" else ""}" data-go="library">{icon("library")}Library</div><span class="bar"></span>']
+    parts = [f'<div class="st{" on" if station == "library" else ""}" data-go="library"><b>01</b>Library</div><span class="rule"></span>']
     for index, (key, label) in enumerate(STATIONS):
-        if index:
-            parts.append('<span class="arrow">›</span>')
         on = " on" if station == key else ""
-        parts.append(f'<div class="st{on}" data-go="{go[key]}">{label}{GLYPH.get(states.get(key, ""), "")}</div>')
+        parts.append(f'<div class="st{on}" data-go="{key}"><b>{index + 2:02d}</b>{label}{GLYPH.get(states.get(key, ""), "")}</div>')
     rig_on = meta.get("rig") == "on"
-    rig = (f'<div class="pill" data-pop-open="rig"><span class="led{"" if rig_on else " off"}"></span>'
-           + ("A7CR · light 41 W" if rig_on else "Rig off") + "</div>")
+    rig = ('<div class="stat" data-pop-open="rig"><i class="gl ok"></i>A7CR<span>light 41 W</span></div>' if rig_on
+           else '<div class="stat" data-pop-open="rig"><i class="gl idle"></i>Rig<span>off</span></div>')
     job = meta.get("job", "idle")
     if job == "capture":
-        jobs = '<div class="pill" data-pop-open="jobs"><span class="ringp" style="--p:63"></span>Capture 61 / 96 · 3:18<span class="dim2">+2</span></div>'
+        jobs = '<div class="stat job" style="--p:63" data-pop-open="jobs"><i class="gl run"></i>Capture<span>61 / 96 · 3:18 · +2</span></div>'
     elif job == "repair":
-        jobs = '<div class="pill" data-pop-open="jobs"><span class="ringp" style="--p:30"></span>Depth repair · 12 s</div>'
+        jobs = '<div class="stat job" style="--p:30" data-pop-open="jobs"><i class="gl run"></i>Depth repair<span>12 s left</span></div>'
     else:
-        jobs = f'<div class="pill" data-pop-open="jobs">{icon("check")}Nothing running</div>'
-    return (f'<div class="top"><div class="brand"><span class="ring"></span>Strehl</div>'
+        jobs = '<div class="stat" data-pop-open="jobs"><i class="gl idle"></i><span>Nothing running</span></div>'
+    return (f'<div class="top"><div class="brand">{BRAND}Strehl</div>'
             f'<div class="crumbs">{"".join(crumbs)}</div><div class="stations">{"".join(parts)}</div>'
-            f'<div class="right">{rig}{jobs}<div class="pill" data-pop-open="palette">{icon("search")}<span class="kbd">Ctrl K</span></div>'
-            f'<div class="wctl"><span>—</span><span>☐</span><span>✕</span></div></div></div>')
+            f'<div class="right">{rig}{jobs}<div class="stat" data-pop-open="palette">{icon("search")}<span class="kbd">Ctrl K</span></div>'
+            f'<div class="wctl"><span>–</span><span>□</span><span>×</span></div></div></div>')
 
 
 def overlays(meta):
     job = meta.get("job", "idle")
     rig_on = meta.get("rig") == "on"
-    running = ""
     if job == "capture":
-        running = ('<div class="job"><span class="ringp" style="--p:63"></span><b>Capture · Blue weevil, dorsal</b><span class="x">❙❙ ✕</span>'
+        running = ('<div class="job"><i class="gl run"></i><b>Capture · Blue weevil, dorsal</b><span class="x">PAUSE · STOP</span>'
                    '<small>Plane 61 of 96 · 3 min 18 s left · ends 21:47</small><div class="bar ok"><i style="width:63%"></i></div></div>'
-                   '<div class="job"><span class="ringp" style="--p:98"></span><b>Checks</b><span class="dim2">keeping up</span>'
+                   '<div class="job"><i class="gl run"></i><b>Checks</b><span class="dim2">keeping up</span>'
                    '<small>60 planes checked as they arrived · 1 retaken</small></div>'
-                   '<div class="hd" style="border-top:0"><span class="cap">Waiting · 2</span><span class="sp"></span><span class="dim2">start when the capture ends</span></div>'
-                   '<div class="job"><span class="dim2">1</span><b>Stack · Blue weevil, dorsal, second pass</b><span class="x">✕</span><small>about 25 s · measurements already cached by the checks</small></div>'
-                   '<div class="job"><span class="dim2">2</span><b>Stack · Bumblebee, frontal</b><span class="x">✕</span><small>183 planes · about 1 min</small></div>')
+                   '<div class="hd"><span class="cap">Waiting · 2</span><span class="sp"></span><span class="dim2" style="font-size:12px">start when the capture ends</span></div>'
+                   '<div class="job"><span class="dim2">1</span><b>Stack · Blue weevil, dorsal, second pass</b><span class="x">REMOVE</span><small>about 25 s · measurements already cached by the checks</small></div>'
+                   '<div class="job"><span class="dim2">2</span><b>Stack · Bumblebee, frontal</b><span class="x">REMOVE</span><small>183 planes · about 1 min</small></div>')
     elif job == "repair":
-        running = ('<div class="job"><span class="ringp" style="--p:30"></span><b>Depth repair · Leg joint</b><span class="x">✕</span>'
+        running = ('<div class="job"><i class="gl run"></i><b>Depth repair · Leg joint</b><span class="x">STOP</span>'
                    '<small>Rebuilding one area of render 3 · 12 s left</small><div class="bar"><i style="width:30%"></i></div></div>')
     else:
-        running = '<div class="job"><span class="ok">●</span><b>Nothing running</b><span></span><small>Queue a stack from any subject, or start a capture</small></div>'
-    jobs = (f'<div class="pop jobs" data-pop="jobs" style="right:206px;top:44px;width:420px">'
-            f'<div class="hd"><h5>Activity</h5><span class="sp"></span>{icon("moon")}<span class="dim">Quiet</span><span class="toggle"></span></div>'
+        running = '<div class="job"><i class="gl idle"></i><b>Nothing running</b><span></span><small>Queue a stack from any subject, or start a capture</small></div>'
+    jobs = ('<div class="pop jobs" data-pop="jobs" style="right:126px;top:43px;width:430px">'
+            f'<div class="hd"><h5>Activity</h5><span class="sp"></span>{icon("moon")}<span class="dim" style="font-size:12px">Quiet</span><span class="toggle"></span></div>'
             f'{running}'
-            '<div class="hd" style="border-top:0"><span class="cap">Earlier today</span><span class="sp"></span><button class="link">Full log</button></div>'
-            '<div class="job"><span class="ok">●</span><b>Calibrate step</b><span class="dim2">21:33</span><small>Step 7 suggested · four-shot mode restored · took 68 s</small></div>'
-            '<div class="job"><span class="ok">●</span><b>Export · 2 files</b><button class="link">Reveal</button><small>weevil-dorsal-web.jpg, weevil-dorsal-hdr.avif</small></div>'
-            '<div class="job" style="background:var(--raised)"><span class="dim2">' + icon("moon") + '</span><b>Quiet holds heavy work</b><span></span>'
+            '<div class="hd"><span class="cap">Earlier today</span><span class="sp"></span><button class="link">Full log</button></div>'
+            '<div class="job"><i class="gl ok"></i><b>Calibrate step</b><span class="dim2">21:33</span><small>Step 7 suggested · four-shot mode restored · took 68 s</small></div>'
+            '<div class="job"><i class="gl ok"></i><b>Export · 2 files</b><button class="link">Reveal</button><small>weevil-dorsal-web.jpg, weevil-dorsal-hdr.avif</small></div>'
+            f'<div class="job">{icon("moon")}<b>Quiet holds heavy work</b><span></span>'
             '<small>Stacks, repairs and compaction wait while a full-screen program is in front. Captures and transfers never wait.</small></div></div>')
     cam = "On · ILCE-7CR · USB 5 Gbit/s" if rig_on else "Off"
     light = "On · 41 W · warm" if rig_on else "Off · 0 W"
-    rig = (f'<div class="pop rig" data-pop="rig" style="right:360px;top:44px;width:380px">'
+    rig = ('<div class="pop rig" data-pop="rig" style="right:330px;top:43px;width:390px">'
            f'<div class="hd"><h5>Rig</h5><span class="sp"></span><span class="chip {"ok" if rig_on else "idle"}">{"Ready" if rig_on else "Off"}</span></div>'
            f'<div class="job">{icon("camera")}<b>Camera</b><button class="btn sm">{"Shut down" if rig_on else "Power on"}</button><small>{cam}</small></div>'
            f'<div class="job">{icon("bulb")}<b>Light</b><button class="btn sm">{"Off" if rig_on else "On"}</button><small>{light}</small></div>'
            f'<div class="job">{icon("power")}<b>Power for a stack</b><span class="toggle on"></span><small>Wake both at the start; switch both off when the files are saved</small></div>'
-           f'<div class="job">{icon("wifi")}<b>Camera host</b><span class="ok">● online</span><small>Answers in 12 ms · controller up to date</small></div>'
-           f'<div class="job">{icon("disk")}<b>Receiver on this PC</b><span class="ok">● ready</span><small>D:\\StrehlCaptures · 371 GB free · last transfer 38 MB/s</small></div>'
+           f'<div class="job">{icon("wifi")}<b>Camera host</b><span class="chip ok">online</span><small>Answers in 12 ms · controller up to date</small></div>'
+           f'<div class="job">{icon("disk")}<b>Receiver on this PC</b><span class="chip ok">ready</span><small>D:\\StrehlCaptures · 371 GB free · last transfer 38 MB/s</small></div>'
            f'<div class="job">{icon("phone")}<b>Phone remote</b><button class="btn sm">Show code</button><small>Follow a capture and get told when it needs you</small></div></div>')
     palette = ('<div class="pop palette" data-pop="palette"><div class="q">' + icon("search") + '<b>ext</b><span>end the stack…</span></div>'
                '<div class="grp cap">Actions</div>'
                '<div class="it on">' + icon("camera") + 'Extend this stack beyond its far end…<span class="kbd">Enter</span></div>'
                '<div class="it">' + icon("export") + 'Export again as last time<span class="kbd">Ctrl Shift E</span></div>'
                '<div class="it">' + icon("bulb") + 'Turn the light off</div>'
-               '<div class="it">' + icon("eye") + 'Lens: Depth<span class="kbd">2</span></div>'
+               '<div class="it">' + icon("eye") + 'Lens: Depth<span class="kbd">3</span></div>'
                '<div class="grp cap">Go to</div>'
-               '<div class="it">' + icon("library") + 'Blue weevil › Wing case, close · 5.6×</div>'
+               '<div class="it">' + icon("library") + 'Blue weevil / Wing case, close · 5.6×</div>'
                '<div class="it">' + icon("library") + 'Net-patterned beetle<span class="chip warn" style="margin-left:auto">1 to check</span></div></div>')
     return '<div class="scrim"></div>' + jobs + rig + palette
 
@@ -150,7 +149,7 @@ def screen(meta, parts):
     else:
         body, _, rest = parts["body"].partition('<div class="hint">')
         hint, _, pins = rest.partition("</div>\n")
-        stage = (f'<div class="app" data-loupe="on">{topbar(meta)}{body}<div class="hint">{hint}</div>'
+        stage = (f'<div class="app">{topbar(meta)}{body}<div class="hint">{hint}</div>'
                  f'{overlays(meta)}{pins}</div>')
     notes = f'<div class="notes">{parts["notes"]}</div>' if parts["notes"] else ""
     return (f'<section class="screen" id="s-{meta["id"]}">{head}<div class="stage-wrap"><div class="stage">{stage}</div></div>'

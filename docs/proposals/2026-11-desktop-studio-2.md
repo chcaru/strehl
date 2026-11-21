@@ -1,8 +1,9 @@
 # Strehl Studio 2: the desktop re-formed around the life of a photograph and the depth of a stack
 
-**Status:** Proposal (2026-11-20). Nothing here is built. The mockups are design intent, not
-application code.
-**Date:** 2026-11-20.
+**Status:** Proposal, second iteration (2026-11-21). Nothing here is built. The mockups are
+design intent, not application code. Section 13 records what the owner asked for after the first
+iteration and what changed.
+**Date:** 2026-11-20, revised 2026-11-21.
 **Owner's question:** the desktop began as a focus stacker and now also captures, diagnoses,
 edits and exports. Take stock of the whole flow, interface and experience, and propose how to
 re-integrate and redesign it into a graceful, capable macro studio: theme and style, layout and
@@ -32,15 +33,16 @@ The proposal has one organising idea and one signature instrument.
   its state for the open stack.
 - **The signature instrument is the depth rail.** Depth is what every part of the application
   is about: it is the lens travel when planning, the planes filling in while shooting, what
-  each plane contributed when checking, and the planes to take from when repairing. Today it is
-  a row of thumbnails. The rail is one component, drawn the same way on every station.
+  each plane contributed when checking, and the planes to take from when repairing. Today's
+  timeline already charts it well, at the foot of the Process view. The rail takes that chart
+  and makes it one component, drawn the same way on every station.
 
 Around these sit eight further moves, each with a mockup screen:
 
 | # | Move | In one line | Screen |
 | --- | --- | --- | --- |
 | 1 | Depth rail | One instrument for depth, everywhere | Stack, Capture, Develop |
-| 2 | Lenses and the core sample | Evidence painted on the photograph; a click drills through the stack at a point | Stack |
+| 2 | Lenses and the core sample | Hover a plane: the photograph shows where it was kept. Hover the photograph: a region's sources open beside it | Stack |
 | 3 | Checks in plain words | A count and a list of measured facts, each with its evidence and an action | Stack |
 | 4 | Flight plan and pre-flight | Capture as four numbered steps and a strip that names what is missing | Capture, plan |
 | 5 | The proof | The picture comes into focus on screen while it is shot | Capture, in flight |
@@ -230,7 +232,7 @@ Variant A, "Stations", is recommended and is what the mockups draw.
 - **Stations:** Library, then Capture › Stack › Develop › Export. Each of the four carries a
   state glyph for the open stack: done, needs a look, running, not yet.
 - **Canvas** in the middle, **inspector** on the right (one per station, with tabs),
-  **depth rail** along the bottom (three heights: closed, ridge, filmstrip), a one-line
+  **depth rail** along the bottom (three heights: closed, chart, chart with filmstrip), a one-line
   **hint bar** at the foot for the keys that apply here.
 - **Rig chip:** camera, light, link speed, camera host and receiver in one popover with the
   power switches, on every station. Amber for a slow USB link or a stopped receiver.
@@ -267,32 +269,48 @@ undo.
 
 ### 5.3 The depth rail, lenses, core sample and checks
 
-**The rail.** A horizontal strip, near on the left and far on the right. Its layers:
+**The rail.** A horizontal strip, near on the left and far on the right, drawn as today's
+timeline is: one bar per plane, a pale outline with a dot on each bar, a dashed line for the
+region under the pointer. It sits on an engraved scale (a tick every five planes, a numeral
+every twenty-five) with the filmstrip beneath it. Its layers:
 
 | Layer | Shows | Station | Source today |
 | --- | --- | --- | --- |
-| Ridge | Detail each plane holds | Stack, Develop, Subject (miniature) | Capture contributions: share of sampled points admitted per capture and size (`process-ledger.rs`), exists |
-| Trace | Detail at the pointer or pin, by plane | Stack, Develop | Hover probe "source support" rows and "At pin" grid, exist |
-| Ticks | One per plane: checked, retaken, still on the camera host, to come | Capture | Checker journal, exists |
-| Bounds and lens | Start, end, lens position, planned planes | Capture | Controller state, exists as numbers |
+| Bars | Detail each plane holds | Stack, Develop, Subject (miniature) | Capture contributions: share of sampled points admitted per capture and size (`process-ledger.rs`); the timeline's "Full image" trace. Exists |
+| Dashed line | Detail in the region under the pointer or pin, by plane | Stack, Develop | The timeline's "Current region" trace and the probe's rows. Exists |
+| Ticks | One per plane: checked, retaken, still on the camera host, to come | Capture | Checker journal. Exists |
+| Bounds and lens | Start, end, lens position, planned planes | Capture | Controller state; numbers only today |
 | Survey profile | Where the subject is sharp across the lens travel | Capture | Bounds survey; whether the profile is returned or only its result is UNVERIFIED |
-| Ranges | Pinned ranges; planes a repair takes from | Stack, Develop | Pinned ranges, exist |
-| Hatching | Planes holding no subject detail | Stack | DERIVED from the ridge; threshold UNVERIFIED |
-| Filmstrip | Thumbnails, magnified near the pointer | any | Timeline thumbnails, exist (48 at most today) |
+| Ranges | Pinned ranges; planes a repair takes from | Stack, Develop | Pinned ranges. Exist |
+| Brackets | Planes holding no subject detail | Stack | DERIVED from the bars; threshold UNVERIFIED |
+| Filmstrip | A frame every few planes, with a mark per detail size under each | any | Timeline thumbnails and their per-size bars. Exist (48 frames at most today) |
 
-With 6,000 planes the rail bins planes to pixels and magnifies under the pointer; the ridge and
-ticks are drawn from binned data. Performance at that size is UNVERIFIED.
+With 6,000 planes the rail bins planes to pixels and magnifies under the pointer. Performance
+at that size is UNVERIFIED.
 
-**Lenses** paint evidence on the photograph. With the loupe on, a lens shows only inside a
-circle under the pointer, so the picture stays a picture.
+**The plane lens: a plane and its region.** This is today's timeline hover, kept whole and
+given a second step.
+
+- *Hover* any plane on the rail or filmstrip. The photograph shows where that plane was kept:
+  filled regions with sample marks, in the plane colour. The plane itself rises above the rail
+  at the pointer, as a preview with the same region outlined in dashes. Nothing reflows.
+- *Click* to hold. The canvas becomes two-up, final beside plane, with one small map per detail
+  size beneath (today's "FINAL admit / px" strip). Escape or "Photograph" returns.
+- The outline on the camera preview is labelled as today: approximate, not a registration.
+
+Source: estimated admission regions and the "Source + final" split
+(`process-admission-regions.rs`, `process-theater.rs:2919-3148`, REPORTED). Both exist; the
+work is presentation.
+
+**Lenses** paint evidence on the photograph, with one switch.
 
 | Lens | Shows | Source |
 | --- | --- | --- |
+| Plane | Where the held or hovered plane was kept, at the chosen detail size | Estimated admission regions. Exist |
 | Depth | Focus order: which part of the range each area came from | The engine's regularised focus field. Multi-stack sessions already save focus ordinals, support and ambiguity ("Save focus evidence"); ordinary stacks do not. Engine work, section 7 |
-| Soft spots | Areas where no plane passed the gate | Fallback samples and estimated regions, exist |
-| Detail kept | Density of kept samples at the chosen detail size | Admission marks, exist |
+| Soft spots | Areas where no plane passed the gate | Fallback samples and estimated regions. Exist |
 | Alignment | Placement residual by area | Alignment evidence exists as run totals; a per-area map is UNVERIFIED |
-| Balance | Observation balance, when recorded | "Save confidence map", exists |
+| Balance | Observation balance, when recorded | "Save confidence map". Exists |
 
 The Depth lens is the regularised field, never a per-pixel sharpest-frame pick: the decision
 record measures raw winner-index speckle at 34.4 % against 0.868 % for the 17 × 17 regularised
@@ -300,11 +318,22 @@ field (fact 20), and the engineering invariants forbid treating a raw argmax as 
 Its legend says "an order of planes, not a measured distance", and it leaves low-support areas
 uncoloured.
 
-**The core sample** is one card for one point: the sharpest plane there, a small grid of
-detail kept by size and plane, and a sentence ("Fine detail here comes from planes 55–61.
-Broad shapes draw on 52–64. Nothing was filled in."). It replaces "At pin / capture admission",
-the hover probe and the two lens crops. Hovering gives a live reading; a click pins it.
-Actions: show that plane, repair here, add a note.
+**The core sample: a region and its sources.** This is today's "This region / source support"
+popover, kept and tidied. Hovering the photograph marks a square region with its sample points
+and opens the popover beside it; a click pins it. It holds:
+
+- the final crop beside the same crop from the planes that lead there, each with its share of
+  samples kept;
+- one strip per detail size, plane by plane, in the detail spectrum (section 6), with the
+  leading planes marked;
+- a sentence ("Fine detail here comes from planes 61–70. Broad shapes draw on 58–73. Nothing
+  was filled in.");
+- today's cautions, kept: kept is support at the noise gate, not a share of the blend; planes
+  can overlap.
+
+While it is open, the rail's dashed line is this region's profile. It replaces "At pin /
+capture admission", the hover probe and the two lens crops; pinned, it offers "show the plane",
+"repair here" and "note".
 
 **Checks.** The Review pane's stance is "no inferred quality grade". The proposal keeps that:
 there is no score and no adjective. There is a count of checks that exceed a stated threshold,
@@ -326,7 +355,7 @@ Every threshold is a gate in the sense of the research workflow: before it ships
 input that makes it fail and exercise it on the corpus. Until a check is validated it is shown
 as a fact without a mark.
 
-On the mockup's 299-plane stack the illustrative ridge is empty for planes 1–55 and 212–299.
+On the mockup's 299-plane stack the illustrative bars are empty for planes 1–55 and 212–299.
 That finding carries two actions: tighter bounds next time, and "Trim sources…", which is
 `strehl thin` behind an explicit confirmation. The owner decided on 2026-11-20 that thinning
 stays numbers-only for now; the button is drawn to show where it would live.
@@ -452,24 +481,44 @@ when nothing else is running and the right tab is open. **Quiet** holds heavy wo
 repairs, compaction) while a full-screen program is in front or on request; captures and
 transfers never wait. The owner uses this PC for other things while the rig runs.
 
-## 6. Visual language
+## 6. Visual language: engraved
 
-- **Themes.** Graphite (recommended): neutral greys, so nothing beside the photograph tints
-  the judgement of its colour; the surround is adjustable. Instrument: today's navy and amber,
-  kept as an option with the same fixes. Lightbox: a light theme for a bright room. All three
-  share one set of tokens.
-- **Colour roles.** The accent (amber) means "selected" and "the main action" and nothing
-  else. Status has its own colours and its own shapes, so it reads without colour vision:
-  ● fine, ▲ look, ◆ failed, ○ not yet, ◐ running. A real red is added.
-- **Type.** Six sizes: 30, 20, 15, 13, 12, and 11 for capitals labels only. Nothing readable
-  below 12 px. Tabular figures; a monospaced face only for file names and values compared digit
-  by digit.
-- **Controls.** 30 px high with a 6 px radius; one button family (primary, standard, quiet,
-  danger); sliders show the default as a tick and a changed value in the accent.
+The first iteration's mockups looked like any rounded dark application. The owner's verdict was
+"vibe-coded", and it was fair. The second iteration takes its manners from the instruments on
+the bench: the white and amber scales engraved on a lens barrel, the vernier of a focusing
+rail, the graticule in an eyepiece. It is also closer to what the application is today, which
+already uses zero corner radius and one-pixel rules.
+
+- **Square, ruled, flat.** No rounded cards, pills, glows or translucent panels. Corners are
+  square. Structure comes from hairlines, alignment and space; a control carries a one-pixel
+  outline and nothing else.
+- **Scales, not gauges.** Quantities are drawn the way instruments draw them: bars on a ruled
+  axis, ticks, an index line. The depth rail, the sliders (a rule and an index, with a tick at
+  the default), the glance dial (one tick per plane) and the millimetre rule under the
+  photograph share one grammar.
+- **Lettering.** One family in the DIN tradition, in four weights: light for large figures,
+  regular for sentences, semibold for statements, and tracked semibold capitals at 10.5 px for
+  labels, stations and links. Sizes: 64, 24, 15, 13, 12, 10.5. Figures are tabular. A
+  monospaced face appears only for file names. The mockups use Bahnschrift, which ships with
+  Windows and cannot be redistributed; the application would bundle an open face of the same
+  tradition (Barlow or D-DIN, both under the Open Font Licence).
+- **Colour measures.** Amber marks what is selected and the main action, as today. Sage green
+  is detail kept (today's GREEN). Teal is the plane under the pointer (today's overlay
+  colour). Status has drawn shapes as well as colours, so it reads without colour vision: a
+  lamp for fine, a triangle for look, a diamond for failed, a ring for not yet, a half for
+  running. A red is added for failure.
+- **The detail spectrum.** Detail size (2 px to 256 px) gets one ramp, cool for fine and warm
+  for broad, used wherever size is shown: the core sample's strips, the marks under each
+  filmstrip frame, the detail-size switch, the engine room's grid. It replaces today's eight
+  unrelated chip colours.
+- **Themes.** Graphite (recommended): today's amber, sage and warm white on neutral greys, so
+  nothing beside the photograph tints the judgement of its colour; the surround is adjustable.
+  Instrument: the same language on today's navy. Lightbox: paper white for a bright room. All
+  three share one set of tokens.
 - **Paths** are shown without the `\\?\` prefix and shortened from the middle.
-- **Feasibility in egui.** Rounded panels, custom painting and the rail are ordinary egui
-  work. Translucent blurred panels are not available without a custom pass; draw them opaque.
-  Lens blending belongs in the photograph's shader, where HDR presentation already lives. The
+- **Feasibility in egui.** Square panels, hairlines, custom painting and the rail are ordinary
+  egui work, and nearer to the current code than the first iteration was. Lens blending and
+  region fills belong in the photograph's shader, where HDR presentation already lives. The
   fit of every screen is checked with the offscreen renderer.
 
 ## 7. What each move needs
@@ -485,8 +534,9 @@ transfers never wait. The owner uses this PC for other things while the rig runs
 | Storage review | New view over existing estimates | none (thin stays numbers-only) |
 | Photograph-first Stack | `process-theater.rs` layout; reuse the Edit layout path | none |
 | Checks | Rework `run-review.rs`; read ledger and checker journal | Names of refused planes in the log; threshold validation |
-| Depth rail on Stack | Rework `process-participation.rs` | none for ridge and trace |
-| Core sample | Merge `process-fingerprint.rs`, `process-region-probe.rs`, `process-contribution.rs` | none |
+| Depth rail on Stack | Rework `process-participation.rs`; keep its bar chart and filmstrip | none |
+| Plane lens: peek and hold | Rework the timeline hover and the "Source + final" split in `process-theater.rs` | none |
+| Core sample | Rework `process-region-probe.rs` and `process-region-visual.rs`; fold in `process-fingerprint.rs` and `process-contribution.rs` | none |
 | Depth lens | Shader blend in the viewer | Save focus evidence for ordinary stacks; cost in time and disk to be measured |
 | Engine room | Re-typeset the existing panels; one legend | none |
 | Flight plan, pre-flight | Rework `capture-workspace.rs` | none |
@@ -559,7 +609,7 @@ Acceptance: a capture started and left alone ends as a stacked render without th
 open; every long task can be stopped or says why not; nothing readable is below 12 px.
 
 **Phase 2: Stack.** Photograph-first page, checks (validated ones marked, the rest as facts),
-depth rail with ridge and trace, core sample, lenses for soft spots and detail kept, recipe
+depth rail with bars and filmstrip, the plane lens (peek and hold), core sample, lens for soft spots, recipe
 with intents and "changes from the defaults", renders with comparison, engine room, time
 estimates. The Depth lens follows when focus evidence is saved for ordinary stacks.
 Acceptance: the photograph is at least 50 % of the window with the inspector open; a refused
@@ -611,7 +661,7 @@ and a full-size file leave in one action.
 
 - **No usability evidence.** One user; the design is ARGUED from an inventory and from
   incidents. The first check of each phase should be the owner using it for a real stack.
-- **The mockups' data is illustrative.** The depth map, ridge, core-sample grid, soft-spot mask
+- **The mockups' data is illustrative.** The depth map, per-plane bars, plane regions, core-sample grid, soft-spot mask
   and proof in the mockups were computed from the bracket's unaligned embedded camera JPEGs
   (local Laplacian energy; `make-assets.py`). They show what the displays would look like. They
   are not engine output, and the JPEG composite's own header says such pixels cannot predict
@@ -628,8 +678,10 @@ and a full-size file leave in one action.
 - **The inventories.** Most file-and-line references come from delegated readings. Twenty were
   re-read and held; the rest are REPORTED and should be re-read by whoever implements the part
   they describe.
-- **egui.** No proposed screen was built in egui. Blur is known to be unavailable; everything
-  else is believed ordinary.
+- **egui.** No proposed screen was built in egui. The second iteration uses no blur or
+  translucency; everything in it is believed ordinary.
+- **Type.** The mockups depend on a face installed with Windows. On a machine without it they
+  fall back to another DIN-style face or the system face, and look plainer.
 - **Web technologies in the mockup** (blend modes, clip paths) do not transfer directly; they
   stand for shader work.
 
@@ -643,9 +695,28 @@ and a full-size file leave in one action.
   ignored `outputs/` folder.
 - Screens: Overview, Today, Library, Subject, Capture · plan, Capture · in flight, Glance,
   Stack, Engine room, Develop, Export, Shell and themes, Design system. Arrow keys move
-  between them. On Stack and Develop, move the pointer over the photograph.
+  between them. On Stack, move the pointer over the photograph, then along the rail, and
+  click a plane.
 - Deep links select a theme and a state, for example
-  `strehl-studio-2-mockups.html?theme=lightbox&do=lens:depth;tab:recipe#stack`.
+  `strehl-studio-2-mockups.html?theme=lightbox&do=peek:128#stack` (also `hold:128`,
+  `hover:0.36,0.40`, `lens:depth`, `tab:recipe`, `pop:jobs`).
 - Inventory sources: `crates/strehl-ui/src` at commit `2d18c6b31`; the owner's catalog
   (37 nodes, 50 runs) read from a scratch copy; offscreen renders made with the installed
   build of the same commit.
+
+## 13. Second iteration: the owner's feedback and what changed
+
+The owner liked the direction and asked for four things (2026-11-21).
+
+| Asked | Changed |
+| --- | --- |
+| The interface looked "vibe-coded", mostly from the corner radii; it should not read as a generic generated UI | A new visual language, section 6: square and ruled, DIN lettering, drawn status marks, scales in place of gauges, no pills, cards or glass |
+| The filmstrip hover that shows a plane's in-focus region on the final image against the same region on the plane was missed | Restored as the plane lens, section 5.3: hover to peek, click to hold two-up with a map per detail size |
+| The popover that highlights a region of the final image and lists its sources was missed | Restored as the core sample, section 5.3: marked region, final crop beside the leading planes, a strip per detail size |
+| Today's filmstrip chart was preferred | The rail is redrawn as one bar per plane with a dashed region line, on an engraved scale, with the filmstrip beneath |
+
+Dropped from the first iteration: the circular loupe that showed a lens only under the
+pointer. The marked region and its core sample do that job and are what the owner uses today.
+
+Carried in from the first iteration unchanged: the model, the stations, the checks, the
+capture flight plan, the proof, the job tray, the library, Develop, Export, and the phases.

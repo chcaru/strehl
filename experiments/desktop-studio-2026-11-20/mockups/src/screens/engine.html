@@ -4,37 +4,37 @@ Nothing from today's Process view is thrown away. The ring, the detail ladder an
 <!--body-->
 <div class="body eng">
   <div class="pipe">
-    <div class="pst"><i class="ok">●</i><div><b>Read</b><span>299 of 299 planes</span></div><em>6 s</em></div>
-    <div class="pst"><i class="ok">●</i><div><b>Align</b><span>2,340 pair fits · none refused</span></div><em>9 s</em></div>
-    <div class="pst"><i class="ok">●</i><div><b>Split by detail size</b><span>8 sizes for each plane</span></div><em>5 s</em></div>
-    <div class="pst"><i class="ok">●</i><div><b>Merge</b><span>299 planes folded in</span></div><em>14 s</em></div>
-    <div class="pst"><i class="ok">●</i><div><b>Rebuild colour</b><span>sensor planes to an image</span></div><em>4 s</em></div>
-    <div class="pst"><i class="ok">●</i><div><b>Develop and save</b><span>TIFF and master checked</span></div><em>3 s</em></div>
+    <div class="pst"><i class="gl ok"></i><div><b>Read</b><span>299 of 299 planes</span></div><em>6 s</em></div>
+    <div class="pst"><i class="gl ok"></i><div><b>Align</b><span>2,340 pair fits · none refused</span></div><em>9 s</em></div>
+    <div class="pst"><i class="gl ok"></i><div><b>Split by detail size</b><span>8 sizes for each plane</span></div><em>5 s</em></div>
+    <div class="pst"><i class="gl ok"></i><div><b>Merge</b><span>299 planes folded in</span></div><em>14 s</em></div>
+    <div class="pst"><i class="gl ok"></i><div><b>Rebuild colour</b><span>sensor planes to an image</span></div><em>4 s</em></div>
+    <div class="pst"><i class="gl ok"></i><div><b>Develop and save</b><span>TIFF and master checked</span></div><em>3 s</em></div>
     <div class="ptotal"><span class="cap">Render 3</span><b>41 s</b><button class="btn sm" data-go="stack">Back to the photograph</button></div>
   </div>
   <div class="egrid">
     <div class="ecol">
-      <div class="card ecard"><div class="row"><b>Alignment</b><span class="dim2 mono">direct fits</span><span class="sp"></span><span class="chip ok">all placed</span></div>
+      <div class="ecard"><div class="row"><b>Alignment</b><span class="dim2 mono">direct fits</span><span class="sp"></span><span class="chip ok">all placed</span></div>
         <div class="ringwrap"><svg class="ring" data-ring width="270" height="270"></svg>
-          <div class="ringside"><div class="im im-plane-07"></div><span class="mono">plane 191</span><div class="im im-plane-08"></div><span class="mono">plane 199</span></div></div>
-        <div class="dim" style="font-size:12.5px">Each chord is one pair of planes fitted to each other. <span class="ok">Green</span> accepted, <span class="warn">orange</span> refused. Selected pair: 191 with 199, accepted, 8 planes apart.</div>
+          <div class="ringside"><div class="im im-pl-20"></div><span>plane 193</span><div class="im im-pl-21"></div><span>plane 203</span></div></div>
+        <div class="dim" style="font-size:12.5px">Each chord is one pair of planes fitted to each other. <span class="ok">Green</span> accepted, <span class="warn">orange</span> refused. Selected pair: 193 with 203, accepted, 10 planes apart.</div>
       </div>
-      <div class="card ecard grow"><div class="row"><b>Detail kept, plane by size</b><span class="dim2 mono">admission</span></div>
+      <div class="ecard grow"><div class="row"><b>Detail kept, plane by size</b><span class="dim2 mono">admission</span></div>
         <svg data-gridmap width="398" height="150"></svg>
         <div class="dim" style="font-size:12.5px">Brighter means more of that plane's detail at that size was kept. Blank columns are planes that held nothing.</div>
       </div>
     </div>
-    <div class="card ecard ladderbox">
+    <div class="ecard ladderbox">
       <div class="row"><b>How detail becomes the photograph</b><span class="sp"></span><span class="dim2">at the pin · plane 143</span></div>
       <div class="lhead"><span></span><span>Texture<small>focus energy</small></span><span>Noise limit<small>the gate</small></span><span>Kept<small>admitted</small></span><span>Filled in<small>fallback</small></span><span>Result so far<small>accumulated</small></span></div>
       <div data-ladder></div>
     </div>
     <div class="ecol">
-      <div class="card ecard"><div class="row"><b>Photograph</b><span class="sp"></span><span class="dim2">pin follows every panel</span></div>
+      <div class="ecard"><div class="row"><b>Photograph</b><span class="sp"></span><span class="dim2">pin follows every panel</span></div>
         <div class="ephoto im im-hero"><i></i></div></div>
-      <div class="card ecard"><div class="row"><b>At the pin</b></div>
+      <div class="ecard"><div class="row"><b>At the pin</b></div>
         <div class="two"><div><div class="im im-detail-a ecrop kept"></div><span class="dim">Kept detail · 221 of 10,880 samples nearby</span></div><div><div class="im im-detail-a ecrop fill"></div><span class="dim">Filled in · 39 samples</span></div></div></div>
-      <div class="card ecard grow"><div class="row"><b>One legend</b></div>
+      <div class="ecard grow"><div class="row"><b>One legend</b></div>
         <dl class="kv terms"><dt><i class="sw" style="background:var(--ok)"></i>Kept</dt><dd>passed the noise gate: "admitted"</dd><dt><i class="sw" style="background:var(--warn)"></i>Filled in</dt><dd>no plane passed: "fallback"</dd><dt><i class="sw" style="background:var(--ink-3)"></i>Blank</dt><dd>not observed</dd><dt><i class="sw hatch"></i>Hatched</dt><dd>grouped planes, some missing</dd></dl>
         <div class="dim" style="font-size:12px;margin-top:8px">Kept marks are samples that passed the gate. They are not ownership of the final pixel and not a quality score.</div>
       </div>
@@ -46,7 +46,7 @@ Nothing from today's Process view is thrown away. The ring, the detail ladder an
   </div>
 </div>
 <div class="hint"><span><span class="kbd">E</span>back to the photograph</span><span><span class="kbd">Click</span>pin a point, a plane or a pair</span><span><span class="kbd">Wheel</span>zoom all linked views</span><span class="sp"></span><span>Recorded with the render: opening it does not stack again</span></div>
-<span class="pin" style="left:11px;top:52px">1</span><span class="pin" style="left:456px;top:232px">2</span><span class="pin" style="left:441px;top:560px">3</span><span class="pin" style="left:1668px;top:670px">4</span><span class="pin new" style="left:196px;top:52px">5</span>
+<span class="pin" style="left:11px;top:52px">1</span><span class="pin" style="left:448px;top:232px">2</span><span class="pin" style="left:430px;top:560px">3</span><span class="pin" style="left:1668px;top:660px">4</span><span class="pin new" style="left:229px;top:112px">5</span>
 <!--notes-->
 <div><i>1</i><b>The same six stages,</b> in words a photographer uses, with the engine's term kept as a subtitle where it helps someone reading the log.</div>
 <div><i>2</i><b>The detail ladder stays whole.</b> Five maps for each of eight detail sizes. Type goes from 8 px to 12 px and the columns gain subtitles.</div>

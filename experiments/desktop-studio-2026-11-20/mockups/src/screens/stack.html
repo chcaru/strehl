@@ -1,69 +1,93 @@
 <!--meta {"id":"stack","nav":"Stack","kind":"app","station":"stack","title":"Stack: the photograph, its checks, and the depth behind every pixel","crumbs":["Blue weevil","Dorsal · 2.8×","Render 3"],"states":{"capture":"done","stack":"cur","develop":"todo","export":"todo"},"rig":"on","job":"idle"} -->
 <!--lede-->
-The photograph takes the stage. What today's wall of instruments says is condensed into a list of checks in plain words, each one a measured fact with a jump to its evidence. Move the pointer over the photograph: the depth rail below shows which planes gave that spot its detail. Try the lenses at the top left, and the three tabs on the right.
+Three things to try. Move the pointer over the photograph: a region is marked and its core sample opens beside it. Move it along the depth rail or the filmstrip: the photograph lights up where that plane was kept, and the plane itself appears above the rail with the same region outlined. Click a plane to hold the two side by side.
 <!--body-->
 <div class="body l-insp">
   <div class="main">
-    <div class="canvas">
-      <div class="photo" data-probe="0.60,0.50" style="left:63px;top:46px;width:1206px;height:804px">
+    <div class="cstrip">
+      <i class="pin in" style="left:0;top:36px">1</i>
+      <span class="cap">Lens</span>
+      <div class="seg">
+        <span class="on" data-lens-set="photo">Photograph</span><span data-lens-set="plane">Plane</span><span data-lens-set="depth">Depth</span><span data-lens-set="soft">Soft spots</span><span data-lens-set="align">Alignment</span>
+      </div>
+      <span class="vr"></span>
+      <span class="cap">Detail size</span>
+      <div class="sizes pickone">
+        <span class="on" style="--c:#5fd9cf">2</span><span style="--c:#7fd3ea">4</span><span style="--c:#a7c9f2">8</span><span style="--c:#c8c0ef">16</span><span style="--c:#e2b9dc">32</span><span style="--c:#f1b7b4">64</span><span style="--c:#f4c18a">128</span><span style="--c:#edd06c">256</span>
+      </div>
+      <span class="sp"></span>
+      <span class="holdnote">Holding plane <b data-k="hold-plane">143</b><span class="dim2" data-k="hold-share"></span><span class="dim2">of the frame</span><span class="kbd">Esc</span></span>
+      <span class="vr"></span>
+      <div class="seg"><span class="on">Fit</span><span>100 %</span></div>
+      <div class="seg"><span class="on">Render 3</span><span>vs Render 2</span></div>
+    </div>
+    <div class="canvas center">
+      <div class="photo single" data-probe="0.60,0.50">
         <div class="base im im-hero"></div>
         <div class="lens lens-depth im im-lens-depth"></div>
         <div class="lens lens-soft im im-lens-soft"></div>
-        <div class="loupe"><div class="im im-hero grey"></div><div class="im im-lens-depth tint"></div></div>
-        <svg class="wire" width="1206" height="804"><line x1="724" y1="402" x2="316" y2="540"/><circle cx="724" cy="402" r="7"/><circle cx="724" cy="402" r="2.2" class="dot"/></svg>
-        <div class="core glass">
-          <div class="row"><span class="cap">Core sample</span><span class="tag" data-k="mode">pinned</span><span class="sp"></span><span class="dim2 mono" data-k="xy" style="white-space:nowrap">4219, 2344</span></div>
-          <div class="core-top">
-            <div class="im im-detail-a"></div>
-            <div><div class="cap">Sharpest plane</div><div class="big" data-k="plane">143</div><div class="dim">kept from <b data-k="range">139–147</b></div></div>
+        <div class="aligngrid"></div>
+        <canvas class="lens lens-plane" width="720" height="480"></canvas>
+        <div class="reticle"><i></i></div>
+        <div class="cs glass">
+          <i class="pin in">2</i>
+          <div class="cs-h"><span class="cap">Core sample</span><span class="tag" data-k="mode">pinned</span><span class="sp"></span><span class="dim2" data-k="xy" style="font-size:11px">809 px square</span></div>
+          <div class="cs-crops">
+            <figure><div class="crop" data-k="c0"></div><figcaption>final</figcaption></figure>
+            <figure><div class="crop" data-k="c1"></div><figcaption data-k="l1">plane</figcaption></figure>
+            <figure><div class="crop" data-k="c2"></div><figcaption data-k="l2">plane</figcaption></figure>
+            <figure><div class="crop" data-k="c3"></div><figcaption data-k="l3">plane</figcaption></figure>
           </div>
-          <div class="cap" style="margin:8px 0 4px">Detail kept, by size and plane</div>
-          <div data-k="matrix"></div>
-          <p data-k="words">Fine detail here comes from planes 139–147.</p>
-          <div class="row"><button class="btn sm">Show plane</button><button class="btn sm">Repair here…</button><button class="btn sm quiet">Note</button></div>
+          <div class="cap" style="margin:11px 0 7px">Kept, by detail size and plane</div>
+          <div data-k="strips"></div>
+          <p data-k="words">Fine detail here comes from a handful of planes.</p>
+          <div class="cs-foot">Kept is support at the noise gate, not a share of the blend. Planes can overlap. Ctrl + wheel resizes the region.</div>
+          <div class="row cs-acts"><button class="btn sm">Show the plane</button><button class="btn sm">Repair here…</button><button class="btn sm quiet">Note</button></div>
         </div>
-        <div class="legend glass"><span class="cap">Depth lens · focus order</span><i></i><div class="row dim2" style="font-size:11.5px"><span>near</span><span class="sp"></span><span>far</span></div><small>No colour where no plane has clear detail. An order of planes, not a measured distance.</small></div>
+        <div class="legend glass"><span class="cap">Depth lens · focus order</span><i></i><div class="row dim2" style="font-size:11px;justify-content:space-between"><span>near</span><span>far</span></div><small>No colour where no plane has clear detail. An order of planes, not a measured distance.</small></div>
+        <svg class="mmrule" data-mm="9.42"></svg>
       </div>
-      <div class="cbar glass" style="left:14px;top:10px">
-        <div class="seg" title="Lenses paint evidence on the photograph">
-          <span class="on" data-lens-set="photo">Photograph</span><span data-lens-set="depth">Depth</span><span data-lens-set="soft">Soft spots</span><span data-lens-set="align">Alignment</span>
-        </div>
-        <span class="btn sm quiet on" data-loupe-toggle title="Show the Depth lens only inside a loupe under the pointer"><svg class="i"><use href="#i-search"/></svg>Loupe</span>
-        <span class="dim2">Detail size</span><div class="slider" style="width:110px;margin:0"><i style="left:0;width:18%"></i><b style="left:18%"></b></div><span class="dim">fine</span>
+      <div class="twoup">
+        <div class="tu tu-final"><div class="tu-cap"><b>Final</b>where plane <span data-k="hold-plane">143</span> was kept, at 2 px</div><div class="photo"><div class="base im im-hero"></div><canvas class="lens" width="720" height="480"></canvas></div></div>
+        <div class="tu tu-plane"><div class="tu-cap"><b>Plane <span data-k="hold-plane">143</span></b>camera preview · the outline is approximate, not a registration</div><div class="photo"><div class="base im"></div><canvas class="lens" width="720" height="480"></canvas></div></div>
+        <div class="tu-sizes"></div>
       </div>
-      <div class="cbar glass" style="right:14px;top:10px">
-        <div class="seg"><span class="on">Fit</span><span>100%</span></div>
-        <div class="seg"><span class="on">Render 3</span><span>vs Render 2</span><span>vs plane</span></div>
-        <span class="btn sm quiet"><svg class="i"><use href="#i-expand"/></svg>Focus mode</span>
+      <div class="peek glass">
+        <div class="peek-im im"></div><canvas width="720" height="480"></canvas>
+        <div class="peek-cap"><b data-k="pk-plane">Plane</b><span data-k="pk-share"></span><span class="sp"></span><span class="dim2">click to hold</span></div>
+        <i class="peek-arrow"></i>
       </div>
     </div>
-    <div class="rail" data-rail='{"margins":[[1,55],[212,299]],"flags":[{"p":56,"k":"info","t":"first plane with subject detail"},{"p":211,"k":"info","t":"last plane with subject detail"}],"h":86}'>
-      <div class="rail-head"><b>Depth rail</b><span>299 planes · step 7 · near to far</span>
-        <div class="seg"><span class="on">Ridge</span><span>Filmstrip</span></div>
-        <span class="row" style="gap:5px"><i class="sw" style="background:var(--ridge)"></i>detail held by each plane</span>
-        <span class="row" style="gap:5px"><i class="sw" style="background:var(--accent)"></i>detail at the pointer</span>
-        <span class="sp"></span><span class="read mono" data-rest="Hover the photograph or the rail"></span>
+    <div class="rail" data-rail='{"inspect":true,"film":18,"margins":[[1,55],[212,299]],"h":84}'>
+      <i class="pin in" style="left:auto;right:9px;top:-9px">3</i>
+      <div class="rail-head"><b>Depth rail</b><span>299 planes · step 7</span>
+        <span class="key"><i class="bars"></i>detail held by each plane</span>
+        <span class="key"><i class="dash"></i>detail in the region under the pointer</span>
+        <span class="key"><i class="pl"></i>plane under the pointer</span>
+        <span class="sp"></span><span class="read" data-rest="Hover a plane to see where it was kept · click to hold it beside the photograph"></span>
       </div>
       <div class="rail-svg"></div>
+      <div class="film"></div>
     </div>
   </div>
   <div class="insp">
     <div class="tabs"><span class="on" data-tab="checks">Checks<b>2</b></span><span data-tab="recipe">Recipe</span><span data-tab="renders">Renders · 3</span></div>
     <div class="insp-body tabpane" data-tab="checks">
-      <div class="card verdict">
-        <div class="row"><div class="tally"><i></i><i></i><i class="w"></i><i class="w"></i><i></i><i></i><i></i><i class="n"></i></div><span class="sp"></span><span class="dim2">Render 3 · 41 s</span></div>
-        <h3>2 of 8 checks need a look</h3>
-        <div class="dim">299 planes · 7032 × 4688 · every figure below is measured, with its evidence one click away</div>
+      <div class="verdict">
+        <i class="pin in">4</i>
+        <span class="n">2</span><span class="t">of 8 checks need a look</span><span class="m">Render 3 · 299 planes · 7032 × 4688 · 41 s</span>
+        <div class="tally"><i></i><i></i><i class="w"></i><i class="w"></i><i></i><i></i><i></i><i class="n"></i></div>
       </div>
-      <div class="card rigcard">
-        <div class="row"><svg class="i acc"><use href="#i-camera"/></svg><b>Subject still on the rig?</b><span class="sp"></span><span class="mono acc">0:52</span></div>
-        <div class="dim" style="margin:3px 0 8px">The camera and light switch off when this countdown ends.</div>
-        <div class="row"><button class="btn sm">Keep the rig on</button><button class="btn sm">Extend the stack…</button><button class="btn sm">Reshoot…</button></div>
+      <div class="rigcard">
+        <i class="pin in new">5</i>
+        <b>Subject still on the rig?</b><span class="count">0:52</span>
+        <span class="dim" style="font-size:12.5px">The camera and light switch off when this reaches zero.</span>
+        <div class="acts"><button class="btn sm">Keep the rig on</button><button class="btn sm">Extend the stack…</button><button class="btn sm">Reshoot…</button></div>
       </div>
       <div>
         <div class="check"><div><b>Every plane read and placed</b><span>299 of 299 · none refused</span></div><button class="link">Show</button></div>
         <div class="check"><div><b>Alignment</b><span>2,340 pair fits accepted · worst 0.13 px</span></div><button class="link">Show</button></div>
-        <div class="check warn"><div><b>Empty planes at both ends</b><span>Planes 1–55 and 212–299 hold no subject detail: 143 planes, 48 % of the capture time</span></div><button class="link">Show</button>
+        <div class="check warn"><i class="pin in new" style="left:-16px;top:12px">6</i><div><b>Empty planes at both ends</b><span>Planes 1–55 and 212–299 hold no subject detail: 143 planes, 48 % of the capture time</span></div><button class="link">Show</button>
           <div class="acts"><button class="btn sm">Tighter bounds next time</button><button class="btn sm">Trim sources… 4.6 GB</button></div></div>
         <div class="check warn"><div><b>Soft spots</b><span>1.9 % of the subject has no sharp plane, mostly where parts overlap</span></div><button class="link" data-lens-set="soft">Show</button></div>
         <div class="check"><div><b>Slices overlap</b><span>Each point is sharp in about 7 planes (step 7, sharp width 50)</span></div><button class="link">Show</button></div>
@@ -73,18 +97,18 @@ The photograph takes the stage. What today's wall of instruments says is condens
       </div>
     </div>
     <div class="insp-body tabpane" data-tab="recipe" style="display:none">
-      <div class="sect"><span class="cap">Intent</span><span class="dim2">sets the options below</span></div>
+      <div class="sect"><span class="cap">Intent</span><span class="dim2" style="font-size:12px">sets the options below</span></div>
       <div class="intents pickone">
-        <div class="card on"><b>Balanced</b><span>The engine's defaults</span></div>
-        <div class="card"><b>Maximum detail</b><span>Keeps fainter texture, more grain</span></div>
-        <div class="card"><b>Cleaner</b><span>Stronger noise gate, smoother shadows</span></div>
-        <div class="card"><b>Draft</b><span>Half size, for a quick look</span></div>
+        <div class="on"><b>Balanced</b><span>The engine's defaults</span></div>
+        <div><b>Maximum detail</b><span>Keeps fainter texture, more grain</span></div>
+        <div><b>Cleaner</b><span>Stronger noise gate, smoother shadows</span></div>
+        <div><b>Draft</b><span>Half size, for a quick look</span></div>
       </div>
       <div class="sect"><span class="cap">3 changes from the defaults</span><button class="link">Reset all</button></div>
-      <div class="card" style="padding:4px 12px">
-        <div class="field"><label>Noise gate</label><span class="dim2">default 2.0</span><span class="val set">1.6</span></div>
-        <div class="field"><label>Planes used</label><span class="dim2">default all</span><span class="val set">56–211</span></div>
-        <div class="field"><label>Save observation balance</label><span class="dim2">about 2× the time</span><span class="toggle on"></span></div>
+      <div>
+        <div class="field"><label>Noise gate</label><span class="dim2" style="font-size:12px">default 2.0</span><span class="val set">1.6</span></div>
+        <div class="field"><label>Planes used</label><span class="dim2" style="font-size:12px">default all</span><span class="val set">56–211</span></div>
+        <div class="field"><label>Save observation balance</label><span class="dim2" style="font-size:12px">about 2× the time</span><span class="toggle on"></span></div>
       </div>
       <div class="sect"><span class="cap">All options</span></div>
       <div class="groups">
@@ -95,29 +119,33 @@ The photograph takes the stage. What today's wall of instruments says is condens
         <div><svg class="i"><use href="#i-chev"/></svg><b>Performance</b><span>GPU fold · 32 threads</span></div>
       </div>
       <div class="sp"></div>
-      <div class="card" style="font-size:12.5px"><span class="dim">A new render never replaces an old one. Render 3 stays, with its versions.</span></div>
+      <div class="dim" style="font-size:12.5px">A new render never replaces an old one. Render 3 stays, with its versions.</div>
     </div>
     <div class="insp-body tabpane" data-tab="renders" style="display:none">
       <div class="sect"><span class="cap">Renders of this stack</span><button class="link">Compare two…</button></div>
-      <div class="render on"><div class="im im-hero-small"></div><div><b>Render 3</b><span>Today 21:48 · Balanced, noise gate 1.6</span><span><i class="chip ok none">6 pass</i> <i class="chip warn none">2 to check</i></span></div><span class="tag">shown</span></div>
-      <div class="render"><div class="im im-hero-small" style="filter:saturate(.8) brightness(.94)"></div><div><b>Render 2</b><span>Today 21:44 · Balanced</span><span><i class="chip ok none">6 pass</i> <i class="chip warn none">2 to check</i></span></div><button class="btn sm">B</button></div>
-      <div class="render"><div class="im im-proof-partial"></div><div><b>Proof</b><span>Today 21:40 · built during the capture from camera previews</span><span class="dim2">not a render: for judging the shot at the rig</span></div><button class="btn sm">B</button></div>
-      <div class="sect" style="margin-top:6px"><span class="cap">Versions of render 3</span><button class="link">Open in Develop</button></div>
-      <div class="render small"><div class="im im-hero-small"></div><div><b>Cool blacks</b><span>Develop version · 12 adjustments · 1 region</span></div></div>
-      <div class="render small"><div class="im im-hero-small" style="filter:contrast(1.12)"></div><div><b>Export · weevil-dorsal.avif</b><span>saved automatically with the export</span></div></div>
+      <div>
+        <div class="render on"><div class="im im-hero-small"></div><div><b>Render 3</b><span>Today 21:48 · Balanced, noise gate 1.6</span><span><i class="chip ok">6 pass</i><i class="chip warn">2 to check</i></span></div><span class="tag">shown</span></div>
+        <div class="render"><div class="im im-hero-small" style="filter:saturate(.8) brightness(.94)"></div><div><b>Render 2</b><span>Today 21:44 · Balanced</span><span><i class="chip ok">6 pass</i><i class="chip warn">2 to check</i></span></div><button class="btn sm">B</button></div>
+        <div class="render"><div class="im im-proof-partial"></div><div><b>Proof</b><span>Today 21:40 · from the camera previews, during the capture</span><span class="dim2">not a render: for judging the shot at the rig</span></div><button class="btn sm">B</button></div>
+      </div>
+      <div class="sect"><span class="cap">Versions of render 3</span><button class="link" data-go="develop">Open in Develop</button></div>
+      <div>
+        <div class="render small"><div class="im im-hero-small"></div><div><b>Cool blacks</b><span>Develop version · 12 adjustments · 1 region</span></div></div>
+        <div class="render small"><div class="im im-hero-small" style="filter:contrast(1.12)"></div><div><b>Export · weevil-dorsal.avif</b><span>saved automatically with the export</span></div></div>
+      </div>
       <div class="sp"></div>
     </div>
     <div class="insp-foot"><button class="btn primary wide" data-go="develop">Develop this render<svg class="i"><use href="#i-chev"/></svg></button><button class="btn">Render again<span class="dim2">≈ 20 s</span></button></div>
   </div>
 </div>
-<div class="hint"><span><span class="kbd">Hover</span>live core sample</span><span><span class="kbd">Click</span>pin it</span><span><span class="kbd">L</span>lens loupe</span><span><span class="kbd">1–4</span>lenses</span><span><span class="kbd">Space</span>clean photograph</span><span><span class="kbd">E</span>engine room</span><span class="sp"></span><span>7032 × 4688 · linear master · <b>HDR display</b></span><span><svg class="i" style="width:13px;height:13px;vertical-align:-2px"><use href="#i-undo"/></svg> Undo: pin moved</span></div>
-<span class="pin" style="left:30px;top:108px">1</span><span class="pin" style="left:377px;top:556px">2</span><span class="pin" style="left:1300px;top:926px">3</span><span class="pin" style="left:1333px;top:130px">4</span><span class="pin new" style="left:1333px;top:262px">5</span><span class="pin new" style="left:1333px;top:480px">6</span><span class="pin" style="left:628px;top:23px">7</span>
+<div class="hint"><span><span class="kbd">Hover</span>photograph: core sample · rail: plane</span><span><span class="kbd">Click</span>pin the sample · hold the plane</span><span><span class="kbd">1–5</span>lenses</span><span><span class="kbd">Space</span>clean photograph</span><span><span class="kbd">E</span>engine room</span><span class="sp"></span><span>7032 × 4688 · linear master · <b>HDR display</b></span><span>Undo: pin moved</span></div>
+<span class="pin" style="left:498px;top:22px">7</span>
 <!--notes-->
-<div><i>1</i><b>Lenses, not panels.</b> Depth, soft spots and alignment are painted on the photograph itself. With the loupe on, the lens shows only under the pointer, so the picture stays a picture. Today the photograph gets 8 % of the window and the evidence sits in nine separate panels.</div>
-<div><i>2</i><b>Core sample.</b> One card replaces "At pin / capture admission", the hover probe and the two lenses: the sharpest plane at this spot, which planes kept detail at each size, and a sentence that says what it means.</div>
-<div><i>3</i><b>The depth rail</b> is the same object on every page. Here the grey ridge is the detail each plane holds and the amber trace is the detail at the pointer. The hatched ends are planes that hold nothing.</div>
+<div><i>1</i><b>Lenses, not panels.</b> Plane, depth, soft spots and alignment are painted on the photograph itself, with one switch. Today the photograph gets 8 % of the window and the evidence sits in nine separate panels.</div>
+<div><i>2</i><b>Core sample.</b> Today's "This region / source support" popover, kept and tidied: the marked region, the final crop beside the planes that lead there, and a strip per detail size showing which planes were kept. A sentence says what it means. Hover reads live; a click pins it.</div>
+<div><i>3</i><b>Depth rail and filmstrip.</b> One bar per plane, as in today's timeline, on an engraved scale. The dashed line is the region under the pointer. Hover a plane: the photograph shows where it was kept, and the plane appears above the rail with the same outline. Click: the two are held side by side, with one small map per detail size.</div>
 <div><i>4</i><b>Checks in plain words.</b> No blended score: a count, then one measured fact per line, each with "Show". "Refused frames", "coverage" and "fallback" are still here, under names a photographer uses.</div>
 <div class="new"><i>5</i><b>Decide while the subject is mounted.</b> The page knows the rig is still on and offers to extend or reshoot before it powers down. The engine's continuation folders already allow a stack to be extended.</div>
 <div class="new"><i>6</i><b>Empty planes become savings.</b> A finding turns into two actions: tighter bounds for the next shot, and an explicit, confirmed trim of the sources already on disk.</div>
-<div><i>7</i><b>Stations.</b> Capture, Stack, Develop and Export are the life of one stack, in order, each with its state. The left rail's mix of places, tools and actions is gone.</div>
-<div class="legend"><em style="background:#f2b24a"></em>reorganises what exists today<em style="background:#7db8ff"></em>new capability</div>
+<div><i>7</i><b>Stations.</b> Library, then Capture, Stack, Develop and Export: the life of one stack, in order, each with its state. The millimetre rule under the photograph comes from the lens data.</div>
+<div class="legend"><em style="box-shadow:inset 0 0 0 1px #e6b450"></em>reorganises what exists today<em style="box-shadow:inset 0 0 0 1px #8ab4e8"></em>new capability</div>

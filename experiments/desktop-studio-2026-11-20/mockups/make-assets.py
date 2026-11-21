@@ -54,12 +54,15 @@ def save_png(image, name):
 
 
 def renders(shots):
-    hero = Image.open(shots / "hero-edit.png").crop(PHOTO_RECT)
-    save(hero.resize((1500, 1000), Image.LANCZOS), "hero", 82)
-    save(hero.resize((480, 320), Image.LANCZOS), "hero-small", 78)
+    """Skips whatever SHOTS_DIR does not hold, so the data can be rebuilt without the renders."""
+    if (shots / "hero-edit.png").exists():
+        hero = Image.open(shots / "hero-edit.png").crop(PHOTO_RECT)
+        save(hero.resize((1500, 1000), Image.LANCZOS), "hero", 82)
+        save(hero.resize((480, 320), Image.LANCZOS), "hero-small", 78)
     for name, out in (("hero-zoom-a", "detail-a"), ("hero-zoom-b", "detail-b")):
-        crop = Image.open(shots / f"{name}.png").crop(PHOTO_RECT)
-        save(crop.resize((960, 640), Image.LANCZOS), out, 80)
+        if (shots / f"{name}.png").exists():
+            crop = Image.open(shots / f"{name}.png").crop(PHOTO_RECT)
+            save(crop.resize((960, 640), Image.LANCZOS), out, 80)
     for name, out in TODAY.items():
         path = shots / f"{name}.png"
         if path.exists():
@@ -93,15 +96,19 @@ def thumb(path):
     return Image.open(io.BytesIO(bytes(data.data))).convert("RGB")
 
 
+PLANE_SLOTS = 32
+
+
 def planes(bracket):
+    """Camera previews of evenly spaced planes: the filmstrip, the plane peek and the hold view."""
     files = sorted(bracket.glob("*.ARW"))
-    picks = [round(i * (len(files) - 1) / 11) for i in range(12)]
+    picks = [round(i * (len(files) - 1) / (PLANE_SLOTS - 1)) for i in range(PLANE_SLOTS)]
     for slot, index in enumerate(picks):
-        image = thumb(files[index])
-        save(image.resize((300, 200), Image.LANCZOS), f"plane-{slot:02d}", 72)
-        if slot in (3, 6, 9):
-            save(image.resize((1200, 800), Image.LANCZOS), f"plane-{slot:02d}-large", 78)
-    print("plane indices", [p + 1 for p in picks], "of", len(files))
+        save(thumb(files[index]).resize((600, 400), Image.LANCZOS), f"pl-{slot:02d}", 62)
+    live = round(163 * 1.0)
+    save(thumb(files[live]).resize((1200, 800), Image.LANCZOS), "plane-06-large", 78)
+    print("plane numbers", [p + 1 for p in picks], "of", len(files))
+    return [p + 1 for p in picks]
 
 
 def sharpness(gray, sigma):
@@ -110,7 +117,7 @@ def sharpness(gray, sigma):
     return cv2.GaussianBlur(np.abs(cv2.Laplacian(gray, cv2.CV_32F, ksize=3)), (0, 0), sigma)
 
 
-def focus_layers(bracket):
+def focus_layers(bracket, plane_ids):
     """Illustrative depth evidence from the unaligned camera JPEGs (see the module note)."""
     import cv2
 
@@ -162,8 +169,14 @@ def focus_layers(bracket):
     strength = cells.max(axis=0) - cells.min(axis=0)
     shaped = np.clip((cells - cells.min(axis=0)) / np.maximum(strength, 1e-6), 0, 1) ** 2.0
     grid = (shaped * 255).astype(np.uint8)
+    mw, mh = 240, 160
+    order_small = cv2.resize(order, (mw, mh), interpolation=cv2.INTER_NEAREST)
+    support_small = (cv2.resize(support, (mw, mh), interpolation=cv2.INTER_AREA) * 255).astype(np.uint8)
     data = {
         "planes": len(files), "sampled": len(picks), "grid_w": gw, "grid_h": gh,
+        "plane_ids": plane_ids, "map_w": mw, "map_h": mh,
+        "order": base64.b64encode(np.ascontiguousarray(order_small).tobytes()).decode("ascii"),
+        "support": base64.b64encode(np.ascontiguousarray(support_small).tobytes()).decode("ascii"),
         "ridge": [round(float(v), 4) for v in ridge / ridge.max()],
         "strength": [round(float(v), 4) for v in (strength / strength.max()).ravel()],
         "grid": base64.b64encode(np.ascontiguousarray(grid.transpose(1, 2, 0)).tobytes()).decode("ascii"),
@@ -183,5 +196,4 @@ if __name__ == "__main__":
     shots_dir, bracket_dir = Path(sys.argv[1]), Path(sys.argv[2])
     renders(shots_dir)
     library()
-    planes(bracket_dir)
-    focus_layers(bracket_dir)
+    focus_layers(bracket_dir, planes(bracket_dir))
