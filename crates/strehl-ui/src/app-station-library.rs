@@ -9,13 +9,14 @@
 use super::studio_route::{Drawer, LibraryView as RouteLibraryView, Route, Station};
 use super::*;
 use crate::{
+    depth_signature::DepthSignatures,
     library_paint::LibraryPalette,
     library_previews::TILE_SIDE,
     library_station::{LibraryInputs, LibraryIntent, LibraryStation, RigCapture, StorageCard},
     notices::{Severity, Source},
     project_explorer::ExplorerAction,
     studio_theme, studio_widgets as w,
-    subject_page::{SubjectInputs, SubjectPage},
+    subject_page::{QueueView, SubjectInputs, SubjectPage},
     workspace_history::{ImportGroup, NodeId, NodeKind, StackDraft},
 };
 
@@ -90,6 +91,10 @@ pub(super) struct LibraryState {
     storage: Option<StorageCard>,
     storage_task: Option<Task<Option<StorageCard>>>,
     storage_read: Option<Instant>,
+    /// Depth signatures for list rows and stack rows (`depth-signature.rs`).
+    signatures: DepthSignatures,
+    /// The queue's waiting stacks, refreshed each frame the Library paints.
+    waiting: Vec<NodeId>,
 }
 
 impl StrehlApp {
@@ -120,6 +125,7 @@ impl StrehlApp {
             || !self.library.imports.waiting.is_empty()
             || self.library.station.sources_pending()
             || self.library.storage_task.is_some()
+            || self.library.signatures.pending()
     }
 
     /// The canvas of the Library station: the subject grid, or a subject page.
@@ -134,7 +140,15 @@ impl StrehlApp {
             }),
             _ => None,
         };
+        let running = self
+            .job
+            .as_ref()
+            .and(self.pending_stack.or(self.active_stack));
+        let busy = self.job.is_some();
         let state = &mut self.library;
+        state.waiting.clear();
+        state.waiting.extend(self.activity_hub.queue.stacks());
+        state.signatures.refresh(&self.catalog, revision);
         let previews = self.project_explorer.previews_mut();
         if subject.is_some() {
             state
@@ -169,7 +183,12 @@ impl StrehlApp {
                     palette: &palette,
                     rig: state.rig.as_ref(),
                     sources: state.station.sources(),
-                    signatures: None,
+                    signatures: Some(state.signatures.stacks()),
+                    queue: QueueView {
+                        running,
+                        waiting: &state.waiting,
+                        busy,
+                    },
                 },
             ),
             None => state.station.show(
@@ -181,9 +200,24 @@ impl StrehlApp {
                     palette: &palette,
                     rig: state.rig.as_ref(),
                     storage: state.storage.as_ref(),
+                    signatures: Some(state.signatures.subjects()),
+                    stacking: busy,
                 },
             ),
         };
+        // Signatures for the rows just painted (computed on a worker).
+        match subject {
+            Some(_) => {
+                if let Some(model) = state.subject.model() {
+                    state
+                        .signatures
+                        .want_stacks(model.stacks.iter().map(|stack| stack.id));
+                }
+            }
+            None => state
+                .signatures
+                .want_subjects(state.station.painted_rows().iter().copied()),
+        }
         if let Some(intent) = intent {
             self.library_intent(ui.ctx(), intent);
         }
@@ -196,6 +230,30 @@ impl StrehlApp {
         match intent {
             LibraryIntent::OpenSubject(id) => self.navigate(Route::Subject(id)),
             LibraryIntent::Back => self.navigate(Route::Library(RouteLibraryView::All)),
+            LibraryIntent::QueueStack(id) => {
+                let (queued, refused) = self.library_queue(&[id]);
+                if queued == 0 {
+                    for line in refused {
+                        self.library_notice(Severity::Warning, format!("Not stacked: {line}"));
+                    }
+                }
+            }
+            LibraryIntent::QueueSubject(subject) => {
+                let stacks = self.library_unstacked(subject);
+                let (queued, refused) = self.library_queue(&stacks);
+                if queued > 0 {
+                    self.library_notice(
+                        Severity::Info,
+                        format!(
+                            "{} the stack queue",
+                            crate::library_paint::plural(queued, "stack joins", "stacks join")
+                        ),
+                    );
+                }
+                for line in refused {
+                    self.library_notice(Severity::Warning, format!("Not stacked: {line}"));
+                }
+            }
             LibraryIntent::OpenStack(id) => {
                 if idle {
                     self.open_project_stack(id);
@@ -477,6 +535,7 @@ impl StrehlApp {
         }
         self.library_poll_imports(ctx);
         self.library_poll_storage(ctx);
+        self.library_poll_signatures(ctx);
         self.library_rig();
         if self.library.pick.is_some()
             || self.library.locate.is_some()
@@ -546,6 +605,73 @@ impl StrehlApp {
             let task = jobs::scan_stack(folder.clone());
             queue.running = Some((subject, folder, task));
         }
+    }
+
+    /// Depth signatures: open the cache beside the catalog once (offscreen
+    /// pictures keep theirs in memory), then one replay at a time, never
+    /// while a stack renders or Quiet holds.
+    fn library_poll_signatures(&mut self, ctx: &egui::Context) {
+        if !self.library.signatures.opened() {
+            let path = self
+                .catalog
+                .path
+                .as_deref()
+                .filter(|_| self.screenshot.is_none())
+                .and_then(DepthSignatures::path_beside);
+            self.library.signatures.open(path);
+        }
+        let allowed = self.job.is_none() && self.activity_hub.quiet.reason().is_none();
+        let unix = crate::workspace_history::timestamp();
+        if self.library.signatures.poll(allowed, unix) {
+            ctx.request_repaint();
+        }
+        if allowed && self.library.signatures.pending() {
+            ctx.request_repaint_after(Duration::from_millis(100));
+        }
+    }
+
+    /// Stack `stacks` through the queue; returns (queued, why not).
+    fn library_queue(&mut self, stacks: &[NodeId]) -> (usize, Vec<String>) {
+        let mut queued = 0;
+        let mut refused = Vec::new();
+        for &id in stacks {
+            match self.queue_stack(id) {
+                Ok(_) => queued += 1,
+                Err(error) => {
+                    let name = self
+                        .catalog
+                        .node(id)
+                        .map_or_else(String::new, |node| node.name.clone());
+                    refused.push(format!("{name}: {error:#}"));
+                }
+            }
+        }
+        (queued, refused)
+    }
+
+    /// A subject's stacks with no saved render that are not already
+    /// rendering or waiting.
+    fn library_unstacked(&self, subject: NodeId) -> Vec<NodeId> {
+        let running = self
+            .job
+            .as_ref()
+            .and(self.pending_stack.or(self.active_stack));
+        let waiting: Vec<NodeId> = self.activity_hub.queue.stacks().collect();
+        self.catalog
+            .nodes
+            .iter()
+            .filter(|node| node.kind == NodeKind::Stack && node.parent == Some(subject))
+            .filter(|node| {
+                !node.revisions.iter().any(|directory| {
+                    self.catalog
+                        .runs
+                        .iter()
+                        .any(|run| &run.directory == directory && run.status == "Saved")
+                })
+            })
+            .map(|node| node.id)
+            .filter(|id| Some(*id) != running && !waiting.contains(id))
+            .collect()
     }
 
     fn library_poll_storage(&mut self, ctx: &egui::Context) {

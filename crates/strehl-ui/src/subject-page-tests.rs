@@ -1,7 +1,7 @@
 //! The subject page: intents, stack order, lineage, journal, editing and
 //! cached depth signatures, on a synthetic catalog.
 use super::*;
-use crate::library_station::tests::{BASE, develop, draft, find, run};
+use crate::library_station::tests::{BASE, count, develop, draft, find, run};
 use eframe::egui::{Event, Modifiers, PointerButton, RawInput};
 
 const WIDTH: f32 = 1680.0;
@@ -107,6 +107,9 @@ struct Harness {
     palette: LibraryPalette,
     sources: HashMap<NodeId, SourcesState>,
     signatures: HashMap<NodeId, Vec<f32>>,
+    running: Option<NodeId>,
+    waiting: Vec<NodeId>,
+    busy: bool,
     rig: Option<RigCapture>,
 }
 impl Harness {
@@ -122,6 +125,9 @@ impl Harness {
             sources: HashMap::new(),
             signatures: HashMap::new(),
             rig: None,
+            running: None,
+            waiting: Vec::new(),
+            busy: false,
         }
     }
     fn frame(
@@ -141,6 +147,9 @@ impl Harness {
             sources,
             signatures,
             rig,
+            running,
+            waiting,
+            busy,
         } = self;
         let input = RawInput {
             events,
@@ -163,6 +172,11 @@ impl Harness {
                             rig: rig.as_ref(),
                             sources,
                             signatures: Some(signatures),
+                            queue: crate::subject_page::QueueView {
+                                running: *running,
+                                waiting,
+                                busy: *busy,
+                            },
                         },
                     );
                 });
@@ -449,4 +463,66 @@ fn a_six_thousand_plane_signature_is_pooled_once_and_pointer_motion_rebuilds_not
     harness.frame(&g, vec![]);
     assert_eq!(harness.page.open, None, "an empty subject opens nothing");
     assert_eq!(harness.page.stats().model_builds, 2);
+}
+
+#[test]
+fn each_stack_row_offers_stack_or_stack_next_and_shows_the_queue() {
+    let f = fixture();
+    let mut harness = Harness::new();
+    // Nothing renders: Stack, on the newest stack's row first.
+    assert_eq!(
+        harness.click_text(&f, "Stack"),
+        Some(LibraryIntent::QueueStack(f.wing))
+    );
+    // Another stack renders: Stack next on the others; the running one
+    // and a waiting one say so instead of offering a button.
+    harness.busy = true;
+    harness.running = Some(f.dorsal);
+    let (output, _) = harness.frame(&f, vec![]);
+    let at = rightmost(&output, "Stack next").expect("a row button");
+    assert_eq!(
+        harness.click(&f, at),
+        Some(LibraryIntent::QueueStack(f.wing))
+    );
+    harness.waiting = vec![f.wing];
+    let (output, _) = harness.frame(&f, vec![]);
+    assert!(find(&output, "STACKING").is_some());
+    assert!(find(&output, "QUEUED").is_some());
+    let at = rightmost(&output, "Stack next").expect("the lateral row's button");
+    assert_eq!(
+        harness.click(&f, at),
+        Some(LibraryIntent::QueueStack(f.lateral)),
+        "only the stack neither rendering nor waiting still offers it"
+    );
+    // A capturing stack offers no Stack.
+    harness.busy = false;
+    harness.running = None;
+    harness.waiting.clear();
+    harness.rig = Some(RigCapture {
+        subject: Some(f.subject),
+        stack: Some(f.wing),
+        title: String::new(),
+        detail: String::new(),
+        progress: 0.5,
+        picture: None,
+    });
+    let (output, _) = harness.frame(&f, vec![]);
+    assert_eq!(
+        count(&output, "Stack"),
+        2,
+        "dorsal and lateral, not the capturing wing case"
+    );
+}
+/// The row button of that label (a life line may use the same words).
+fn rightmost(output: &egui::FullOutput, needle: &str) -> Option<Pos2> {
+    output
+        .shapes
+        .iter()
+        .filter_map(|shape| match &shape.shape {
+            egui::Shape::Text(t) if t.galley.text() == needle => {
+                Some(t.pos + t.galley.size() * 0.5)
+            }
+            _ => None,
+        })
+        .max_by(|a, b| a.x.total_cmp(&b.x).then(b.y.total_cmp(&a.y)))
 }

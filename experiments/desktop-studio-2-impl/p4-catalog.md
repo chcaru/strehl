@@ -220,6 +220,57 @@ client, `StorageCard` from a disk-space worker, applying `EditSubject` through
 `ProjectExplorer::organize`, executing `ImportFolders` (scan, then one stack per folder in a new
 or existing subject), and the depth signatures from the Stack station.
 
+## Depth signatures and Stack next (after P5)
+
+**Date:** 2026-11-21. **Branch:** `studio2/p4-signatures` from `91ebd7e70`.
+
+- **Definition** (VERIFIED by test): the depth rail's own series at its default detail size
+  (level 0): per plane, the share of sampled sites whose gate admitted it. `depth-signature.rs`
+  replays a saved run as a reopen does (the log, then `evidence.strehl`) into a
+  `PipelineProgress` and runs `DepthRail::update` on it; the test checks equality with
+  `DepthRail::share` on the same progress. At most 128 values, planes pooled by the ratio of
+  sums as the rail pools columns; a column with no observed plane is negative and draws
+  nothing. A run without per-plane evidence (older GPU renders, imported sessions, a log over
+  the replay bound, a moved run) has no signature and shows none.
+- **Cache:** `depth-signatures.json` beside the catalog, keyed by run folder (a saved run's log
+  does not change), at most 4,096 entries (oldest computed leave first), written atomically on
+  a worker at most every 5 s. A missing, unreadable or newer file starts empty and is left as
+  it is until the next save. Offscreen pictures keep theirs in memory. Nothing is written in a
+  run or capture folder.
+- **Work:** one replay at a time on a worker, only for the rows painted (list rows; the open
+  subject's stacks), newest request first, at most 64 waiting; never while a stack renders or
+  Quiet holds (a replay in flight is cancelled when a stack starts and asked for again by its
+  row). Offscreen pictures wait for it (`library_loading`). Per frame: one key compare, then
+  O(rows painted) look-ups; the index of newest saved runs is rebuilt per catalog revision.
+- **Where:** the subject page's stack rows (the 230 x 46 slot the mockup has) and the Library's
+  list rows (200 x 40, between the progress words and the badge), the subject's newest render.
+  Grid cards are unchanged: the mockup's cards carry no signature. One spark painter
+  (`library_paint::spark`) serves both, cached per row, series and width.
+- **Stack / Stack next:** a subject page row has Stack left of Open ("Stack next" while a stack
+  renders; STACKING or QUEUED in its place when that stack is running or waiting; nothing while
+  it is capturing). A Library card or list row offers "Stack · N stacks" or "Stack next · N
+  stacks" on right-click for the subject's stacks without a saved render that are not already
+  running or waiting. Both go through `queue_stack`, which starts at once when nothing renders.
+- **Also (P5 open issues):** a capture that finishes while a stack renders joins the queue
+  (`queue_finished_capture`; `capture_destination` factored out of `capture_names`); the
+  estimate before the merge no longer needs the seed's `frames` line (see `p5-activities.md`).
+
+### Signature results
+
+- **Tests** (MEASURED): `cargo test --locked -p strehl-ui` 1,363 passed, 0 failed, 31 ignored
+  ("Compiling strehl-ui" observed); clippy `-D warnings` and `fmt --check` clean. New: rail equality and missing planes, pooling and no-evidence, replay and cancel, the
+  worker and cache (computed once, reloaded, unreadable file left alone, a moved run not
+  retried, nothing while a stack renders), list rows draw bars and the grid none, right-click
+  intents in both states, row buttons and queue states, app-level signatures from a worker,
+  queue intents, a finished capture queued, the ETA seed fix.
+- **Look** (VERIFIED by viewing): `visual-check.py subject subject-lightbox library` (release,
+  the owner's catalog copied to scratch): subject rows show signatures for renders with
+  evidence and a bare baseline for the others, Stack beside Open, in both themes; the grid is
+  unchanged. A list-view picture with synthetic signatures (`offscreen_list_rows_with_signatures`)
+  reads as ruled rows with square bars. The subject route took 8.7 s offscreen including three
+  signature replays of the owner's logs, against 5.1 s for the grid (one sample each).
+- **Performance** (MEASURED, release, `--test-threads 1`): the list view with a 128-value signature on all 13 painted rows of 200 subjects, pointer sweeping, 0.19-0.62 ms a frame (paint plus tessellation; no signature pooled again after the first frames); the grid, 0.17-0.20 ms (40 and 200 subjects; model and list built once). Host load was high during these runs (about 82 % CPU: other lanes' engine renders and builds, which this lane did not start or stop), so the P0 pointer sweep read process 0.84-2.40 ms (medians 1.66-2.09) and source 0.45-1.25 ms, against the P0 baseline of 1.28-1.32 and 0.45-0.48 measured on a quiet machine; nothing in this change runs in that view. Repeat on a quiet machine before quoting.
+
 ## For the orchestrator
 
 - **Startup reconciliation** (one line, `app.rs`, `from_launch`, after `let mut app = Self { … };`):

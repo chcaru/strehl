@@ -40,8 +40,22 @@ pub(crate) struct SubjectInputs<'a> {
     pub rig: Option<&'a RigCapture>,
     /// The Library's sources check (`LibraryStation::sources`).
     pub sources: &'a HashMap<NodeId, SourcesState>,
-    /// Depth signatures from the Stack station: one value per plane.
+    /// Depth signatures by stack (`depth_signature`): its newest render's
+    /// rail, at most 128 values; negative values have no evidence.
     pub signatures: Option<&'a HashMap<NodeId, Vec<f32>>>,
+    /// The stack queue, for each row's Stack / Stack next.
+    pub queue: QueueView<'a>,
+}
+
+/// The stack queue as the stack rows show it.
+#[derive(Clone, Copy, Debug, Default)]
+pub(crate) struct QueueView<'a> {
+    /// The stack rendering now.
+    pub running: Option<NodeId>,
+    /// Stacks waiting in the queue.
+    pub waiting: &'a [NodeId],
+    /// A stack renders: a new one waits for it ("Stack next").
+    pub busy: bool,
 }
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
@@ -398,9 +412,6 @@ impl Draft {
     }
 }
 
-/// A depth series' identity (address, length) and the drawn width.
-type SparkKey = (usize, usize, u32);
-
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub(crate) struct SubjectStats {
     pub model_builds: u64,
@@ -418,7 +429,7 @@ pub(crate) struct SubjectPage {
     editing: Option<Draft>,
     model: Option<SubjectModel>,
     /// Pooled depth signatures: (series identity, width) -> column heights.
-    sparks: HashMap<NodeId, (SparkKey, Vec<f32>)>,
+    sparks: paint::SparkCache,
     stats: SubjectStats,
 }
 
@@ -476,6 +487,7 @@ impl SubjectPage {
             rig,
             sources,
             signatures,
+            queue,
         } = inputs;
         let ctx = ui.ctx().clone();
         previews.poll(&ctx);
@@ -499,7 +511,15 @@ impl SubjectPage {
         };
         let mut intent = self.left_column(ui, left, &model, previews, palette);
         let found = self.right_column(
-            ui, right, &model, catalog, previews, palette, rig, sources, signatures,
+            ui,
+            right,
+            &model,
+            catalog,
+            previews,
+            palette,
+            rig,
+            sources,
+            (signatures, queue),
         );
         intent = intent.or(found);
         intent = intent.or(drops(ui, &model, subject));
@@ -720,7 +740,7 @@ impl SubjectPage {
         palette: &LibraryPalette,
         rig: Option<&RigCapture>,
         sources: &HashMap<NodeId, SourcesState>,
-        signatures: Option<&HashMap<NodeId, Vec<f32>>>,
+        (signatures, queue): (Option<&HashMap<NodeId, Vec<f32>>>, QueueView<'_>),
     ) -> Option<LibraryIntent> {
         let painter = ui.painter().clone();
         let x0 = right.left() + 26.0;
@@ -816,7 +836,14 @@ impl SubjectPage {
                             let signature =
                                 signatures.and_then(|s| s.get(&stack.id)).map(Vec::as_slice);
                             let found = self.stack_row(
-                                ui, rect, stack, previews, palette, capturing, moved, signature,
+                                ui,
+                                rect,
+                                stack,
+                                previews,
+                                palette,
+                                capturing,
+                                moved,
+                                (signature, queue),
                                 now,
                             );
                             intent = intent.take().or(found);
@@ -926,7 +953,7 @@ impl SubjectPage {
         palette: &LibraryPalette,
         capturing: bool,
         moved: bool,
-        signature: Option<&[f32]>,
+        (signature, queue): (Option<&[f32]>, QueueView<'_>),
         now: u64,
     ) -> Option<LibraryIntent> {
         let row = Rect::from_min_size(rect.min, Vec2::new(rect.width(), ROW));
@@ -945,7 +972,9 @@ impl SubjectPage {
             Pos2::new(row.right() - 112.0, row.center().y - 14.0),
             Vec2::new(112.0, 28.0),
         );
-        let size_right = button_rect.left() - 18.0;
+        // Stack (or Stack next while another renders) left of Open.
+        let stack_rect = button_rect.translate(Vec2::new(-(112.0 + 8.0), 0.0));
+        let size_right = stack_rect.left() - 18.0;
         let spark = Rect::from_min_size(
             Pos2::new(size_right - 118.0 - 18.0 - 230.0, row.center().y - 23.0),
             Vec2::new(230.0, 46.0),
@@ -1027,6 +1056,47 @@ impl SubjectPage {
                 None,
             );
         }
+        if !capturing {
+            let state = if queue.running == Some(stack.id) {
+                Some("Stacking")
+            } else if queue.waiting.contains(&stack.id) {
+                Some("Queued")
+            } else {
+                None
+            };
+            match state {
+                Some(words) => {
+                    paint::caps(
+                        &painter,
+                        stack_rect.center(),
+                        Align2::CENTER_CENTER,
+                        words,
+                        10.5,
+                        palette.ink_3,
+                    );
+                }
+                None => {
+                    let label = if queue.busy { "Stack next" } else { "Stack" };
+                    let button = paint::button(
+                        ui,
+                        stack_rect,
+                        ("subject-stack", stack.id),
+                        label,
+                        None,
+                        ButtonStyle::Outline,
+                        palette,
+                    )
+                    .on_hover_text(if queue.busy {
+                        "Stack with the saved recipe when the stack rendering now ends"
+                    } else {
+                        "Stack with the saved recipe now"
+                    });
+                    if button.clicked() {
+                        intent = Some(LibraryIntent::QueueStack(stack.id));
+                    }
+                }
+            }
+        }
         let (label, action) = if capturing {
             ("Open capture", LibraryIntent::OpenCapture)
         } else {
@@ -1060,8 +1130,7 @@ impl SubjectPage {
         intent
     }
 
-    /// The depth signature, pooled to at most one column per 2 px and cached
-    /// per series identity and width; without a series, a baseline only.
+    /// The depth signature (`paint::spark`), cached per stack.
     fn spark(
         &mut self,
         painter: &egui::Painter,
@@ -1070,50 +1139,8 @@ impl SubjectPage {
         series: Option<&[f32]>,
         palette: &LibraryPalette,
     ) {
-        paint::hline(
-            painter,
-            rect.left()..=rect.right(),
-            rect.bottom() - 1.0,
-            palette.line_2,
-        );
-        let Some(series) = series.filter(|s| !s.is_empty()) else {
-            return;
-        };
-        let columns = ((rect.width() / 2.0) as usize).clamp(1, series.len());
-        let key = (series.as_ptr() as usize, series.len(), rect.width() as u32);
-        let cached = self.sparks.get(&stack).is_some_and(|(k, _)| *k == key);
-        if !cached {
-            let mut pooled = vec![0.0f32; columns];
-            for (index, value) in series.iter().enumerate() {
-                let column = index * columns / series.len();
-                pooled[column] = pooled[column].max(value.max(0.0));
-            }
-            let peak = pooled
-                .iter()
-                .copied()
-                .fold(0.0f32, f32::max)
-                .max(f32::EPSILON);
-            pooled.iter_mut().for_each(|v| *v /= peak);
-            self.sparks.insert(stack, (key, pooled));
+        if paint::spark(painter, rect, &mut self.sparks, stack, series, palette) {
             self.stats.spark_builds += 1;
-        }
-        let pooled = &self.sparks[&stack].1;
-        let step = rect.width() / pooled.len() as f32;
-        let color = palette.ok.gamma_multiply(0.75);
-        for (index, value) in pooled.iter().enumerate() {
-            if *value <= 0.0 {
-                continue;
-            }
-            let x = rect.left() + index as f32 * step;
-            let height = (rect.height() - 2.0) * value;
-            painter.rect_filled(
-                Rect::from_min_max(
-                    Pos2::new(x, rect.bottom() - 1.0 - height),
-                    Pos2::new(x + (step - 1.0).max(1.0), rect.bottom() - 1.0),
-                ),
-                CornerRadius::ZERO,
-                color,
-            );
         }
     }
 

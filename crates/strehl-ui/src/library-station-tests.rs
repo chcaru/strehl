@@ -140,6 +140,9 @@ pub(crate) struct Harness {
     pub palette: LibraryPalette,
     pub rig: Option<RigCapture>,
     pub storage: Option<StorageCard>,
+    /// Depth signatures by subject, for list rows.
+    pub signatures: HashMap<NodeId, Vec<f32>>,
+    pub stacking: bool,
 }
 impl Harness {
     pub(crate) fn new() -> Self {
@@ -154,6 +157,8 @@ impl Harness {
             palette: LibraryPalette::graphite(),
             rig: None,
             storage: None,
+            signatures: HashMap::new(),
+            stacking: false,
         }
     }
     pub(crate) fn frame(
@@ -186,6 +191,8 @@ impl Harness {
             palette,
             rig,
             storage,
+            signatures,
+            stacking,
         } = self;
         let output = ctx.run(input, |ctx| {
             egui::CentralPanel::default()
@@ -200,6 +207,8 @@ impl Harness {
                             palette,
                             rig: rig.as_ref(),
                             storage: storage.as_ref(),
+                            signatures: Some(signatures),
+                            stacking: *stacking,
                         },
                     );
                 });
@@ -254,6 +263,17 @@ pub(crate) fn find(output: &egui::FullOutput, needle: &str) -> Option<Pos2> {
         }
     }
     output.shapes.iter().find_map(|s| visit(&s.shape, needle))
+}
+/// How many times `needle` is drawn as a whole text.
+pub(crate) fn count(output: &egui::FullOutput, needle: &str) -> usize {
+    fn visit(shape: &egui::Shape, needle: &str) -> usize {
+        match shape {
+            egui::Shape::Text(t) => usize::from(t.galley.text() == needle),
+            egui::Shape::Vec(v) => v.iter().map(|s| visit(s, needle)).sum(),
+            _ => 0,
+        }
+    }
+    output.shapes.iter().map(|s| visit(&s.shape, needle)).sum()
 }
 fn subject_id(catalog: &Catalog, name: &str) -> NodeId {
     catalog
@@ -692,5 +712,180 @@ fn scrolling_requests_visible_and_one_screen_ahead_within_the_preview_budgets() 
         cold.entries,
         cold.bytes as f64 / 1_048_576.0,
         cold.largest_poll_upload as f64 / 1024.0
+    );
+}
+
+#[test]
+fn list_rows_draw_each_subjects_signature_and_right_click_stacks_what_is_left() {
+    let catalog = catalog(12, None);
+    let mut harness = Harness::new();
+    harness.station.view = LibraryView::List;
+    harness.frame(&catalog, vec![]);
+    let painted = harness.station.painted_rows().to_vec();
+    assert!(!painted.is_empty() && painted.len() <= 12, "{painted:?}");
+    // A signature on the first row: one bar per evidenced value, none for
+    // a value without evidence, in the signature colour.
+    harness
+        .signatures
+        .insert(painted[0], vec![0.2, 1.0, -1.0, 0.5]);
+    let (output, _) = harness.frame(&catalog, vec![]);
+    let colour = harness.palette.ok.gamma_multiply(0.75);
+    let bars = |output: &egui::FullOutput| {
+        output
+            .shapes
+            .iter()
+            .filter(|s| matches!(&s.shape, egui::Shape::Rect(r) if r.fill == colour))
+            .count()
+    };
+    assert_eq!(bars(&output), 3);
+    // The grid's cards keep the mockup: no signatures there.
+    harness.station.view = LibraryView::Grid;
+    let (output, _) = harness.frame(&catalog, vec![]);
+    assert_eq!(bars(&output), 0);
+    assert!(harness.station.painted_rows().is_empty());
+    // Subject 008 has a stack never stacked: right-click offers it.
+    for stacking in [false, true] {
+        harness.stacking = stacking;
+        let (output, _) = harness.frame(&catalog, vec![]);
+        let at = find(&output, "Subject 008").expect("drawn");
+        harness.time += 1.0;
+        let button = |pressed| Event::PointerButton {
+            pos: at,
+            button: PointerButton::Secondary,
+            pressed,
+            modifiers: Modifiers::NONE,
+        };
+        harness.frame(&catalog, vec![Event::PointerMoved(at), button(true)]);
+        harness.frame(&catalog, vec![button(false)]);
+        let (output, _) = harness.frame(&catalog, vec![]);
+        let label = if stacking {
+            "Stack next · 1 stack"
+        } else {
+            "Stack · 1 stack"
+        };
+        let item = find(&output, label).unwrap_or_else(|| panic!("{label}"));
+        assert_eq!(
+            harness.click(&catalog, item),
+            Some(LibraryIntent::QueueSubject(subject_id(
+                &catalog,
+                "Subject 008"
+            )))
+        );
+    }
+    // A subject whose stacks all have renders offers nothing.
+    let (output, _) = harness.frame(&catalog, vec![]);
+    let at = find(&output, "Subject 009").expect("drawn");
+    harness.time += 1.0;
+    let button = |pressed| Event::PointerButton {
+        pos: at,
+        button: PointerButton::Secondary,
+        pressed,
+        modifiers: Modifiers::NONE,
+    };
+    harness.frame(&catalog, vec![Event::PointerMoved(at), button(true)]);
+    harness.frame(&catalog, vec![button(false)]);
+    let (output, _) = harness.frame(&catalog, vec![]);
+    assert!(find(&output, "Stack · 1 stack").is_none());
+    assert!(find(&output, "Stack next · 1 stack").is_none());
+}
+
+/// Offscreen picture of the list view with depth signatures, for the look
+/// check. `STREHL_P4_SHOTS` names the folder.
+#[test]
+#[ignore = "needs a GPU; writes a PNG into STREHL_P4_SHOTS"]
+fn offscreen_list_rows_with_signatures() {
+    let shots =
+        std::path::PathBuf::from(std::env::var_os("STREHL_P4_SHOTS").expect("STREHL_P4_SHOTS"));
+    std::fs::create_dir_all(&shots).unwrap();
+    let root = tempfile::tempdir().unwrap();
+    let (catalog, _) = super::visual_tests::mockup_catalog(root.path());
+    let signatures: HashMap<NodeId, Vec<f32>> = catalog
+        .nodes
+        .iter()
+        .filter(|n| n.kind == NodeKind::Subject)
+        .enumerate()
+        .map(|(i, n)| {
+            let centre = 30.0 + (i % 5) as f32 * 15.0;
+            let values = (0..128)
+                .map(|p| {
+                    let d = (p as f32 - centre) / (10.0 + (i % 3) as f32 * 6.0);
+                    let v = (-d * d).exp() * 0.8 + 0.04 * ((p * 7 + i) % 5) as f32;
+                    if p % 41 == 40 { -1.0 } else { v }
+                })
+                .collect();
+            (n.id, values)
+        })
+        .collect();
+    let mut station = LibraryStation {
+        view: LibraryView::List,
+        ..Default::default()
+    };
+    let mut previews = LibraryPreviews::default();
+    let palette = LibraryPalette::graphite();
+    super::visual_tests::render(&shots.join("library-list.png"), |ui| {
+        station.show(
+            ui,
+            LibraryInputs {
+                catalog: &catalog,
+                revision: catalog.generation(),
+                previews: &mut previews,
+                palette: &palette,
+                rig: None,
+                storage: None,
+                signatures: Some(&signatures),
+                stacking: true,
+            },
+        );
+        !previews.pending()
+    })
+    .unwrap();
+}
+
+/// The list view with a 128-value signature on every row, pointer
+/// sweeping: CPU paint plus tessellation per frame. Release:
+/// `cargo test --release -- --ignored benchmark_list_rows_with_signatures`.
+#[test]
+#[ignore = "explicit CPU paint+tessellation benchmark of the list rows"]
+fn benchmark_list_rows_with_signatures() {
+    let catalog = catalog(200, None);
+    let mut harness = Harness::new();
+    harness.station.view = LibraryView::List;
+    harness.signatures = catalog
+        .nodes
+        .iter()
+        .filter(|n| n.kind == NodeKind::Subject)
+        .map(|n| {
+            let values = (0..128).map(|p| ((p as f32) * 0.1).sin().abs()).collect();
+            (n.id, values)
+        })
+        .collect();
+    for _ in 0..5 {
+        harness.frame(&catalog, vec![]);
+    }
+    let built = harness.station.sparks.len();
+    let mut times = Vec::new();
+    for _ in 0..5 {
+        let started = std::time::Instant::now();
+        for step in 0..80 {
+            let phase = step as f32 / 79.0;
+            let at = Pos2::new(300.0 + phase * 1300.0, 160.0 + phase * 800.0);
+            let (output, _) = harness.frame(&catalog, vec![Event::PointerMoved(at)]);
+            std::hint::black_box(
+                harness
+                    .ctx
+                    .tessellate(output.shapes, output.pixels_per_point),
+            );
+        }
+        times.push(started.elapsed().as_secs_f64() * 1000.0 / 80.0);
+    }
+    assert_eq!(
+        harness.station.sparks.len(),
+        built,
+        "pointer motion pools no signature again"
+    );
+    eprintln!(
+        "library list, 200 subjects, {} rows painted, {built} signatures pooled: {:.3?} ms per frame",
+        harness.station.painted_rows().len(),
+        times
     );
 }
