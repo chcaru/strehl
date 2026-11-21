@@ -58,7 +58,7 @@ const SETTLE: Duration = Duration::from_millis(90);
 const SPARSE_SIDE: u32 = 160;
 const SPARSE_COUNT: usize = 512;
 const SPARSE_BYTES: usize = 52 * 1024 * 1024;
-const SPARSE_BATCH: usize = 4;
+const SPARSE_BATCH: usize = 16;
 
 #[derive(Clone)]
 struct CachedImage {
@@ -393,7 +393,7 @@ impl SourceBrowser {
                     source_preview::load_scrub_batch(paths, side, thumbnail.then_some(THUMB_SIDE))
                 }
                 // The same canonical small-first decoder, without contacts.
-                Kind::Sparse => source_preview::load_scrub_batch(paths, side, None),
+                Kind::Sparse => source_preview::load_sparse_batch(paths, side),
                 Kind::Overview => source_preview::load_overview_batch(
                     paths,
                     side,

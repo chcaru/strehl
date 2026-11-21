@@ -261,11 +261,34 @@ pub(crate) fn load_scrub_batch(
     max_side: u32,
     thumbnail_side: Option<u32>,
 ) -> Task<FilmstripBatch> {
-    spawn_task("strehl-source-scrub-warm", move |cancelled| {
-        ensure!(
-            paths.len() <= 4,
-            "Too many resident scrub previews requested"
-        );
+    load_resident_batch(
+        "strehl-source-scrub-warm",
+        4,
+        paths,
+        max_side,
+        thumbnail_side,
+    )
+}
+
+/// The stack-wide sparse tier: the same canonical decoder and disk
+/// derivative, in larger batches of tiny pictures, so warming from open is
+/// not bound by one four-picture batch per UI poll.
+pub(crate) fn load_sparse_batch(
+    paths: Vec<(usize, PathBuf)>,
+    max_side: u32,
+) -> Task<FilmstripBatch> {
+    load_resident_batch("strehl-source-sparse-warm", 16, paths, max_side, None)
+}
+
+fn load_resident_batch(
+    name: &str,
+    limit: usize,
+    paths: Vec<(usize, PathBuf)>,
+    max_side: u32,
+    thumbnail_side: Option<u32>,
+) -> Task<FilmstripBatch> {
+    spawn_task(name, move |cancelled| {
+        ensure!(paths.len() <= limit, "Too many resident previews requested");
         let workers = std::thread::available_parallelism()
             .map_or(1, usize::from)
             .min(FILMSTRIP_WORKERS);
