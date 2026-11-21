@@ -873,6 +873,7 @@ fn split_same_color_intervals_neither_stripe_nor_bias_mixed_color() {
         color: Color32::WHITE,
         pixels_per_point: 1.0,
         approximate: false,
+        kept: None,
         options: Default::default(),
     };
     let mesh = selection_mesh(&split, &key);

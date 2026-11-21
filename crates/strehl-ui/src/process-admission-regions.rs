@@ -59,6 +59,302 @@ struct Key {
     settings: RegionSettings,
 }
 
+/// What the photograph can show for a requested capture right now.
+#[derive(Clone, Default)]
+pub(crate) struct RegionLookup {
+    pub region: Option<Arc<DenseRegion>>,
+    /// The capture and level the region belongs to. While a newer request is
+    /// extracted the previous region stays, and captions must name *this*.
+    pub frame: Option<usize>,
+    pub level: Option<usize>,
+    /// The region answers the latest request.
+    #[allow(dead_code)] // Read by the Stack station (stage 2) and tests.
+    pub current: bool,
+}
+
+struct RegionRequest {
+    key: Key,
+    /// A main-path request may replace what is shown; a prefetch never does.
+    main: bool,
+    meta: AdmissionMeta,
+    geometry: SampleGeometry,
+    samples: Vec<bool>,
+}
+
+/// `DenseRegion::extract` off the paint path (spec 5.5 item 3). One worker at a
+/// time; the newest request replaces any queued one, so a fast sweep never
+/// builds a backlog. Paint reads only finished results; the previous region
+/// stays until its replacement is ready. Results are cached by receipt (frame,
+/// level, the map's own sequence, extent and settings), so unrelated packets
+/// do not evict them and scrubbing back is immediate.
+#[derive(Default)]
+pub(crate) struct DenseRegionWorker {
+    cache: VecDeque<(Key, Option<Arc<DenseRegion>>)>,
+    running: Option<(Key, bool, crate::jobs::Task<Option<DenseRegion>>)>,
+    queued: Option<RegionRequest>,
+    shown: Option<(Key, Option<Arc<DenseRegion>>)>,
+    #[cfg(test)]
+    pub(crate) started: usize,
+    /// Test-only: extract inside `start`, so paint-exact legacy tests stay
+    /// deterministic. Production and the worker's own tests never set it.
+    #[cfg(test)]
+    pub(crate) inline: bool,
+}
+
+const WORKER_CACHE: usize = 64;
+
+impl DenseRegionWorker {
+    /// The region for `frame` if it is ready; otherwise the previous region
+    /// (named in the lookup) while one bounded worker extracts the new one.
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn region(
+        &mut self,
+        ctx: &egui::Context,
+        archive: &AdmissionArchive,
+        domain: [u64; 2],
+        frame: usize,
+        level: usize,
+        extent: [usize; 2],
+        settings: RegionSettings,
+    ) -> RegionLookup {
+        self.poll(ctx);
+        if !settings.enabled {
+            return RegionLookup {
+                current: true,
+                ..Default::default()
+            };
+        }
+        let key = region_key(archive, domain, frame, level, extent, settings);
+        if let Some(region) = self.cached(&key) {
+            // An answered request makes any queued one obsolete.
+            self.queued = None;
+            self.shown = Some((key, region.clone()));
+            return RegionLookup {
+                region,
+                frame: Some(frame),
+                level: Some(level),
+                current: true,
+            };
+        }
+        let waiting = self
+            .running
+            .as_ref()
+            .is_some_and(|(running, _, _)| *running == key)
+            || self.queued.as_ref().is_some_and(|queued| queued.key == key);
+        if !waiting {
+            let Some(request) = request(archive, key, true) else {
+                // No receipt is an immediate, honest answer: no region.
+                self.insert(key, None);
+                self.shown = Some((key, None));
+                return RegionLookup {
+                    region: None,
+                    frame: Some(frame),
+                    level: Some(level),
+                    current: true,
+                };
+            };
+            self.queued = Some(request);
+            self.start(ctx);
+            #[cfg(test)]
+            if let Some(region) = self.inline.then(|| self.cached(&key)).flatten() {
+                return RegionLookup {
+                    region,
+                    frame: Some(frame),
+                    level: Some(level),
+                    current: true,
+                };
+            }
+        }
+        let (region, frame, level) = self
+            .shown
+            .as_ref()
+            .map_or((None, None, None), |(key, region)| {
+                (region.clone(), Some(key.frame), Some(key.level))
+            });
+        RegionLookup {
+            region,
+            frame,
+            level,
+            current: false,
+        }
+    }
+
+    /// A cached result without starting work or changing what is shown.
+    #[allow(dead_code)] // Read by the Stack station (stage 2) and tests.
+    pub(crate) fn ready(
+        &self,
+        archive: &AdmissionArchive,
+        domain: [u64; 2],
+        frame: usize,
+        level: usize,
+        extent: [usize; 2],
+        settings: RegionSettings,
+    ) -> Option<Option<Arc<DenseRegion>>> {
+        let key = region_key(archive, domain, frame, level, extent, settings);
+        self.cache
+            .iter()
+            .find(|(entry, _)| *entry == key)
+            .map(|(_, region)| region.clone())
+    }
+
+    pub(crate) fn pending(&self) -> bool {
+        self.running.is_some() || self.queued.is_some()
+    }
+
+    /// Warm a region that is not on screen yet (the per-size maps). It starts
+    /// only when the worker is idle, so it never delays the main request and
+    /// never changes the region kept on screen. Returns the result if ready.
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn prefetch(
+        &mut self,
+        ctx: &egui::Context,
+        archive: &AdmissionArchive,
+        domain: [u64; 2],
+        frame: usize,
+        level: usize,
+        extent: [usize; 2],
+        settings: RegionSettings,
+    ) -> Option<Option<Arc<DenseRegion>>> {
+        self.poll(ctx);
+        if !settings.enabled {
+            return Some(None);
+        }
+        let key = region_key(archive, domain, frame, level, extent, settings);
+        if let Some(index) = self.cache.iter().position(|(entry, _)| *entry == key) {
+            return Some(self.cache[index].1.clone());
+        }
+        if self.pending() {
+            return None;
+        }
+        let Some(request) = request(archive, key, false) else {
+            self.insert(key, None);
+            return Some(None);
+        };
+        self.queued = Some(request);
+        self.start(ctx);
+        None
+    }
+
+    /// Receive a finished extraction and start the newest queued request.
+    pub(crate) fn poll(&mut self, ctx: &egui::Context) {
+        let finished =
+            self.running
+                .as_ref()
+                .and_then(|(_, _, task)| match task.receiver.try_recv() {
+                    Ok(result) => Some(result.ok().flatten()),
+                    Err(std::sync::mpsc::TryRecvError::Disconnected) => Some(None),
+                    Err(std::sync::mpsc::TryRecvError::Empty) => None,
+                });
+        if let Some(region) = finished {
+            let (key, main, _) = self.running.take().expect("a finished task is running");
+            let region = region.map(Arc::new);
+            self.insert(key, region.clone());
+            // The newest finished main region is the best stand-in while a
+            // later request is still queued; paint re-selects each frame.
+            if main {
+                self.shown = Some((key, region));
+            }
+        }
+        self.start(ctx);
+    }
+
+    fn start(&mut self, ctx: &egui::Context) {
+        if self.running.is_some() {
+            return;
+        }
+        let Some(request) = self.queued.take() else {
+            return;
+        };
+        let key = request.key;
+        let main = request.main;
+        let settings = key.settings;
+        let notify = ctx.clone();
+        #[cfg(test)]
+        {
+            self.started += 1;
+            if self.inline {
+                let region = DenseRegion::extract(
+                    request.meta,
+                    request.geometry,
+                    &request.samples,
+                    settings,
+                )
+                .map(Arc::new);
+                self.insert(key, region.clone());
+                if main {
+                    self.shown = Some((key, region));
+                }
+                return;
+            }
+        }
+        let task = crate::jobs::spawn_notifying_task(
+            "strehl-dense-region",
+            move |_| {
+                Ok(DenseRegion::extract(
+                    request.meta,
+                    request.geometry,
+                    &request.samples,
+                    settings,
+                ))
+            },
+            move || notify.request_repaint(),
+        );
+        self.running = Some((key, main, task));
+    }
+
+    fn cached(&mut self, key: &Key) -> Option<Option<Arc<DenseRegion>>> {
+        let index = self.cache.iter().position(|(entry, _)| entry == key)?;
+        let entry = self.cache.remove(index)?;
+        let region = entry.1.clone();
+        self.cache.push_back(entry);
+        Some(region)
+    }
+
+    fn insert(&mut self, key: Key, region: Option<Arc<DenseRegion>>) {
+        self.cache.retain(|(entry, _)| *entry != key);
+        if self.cache.len() == WORKER_CACHE {
+            self.cache.pop_front();
+        }
+        self.cache.push_back((key, region));
+    }
+}
+
+fn request(archive: &AdmissionArchive, key: Key, main: bool) -> Option<RegionRequest> {
+    archive
+        .cells(key.level, key.frame)
+        .filter(|(meta, _)| meta.extent == key.extent)
+        .and_then(|(meta, cells)| {
+            Some(RegionRequest {
+                key,
+                main,
+                meta,
+                geometry: SampleGeometry::new(key.level, meta)?,
+                samples: cells.collect(),
+            })
+        })
+}
+
+fn region_key(
+    archive: &AdmissionArchive,
+    domain: [u64; 2],
+    frame: usize,
+    level: usize,
+    extent: [usize; 2],
+    settings: RegionSettings,
+) -> Key {
+    Key {
+        domain,
+        frame,
+        level,
+        extent,
+        meta: archive.metadata(level, frame),
+        settings: RegionSettings {
+            threshold: settings.threshold.clamp(35, 85),
+            ..settings
+        },
+    }
+}
+
 /// A bounded multi-source cache, so back-and-forth scrubbing does not repeat
 /// morphology or contour extraction. Unrelated arriving packets do not evict
 /// an unchanged source receipt.
@@ -1054,7 +1350,30 @@ struct PaintKey {
     color: Color32,
     pixels_per_point: f32,
     approximate: bool,
+    kept: Option<KeptStyle>,
     options: egui::epaint::TessellationOptions,
+}
+
+/// The Stack station's plane lens: where one plane was kept, drawn as a fill,
+/// a one-pixel contour and, optionally, the sampled sites as a dot lattice.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub(crate) struct KeptStyle {
+    /// Fill opacity, 0..1.
+    pub fill: f32,
+    /// Screen spacing of the sample-dot lattice inside the region.
+    pub dots: Option<f32>,
+}
+impl KeptStyle {
+    /// Over the photograph: 23 % fill, contour, dots on a 7 px lattice.
+    pub(crate) const LENS: Self = Self {
+        fill: 0.23,
+        dots: Some(7.0),
+    };
+    /// The eight small per-size maps: a stronger fill, no dots.
+    pub(crate) const SMALL: Self = Self {
+        fill: 0.43,
+        dots: None,
+    };
 }
 struct PaintEntry {
     region: Arc<DenseRegion>,
@@ -1093,6 +1412,19 @@ impl DenseRegionPainter {
         self.paint_style(painter, region, image, aperture, color, true);
     }
 
+    /// The plane lens's certified final-photograph style (spec 7.2).
+    pub(crate) fn paint_kept(
+        &mut self,
+        painter: &Painter,
+        region: &Arc<DenseRegion>,
+        image: Rect,
+        aperture: Rect,
+        color: Color32,
+        style: KeptStyle,
+    ) {
+        self.paint_with(painter, region, image, aperture, color, false, Some(style));
+    }
+
     fn paint_style(
         &mut self,
         painter: &Painter,
@@ -1101,6 +1433,20 @@ impl DenseRegionPainter {
         aperture: Rect,
         color: Color32,
         approximate: bool,
+    ) {
+        self.paint_with(painter, region, image, aperture, color, approximate, None);
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn paint_with(
+        &mut self,
+        painter: &Painter,
+        region: &Arc<DenseRegion>,
+        image: Rect,
+        aperture: Rect,
+        color: Color32,
+        approximate: bool,
+        kept: Option<KeptStyle>,
     ) {
         if region.is_empty()
             || !image.is_finite()
@@ -1115,6 +1461,7 @@ impl DenseRegionPainter {
             aperture,
             color,
             approximate,
+            kept,
             pixels_per_point: painter.ctx().pixels_per_point(),
             options: painter.ctx().tessellation_options(|options| *options),
         };
@@ -1135,7 +1482,11 @@ impl DenseRegionPainter {
                 color.r(),
                 color.g(),
                 color.b(),
-                if approximate { 18 } else { 36 },
+                match kept {
+                    Some(style) => (style.fill.clamp(0.0, 1.0) * 255.0).round() as u8,
+                    None if approximate => 18,
+                    None => 36,
+                },
             )
             .gamma_multiply(f32::from(color.a()) / 255.0);
             mesh.vertices
@@ -1151,7 +1502,17 @@ impl DenseRegionPainter {
                 [1, 1],
                 Vec::new(),
             );
-            let stroke = Stroke::new(1.0_f32, color.gamma_multiply(0.8));
+            let stroke = Stroke::new(
+                1.0_f32,
+                if kept.is_some() {
+                    color
+                } else {
+                    color.gamma_multiply(0.8)
+                },
+            );
+            if let Some(spacing) = kept.and_then(|style| style.dots) {
+                lattice_dots(&mut mesh, region, image, &project, spacing, color);
+            }
             for contour in &region.contours {
                 let points: Vec<_> = contour.iter().copied().map(project).collect();
                 if approximate {
@@ -1179,6 +1540,78 @@ impl DenseRegionPainter {
         painter
             .with_clip_rect(painter.clip_rect().intersect(image))
             .add(egui::Shape::mesh(mesh));
+    }
+}
+
+/// Sampled-site dots on a fixed screen lattice, inside the region's own fill
+/// triangles. Each lattice cell is tested once; shared edges add no duplicate.
+fn lattice_dots(
+    mesh: &mut egui::Mesh,
+    region: &DenseRegion,
+    image: Rect,
+    project: &dyn Fn(Pos2) -> Pos2,
+    spacing: f32,
+    color: Color32,
+) {
+    if spacing.is_nan() || spacing < 2.0 {
+        return;
+    }
+    let origin = image.min + egui::vec2(spacing * 0.5, spacing * 0.5);
+    let columns = (image.width() / spacing).floor().max(0.0) as usize;
+    let rows = (image.height() / spacing).floor().max(0.0) as usize;
+    if columns == 0 || rows == 0 || columns.saturating_mul(rows) > 4_000_000 {
+        return;
+    }
+    let mut marked = vec![false; columns * rows];
+    let points: Vec<Pos2> = region.vertices.iter().map(|&uv| project(uv)).collect();
+    for triangle in region.indices.as_chunks::<3>().0 {
+        let [a, b, c] = triangle.map(|index| points[index as usize]);
+        let low = a.min(b).min(c);
+        let high = a.max(b).max(c);
+        let first = |value: f32, origin: f32| ((value - origin) / spacing).ceil().max(0.0) as usize;
+        let last = |value: f32, origin: f32, count: usize| {
+            let index = ((value - origin) / spacing).floor();
+            (index >= 0.0).then(|| (index as usize).min(count - 1))
+        };
+        let (Some(x1), Some(y1)) = (
+            last(high.x, origin.x, columns),
+            last(high.y, origin.y, rows),
+        ) else {
+            continue;
+        };
+        let (x0, y0) = (first(low.x, origin.x), first(low.y, origin.y));
+        let edge =
+            |p: Pos2, q: Pos2, r: Pos2| (q.x - p.x) * (r.y - p.y) - (q.y - p.y) * (r.x - p.x);
+        let area = edge(a, b, c);
+        if area.abs() <= f32::EPSILON {
+            continue;
+        }
+        for row in y0..=y1 {
+            for column in x0..=x1 {
+                let cell = row * columns + column;
+                if marked[cell] {
+                    continue;
+                }
+                let at = egui::pos2(
+                    origin.x + column as f32 * spacing,
+                    origin.y + row as f32 * spacing,
+                );
+                let (u, v, w) = (edge(b, c, at), edge(c, a, at), edge(a, b, at));
+                let inside = if area > 0.0 {
+                    u >= 0.0 && v >= 0.0 && w >= 0.0
+                } else {
+                    u <= 0.0 && v <= 0.0 && w <= 0.0
+                };
+                marked[cell] = inside;
+            }
+        }
+    }
+    for (cell, _) in marked.iter().enumerate().filter(|(_, on)| **on) {
+        let at = egui::pos2(
+            origin.x + (cell % columns) as f32 * spacing,
+            origin.y + (cell / columns) as f32 * spacing,
+        );
+        mesh.add_colored_rect(Rect::from_center_size(at, egui::Vec2::splat(1.5)), color);
     }
 }
 
@@ -1236,6 +1669,7 @@ impl DenseSelectionPainter {
             aperture,
             color: Color32::WHITE,
             approximate,
+            kept: None,
             pixels_per_point: painter.ctx().pixels_per_point(),
             options: painter.ctx().tessellation_options(|options| *options),
         };

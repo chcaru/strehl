@@ -431,14 +431,12 @@ impl StrehlApp {
                     }
                 },
             };
-            let name = self.session_ui.pending_name.take().unwrap_or_else(|| {
-                draft
-                    .source
-                    .file_name()
-                    .unwrap_or_default()
-                    .to_string_lossy()
-                    .into_owned()
-            });
+            // A camera folder (`107MSDCF`) names nothing; its parent names the subject.
+            let name = self
+                .session_ui
+                .pending_name
+                .take()
+                .unwrap_or_else(|| crate::workspace_history::default_stack_name(&draft.source));
             match self.catalog.create_stack(parent, &name, draft) {
                 Ok(id) => self.active_stack = Some(id),
                 Err(error) => self.error = Some(error.to_string()),

@@ -400,6 +400,13 @@ fn old_scrub_batch_failures_are_discarded_after_the_resident_window_moves() {
             .images
             .insert(index, cache_image(&h.ctx, image(index), Kind::Image));
     }
+    // This test is about the windowed scrub lane: the stack-wide sparse
+    // tier, which precedes it, is already resident.
+    for index in (0..600).step_by(SourceBrowser::sparse_stride(600).unwrap()) {
+        h.browser
+            .sparse
+            .insert(index, cache_image(&h.ctx, image(index), Kind::Sparse));
+    }
     h.select(0);
     h.now += SCRUB_IDLE;
     h.tick();

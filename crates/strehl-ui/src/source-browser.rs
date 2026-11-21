@@ -18,7 +18,7 @@ use eframe::egui::{self, TextureHandle};
 use crate::{
     jobs::{FrameFile, Task},
     preview::PreviewImage,
-    source_preview::{self, FilmstripBatch, SourcePreview},
+    source_preview::{self, DetailPreview, FilmstripBatch, SourcePreview},
     viewer::Viewer,
 };
 
@@ -51,6 +51,14 @@ const ERROR_COUNT: usize = 256;
 // still fits the worst-case square thumbnail budget without eviction churn.
 const VISIBLE_WARM_COUNT: usize = 96;
 const SETTLE: Duration = Duration::from_millis(90);
+// Stack-wide sparse tier (spec 5.5 item 1): beyond the 512-capture resident
+// window, every k-th capture at 160 px stays resident from open, so a fast
+// cold sweep always has the requested capture or its nearest resident
+// neighbour to show. Square-bounded: 512 x 160 x 160 x 4 B is 50 MiB.
+const SPARSE_SIDE: u32 = 160;
+const SPARSE_COUNT: usize = 512;
+const SPARSE_BYTES: usize = 52 * 1024 * 1024;
+const SPARSE_BATCH: usize = 16;
 
 #[derive(Clone)]
 struct CachedImage {
@@ -63,6 +71,7 @@ struct CachedImage {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 enum Kind {
     Thumbnail,
+    Sparse,
     Scrub,
     Overview,
     Image,
@@ -72,7 +81,7 @@ struct Work {
     epoch: u64,
     index: usize,
     kind: Kind,
-    task: Task<SourcePreview>,
+    task: Task<DetailPreview>,
 }
 
 struct FilmWork {
@@ -99,6 +108,12 @@ pub struct SourceBrowser {
     scrub_side: u32,
     scrub_failures: BTreeSet<usize>,
     thumbs: BTreeMap<usize, CachedImage>,
+    sparse: BTreeMap<usize, CachedImage>,
+    sparse_pending: VecDeque<(usize, SourcePreview)>,
+    sparse_failures: BTreeSet<usize>,
+    /// A large detail texture that arrived in a poll that already uploaded;
+    /// it uploads first in the next poll (spec 5.5 item 2).
+    deferred: Option<(usize, Kind, DetailPreview)>,
     errors: BTreeMap<(usize, Kind), String>,
     probe_frames: [Option<usize>; 2],
     live_frame: Option<usize>,
@@ -123,6 +138,10 @@ impl Default for SourceBrowser {
             scrub_side: SCRUB_SIDE,
             scrub_failures: BTreeSet::new(),
             thumbs: BTreeMap::new(),
+            sparse: BTreeMap::new(),
+            sparse_pending: VecDeque::new(),
+            sparse_failures: BTreeSet::new(),
+            deferred: None,
             errors: BTreeMap::new(),
             probe_frames: [None, None],
             live_frame: None,
@@ -150,6 +169,10 @@ impl SourceBrowser {
         self.scrub_pending.clear();
         self.scrub_failures.clear();
         self.thumbs.clear();
+        self.sparse.clear();
+        self.sparse_pending.clear();
+        self.sparse_failures.clear();
+        self.deferred = None;
         self.errors.clear();
         self.probe_frames = [None, None];
         self.live_frame = None;
@@ -174,7 +197,33 @@ impl SourceBrowser {
             .get(&index)
             .or_else(|| self.overviews.get(&index))
             .or_else(|| self.scrubs.get(&index))
+            .or_else(|| self.sparse.get(&index))
             .map(|image| (self.epoch, image.texture.clone(), image.source_size))
+    }
+
+    /// The nearest capture with a resident canonical picture, for views that
+    /// label a stand-in honestly (its own index is returned). Never decodes.
+    #[allow(dead_code)] // The Stack station's peek card uses it (stage 2).
+    pub(crate) fn nearest_resident(
+        &self,
+        index: usize,
+    ) -> Option<(usize, TextureHandle, [u32; 2])> {
+        let nearest = |cache: &BTreeMap<usize, CachedImage>| {
+            let below = cache.range(..=index).next_back().map(|(&i, _)| i);
+            let above = cache.range(index..).next().map(|(&i, _)| i);
+            [below, above]
+                .into_iter()
+                .flatten()
+                .min_by_key(|&i| i.abs_diff(index))
+        };
+        [&self.images, &self.overviews, &self.scrubs, &self.sparse]
+            .into_iter()
+            .filter_map(nearest)
+            .min_by_key(|&i| i.abs_diff(index))
+            .and_then(|i| {
+                self.texture_snapshot(i)
+                    .map(|(_, texture, size)| (i, texture, size))
+            })
     }
 
     /// Canonical photographs available for same-paint inspection. Native
@@ -220,12 +269,17 @@ impl SourceBrowser {
     pub fn refining(&self) -> bool {
         !self.pending()
             && self.displayed.is_some_and(|(index, kind)| {
-                matches!(kind, Kind::Scrub | Kind::Overview) && self.missing(index, Kind::Image)
+                matches!(kind, Kind::Sparse | Kind::Scrub | Kind::Overview)
+                    && self.missing(index, Kind::Image)
             })
     }
 
     pub fn active(&self) -> bool {
-        self.work.is_some() || self.film_work.is_some() || !self.scrub_pending.is_empty()
+        self.work.is_some()
+            || self.film_work.is_some()
+            || !self.scrub_pending.is_empty()
+            || !self.sparse_pending.is_empty()
+            || self.deferred.is_some()
     }
 
     pub fn error(&self, index: usize) -> Option<&str> {
@@ -338,6 +392,8 @@ impl SourceBrowser {
                 Kind::Scrub => {
                     source_preview::load_scrub_batch(paths, side, thumbnail.then_some(THUMB_SIDE))
                 }
+                // The same canonical small-first decoder, without contacts.
+                Kind::Sparse => source_preview::load_sparse_batch(paths, side),
                 Kind::Overview => source_preview::load_overview_batch(
                     paths,
                     side,
@@ -359,7 +415,7 @@ impl SourceBrowser {
         max_texture_side: u32,
         viewer: &mut Viewer,
         now: Instant,
-        mut load: impl FnMut(PathBuf, u32, Kind, bool) -> Task<SourcePreview>,
+        mut load: impl FnMut(PathBuf, u32, Kind, bool) -> Task<DetailPreview>,
         mut load_film: impl FnMut(Vec<(usize, PathBuf)>, u32, Kind, bool) -> Task<FilmstripBatch>,
     ) {
         if epoch != self.epoch {
@@ -372,6 +428,15 @@ impl SourceBrowser {
                 self.warm_thumbs = self.thumbnail_targets(frames.len(), visible);
             }
             self.retire_obsolete_work(selected);
+        }
+        // Uploads this poll. A large tier uploads alone: it waits for the next
+        // poll when anything else already uploaded, and then nothing else
+        // (scrub or sparse) shares its poll.
+        let mut uploaded = 0usize;
+        if let Some((index, kind, detail)) = self.deferred.take() {
+            uploaded += self.publish_detail(ctx, index, kind, detail);
+            self.install_selected(viewer);
+            self.trim();
         }
         let delivery = self
             .work
@@ -387,25 +452,14 @@ impl SourceBrowser {
             let work = self.work.take().expect("delivery belongs to a task");
             if work.epoch == self.epoch && !work.task.is_cancelled() {
                 match delivery {
-                    Ok(preview) => {
-                        if !self.thumbs.contains_key(&work.index)
-                            && let Some(thumbnail) = preview.thumbnail
-                        {
-                            self.thumbs
-                                .insert(work.index, cache_image(ctx, thumbnail, Kind::Thumbnail));
-                            self.errors.remove(&(work.index, Kind::Thumbnail));
+                    Ok(detail) => {
+                        if work.kind == Kind::Image && uploaded > 0 {
+                            self.deferred = Some((work.index, work.kind, detail));
+                        } else {
+                            uploaded += self.publish_detail(ctx, work.index, work.kind, detail);
+                            self.install_selected(viewer);
+                            self.trim();
                         }
-                        let cached = cache_image(ctx, preview.image, work.kind);
-                        let cache = match work.kind {
-                            Kind::Image => &mut self.images,
-                            Kind::Overview => &mut self.overviews,
-                            Kind::Scrub => &mut self.scrubs,
-                            Kind::Thumbnail => &mut self.thumbs,
-                        };
-                        cache.insert(work.index, cached);
-                        self.errors.remove(&(work.index, work.kind));
-                        self.install_selected(viewer);
-                        self.trim();
                     }
                     Err(error) => {
                         self.errors.insert((work.index, work.kind), error);
@@ -446,7 +500,10 @@ impl SourceBrowser {
                             // not replace its established thumbnail geometry.
                             if work.kind == Kind::Scrub {
                                 self.scrub_pending.push_back((index, preview));
+                            } else if work.kind == Kind::Sparse {
+                                self.sparse_pending.push_back((index, preview));
                             } else if work.kind == Kind::Overview {
+                                uploaded += preview.image.rgba.len();
                                 if let Some(thumbnail) = preview.thumbnail {
                                     self.thumbs.entry(index).or_insert_with(|| {
                                         cache_image(ctx, thumbnail, Kind::Thumbnail)
@@ -476,6 +533,8 @@ impl SourceBrowser {
                                 if self.scrub_range(frames.len()).contains(&index) {
                                     self.scrub_failures.insert(index);
                                 }
+                            } else if work.kind == Kind::Sparse {
+                                self.sparse_failures.insert(index);
                             } else {
                                 self.errors.insert((index, work.kind), error);
                             }
@@ -486,7 +545,10 @@ impl SourceBrowser {
                 self.trim();
             }
         }
-        if self.upload_scrubs(ctx, selected, frames.len()) {
+        if self.upload_scrubs_within(ctx, selected, frames.len(), &mut uploaded) {
+            self.install_selected(viewer);
+        }
+        if self.upload_sparse(ctx, frames.len(), &mut uploaded) {
             self.install_selected(viewer);
         }
         self.trim_errors(selected);
@@ -497,6 +559,7 @@ impl SourceBrowser {
         {
             let side = match kind {
                 Kind::Thumbnail => THUMB_SIDE,
+                Kind::Sparse => SPARSE_SIDE,
                 Kind::Scrub => self.scrub_side,
                 Kind::Overview => OVERVIEW_SIDE,
                 Kind::Image => IMAGE_SIDE,
@@ -526,14 +589,35 @@ impl SourceBrowser {
                         || work.kind != Kind::Overview
                         || work.task.is_cancelled()
                 });
-            let (mut indices, mut kind) = if rescue {
+            // While a long stack's sparse tier is incomplete it is what lets a
+            // moving pointer show anything: during motion it outranks the
+            // selection's rescue overview (obsolete within a few steps) and
+            // the moving contact neighbourhood; visible contacts stay first.
+            let sparse_wanted =
+                self.sparse_pending.is_empty() && !self.next_sparse(frames.len()).is_empty();
+            let settled = now.saturating_duration_since(self.requested_at) >= SETTLE;
+            let (mut indices, mut kind) = if rescue && (settled || !sparse_wanted) {
                 (vec![selected], Kind::Overview)
+            } else if sparse_wanted {
+                let shown = self.next_filmstrip(frames.len(), visible, now, false);
+                if shown.is_empty() {
+                    (self.next_sparse(frames.len()), Kind::Sparse)
+                } else {
+                    (shown, Kind::Thumbnail)
+                }
             } else {
                 (
-                    self.next_filmstrip(frames.len(), visible, now),
+                    self.next_filmstrip(frames.len(), visible, now, true),
                     Kind::Thumbnail,
                 )
             };
+            // The sparse tier is resident from open: it needs no idle period,
+            // and it precedes the windowed scrub tier because it covers the
+            // whole stack.
+            if indices.is_empty() && self.sparse_pending.is_empty() {
+                indices = self.next_sparse(frames.len());
+                kind = Kind::Sparse;
+            }
             if indices.is_empty()
                 && self.scrub_pending.is_empty()
                 && now.saturating_duration_since(self.requested_at) >= SCRUB_IDLE
@@ -554,6 +638,7 @@ impl SourceBrowser {
                 let side = match kind {
                     Kind::Overview => OVERVIEW_SIDE,
                     Kind::Scrub => self.scrub_side,
+                    Kind::Sparse => SPARSE_SIDE,
                     _ => THUMB_SIDE,
                 };
                 self.film_work = Some(FilmWork {
@@ -569,6 +654,7 @@ impl SourceBrowser {
         // even when no decoder is currently running.
         if self.active()
             || (self.refining() && self.missing(selected, Kind::Image))
+            || (selected < frames.len() && !self.next_sparse(frames.len()).is_empty())
             || (selected < frames.len()
                 && !cache_covers_range(&self.scrubs, &self.scrub_range(frames.len()))
                 && self
@@ -582,15 +668,24 @@ impl SourceBrowser {
     fn missing(&self, index: usize, kind: Kind) -> bool {
         let cache = match kind {
             Kind::Thumbnail => &self.thumbs,
+            Kind::Sparse => &self.sparse,
             Kind::Overview => &self.overviews,
             Kind::Scrub => &self.scrubs,
             Kind::Image => &self.images,
         };
         // A large image may satisfy its canonical overview, but it cannot
         // satisfy a contact-lane request after the small texture was evicted.
+        // A decoded image waiting for its upload poll is not missing.
         !cache.contains_key(&index)
+            && !self
+                .deferred
+                .as_ref()
+                .is_some_and(|(deferred, deferred_kind, _)| {
+                    *deferred == index && *deferred_kind == kind
+                })
             && !(kind == Kind::Overview && self.images.contains_key(&index))
             && !(kind == Kind::Scrub && self.scrub_failures.contains(&index))
+            && !(kind == Kind::Sparse && self.sparse_failures.contains(&index))
             && !self.errors.contains_key(&(index, kind))
     }
 
@@ -635,7 +730,7 @@ impl SourceBrowser {
         }
         if let Some(work) = &self.film_work {
             let useful = match work.kind {
-                Kind::Scrub => true,
+                Kind::Scrub | Kind::Sparse => true,
                 Kind::Overview => work.indices.iter().any(|&index| useful_overview(index)),
                 _ => work
                     .indices
@@ -651,7 +746,8 @@ impl SourceBrowser {
     fn next_detail(&self, count: usize, now: Instant) -> Option<(usize, Kind)> {
         let selected = self.requested?;
         let settled = now.saturating_duration_since(self.requested_at) >= SETTLE;
-        if !settled && self.scrubs.contains_key(&selected) {
+        if !settled && (self.scrubs.contains_key(&selected) || self.sparse.contains_key(&selected))
+        {
             // During a gesture the already resident canonical image follows
             // every pointer sample. Do not chase it with immediately obsolete
             // refinement decodes or uploads; refine where the gesture rests.
@@ -730,7 +826,120 @@ impl SourceBrowser {
             .collect()
     }
 
+    /// Every k-th capture, when the stack is longer than the resident window.
+    fn sparse_stride(count: usize) -> Option<usize> {
+        (count > SCRUB_COUNT).then(|| count.div_ceil(SPARSE_COUNT))
+    }
+
+    fn next_sparse(&self, count: usize) -> Vec<usize> {
+        let (Some(stride), Some(selected)) = (Self::sparse_stride(count), self.requested) else {
+            return Vec::new();
+        };
+        let slots = count.div_ceil(stride);
+        if self.sparse.len() + self.sparse_failures.len() >= slots {
+            return Vec::new();
+        }
+        // Nearest to the selection first, so its neighbourhood is covered early.
+        let home = selected / stride;
+        let mut found = Vec::with_capacity(SPARSE_BATCH);
+        for distance in 0..slots {
+            for slot in [home.checked_add(distance), home.checked_sub(distance)]
+                .into_iter()
+                .flatten()
+                .filter(|&slot| slot < slots)
+            {
+                let index = slot * stride;
+                if self.missing(index, Kind::Sparse) && !found.contains(&index) {
+                    found.push(index);
+                    if found.len() == SPARSE_BATCH {
+                        return found;
+                    }
+                }
+            }
+            if distance > home && home + distance >= slots {
+                break;
+            }
+        }
+        found
+    }
+
+    fn upload_sparse(&mut self, ctx: &egui::Context, count: usize, uploaded: &mut usize) -> bool {
+        let stride = Self::sparse_stride(count);
+        self.sparse_pending
+            .retain(|(index, _)| stride.is_some_and(|stride| index % stride == 0));
+        let mut changed = false;
+        while let Some((_, preview)) = self.sparse_pending.front() {
+            let bytes = preview.image.rgba.len();
+            if *uploaded + bytes > SCRUB_UPLOAD_BYTES {
+                break;
+            }
+            let (index, preview) = self.sparse_pending.pop_front().expect("ready sparse image");
+            *uploaded += bytes;
+            if self.sparse.contains_key(&index) {
+                continue;
+            }
+            self.sparse
+                .insert(index, cache_image(ctx, preview.image, Kind::Sparse));
+            changed = true;
+        }
+        if changed {
+            trim_cache(
+                &mut self.sparse,
+                self.requested.unwrap_or(0),
+                SPARSE_COUNT,
+                SPARSE_BYTES,
+            );
+        }
+        changed
+    }
+
+    /// Publish a detail decode; returns the bytes handed to egui.
+    fn publish_detail(
+        &mut self,
+        ctx: &egui::Context,
+        index: usize,
+        kind: Kind,
+        detail: DetailPreview,
+    ) -> usize {
+        let DetailPreview { preview, color } = detail;
+        let mut bytes = 0;
+        if !self.thumbs.contains_key(&index)
+            && let Some(thumbnail) = preview.thumbnail
+        {
+            bytes += thumbnail.rgba.len();
+            self.thumbs
+                .insert(index, cache_image(ctx, thumbnail, Kind::Thumbnail));
+            self.errors.remove(&(index, Kind::Thumbnail));
+        }
+        let cached = match color {
+            Some(color) => cache_texels(ctx, preview.image, color, kind),
+            None => cache_image(ctx, preview.image, kind),
+        };
+        bytes += cached.bytes;
+        let cache = match kind {
+            Kind::Image => &mut self.images,
+            Kind::Overview => &mut self.overviews,
+            Kind::Scrub => &mut self.scrubs,
+            Kind::Sparse => &mut self.sparse,
+            Kind::Thumbnail => &mut self.thumbs,
+        };
+        cache.insert(index, cached);
+        self.errors.remove(&(index, kind));
+        bytes
+    }
+
+    #[cfg(test)]
     fn upload_scrubs(&mut self, ctx: &egui::Context, selected: usize, count: usize) -> bool {
+        self.upload_scrubs_within(ctx, selected, count, &mut 0)
+    }
+
+    fn upload_scrubs_within(
+        &mut self,
+        ctx: &egui::Context,
+        selected: usize,
+        count: usize,
+        budget: &mut usize,
+    ) -> bool {
         let range = self.scrub_range(count);
         if self.scrub_window != range {
             self.scrubs.retain(|index, _| range.contains(index));
@@ -754,7 +963,8 @@ impl SourceBrowser {
         {
             self.scrub_pending.push_front(image);
         }
-        let mut uploaded = 0;
+        let mut uploaded = *budget;
+        let start = uploaded;
         while let Some((index, preview)) = self.scrub_pending.front() {
             let bytes = preview.image.rgba.len()
                 + preview
@@ -780,10 +990,11 @@ impl SourceBrowser {
             self.scrubs
                 .insert(index, cache_image(ctx, preview.image, Kind::Scrub));
         }
-        if uploaded > 0 {
+        *budget = uploaded;
+        if uploaded > start {
             self.trim();
         }
-        uploaded > 0
+        uploaded > start
     }
 
     fn bounded_visible(&self, count: usize, visible: &[usize]) -> Vec<usize> {
@@ -816,7 +1027,13 @@ impl SourceBrowser {
         targets
     }
 
-    fn next_filmstrip(&self, count: usize, visible: &[usize], now: Instant) -> Vec<usize> {
+    fn next_filmstrip(
+        &self,
+        count: usize,
+        visible: &[usize],
+        now: Instant,
+        neighbourhood: bool,
+    ) -> Vec<usize> {
         let Some(selected) = self.requested else {
             return Vec::new();
         };
@@ -835,7 +1052,9 @@ impl SourceBrowser {
                 .flatten()
                 .filter(|&index| index < count),
         );
-        let radius = if now.saturating_duration_since(self.requested_at) >= SETTLE {
+        let radius = if !neighbourhood {
+            0
+        } else if now.saturating_duration_since(self.requested_at) >= SETTLE {
             40
         } else {
             12
@@ -895,7 +1114,12 @@ impl SourceBrowser {
                     .get(&index)
                     .map(|image| (image, Kind::Overview))
             })
-            .or_else(|| self.scrubs.get(&index).map(|image| (image, Kind::Scrub)));
+            .or_else(|| self.scrubs.get(&index).map(|image| (image, Kind::Scrub)))
+            .or_else(|| self.sparse.get(&index).map(|image| (image, Kind::Sparse)));
+        if selected.is_none() {
+            self.install_neighbour(index, viewer);
+            return;
+        }
         if let Some((image, kind)) = selected {
             if self.displayed == Some((index, kind))
                 && viewer.has_source(&image.texture, (self.epoch, index))
@@ -912,6 +1136,34 @@ impl SourceBrowser {
             );
             self.displayed = Some((index, kind));
         }
+    }
+
+    /// A cold capture in a long stack: show the nearest sparse-tier capture
+    /// if it is closer to the request than the picture on screen. It is a
+    /// different capture, so it swaps without a fade, and `displayed_index`
+    /// names it: the request stays pending until its own tier arrives.
+    fn install_neighbour(&mut self, index: usize, viewer: &mut Viewer) {
+        let below = self.sparse.range(..index).next_back();
+        let above = self.sparse.range(index..).next();
+        let Some((&neighbour, image)) = [below, above]
+            .into_iter()
+            .flatten()
+            .min_by_key(|(candidate, _)| candidate.abs_diff(index))
+        else {
+            return;
+        };
+        if self.displayed.is_some_and(|(shown, _)| {
+            shown == neighbour || shown.abs_diff(index) <= neighbour.abs_diff(index)
+        }) {
+            return;
+        }
+        viewer.install_source(
+            &image.texture,
+            image.source_size,
+            true,
+            (self.epoch, neighbour),
+        );
+        self.displayed = Some((neighbour, Kind::Sparse));
     }
 
     fn trim(&mut self) {
@@ -1013,6 +1265,26 @@ fn neighborhood(selected: usize, count: usize, direction: isize, radius: usize) 
         }
     }
     indices
+}
+
+/// Texels prepared on the worker: the UI thread only registers them.
+fn cache_texels(
+    ctx: &egui::Context,
+    image: PreviewImage,
+    color: egui::ColorImage,
+    kind: Kind,
+) -> CachedImage {
+    let bytes = color.pixels.len() * 4;
+    CachedImage {
+        texture: ctx.load_texture(
+            format!("{}:{kind:?}", image.path.display()),
+            color,
+            egui::TextureOptions::LINEAR,
+        ),
+        source_size: image.source_size,
+        overview: image.is_overview,
+        bytes,
+    }
 }
 
 fn cache_image(ctx: &egui::Context, image: PreviewImage, kind: Kind) -> CachedImage {

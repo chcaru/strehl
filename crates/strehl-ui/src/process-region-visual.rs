@@ -346,27 +346,36 @@ impl RegionProbe {
         let mut cache = self.visual_cache.borrow_mut();
         if cache.key != Some(key) {
             let mut mesh = egui::Mesh::default();
+            // Long stacks pool captures into at most one column per pixel:
+            // the ratio of summed counts, so a column never overstates.
+            let columns = frames.clamp(1, (bounds.width().floor() as usize).max(1));
             for (row, &level) in self.levels.iter().enumerate() {
                 let y = bounds.top() + row as f32 * (row_height + 4.0);
+                let mut pooled = vec![SampleCount::default(); columns];
                 for (&(_, frame), item) in self
                     .evidence
                     .range((level, 0)..=(level, frames.saturating_sub(1)))
                 {
-                    let Some(fraction) = item.count.fraction() else {
+                    let cell = &mut pooled[frame * columns / frames.max(1)];
+                    cell.admitted += item.count.admitted;
+                    cell.observed += item.count.observed;
+                }
+                for (column, count) in pooled.into_iter().enumerate() {
+                    let Some(fraction) = count.fraction() else {
                         continue;
                     };
                     let cell = Rect::from_min_max(
                         egui::pos2(
                             egui::lerp(
                                 bounds.left()..=bounds.right(),
-                                frame as f32 / frames.max(1) as f32,
+                                column as f32 / columns as f32,
                             ),
                             y,
                         ),
                         egui::pos2(
                             egui::lerp(
                                 bounds.left()..=bounds.right(),
-                                (frame + 1) as f32 / frames.max(1) as f32,
+                                (column + 1) as f32 / columns as f32,
                             ),
                             y + row_height - 2.0,
                         ),

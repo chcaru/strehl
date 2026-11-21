@@ -476,10 +476,14 @@ fn admission_plots_show_true_selected_counts_and_do_not_bridge_missing_captures(
             .iter()
             .any(|text| text.contains("50% full image  /  100% region"))
     );
-    let full_curve: Vec<_> = output
-        .shapes
+    // The completed lanes are one cached mesh; read the shapes it was
+    // tessellated from, and witness that the mesh itself was painted.
+    assert!(output.shapes.iter().any(|shape| matches!(&shape.shape,
+        egui::Shape::Mesh(mesh) if mesh.texture_id == egui::TextureId::default() && !mesh.vertices.is_empty())));
+    let full_curve: Vec<_> = row
+        .lane_shapes
         .iter()
-        .filter_map(|shape| match &shape.shape {
+        .filter_map(|shape| match shape {
             egui::Shape::LineSegment { points, stroke }
                 if stroke.color == GREEN
                     && (stroke.width - 1.0).abs() < 0.001
@@ -503,7 +507,7 @@ fn admission_plots_show_true_selected_counts_and_do_not_bridge_missing_captures(
     );
     assert!(layout.lane(0).height() >= 50.0);
     assert!(
-        output.shapes.iter().any(|shape| matches!(&shape.shape,
+        row.lane_shapes.iter().any(|shape| matches!(shape,
         egui::Shape::LineSegment { points, stroke } if stroke.color == ACCENT
         && (stroke.width - 1.2).abs() < 0.001 && points[0].distance(points[1]) <= 3.01)),
         "the regional curve is a distinct dashed trace in the same plot"

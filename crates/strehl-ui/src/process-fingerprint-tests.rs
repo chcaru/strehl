@@ -461,3 +461,57 @@ fn maximum_axis_and_64_rows_keep_only_retained_observations_and_bounded_screen_c
     assert_eq!(layout.range(115).end, 65536);
     assert_eq!(pick(layout, &sampled, 63, 115).frame, None);
 }
+
+#[test]
+fn pin_cells_are_scanned_once_per_pin_and_evidence_not_per_frame() {
+    let ctx = egui::Context::default();
+    let mut progress = PipelineProgress::default();
+    progress.bands = Some(7);
+    for frame in 0..40 {
+        progress.admission_archive.ingest(
+            &packet(frame as u64 + 1, frame, 0, [4, 3], &[255; 12]),
+            [400, 300],
+        );
+    }
+    let pin = egui::pos2(0.5, 0.5);
+    for step in 0..30 {
+        let at = egui::pos2(100.0 + step as f32 * 7.0, 120.0);
+        draw(
+            &ctx,
+            egui::vec2(680.0, 240.0),
+            input(&progress, 40),
+            &progress.admission_archive,
+            pin,
+            step as f64 * 0.01,
+            vec![egui::Event::PointerMoved(at)],
+        );
+    }
+    assert_eq!(
+        cell_builds(&ctx),
+        1,
+        "pointer motion rescans no retained map"
+    );
+    draw(
+        &ctx,
+        egui::vec2(680.0, 240.0),
+        input(&progress, 40),
+        &progress.admission_archive,
+        egui::pos2(0.25, 0.5),
+        1.0,
+        vec![],
+    );
+    assert_eq!(cell_builds(&ctx), 2, "a new pin is a new reading");
+    progress
+        .admission_archive
+        .ingest(&packet(1_000, 3, 0, [4, 3], &[0; 12]), [400, 300]);
+    draw(
+        &ctx,
+        egui::vec2(680.0, 240.0),
+        input(&progress, 40),
+        &progress.admission_archive,
+        egui::pos2(0.25, 0.5),
+        1.1,
+        vec![],
+    );
+    assert_eq!(cell_builds(&ctx), 3, "new evidence is read once");
+}

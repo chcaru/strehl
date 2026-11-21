@@ -163,10 +163,11 @@ fn actual_full_width_graph_points_align_with_outer_photos_and_every130_hover_tar
     let (_, output) = paint(&mut row, &ctx, data(&progress, &photos), 0.1, vec![]);
     let first = image(&output, photos[0].texture.id()).unwrap();
     let last = image(&output, photos[129].texture.id()).unwrap();
-    let points: Vec<_> = output
-        .shapes
+    // The lanes are one cached mesh; its source shapes carry the geometry.
+    let points: Vec<_> = row
+        .lane_shapes
         .iter()
-        .filter_map(|shape| match &shape.shape {
+        .filter_map(|shape| match shape {
             egui::Shape::Circle(circle) if circle.fill == GREEN && circle.radius <= 3.0 => {
                 Some(circle.center)
             }

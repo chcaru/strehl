@@ -103,7 +103,7 @@ impl Harness {
                             if !thumbnail {
                                 preview.thumbnail = None;
                             }
-                            preview
+                            DetailPreview::from(preview)
                         })
                         .map_err(anyhow::Error::msg)
                 })
@@ -132,6 +132,22 @@ impl Harness {
                 })
             },
         );
+    }
+
+    /// Sparse-tier decodes started so far; each slot at most once.
+    fn sparse_starts(&self) -> usize {
+        let started = self.started.borrow();
+        let sparse: Vec<usize> = started
+            .iter()
+            .filter(|(_, kind)| *kind == Kind::Sparse)
+            .map(|(index, _)| *index)
+            .collect();
+        let mut unique = sparse.clone();
+        unique.sort_unstable();
+        unique.dedup();
+        assert_eq!(unique.len(), sparse.len(), "a sparse slot decoded twice");
+        assert!(sparse.len() <= SPARSE_COUNT);
+        sparse.len()
     }
 
     fn select(&mut self, index: usize) {
@@ -662,8 +678,11 @@ fn expanded_network_axis_and_source_dock_all_receive_native_contacts_then_reach_
             image.bytes = THUMB_SIDE as usize * THUMB_SIDE as usize * 4;
         }
         harness.browser.trim();
+        // The stack-wide sparse tier is a fixed amount of extra work: one
+        // decode per slot, never a cycle. Bound the rest as before.
+        let sparse = harness.sparse_starts();
         assert!(
-            delivered < 220,
+            delivered - sparse < 220,
             "all visible surfaces must settle without cyclic decoding"
         );
     }
@@ -1315,8 +1334,9 @@ fn protected_complete_working_set_evicts_stale_nearby_thumbs_and_reaches_idle() 
             image.bytes = IMAGE_SIDE as usize * IMAGE_SIDE as usize * 4;
         }
         harness.browser.trim();
+        let sparse = harness.sparse_starts();
         assert!(
-            delivered < 180,
+            delivered - sparse < 180,
             "a full old cache cannot force infinite visible re-decoding"
         );
     }
