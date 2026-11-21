@@ -1,0 +1,5 @@
+build 8e8531a43  started 2026-11-21T08:18:16.5929447-08:00
+cpu load at start: 1 %
+pointer sweeps exit 0
+resident exit 0
+finished 2026-11-21T08:31:20.3329686-08:00
