@@ -212,6 +212,9 @@ pub struct LaunchOptions {
     pub(crate) theme: Option<studio_theme::ThemeName>,
     /// `--plane-hold N`: the Stack station holds plane N (from 1) once open.
     pub(crate) plane_hold: Option<usize>,
+    /// `--depth-brush`: Develop opens with the depth brush out (offscreen
+    /// checks of the rail it shares with the Stack station).
+    pub(crate) depth_brush: bool,
     /// `--capture-fixture plan|flight|glance`: the Capture station from a
     /// fabricated state (offscreen checks); nothing reaches a camera.
     pub(crate) capture_fixture: Option<String>,
@@ -459,6 +462,10 @@ fn main() -> eframe::Result {
                 eprintln!("Use --route {}", app::studio_route::LaunchRoute::NAMES);
                 std::process::exit(2);
             }
+            continue;
+        }
+        if arg == "--depth-brush" {
+            launch.depth_brush = true;
             continue;
         }
         if arg == "--plane-hold" {

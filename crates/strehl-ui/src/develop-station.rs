@@ -1024,7 +1024,7 @@ pub(crate) fn depth_rail(
     head_ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
         style::text(
             ui,
-            "the sharpness trace arrives with the Stack station's rail",
+            "kept share per plane, as in Stack",
             style::SMALL,
             pal.ink_3,
         );

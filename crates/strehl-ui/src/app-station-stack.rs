@@ -1354,8 +1354,10 @@ impl crate::develop_station::DepthRail for DevelopRangeRail<'_> {
             0,
             crate::depth_rail::evidence_revision(self.progress),
         );
+        // The rail's whole width, less room for the "of N" label after it.
+        let width = (ui.available_width() - 64.0).max(160.0);
         let (rect, response) =
-            ui.allocate_exact_size(egui::vec2(280.0, 26.0), egui::Sense::click_and_drag());
+            ui.allocate_exact_size(egui::vec2(width, 26.0), egui::Sense::click_and_drag());
         let columns = ((rect.width() / 2.0) as usize).clamp(1, planes);
         let key = (
             station.develop_rail.series_revision(),

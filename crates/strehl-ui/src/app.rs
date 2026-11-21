@@ -267,6 +267,7 @@ impl StrehlApp {
         // An interactive launch that names no pane or document reopens the
         // station the owner last used.
         let launch_route = launch.route;
+        let launch_depth_brush = launch.depth_brush;
         let launch_subject = launch.route_subject.clone();
         let restore_station = launch_route.is_none()
             && !(launch.headless
@@ -518,6 +519,9 @@ impl StrehlApp {
             && let Err(error) = app.capture.load_fixture(name)
         {
             app.capture.error = Some(format!("{error:#}"));
+        }
+        if launch_depth_brush {
+            app.editor.develop.tool = crate::develop_station::DevelopTool::DepthBrush;
         }
         // Adopt the launch flags above, then apply an explicit route.
         app.sync_route();
