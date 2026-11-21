@@ -97,3 +97,10 @@ From the phase agents (release, alternated binaries; details in their notes):
   - `import_stack` ignores `name` when `parent_id` is given.
   - A JPEG export requested without a colour space gets Rec.2020. This default predates tonight.
 - **egui was not upgraded:** it stays at 0.33. Nothing in the plan needed a newer version, and an upgrade would have collided with seven parallel branches and the vendored egui-wgpu patch.
+
+### Package and install
+
+- A source-inclusive package of `191e4fadb` was built with `scripts/package-desktop.ps1` (build id `desktop-2b8da1787c8409c4`). Five routes rendered offscreen from the packaged `Strehl.exe` on a copy of the catalog (VERIFIED).
+- **It is not installed.** The session's permission check refused the in-place install (stopping the receiver and replacing the installed desktop), so the owner's install, receiver and catalog are unchanged. Installing is a manual step for the owner.
+- The first save after installing converts the catalog to format 2 and writes a verified format-1 backup beside it. Older builds refuse format 2, so downgrading means restoring that backup.
+- No receiver or RAW-archive change was needed: the archive codec did not change. The receiver runs from the installed desktop, so updating the desktop updates it.
