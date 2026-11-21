@@ -22,6 +22,8 @@ use crate::preview::PreviewImage;
 mod cache;
 #[path = "source-preview-decode.rs"]
 mod decode;
+#[path = "source-preview-disk.rs"]
+pub(crate) mod disk;
 
 const MAX_IFDS: usize = 64;
 const MAX_IFD_DEPTH: usize = 8;
@@ -92,6 +94,28 @@ pub(crate) struct SourcePreview {
     pub thumbnail: Option<PreviewImage>,
 }
 
+/// A detail decode whose main image was already converted to texture texels
+/// on the worker (spec 5.5 item 2): the UI thread only hands the prepared
+/// `ColorImage` to egui. `image.rgba` is then empty; `image.size` remains.
+pub(crate) struct DetailPreview {
+    pub preview: SourcePreview,
+    pub color: Option<eframe::egui::ColorImage>,
+}
+impl From<SourcePreview> for DetailPreview {
+    fn from(preview: SourcePreview) -> Self {
+        Self {
+            preview,
+            color: None,
+        }
+    }
+}
+
+/// Move an image's pixels into texels. Runs on a worker.
+pub(crate) fn texels(image: &mut PreviewImage) -> eframe::egui::ColorImage {
+    let rgba = std::mem::take(&mut image.rgba);
+    eframe::egui::ColorImage::from_rgba_unmultiplied(image.size, &rgba)
+}
+
 /// A detail decode supplies a filmstrip derivative only when the caller does
 /// not already retain one. All resizing stays off the UI thread.
 pub(crate) fn load_browser_preview(
@@ -99,13 +123,18 @@ pub(crate) fn load_browser_preview(
     max_side: u32,
     overview: bool,
     thumbnail_side: Option<u32>,
-) -> Task<SourcePreview> {
+) -> Task<DetailPreview> {
     spawn_task("strehl-source-detail", move |cancelled| {
-        let image = load_with_policy(&path, max_side, overview, &cancelled)?;
+        let mut image = load_with_policy(&path, max_side, overview, &cancelled)?;
         let thumbnail = thumbnail_side
             .map(|side| thumbnail_of(&image, side, &cancelled))
             .transpose()?;
-        Ok(SourcePreview { image, thumbnail })
+        check_cancelled(&cancelled)?;
+        let color = Some(texels(&mut image));
+        Ok(DetailPreview {
+            preview: SourcePreview { image, thumbnail },
+            color,
+        })
     })
 }
 
@@ -242,7 +271,14 @@ pub(crate) fn load_scrub_batch(
             .min(FILMSTRIP_WORKERS);
         bounded_map(paths.len(), workers, &cancelled, |slot| {
             let (index, path) = &paths[slot];
-            let preview = load_with_policy(path, max_side, true, &cancelled)
+            // A reopened stack warms from the bounded disk derivative.
+            let preview = disk::load(path, max_side, "canonical-small-first")
+                .map(Ok::<_, anyhow::Error>)
+                .unwrap_or_else(|| {
+                    let image = load_with_policy(path, max_side, true, &cancelled)?;
+                    disk::store(path, max_side, "canonical-small-first", &image);
+                    Ok(image)
+                })
                 .and_then(|image| {
                     let thumbnail = thumbnail_side
                         .map(|side| thumbnail_of(&image, side, &cancelled))
@@ -786,6 +822,18 @@ fn orient(image: DynamicImage, orientation: u16) -> DynamicImage {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// Opaque camera texels as RGBA bytes (premultiplied equals straight).
+    fn texel_bytes(detail: &DetailPreview) -> Vec<u8> {
+        detail
+            .color
+            .as_ref()
+            .expect("detail texels are prepared on the worker")
+            .pixels
+            .iter()
+            .flat_map(|pixel| pixel.to_array())
+            .collect()
+    }
     use crate::jobs::tests::TestDirectory;
 
     fn put_u16(bytes: &mut [u8], value: u16, order: ByteOrder) {
@@ -1387,10 +1435,16 @@ mod tests {
             .unwrap()
             .unwrap();
         assert_eq!(
-            detail.image.rgba, overview.rgba,
+            texel_bytes(&detail),
+            overview.rgba,
             "bundling a filmstrip derivative cannot perturb detail pixels"
         );
-        let derivative = detail.thumbnail.unwrap();
+        assert!(
+            detail.preview.image.rgba.is_empty(),
+            "texels were prepared on the worker"
+        );
+        assert_eq!(detail.preview.image.size, overview.size);
+        let derivative = detail.preview.thumbnail.unwrap();
         assert_eq!(derivative.source_size, overview.source_size);
         assert!(derivative.size.into_iter().all(|side| side <= 240));
         assert!(
@@ -1404,11 +1458,12 @@ mod tests {
             .unwrap()
             .unwrap();
         assert!(
-            cached_contact.thumbnail.is_none(),
+            cached_contact.preview.thumbnail.is_none(),
             "an existing native contact skips the derivative allocation"
         );
         assert_eq!(
-            cached_contact.image.rgba, overview.rgba,
+            texel_bytes(&cached_contact),
+            overview.rgba,
             "omitting the derivative cannot change canonical camera pixels"
         );
         let rescue = load_overview_batch(vec![(73, path.clone())], 960, None)
