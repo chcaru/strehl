@@ -206,3 +206,20 @@ manual mode only, restored when the camera is released) and
 plan's direction). The manifest schema is `strehl-capture-v2`: its top level
 reports the run's real pixel-shift count, RAW format and planned planes; per-file
 bindings in `events.jsonl` remain authoritative.
+
+Additions for Strehl Studio 2 (2026-11-21), all optional and announced in the
+state's `capabilities`; a controller without `capabilities` has none of them, and
+a desktop sends a new field only after reading its flag:
+- `capabilities.exposure_check`: `exposure.mode` (`M`, `P`, `A`, `S` or `other`)
+  and `exposure.problem`, the sentence the check before every capture would stop
+  with (M mode, a fixed ISO, a timed shutter), so it can be shown before Start.
+- `capabilities.test_shot`: `capture_positions {positions: [p], kind: "test"}`
+  takes one exposure whose manifest says `capture_kind` `test`. Error correction
+  does not hold it, and the desktop does not follow it, list it as a stack or hand
+  it to Projects; it reads the RAW's clipped share and shadow level instead. A
+  burst or retake omits `kind`, so older controllers accept it as before.
+
+The desktop lists stopped captures (`result.json` outcome `stopped` or
+`uncertain`, at least one RAW saved on this PC) beside the completed ones as
+"stopped · N planes"; they open in Projects like any folder and are never
+promoted to complete.

@@ -529,6 +529,7 @@ impl App {
                         root: settings.root.clone(),
                         positions: None,
                         keep_power_on: false,
+                        test: false,
                     },
                 );
             }
