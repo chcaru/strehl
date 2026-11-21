@@ -2,6 +2,7 @@
 //! cadence. This measures CPU publication, not a rendered GPU frame or quality.
 use super::*;
 use serde_json::json;
+use std::path::Path;
 
 fn tick(
     browser: &mut SourceBrowser,
@@ -164,9 +165,12 @@ fn benchmark_real_stack_scrub_publication() {
         .collect();
     frames.sort_by(|a, b| a.path.cmp(&b.path));
     assert!(
-        (12..=512).contains(&frames.len()),
-        "use12..512 actual RAW photographs, ideally the full299-frame stack"
+        (12..=6_000).contains(&frames.len()),
+        "use 12..6000 actual RAW photographs, ideally the full 299- or 1,444-frame stack"
     );
+    if frames.len() > SCRUB_COUNT {
+        return long_stack_scrub_publication(&directory, &report, &frames);
+    }
     let ctx = egui::Context::default();
     let mut browser = SourceBrowser::default();
     let mut viewer = Viewer::default();
@@ -251,6 +255,156 @@ fn benchmark_real_stack_scrub_publication() {
         "{} actual sources; resident warming {:.1}ms; report {}",
         frames.len(),
         warm_ms,
+        report.display()
+    );
+}
+
+/// One sweep step: what is on screen, how far it is from the request, and
+/// what the step cost. A long stack cannot hold every capture resident, so
+/// the claim is the sparse tier's: the requested capture or its nearest
+/// resident neighbour is on screen at every step, with no upload.
+fn neighbour_trace(
+    browser: &mut SourceBrowser,
+    viewer: &mut Viewer,
+    ctx: &egui::Context,
+    frames: &[FrameFile],
+    reverse: bool,
+    limit: Option<usize>,
+) -> serde_json::Value {
+    let mut exact = 0;
+    let mut stand_in = 0;
+    let mut blank = 0;
+    let mut worst = 0;
+    let mut uploads = 0;
+    let mut polls = Vec::new();
+    for step in 0..frames.len() {
+        let selected = if reverse {
+            frames.len() - 1 - step
+        } else {
+            step
+        };
+        let (poll_us, upload_bytes, _) = tick(browser, viewer, ctx, frames, selected);
+        uploads += upload_bytes;
+        polls.push(poll_us);
+        match browser.displayed_index() {
+            Some(shown) if shown == selected => exact += 1,
+            Some(shown) => {
+                stand_in += 1;
+                worst = worst.max(shown.abs_diff(selected));
+            }
+            None => blank += 1,
+        }
+        if let Some(limit) = limit {
+            let shown = browser.displayed_index();
+            assert!(
+                shown.is_some_and(|shown| shown.abs_diff(selected) <= limit),
+                "step {selected} showed {shown:?}: farther than the nearest resident neighbour"
+            );
+            assert_eq!(upload_bytes, 0, "a resident stand-in uploads nothing");
+        }
+        std::thread::sleep(Duration::from_millis(8));
+    }
+    polls.sort_by(f64::total_cmp);
+    let p95 = polls[(polls.len() * 95 / 100).min(polls.len() - 1)];
+    json!({"requested":frames.len(),"exact":exact,"stand_in":stand_in,"blank":blank,"worst_distance":worst,"upload_bytes":uploads,"poll_us_p95":p95,"poll_us_max":polls.last().copied().unwrap_or(0.0)})
+}
+
+fn sparse_complete(browser: &SourceBrowser, count: usize) -> bool {
+    let stride = SourceBrowser::sparse_stride(count).expect("a long stack");
+    browser.sparse.len() + browser.sparse_failures.len() >= count.div_ceil(stride)
+        && browser.sparse_pending.is_empty()
+}
+
+fn long_stack_scrub_publication(directory: &Path, report: &Path, frames: &[FrameFile]) {
+    // An explicit, emptied derivative folder: the cold run decodes every
+    // picture; the reopen then measures the persistent tier honestly.
+    let cache = std::env::var_os("STREHL_UI_BENCH_CACHE").map(PathBuf::from);
+    if let Some(cache) = &cache {
+        let _ = std::fs::remove_dir_all(cache);
+    }
+    crate::source_preview::disk::set_root(cache.clone());
+    let count = frames.len();
+    let stride = SourceBrowser::sparse_stride(count).unwrap();
+    let ctx = egui::Context::default();
+    let mut browser = SourceBrowser::default();
+    let mut viewer = Viewer::default();
+    let cold = trace(&mut browser, &mut viewer, &ctx, frames, false, false);
+    // Rest at the end of the stack until both resident tiers are warm.
+    let selected = count - 1;
+    let warm_start = Instant::now();
+    let mut sparse_ms = None;
+    loop {
+        tick(&mut browser, &mut viewer, &ctx, frames, selected);
+        if sparse_ms.is_none() && sparse_complete(&browser, count) {
+            sparse_ms = Some(warm_start.elapsed().as_secs_f64() * 1000.0);
+        }
+        if sparse_complete(&browser, count)
+            && cache_covers_range(&browser.scrubs, &browser.scrub_range(count))
+            && !browser.active()
+        {
+            break;
+        }
+        assert!(
+            warm_start.elapsed() < Duration::from_secs(300),
+            "long stack did not warm: sparse {} scrub {}",
+            browser.sparse.len(),
+            browser.scrubs.len()
+        );
+        std::thread::sleep(Duration::from_millis(16));
+    }
+    let warm_ms = warm_start.elapsed().as_secs_f64() * 1000.0;
+    let sparse_bytes: usize = browser.sparse.values().map(|image| image.bytes).sum();
+    let scrub_bytes: usize = browser.scrubs.values().map(|image| image.bytes).sum();
+    assert!(sparse_bytes <= SPARSE_BYTES && scrub_bytes <= SCRUB_BYTES);
+    // The acceptance sweep: every larger tier removed, the sparse tier only.
+    browser.scrubs.clear();
+    browser.overviews.clear();
+    browser.images.clear();
+    let limit = Some(stride / 2 + 1);
+    let cold_forward = neighbour_trace(&mut browser, &mut viewer, &ctx, frames, false, limit);
+    let cold_reverse = neighbour_trace(&mut browser, &mut viewer, &ctx, frames, true, limit);
+    // Reopen: a new browser on the same files, with the derivative folder.
+    let mut reopened = SourceBrowser::default();
+    let mut viewer = Viewer::default();
+    let reopen_start = Instant::now();
+    let mut reopen_sparse_ms = None;
+    loop {
+        tick(&mut reopened, &mut viewer, &ctx, frames, selected);
+        if sparse_complete(&reopened, count) {
+            reopen_sparse_ms = Some(reopen_start.elapsed().as_secs_f64() * 1000.0);
+            break;
+        }
+        if reopen_start.elapsed() > Duration::from_secs(300) {
+            break;
+        }
+        std::thread::sleep(Duration::from_millis(16));
+    }
+    crate::source_preview::disk::set_root(None);
+    let data = json!({
+        "measurement":"real camera decoding + scheduler + CPU egui texture publication; GPU not measured",
+        "source":directory,"frames":count,"input_interval_ms":8,
+        "sparse_stride":stride,"sparse_side":SPARSE_SIDE,"sparse_bytes":sparse_bytes,
+        "scrub_side":browser.scrub_side,"scrub_bytes":scrub_bytes,
+        "disk_derivatives":cache.is_some(),
+        "cold_forward_from_open":cold,
+        "warm_ms":warm_ms,"sparse_warm_ms":sparse_ms,
+        "sparse_only_forward":cold_forward,"sparse_only_reverse":cold_reverse,
+        "reopen_sparse_ms":reopen_sparse_ms,
+        "quality_claim":false
+    });
+    std::fs::write(report, serde_json::to_vec_pretty(&data).unwrap()).unwrap();
+    println!(
+        "{count} actual sources; sparse tier {:.1} ms, both tiers {warm_ms:.1} ms; sparse-only sweeps exact {}+{} stand-in {}+{} blank {}+{} worst {} / {}; reopen sparse {:?} ms; report {}",
+        sparse_ms.unwrap_or(f64::NAN),
+        cold_forward["exact"],
+        cold_reverse["exact"],
+        cold_forward["stand_in"],
+        cold_reverse["stand_in"],
+        cold_forward["blank"],
+        cold_reverse["blank"],
+        cold_forward["worst_distance"],
+        cold_reverse["worst_distance"],
+        reopen_sparse_ms,
         report.display()
     );
 }

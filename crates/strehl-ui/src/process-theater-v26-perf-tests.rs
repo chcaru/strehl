@@ -15,6 +15,7 @@ const OUTPUT: [u32; 2] = [7032, 4688];
 
 struct Fixture {
     ctx: egui::Context,
+    frames: usize,
     progress: PipelineProgress,
     photos: Vec<SourcePhoto>,
     final_image: TextureHandle,
@@ -23,18 +24,24 @@ struct Fixture {
 
 impl Fixture {
     fn new() -> Self {
+        Self::with_frames(FRAMES)
+    }
+
+    /// The same synthetic stack at any length. Long stacks keep every map the
+    /// archive retains; its cap is reported, never silently assumed away.
+    fn with_frames(frames: usize) -> Self {
         let ctx = egui::Context::default();
         crate::theme::install(&ctx);
         let mut progress = PipelineProgress::default();
         progress.ingest("planes : 3516 x 2344 per CFA plane\ncoverage : field of view scaled to 0.9500 so that EVERY frame covers every pixel\nbands : 7 Laplacian levels + 1 base, coarsest 28 x 19\nwrote : result.tiff (7032 x 4688, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, Malvar-He-Cutler demosaic)\n");
-        progress.frames_total = Some(FRAMES);
-        progress.frames_accepted = Some(FRAMES);
+        progress.frames_total = Some(frames);
+        progress.frames_accepted = Some(frames);
         let mut maps = Vec::new();
         for level in 0..8 {
             let spacing = 1usize << level;
             let width = ANALYSIS[0].div_ceil(spacing).min(128);
             let height = ANALYSIS[1].div_ceil(spacing).min(96);
-            for frame in 0..FRAMES {
+            for frame in 0..frames {
                 // Broad overlapping capture support plus a changed fine pattern;
                 // neither all-positive nor all-negative masks can pass for this.
                 let pixels = (0..height)
@@ -52,7 +59,7 @@ impl Fixture {
                     })
                     .collect::<Vec<_>>();
                 let packet = DiagnosticSurface {
-                    sequence: (level * FRAMES + frame + 1) as u64,
+                    sequence: (level * frames + frame + 1) as u64,
                     frame,
                     level,
                     kind: DiagnosticKind::GateSupport,
@@ -95,7 +102,7 @@ impl Fixture {
                     folded: if scope == DiagnosticScope::Frame {
                         1
                     } else {
-                        FRAMES
+                        frames
                     },
                     pixels: (0..width * height)
                         .map(|i| {
@@ -117,7 +124,10 @@ impl Fixture {
             }
         }
         progress.mark_complete();
-        assert_eq!(progress.admission_archive.len(), FRAMES * 8);
+        assert_eq!(
+            progress.admission_archive.len() + progress.admission_archive.dropped(),
+            frames * 8
+        );
         for level in 0..8 {
             let (meta, _) = progress.admission_archive.cells(level, 65).unwrap();
             assert!(
@@ -127,7 +137,7 @@ impl Fixture {
             let (yes, total) = progress.admission_archive.counts(level, 65).unwrap();
             assert!(yes > 0 && yes < total);
         }
-        let photos = (0..FRAMES)
+        let photos = (0..frames)
             .map(|index| SourcePhoto {
                 epoch: 1,
                 index,
@@ -149,6 +159,7 @@ impl Fixture {
         );
         Self {
             ctx,
+            frames,
             progress,
             photos,
             final_image,
@@ -262,8 +273,8 @@ impl Fixture {
         let input = Input {
             epoch: 1,
             progress: &self.progress,
-            frame_count: FRAMES,
-            selected: 65,
+            frame_count: self.frames,
+            selected: 65.min(self.frames - 1),
             inspected_pair: None,
             photos: &self.photos,
             inspection_photos: &self.photos,
@@ -1506,4 +1517,49 @@ fn production_region_extraction_runs_on_its_worker_and_paints_when_ready() {
         field.dense_regions.started, started,
         "a ready region starts no further work"
     );
+}
+
+/// The same pointer protocol on long synthetic stacks (spec 5.3: a 1,500- and
+/// a 6,000-plane fixture; budget 6,000 within 1.25 x the 130-plane figure).
+#[test]
+#[ignore = "explicit long-stack CPU paint+tessellation benchmark; not GPU FPS"]
+fn benchmark_long_stack_pointer_sweeps() {
+    let mut summary = Vec::new();
+    for frames in [FRAMES, 1_500, 6_000] {
+        let built = Instant::now();
+        let fixture = Fixture::with_frames(frames);
+        let build_s = built.elapsed().as_secs_f64();
+        let surfaces = fixture.surfaces();
+        let mut timings = [Vec::new(), Vec::new()];
+        for sweep in 0..4 {
+            for mode in if sweep % 2 == 0 { [0, 1] } else { [1, 0] } {
+                let (mut field, image, mut time) = settle(&fixture, &surfaces, mode == 1);
+                let start = Instant::now();
+                for step in 0..80 {
+                    time += 1.0 / 120.0;
+                    let phase = if sweep % 2 == 0 { step } else { 79 - step } as f32 / 79.0;
+                    let at = image.min
+                        + image.size() * egui::vec2(0.15 + phase * 0.65, 0.30 + phase * 0.24);
+                    let output = fixture.paint(&mut field, &surfaces, time, at);
+                    let primitives = fixture
+                        .ctx
+                        .tessellate(output.shapes, output.pixels_per_point);
+                    std::hint::black_box(primitives);
+                }
+                timings[mode].push(start.elapsed().as_secs_f64() * 1000.0 / 80.0);
+            }
+        }
+        let min = |values: &[f64]| values.iter().copied().fold(f64::INFINITY, f64::min);
+        println!(
+            "long_stack_cpu_ms_per_frame frames={frames} retained_maps={} dropped_maps={} fixture_build_s={build_s:.1} process={:?} source={:?}",
+            fixture.progress.admission_archive.len(),
+            fixture.progress.admission_archive.dropped(),
+            timings[0],
+            timings[1]
+        );
+        summary.push((frames, min(&timings[0]), min(&timings[1])));
+    }
+    for (frames, process, source) in &summary {
+        println!("long_stack_cpu_min_ms frames={frames} process={process:.3} source={source:.3}");
+    }
 }

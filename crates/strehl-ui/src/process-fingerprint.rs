@@ -364,7 +364,7 @@ pub(crate) fn show(
     if let Some(point) = response.hover_pos()
         && let Some((level, column)) = layout.pick(point)
     {
-        let selection = pick(layout, &cells, level, column);
+        let selection = pick(layout, cells, level, column);
         result.hovered = Some(selection);
         if response.clicked() {
             result.clicked = Some(selection);

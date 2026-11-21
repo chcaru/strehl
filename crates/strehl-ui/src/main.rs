@@ -106,6 +106,9 @@ mod source_browser;
 mod source_preview;
 #[path = "stack-map.rs"]
 mod stack_map;
+#[cfg(test)]
+#[path = "stack-parts-perf-tests.rs"]
+mod stack_parts_perf_tests;
 mod theme;
 #[path = "ui-icon.rs"]
 mod ui_icon;
