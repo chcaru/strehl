@@ -553,3 +553,50 @@ fn invalid_metadata_and_shutdown_arguments_do_not_dispatch() {
         assert_eq!(reply["result"]["isError"], true, "{call}");
     }
 }
+
+#[test]
+fn schema_lists_the_additive_subject_commands_with_their_required_fields() {
+    let registry = tool_definitions();
+    let tool = registry
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|tool| tool["name"] == "strehl_command")
+        .unwrap();
+    let options = tool["inputSchema"]["properties"]["command"]["oneOf"]
+        .as_array()
+        .unwrap();
+    let command = |name: &str| {
+        options
+            .iter()
+            .find(|option| option["properties"]["operation"]["const"] == name)
+            .unwrap_or_else(|| panic!("{name} is advertised"))
+    };
+    assert_eq!(
+        command("create_subject")["required"],
+        json!(["operation", "name", "parent_id"])
+    );
+    assert_eq!(
+        command("move_node")["required"],
+        json!(["operation", "id", "parent_id"])
+    );
+    let meta = command("set_subject_meta");
+    assert_eq!(meta["required"], json!(["operation", "id"]));
+    for field in ["optics", "scale", "hero_run"] {
+        assert_eq!(
+            meta["properties"][field]["anyOf"][0]["type"], "null",
+            "{field} can be cleared"
+        );
+    }
+    assert!(command("create_project").is_object() && command("rename_node").is_object());
+    // Every advertised example parses as the typed command.
+    for value in [
+        json!({"operation":"create_subject","name":"Weevil","parent_id":1}),
+        json!({"operation":"move_node","id":3,"parent_id":2}),
+        json!({"operation":"set_subject_meta","id":2,"notes":"n","optics":{"camera":"c","lens":"l"},
+            "scale":{"um_per_px":1.88,"source":{"kind":"entered","magnification":2.0,"pitch_um":3.76}},
+            "hero_run":{"stack_id":3,"run_index":0}}),
+    ] {
+        serde_json::from_value::<AgentCommand>(value).unwrap();
+    }
+}

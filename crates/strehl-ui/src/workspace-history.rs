@@ -16,6 +16,14 @@ use std::{
 #[path = "photo-history.rs"]
 pub(crate) mod photographs;
 pub(crate) use photographs::{PhotoExport, PhotoOwner, PhotoVersion};
+#[path = "catalog-subjects.rs"]
+mod subjects;
+#[allow(unused_imports)]
+pub(crate) use subjects::{
+    LibraryIndex, NextStep, Optics, RelocateMismatch, RelocateReport, RunState, ScaleCalibration,
+    ScaleSource, SourcesState, StackLifecycle, StepState, SubjectEdit, SubjectMeta, SubjectSummary,
+    default_stack_name, is_camera_folder,
+};
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub(crate) struct SourceIdentity {
@@ -101,6 +109,12 @@ impl Run {
 }
 pub(crate) type NodeId = u64;
 const MAX_CATALOG_BYTES: usize = 32 * 1024 * 1024;
+/// Format 2 adds subjects. An older build meets `NodeKind::Subject`, fails to
+/// load, and refuses to save, so it cannot silently strip them.
+pub(crate) const CATALOG_FORMAT: u32 = 2;
+fn legacy_format() -> u32 {
+    1
+}
 const MAX_PROJECT_NODES: usize = 16_384;
 const MAX_TREE_DEPTH: usize = 64;
 
@@ -109,6 +123,8 @@ pub(crate) enum NodeKind {
     Project,
     Folder,
     Stack,
+    /// Format 2: one specimen or object. Holds stacks only.
+    Subject,
 }
 
 /// The next render's editable recipe. A completed Run retains its own copy,
@@ -167,14 +183,21 @@ pub(crate) struct ProjectNode {
     /// Oldest to newest. The directory is the revision identity, never its name.
     #[serde(default)]
     pub revisions: Vec<PathBuf>,
+    /// Present exactly on subjects (format 2). A subject's notes are `notes`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub subject: Option<SubjectMeta>,
 }
 fn expanded_by_default() -> bool {
     true
 }
 
-#[derive(Default, Serialize, Deserialize)]
+#[derive(Serialize, Deserialize)]
 #[serde(default)]
 pub(crate) struct Catalog {
+    /// Absent in format-1 files. Loading upgrades the in-memory catalog to
+    /// `CATALOG_FORMAT`; the first save over a format-1 file backs it up.
+    #[serde(default = "legacy_format")]
+    pub format: u32,
     pub layout: WorkspaceLayout,
     pub runs: Vec<Run>,
     pub nodes: Vec<ProjectNode>,
@@ -190,11 +213,38 @@ pub(crate) struct Catalog {
     pub load_error: Option<String>,
     #[serde(skip)]
     disk_bytes: RefCell<Option<Vec<u8>>>,
+    /// Format of `disk_bytes`; a format-1 file is backed up before replacement.
+    #[serde(skip)]
+    disk_format: std::cell::Cell<u32>,
+    /// The verified copy of the format-1 file, once written by this window.
+    #[serde(skip)]
+    legacy_backup: RefCell<Option<PathBuf>>,
+}
+impl Default for Catalog {
+    fn default() -> Self {
+        Self {
+            format: CATALOG_FORMAT,
+            layout: WorkspaceLayout::default(),
+            runs: Vec::new(),
+            nodes: Vec::new(),
+            selected: None,
+            photo_versions: Vec::new(),
+            photo_exports: Vec::new(),
+            export_directories: BTreeMap::new(),
+            next_node_id: 0,
+            path: None,
+            load_error: None,
+            disk_bytes: RefCell::new(None),
+            disk_format: std::cell::Cell::new(CATALOG_FORMAT),
+            legacy_backup: RefCell::new(None),
+        }
+    }
 }
 impl Catalog {
     pub fn load(path: Option<PathBuf>) -> Self {
         let mut load_error = None;
         let mut disk_bytes = None;
+        let mut disk_format = CATALOG_FORMAT;
         let mut catalog = path
             .as_deref()
             .and_then(|p| {
@@ -211,10 +261,19 @@ impl Catalog {
                 }
                 match read_catalog_bytes(&source, MAX_CATALOG_BYTES).and_then(|bytes| {
                     let mut catalog: Self = serde_json::from_slice(&bytes)?;
+                    anyhow::ensure!(
+                        catalog.format <= CATALOG_FORMAT,
+                        "Projects were saved by a newer Strehl (catalog format {}); this build reads format {CATALOG_FORMAT} or older",
+                        catalog.format
+                    );
+                    let format = catalog.format;
                     catalog.validate()?;
                     catalog.migrate_runs()?;
+                    catalog.migrate_subjects()?;
+                    catalog.format = CATALOG_FORMAT;
                     if source == p {
                         disk_bytes = Some(bytes);
+                        disk_format = format;
                     }
                     Ok(catalog)
                 }) {
@@ -231,6 +290,7 @@ impl Catalog {
         catalog.path = path;
         catalog.load_error = load_error;
         catalog.disk_bytes = RefCell::new(disk_bytes);
+        catalog.disk_format.set(disk_format);
         catalog.layout.sanitize();
         catalog
     }
@@ -244,6 +304,10 @@ impl Catalog {
         anyhow::ensure!(
             self.load_error.is_none(),
             "Unreadable workspace is preserved; choose a new catalog before saving"
+        );
+        anyhow::ensure!(
+            self.format == CATALOG_FORMAT,
+            "Projects were not upgraded to catalog format {CATALOG_FORMAT}; reload before saving"
         );
         self.validate()?;
         let parent = path
@@ -270,6 +334,15 @@ impl Catalog {
         let temporary = path.with_extension(format!("{}.tmp", std::process::id()));
         let bytes = serde_json::to_vec_pretty(self)?;
         anyhow::ensure!(bytes.len() <= limit, "Workspace exceeds size limit");
+        if let Some(original) = &actual
+            && self.disk_format.get() < CATALOG_FORMAT
+            && self.legacy_backup.borrow().is_none()
+        {
+            // The first format-2 save keeps the exact format-1 bytes beside
+            // the catalog, verified by reading them back, or saves nothing.
+            let backup = subjects::write_legacy_backup(path, original)?;
+            *self.legacy_backup.borrow_mut() = Some(backup);
+        }
         let result = (|| {
             let mut file = std::fs::File::create(&temporary)?;
             file.write_all(&bytes)?;
@@ -284,7 +357,16 @@ impl Catalog {
         }
         result?;
         *self.disk_bytes.borrow_mut() = Some(bytes);
+        self.disk_format.set(CATALOG_FORMAT);
         Ok(())
+    }
+    /// The verified format-1 backup this window wrote before its first save.
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "shown by the library station (P4 UI)")
+    )]
+    pub(crate) fn legacy_backup(&self) -> Option<PathBuf> {
+        self.legacy_backup.borrow().clone()
     }
     /// Explicit conflict recovery preserves this window before loading another
     /// window's library. Immutable recipe payloads are never removed.
@@ -483,7 +565,7 @@ impl Catalog {
         self.insert_node(None, name, NodeKind::Project, None)
     }
     pub fn create_folder(&mut self, parent: NodeId, name: &str) -> anyhow::Result<NodeId> {
-        self.check_container(parent)?;
+        self.check_parent(NodeKind::Folder, parent)?;
         self.insert_node(Some(parent), name, NodeKind::Folder, None)
     }
     pub fn create_stack(
@@ -520,7 +602,7 @@ impl Catalog {
             return Ok(());
         }
         let parent = parent.ok_or_else(|| anyhow::anyhow!("Choose a project or folder"))?;
-        self.check_container(parent)?;
+        self.check_parent(node.kind, parent)?;
         let mut at = Some(parent);
         let mut depth = 0;
         while let Some(ancestor) = at {
@@ -656,12 +738,26 @@ impl Catalog {
         names.reverse();
         names.join(" / ")
     }
+    /// Whether `id` can hold a stack: a project, folder or subject.
     fn check_container(&self, id: NodeId) -> anyhow::Result<()> {
-        anyhow::ensure!(
-            self.node(id).is_some_and(|n| n.kind != NodeKind::Stack),
-            "Choose a project or folder"
-        );
-        Ok(())
+        self.check_parent(NodeKind::Stack, id)
+    }
+    /// Collection (project) > folder* > subject > stack. A stack directly in a
+    /// project or folder is a format-1 placement, still valid; loading moves
+    /// it into a subject.
+    fn check_parent(&self, kind: NodeKind, parent: NodeId) -> anyhow::Result<()> {
+        let parent = self.node(parent).map(|n| n.kind);
+        match (kind, parent) {
+            (NodeKind::Folder | NodeKind::Subject, Some(NodeKind::Project | NodeKind::Folder))
+            | (NodeKind::Stack, Some(NodeKind::Project | NodeKind::Folder | NodeKind::Subject)) => {
+                Ok(())
+            }
+            (NodeKind::Folder | NodeKind::Subject, Some(NodeKind::Subject)) => {
+                anyhow::bail!("A subject holds stacks only; choose a project or folder")
+            }
+            (NodeKind::Project, _) => anyhow::bail!("Projects remain at the top level"),
+            _ => anyhow::bail!("Choose a project or folder"),
+        }
     }
     fn insert_node(
         &mut self,
@@ -700,6 +796,7 @@ impl Catalog {
             expanded: true,
             stack,
             revisions: Vec::new(),
+            subject: None,
         });
         if let Some(parent) = parent {
             self.node_mut(parent).unwrap().expanded = true;
@@ -777,13 +874,21 @@ impl Catalog {
                 "Invalid stack recipe"
             );
             anyhow::ensure!(
+                (node.kind == NodeKind::Subject) == node.subject.is_some(),
+                "Invalid subject record"
+            );
+            if let Some(subject) = &node.subject {
+                subject.validate()?;
+            }
+            anyhow::ensure!(
                 node.kind == NodeKind::Stack || node.revisions.is_empty(),
                 "Only stacks contain render revisions"
             );
             if node.kind == NodeKind::Project {
                 anyhow::ensure!(node.parent.is_none(), "Project must be at top level");
             } else {
-                self.check_container(
+                self.check_parent(
+                    node.kind,
                     node.parent
                         .ok_or_else(|| anyhow::anyhow!("Object has no project"))?,
                 )?;
@@ -956,3 +1061,7 @@ mod review_tests;
 #[cfg(test)]
 #[path = "project-catalog-tests.rs"]
 mod project_tests;
+
+#[cfg(test)]
+#[path = "catalog-subjects-tests.rs"]
+mod subject_tests;

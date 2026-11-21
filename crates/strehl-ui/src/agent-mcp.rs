@@ -330,6 +330,22 @@ fn string(max: usize) -> Value {
 fn id_schema() -> Value {
     json!({"type":"integer","minimum":0})
 }
+fn subject_meta_schema() -> Value {
+    let text = json!({"type":"string","maxLength":160});
+    let positive = |max: f64| json!({"type":"number","exclusiveMinimum":0,"maximum":max});
+    let scale = json!({"oneOf":[
+        object(json!({"um_per_px":positive(1.0e6),"source":object(json!({"kind":{"const":"measured"},"slide":text}), &["kind"])}), &["um_per_px","source"]),
+        object(json!({"um_per_px":positive(1.0e6),"source":object(json!({"kind":{"const":"entered"},"magnification":positive(1000.0),"pitch_um":positive(100.0)}), &["kind","magnification","pitch_um"])}), &["um_per_px","source"])
+    ],"description":"Micrometres per sensor pixel. Entered: um_per_px must equal pitch_um / magnification. Nothing reads magnification from the RAW."});
+    json!({
+        "id":id_schema(),
+        "notes":{"type":"string","maxLength":4000},
+        "optics":{"anyOf":[{"type":"null"},object(json!({"camera":text,"lens":text}), &[])],"description":"Typed camera and lens; null clears."},
+        "scale":{"anyOf":[{"type":"null"},scale],"description":"null clears."},
+        "hero_run":{"anyOf":[{"type":"null"},object(json!({"stack_id":id_schema(),"run_index":id_schema()}), &["stack_id","run_index"])],
+            "description":"A saved render of one of this subject's stacks (zero-based projects[].revisions index) becomes its picture; null clears."}
+    })
+}
 fn command(operation: &str, properties: Value, required: &[&str]) -> Value {
     let mut p = properties.as_object().cloned().unwrap_or_default();
     p.insert("operation".into(), json!({"const":operation}));
@@ -576,6 +592,18 @@ pub(crate) fn tool_definitions() -> Value {
             json!({"id":id_schema(),"name":string(160)}),
             &["id", "name"],
         ),
+        command(
+            "create_subject",
+            json!({"name":string(160),"parent_id":id_schema()}),
+            &["name", "parent_id"],
+        ),
+        command(
+            "move_node",
+            json!({"id":id_schema(),"parent_id":{"type":"integer","minimum":0,
+                "description":"A project or folder for a folder or subject; a subject (or, for older placements, a project or folder) for a stack. Projects stay at the top level."}}),
+            &["id", "parent_id"],
+        ),
+        command("set_subject_meta", subject_meta_schema(), &["id"]),
         command(
             "import_completed_session",
             json!({"grant_id":string(80),"relative_path":string(1024),"parent_id":id_schema()}),

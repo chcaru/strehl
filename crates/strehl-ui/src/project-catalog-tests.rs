@@ -368,11 +368,20 @@ fn project_catalog_roundtrips_and_semantic_corruption_preserves_original_bytes()
     catalog.save().unwrap();
     let saved = Catalog::load(Some(path.clone()));
     assert!(saved.load_error.is_none());
+    // Format 2: the stack placed directly in a folder gains its one subject.
     assert_eq!(
         saved.nodes.len(),
-        3,
+        4,
         "reloading must not remigrate linked revisions into duplicates"
     );
+    assert_eq!(
+        saved
+            .subject_of(stack)
+            .map(|s| saved.node(s).unwrap().parent),
+        Some(Some(folder))
+    );
+    saved.save().unwrap();
+    assert_eq!(Catalog::load(Some(path.clone())).nodes.len(), 4);
     assert_eq!(saved.selected, Some(stack));
     assert_eq!(
         saved.node(project).unwrap().notes,
