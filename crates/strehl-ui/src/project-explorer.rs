@@ -1,13 +1,12 @@
 //! Compact virtual project tree. Every command is a catalog edit or an explicit
 //! request to open a stack; no command moves photographs or deletes evidence.
+use crate::library_previews as previews;
 use crate::{
     theme::{self, ACCENT, AMBER, GREEN, INK, LINE, MUTED, RAISED},
     workspace_history::{Catalog, NodeId, NodeKind, ProjectNode, Run, SubjectMeta, timestamp},
 };
 use eframe::egui::{self, Align2, Color32, FontId, Key, RichText, Sense, Stroke};
 use std::path::{Path, PathBuf};
-#[path = "explorer-previews.rs"]
-mod previews;
 
 #[derive(Clone, Debug)]
 pub(crate) enum ExplorerAction {
@@ -32,7 +31,7 @@ pub(crate) struct ProjectExplorer {
     selected_revision: Option<PathBuf>,
     selected_stack: Option<NodeId>,
     selected_history: Option<String>,
-    previews: previews::ExplorerPreviews,
+    previews: previews::LibraryPreviews,
     dragging: Option<NodeId>,
     notes_open: bool,
     notes_editor: Option<egui::Id>,
@@ -764,7 +763,7 @@ impl ProjectExplorer {
             .filter(|_| ui.is_rect_visible(rect))
             .and_then(|(path, source)| self.previews.file(path, *source));
         if representative.is_some() {
-            previews::ExplorerPreviews::paint(
+            previews::LibraryPreviews::paint(
                 ui,
                 egui::Rect::from_center_size(
                     rect.min + egui::vec2(indent + 29.0, 12.5),
@@ -869,7 +868,7 @@ impl ProjectExplorer {
             }
         );
         hit.clone().on_hover_ui(|ui| {
-            previews::ExplorerPreviews::hover(ui, texture.as_ref(), &caption);
+            previews::LibraryPreviews::hover(ui, texture.as_ref(), &caption);
             if let Some((path, source)) = &representative
                 && let Some(error) = self.previews.error(path, *source)
             {
@@ -1023,7 +1022,7 @@ impl ProjectExplorer {
             .is_rect_visible(rect)
             .then(|| self.previews.file(&run.output, false))
             .flatten();
-        previews::ExplorerPreviews::paint(
+        previews::LibraryPreviews::paint(
             ui,
             egui::Rect::from_center_size(
                 rect.min + egui::vec2(indent + 29.0, 12.0),
@@ -1044,7 +1043,7 @@ impl ProjectExplorer {
             INK,
         );
         hit.clone().on_hover_ui(|ui| {
-            previews::ExplorerPreviews::hover(ui, thumbnail.as_ref(), &revision_description(run));
+            previews::LibraryPreviews::hover(ui, thumbnail.as_ref(), &revision_description(run));
             if let Some(error) = self.previews.error(&run.output, false) {
                 ui.colored_label(AMBER, error);
             }
@@ -1148,7 +1147,7 @@ impl ProjectExplorer {
         let thumbnail = source
             .filter(|_| ui.is_rect_visible(rect))
             .and_then(|path| self.previews.file(path, true));
-        previews::ExplorerPreviews::paint(
+        previews::LibraryPreviews::paint(
             ui,
             egui::Rect::from_center_size(
                 rect.min + egui::vec2(indent + 29.0, 12.0),
@@ -1169,7 +1168,7 @@ impl ProjectExplorer {
             MUTED,
         );
         hit.clone().on_hover_ui(|ui| {
-            previews::ExplorerPreviews::hover(
+            previews::LibraryPreviews::hover(
                 ui,
                 thumbnail.as_ref(),
                 &format!(
@@ -1247,7 +1246,7 @@ impl ProjectExplorer {
             } else {
                 (None, false)
             };
-            previews::ExplorerPreviews::paint(
+            previews::LibraryPreviews::paint(
                 ui,
                 egui::Rect::from_center_size(
                     rect.min + egui::vec2(indent + 15.0, 12.0),
@@ -1257,7 +1256,7 @@ impl ProjectExplorer {
             );
             row_text(ui, rect, indent + 28.0, &version.name, "edit", INK);
             hit.clone().on_hover_ui(|ui| {
-                previews::ExplorerPreviews::hover(
+                previews::LibraryPreviews::hover(
                     ui,
                     thumbnail.as_ref(),
                     if exact {
@@ -1364,7 +1363,7 @@ impl ProjectExplorer {
                 } else {
                     thumbnail.clone()
                 };
-                previews::ExplorerPreviews::paint(
+                previews::LibraryPreviews::paint(
                     ui,
                     egui::Rect::from_center_size(
                         rect.min + egui::vec2(indent + 29.0, 12.0),
@@ -1380,7 +1379,7 @@ impl ProjectExplorer {
                     } else {
                         "Base photograph · export encoding not shown"
                     };
-                    previews::ExplorerPreviews::hover(
+                    previews::LibraryPreviews::hover(
                         ui,
                         export_thumbnail.as_ref(),
                         &format!(

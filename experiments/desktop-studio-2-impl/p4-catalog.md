@@ -129,12 +129,101 @@ was unchanged afterwards (MEASURED).
   1,500 planes (about 1.6 MB with five renders). The sources format is unchanged, as instructed;
   the per-run sidecar of plan 6.7 is the remedy if long stacks multiply.
 
+## Library UI, stage 1 (self-contained screens)
+
+**Scope:** plan 7.3, 5.4 "Library grid", 5.5 item 7. The Library station and the subject page
+are modules that take their inputs as parameters and return intents; composing them into the
+P1 shell (route, top bar, hint bar, theme tokens) is stage 2. Nothing in `app.rs`,
+`app-workspace.rs` or `theme.rs` changed; `main.rs` gained four `#[path]` module lines.
+
+| Module | What it is |
+| --- | --- |
+| `library-previews.rs` | `ExplorerPreviews` lifted out of the project tree as `LibraryPreviews`; the tree uses it unchanged. Budgets per 5.5 item 7: 240 entries, 48 MiB, 3 workers; 256 px tiles scaled on the worker from the 384 px disk tier; visible requests run before one screen of prefetch; requests not repeated in the last paint are dropped; a row (`group`) uploads together; at most 2 MiB uploaded a poll; `spawn_notifying_task` wakes; `poll` counts once per egui pass so views can share it. |
+| `library-paint.rs` | `LibraryPalette` (Graphite defaults from the mockup's `base.css`), the drawn marks (lamp, triangle, diamond, ring, half), tracked capitals, hairlines, square buttons, segments, the four lifecycle bars, badges, tags, size and date formats. |
+| `library-station.rs` | Left list (232 px: All subjects, On the rig, Needs you, Collections, storage card), header (counts, legend, search, Recent/Name/Size, grid/list, New subject ▾), on-rig strip, virtualised grid of cards (5 columns at 1448 px), list view, keys, folder drops. |
+| `subject-page.rs` | Left column (500 px: back, hero, name and collection, notes, optics and scale, on disk, New stack of this subject, Add folders) and right column (stacks newest first or by name, lifecycle line, depth signature hook, size, Open; the open row's lineage renders → versions → exports, Shoot again, Reveal folder; the journal). Inline editor for name, notes, optics and scale. Trim sources is not built (D9). |
+
+API for the shell:
+
+```rust
+LibraryStation::show(&mut self, ui: &mut Ui, inputs: LibraryInputs<'_>) -> Option<LibraryIntent>
+LibraryInputs { catalog: &Catalog, revision: u64, previews: &mut LibraryPreviews,
+    palette: &LibraryPalette, rig: Option<&RigCapture>, storage: Option<&StorageCard> }
+LibraryStation::sources(&self) -> &HashMap<NodeId, SourcesState>   // pass to the subject page
+SubjectPage::show(&mut self, ui: &mut Ui, inputs: SubjectInputs<'_>) -> Option<LibraryIntent>
+SubjectInputs { catalog, revision, subject: NodeId, previews, palette, rig,
+    sources: &HashMap<NodeId, SourcesState>, signatures: Option<&HashMap<NodeId, Vec<f32>>> }
+enum LibraryIntent { OpenSubject(NodeId), OpenStack(NodeId), OpenRender { stack, run: PathBuf },
+    OpenVersion(String), OpenCapture, NewStackFromCamera { collection, subject },
+    PickFolders { collection, subject }, ImportFolders { collection, subject, groups: Vec<ImportGroup> },
+    Locate(NodeId), ShootAgain(NodeId), RevealPath(PathBuf), Rename(NodeId),
+    EditSubject { id, name, edit: SubjectEdit }, NewCollection, ReviewStorage, Back }
+Catalog::generation(&self) -> u64      // bumped by every save; a ready-made `revision`
+import_plan(&[PathBuf]) -> Vec<ImportGroup>   // one stack per folder, camera folders by parent
+```
+
+The station caches its model (cards, needs-you counts, collections, search text) per
+(revision, record counts), the visible list per (model, filter, search, sort, rig subject), and
+checks every stack's sources on a worker once per revision (one listing per folder, names only).
+The subject page caches its model per (revision, subject) and pools a depth signature to at most
+one column per 2 px, cached per series identity and width.
+
+Decisions (ARGUED):
+
+- A card's picture is the first of up to six candidates that loads: the chosen hero, the newest
+  stacks' saved renders, then a first source. On the owner's catalog several outputs and source
+  folders are gone; without the fallback those subjects had blank cards.
+- "Recent" orders by the newest render, version or export, else the subject's creation, so a
+  subject made today but never stacked sorts first.
+- The subject page's second order is "By name", not the mockup's "By view": the catalog has no
+  view field.
+- On disk shows the recorded source bytes and the render count only. Render sizes and "could be
+  freed" need disk reads or a compaction estimate; the storage card takes the volume's free and
+  total space and the compactable total from the shell (`StorageCard`).
+
+### Library UI results
+
+Commands as before (`cargo test --locked -p strehl-ui`, clippy, fmt). Pictures:
+`$env:STREHL_P4_SHOTS=<dir>; cargo test --locked -p strehl-ui -- offscreen_library_and_subject --ignored --nocapture`,
+with `STREHL_P4_CATALOG=<copy>` for a catalog copy.
+
+- **Tests** (MEASURED): 1,092 passed, 0 failed, 18 ignored (the offscreen-pictures test added).
+  New: six station tests (intents, filters, search, sort, virtualisation, preview budgets while
+  scrolling), four subject-page tests (order, lineage, journal, every control's intent, editing,
+  pooled signature), two preview tests (a row uploads whole; uploads paced), one import-plan test.
+  The tree's ten preview tests pass on the lifted service; one independent review test now
+  derives its capacity from the byte budget (85 tree pictures of 384 px fit 48 MiB) instead of
+  the old 40-entry count.
+- **Falsification** (MEASURED): with row grouping disabled the row test fails (2 or 3 of 4 tiles
+  shown); with a 128 MiB upload budget the pacing test fails (one uploading poll, three needed).
+- **Clippy and format** (MEASURED): clean apart from the known `unnecessary_cast`; "Checking
+  strehl-ui" observed after touching the changed files.
+- **Paint cost** (MEASURED, debug build, egui included, this PC with other agents building):
+  40 and 200 subjects both lay out 16 cards; across 30 pointer-motion frames the model and the
+  list are built once; frame median 0.42-0.70 ms, worst 1.2-4.9 ms. The 200-subject shape count
+  is within 3 % of the 40-subject one. Release figures are not measured.
+- **Previews** (MEASURED, scroll test, 200 subjects with 420 × 280 PNG heroes): at most 3
+  decoders; at most 50 tiles requested while still and 100 while scrolling (this paint's and the
+  last); after scrolling the full list, 75 decodes, 75 uploads, 12.5 MiB resident, largest poll
+  upload 684 KiB; a warm view started no task and uploaded nothing on pointer motion.
+- **Look** (VERIFIED by viewing; pictures not committed, D10): offscreen renders at 1680 × 982
+  (the area under the top bar) of a fixture with the mockup's subjects, and of a copy of the
+  owner's catalog with its real renders, beside `library.png` and `subject.png`. Layout,
+  hairlines, capitals, marks, badges, lifecycle bars, rig strip, storage card, lineage and
+  journal match; the fonts are the system face until P1, and names are not bold.
+- **Owner copy** (MEASURED): 21 subjects; Needs you 4 / 1 / 14 / 8; collections "Imported
+  stacks" 15, "Bugs" 6; 11 stacks show "sources moved" (as found by the model's check).
+
+Open for stage 2: route and offscreen `--route library|subject`, theme tokens into
+`LibraryPalette`, the shell's revision (or `Catalog::generation`), `RigCapture` from the capture
+client, `StorageCard` from a disk-space worker, applying `EditSubject` through
+`ProjectExplorer::organize`, executing `ImportFolders` (scan, then one stack per folder in a new
+or existing subject), and the depth signatures from the Stack station.
+
 ## For the orchestrator
 
 - **Startup reconciliation** (one line, `app.rs`, `from_launch`, after `let mut app = Self { … };`):
   `app.catalog.reconcile_interrupted_runs(&[]);`
   No job exists yet at that point; the next catalog save writes the change.
-- `git` in this worktree resolves its top level to the submodule's git directory (`core.worktree`
-  is set in the shared config). Commits here used `git --work-tree=C:/w/p4`.
 - The milestone row `desktop-studio-2-p4-2026-11-21` is still marked "reserved; not started";
   left for the orchestrator to avoid conflicting table edits across branches.

@@ -158,7 +158,7 @@ impl ScaleCalibration {
 }
 
 /// A partial edit: `None` leaves a field alone; `Some(None)` clears it.
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, PartialEq)]
 pub(crate) struct SubjectEdit {
     pub notes: Option<String>,
     pub hero: Option<Option<PathBuf>>,
@@ -253,6 +253,52 @@ fn grouping(node: &ProjectNode) -> (String, String) {
         return (format!("stack:{}", node.id), node.name.clone());
     }
     (path_key(source), node.name.clone())
+}
+
+/// One subject's worth of folders to import, one stack per folder.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub(crate) struct ImportGroup {
+    /// The subject's suggested name: the camera folders' parent, else the folder.
+    pub subject: String,
+    pub folders: Vec<PathBuf>,
+}
+
+/// Folders dropped or picked together, grouped like the migration groups
+/// stacks: camera folders by the folder above them, any other folder alone.
+/// Duplicates collapse; groups keep the first folder's order and list their
+/// folders by name. Pure: the importer scans and validates each folder.
+pub(crate) fn import_plan(folders: &[PathBuf]) -> Vec<ImportGroup> {
+    let mut groups: Vec<(String, ImportGroup)> = Vec::new();
+    let mut seen = HashSet::new();
+    for folder in folders {
+        if folder.as_os_str().is_empty() || !seen.insert(path_key(folder)) {
+            continue;
+        }
+        let camera = folder
+            .file_name()
+            .is_some_and(|name| is_camera_folder(&name.to_string_lossy()));
+        let (key, subject) = match (camera, folder.parent(), meaningful_parent(folder)) {
+            (true, Some(parent), Some(name)) => (path_key(parent), name),
+            _ => (path_key(folder), default_stack_name(folder)),
+        };
+        match groups.iter_mut().find(|(k, _)| *k == key) {
+            Some((_, group)) => group.folders.push(folder.clone()),
+            None => groups.push((
+                key,
+                ImportGroup {
+                    subject,
+                    folders: vec![folder.clone()],
+                },
+            )),
+        }
+    }
+    groups
+        .into_iter()
+        .map(|(_, mut group)| {
+            group.folders.sort();
+            group
+        })
+        .collect()
 }
 
 impl Catalog {
@@ -743,7 +789,8 @@ pub(super) fn process_alive(_pid: u32, _since: u64) -> bool {
     true
 }
 
-fn sources_state(draft: &StackDraft) -> SourcesState {
+/// `Catalog::sources_present` for a recipe already cloned off the UI thread.
+pub(crate) fn sources_state(draft: &StackDraft) -> SourcesState {
     if draft.sources.is_empty() {
         return if draft.source.is_dir() {
             SourcesState::Unrecorded

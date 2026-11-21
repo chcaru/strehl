@@ -38,6 +38,12 @@ mod hdr_display;
 #[path = "image-gesture.rs"]
 mod image_gesture;
 mod jobs;
+#[path = "library-paint.rs"]
+mod library_paint;
+#[path = "library-previews.rs"]
+mod library_previews;
+#[path = "library-station.rs"]
+mod library_station;
 #[path = "photo-coverage.rs"]
 mod photo_coverage;
 #[path = "photo-viewport.rs"]
@@ -100,6 +106,8 @@ mod source_browser;
 mod source_preview;
 #[path = "stack-map.rs"]
 mod stack_map;
+#[path = "subject-page.rs"]
+mod subject_page;
 mod theme;
 #[path = "ui-icon.rs"]
 mod ui_icon;

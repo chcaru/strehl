@@ -59,7 +59,7 @@ fn reused_version_id_does_not_reuse_another_roots_or_pixels_texture() {
         make("library-one", changed_pixels),
         make("library-one", changed_output),
     ];
-    let mut cache = ExplorerPreviews::default();
+    let mut cache = LibraryPreviews::default();
     let ctx = egui::Context::default();
     let texture = ctx.load_texture(
         "cached-original",
@@ -75,11 +75,11 @@ fn reused_version_id_does_not_reuse_another_roots_or_pixels_texture() {
             touched: 0,
         },
     );
-    assert!(cache.request(original.clone()).is_some());
+    assert!(cache.request_row(original.clone()).is_some());
     for request in alternatives {
         assert_ne!(original.key(), request.key());
         assert!(
-            cache.request(request).is_none(),
+            cache.request_row(request).is_none(),
             "a matching ID alone reused the wrong saved photograph"
         );
     }
@@ -92,18 +92,18 @@ fn queued_versions_do_not_keep_closed_documents_pixel_buffers_alive() {
     let preview = image();
     let weak_full = Arc::downgrade(&full);
     let weak_preview = Arc::downgrade(&preview);
-    let mut cache = ExplorerPreviews::default();
+    let mut cache = LibraryPreviews::default();
     cache.set_current(
         Some(Path::new("fixture/result.tiff")),
         Some(&full),
         Some(&preview),
     );
-    cache.request(Request::Version {
+    cache.request_row(Request::Version {
         root: "library-one".into(),
         version: Box::new(version()),
         image: Arc::downgrade(&preview),
     });
-    cache.request(file(0));
+    cache.request_row(file(0));
     assert_eq!(cache.queue.len(), 2);
     drop(full);
     drop(preview);
@@ -121,22 +121,24 @@ fn queued_versions_do_not_keep_closed_documents_pixel_buffers_alive() {
         "queued old versions retained a closed document's preview"
     );
     assert_eq!(cache.queue.len(), 1);
-    assert!(matches!(&cache.queue[0].0, Request::File { .. }));
+    assert!(matches!(&cache.queue[0].request, Request::File { .. }));
 }
 
 #[test]
 fn oversized_visible_working_set_stabilizes_and_scroll_admits_new_rows() {
-    let mut cache = ExplorerPreviews::default();
-    let visible = MAX_ENTRIES + 23;
+    let mut cache = LibraryPreviews::default();
+    // The byte budget binds before the count: 85 tree pictures of 384 px.
+    let capacity = MAX_ENTRIES.min(MAX_BYTES / estimate(SIDE));
+    let visible = capacity + 23;
     for row in 0..visible {
-        cache.request(file(row));
+        cache.request_row(file(row));
     }
-    assert_eq!(cache.queue.len(), MAX_ENTRIES);
+    assert_eq!(cache.queue.len(), capacity);
     // Model completed maximum-size decodes. The test exercises actual request
     // admission, not codec timing; author controls cover real worker publication.
-    for (request, _) in cache.queue.drain(..) {
+    for queued in cache.queue.drain(..) {
         cache.entries.insert(
-            request.key(),
+            queued.key,
             Entry {
                 texture: None,
                 error: None,
@@ -149,7 +151,7 @@ fn oversized_visible_working_set_stabilizes_and_scroll_admits_new_rows() {
     for _ in 0..12 {
         cache.clock += 1;
         for row in 0..visible {
-            cache.request(file(row));
+            cache.request_row(file(row));
         }
         assert!(
             cache.queue.is_empty(),
@@ -172,14 +174,14 @@ fn oversized_visible_working_set_stabilizes_and_scroll_admits_new_rows() {
     // pass the no-churn assertion but fail this independent positive arm.
     cache.clock += 1;
     for row in 100..100 + visible {
-        cache.request(file(row));
+        cache.request_row(file(row));
     }
-    assert_eq!(cache.queue.len(), MAX_ENTRIES);
+    assert_eq!(cache.queue.len(), capacity);
     assert!(cache.entries.is_empty());
     assert!(
         cache
             .queue
             .iter()
-            .all(|(request, _)| !original_keys.contains(&request.key()))
+            .all(|queued| !original_keys.contains(&queued.key))
     );
 }
