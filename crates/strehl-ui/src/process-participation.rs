@@ -137,6 +137,17 @@ struct EvidenceKey {
     extent: Option<[usize; 2]>,
     window: Option<SampleWindow>,
 }
+#[derive(Clone, Copy, PartialEq)]
+struct LaneKey {
+    lanes: [Rect; 2],
+    columns: usize,
+    count: usize,
+    left: f32,
+    right: f32,
+    plot: u64,
+    pixels_per_point: f32,
+}
+
 #[derive(PartialEq)]
 struct BandKey {
     revision: u64,
@@ -187,6 +198,16 @@ pub(crate) struct CaptureParticipation {
     plot_cache: Vec<[Area; 2]>,
     plot_key: Option<(usize, usize)>,
     plot_dirty: bool,
+    /// Bumped by every plot rebuild; part of the lane mesh key.
+    plot_revision: u64,
+    /// The completed timeline's lanes as one mesh (spec 5.5 item 4). The
+    /// pointer's highlight is drawn over it, so motion rebuilds nothing.
+    lane_mesh: Option<(LaneKey, std::sync::Arc<egui::Mesh>)>,
+    #[cfg(test)]
+    lane_builds: usize,
+    /// The shapes the lane mesh was tessellated from, for geometry tests.
+    #[cfg(test)]
+    lane_shapes: Vec<egui::Shape>,
     #[cfg(test)]
     evidence_refreshes: usize,
     #[cfg(test)]
@@ -1078,6 +1099,30 @@ impl CaptureParticipation {
         } else {
             &[("Full image", GREEN), ("Current region", ACCENT)]
         };
+        if !self.source_mode {
+            let key = LaneKey {
+                lanes: [layout.lane(0), layout.lane(1)],
+                columns: layout.columns,
+                count: layout.count,
+                left: layout.left,
+                right: layout.right,
+                plot: self.plot_revision,
+                pixels_per_point: ui.ctx().pixels_per_point(),
+            };
+            if self.lane_mesh.as_ref().is_none_or(|(old, _)| *old != key) {
+                #[cfg(test)]
+                {
+                    self.lane_builds += 1;
+                }
+                let shapes = self.lane_shapes_for(&layout, lanes);
+                #[cfg(test)]
+                {
+                    self.lane_shapes = shapes.clone();
+                }
+                let mesh = tessellate(shapes, ui.ctx());
+                self.lane_mesh = Some((key, std::sync::Arc::new(mesh)));
+            }
+        }
         for (row, &(name, colour)) in lanes.iter().enumerate() {
             let lane = layout.lane(row);
             painter.text(
@@ -1105,6 +1150,39 @@ impl CaptureParticipation {
                     [lane.left_bottom(), lane.right_bottom()],
                     Stroke::new(0.5_f32, LINE),
                 );
+            }
+            if !self.source_mode {
+                if row == 0
+                    && let Some((_, mesh)) = &self.lane_mesh
+                {
+                    painter.add(egui::Shape::mesh(mesh.clone()));
+                }
+                // The pointer's column: a larger dot and, on the first lane,
+                // a guide. Cheap per-frame shapes over the cached lanes.
+                if let Some(frame) = result.frame.filter(|&frame| frame < layout.count) {
+                    let column = (frame * layout.columns / layout.count).min(layout.columns - 1);
+                    let column = (column.saturating_sub(1)..(column + 2).min(layout.columns))
+                        .find(|&column| layout.range(column).contains(&frame))
+                        .unwrap_or(column);
+                    if let Some(fraction) = self.plot_cache[column][row].fraction() {
+                        let cell = layout.cell(row, column);
+                        let at = egui::pos2(
+                            layout.column_x(column),
+                            cell.bottom() - 1.0 - fraction * (cell.height() - 1.0),
+                        );
+                        painter.circle_filled(at, 3.0, colour);
+                        if row == 0 {
+                            painter.line_segment(
+                                [
+                                    egui::pos2(at.x, lane.top()),
+                                    egui::pos2(at.x, lane.bottom()),
+                                ],
+                                Stroke::new(0.7_f32, colour.gamma_multiply(0.65)),
+                            );
+                        }
+                    }
+                }
+                continue;
             }
             let mut previous: Option<Pos2> = None;
             for column in 0..layout.columns {
@@ -1527,6 +1605,7 @@ impl CaptureParticipation {
         }
         self.plot_key = Some((frames, columns));
         self.plot_dirty = false;
+        self.plot_revision = self.plot_revision.wrapping_add(1);
         self.plot_cache.clear();
         #[cfg(test)]
         {
@@ -1543,6 +1622,50 @@ impl CaptureParticipation {
             }
             self.plot_cache.push(areas);
         }
+    }
+
+    /// The completed timeline's lane shapes (bars, outline, dashed region
+    /// trace, small dots), tessellated once per plot and layout.
+    fn lane_shapes_for(&self, layout: &Layout, lanes: &[(&str, Color32)]) -> Vec<egui::Shape> {
+        let mut shapes = Vec::new();
+        for (row, &(_, colour)) in lanes.iter().enumerate() {
+            let mut previous: Option<Pos2> = None;
+            for column in 0..layout.columns {
+                let cell = layout.cell(row, column);
+                let Some(fraction) = self.plot_cache[column][row].fraction() else {
+                    previous = None;
+                    continue;
+                };
+                let bar = Rect::from_min_max(
+                    egui::pos2(
+                        cell.left(),
+                        cell.bottom() - 1.0 - fraction * (cell.height() - 1.0),
+                    ),
+                    cell.right_bottom(),
+                );
+                if row == 0 {
+                    shapes.push(egui::Shape::rect_filled(
+                        bar,
+                        0.0,
+                        colour.gamma_multiply(if fraction > 0.0 { 0.14 } else { 0.3 }),
+                    ));
+                }
+                let at = egui::pos2(layout.column_x(column), bar.top());
+                if let Some(before) = previous {
+                    if row == 0 {
+                        shapes.push(egui::Shape::line_segment(
+                            [before, at],
+                            Stroke::new(1.0_f32, colour),
+                        ));
+                    } else {
+                        dashed_shapes(&mut shapes, before, at, Stroke::new(1.2_f32, colour));
+                    }
+                }
+                shapes.push(egui::Shape::circle_filled(at, 1.1, colour));
+                previous = Some(at);
+            }
+        }
+        shapes
     }
 
     fn update_bands(&mut self, input: &Input<'_>, archive: &AdmissionArchive, frames: &[usize]) {
@@ -1994,6 +2117,40 @@ fn contact_slot(frame: usize, count: usize, contacts: usize) -> usize {
 
 fn contact_height(height: f32) -> f32 {
     (height - 64.0 - graph_height(height)).clamp(8.0, 240.0)
+}
+
+fn tessellate(shapes: Vec<egui::Shape>, ctx: &egui::Context) -> egui::Mesh {
+    let mut mesh = egui::Mesh::default();
+    let mut tessellator = egui::epaint::Tessellator::new(
+        ctx.pixels_per_point(),
+        ctx.tessellation_options(|options| *options),
+        [1, 1],
+        Vec::new(),
+    );
+    for shape in shapes {
+        tessellator.tessellate_shape(shape, &mut mesh);
+    }
+    mesh
+}
+
+fn dashed_shapes(shapes: &mut Vec<egui::Shape>, a: Pos2, b: Pos2, stroke: Stroke) {
+    let delta = b - a;
+    let length = delta.length();
+    if length <= f32::EPSILON {
+        return;
+    }
+    let direction = delta / length;
+    let mut start = 0.0;
+    while start < length {
+        shapes.push(egui::Shape::line_segment(
+            [
+                a + direction * start,
+                a + direction * (start + 3.0).min(length),
+            ],
+            stroke,
+        ));
+        start += 6.0;
+    }
 }
 
 fn dashed_line(painter: &egui::Painter, a: Pos2, b: Pos2, stroke: Stroke) {

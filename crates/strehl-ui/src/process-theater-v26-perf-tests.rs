@@ -341,7 +341,11 @@ fn region_fill_meshes(output: &egui::FullOutput, alpha: u8) -> Vec<(Rect, Vec<[P
                     vertices
                         .iter()
                         .all(|vertex| {
-                            vertex.color.a() == alpha && vertex.color.g() > vertex.color.r()
+                            // Teal detail colour, not the timeline's cached
+                            // yellow-green lane bars at a similar alpha.
+                            vertex.color.a() == alpha
+                                && vertex.color.g() > vertex.color.r()
+                                && vertex.color.b() > vertex.color.r()
                         })
                         .then(|| vertices.map(|vertex| vertex.pos))
                 })
