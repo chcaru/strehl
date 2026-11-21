@@ -9,14 +9,14 @@
 //! to the run's `evidence.strehl` (created when the desktop's progress did not
 //! create one):
 //!
-//! - kind 4, focus depth: per area, the median measured acquisition ordinal
+//! - kind 7, focus depth: per area, the median measured acquisition ordinal
 //!   of its usable pixels, quantised `0..=254` over `[0, frames - 1]`; 255
 //!   where none of the area is usable. An order of planes, not a measured
 //!   distance. A reader draws an area only when enough of it is usable
 //!   (the summary's flag uses [`MIN_AREA_SHARE`]).
-//! - kind 5, focus share: per area, the share of its pixels with usable
+//! - kind 8, focus share: per area, the share of its pixels with usable
 //!   evidence (`FocusEvidence::usable`), `0..=255` over `[0, 1]`.
-//! - kind 6, focus summary: whether the field is usable and, if not, why.
+//! - kind 9, focus summary: whether the field is usable and, if not, why.
 //!
 //! An area is lattice cell `(i, j)` of `[w, h]`: analysis-domain pixels
 //! `x` in `[i W / w, (i + 1) W / w)` and `y` likewise.
@@ -160,7 +160,7 @@ impl Summary {
         }
     }
 
-    /// The kind-6 payload: `u8 format, u8 usable, u16 reason, u32 frames,
+    /// The kind-9 payload: `u8 format, u8 usable, u16 reason, u32 frames,
     /// u32 field width, u32 field height, u32 usable pixels, u32 covered
     /// pixels, f32 seconds, u64 reservation bytes, 7 x u32 pixels per refusal
     /// flag, u16 text bytes`, then the reason as UTF-8 (at most 1,024

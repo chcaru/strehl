@@ -14,9 +14,25 @@
 //!   f32 max` and one quantised byte per site: the bytes the hex lines carried.
 //!
 //! - `strehl stack --focus-evidence` (plan E5) appends a compact focus field
-//!   on level 0's lattice: kinds 4 (focus depth) and 5 (focus share) carry
-//!   `f32 min, f32 max` and one byte per site, kind 6 a summary. The maps
+//!   on level 0's lattice: kinds 7 (focus depth) and 8 (focus share) carry
+//!   `f32 min, f32 max` and one byte per site, kind 9 a summary. The maps
 //!   reader skips them; [`read_focus`] reads them as an [`EvidenceFocus`].
+//!
+//! Every record kind, once ([`kind`]); `evidence.strehl` and P2's
+//! `live.strehl` share one numbering:
+//!
+//! | Kind | Record | File |
+//! | --- | --- | --- |
+//! | 0 | gate support | evidence |
+//! | 1 | averaging map | evidence |
+//! | 2 | focus energy | evidence |
+//! | 3 | gate floor | evidence |
+//! | 4 | coefficient | live (P2) |
+//! | 5 | preview | live (P2) |
+//! | 6 | preview's revision sample | evidence (P2) |
+//! | 7 | focus depth | evidence (E5) |
+//! | 8 | focus share | evidence (E5) |
+//! | 9 | focus summary | evidence (E5) |
 //!
 //! A set gate-support bit means the sampled kernel weight was positive at that
 //! site, not that the plane won it or supplied a measured share of the blend.
@@ -34,6 +50,33 @@ use std::fs::File;
 use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, Ordering};
+
+/// The record kinds, each number once (the module's table).
+#[allow(dead_code)]
+pub(crate) mod kind {
+    pub(crate) const GATE_SUPPORT: u8 = 0;
+    pub(crate) const AVERAGING: u8 = 1;
+    pub(crate) const FOCUS_ENERGY: u8 = 2;
+    pub(crate) const GATE_FLOOR: u8 = 3;
+    pub(crate) const COEFFICIENT: u8 = 4;
+    pub(crate) const PREVIEW: u8 = 5;
+    pub(crate) const PREVIEW_SAMPLE: u8 = 6;
+    pub(crate) const FOCUS_DEPTH: u8 = 7;
+    pub(crate) const FOCUS_SHARE: u8 = 8;
+    pub(crate) const FOCUS_SUMMARY: u8 = 9;
+    pub(crate) const ALL: [u8; 10] = [
+        GATE_SUPPORT,
+        AVERAGING,
+        FOCUS_ENERGY,
+        GATE_FLOOR,
+        COEFFICIENT,
+        PREVIEW,
+        PREVIEW_SAMPLE,
+        FOCUS_DEPTH,
+        FOCUS_SHARE,
+        FOCUS_SUMMARY,
+    ];
+}
 
 /// The file's name inside a run's folder; the engine's log line names it too.
 pub(crate) const FILE_NAME: &str = "evidence.strehl";
@@ -255,7 +298,7 @@ impl EvidenceDecoder {
             folded: 1,
         };
         match kind {
-            0 => {
+            kind::GATE_SUPPORT => {
                 if payload.len() != sites.div_ceil(8) {
                     return None;
                 }
@@ -285,7 +328,7 @@ impl EvidenceDecoder {
                     packed: Some(PackedMask { bits, on }),
                 })
             }
-            2 | 3 => {
+            kind::FOCUS_ENERGY | kind::GATE_FLOOR => {
                 if payload.len() != 8 + sites {
                     return None;
                 }
@@ -293,7 +336,7 @@ impl EvidenceDecoder {
                 if !min.is_finite() || !max.is_finite() || min > max || min < 0.0 {
                     return None;
                 }
-                let kind = if kind == 2 {
+                let kind = if kind == kind::FOCUS_ENERGY {
                     DiagnosticKind::FocusEnergy
                 } else {
                     DiagnosticKind::GateFloor
@@ -547,19 +590,20 @@ pub(crate) fn read_focus(path: &Path) -> anyhow::Result<Option<EvidenceFocus>> {
             break; // a torn tail
         }
         let (frame, level, kind) = (u32_at(&record, 0), record[4], record[5]);
-        if (4..=6).contains(&kind) && frame == 0 && level == 0 {
+        let focus = [kind::FOCUS_DEPTH, kind::FOCUS_SHARE, kind::FOCUS_SUMMARY];
+        if focus.contains(&kind) && frame == 0 && level == 0 {
             let mut payload = vec![0u8; size];
             file.read_exact(&mut payload)?;
             match kind {
-                4 | 5 if size == 8 + sites => {
+                kind::FOCUS_DEPTH | kind::FOCUS_SHARE if size == 8 + sites => {
                     let bytes = payload[8..].to_vec();
-                    if kind == 4 {
+                    if kind == kind::FOCUS_DEPTH {
                         depth = Some(bytes);
                     } else {
                         share = Some(bytes);
                     }
                 }
-                6 if size >= SUMMARY_HEAD && payload[0] == 1 => {
+                kind::FOCUS_SUMMARY if size >= SUMMARY_HEAD && payload[0] == 1 => {
                     let text = u16::from_le_bytes([payload[64], payload[65]]) as usize;
                     if size == SUMMARY_HEAD + text {
                         summary = Some(payload);

@@ -441,9 +441,9 @@ fn focus_records_join_the_render_file_with_the_last_sequences() {
         identities,
         [
             (2, 1, 0, 9, 4),
-            (0, 0, 6, u32::MAX - 2, 40),
-            (0, 0, 4, u32::MAX - 1, 99),
-            (0, 0, 5, u32::MAX, 99),
+            (0, 0, 9, u32::MAX - 2, 40),
+            (0, 0, 7, u32::MAX - 1, 99),
+            (0, 0, 8, u32::MAX, 99),
         ]
     );
     // Every payload fits the framing limit of readers that predate them.
@@ -474,4 +474,36 @@ fn focus_records_join_the_render_file_with_the_last_sequences() {
     .unwrap();
     let (lattices, frames, records) = read(&path);
     assert_eq!((lattices, frames, records.len()), (vec![[5, 5]], 3, 1));
+}
+
+/// Every kind number is defined once and distinct, in the module table's
+/// order: P2's kinds 0-6 and E5's 7-9 cannot be mistaken for each other.
+#[test]
+fn record_kinds_are_distinct() {
+    let numbers: Vec<u8> = Kind::ALL.iter().map(|&k| k as u8).collect();
+    assert_eq!(numbers, (0..10).collect::<Vec<u8>>());
+    assert_eq!(
+        [Kind::FocusDepth, Kind::FocusShare, Kind::FocusSummary].map(|k| k as u8),
+        [7, 8, 9]
+    );
+    // This writer refuses the kinds P2's code writes, so E5 cannot emit one.
+    let scratch = Scratch::new("kinds");
+    let header = Header {
+        levels: vec![([4, 3], [40, 30])],
+        frames: 2,
+    };
+    let (writer, _) = Writer::open(&scratch.0, header).unwrap();
+    let mut out = Vec::new();
+    for kind in [
+        Kind::Averaging,
+        Kind::Coefficient,
+        Kind::Preview,
+        Kind::PreviewSample,
+    ] {
+        assert!(
+            !writer.encode(0, 0, kind, 1, &[0; 32], &mut out),
+            "{kind:?}"
+        );
+    }
+    assert!(out.is_empty());
 }

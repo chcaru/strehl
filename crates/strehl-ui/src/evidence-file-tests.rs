@@ -307,9 +307,9 @@ fn focus_records_are_skipped_by_the_maps_reader_and_read_by_read_focus() {
     let mut share = vec![128u8; 91];
     share[2] = 30;
     let field = [
-        record_bytes(0, 0, 6, u32::MAX - 2, &focus_summary(true, 0, 11, "")),
-        record_bytes(0, 0, 4, u32::MAX - 1, &float_payload(0.0, 10.0, &depth)),
-        record_bytes(0, 0, 5, u32::MAX, &float_payload(0.0, 1.0, &share)),
+        record_bytes(0, 0, 9, u32::MAX - 2, &focus_summary(true, 0, 11, "")),
+        record_bytes(0, 0, 7, u32::MAX - 1, &float_payload(0.0, 10.0, &depth)),
+        record_bytes(0, 0, 8, u32::MAX, &float_payload(0.0, 1.0, &share)),
     ];
     let path = focus_file(dir.path(), &field);
     // The maps reader: one map, three skipped, no failure.
@@ -343,7 +343,7 @@ fn focus_records_are_skipped_by_the_maps_reader_and_read_by_read_focus() {
     let refused = [record_bytes(
         0,
         0,
-        6,
+        9,
         u32::MAX,
         &focus_summary(false, 3, 299, "needs 6.35 GiB"),
     )];
@@ -375,7 +375,7 @@ fn the_largest_focus_record_keeps_the_maps_reader_reading() {
     bytes.extend(record_bytes(
         0,
         0,
-        4,
+        7,
         u32::MAX,
         &float_payload(0.0, 298.0, &[7; 128 * 96]),
     ));
@@ -393,4 +393,63 @@ fn the_largest_focus_record_keeps_the_maps_reader_reading() {
         (out.len(), decoder.skipped(), decoder.failure()),
         (1, 1, None)
     );
+}
+
+/// A preview's revision sample (P2's kind 6, `u32 folded, u16 preview_w,
+/// u16 preview_h, u16 w, u16 h, f32 min, f32 max`, then `w x h` bytes) at
+/// the 64 x 48 lattice, as P2's engine writes one per generation.
+fn revision_sample(folded: u32) -> Vec<u8> {
+    let mut out = folded.to_le_bytes().to_vec();
+    for value in [512u16, 384, 64, 48] {
+        out.extend(value.to_le_bytes());
+    }
+    out.extend(0f32.to_le_bytes());
+    out.extend(1f32.to_le_bytes());
+    out.extend([9u8; 64 * 48]);
+    out
+}
+
+/// Every kind number is defined once and distinct; E5's are 7, 8 and 9.
+#[test]
+fn record_kinds_are_distinct() {
+    let mut numbers = kind::ALL.to_vec();
+    numbers.sort_unstable();
+    numbers.dedup();
+    assert_eq!(numbers, (0..10).collect::<Vec<u8>>());
+    assert_eq!(
+        [kind::FOCUS_DEPTH, kind::FOCUS_SHARE, kind::FOCUS_SUMMARY],
+        [7, 8, 9]
+    );
+}
+
+/// A file holding P2's revision samples (kind 6, frame 0 among them) and
+/// E5's field reads both ways: the maps reader never returns a focus record
+/// and stops for neither, and `read_focus` takes only kinds 7-9, so P2's
+/// frame-0 sample is not read as a summary.
+#[test]
+fn revision_samples_and_the_focus_field_share_a_file() {
+    let dir = tempfile::tempdir().unwrap();
+    let depth = vec![127u8; 91];
+    let share = vec![200u8; 91];
+    let records = [
+        record_bytes(0, 0, 6, 6, &revision_sample(1)),
+        record_bytes(1, 0, 6, 7, &revision_sample(2)),
+        record_bytes(0, 0, 9, u32::MAX - 2, &focus_summary(true, 0, 11, "")),
+        record_bytes(0, 0, 7, u32::MAX - 1, &float_payload(0.0, 10.0, &depth)),
+        record_bytes(0, 0, 8, u32::MAX, &float_payload(0.0, 1.0, &share)),
+    ];
+    let path = focus_file(dir.path(), &records);
+    let bytes = std::fs::read(&path).unwrap();
+    let mut decoder = EvidenceDecoder::default();
+    let mut out = Vec::new();
+    decoder.feed(&bytes, &mut out);
+    assert_eq!(decoder.failure(), None);
+    // Six records: the gate map, two samples, three focus records. A reader
+    // that knows kind 6 returns the samples; one that does not skips them.
+    assert_eq!(out.len() + decoder.skipped(), 6);
+    assert!(decoder.skipped() >= 3, "the focus records are skipped");
+    assert!(out.iter().all(|r| r.surface.sequence < u32::MAX as u64 - 2));
+    let focus = read_focus(&path).unwrap().expect("the field");
+    assert_eq!((focus.frames, focus.usable), (11, true));
+    assert_eq!(focus.ordinal(0, 0), Some(5.0));
 }

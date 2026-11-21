@@ -80,12 +80,12 @@ time.
 
 - All on level 0's lattice (at most 128 x 96, the plane maps' lattice), frame 0, with the
   format's largest sequences (`u32::MAX - 2 ..= u32::MAX`), after every plane map.
-- Kind 4, focus depth: per area, the median measured acquisition ordinal of its usable
+- Kind 7, focus depth: per area, the median measured acquisition ordinal of its usable
   pixels (`FocusEvidence::usable`), `f32 min, max` = `0, frames - 1`, one byte per area
   `0..=254`; 255 where no pixel of the area is usable. An order of planes, not a distance.
-- Kind 5, focus share: per area, the share of usable pixels, `0..=255` over `[0, 1]`; at
+- Kind 8, focus share: per area, the share of usable pixels, `0..=255` over `[0, 1]`; at
   least 1 wherever a depth is stored.
-- Kind 6, summary: `u8 format (1), u8 usable, u16 reason, u32 frames, u32 field width, u32
+- Kind 9, summary: `u8 format (1), u8 usable, u16 reason, u32 frames, u32 field width, u32
   field height, u32 usable pixels, u32 covered pixels, f32 seconds, u64 reservation bytes,
   u16 text bytes`, then the reason as UTF-8 (at most 1,024 bytes). The field is usable when
   at least one area is a quarter usable.
@@ -93,6 +93,18 @@ time.
   `[i W / w, (i + 1) W / w)` by `[j H / h, (j + 1) H / h)`.
 - The render's file is joined (its own header); a render without the desktop's progress
   gets a new file with the merge's level grids.
+
+**Kind numbers.** P2's round 2 (`studio2/p2-evidence`) uses kinds 1 (averaging) and 6 (a
+preview's revision sample, every generation, frame 0 included) in this file and 4 and 5 in
+`live.strehl`, so E5's records were renumbered from 4-6 to 7-9 (they first collided with
+P2's kind 6). Each side now defines every number once with the full table in its module
+docs (`ui-evidence.rs` `Kind`, `evidence-file.rs` `kind`), with tests that the ten are
+distinct (`record_kinds_are_distinct`, both sides), that the engine writer refuses P2's
+kinds, and that a file holding P2's revision samples and E5's field reads both ways
+(`revision_samples_and_the_focus_field_share_a_file`: the maps reader never returns a
+focus record; `read_focus` ignores P2's frame-0 sample). P2's reader skips unknown kinds
+(`_ => None` in its `record`, VERIFIED by reading `27e30b95e`). The branch was not merged
+with P2: see the open issues.
 
 **Old readers skip the new kinds (VERIFIED).** The desktop's `EvidenceDecoder` returns
 `None` for any kind it does not know and counts it as skipped; it stops reading a file only
@@ -125,7 +137,8 @@ Engines (release, `--features temporal-energy`, GPU default, this branch):
 - `9ab14e27...` (first five 299-plane arms; depth stored only for areas a quarter usable).
 - `b23ae160...` (depth for every area with a usable pixel; no refusal counts in the
   summary; a share rounding to zero not yet lifted to 1).
-- `83d92ffd...`, the committed code (refusal counts in the summary).
+- `83d92ffd...`, the code of `22ac79728` (refusal counts in the summary). It wrote the focus
+  records as kinds 4-6; they are now 7-9 with the same payloads (no new measurement).
 
 Host: 32 logical processors, RTX 5090, 61.6 GB. Other agents were running throughout: other
 processes used 31-78 % of the CPU on average and up to 100 %. Times are bounds on a busy host.
@@ -230,3 +243,10 @@ cargo test --locked -p strehl-ui evidence_file
   `ordinal_with_share` leave open.
 - No milestone-ledger identity was allocated for this measurement; the orchestrator
   allocates lanes.
+- **Not merged with `studio2/p2-evidence`.** Merging it here conflicts outside E5, in
+  `process-region-probe.rs` and `process-theater-v26-perf-tests.rs`, where P2's long-stack
+  passes meet the integration branch's; P3 resolved those in `54c0f7808` together with its
+  own stage-2 changes. Resolving them here would record a second resolution of P2's commits.
+  When both land, `ui-evidence.rs`'s `Kind` (identical lines for 0-6) and the decoder's
+  `record` match (P2's literal arms beside these constants) need a short manual merge; the
+  cross-read test then runs against P2's reader, and its counts hold either way.
