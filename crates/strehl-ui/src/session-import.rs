@@ -34,8 +34,12 @@ impl ImportedSession {
     }
 }
 fn hash(path: &Path, cancelled: &AtomicBool) -> Result<String> {
-    let mut f = std::fs::File::open(path)
-        .with_context(|| format!("Reading imported {}", path.display()))?;
+    let mut f = std::fs::File::open(path).with_context(|| {
+        format!(
+            "Reading imported {}",
+            crate::display_path::display_path(path)
+        )
+    })?;
     ensure!(
         f.metadata()?.is_file() && f.metadata()?.len() <= FILE_LIMIT,
         "Imported artifact exceeds the 2 GiB file bound"

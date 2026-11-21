@@ -97,7 +97,7 @@ pub(crate) fn validate_tiff(path: &Path) -> Result<()> {
 
 fn reader(path: &Path) -> Result<ImageReader<std::io::BufReader<std::fs::File>>> {
     let mut reader = ImageReader::open(path)
-        .with_context(|| format!("Opening {}", path.display()))?
+        .with_context(|| format!("Opening {}", crate::display_path::display_path(path)))?
         .with_guessed_format()
         .context("Recognising the image format")?;
     let mut limits = image::Limits::default();

@@ -885,7 +885,7 @@ impl CaptureWorkspace {
             ui.add(egui::TextEdit::singleline(&mut self.config.pairing_key).password(true).desired_width(f32::INFINITY));
             ui.label("Local subnet");ui.text_edit_singleline(&mut self.config.lan);
             ui.label("Receiver configuration on this PC");
-            let mut receiver_path=self.config.receiver_config.display().to_string();
+            let mut receiver_path=crate::display_path::display_path(&self.config.receiver_config);
             if ui.add(egui::TextEdit::singleline(&mut receiver_path).desired_width(f32::INFINITY)).changed(){self.config.receiver_config=receiver_path.into();}
             if ui.add_enabled(!s.pending,egui::Button::new("Save connection")).clicked() {
                 let result=self.config.normalize().and_then(|()|self.connection.as_ref().unwrap().configure(self.config.clone()));

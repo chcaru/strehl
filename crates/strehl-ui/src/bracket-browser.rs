@@ -955,8 +955,10 @@ impl BracketBrowser {
 }
 
 fn read_directory(path: &Path, children: bool, cancelled: &AtomicBool) -> Result<Directory> {
-    let path = fs::canonicalize(path).with_context(|| format!("Opening {}", path.display()))?;
-    let entries = fs::read_dir(&path).with_context(|| format!("Reading {}", path.display()))?;
+    let path = fs::canonicalize(path)
+        .with_context(|| format!("Opening {}", crate::display_path::display_path(path)))?;
+    let entries = fs::read_dir(&path)
+        .with_context(|| format!("Reading {}", crate::display_path::display_path(&path)))?;
     let mut frames = Vec::new();
     let mut folders = Vec::new();
     let mut limited = false;

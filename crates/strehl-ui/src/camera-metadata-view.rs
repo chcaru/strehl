@@ -214,7 +214,7 @@ impl Frame {
         }
         Ok(Self {
             summary,
-            path: path.display().to_string(),
+            path: crate::display_path::display_path(path),
             grid,
             values,
             curves,

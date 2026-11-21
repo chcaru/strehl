@@ -501,7 +501,10 @@ pub(crate) fn available_path(
             return Ok(path);
         }
     }
-    anyhow::bail!("No free file name for {stem} in {}", folder.display())
+    anyhow::bail!(
+        "No free file name for {stem} in {}",
+        crate::display_path::display_path(folder)
+    )
 }
 
 fn random_id() -> Result<String> {

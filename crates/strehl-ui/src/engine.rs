@@ -49,8 +49,12 @@ pub fn command(executable: &Path) -> Result<Command> {
 
 fn resolve(path: &Path) -> Result<PathBuf> {
     if path.is_file() || path.components().count() > 1 || path.is_absolute() {
-        std::fs::canonicalize(path)
-            .with_context(|| format!("Finding the engine at {}", path.display()))
+        std::fs::canonicalize(path).with_context(|| {
+            format!(
+                "Finding the engine at {}",
+                crate::display_path::display_path(path)
+            )
+        })
     } else {
         Ok(path.to_path_buf())
     }

@@ -567,7 +567,12 @@ impl Catalog {
         let scan = jobs::scan_stack(new_dir.to_path_buf())
             .receiver
             .recv()
-            .map_err(|_| anyhow::anyhow!("Reading {} stopped", new_dir.display()))?
+            .map_err(|_| {
+                anyhow::anyhow!(
+                    "Reading {} stopped",
+                    crate::display_path::display_path(new_dir)
+                )
+            })?
             .map_err(anyhow::Error::msg)?;
         self.relocate_stack_to_scan(stack, &scan)
     }
@@ -877,7 +882,7 @@ pub(super) fn write_legacy_backup(path: &Path, original: &[u8]) -> anyhow::Resul
     }
     anyhow::bail!(
         "Could not name a Projects backup beside {}; nothing was saved",
-        path.display()
+        crate::display_path::display_path(path)
     )
 }
 fn verify_legacy_backup(backup: &Path, original: &[u8]) -> anyhow::Result<()> {
@@ -1143,7 +1148,7 @@ impl std::fmt::Display for RelocateMismatch {
         write!(
             f,
             "{} does not hold this stack's sources",
-            self.directory.display()
+            crate::display_path::display_path(&self.directory)
         )?;
         if !self.missing.is_empty() {
             write!(

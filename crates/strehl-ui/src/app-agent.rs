@@ -266,7 +266,7 @@ impl StrehlApp {
                 );
                 if ui.button("Copy session path").clicked() {
                     ui.ctx()
-                        .copy_text(bridge.descriptor_path().display().to_string());
+                        .copy_text(crate::display_path::display_path(bridge.descriptor_path()));
                 }
             }
         } else if ui

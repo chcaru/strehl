@@ -95,7 +95,8 @@ fn levels_of<'a>(
 
 /// Decodes `path` and reads its levels. Worker thread only: a full decode.
 pub(crate) fn read_levels(path: &Path) -> Result<RawLevels> {
-    let frame = strehl_raw::decode(path).with_context(|| format!("Decoding {}", path.display()))?;
+    let frame = strehl_raw::decode(path)
+        .with_context(|| format!("Decoding {}", crate::display_path::display_path(path)))?;
     let (samples, clipped_share, shadow_level, median_level, highlight_level) = levels_of(
         (0..frame.active.height).map(|y| frame.active_row(y)),
         frame.levels.black,

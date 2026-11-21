@@ -70,7 +70,8 @@ pub(super) struct Repro {
     pub tiles: Vec<Tile>,
 }
 pub(super) fn read(path: &Path) -> Result<Value> {
-    let file = std::fs::File::open(path).with_context(|| format!("Reading {}", path.display()))?;
+    let file = std::fs::File::open(path)
+        .with_context(|| format!("Reading {}", crate::display_path::display_path(path)))?;
     ensure!(
         file.metadata()?.len() <= MAX_REPORT,
         "Saved report exceeds 64 MiB"

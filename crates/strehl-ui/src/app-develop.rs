@@ -741,7 +741,7 @@ impl StrehlApp {
         if !current {
             self.edit_pane.develop.notice = Some(format!(
                 "The depth repair is finished: {}",
-                output.display()
+                crate::display_path::display_path(&output)
             ));
             return;
         }
@@ -1183,7 +1183,7 @@ impl StrehlApp {
                     Ok(())
                 });
             }
-            ExportIntent::CopyPath(path) => ctx.copy_text(path.display().to_string()),
+            ExportIntent::CopyPath(path) => ctx.copy_text(crate::display_path::display_path(&path)),
             ExportIntent::ExportTicked => self.start_export_batch(None)?,
             ExportIntent::ExportAgain(id) => self.start_export_batch(Some(id))?,
             ExportIntent::ExportViewBundle => {
@@ -1368,9 +1368,10 @@ impl StrehlApp {
                 let written = done.written.len();
                 self.export_pane.station.error = match (result, done.failed.first()) {
                     (Err(error), _) => Some(format!("Recording the exports: {error}")),
-                    (Ok(()), Some((path, error))) => {
-                        Some(format!("{} failed: {error}", path.display()))
-                    }
+                    (Ok(()), Some((path, error))) => Some(format!(
+                        "{} failed: {error}",
+                        crate::display_path::display_path(path)
+                    )),
                     (Ok(()), None) if done.cancelled => {
                         Some(format!("Cancelled after {written} file(s)"))
                     }

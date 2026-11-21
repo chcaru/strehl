@@ -155,11 +155,11 @@ fn session_exit_message(status: impl std::fmt::Display, log: &Path) -> String {
     match reason {
         Some(reason) => format!(
             "{reason}. Session engine exited with {status}; full output: {}",
-            log.display()
+            crate::display_path::display_path(log)
         ),
         None => format!(
             "Session engine exited with {status}; full output: {}",
-            log.display()
+            crate::display_path::display_path(log)
         ),
     }
 }
@@ -311,13 +311,13 @@ pub(super) fn run_session_render(
                     ensure!(
                         photograph.is_file() && photograph.metadata()?.len() > 0,
                         "Session photograph was not completed: {}",
-                        photograph.display()
+                        crate::display_path::display_path(photograph)
                     );
                     let master = photograph.with_file_name("master.tiff");
                     ensure!(
                         master.is_file() && master.metadata()?.len() > 0,
                         "Session linear master was not completed: {}",
-                        master.display()
+                        crate::display_path::display_path(&master)
                     );
                     crate::preview::validate_tiff(photograph)
                         .context("Validating the complete session photograph")?;

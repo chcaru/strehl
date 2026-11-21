@@ -164,7 +164,7 @@ impl ProcessSpace {
                         );
                         for alternative in &summary.alternatives {
                             ui.label(egui::RichText::new(&alternative.pass).color(INK))
-                                .on_hover_text(alternative.photograph.display().to_string());
+                                .on_hover_text(crate::display_path::display_path(&alternative.photograph));
                             ui.label(
                                 egui::RichText::new(format!("Own photograph · {}", alternative.reason))
                                     .size(10.0)

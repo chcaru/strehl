@@ -443,9 +443,10 @@ impl SessionSummary {
 }
 
 fn read<T: serde::de::DeserializeOwned>(path: &Path) -> Result<T> {
-    let file = std::fs::File::open(path).with_context(|| format!("Reading {}", path.display()))?;
+    let file = std::fs::File::open(path)
+        .with_context(|| format!("Reading {}", crate::display_path::display_path(path)))?;
     serde_json::from_reader(std::io::BufReader::new(file))
-        .with_context(|| format!("Parsing {}", path.display()))
+        .with_context(|| format!("Parsing {}", crate::display_path::display_path(path)))
 }
 
 #[cfg(test)]
