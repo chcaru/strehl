@@ -74,6 +74,21 @@ impl Default for CorePalette {
         Self::GRAPHITE
     }
 }
+impl CorePalette {
+    pub(crate) fn from_tokens(t: &crate::studio_theme::Tokens) -> Self {
+        Self {
+            accent: t.accent,
+            ink: t.ink,
+            ink2: t.ink2,
+            ink3: t.ink3,
+            line: t.line,
+            line2: t.line2,
+            panel: t.raised,
+            surround: t.surround,
+            spectrum: t.spectrum,
+        }
+    }
+}
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub(crate) enum CoreAction {
@@ -311,6 +326,10 @@ impl CoreSample {
             input.planes,
             region,
         );
+        if self.probe.recounting() {
+            // A long stack's window is being recounted within its budget.
+            ui.ctx().request_repaint();
+        }
         self.update_profile(input.level, input.planes);
         let leading = self.probe.leading();
         response.leading = leading.clone();

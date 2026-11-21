@@ -728,6 +728,12 @@ impl ProcessTheater {
         }
     }
 
+    /// The Stack station's filmstrip frames stand in for the instruments'
+    /// visible contacts while the process view is not painted.
+    pub(crate) fn set_station_contacts(&mut self, contacts: Vec<usize>) {
+        self.visible_contacts = contacts;
+    }
+
     /// Region extraction is pending on its worker.
     #[allow(dead_code)] // Read by the Stack station (stage 2).
     pub(crate) fn region_pending(&self) -> bool {

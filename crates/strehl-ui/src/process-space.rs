@@ -85,6 +85,7 @@ pub struct Response {
 }
 #[derive(Default)]
 pub struct ProcessSpace {
+    station_busy: Option<bool>,
     saved_diagnostics: crate::session_diagnostics::SavedDiagnostics,
     capture_groups: Vec<crate::session_workspace::CaptureGroup>,
     session_summary: Option<crate::session_workspace::SessionSummary>,
@@ -98,6 +99,19 @@ pub struct ProcessSpace {
     edit_timeline_height: f32,
 }
 impl ProcessSpace {
+    /// The Stack station's plane lens (P3): a peek is a hover, a hold an
+    /// inspected source; the browser requests previews for them as for the
+    /// timeline. The station shows inspection in place, without animation.
+    pub(crate) fn set_inspection(&mut self, hover: Option<usize>, held: Option<usize>) {
+        self.theater.set_inspection(hover, held);
+    }
+    pub(crate) fn set_instant_inspection(&mut self, instant: bool) {
+        self.theater.instant_inspection = instant;
+    }
+    /// The Stack station's filmstrip frames, warmed as visible contacts.
+    pub(crate) fn set_station_contacts(&mut self, contacts: Vec<usize>) {
+        self.theater.set_station_contacts(contacts);
+    }
     pub(crate) fn diagnostics_loading(&self) -> bool {
         self.saved_diagnostics.is_loading()
     }
@@ -230,10 +244,19 @@ impl ProcessSpace {
     }
 
     pub fn transitioning(&self) -> bool {
-        self.theater.transitioning()
+        // While the Stack station owns the canvas the theater is not painted;
+        // its last animation never finishes, so the station reports instead.
+        self.station_busy
+            .unwrap_or_else(|| self.theater.transitioning())
+    }
+    /// The Stack station painted the canvas this frame (P3), busy while a
+    /// region or a long recount is still being prepared.
+    pub(crate) fn set_station_busy(&mut self, busy: bool) {
+        self.station_busy = Some(busy);
     }
 
     pub fn show(&mut self, ui: &mut Ui, input: Input<'_>) -> Response {
+        self.station_busy = None;
         let view_index = input.progress.active_view().map(|v| v.index);
         if self.epoch != Some(input.epoch) || self.view_index != view_index {
             let layout = self.theater.layout;

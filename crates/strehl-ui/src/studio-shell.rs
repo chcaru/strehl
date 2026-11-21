@@ -546,11 +546,7 @@ impl StrehlApp {
                 owns_body: true,
                 ..none
             },
-            Station::Stack => StationLayout {
-                inspector: self.shell.navigator.route().room() != Some(Room::Engine),
-                control_strip: true,
-                ..none
-            },
+            Station::Stack => self.stack_layout(),
             Station::Develop | Station::Export => StationLayout {
                 inspector: true,
                 control_strip: true,
@@ -560,8 +556,11 @@ impl StrehlApp {
     }
     /// True while a station still paints with the Graphite constants. On a
     /// light theme it is then drawn in the Graphite scope.
-    pub(super) fn station_paints_legacy(&self, _station: Station) -> bool {
-        true
+    pub(super) fn station_paints_legacy(&self, station: Station) -> bool {
+        match station {
+            Station::Stack => self.stack_paints_legacy(),
+            _ => true,
+        }
     }
 
     /// The station body: every panel below the top bar and above the hint bar.
@@ -711,9 +710,16 @@ impl StrehlApp {
     /// The 44 px tool strip. No station has tools yet (Develop's arrive in P7).
     pub(super) fn station_tools(&mut self, _ui: &mut egui::Ui, _station: Station) {}
     /// The rail and filmstrip slot. The depth rail arrives in P3.
-    pub(super) fn station_rail(&mut self, _ui: &mut egui::Ui, _station: Station) {}
+    pub(super) fn station_rail(&mut self, ui: &mut egui::Ui, station: Station) {
+        if station == Station::Stack {
+            self.stack_rail(ui);
+        }
+    }
     /// The canvas: today's process view, or the welcome page with nothing open.
-    pub(super) fn station_canvas(&mut self, ui: &mut egui::Ui, _station: Station) {
+    pub(super) fn station_canvas(&mut self, ui: &mut egui::Ui, station: Station) {
+        if station == Station::Stack {
+            return self.stack_canvas(ui);
+        }
         if self.stack.is_none()
             && !self.activity
             && self.expected_run.is_none()
@@ -741,6 +747,7 @@ impl StrehlApp {
         strip.spacing_mut().item_spacing = egui::vec2(14.0, 0.0);
         let ui = &mut strip;
         match station {
+            Station::Stack if self.stack_control_strip(ui) => {}
             Station::Stack => {
                 w::caps(ui, "View");
                 let mut room = self.shell.navigator.route().room().unwrap_or_default();
@@ -952,6 +959,7 @@ impl StrehlApp {
             return;
         }
         match station {
+            Station::Stack if self.stack_inspector_tabs(ui) => {}
             Station::Stack => {
                 for (tab, label) in [(StackTab::Adjust, "Adjust"), (StackTab::Review, "Review")] {
                     let selected = self.shell.navigator.stack_tab == tab;
@@ -979,6 +987,7 @@ impl StrehlApp {
     /// the Edit pane on Develop, the Export pane on Export.
     pub(super) fn station_inspector_body(&mut self, ui: &mut egui::Ui, station: Station) {
         match station {
+            Station::Stack if self.stack_inspector_body(ui) => {}
             Station::Stack => match self.shell.navigator.stack_tab {
                 StackTab::Adjust => self.scrolling_pane(ui, "Adjust", |app, ui| {
                     app.session_panel(ui);

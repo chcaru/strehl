@@ -59,6 +59,20 @@ impl Default for FilmPalette {
         Self::GRAPHITE
     }
 }
+impl FilmPalette {
+    pub(crate) fn from_tokens(t: &crate::studio_theme::Tokens) -> Self {
+        Self {
+            plane: t.plane,
+            accent: t.accent,
+            ink: t.ink,
+            ink3: t.ink3,
+            line: t.line,
+            line2: t.line2,
+            surround: t.surround,
+            spectrum: t.spectrum,
+        }
+    }
+}
 
 /// How many frames fit: 17 at 1,332 px, never more than `MAX_FRAMES`.
 pub(crate) fn frame_count(width: f32, planes: usize) -> usize {

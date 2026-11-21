@@ -50,6 +50,8 @@ mod session;
 mod session_import;
 #[path = "app-session-output.rs"]
 mod session_output;
+#[path = "app-station-stack.rs"]
+mod station_stack;
 #[path = "studio-route.rs"]
 pub(crate) mod studio_route;
 #[path = "studio-shell.rs"]
@@ -233,6 +235,8 @@ pub struct StrehlApp {
     agent_session_out: Option<PathBuf>,
     /// The Studio 2 frame: route, notices, palette, preferences.
     shell: studio_shell::Shell,
+    /// The Stack station's parts (P3): rail, filmstrip, plane lens, core sample.
+    stack_station: station_stack::StackStation,
 }
 
 impl StrehlApp {
@@ -374,6 +378,7 @@ impl StrehlApp {
             headless_shutdown: false,
             agent_session_out: launch.agent_session_out,
             shell,
+            stack_station: station_stack::StackStation::with_hold(launch.plane_hold),
         };
         if isolated_state {
             app.editor.recovery_root = app

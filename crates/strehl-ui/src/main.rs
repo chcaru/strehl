@@ -204,6 +204,8 @@ pub struct LaunchOptions {
     pub(crate) route: Option<app::studio_route::LaunchRoute>,
     /// `--theme`: Graphite, Instrument or Lightbox for this session only.
     pub(crate) theme: Option<studio_theme::ThemeName>,
+    /// `--plane-hold N`: the Stack station holds plane N (from 1) once open.
+    pub(crate) plane_hold: Option<usize>,
 }
 
 fn parse_screenshot_ranges(value: &str) -> Option<Vec<[usize; 2]>> {
@@ -438,6 +440,17 @@ fn main() -> eframe::Result {
                 .and_then(app::studio_route::LaunchRoute::parse);
             if launch.route.is_none() {
                 eprintln!("Use --route {}", app::studio_route::LaunchRoute::NAMES);
+                std::process::exit(2);
+            }
+            continue;
+        }
+        if arg == "--plane-hold" {
+            launch.plane_hold = args
+                .next()
+                .and_then(|v| v.to_str().and_then(|v| v.parse().ok()))
+                .filter(|&plane: &usize| plane > 0);
+            if launch.plane_hold.is_none() {
+                eprintln!("Use --plane-hold N (a plane number, from 1)");
                 std::process::exit(2);
             }
             continue;
