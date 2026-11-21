@@ -540,10 +540,31 @@ impl CaptureParticipation {
             self.evidence.clear();
             self.level = Some(level);
         }
+        let whole = aperture.contains_rect(Rect::from_min_max(Pos2::ZERO, egui::pos2(1.0, 1.0)));
+        if same_receipts {
+            // Only the pointer's window moved: every retained receipt is
+            // already here and still valid. Recount the window in place,
+            // without revalidating each receipt against the archive.
+            for (&frame, evidence) in &mut self.evidence {
+                if evidence.window_key != window {
+                    evidence.window = if whole && window.is_some() {
+                        evidence.scene
+                    } else {
+                        window
+                            .map(|window| window.archive_counts(archive, level, frame))
+                            .map_or_else(Area::default, |count| Area {
+                                observed: count.observed,
+                                admitted: count.admitted,
+                            })
+                    };
+                    evidence.window_key = window;
+                }
+            }
+            return;
+        }
         self.evidence.retain(|&frame, item| {
             frame < input.frame_count && archive.metadata(level, frame) == Some(item.meta)
         });
-        let whole = aperture.contains_rect(Rect::from_min_max(Pos2::ZERO, egui::pos2(1.0, 1.0)));
         for frame in archive
             .frames(level)
             .filter(|&frame| frame < input.frame_count)

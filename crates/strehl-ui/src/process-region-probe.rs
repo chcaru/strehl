@@ -251,6 +251,14 @@ impl EvidenceStore {
         self.levels.clear();
         self.len = 0;
     }
+    /// Update every entry of one level in place, in frame order.
+    fn recount(&mut self, level: usize, mut update: impl FnMut(usize, &mut Evidence)) {
+        if let Some((_, frames)) = self.levels.iter_mut().find(|(slot, _)| *slot == level) {
+            for (key, evidence) in frames.iter_mut().flatten() {
+                update(key.1, evidence);
+            }
+        }
+    }
     fn retain(&mut self, mut keep: impl FnMut(&EvidenceKey, &mut Evidence) -> bool) {
         for (_, frames) in &mut self.levels {
             for slot in frames.iter_mut() {
@@ -723,6 +731,24 @@ impl RegionProbe {
             }
             self.spatial_dirty = true;
             self.window_revision = self.window_revision.wrapping_add(1);
+            if !receipts_changed && self.evidence.frames(level).is_some() {
+                // Same receipts, new window: recount in place with each
+                // entry's own receipt, without revalidating it.
+                self.evidence.recount(level, |frame, evidence| {
+                    evidence.count = window.map_or_else(SampleCount::default, |window| {
+                        window.archive_counts(archive, level, frame)
+                    });
+                    evidence.window = window;
+                });
+                #[cfg(test)]
+                {
+                    self.readings += self
+                        .evidence
+                        .range((level, 0)..=(level, usize::MAX))
+                        .count();
+                }
+                continue;
+            }
             for frame in archive.frames(level).filter(|&frame| frame < frame_count) {
                 if self
                     .evidence

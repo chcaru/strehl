@@ -142,7 +142,9 @@ impl Fixture {
             let (yes, total) = progress.admission_archive.counts(level, 65).unwrap();
             assert!(yes > 0 && yes < total);
         }
-        let photos = (0..frames)
+        // As the app: SourceBrowser publishes at most its resident window
+        // (512 native contacts, 512 canonical scrubs) whatever the length.
+        let photos = (0..frames.min(512))
             .map(|index| SourcePhoto {
                 epoch: 1,
                 index,
