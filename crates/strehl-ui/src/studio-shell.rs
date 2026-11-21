@@ -78,7 +78,6 @@ pub(super) struct Shell {
     focus_motion: f64,
     pub rig: RigSummary,
     rig_read: Option<f64>,
-    rig_notice: Option<String>,
     /// The Adjust pane changed the recipe during the last paint.
     recipe_changed: bool,
     catalog_revision: u64,
@@ -121,7 +120,6 @@ impl Shell {
                 &serde_json::json!({"online":false,"initialized":false}),
             ),
             rig_read: None,
-            rig_notice: None,
             recipe_changed: false,
             catalog_revision: 0,
             catalog_pending_seen: None,
@@ -258,13 +256,8 @@ impl StrehlApp {
     pub(super) fn tick(&mut self, ctx: &egui::Context) {
         self.apply_theme(ctx);
         self.sync_route();
-        // The camera connection is wanted while Capture is open; once open it
-        // stays for this session, as before.
-        if self.shell.navigator.station() == Station::Capture {
-            self.capture.activate(ctx);
-        }
-        // Following a capture and handing a finished one to the Library.
-        self.poll_capture(ctx);
+        // The camera connection, the capture checker and a finished capture.
+        self.capture_tick(ctx);
         self.sync_route();
         self.select_edit_tool();
         self.save_pending_draft();
@@ -359,14 +352,10 @@ impl StrehlApp {
         let snapshot = self.capture.snapshot();
         let rig = RigSummary::from_snapshot(&snapshot);
         // The capture client's success notices, which nothing else shows.
-        let notice = snapshot["notice"].as_str().map(str::to_owned);
-        if notice != self.shell.rig_notice {
-            if let Some(text) = &notice {
-                self.shell
-                    .notices
-                    .push(Severity::Done, Source::Capture, text.clone(), None);
-            }
-            self.shell.rig_notice = notice;
+        if let Some(text) = self.capture_notice() {
+            self.shell
+                .notices
+                .push(Severity::Done, Source::Capture, text, None);
         }
         if rig != self.shell.rig {
             self.shell.rig = rig;
@@ -555,7 +544,10 @@ impl StrehlApp {
         if self.shell.rig.capturing() {
             let mut capture =
                 ActivityStatus::running(ActivityKind::Capture, "Capture", Lane::Camera);
-            capture.phase = self.shell.rig.phase.clone().unwrap_or_default();
+            capture.phase = self
+                .capture_activity_phase()
+                .or_else(|| self.shell.rig.phase.clone())
+                .unwrap_or_default();
             capture.done = self.shell.rig.completed;
             capture.total = self.shell.rig.planned;
             list.push(capture);
@@ -577,10 +569,7 @@ impl StrehlApp {
         };
         match station {
             Station::Library => none,
-            Station::Capture => StationLayout {
-                owns_body: true,
-                ..none
-            },
+            Station::Capture => self.capture_layout(),
             Station::Stack => StationLayout {
                 inspector: self.shell.navigator.route().room() != Some(Room::Engine),
                 control_strip: true,
@@ -594,8 +583,8 @@ impl StrehlApp {
     pub(super) fn station_paints_legacy(&self, station: Station) -> bool {
         match station {
             Station::Library => self.library_paints_legacy(),
-            Station::Develop | Station::Export => false,
-            _ => true,
+            Station::Capture | Station::Develop | Station::Export => false,
+            Station::Stack => true,
         }
     }
 
@@ -620,12 +609,7 @@ impl StrehlApp {
             self.inspector_panel(ctx, station);
         }
         if layout.owns_body {
-            let can_import = self.job.is_none()
-                && self.scan.is_none()
-                && self.replay.is_none()
-                && self.session_import.is_none()
-                && !self.picker_active();
-            self.capture.show(ctx, can_import);
+            self.capture.show_station(ctx);
             return;
         }
         let t = studio_theme::tokens(ctx);
@@ -732,12 +716,18 @@ impl StrehlApp {
     pub(super) fn station_rail(&mut self, ui: &mut egui::Ui, station: Station) {
         if matches!(station, Station::Develop | Station::Export) {
             self.develop_rail(ui, station);
+        } else if station == Station::Capture {
+            self.capture_rail(ui);
         }
     }
     /// The canvas: today's process view, or the welcome page with nothing open.
     pub(super) fn station_canvas(&mut self, ui: &mut egui::Ui, station: Station) {
         if station == Station::Library {
             return self.library_canvas(ui);
+        }
+        if station == Station::Capture {
+            self.capture_canvas(ui);
+            return;
         }
         if self.stack.is_none()
             && !self.activity
@@ -798,7 +788,14 @@ impl StrehlApp {
                 });
             }
             Station::Develop | Station::Export => self.develop_strip(ui, station),
-            Station::Library | Station::Capture => {}
+            Station::Capture => {
+                // The strip draws its own 14 px margins.
+                let full = ui.max_rect().expand2(egui::vec2(14.0, 0.0));
+                ui.scope_builder(egui::UiBuilder::new().max_rect(full), |ui| {
+                    self.capture_control_strip(ui)
+                });
+            }
+            Station::Library => {}
         }
     }
 
@@ -892,7 +889,13 @@ impl StrehlApp {
         theme::rule(ui.painter(), rect.left_top(), rect.left_bottom(), t.line);
         let drawer = self.shell.navigator.drawer;
         let footer = drawer.is_none() && self.station_has_footer(station);
-        let tabs = egui::Rect::from_min_size(rect.min, egui::vec2(rect.width(), INSPECTOR_TABS));
+        // Capture's inspector has no tabs: the plan begins at the top.
+        let tab_height = if drawer.is_none() && station == Station::Capture {
+            0.0
+        } else {
+            INSPECTOR_TABS
+        };
+        let tabs = egui::Rect::from_min_size(rect.min, egui::vec2(rect.width(), tab_height));
         let foot = egui::Rect::from_min_max(
             egui::pos2(
                 rect.left(),
@@ -1018,7 +1021,8 @@ impl StrehlApp {
                 }
             },
             Station::Develop | Station::Export => self.develop_inspector_body(ui, station),
-            Station::Library | Station::Capture => {}
+            Station::Capture => self.capture_inspector(ui),
+            Station::Library => {}
         }
     }
 

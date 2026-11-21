@@ -63,6 +63,7 @@ fn inputs<'a>(s: &'a Snapshot, blockers: &'a [Blocker]) -> PlanInputs<'a> {
             power_down: Some(true),
         },
         engine: true,
+        subjects: &[],
     }
 }
 
@@ -136,7 +137,7 @@ fn plane_counts_match_the_hosts_positions() {
 #[test]
 fn lines_say_what_the_rig_test_shot_and_calibration_found() {
     let s = snapshot(ready());
-    assert_eq!(rig_summary(&s), "ILCE-7CR on · USB 5 Gbit/s · light 41 W");
+    assert_eq!(rig_summary(&s), "A7CR on · USB 5 Gbit/s · light 41 W");
     let mut off = ready();
     off["connected"] = json!(false);
     assert!(rig_summary(&snapshot(off)).starts_with("Camera not connected"));

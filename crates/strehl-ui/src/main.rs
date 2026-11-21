@@ -206,6 +206,9 @@ pub struct LaunchOptions {
     pub(crate) route_subject: Option<String>,
     /// `--theme`: Graphite, Instrument or Lightbox for this session only.
     pub(crate) theme: Option<studio_theme::ThemeName>,
+    /// `--capture-fixture plan|flight|glance`: the Capture station from a
+    /// fabricated state (offscreen checks); nothing reaches a camera.
+    pub(crate) capture_fixture: Option<String>,
 }
 
 fn parse_screenshot_ranges(value: &str) -> Option<Vec<[usize; 2]>> {
@@ -448,6 +451,18 @@ fn main() -> eframe::Result {
             launch.route_subject = subject;
             if launch.route.is_none() {
                 eprintln!("Use --route {}", app::studio_route::LaunchRoute::NAMES);
+                std::process::exit(2);
+            }
+            continue;
+        }
+        if arg == "--capture-fixture" {
+            launch.capture_fixture = args.next().and_then(|v| v.to_str().map(str::to_owned));
+            if !launch
+                .capture_fixture
+                .as_deref()
+                .is_some_and(|v| matches!(v, "plan" | "flight" | "glance"))
+            {
+                eprintln!("Use --capture-fixture plan|flight|glance");
                 std::process::exit(2);
             }
             continue;

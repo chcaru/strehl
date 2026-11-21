@@ -71,6 +71,8 @@ pub(crate) struct PlanInputs<'a> {
     pub switches: Switches,
     /// The desktop can run the engine (calibration needs it).
     pub engine: bool,
+    /// The catalog's subjects, offered for the subject field.
+    pub subjects: &'a [String],
 }
 
 /// What the user asked of the plan.
@@ -80,7 +82,10 @@ pub(crate) enum PlanIntent {
     SetStackName(String),
     OpenRig,
     Connect,
-    Exposure { iso: u64, shutter: u64 },
+    Exposure {
+        iso: u64,
+        shutter: u64,
+    },
     TestShot,
     StopTestShot,
     MarkStart,
@@ -96,6 +101,8 @@ pub(crate) enum PlanIntent {
     SetPowerDown(bool),
     Start,
     Schedule,
+    /// The connection, storage and past captures window.
+    OpenSettings,
     Fix(Fix),
 }
 
@@ -225,10 +232,12 @@ pub(crate) fn rig_summary(s: &Snapshot) -> String {
     }
     let mut parts = Vec::new();
     if host.connected {
-        parts.push(format!(
-            "{} on",
-            host.camera_model.as_deref().unwrap_or("Camera")
-        ));
+        // The short name the top bar uses: ILCE-7CR reads as A7CR.
+        let model = host.camera_model.as_deref().unwrap_or("Camera");
+        let model = model
+            .strip_prefix("ILCE-")
+            .map_or_else(|| model.to_owned(), |rest| format!("A{rest}"));
+        parts.push(format!("{model} on"));
         if let Some(mbps) = host.usb_speed_mbps {
             parts.push(if mbps >= 1000 {
                 format!("USB {} Gbit/s", mbps / 1000)
@@ -394,12 +403,18 @@ impl PlanView {
                     .auto_shrink([false, false])
                     .show(ui, |ui| {
                         ui.spacing_mut().item_spacing.y = 0.0;
-                        self.names(ui, palette, &mut out);
+                        self.names(ui, inputs.subjects, palette, &mut out);
                         ui.add_space(10.0);
                         rig_step(ui, inputs, palette, &mut out);
                         exposure_step(ui, inputs, palette, &mut out);
                         depth_step(ui, inputs, &rows, palette, &mut out);
                         after_step(ui, inputs, palette, &mut out);
+                        ui.add_space(4.0);
+                        if style::link(ui, "Captures, storage and connection…", true, palette)
+                            .clicked()
+                        {
+                            out.push(PlanIntent::OpenSettings);
+                        }
                     });
             },
         );
@@ -407,7 +422,13 @@ impl PlanView {
         out
     }
 
-    fn names(&mut self, ui: &mut Ui, palette: &CapturePalette, out: &mut Vec<PlanIntent>) {
+    fn names(
+        &mut self,
+        ui: &mut Ui,
+        subjects: &[String],
+        palette: &CapturePalette,
+        out: &mut Vec<PlanIntent>,
+    ) {
         let w = (ui.available_width() - 10.0) / 2.0;
         ui.horizontal(|ui| {
             ui.spacing_mut().item_spacing.x = 10.0;
@@ -445,6 +466,41 @@ impl PlanView {
                         } else {
                             PlanIntent::SetStackName(value.clone())
                         });
+                    }
+                    // The catalog's subjects that match what is typed.
+                    let list_id = ui.id().with("capture-subjects");
+                    let over_list = ui.data(|d| d.get_temp::<bool>(list_id).unwrap_or(false));
+                    if subject && (r.has_focus() || over_list) && !subjects.is_empty() {
+                        let typed = value.trim().to_lowercase();
+                        let matches: Vec<&String> = subjects
+                            .iter()
+                            .filter(|s| typed.is_empty() || s.to_lowercase().contains(&typed))
+                            .filter(|s| s.to_lowercase() != typed)
+                            .take(8)
+                            .collect();
+                        if !matches.is_empty() {
+                            let area = egui::Area::new(list_id)
+                                .order(egui::Order::Foreground)
+                                .fixed_pos(r.rect.left_bottom() + egui::vec2(0.0, 2.0));
+                            let shown = area.show(ui.ctx(), |ui| {
+                                egui::Frame::new()
+                                    .fill(palette.panel)
+                                    .stroke(Stroke::new(1.0_f32, palette.line2))
+                                    .show(ui, |ui| {
+                                        ui.set_width(w - 2.0);
+                                        for name in matches {
+                                            if ui.selectable_label(false, name.as_str()).clicked() {
+                                                *value = name.clone();
+                                                out.push(PlanIntent::SetSubject(name.clone()));
+                                            }
+                                        }
+                                    });
+                            });
+                            let over = shown.response.contains_pointer();
+                            ui.data_mut(|d| d.insert_temp(list_id, over));
+                        } else {
+                            ui.data_mut(|d| d.insert_temp(list_id, false));
+                        }
                     }
                 });
             }
@@ -533,7 +589,13 @@ fn rig_step(
             .iter()
             .find(|b| rig_checks.contains(&b.check))
         {
-            let mut job = style::job(&b.sentence, 12.5, palette.warn, 0.0);
+            // A fault is red (P0 item 4); anything else waits in amber.
+            let color = if matches!(b.check, Check::Failure | Check::HostState) {
+                palette.bad
+            } else {
+                palette.warn
+            };
+            let mut job = style::job(&b.sentence, 12.5, color, 0.0);
             job.wrap.max_width = ui.available_width();
             let r = ui.add(egui::Label::new(job).sense(Sense::click()));
             if r.clicked()

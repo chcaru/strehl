@@ -30,6 +30,10 @@ pub(crate) struct CapturePalette {
     pub info: Color32,
     pub plane: Color32,
     pub surround: Color32,
+    /// Text and rules on the dark photograph surround (they differ from the
+    /// panel's on Lightbox).
+    pub canvas_ink: [Color32; 3],
+    pub canvas_line: [Color32; 2],
 }
 
 const fn hex(rgb: u32) -> Color32 {
@@ -58,6 +62,8 @@ impl Default for CapturePalette {
             info: hex(0x8ab4e8),
             plane: hex(0x55d6c4),
             surround: hex(0x0e0e0f),
+            canvas_ink: [hex(0xe9e6de), hex(0xa19f98), hex(0x807e77)],
+            canvas_line: [hex(0x232326), hex(0x37373c)],
         }
     }
 }
@@ -78,6 +84,58 @@ pub(crate) enum Mark {
 }
 
 impl CapturePalette {
+    /// The shell's theme tokens (Graphite, Instrument or Lightbox).
+    pub fn from_tokens(t: &crate::studio_theme::Tokens) -> Self {
+        Self {
+            bg: t.bg,
+            panel: t.panel,
+            raised: t.raised,
+            control: t.control,
+            line: t.line,
+            line2: t.line2,
+            ink: t.ink,
+            ink2: t.ink2,
+            ink3: t.ink3,
+            accent: t.accent,
+            accent_ink: t.accent_ink,
+            accent_soft: t.accent_soft,
+            ok: t.ok,
+            warn: t.warn,
+            bad: t.bad,
+            info: t.info,
+            plane: t.plane,
+            surround: t.surround,
+            canvas_ink: t.canvas_ink,
+            canvas_line: t.canvas_line,
+        }
+    }
+    /// The palette for what is drawn on the canvas (the live view, the
+    /// capture in flight): the canvas's inks and rules, and dark panels, so
+    /// Lightbox's dark surround reads as the mockup's.
+    pub fn on_canvas(&self) -> Self {
+        if self.canvas_ink[0] == self.ink {
+            return *self;
+        }
+        let dark = |c: Color32, f: f32| {
+            Color32::from_rgb(
+                (c.r() as f32 * f) as u8,
+                (c.g() as f32 * f) as u8,
+                (c.b() as f32 * f) as u8,
+            )
+        };
+        Self {
+            bg: dark(self.surround, 0.55),
+            panel: dark(self.surround, 0.7),
+            raised: dark(self.surround, 0.85),
+            control: self.surround,
+            line: self.canvas_line[0],
+            line2: self.canvas_line[1],
+            ink: self.canvas_ink[0],
+            ink2: self.canvas_ink[1],
+            ink3: self.canvas_ink[2],
+            ..*self
+        }
+    }
     pub fn mark_color(&self, mark: Mark) -> Color32 {
         match mark {
             Mark::Ok => self.ok,

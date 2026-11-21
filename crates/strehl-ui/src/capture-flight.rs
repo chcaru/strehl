@@ -234,8 +234,20 @@ fn spell(n: u64) -> String {
 }
 
 /// The last `n` planes, newest first: plane number, mark, sentence, timing.
+/// The newest retaken plane keeps the last row when it is older than the
+/// rest, so its Show stays in reach (Studio 2, 7.4).
 pub(crate) fn recent_planes(p: &Progress, n: usize) -> Vec<(u64, Mark, String, Option<String>)> {
-    p.latest(n)
+    let mut planes: Vec<(&u64, &Value)> = p.latest(n).collect();
+    if let Some(retaken) = p.retaken_planes.last()
+        && n > 1
+        && planes.len() == n
+        && !planes.iter().any(|(plane, _)| *plane == retaken)
+        && let Some(v) = p.plane(*retaken)
+    {
+        planes[n - 1] = (retaken, v);
+    }
+    planes
+        .into_iter()
         .map(|(plane, v)| {
             let (mark, text, seconds) = plane_sentence(v, p.retaken_planes.contains(plane));
             (*plane, mark, text, seconds)

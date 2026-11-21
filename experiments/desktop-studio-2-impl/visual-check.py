@@ -36,6 +36,16 @@ ROUTES = {
     "develop": (["--open-run", RUN, "--route", "develop"], "develop.png"),
     "export": (["--open-run", RUN, "--route", "export"], "export.png"),
     "capture": (["--route", "capture"], "capture-plan.png"),
+    # The Capture station from fabricated states: no camera host is reached.
+    "capture-plan": (["--route", "capture", "--capture-fixture", "plan"], "capture-plan.png"),
+    "capture-flight": (["--route", "capture", "--capture-fixture", "flight"], "capture-flight.png"),
+    "glance": (["--route", "capture", "--capture-fixture", "glance"], "glance.png"),
+    "capture-flight-lightbox": (["--route", "capture", "--capture-fixture", "flight", "--theme", "lightbox"],
+                                "capture-flight-lightbox.png"),
+    "capture-plan-instrument": (["--route", "capture", "--capture-fixture", "plan", "--theme", "instrument"],
+                                "capture-plan.png"),
+    "capture-plan-lightbox": (["--route", "capture", "--capture-fixture", "plan", "--theme", "lightbox"],
+                              "capture-plan.png"),
     "stack-instrument": (["--open-run", RUN, "--route", "stack", "--theme", "instrument"], "stack-instrument.png"),
     "stack-lightbox": (["--open-run", RUN, "--route", "stack", "--theme", "lightbox"], "stack-lightbox.png"),
 }
