@@ -1,0 +1,12 @@
+
+running 1 test
+test process_theater::v26_perf_tests::benchmark_long_stack_pointer_sweeps ... long_stack_cpu_ms_per_frame frames=130 retained_maps=1040 dropped_maps=0 fixture_build_s=0.0 process=[0.7288924999999999, 0.7494912499999999, 0.7920037499999999, 0.7151562499999999] source=[0.39282125, 0.3816775, 0.44870625, 0.37943125]
+long_stack_cpu_ms_per_frame frames=1500 retained_maps=12000 dropped_maps=0 fixture_build_s=0.4 process=[2.3856675, 2.2625975, 1.9802050000000002, 2.33357375] source=[1.544335, 1.3115425, 1.6474499999999999, 1.3640012499999998]
+long_stack_cpu_ms_per_frame frames=6000 retained_maps=48000 dropped_maps=0 fixture_build_s=1.5 process=[3.406135, 3.49213375, 3.4727000000000006, 2.78068] source=[2.87657375, 2.8325287500000003, 2.4295850000000003, 2.3263024999999997]
+long_stack_cpu_min_ms frames=130 process=0.715 source=0.379
+long_stack_cpu_min_ms frames=1500 process=1.980 source=1.312
+long_stack_cpu_min_ms frames=6000 process=2.781 source=2.326
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1394 filtered out; finished in 5.57s
+

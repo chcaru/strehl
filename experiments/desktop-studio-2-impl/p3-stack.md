@@ -334,7 +334,8 @@ desktop window and a full render on the owner's machine.
   tests' reference.
 - Peek saturation (75 %) is not applied: it needs a presenter uniform and an SDR path; brightness
   is dimmed.
-- The engine-room timeline's region lane still recounts every plane per window crossing.
+- The engine-room timeline's region lane now recounts within the budget (round 3); its lane mesh
+  and plot still rebuild at each commit.
 - The lane mesh adds 3,640 tessellated vertices at 130 captures (circles tessellated without
   egui's prepared discs, which `FontsView` does not expose in egui 0.33). MEASURED; paint time
   still fell.
@@ -347,3 +348,74 @@ desktop window and a full render on the owner's machine.
   while it is incomplete; shorter stacks keep the baseline's schedule (their tests are unchanged).
 - "No subject detail" threshold and the per-size mark scaling in the filmstrip (per level, across
   the frames shown) are display choices, UNVALIDATED.
+
+## Round 3: flakes, long stacks, live render (after P2 round 2)
+
+`studio2/p2-evidence` (27e30b95e) is merged into this branch (`54c0f7808`). The probe keeps its
+dense store and bounded recount and takes P2's ordered archive pass; the perf fixture keeps its
+`frames` field and takes `STREHL_UI_BENCH_FRAMES`. P2's 24 `ui_` CLI tests and all strehl-ui
+tests pass; 13 research tests in strehl-cli (`m194f`/`m194g`, gatefloor controls) fail here for
+want of private experiment files, unrelated to either branch.
+
+### Flaky tests
+
+- `last_filmstrip_photos_remain_fixed_and_opaque_during_end_follow_and_real_wheel_input`: the
+  selection's neighbour overview (radius 4 reaches frame 27) can land before the contact batch
+  and legitimately give the contact a derived 3:2 thumbnail (ARGUED from the scheduler; not
+  reproduced in 192 parallel isolated runs or 10 full-suite runs of the old build). A test-only
+  `hold_canonical_tiers` keeps detail, scrub and sparse off until the native contacts are in,
+  asserted, then releases it (`0b8c656e1`).
+- A second flake turned up in the first five-run check (1 of 5):
+  `dropping_a_session_answers_pending_requests_with_an_error_instead_of_losing_them`. The app
+  publishes final replies before it deletes `session.json`; a client that checked for its reply
+  just before and for the descriptor just after reported a disconnection. It now looks once more
+  for its reply (`aef460f3d`). ARGUED from the code; not reproduced in 256 isolated runs.
+- MEASURED: five full `cargo test --locked -p strehl-ui` runs in a row on `423bffdfb`, 1,366
+  passed each, 0 failures (`perf/p3-round3/suite5-final.txt`; the earlier five, with the bridge
+  flake, are in `suite5-before-bridge-fix.txt`).
+
+### Long stacks (spec 5.3: 6,000 within 1.25 x the 130-plane figure)
+
+Temporary section timers (not committed) found, at 6,000 planes: the region probe recounting all
+eight levels (4,096 windows a frame), the engine room's region lane recounting all 6,000 captures
+per window crossing (about 1 ms) and its lane mesh rebuilt on each crossing (0.6 ms). Only the
+active level is ever read, so the probe now counts that level alone; the region lane recounts
+within the same budget, staged and committed at once (`423bffdfb`). Budget 512: a 6,000-plane
+window commits after twelve frames, the previous complete one shown meanwhile.
+
+MEASURED, release, interleaved: A = merge commit, B = this change at budgets 4,096, 1,024 and 512
+(one binary, budget from an environment variable for the run only). Load 7 to 22 %. Minimum ms per
+frame; outputs in `perf/p3-round3/`.
+
+| | A | B 4,096 | B 1,024 | B 512 |
+| --- | --- | --- | --- | --- |
+| Station photograph sweep 130 / 6,000 | 0.155-0.167 / 0.448-0.453 | 0.122 / 0.250-0.251 | 0.123-0.125 / 0.163-0.170 | 0.122-0.123 / 0.137-0.141 |
+| Engine room process 130 / 6,000 | 0.703-0.715 / 2.78-3.52 | 0.622-0.625 / 1.65-1.90 | 0.624-0.629 / 1.15-1.18 | 0.618-0.624 / 0.90-0.91 |
+| Engine room source 130 / 6,000 | 0.379 / 2.33-2.63 | 0.325 / 1.04-1.09 | 0.324-0.333 / 0.57-0.69 | 0.325-0.335 / 0.45-0.49 |
+
+At 512 the station's photograph sweep meets the budget (1.12-1.15 x). The engine room does not:
+1.45 x its own 130 figure for process, 1.33-1.5 x for source (1.27 x the old 130 figure). What
+remains is the lane mesh and plot rebuilt at each commit (DERIVED from the timers).
+
+### Live render frame times (item 4)
+
+MEASURED with `p3-live-measure.py`: a native window driven only through the control interface,
+isolated catalog, output, capture settings (absent) and LOCALAPPDATA / STREHL_CACHE_DIR in
+scratch; desktop sha256 `60dfe168…` (the item-2 build); GPU fold; default route (the Stack
+station). `App::update` CPU ms per frame:
+
+| Render | Stage | Frames | p50 | p95 | Max | Over 16 ms |
+| --- | --- | --- | --- | --- | --- | --- |
+| 299 (24.5 s, load 53 %) | Alignment / Merge / Rendering / Complete | 1,654 / 565 / 179 / 149 | 0.28 / 0.36 / 0.29 / 0.29 | 0.53 / 0.93 / 0.92 / 0.53 | 9.6 / 2.9 / 1.5 / 2.9 | 0 |
+| 1,444 (65 s, load 69 %) | Alignment / Merge / Rendering / Complete | 6,172 / 3,432 / 255 / 218 | 0.25 / 0.35 / 0.38 / 0.30 | 0.72 / 1.01 / 0.84 / 0.59 | 44.3 / 15.2 / 4.6 / 11.8 | 10 / 0 / 0 / 0 |
+
+While evidence streams (Merge) no frame exceeds 16 ms (P2 measured 4 to 16 such frames, max 20
+to 36 ms, before this branch). Ten Alignment frames at the 1,444 start, before any evidence,
+reach 25 to 44 ms; not attributed (open).
+
+### Not done this round
+
+- Peek saturation (75 %): the presenter's `Parameters` uniform could take a look vector, but the
+  SDR path draws through egui images and would have to route through the shader; not contained
+  in the time. Brightness is still dimmed.
+- DevelopRangeRail offscreen check: no launch option selects the depth brush offscreen; not done.

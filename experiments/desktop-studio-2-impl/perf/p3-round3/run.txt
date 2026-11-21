@@ -1,0 +1,16 @@
+long-A-1 exit 0 load-before 7
+long-B4096-1 exit 0 load-before 16
+long-B1024-1 exit 0 load-before 15
+long-B512-1 exit 0 load-before 12
+station-A-1 exit 0 load-before 14
+station-B4096-1 exit 0 load-before 16
+station-B1024-1 exit 0 load-before 10
+station-B512-1 exit 0 load-before 22
+long-A-2 exit 0 load-before 14
+long-B4096-2 exit 0 load-before 19
+long-B1024-2 exit 0 load-before 9
+long-B512-2 exit 0 load-before 16
+station-A-2 exit 0 load-before 13
+station-B4096-2 exit 0 load-before 14
+station-B1024-2 exit 0 load-before 11
+station-B512-2 exit 0 load-before 15
