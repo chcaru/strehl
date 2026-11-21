@@ -5,6 +5,9 @@
 #[global_allocator]
 static GLOBAL: strehl_cli::EngineAllocator = strehl_cli::ENGINE_ALLOCATOR;
 
+mod activity;
+#[path = "activity-tray.rs"]
+mod activity_tray;
 #[path = "agent-interface.rs"]
 mod agent_interface;
 mod app;
@@ -21,11 +24,15 @@ mod capture_axis;
 mod capture_client;
 #[path = "capture-workspace.rs"]
 mod capture_workspace;
+#[path = "command-palette.rs"]
+mod command_palette;
 mod controls;
 #[path = "develop-presets.rs"]
 mod develop_presets;
 #[path = "development-job.rs"]
 mod development_job;
+#[path = "display-path.rs"]
+mod display_path;
 #[path = "draft-preview.rs"]
 mod draft_preview;
 #[path = "edit-workspace.rs"]
@@ -44,6 +51,7 @@ mod library_paint;
 mod library_previews;
 #[path = "library-station.rs"]
 mod library_station;
+mod notices;
 #[path = "photo-coverage.rs"]
 mod photo_coverage;
 #[path = "photo-viewport.rs"]
@@ -94,6 +102,8 @@ mod processing_view;
 mod project_explorer;
 #[path = "reveal-path.rs"]
 mod reveal_path;
+#[path = "rig-status.rs"]
+mod rig_status;
 #[path = "session-diagnostics.rs"]
 mod session_diagnostics;
 #[path = "session-import.rs"]
@@ -108,6 +118,14 @@ mod source_preview;
 mod stack_map;
 #[path = "subject-page.rs"]
 mod subject_page;
+#[path = "studio-fonts.rs"]
+mod studio_fonts;
+#[path = "studio-preferences.rs"]
+mod studio_preferences;
+#[path = "studio-theme.rs"]
+mod studio_theme;
+#[path = "studio-widgets.rs"]
+mod studio_widgets;
 mod theme;
 #[path = "ui-icon.rs"]
 mod ui_icon;
@@ -162,6 +180,10 @@ pub struct LaunchOptions {
     pub agent_grants: Vec<PathBuf>,
     pub catalog: Option<PathBuf>,
     pub output_directory: Option<PathBuf>,
+    /// `--route`: the Studio 2 station (and room) to open.
+    pub(crate) route: Option<app::studio_route::LaunchRoute>,
+    /// `--theme`: Graphite, Instrument or Lightbox for this session only.
+    pub(crate) theme: Option<studio_theme::ThemeName>,
 }
 
 fn parse_screenshot_ranges(value: &str) -> Option<Vec<[usize; 2]>> {
@@ -389,6 +411,26 @@ fn main() -> eframe::Result {
             launch.draft = true;
             continue;
         }
+        if arg == "--route" {
+            let value = args.next().and_then(|v| v.to_str().map(str::to_owned));
+            launch.route = value
+                .as_deref()
+                .and_then(app::studio_route::LaunchRoute::parse);
+            if launch.route.is_none() {
+                eprintln!("Use --route {}", app::studio_route::LaunchRoute::NAMES);
+                std::process::exit(2);
+            }
+            continue;
+        }
+        if arg == "--theme" {
+            let value = args.next().and_then(|v| v.to_str().map(str::to_owned));
+            launch.theme = value.as_deref().and_then(studio_theme::ThemeName::parse);
+            if launch.theme.is_none() {
+                eprintln!("Use --theme graphite|instrument|lightbox");
+                std::process::exit(2);
+            }
+            continue;
+        }
         if arg == "--size" {
             let value = args.next().and_then(|s| s.to_str().map(str::to_owned));
             launch.size = value.and_then(|s| {
@@ -417,7 +459,7 @@ fn main() -> eframe::Result {
             Some("--activity-log") => &mut launch.activity_log,
             _ => {
                 eprintln!(
-                    "Usage: Strehl [--source DIR] [--open-run DIR] [--browse DIR] [--preview IMAGE] [--engine EXE] [--process] [--edit | --export | --projects] [--agent | --headless --agent-session-out JSON] [--agent-grant DIR] [--catalog JSON] [--output-dir DIR] [--screenshot PNG]\n       Strehl --control --session SESSION_JSON [--request JSON_FILE|-]"
+                    "Usage: Strehl [--source DIR] [--open-run DIR] [--browse DIR] [--preview IMAGE] [--engine EXE] [--process] [--edit | --export | --projects] [--route library|subject|capture|stack|engine|develop|export] [--theme graphite|instrument|lightbox] [--agent | --headless --agent-session-out JSON] [--agent-grant DIR] [--catalog JSON] [--output-dir DIR] [--screenshot PNG]\n       Strehl --control --session SESSION_JSON [--request JSON_FILE|-]"
                 );
                 std::process::exit(2);
             }

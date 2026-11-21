@@ -62,6 +62,7 @@ pub(crate) fn run_offscreen(launch: LaunchOptions) -> Result<()> {
     theme::install(&ctx);
     ctx.set_pixels_per_point(1.0);
     let mut app = StrehlApp::from_launch(max_texture_side, launch);
+    app.apply_theme(&ctx);
     // No PhotoPresenter window negotiation: the existing SDR photo fallback and
     // ordinary egui source/metadata textures remain available to the real UI.
     let result = (|| -> Result<()> {

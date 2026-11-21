@@ -1174,7 +1174,7 @@ impl ProjectExplorer {
                 &format!(
                     "Camera preview · {} source photographs\n{}",
                     draft.sources.len(),
-                    draft.source.display()
+                    crate::display_path::display_path(&draft.source)
                 ),
             );
             if let Some(path) = source
@@ -1384,7 +1384,7 @@ impl ProjectExplorer {
                         export_thumbnail.as_ref(),
                         &format!(
                             "{preview_label}\n{}\n{:?} · {} · quality {}\nFrom edit: {}",
-                            export.path.display(),
+                            crate::display_path::display_path(&export.path),
                             export.settings.format,
                             export.settings.color_space.label(),
                             export.settings.quality,
@@ -1507,7 +1507,7 @@ impl ProjectExplorer {
             self.notes_open = !self.notes_open;
         }
         if let Some(draft) = &node.stack {
-            let source = draft.source.display().to_string();
+            let source = crate::display_path::display_path(&draft.source);
             ui.add(egui::Label::new(RichText::new(&source).size(9.0).color(MUTED)).truncate())
                 .on_hover_text(source);
         } else {
@@ -1749,7 +1749,7 @@ fn revision_description(run: &Run) -> String {
         } else {
             "Default coverage"
         },
-        run.source.display()
+        crate::display_path::display_path(&run.source)
     )
 }
 #[cfg(test)]

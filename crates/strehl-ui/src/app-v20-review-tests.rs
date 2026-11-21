@@ -49,10 +49,10 @@ fn paint(
         },
         |ctx| {
             app.undo_shortcuts(ctx);
-            app.status_bar(ctx);
+            app.shell_bars(ctx);
             app.workspace(ctx);
             app.observe_edits(ctx);
-            crate::window_chrome::finish(ctx, false);
+            crate::window_chrome::finish_with(ctx, false, 1.0);
         },
     )
 }
@@ -285,25 +285,35 @@ fn saved_result_open_highlights_the_result_and_stack_open_highlights_its_recipe_
     ));
 }
 #[test]
-fn workspace_chrome_reclaims_top_edge_without_placing_controls_over_projects() {
+fn workspace_chrome_is_one_top_bar_and_never_places_controls_over_projects() {
     let (mut app, _, _) = fixture();
     let ctx = egui::Context::default();
     let out = paint(&mut app, &ctx, 0.0, vec![]);
     let projects = find(&out, "PROJECTS").expect("actual explorer header is present");
+    let top = crate::window_chrome::CONTROLS_HEIGHT + 1.0;
     assert!(
-        projects.top() < 16.0,
-        "sidebar must start at the reclaimed top edge, got {projects:?}"
+        projects.top() >= top && projects.top() < top + 16.0,
+        "the Library pane starts directly under the top bar, got {projects:?}"
     );
+    let brand = find(&out, "STREHL").expect("the brand sits in the top bar");
     assert!(
-        find(&out, "STREHL").is_none(),
-        "brand/title strip must not consume a row"
+        brand.bottom() <= top,
+        "the brand shares the top bar: {brand:?}"
     );
-    assert!(projects.left() >= crate::window_chrome::RAIL_WIDTH);
+    let controls = crate::window_chrome::controls_rect(egui::Rect::from_min_size(
+        egui::Pos2::ZERO,
+        egui::vec2(1440.0, 940.0),
+    ));
+    assert!(!controls.intersects(projects));
+    assert!(
+        projects.left() >= 0.0 && projects.right() < 440.0,
+        "no rail precedes the pane"
+    );
     let out = paint(&mut app, &ctx, 0.1, vec![]);
     assert_eq!(
         projects,
         find(&out, "PROJECTS").unwrap(),
-        "native controls must not push sidebar downward on a later frame"
+        "native controls must not push the pane downward on a later frame"
     );
 }
 

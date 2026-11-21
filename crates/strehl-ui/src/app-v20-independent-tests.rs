@@ -188,7 +188,7 @@ fn source_picker_is_opened_from_selected_nested_folder_without_creating_a_stack_
 }
 
 #[test]
-fn workspace_reclaims_top_edge_and_keeps_chrome_local_at_different_pixel_densities() {
+fn workspace_sits_directly_under_the_top_bar_at_different_pixel_densities() {
     for scale in [1.0, 1.25, 1.5, 2.0] {
         let ctx = egui::Context::default();
         ctx.set_pixels_per_point(scale);
@@ -203,20 +203,22 @@ fn workspace_reclaims_top_edge_and_keeps_chrome_local_at_different_pixel_densiti
         for i in 1..5 {
             out = paint(&mut app, &ctx, size, i as f64 * 0.05, vec![]);
         }
+        // The 44-point top bar is the only row above the workspace.
+        let top = crate::window_chrome::CONTROLS_HEIGHT + 1.0;
         let heading = text_rect(&out, "PROJECTS");
         assert!(
-            heading.top() < 20.0,
-            "unused title row must not reappear at scale {scale}: {heading:?}"
+            heading.top() >= top && heading.top() < top + 20.0,
+            "no second title row may appear at scale {scale}: {heading:?}"
         );
         let action = text_rect(&out, "New stack");
         assert!(
-            action.top() < 65.0,
+            action.top() < top + 65.0,
             "source workflow should stay next to the explorer heading"
         );
         let read = text_rect(&out, "READ");
         assert!(
-            read.top() < 40.0,
-            "primary process should use the former title row at scale {scale}"
+            read.top() < top + 40.0,
+            "primary process starts directly under the top bar at scale {scale}"
         );
         assert!(
             read.left() > heading.left(),

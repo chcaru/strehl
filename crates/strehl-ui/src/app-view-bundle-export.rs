@@ -64,7 +64,10 @@ impl StrehlApp {
         self.view_bundle_export = None;
         match result {
             Ok(path) => {
-                self.status = format!("Exported complete view bundle to {}", path.display());
+                self.status = format!(
+                    "Exported complete view bundle to {}",
+                    crate::display_path::display_path(&path)
+                );
                 self.last_view_bundle_export = Some(path);
             }
             Err(error) => {

@@ -2,7 +2,7 @@
 //! axis-aligned rules are snapped to physical pixel centres at each UI scale.
 use eframe::egui::{self, Color32, Painter, Pos2, Stroke};
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(crate) enum Icon {
     Projects,
     Camera,

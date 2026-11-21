@@ -35,6 +35,7 @@ fn draw(
             ..Default::default()
         },
         |ctx| {
+            app.shell_bars(ctx);
             app.workspace(ctx);
         },
     )
@@ -66,38 +67,48 @@ fn pointer(at: egui::Pos2, pressed: bool) -> egui::Event {
 }
 
 #[test]
-fn default_process_survives_actual_rail_buttons_and_integrated_source_inspection() {
+fn default_process_survives_actual_station_and_pane_controls_and_integrated_source_inspection() {
     let ctx = egui::Context::default();
     theme::install(&ctx);
     let mut app = test_app();
     assert!(app.process_view, "normal launch starts inside the process");
     let initial = draw(&mut app, &ctx, 0.0, vec![]);
     assert!(find_text(&initial, "READ").is_some());
-    for (step, (label, pane)) in [
-        ("Adjust", workspace::Sidebar::Adjust),
-        ("Review", workspace::Sidebar::Review),
-        ("Activity", workspace::Sidebar::Activity),
-        ("Projects", workspace::Sidebar::Projects),
+    // The Stack station's tabs, the activity tray's engine log, then the
+    // Library station: each is a real control in the frame.
+    for (step, (labels, pane)) in [
+        (&["STACK"][..], workspace::Sidebar::Adjust),
+        (&["REVIEW"][..], workspace::Sidebar::Review),
+        (
+            &["Nothing running", "ENGINE LOG"][..],
+            workspace::Sidebar::Activity,
+        ),
+        (&["LIBRARY"][..], workspace::Sidebar::Projects),
     ]
     .into_iter()
     .enumerate()
     {
-        let time = step as f64 + 0.1;
-        let previous = draw(&mut app, &ctx, time, vec![]);
-        let at = find_text(&previous, label).expect("actual rail command must be visible");
-        draw(
-            &mut app,
-            &ctx,
-            time + 0.1,
-            vec![egui::Event::PointerMoved(at), pointer(at, true)],
-        );
-        let opened = draw(&mut app, &ctx, time + 0.2, vec![pointer(at, false)]);
+        let mut time = step as f64 + 0.1;
+        for label in labels {
+            let previous = draw(&mut app, &ctx, time, vec![]);
+            let at = find_text(&previous, label).expect("the actual control must be visible");
+            draw(
+                &mut app,
+                &ctx,
+                time + 0.1,
+                vec![egui::Event::PointerMoved(at), pointer(at, true)],
+            );
+            draw(&mut app, &ctx, time + 0.2, vec![pointer(at, false)]);
+            time += 0.3;
+        }
+        let opened = draw(&mut app, &ctx, time, vec![]);
+        let label = labels.last().unwrap();
         assert!(app.process_view, "{label} navigated away from Process");
         assert!(
             find_text(&opened, "READ").is_some(),
             "{label} replaced Process"
         );
-        assert_eq!(app.sidebar, Some(pane), "click must open its actual pane");
+        assert_eq!(app.sidebar, Some(pane), "{label} must open its actual pane");
     }
     app.inspect_frame(11);
     assert!(app.process_view);

@@ -624,11 +624,10 @@ impl CameraMetadata {
         let mut select = None;
         let safe = metadata_window_safe_rect(ctx);
         let style = ctx.style();
-        let frame = egui::Frame::window(&style).fill(egui::Color32::from_rgb(249, 250, 252));
+        let frame = egui::Frame::window(&style);
         // Window size controls address its body; leave room for both the frame
         // and title/close controls inside the application's unobstructed area.
         let title: egui::WidgetText = egui::RichText::new("Camera metadata")
-            .color(egui::Color32::from_rgb(32, 42, 55))
             .text_style(egui::TextStyle::Heading)
             .into();
         // Match egui::Window's measured title row, including font ascent/leading;
@@ -648,14 +647,13 @@ impl CameraMetadata {
             .constrain_to(safe).resizable(true).scroll([true, true])
             .frame(frame)
             .show(ctx,|ui| {
-                ui.set_style(egui::Style {visuals:egui::Visuals::light(),..(*ui.style()).as_ref().clone()});
                 if self.work.is_some() || self.pending.is_some() {ui.horizontal(|ui|{ui.spinner();ui.label("Reading metadata for the imported bracket…");cancel=ui.small_button("Cancel").clicked();});}
-                if let Some(error)=&self.error {ui.colored_label(egui::Color32::from_rgb(160,65,20),error);}
+                if let Some(error)=&self.error {ui.colored_label(crate::theme::RED,error);}
                 if let Some(result)=&self.result {
                     select=self.view.show(ui,&result.view,selected);
                     ui.collapsing("Read snapshot",|ui| {
-                        ui.label(format!("{} captures · {}",result.sources.len(),result.json.display()));
-                        if let Some((path,stamp))=result.sources.get(selected) {ui.label(path.display().to_string());ui.label(format!("{} bytes · modified {}",stamp.bytes,stamp.modified_ns.as_deref().unwrap_or("unavailable")));}
+                        ui.label(format!("{} captures · {}",result.sources.len(),crate::display_path::display_path(&result.json)));
+                        if let Some((path,stamp))=result.sources.get(selected) {ui.label(crate::display_path::display_path(path));ui.label(format!("{} bytes · modified {}",stamp.bytes,stamp.modified_ns.as_deref().unwrap_or("unavailable")));}
                         ui.small("Source size and modification time agreed before and after the read. This cached snapshot is not a whole-file hash. Refresh rereads the bracket.");
                     });
                 }
@@ -676,13 +674,11 @@ impl CameraMetadata {
     }
 }
 fn metadata_window_safe_rect(ctx: &egui::Context) -> egui::Rect {
+    // Below the top bar and its window buttons.
     let screen = ctx.content_rect();
-    let dock = crate::window_chrome::dock_rect(ctx.viewport_rect());
     let minimum = egui::pos2(
-        (screen.left() + crate::window_chrome::RAIL_WIDTH + 16.0).min(screen.right() - 1.0),
-        (screen.top() + 12.0)
-            .max(dock.bottom() + 8.0)
-            .min(screen.bottom() - 1.0),
+        (screen.left() + 16.0).min(screen.right() - 1.0),
+        (screen.top() + crate::window_chrome::CONTROLS_HEIGHT + 9.0).min(screen.bottom() - 1.0),
     );
     let maximum = (screen.max - egui::vec2(16.0, 16.0)).max(minimum + egui::Vec2::splat(1.0));
     egui::Rect::from_min_max(minimum, maximum)

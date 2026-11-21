@@ -218,6 +218,13 @@ def screenshot(args):
             command += [option,str(value)]
     if args.metadata:
         command.append("--metadata")
+    for flag, enabled in (("--edit", args.edit), ("--export", args.export), ("--projects", args.projects)):
+        if enabled:
+            command.append(flag)
+    if args.route is not None:
+        command += ["--route", args.route]
+    if args.theme is not None:
+        command += ["--theme", args.theme]
     if args.output_dir is not None:
         command += ["--output-dir", str(args.output_dir.resolve())]
     if args.size is not None:
@@ -302,6 +309,14 @@ def parser():
     capture.add_argument("--output-dir", type=Path, help="generated results and metadata reports")
     capture.add_argument("--catalog", type=Path, help="isolated catalog (default: PNG path with .projects.json)")
     capture.add_argument("--size", metavar="WxH", help="canvas dimensions, for example 1440x940")
+    capture.add_argument("--route", choices=["library", "subject", "capture", "stack", "engine", "develop", "export"],
+                         help="Studio 2 station to open (engine = the Stack station's engine room)")
+    capture.add_argument("--theme", choices=["graphite", "instrument", "lightbox"],
+                         help="theme for this render only; the owner's Preferences are not changed")
+    pane = capture.add_mutually_exclusive_group()
+    pane.add_argument("--edit", action="store_true", help="open the Develop pane (legacy flag; prefer --route develop)")
+    pane.add_argument("--export", action="store_true", help="open the Export pane (legacy flag; prefer --route export)")
+    pane.add_argument("--projects", action="store_true", help="open the Library pane (legacy flag; prefer --route library)")
     start = commands.add_parser("launch", help="start headless and wait for session publication")
     start.add_argument("--source", type=Path, help="source directory to import")
     start.add_argument("--capture", action="store_true", help="open native Capture")

@@ -1,7 +1,10 @@
-//! Compact activity rail and a single modular sidebar around the process.
+//! Today's panes and the document actions behind them. The Studio 2 frame
+//! (`studio-shell.rs`) places these panes inside its stations.
 use super::*;
 use crate::workspace_history::{NodeId, StackDraft};
 
+/// The pane flags today's code reads and writes. The shell's route is the
+/// source of truth and writes these through its adapter (`studio-route.rs`).
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(super) enum Sidebar {
     Projects,
@@ -13,26 +16,11 @@ pub(super) enum Sidebar {
     Review,
     Activity,
 }
-impl Sidebar {
-    fn label(self) -> &'static str {
-        match self {
-            Self::Projects => "Projects",
-            Self::Capture => "Capture",
-            Self::Adjust => "Adjust",
-            Self::Edit => "Edit",
-            Self::Export => "Export",
-            Self::Agent => "Agent",
-            Self::Review => "Review",
-            Self::Activity => "Activity",
-        }
-    }
-}
 
 impl StrehlApp {
-    pub(super) fn poll_capture(&mut self, ctx: &egui::Context) {
-        if self.sidebar == Some(Sidebar::Capture) {
-            self.capture.activate(ctx);
-        }
+    /// Following a capture and handing a finished one over. Runs from `tick`;
+    /// the camera connection itself is opened there.
+    pub(super) fn poll_capture(&mut self, _ctx: &egui::Context) {
         self.capture.poll_follow(self.engine.as_deref());
         if let Some(folder) = self.capture.take_finished_capture() {
             let name = folder
@@ -48,7 +36,9 @@ impl StrehlApp {
                 || self.replay.is_some()
                 || self.session_import.is_some()
                 || self.picker_active();
-            if busy || !(self.sidebar == Some(Sidebar::Capture) || self.stack.is_none()) {
+            let capture_open =
+                self.shell.navigator.station() == super::studio_route::Station::Capture;
+            if busy || !(capture_open || self.stack.is_none()) {
                 self.capture.follow_note = Some(format!(
                     "{name} is checked. Open it from Completed captures to stack it."
                 ));
@@ -220,7 +210,7 @@ impl StrehlApp {
                 ui.add(egui::Label::new(RichText::new(&name).size(12.0).color(INK)).truncate())
                     .on_hover_text(self.stack.as_ref().map_or_else(
                         || name.clone(),
-                        |stack| stack.directory.display().to_string(),
+                        |stack| crate::display_path::display_path(&stack.directory),
                     ));
                 ui.add(egui::Label::new(RichText::new(&detail).size(10.0).color(MUTED)).truncate())
                     .on_hover_text(&detail);
@@ -305,7 +295,10 @@ impl StrehlApp {
                         .on_hover_text("Adjust this stack's recipe")
                         .clicked()
                     {
-                        self.sidebar = Some(Sidebar::Adjust);
+                        self.shell
+                            .navigator
+                            .set_stack_tab(super::studio_route::StackTab::Adjust);
+                        self.go_station(super::studio_route::Station::Stack);
                     }
                 }
             });
@@ -314,11 +307,10 @@ impl StrehlApp {
         theme::rule(ui.painter(), line.left_center(), line.right_center(), LINE);
     }
 
-    pub(super) fn welcome_workspace(&mut self, ctx: &egui::Context) {
-        let mut add = false;
-        egui::CentralPanel::default()
-            .frame(egui::Frame::new().fill(BG))
-            .show(ctx, |ui| {
+    pub(super) fn welcome_workspace(&mut self, ui: &mut egui::Ui) {
+        let add;
+        {
+            {
                 let bounds = ui.max_rect();
                 let width = (bounds.width() - 64.0).clamp(220.0, 520.0);
                 let origin = bounds.center() - egui::vec2(width * 0.5, 95.0);
@@ -333,7 +325,7 @@ impl StrehlApp {
                 p.text(
                     origin + egui::vec2(0.0, 38.0),
                     egui::Align2::LEFT_TOP,
-                    "Choose a stack in Projects, or bring in a new capture bracket.",
+                    "Choose a stack in the Library, or bring in a new capture bracket.",
                     egui::FontId::proportional(11.0),
                     MUTED,
                 );
@@ -386,7 +378,8 @@ impl StrehlApp {
                         "Choose a folder of source photographs in the visual bracket browser",
                     )
                     .clicked();
-            });
+            }
+        }
         if add {
             self.capture_parent = self.catalog.selected_container();
             self.pick(Dialog::Source);
@@ -394,6 +387,7 @@ impl StrehlApp {
     }
     pub(super) fn persist_catalog(&mut self) {
         self.catalog_edit_pending = None;
+        self.shell.catalog_changed();
         if let Err(error) = self.catalog.save() {
             self.error = Some(format!("Saving projects: {error}"));
         }
@@ -529,249 +523,91 @@ impl StrehlApp {
         self.apply_draft(&draft);
         self.process_view = true;
     }
-    pub(super) fn navigation_rail(&mut self, ctx: &egui::Context) {
-        egui::SidePanel::left("activity-rail")
-            .exact_width(crate::window_chrome::RAIL_WIDTH)
-            .resizable(false)
-            .show_separator_line(false)
-            .frame(egui::Frame::new().fill(PANEL).inner_margin(0))
-            .show(ctx, |ui| {
-                ui.add_space(6.0);
-                let rail = ui.max_rect();
-                theme::rule(ui.painter(), rail.right_top(), rail.right_bottom(), LINE);
-                if self.picker_active() {
-                    ui.disable();
-                }
-                for (index, pane) in [
-                    (0, Sidebar::Projects),
-                    (10, Sidebar::Capture),
-                    (1, Sidebar::Adjust),
-                    (7, Sidebar::Edit),
-                    (9, Sidebar::Export),
-                    (8, Sidebar::Agent),
-                    (2, Sidebar::Review),
-                    (3, Sidebar::Activity),
-                ]
-                .into_iter()
-                {
-                    if rail_command(ui, pane.label(), index, self.sidebar == Some(pane), true)
-                        .clicked()
-                    {
-                        self.sidebar = if self.sidebar == Some(pane) {
-                            None
-                        } else {
-                            Some(pane)
-                        };
-                        self.process_view = true;
-                    }
-                }
-                let spare = ui.available_rect_before_wrap();
-                let drag = egui::Rect::from_min_max(
-                    spare.min + egui::vec2(7.0, 4.0),
-                    spare.max - egui::vec2(7.0, 106.0),
-                );
-                if drag.is_positive() {
-                    crate::window_chrome::drag_space(ui, drag, self.picker_active());
-                }
-                ui.with_layout(egui::Layout::bottom_up(egui::Align::Center), |ui| {
-                    ui.add_space(5.0);
-                    if rail_command(ui, "Reset layout", 5, false, true).clicked() {
-                        self.process_space.set_layout(Default::default());
-                        self.catalog.layout = Default::default();
-                        self.persist_catalog();
-                    }
-                    let enabled = self.job.is_some() || self.stack_start_blocker().is_none();
-                    if rail_command(ui, "Stack", 4, self.job.is_some(), enabled).clicked() {
-                        if self.job.is_some() {
-                            self.sidebar = Some(Sidebar::Projects);
-                        } else {
-                            self.start_render();
-                        }
-                    }
-                });
-            });
-    }
-    pub(super) fn sidebar(&mut self, ctx: &egui::Context) {
-        let Some(pane) = self.sidebar else { return };
-        let mut action = None;
+    /// Today's Projects pane: the current stack's command, session controls,
+    /// saved photographs and the project tree. Returns whether the catalog
+    /// changed and any explorer action, for `after_pane`.
+    pub(super) fn projects_pane(
+        &mut self,
+        ui: &mut egui::Ui,
+    ) -> (bool, Option<crate::project_explorer::ExplorerAction>) {
         let mut changed = false;
-        egui::SidePanel::left("workspace-sidebar")
-            .default_width(270.0)
-            .width_range(230.0..=440.0)
-            .resizable(true)
-            .show_separator_line(false)
-            .frame(egui::Frame::new().fill(PANEL).inner_margin(0))
-            .show(ctx, |ui| {
-                let pane_rect = ui.max_rect();
-                theme::rule(
-                    ui.painter(),
-                    pane_rect.right_top(),
-                    pane_rect.right_bottom(),
-                    LINE,
-                );
-                let (heading, _) = ui.allocate_exact_size(
-                    egui::vec2(ui.available_width(), 29.0),
-                    egui::Sense::hover(),
-                );
-                ui.painter().text(
-                    heading.left_center() + egui::vec2(12.0, 0.0),
-                    egui::Align2::LEFT_CENTER,
-                    pane.label().to_uppercase(),
-                    egui::FontId::proportional(10.0),
-                    INK,
-                );
-                let close = egui::Rect::from_center_size(
-                    heading.right_center() - egui::vec2(14.0, 0.0),
-                    egui::vec2(24.0, 24.0),
-                );
-                let close_hit =
-                    ui.interact(close, ui.id().with("hide-sidebar"), egui::Sense::click());
-                close_hit.widget_info(|| {
-                    egui::WidgetInfo::labeled(egui::WidgetType::Button, true, "Hide sidebar")
-                });
-                let c = close.center();
-                let color = if close_hit.hovered() { INK } else { MUTED };
-                theme::rule(
-                    ui.painter(),
-                    c - egui::vec2(3.0, 3.0),
-                    c + egui::vec2(3.0, 3.0),
-                    color,
-                );
-                theme::rule(
-                    ui.painter(),
-                    c + egui::vec2(-3.0, 3.0),
-                    c + egui::vec2(3.0, -3.0),
-                    color,
-                );
-                if close_hit.on_hover_text("Hide sidebar").clicked() {
-                    self.sidebar = None;
-                }
-                theme::rule(
-                    ui.painter(),
-                    heading.left_bottom(),
-                    heading.right_bottom(),
-                    LINE,
-                );
-                if matches!(pane, Sidebar::Projects | Sidebar::Adjust)
-                    && (pane == Sidebar::Adjust
-                        || self.stack.is_some()
-                        || self.scan.is_some()
-                        || self.replay.is_some()
-                        || self.job.is_some())
-                {
-                    self.stack_launch_panel(ui, pane);
-                }
-                if pane == Sidebar::Projects {
-                    if self.controls.settings.session.is_some() {
-                        // Always show the bar: a long pass list otherwise
-                        // ends at the clip edge with no sign that it scrolls.
-                        egui::Frame::NONE.inner_margin(egui::Margin::symmetric(8, 0)).show(ui, |ui| {
-                            egui::ScrollArea::vertical()
-                                .id_salt("project-session-editor")
-                                .max_height((ui.available_height() * 0.55).clamp(180.0, 420.0))
-                                .auto_shrink([false, true])
-                                .scroll_bar_visibility(egui::scroll_area::ScrollBarVisibility::AlwaysVisible)
-                                .show(ui, |ui| self.session_panel(ui));
-                        });
-                        ui.add_space(6.0);
-                    } else {
-                        self.session_panel(ui);
-                    }
-                    self.session_result_picker(ui);
-                    self.photo_history_panel(ui);
-                    self.project_explorer.set_current_photo(
-                        self.editor.path.as_deref(),
-                        self.editor.loaded.as_ref().map(|photo| &photo.image),
-                        self.editor.loaded.as_ref().map(|photo| &photo.preview),
-                    );
-                    let busy = self.job.is_some() || self.picker_active() || self.scan.is_some();
-                    // Keep the primary source workflow beside the Projects heading.
-                    // Reserve a footer for completed-result import instead of
-                    // pushing New stack down with an unrelated action row.
-                    let import_height = if self.session_import.is_some() { 76.0 } else { 30.0 };
-                    let response = ui.allocate_ui(
-                        egui::vec2(ui.available_width(), (ui.available_height() - import_height).max(70.0)),
-                        |ui| self.project_explorer.show(ui, &mut self.catalog, busy),
-                    ).inner;
-                    changed = response.changed;
-                    action = response.action;
-                    ui.horizontal(|ui| {
-                        if cfg!(feature = "multi-stack") && ui.add_enabled(!busy && self.replay.is_none(), egui::Button::new("Stack everything…")).on_hover_text("Pick a folder of related captures. Every folder of RAW files inside becomes a pass, and Best result plans what each contributes to one photograph.").clicked() { self.pick(Dialog::StackEverything); }
-                        if cfg!(feature = "multi-stack") && ui.add_enabled(!busy && self.replay.is_none(), egui::Button::new("Open completed CLI session…")).on_hover_text("Import saved photographs and diagnostics without opening original capture folders.").clicked() { self.pick(Dialog::CompletedSession); }
-                    });
-                    if let Some((_,_,task)) = &self.session_import {
-                        ui.label("Verifying imported artifacts…");
-                        if ui.button("Cancel import").clicked() { task.cancel(); }
-                    }
-                } else if pane == Sidebar::Edit {
-                    self.edit_panel(ui);
-                } else if pane == Sidebar::Export {
-                    self.export_panel(ui);
-                } else {
-                    egui::Frame::NONE.inner_margin(10).show(ui, |ui| {
-                        egui::ScrollArea::vertical()
-                        .id_salt(("workspace-pane", pane.label()))
-                        .auto_shrink([false, false])
+        let mut action = None;
+        if self.stack.is_some()
+            || self.scan.is_some()
+            || self.replay.is_some()
+            || self.job.is_some()
+        {
+            self.stack_launch_panel(ui, Sidebar::Projects);
+        }
+        if self.controls.settings.session.is_some() {
+            // Always show the bar: a long pass list otherwise ends at the
+            // clip edge with no sign that it scrolls.
+            egui::Frame::NONE
+                .inner_margin(egui::Margin::symmetric(8, 0))
+                .show(ui, |ui| {
+                    egui::ScrollArea::vertical()
+                        .id_salt("project-session-editor")
+                        .max_height((ui.available_height() * 0.55).clamp(180.0, 420.0))
+                        .auto_shrink([false, true])
                         .scroll_bar_visibility(
                             egui::scroll_area::ScrollBarVisibility::AlwaysVisible,
                         )
-                        .show(ui, |ui| match pane {
-                            Sidebar::Adjust => {
-                                self.session_panel(ui);
-                                let recipe_before = history::Recipe::capture(&self.controls);
-                                let before = (
-                                    self.controls.settings.clone(),
-                                    self.controls.exposure,
-                                    self.controls.gate,
-                                    self.controls.workers,
-                                );
-                                self.controls.show(ui, self.job.is_none());
-                                changed = before
-                                    != (
-                                        self.controls.settings.clone(),
-                                        self.controls.exposure,
-                                        self.controls.gate,
-                                        self.controls.workers,
-                                    );
-                                if changed {
-                                    self.edits.changed_recipe(recipe_before, ui.input(|i| i.time));
-                                }
-                                ui.add_space(8.0);
-                                egui::CollapsingHeader::new("Destination")
-                                    .show(ui, |ui| self.destination_controls(ui));
-                            }
-                            Sidebar::Review => self.review_panel(ui),
-                            Sidebar::Edit | Sidebar::Export => unreachable!(),
-                            Sidebar::Agent => self.agent_panel(ui),
-                            Sidebar::Activity => {
-                                if let Some(error) = &self.error {
-                                    ui.colored_label(AMBER, error);
-                                    ui.separator();
-                                }
-                                if self.logs.is_empty() {
-                                    theme::caption(
-                                        ui,
-                                        "Engine observations will be retained with each render.",
-                                    );
-                                }
-                                for line in &self.logs {
-                                    ui.add(
-                                        egui::Label::new(
-                                            RichText::new(line).monospace().size(10.0).color(MUTED),
-                                        )
-                                        .wrap(),
-                                    );
-                                }
-                            }
-                            Sidebar::Projects | Sidebar::Capture => unreachable!(),
-                        });
-                    });
-                }
-            });
-        if changed {
-            if pane == Sidebar::Adjust {
-                self.save_active_draft();
+                        .show(ui, |ui| self.session_panel(ui));
+                });
+            ui.add_space(6.0);
+        } else {
+            self.session_panel(ui);
+        }
+        self.session_result_picker(ui);
+        self.photo_history_panel(ui);
+        self.project_explorer.set_current_photo(
+            self.editor.path.as_deref(),
+            self.editor.loaded.as_ref().map(|photo| &photo.image),
+            self.editor.loaded.as_ref().map(|photo| &photo.preview),
+        );
+        let busy = self.job.is_some() || self.picker_active() || self.scan.is_some();
+        // Keep the primary source workflow beside the Projects heading.
+        // Reserve a footer for completed-result import instead of pushing New
+        // stack down with an unrelated action row.
+        let import_height = if self.session_import.is_some() {
+            76.0
+        } else {
+            30.0
+        };
+        let response = ui
+            .allocate_ui(
+                egui::vec2(
+                    ui.available_width(),
+                    (ui.available_height() - import_height).max(70.0),
+                ),
+                |ui| self.project_explorer.show(ui, &mut self.catalog, busy),
+            )
+            .inner;
+        changed |= response.changed;
+        action = action.or(response.action);
+        ui.horizontal(|ui| {
+            if cfg!(feature = "multi-stack") && ui.add_enabled(!busy && self.replay.is_none(), egui::Button::new("Stack everything…")).on_hover_text("Pick a folder of related captures. Every folder of RAW files inside becomes a pass, and Best result plans what each contributes to one photograph.").clicked() { self.pick(Dialog::StackEverything); }
+            if cfg!(feature = "multi-stack") && ui.add_enabled(!busy && self.replay.is_none(), egui::Button::new("Open completed CLI session…")).on_hover_text("Import saved photographs and diagnostics without opening original capture folders.").clicked() { self.pick(Dialog::CompletedSession); }
+        });
+        if let Some((_, _, task)) = &self.session_import {
+            ui.label("Verifying imported artifacts…");
+            if ui.button("Cancel import").clicked() {
+                task.cancel();
             }
+        }
+        (changed, action)
+    }
+
+    /// After a pane painted: debounce the catalog save, ask `tick` to save
+    /// the next render's recipe, and carry out the explorer's action.
+    pub(super) fn after_pane(
+        &mut self,
+        changed: bool,
+        recipe: bool,
+        action: Option<crate::project_explorer::ExplorerAction>,
+    ) {
+        if changed {
+            self.shell.request_draft_save(recipe);
             // Editing a title or dragging a recipe control must not serialize
             // an entire project library on every pointer or keyboard event.
             self.catalog_edit_pending = Some(Instant::now());
@@ -783,6 +619,9 @@ impl StrehlApp {
                     self.capture_parent = parent;
                     self.pick(Dialog::Source);
                 }
+                // Opening from the tree keeps the Library: its canvas shows the
+                // stack, and the tree stays beside it. The Stack station is one
+                // click away in the top bar.
                 ExplorerAction::OpenStack { id } => self.open_project_stack(id),
                 ExplorerAction::OpenRun { run } => self.reopen_run(*run),
                 action @ (ExplorerAction::RestoreVersion { .. }
@@ -791,7 +630,7 @@ impl StrehlApp {
             }
         }
     }
-    fn review_panel(&mut self, ui: &mut egui::Ui) {
+    pub(super) fn review_panel(&mut self, ui: &mut egui::Ui) {
         self.session_result_picker(ui);
         if !self.activity {
             theme::caption(
@@ -810,7 +649,8 @@ impl StrehlApp {
         if let Some(output) = &self.result {
             ui.separator();
             if ui.button("Copy photograph path").clicked() {
-                ui.ctx().copy_text(output.display().to_string());
+                ui.ctx()
+                    .copy_text(crate::display_path::display_path(output));
             }
             let confidence = output.with_file_name("confidence.tiff");
             if confidence.is_file()
@@ -819,232 +659,8 @@ impl StrehlApp {
                     .on_hover_text("Aligned-observation centrality rank saved alongside this render; not a defect map")
                     .clicked()
             {
-                ui.ctx().copy_text(confidence.display().to_string());
+                ui.ctx().copy_text(crate::display_path::display_path(&confidence));
             }
         }
     }
-    pub(super) fn status_bar(&mut self, ctx: &egui::Context) {
-        egui::TopBottomPanel::bottom("status-v2")
-            .exact_height(23.0)
-            .show_separator_line(false)
-            .frame(
-                egui::Frame::new()
-                    .fill(PANEL)
-                    .inner_margin(egui::Margin::symmetric(10, 0)),
-            )
-            .show(ctx, |ui| {
-                let frame = ui.max_rect().expand2(egui::vec2(10.0, 0.0));
-                theme::rule(ui.painter(), frame.left_top(), frame.right_top(), LINE);
-                ui.spacing_mut().interact_size.y = 19.0;
-                ui.horizontal_centered(|ui| {
-                    for redo in [false, true] {
-                        let enabled = self.can_undo_edit(redo);
-                        let label = self.undo_label(redo);
-                        if history_command(ui, redo, enabled, &label).clicked() {
-                            self.undo_edit(redo);
-                        }
-                    }
-                    dot(
-                        ui,
-                        if self.error.is_some() {
-                            AMBER
-                        } else if self.job.is_some() {
-                            ACCENT
-                        } else {
-                            MUTED
-                        },
-                    );
-                    let message = self.error.as_deref().unwrap_or(&self.status);
-                    let identity = self
-                        .active_stack
-                        .and_then(|id| self.catalog.node(id))
-                        .map(|node| node.name.as_str())
-                        .or_else(|| {
-                            self.stack
-                                .as_ref()
-                                .and_then(|stack| stack.directory.file_name())
-                                .and_then(|name| name.to_str())
-                        });
-                    let status = identity
-                        .map_or_else(|| message.to_owned(), |name| format!("{name} · {message}"));
-                    let label = ui.add_sized(
-                        [
-                            (ui.available_width()
-                                - if self.editor.loaded.is_some() {
-                                    365.0
-                                } else {
-                                    320.0
-                                })
-                            .max(20.0),
-                            19.0,
-                        ],
-                        egui::Label::new(
-                            RichText::new(&status)
-                                .size(10.0)
-                                .color(if self.error.is_some() { AMBER } else { MUTED }),
-                        )
-                        .truncate()
-                        .sense(egui::Sense::click()),
-                    );
-                    if label.clone().on_hover_text(&status).clicked() {
-                        self.sidebar = Some(Sidebar::Activity);
-                    }
-                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                        if ui.add(egui::Button::new("Activity").frame(false)).clicked() {
-                            self.sidebar = Some(Sidebar::Activity);
-                        }
-                        if self.editor.loaded.is_some()
-                            && let Some(presenter) = &self.editor.viewport.presenter
-                        {
-                            let display = presenter.status();
-                            let hdr = display.active
-                                && self.editor.loaded.as_ref().is_some_and(|photo| {
-                                    photo.image.origin == strehl_edit::ImageOrigin::SceneLinear
-                                });
-                            ui.label(
-                                RichText::new(if hdr { "HDR" } else { "SDR" })
-                                    .size(10.0)
-                                    .color(if hdr { ACCENT } else { MUTED }),
-                            )
-                            .on_hover_text(format!(
-                                "{}\nVisible photo detail refines to source pixels as you zoom.",
-                                display.reason
-                            ));
-                        }
-                        if self.recorded {
-                            theme::caption(ui, "Recorded");
-                        }
-                        if let Some(started) = self.started.filter(|_| self.job.is_some()) {
-                            theme::caption(ui, &elapsed(started.elapsed()));
-                        }
-                        theme::caption(ui, &format!("{} workers", self.controls.workers));
-                        if let Some(stack) = &self.stack {
-                            theme::caption(
-                                ui,
-                                &format!(
-                                    "{} RAW · {}",
-                                    stack.frames.len(),
-                                    bytes(stack.total_bytes)
-                                ),
-                            );
-                        }
-                    });
-                });
-            });
-    }
-}
-
-fn history_command(ui: &mut egui::Ui, redo: bool, enabled: bool, label: &str) -> egui::Response {
-    let (rect, response) = ui.allocate_exact_size(
-        egui::vec2(22.0, 19.0),
-        if enabled {
-            egui::Sense::click()
-        } else {
-            egui::Sense::hover()
-        },
-    );
-    response.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, enabled, label));
-    let p = ui.painter_at(rect);
-    if enabled && response.hovered() {
-        p.rect_filled(rect, 0.0, theme::RAISED);
-    }
-    let color = if enabled {
-        INK
-    } else {
-        MUTED.gamma_multiply(0.4)
-    };
-    let c = rect.center();
-    let flip = if redo { -1.0 } else { 1.0 };
-    let point = |x: f32, y: f32| c + egui::vec2(x * flip, y);
-    let stroke = Stroke::new(1.0 / ui.ctx().pixels_per_point(), color);
-    p.add(egui::Shape::line(
-        vec![
-            point(-5.0, -3.0),
-            point(2.0, -3.0),
-            point(5.0, 0.0),
-            point(5.0, 4.0),
-        ],
-        stroke,
-    ));
-    p.add(egui::Shape::line(
-        vec![point(-1.0, -6.0), point(-5.0, -3.0), point(-1.0, 0.0)],
-        stroke,
-    ));
-    response.on_hover_text(format!(
-        "{label} · {}",
-        if redo {
-            "Ctrl+Shift+Z / Ctrl+Y"
-        } else {
-            "Ctrl+Z"
-        }
-    ))
-}
-
-fn rail_command(
-    ui: &mut egui::Ui,
-    label: &str,
-    kind: usize,
-    selected: bool,
-    enabled: bool,
-) -> egui::Response {
-    let (rect, response) = ui.allocate_exact_size(
-        egui::vec2(48.0, 48.0),
-        if enabled {
-            egui::Sense::click()
-        } else {
-            egui::Sense::hover()
-        },
-    );
-    response.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, enabled, label));
-    let p = ui.painter_at(rect);
-    let c = rect.center() - egui::vec2(0.0, 5.0);
-    let color = if enabled && (selected || response.hovered() || kind == 4) {
-        ACCENT
-    } else {
-        MUTED
-    };
-    if selected {
-        p.rect_filled(
-            egui::Rect::from_min_size(
-                rect.min,
-                egui::vec2(1.0 / ui.ctx().pixels_per_point(), rect.height()),
-            ),
-            0.0,
-            ACCENT,
-        );
-    }
-    if response.hovered() {
-        p.rect_filled(rect.shrink(3.0), 0.0, theme::RAISED);
-    }
-    let icon = match kind {
-        0 => crate::workspace_icons::Icon::Projects,
-        1 => crate::workspace_icons::Icon::Adjust,
-        2 => crate::workspace_icons::Icon::Review,
-        3 => crate::workspace_icons::Icon::Activity,
-        4 => crate::workspace_icons::Icon::Stack,
-        7 => crate::workspace_icons::Icon::Edit,
-        8 => crate::workspace_icons::Icon::Agent,
-        9 => crate::workspace_icons::Icon::Export,
-        10 => crate::workspace_icons::Icon::Camera,
-        _ => crate::workspace_icons::Icon::Layout,
-    };
-    crate::workspace_icons::paint(&p, c, 20.0, icon, color);
-    p.text(
-        rect.center_bottom() - egui::vec2(0.0, 3.0),
-        egui::Align2::CENTER_BOTTOM,
-        if kind == 5 { "Layout" } else { label },
-        egui::FontId::proportional(8.0),
-        color,
-    );
-    response.on_hover_text(match kind {
-        0 => "Projects · folders, stacks and saved renders",
-        10 => "Capture · live camera, focus bounds and RAW receiver",
-        1 => "Adjust · settings for the next render",
-        2 => "Review · retained processing evidence",
-        3 => "Activity · engine observations",
-        4 if selected => "Opens current stack",
-        4 => "Stack · build a new render with these settings",
-        6 => "Space · explore the photograph, capture order, detail sizes and construction history as one object · experimental",
-        _ => "Reset workspace proportions",
-    })
 }

@@ -135,8 +135,8 @@ impl Controls {
                     });
                 });
                 note(ui,"All available CPU threads by default.");
-                note(ui,"CPU stacking · GPU display");
-                ui.label(RichText::new("Engine manages memory and task routing.").size(9.5).color(MUTED)).on_hover_text("The normal stacking engine runs on CPU. The graphics card draws this workspace. Thread limits do not change the image settings or canonical merge reduction order; actual active threads depend on the current stage and bracket.");
+                note(ui,"GPU fold when available · CPU otherwise");
+                ui.label(RichText::new("Engine manages memory and task routing.").size(9.5).color(MUTED)).on_hover_text("The desktop runs the engine with its GPU fold on automatic: the merge folds on the graphics card when one is available and on the CPU otherwise. The graphics card also draws this workspace. Thread limits do not change the image settings or canonical merge reduction order; actual active threads depend on the current stage and bracket.");
             });
         });
     }

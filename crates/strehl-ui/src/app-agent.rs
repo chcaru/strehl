@@ -390,6 +390,10 @@ impl StrehlApp {
             "saved_diagnostics":self.process_space.diagnostic_snapshot(),
             "semantics":"Camera previews are unregistered. Admission is sampled gate evidence, not fractional ownership. Annotations use final-photo normalized coordinates. Exports and new runs preserve originals."
         });
+        // Studio 2 additions (plan 11): the route, notices and activities.
+        for (key, value) in self.studio_snapshot() {
+            snapshot[key] = value;
+        }
         snapshot["view_progress"] =
             serde_json::to_value(self.progress.view.as_ref()).expect("Serializable view progress");
         snapshot["view_progress_observations_missing"] =

@@ -1,13 +1,23 @@
 use eframe::egui::{self, Color32, FontFamily, FontId, Stroke, TextStyle};
-pub const BG: Color32 = Color32::from_rgb(16, 20, 28);
-pub const PANEL: Color32 = Color32::from_rgb(20, 24, 33);
-pub const RAISED: Color32 = Color32::from_rgb(27, 32, 42);
-pub const LINE: Color32 = Color32::from_rgb(44, 51, 64);
-pub const INK: Color32 = Color32::from_rgb(200, 198, 190);
-pub const MUTED: Color32 = Color32::from_rgb(141, 150, 162);
-pub const ACCENT: Color32 = Color32::from_rgb(230, 180, 80);
-pub const GREEN: Color32 = Color32::from_rgb(169, 199, 121);
-pub const AMBER: Color32 = Color32::from_rgb(223, 156, 99);
+// Legacy palette shim. These names keep compiling everywhere they are used
+// today and now hold the Graphite tokens (studio-theme.rs, appendix A), so the
+// whole app adopts the new palette at once. A constant cannot follow the
+// theme chosen in Preferences: new code reads `crate::studio_theme::tokens(ctx)`
+// instead, and the shell draws views that still use these constants in the
+// Graphite scope on a light theme so they stay legible. Replace call sites
+// module by module and delete a constant when no caller remains.
+pub const BG: Color32 = crate::studio_theme::GRAPHITE.bg;
+pub const PANEL: Color32 = crate::studio_theme::GRAPHITE.panel;
+pub const RAISED: Color32 = crate::studio_theme::GRAPHITE.raised;
+pub const LINE: Color32 = crate::studio_theme::GRAPHITE.line;
+pub const INK: Color32 = crate::studio_theme::GRAPHITE.ink;
+pub const MUTED: Color32 = crate::studio_theme::GRAPHITE.ink3;
+pub const ACCENT: Color32 = crate::studio_theme::GRAPHITE.accent;
+pub const GREEN: Color32 = crate::studio_theme::GRAPHITE.ok;
+pub const AMBER: Color32 = crate::studio_theme::GRAPHITE.warn;
+/// Failure: a capture fault, a stopped render, a refused file.
+#[allow(dead_code)]
+pub const RED: Color32 = crate::studio_theme::GRAPHITE.bad;
 
 /// Keep the button and popup tied to the parent control's width. egui's Width
 /// option is a minimum, and its popup defaults to Extend; neither bounds long
@@ -78,78 +88,113 @@ pub fn rule(p: &egui::Painter, mut from: egui::Pos2, mut to: egui::Pos2, color: 
 pub fn install(ctx: &egui::Context) {
     // Keep native controls on the same palette when the OS reports light mode.
     ctx.set_theme(egui::Theme::Dark);
-    // Read an installed system face; font files are never redistributed.
-    #[cfg(windows)]
-    if let Ok(bytes) = std::fs::read("C:/Windows/Fonts/segoeui.ttf") {
-        let mut fonts = egui::FontDefinitions::default();
-        fonts
-            .font_data
-            .insert("system-ui".into(), egui::FontData::from_owned(bytes).into());
-        fonts
-            .families
-            .entry(FontFamily::Proportional)
-            .or_default()
-            .insert(0, "system-ui".into());
-        ctx.set_fonts(fonts);
-    }
-    let hairline = 1.0 / ctx.pixels_per_point();
-    let mut style = (*ctx.style()).clone();
-    style.visuals = egui::Visuals::dark();
-    style.visuals.panel_fill = PANEL;
-    style.visuals.window_fill = PANEL;
-    style.visuals.extreme_bg_color = BG;
-    style.visuals.faint_bg_color = RAISED;
-    style.visuals.override_text_color = Some(INK);
-    style.visuals.selection.bg_fill = Color32::from_rgb(53, 47, 34);
-    style.visuals.selection.stroke = Stroke::new(hairline, ACCENT);
-    style.visuals.window_corner_radius = egui::CornerRadius::ZERO;
-    style.visuals.menu_corner_radius = egui::CornerRadius::ZERO;
-    style.visuals.window_shadow = egui::epaint::Shadow::NONE;
-    style.visuals.popup_shadow = egui::epaint::Shadow::NONE;
-    style.visuals.window_stroke = Stroke::new(hairline, LINE);
-    style.visuals.hyperlink_color = ACCENT;
-    style.visuals.warn_fg_color = AMBER;
-    style.visuals.code_bg_color = BG;
-    style.visuals.widgets.noninteractive.bg_fill = PANEL;
-    style.visuals.widgets.noninteractive.bg_stroke = Stroke::new(hairline, LINE);
-    style.visuals.widgets.noninteractive.fg_stroke = Stroke::new(hairline, MUTED);
-    style.visuals.widgets.inactive.weak_bg_fill = PANEL;
-    style.visuals.widgets.inactive.bg_fill = RAISED;
-    style.visuals.widgets.inactive.bg_stroke = Stroke::new(hairline, LINE);
-    style.visuals.widgets.inactive.fg_stroke = Stroke::new(hairline, INK);
-    style.visuals.widgets.hovered.weak_bg_fill = RAISED;
-    style.visuals.widgets.hovered.bg_fill = RAISED;
-    style.visuals.widgets.hovered.bg_stroke = Stroke::new(hairline, LINE);
-    style.visuals.widgets.hovered.fg_stroke = Stroke::new(hairline, ACCENT);
-    style.visuals.widgets.active.weak_bg_fill = Color32::from_rgb(45, 42, 34);
-    style.visuals.widgets.active.bg_fill = Color32::from_rgb(45, 42, 34);
-    style.visuals.widgets.active.bg_stroke = Stroke::new(hairline, ACCENT);
-    style.visuals.widgets.active.fg_stroke = Stroke::new(hairline, ACCENT);
-    style.visuals.widgets.open = style.visuals.widgets.active;
+    // Read installed system faces; font files are never redistributed.
+    crate::studio_fonts::install(ctx);
+    crate::studio_theme::apply(
+        ctx,
+        crate::studio_theme::theme_name(ctx),
+        crate::studio_theme::surround(ctx),
+        crate::studio_theme::reduced_motion(ctx),
+    );
+}
+
+fn mix(a: Color32, b: Color32, t: f32) -> Color32 {
+    let channel = |x: u8, y: u8| (x as f32 + (y as f32 - x as f32) * t).round() as u8;
+    Color32::from_rgb(
+        channel(a.r(), b.r()),
+        channel(a.g(), b.g()),
+        channel(a.b(), b.b()),
+    )
+}
+
+/// egui's style for a set of tokens: square corners, hairline rules, no
+/// shadow except under popovers, and the Studio type scale (plan 6.4).
+pub(crate) fn studio_style(
+    base: &egui::Style,
+    t: &crate::studio_theme::Tokens,
+    hairline: f32,
+    reduced_motion: bool,
+    strong: FontFamily,
+) -> egui::Style {
+    use crate::studio_theme::scale;
+    let mut style = base.clone();
+    style.visuals = if t.light {
+        egui::Visuals::light()
+    } else {
+        egui::Visuals::dark()
+    };
+    let visuals = &mut style.visuals;
+    visuals.panel_fill = t.panel;
+    visuals.window_fill = t.panel;
+    visuals.extreme_bg_color = t.bg;
+    visuals.faint_bg_color = t.raised;
+    visuals.override_text_color = Some(t.ink);
+    visuals.selection.bg_fill = mix(t.panel, t.accent, if t.light { 0.24 } else { 0.2 });
+    visuals.selection.stroke = Stroke::new(hairline, t.accent);
+    visuals.window_corner_radius = egui::CornerRadius::ZERO;
+    visuals.menu_corner_radius = egui::CornerRadius::ZERO;
+    let shadow = egui::epaint::Shadow {
+        offset: [0, 10],
+        blur: 30,
+        spread: 0,
+        color: t.shadow,
+    };
+    visuals.window_shadow = shadow;
+    visuals.popup_shadow = shadow;
+    visuals.window_stroke = Stroke::new(hairline, t.line2);
+    // Links are neutral; only a check that needs a look takes the accent.
+    visuals.hyperlink_color = t.ink2;
+    visuals.warn_fg_color = t.warn;
+    visuals.error_fg_color = t.bad;
+    visuals.code_bg_color = t.bg;
+    let widgets = &mut visuals.widgets;
+    widgets.noninteractive.bg_fill = t.panel;
+    widgets.noninteractive.weak_bg_fill = t.panel;
+    widgets.noninteractive.bg_stroke = Stroke::new(hairline, t.line);
+    widgets.noninteractive.fg_stroke = Stroke::new(hairline, t.ink2);
+    // Buttons read as outlines: their fill is the panel they sit on.
+    widgets.inactive.weak_bg_fill = t.panel;
+    widgets.inactive.bg_fill = t.control;
+    widgets.inactive.bg_stroke = Stroke::new(hairline, t.line2);
+    widgets.inactive.fg_stroke = Stroke::new(hairline, t.ink);
+    // Hover lightens the outline; amber is kept for selection and the main action.
+    widgets.hovered.weak_bg_fill = t.panel;
+    widgets.hovered.bg_fill = t.control;
+    widgets.hovered.bg_stroke = Stroke::new(hairline, t.ink3);
+    widgets.hovered.fg_stroke = Stroke::new(hairline, t.ink);
+    widgets.active.weak_bg_fill = t.control;
+    widgets.active.bg_fill = t.control;
+    widgets.active.bg_stroke = Stroke::new(hairline, t.accent);
+    widgets.active.fg_stroke = Stroke::new(hairline, t.ink);
+    widgets.open = widgets.active;
     for widget in [
-        &mut style.visuals.widgets.noninteractive,
-        &mut style.visuals.widgets.inactive,
-        &mut style.visuals.widgets.hovered,
-        &mut style.visuals.widgets.active,
-        &mut style.visuals.widgets.open,
+        &mut widgets.noninteractive,
+        &mut widgets.inactive,
+        &mut widgets.hovered,
+        &mut widgets.active,
+        &mut widgets.open,
     ] {
         widget.corner_radius = egui::CornerRadius::ZERO;
         widget.expansion = 0.0;
     }
     style.spacing.item_spacing = egui::vec2(6.0, 3.0);
-    style.spacing.button_padding = egui::vec2(7.0, 3.0);
-    style.spacing.interact_size.y = 23.0;
+    style.spacing.button_padding = egui::vec2(8.0, 3.0);
+    style.spacing.interact_size.y = 24.0;
     style.spacing.slider_width = 125.0;
     style.spacing.scroll = egui::style::ScrollStyle::solid();
     style.spacing.scroll.bar_width = 5.0;
     style.spacing.scroll.bar_inner_margin = 6.0;
     style.spacing.scroll.bar_outer_margin = 1.0;
     style.visuals.handle_shape = egui::style::HandleShape::Rect { aspect_ratio: 0.5 };
+    // No animation is longer than 160 ms; reduced motion removes them.
+    style.animation_time = if reduced_motion { 0.0 } else { 0.1 };
+    // Studio widgets size their own labels. egui's Button style stays at the
+    // 11 px the existing panes align their painted labels with (the Develop
+    // pane's value fields, for one); every style stays above 10.5 px.
     for (name, size) in [
-        (TextStyle::Body, 11.0),
+        (TextStyle::Body, scale::BODY),
         (TextStyle::Button, 11.0),
-        (TextStyle::Small, 10.0),
-        (TextStyle::Heading, 14.0),
+        (TextStyle::Small, scale::HINT),
     ] {
         style
             .text_styles
@@ -157,8 +202,11 @@ pub fn install(ctx: &egui::Context) {
     }
     style
         .text_styles
-        .insert(TextStyle::Monospace, FontId::monospace(11.0));
-    ctx.set_style(style);
+        .insert(TextStyle::Heading, FontId::new(scale::STATEMENT, strong));
+    style
+        .text_styles
+        .insert(TextStyle::Monospace, FontId::monospace(scale::HINT));
+    style
 }
 pub fn caption(ui: &mut egui::Ui, text: &str) {
     ui.label(egui::RichText::new(text).size(11.0).color(MUTED));
@@ -442,7 +490,7 @@ mod tests {
                 let colors = native_control_colors(&ctx, system_theme, frame as f64 + 1.0);
                 assert_eq!(
                     colors,
-                    (BG, LINE, LINE),
+                    (BG, crate::studio_theme::GRAPHITE.line2, LINE),
                     "OS theme changes must preserve the actual editor and separator paint"
                 );
                 assert_eq!(ctx.theme(), egui::Theme::Dark);
@@ -459,7 +507,7 @@ mod tests {
         let (fill, border, rule) = native_control_colors(&control, egui::Theme::Light, 0.0);
         assert_eq!(control.theme(), egui::Theme::Light);
         assert_ne!(fill, BG);
-        assert_ne!(border, LINE);
+        assert_ne!(border, crate::studio_theme::GRAPHITE.line2);
         assert_ne!(rule, LINE);
     }
 

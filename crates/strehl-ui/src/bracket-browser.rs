@@ -255,9 +255,10 @@ impl BracketBrowser {
             }
             return None;
         }
+        // Below the top bar, whose window buttons stay usable over the modal.
         let screen = ctx.content_rect();
         let safe = Rect::from_min_max(
-            screen.min + egui::vec2(crate::window_chrome::RAIL_WIDTH + 16.0, 12.0),
+            screen.min + egui::vec2(16.0, crate::window_chrome::CONTROLS_HEIGHT + 13.0),
             screen.max - egui::vec2(16.0, 16.0),
         );
         let frame = egui::Frame::new()
@@ -304,17 +305,7 @@ impl BracketBrowser {
                 // a tall separator or long Places list cannot grow the modal back
                 // into the native title controls or push Open below the window.
                 let (bounds, _) = ui.allocate_exact_size(egui::vec2(width, height), Sense::hover());
-                let mut header = Rect::from_min_size(bounds.min, egui::vec2(width, 32.0));
-                let window_dock = crate::window_chrome::dock_rect(ctx.viewport_rect());
-                if header.intersects(window_dock.expand(8.0)) {
-                    // Keep the local chooser actions beside the native dock.
-                    // Only this header gives up the corner: the location row
-                    // and gallery retain the entire available modal width.
-                    header.max.x = header
-                        .right()
-                        .min(window_dock.left() - 8.0)
-                        .max(header.left() + 1.0);
-                }
+                let header = Rect::from_min_size(bounds.min, egui::vec2(width, 32.0));
                 let path_row = Rect::from_min_size(
                     bounds.min + egui::vec2(0.0, 42.0),
                     egui::vec2(width, 28.0),

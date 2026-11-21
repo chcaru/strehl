@@ -657,7 +657,7 @@ impl StrehlApp {
                         self.photo_history.error = None;
                         self.photo_history.status = Some(format!(
                             "This window’s history was preserved in {}",
-                            path.display()
+                            crate::display_path::display_path(&path)
                         ));
                     }
                     Err(e) => self.photo_history.error = Some(e.to_string()),
