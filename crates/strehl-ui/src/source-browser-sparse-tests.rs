@@ -222,3 +222,47 @@ fn square(index: usize, side: usize) -> PreviewImage {
         is_overview: true,
     }
 }
+
+#[test]
+fn a_sweep_from_open_warms_the_sparse_tier_around_the_pointer_and_shows_stand_ins() {
+    let count = 1_444;
+    let mut h = Harness::new(count);
+    let mut shown = 0;
+    let mut sparse_batches = 0;
+    for step in 0..400 {
+        // A pointer moving four planes per poll, never settling.
+        h.select((step * 4) % count);
+        h.tick();
+        if let Some(pending) = h.film_pending.first() {
+            if pending.kind == Kind::Sparse {
+                // Its first batch is the pointer's neighbourhood; later ones
+                // fill the nearest slots still missing, wherever they are.
+                if sparse_batches == 0 {
+                    assert!(
+                        pending
+                            .indices
+                            .iter()
+                            .all(|&index| index.abs_diff(h.selected) <= 48),
+                        "the sparse tier warms around the pointer first"
+                    );
+                }
+                sparse_batches += 1;
+            }
+            h.deliver_film_images();
+        }
+        h.tick();
+        shown += usize::from(h.browser.displayed_index().is_some());
+        assert!(
+            h.browser
+                .film_work
+                .as_ref()
+                .is_none_or(|work| !work.task.is_cancelled()),
+            "a sparse batch is never cancelled by a moving cold pointer"
+        );
+    }
+    assert!(sparse_batches > 0);
+    assert!(
+        shown >= 390,
+        "after its first batch a cold sweep shows a picture: {shown} of 400"
+    );
+}

@@ -589,11 +589,25 @@ impl SourceBrowser {
                         || work.kind != Kind::Overview
                         || work.task.is_cancelled()
                 });
-            let (mut indices, mut kind) = if rescue {
+            // While a long stack's sparse tier is incomplete it is what lets a
+            // moving pointer show anything: during motion it outranks the
+            // selection's rescue overview (obsolete within a few steps) and
+            // the moving contact neighbourhood; visible contacts stay first.
+            let sparse_wanted =
+                self.sparse_pending.is_empty() && !self.next_sparse(frames.len()).is_empty();
+            let settled = now.saturating_duration_since(self.requested_at) >= SETTLE;
+            let (mut indices, mut kind) = if rescue && (settled || !sparse_wanted) {
                 (vec![selected], Kind::Overview)
+            } else if sparse_wanted {
+                let shown = self.next_filmstrip(frames.len(), visible, now, false);
+                if shown.is_empty() {
+                    (self.next_sparse(frames.len()), Kind::Sparse)
+                } else {
+                    (shown, Kind::Thumbnail)
+                }
             } else {
                 (
-                    self.next_filmstrip(frames.len(), visible, now),
+                    self.next_filmstrip(frames.len(), visible, now, true),
                     Kind::Thumbnail,
                 )
             };
@@ -686,7 +700,7 @@ impl SourceBrowser {
         if self.missing(selected, Kind::Overview)
             && self.missing(selected, Kind::Scrub)
             && let Some(work) = &self.film_work
-            && matches!(work.kind, Kind::Scrub | Kind::Sparse)
+            && work.kind == Kind::Scrub
             && !work.indices.contains(&selected)
         {
             work.task.cancel();
@@ -1013,7 +1027,13 @@ impl SourceBrowser {
         targets
     }
 
-    fn next_filmstrip(&self, count: usize, visible: &[usize], now: Instant) -> Vec<usize> {
+    fn next_filmstrip(
+        &self,
+        count: usize,
+        visible: &[usize],
+        now: Instant,
+        neighbourhood: bool,
+    ) -> Vec<usize> {
         let Some(selected) = self.requested else {
             return Vec::new();
         };
@@ -1032,7 +1052,9 @@ impl SourceBrowser {
                 .flatten()
                 .filter(|&index| index < count),
         );
-        let radius = if now.saturating_duration_since(self.requested_at) >= SETTLE {
+        let radius = if !neighbourhood {
+            0
+        } else if now.saturating_duration_since(self.requested_at) >= SETTLE {
             40
         } else {
             12
