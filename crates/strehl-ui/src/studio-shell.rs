@@ -257,6 +257,11 @@ impl StrehlApp {
             "agent" => self.open_drawer(Drawer::Agent),
             "palette" => self.shell.palette.open(),
             "preferences" => self.shell.preferences_open = true,
+            // The Library's menus, selection and delete confirmation
+            // (`app-library-manage.rs`), once the view has painted.
+            other if other.starts_with("library-") || other.starts_with("subject-") => {
+                self.library.manage.overlay = Some(other.to_owned());
+            }
             _ => {}
         }
     }

@@ -68,6 +68,27 @@ ROUTES = {
     "stack-instrument": (["--open-run", RUN, "--route", "stack", "--theme", "instrument"], "stack-instrument.png"),
     "stack-lightbox": (["--open-run", RUN, "--route", "stack", "--theme", "lightbox"], "stack-lightbox.png"),
     "stack-plane-held": (["--open-run", RUN, "--route", "stack", "--plane-hold", "128"], "stack-plane-held.png"),
+    # Library management (fb-library): menus, selection and the delete confirmation.
+    "library-menu": (["--route", "library", "--overlay", "library-menu"], "library.png"),
+    "library-menu-move": (["--route", "library", "--overlay", "library-menu-move"], "library.png"),
+    "library-menu-lightbox": (["--route", "library", "--overlay", "library-menu-move", "--theme", "lightbox"],
+                              "library.png"),
+    "library-menu-instrument": (["--route", "library", "--overlay", "library-menu", "--theme", "instrument"],
+                                "library.png"),
+    "library-select": (["--route", "library", "--overlay", "library-select"], "library.png"),
+    "library-list": (["--route", "library", "--overlay", "library-list"], "library.png"),
+    "library-list-lightbox": (["--route", "library", "--overlay", "library-list", "--theme", "lightbox"],
+                              "library.png"),
+    "library-delete": (["--route", "library", "--overlay", "library-delete"], "library.png"),
+    "library-delete-sources": (["--route", "library", "--overlay", "library-delete-sources"], "library.png"),
+    "library-delete-confirm": (["--route", "library", "--overlay", "library-delete-confirm"], "library.png"),
+    "library-delete-lightbox": (["--route", "library", "--overlay", "library-delete-sources", "--theme",
+                                 "lightbox"], "library.png"),
+    "library-delete-instrument": (["--route", "library", "--overlay", "library-delete-confirm", "--theme",
+                                   "instrument"], "library.png"),
+    "subject-menu": (["--route", "subject", "--overlay", "subject-menu"], "subject.png"),
+    "subject-menu-move": (["--route", "subject", "--overlay", "subject-menu-move"], "subject.png"),
+    "subject-select": (["--route", "subject", "--overlay", "subject-select"], "subject.png"),
 }
 
 

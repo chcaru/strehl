@@ -209,7 +209,8 @@ fn migration_groups_an_owner_shaped_catalog_into_subjects_and_loses_no_evidence(
         let position = |id| catalog.nodes.iter().position(|n| n.id == id).unwrap();
         assert!(position(subject.id) < position(stacks[0]));
     }
-    // Subject dates come from their earliest render, else the migration time.
+    // Subject dates come from their earliest render or recorded capture;
+    // with neither the subject has no date, never the migration time.
     let created = |stack| {
         catalog
             .node(catalog.subject_of(stack).unwrap())
@@ -222,7 +223,7 @@ fn migration_groups_an_owner_shaped_catalog_into_subjects_and_loses_no_evidence(
     assert_eq!(created(6), 100);
     assert_eq!(created(13), 300);
     assert_eq!(created(41), 600);
-    assert!(created(4) > 1_700_000_000);
+    assert_eq!(created(4), 0);
 
     // No run, version or export changed; every stack keeps its id and renders.
     assert_eq!(
@@ -1233,5 +1234,93 @@ fn an_import_plan_groups_camera_folders_by_parent_and_keeps_others_alone() {
             ("100MSDCF".to_owned(), vec![path("/100MSDCF")]),
         ],
         "one stack per folder; a repeated folder counts once; DCIM and a root name nothing"
+    );
+}
+
+/// The owner's catalog (2026-11-21): node 23, `generated-smoke-input`, a
+/// test input from a temp folder long gone, never rendered, showed its
+/// subject dated "today": migration gave a subject without renders the
+/// time of migration. Its own record is the photographs' write time.
+#[test]
+fn a_subject_without_renders_is_dated_by_its_recorded_capture_never_today() {
+    use crate::library_station::LibraryModel;
+    // 2026-10-24, the smoke input's recorded modification time.
+    const RECORDED_NS: u128 = 1_792_940_742_495_839_900;
+    const RECORDED: u64 = 1_792_940_742;
+    let dir = tempfile::tempdir().unwrap();
+    let mut smoke = stack_json(
+        23,
+        1,
+        "generated-smoke-input",
+        "/tmp/gone/generated-smoke-input",
+        &[],
+    );
+    smoke["stack"]["sources"] = json!([
+        {"path": "/tmp/gone/generated-smoke-input/a-valid-optical.ARW", "bytes": 100, "modified_ns": RECORDED_NS},
+        {"path": "/tmp/gone/generated-smoke-input/b-malformed-optical.ARW", "bytes": 100, "modified_ns": RECORDED_NS}
+    ]);
+    let v1 = json!({
+        "layout": {}, "selected": null, "next_node_id": 30,
+        "nodes": [
+            {"id": 1, "parent": null, "name": "Imported stacks", "kind": "Project"},
+            smoke,
+            stack_json(24, 1, "input", "/tmp/gone/input", &[])
+        ],
+        "runs": [], "photo_versions": [], "photo_exports": [], "export_directories": {}
+    });
+    let (path, _) = write_fixture(dir.path(), &v1);
+    let catalog = Catalog::load(Some(path));
+    assert!(catalog.load_error.is_none(), "{:?}", catalog.load_error);
+    let subject = catalog.subject_of(23).unwrap();
+    let meta = catalog.node(subject).unwrap().subject.clone().unwrap();
+    assert_eq!(
+        meta.created, RECORDED,
+        "the capture's own date, not the migration's"
+    );
+    // With no recorded time at all the subject has no date (0), not now.
+    let undated = catalog.subject_of(24).unwrap();
+    assert_eq!(
+        catalog
+            .node(undated)
+            .unwrap()
+            .subject
+            .as_ref()
+            .unwrap()
+            .created,
+        0
+    );
+    let now = timestamp();
+    let model = LibraryModel::build(&catalog, 0, now);
+    let card = |id| model.cards.iter().find(|c| c.id == id).unwrap();
+    assert_eq!(card(subject).last, RECORDED);
+    assert_ne!(crate::library_paint::day(card(subject).last, now), "today");
+    assert_eq!(
+        crate::library_paint::day(card(undated).last, now),
+        "",
+        "no date shown"
+    );
+    // A catalog an earlier build already saved with the migration's time:
+    // the card still reads the stack's own record.
+    let mut saved = catalog;
+    saved
+        .node_mut(subject)
+        .unwrap()
+        .subject
+        .as_mut()
+        .unwrap()
+        .created = now;
+    let model = LibraryModel::build(&saved, 1, now);
+    let card = model.cards.iter().find(|c| c.id == subject).unwrap();
+    assert_eq!(card.last, RECORDED);
+    // The subject page dates the stack row by its capture too.
+    let page = crate::subject_page::SubjectModel::build(&saved, subject, 1).unwrap();
+    assert_eq!(page.stacks[0].last, RECORDED);
+    assert!(
+        page.journal
+            .iter()
+            .any(|line| line.at == RECORDED
+                && line.text == "generated-smoke-input captured · 2 planes"),
+        "{:?}",
+        page.journal
     );
 }

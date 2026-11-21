@@ -22,7 +22,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-const MAX_NOTES_CHARS: usize = 4000;
+pub(super) const MAX_NOTES_CHARS: usize = 4000;
 const MAX_TEXT_CHARS: usize = 160;
 const MAX_PATH_CHARS: usize = 4096;
 /// The status a reconciled run carries after its desktop was hard-killed.
@@ -343,11 +343,16 @@ impl Catalog {
             let node = self.node(id).unwrap();
             let container = node.parent.unwrap();
             let (key, name) = grouping(node);
+            // The stack's own record: its first render, or when its photographs
+            // were written, whichever is earlier. Never the time of migration:
+            // a stack nobody rendered would otherwise date its subject "today".
             let first_run = node
                 .revisions
                 .iter()
                 .filter_map(|directory| self.runs.iter().find(|r| &r.directory == directory))
                 .map(|run| run.created)
+                .filter(|&created| created > 0)
+                .chain(node.stack.as_ref().and_then(recorded_capture))
                 .min();
             let subject = match subjects.get(&(container, key.clone())) {
                 Some(&subject) => {
@@ -355,7 +360,11 @@ impl Catalog {
                         && let Some(first_run) = first_run
                         && let Some(meta) = self.node_mut(subject).unwrap().subject.as_mut()
                     {
-                        meta.created = meta.created.min(first_run);
+                        meta.created = if meta.created == 0 {
+                            first_run
+                        } else {
+                            meta.created.min(first_run)
+                        };
                     }
                     subject
                 }
@@ -367,8 +376,9 @@ impl Catalog {
                     };
                     let subject =
                         self.insert_node(Some(container), &name, NodeKind::Subject, None)?;
+                    // 0 when nothing is recorded: the subject shows no date.
                     self.node_mut(subject).unwrap().subject =
-                        Some(SubjectMeta::new(first_run.unwrap_or_else(timestamp)));
+                        Some(SubjectMeta::new(first_run.unwrap_or(0)));
                     // Sit where the first stack sat, so the tree keeps its order.
                     let from = self.nodes.iter().position(|n| n.id == subject).unwrap();
                     let to = self.nodes.iter().position(|n| n.id == id).unwrap();
@@ -479,7 +489,8 @@ impl Catalog {
                 usage.export(export.created);
             }
         }
-        Some(StackLifecycle::from_parts(&runs, usage))
+        let captured = node.stack.as_ref().and_then(recorded_capture).unwrap_or(0);
+        Some(StackLifecycle::from_parts(&runs, usage, captured))
     }
 
     /// One subject's stacks combined, from the catalog alone (no I/O).
@@ -527,6 +538,7 @@ impl Catalog {
                     let lifecycle = StackLifecycle::from_parts(
                         &revisions,
                         usage.get(&node.id).copied().unwrap_or_default(),
+                        node.stack.as_ref().and_then(recorded_capture).unwrap_or(0),
                     );
                     index.stacks.insert(node.id, lifecycle);
                 }
@@ -732,7 +744,7 @@ impl Catalog {
 }
 
 /// The process id in a job folder named `strehl-<millis>-<pid>-<sequence>`.
-fn job_process(directory: &Path) -> Option<u32> {
+pub(super) fn job_process(directory: &Path) -> Option<u32> {
     let name = directory.file_name()?.to_str()?;
     let mut parts = name.strip_prefix("strehl-")?.split('-');
     parts.next()?.parse::<u128>().ok()?;
@@ -792,6 +804,19 @@ pub(super) fn process_alive(pid: u32, _since: u64) -> bool {
 #[cfg(not(any(windows, unix)))]
 pub(super) fn process_alive(_pid: u32, _since: u64) -> bool {
     true
+}
+
+/// When a stack's photographs were written, in Unix seconds: the newest
+/// modification time the catalog recorded for them (no I/O). `None` when the
+/// recipe records none.
+pub(crate) fn recorded_capture(draft: &StackDraft) -> Option<u64> {
+    draft
+        .sources
+        .iter()
+        .filter_map(|s| s.modified_ns)
+        .max()
+        .map(|ns| (ns / 1_000_000_000) as u64)
+        .filter(|&seconds| seconds > 0)
 }
 
 /// `Catalog::sources_present` for a recipe already cloned off the UI thread.
@@ -977,9 +1002,12 @@ pub(crate) struct StackLifecycle {
     pub exports: usize,
     /// Newest render, version or export, in Unix seconds; 0 when none.
     pub last_activity: u64,
+    /// When its photographs were written (`recorded_capture`); 0 when the
+    /// catalog records no time.
+    pub captured_at: u64,
 }
 impl StackLifecycle {
-    fn from_parts(runs: &[&Run], usage: Usage) -> Self {
+    fn from_parts(runs: &[&Run], usage: Usage, captured_at: u64) -> Self {
         let latest = runs.last().map(|run| RunState::of(&run.status));
         let stacked = match latest {
             None => StepState::NotYet,
@@ -1013,7 +1041,12 @@ impl StackLifecycle {
                 .max()
                 .unwrap_or(0)
                 .max(usage.last),
+            captured_at,
         }
+    }
+    /// The stack's own newest date: activity, else its capture; 0 unknown.
+    pub(crate) fn last_dated(&self) -> u64 {
+        self.last_activity.max(self.captured_at)
     }
     pub(crate) fn steps(&self) -> [StepState; 4] {
         [self.captured, self.stacked, self.developed, self.exported]
@@ -1048,6 +1081,8 @@ pub(crate) struct SubjectSummary {
     pub versions: usize,
     pub exports: usize,
     pub last_activity: u64,
+    /// The newest capture time recorded for its stacks; 0 when none.
+    pub captured_at: u64,
     /// The strongest state of each step across the stacks.
     pub steps: [StepState; 4],
 }
@@ -1067,6 +1102,7 @@ impl SubjectSummary {
         self.versions += stack.versions;
         self.exports += stack.exports;
         self.last_activity = self.last_activity.max(stack.last_activity);
+        self.captured_at = self.captured_at.max(stack.captured_at);
         for (step, state) in self.steps.iter_mut().zip(stack.steps()) {
             *step = (*step).max(state);
         }
