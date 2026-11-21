@@ -1,0 +1,72 @@
+<!--meta {"id":"system","nav":"Design system","kind":"page","title":""} -->
+<!--body-->
+<div class="page">
+  <h2>Design system</h2>
+  <p class="lede">A small set of rules, applied everywhere, replaces fifteen type sizes, four button styles and two theme treatments. The components below are live and follow the theme switch at the top right.</p>
+
+  <h3>Six rules</h3>
+  <div class="grid g3">
+    <div class="tile"><span class="k">1</span><h4>The photograph is the page</h4><p>Whatever station is open, the picture is the largest thing on it, on a neutral surround. Evidence comes to the picture; the picture does not shrink for the evidence.</p></div>
+    <div class="tile"><span class="k">2</span><h4>Plain words first, numbers one step behind</h4><p>Every reading has a name a photographer would use and a sentence saying what it means. The measured value and the engine's term follow it, never replace it.</p></div>
+    <div class="tile"><span class="k">3</span><h4>Amber means "selected", never "careful"</h4><p>The accent marks the current thing and the main action. Status has its own colours and its own shapes: ● fine, ▲ look, ◆ failed, ○ not yet, ◐ running.</p></div>
+    <div class="tile"><span class="k">4</span><h4>Nothing waits in silence</h4><p>Every task that can take more than two seconds shows what it is doing, how far it is, what it is waiting for, how to stop it, and what happens next.</p></div>
+    <div class="tile"><span class="k">5</span><h4>A disabled control says why</h4><p>On the control or beside it, in words, with the fix one click away. Never only in a hover.</p></div>
+    <div class="tile"><span class="k">6</span><h4>One word for one thing</h4><p>Plane, stack, render, version, export. The table at the foot of this page retires the synonyms.</p></div>
+  </div>
+
+  <h3>Components</h3>
+  <div class="app inline">
+    <div class="sysrow"><span class="cap">Buttons</span><button class="btn primary">Start stack</button><button class="btn">Render again</button><button class="btn quiet">Reveal folder</button><button class="btn danger">Stop…</button><button class="btn" disabled>Export</button><span class="dim">Export needs a finished render</span></div>
+    <div class="sysrow"><span class="cap">Choice</span><div class="seg pick"><span class="on">Photograph</span><span>Depth</span><span>Soft spots</span></div><div class="seg acc pick"><span class="on">After</span><span>Before</span><span>Split</span></div><span class="toggle on"></span><span class="toggle"></span></div>
+    <div class="sysrow"><span class="cap">Status</span><span class="chip ok">Pass</span><span class="chip warn">To check</span><span class="chip bad">Failed</span><span class="chip run">Running</span><span class="chip idle">Not yet</span><span class="dim">shape and colour together, so it reads without colour vision</span></div>
+    <div class="sysrow"><span class="cap">Lifecycle</span><div class="life"><span class="done">Captured</span><em></em><span class="warn">Stacked · 2 to check</span><em></em><span class="cur">Developing</span><em></em><span>Export</span></div></div>
+    <div class="sysrow tall"><span class="cap">Value</span>
+      <div style="width:230px"><div class="field"><label>Contrast</label><span class="val set">+20</span></div><div class="slider"><u style="left:50%"></u><i style="left:50%;width:10%"></i><b style="left:60%"></b></div><span class="dim" style="font-size:12px">The tick is the default. A changed value takes the accent; double-click returns it.</span></div>
+      <div style="width:270px"><div class="check warn"><div><b>Soft spots</b><span>1.9 % of the subject has no sharp plane</span></div><button class="link">Show</button></div><span class="dim" style="font-size:12px">A check: name, the measured fact, its evidence.</span></div>
+      <div style="width:330px" class="card"><div class="job" style="padding:0;border:0"><span class="ringp" style="--p:62"></span><b>Stack · Blue weevil, dorsal</b><span class="x">✕</span><small>Merging · plane 186 of 299 · 14 s left</small><div class="bar"><i style="width:62%"></i></div></div></div>
+    </div>
+  </div>
+
+  <h3>Type</h3>
+  <div class="tile types">
+    <div><span style="font-size:30px;font-weight:650;color:#f2f2f5">3:18 left</span><em>30 / 650 · headline figures; larger still in glance mode</em></div>
+    <div><span style="font-size:20px;font-weight:650;color:#f2f2f5">Blue weevil</span><em>20 / 650 · page and subject titles</em></div>
+    <div><span style="font-size:15px;font-weight:600;color:#f2f2f5">2 of 8 checks need a look</span><em>15 / 600 · card titles</em></div>
+    <div><span style="font-size:13px;color:#dcdce0">Each point is sharp in about 7 planes</span><em>13 / 400 · body and controls</em></div>
+    <div><span style="font-size:12px;color:#a9a9b1">Today 21:38 · 96 planes × 4 shots</span><em>12 / 400 · secondary; the smallest readable size</em></div>
+    <div><span style="font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:#72727b">Depth rail</span><em>11 / 600 caps · labels only</em></div>
+    <div><span style="font:12px 'Cascadia Mono',Consolas,monospace;color:#dcdce0">weevil-dorsal-web.jpg · 37,556</span><em>12 mono · file names and values that are compared digit by digit; all figures are tabular</em></div>
+  </div>
+  <p>The interface face is the system's (Segoe UI Variable on Windows); a bundled open face such as Inter would make every platform match. Zero-radius rules and one-pixel hairlines stay from today; controls gain a 6 px radius and a 30 px height so they can be hit.</p>
+
+  <h3>The five states of any long task</h3>
+  <table class="t">
+    <tr><th>State</th><th>It must say</th><th>Example</th></tr>
+    <tr><td>Waiting</td><td>for what, and for how long before it gives up</td><td>Waiting for the camera to connect · gives up in 40 s · Stop waiting</td></tr>
+    <tr><td>Running</td><td>the step, how far, the time left, how to stop</td><td>Surveying · shot 14 of 25 · 32 s left · Cancel</td></tr>
+    <tr><td>Needs you</td><td>what is wrong and the one action that fixes it</td><td>Paused: the receiver stopped answering · Start receiver</td></tr>
+    <tr><td>Stopped</td><td>why, and what was kept</td><td>Camera disconnected at plane 61 · 60 planes saved as a stack</td></tr>
+    <tr><td>Done</td><td>the result and what happens next</td><td>Step 7 suggested · four-shot mode restored · Use step 7</td></tr>
+  </table>
+
+  <h3>One word for one thing</h3>
+  <table class="t">
+    <tr><th>Today</th><th>Version 2</th><th>Why</th></tr>
+    <tr><td>photos · frames · captures · camera frames · focal planes</td><td>plane (a focus position) · RAW (a file)</td><td>Four shots make one plane; the count the user plans in is planes</td></tr>
+    <tr><td>stack · capture · bracket · run · sequence</td><td>stack</td><td>One sweep through focus, whether shot here or imported</td></tr>
+    <tr><td>Result NN · revision · run</td><td>Render N</td><td>It is what the stacker produced from a recipe</td></tr>
+    <tr><td>edit version · look · recipe (also means stack settings)</td><td>Version (of a render) · Recipe (of a render only)</td><td>"Recipe" stops meaning two things</td></tr>
+    <tr><td>Projects › folders</td><td>Collections › subjects</td><td>The unit people remember is the thing photographed</td></tr>
+    <tr><td>admitted · admission</td><td>kept</td><td>Detail that passed the noise gate</td></tr>
+    <tr><td>fallback · stack fallback</td><td>filled in · soft spots</td><td>No plane passed, so smoother layers were used</td></tr>
+    <tr><td>direct fits · placement</td><td>pair fits · alignment</td><td></td></tr>
+    <tr><td>accumulated</td><td>result so far</td><td></td></tr>
+    <tr><td>Adaptive · Signature</td><td>Look</td><td>With a line saying what each look does</td></tr>
+    <tr><td>Source repair · Stack repair</td><td>Depth repair, made with the depth brush</td><td>Names what it does: takes an area from other planes</td></tr>
+    <tr><td>region · selection · annotation · issue</td><td>layer (region, repair, heal, backdrop, note)</td><td>One list, one eye icon each</td></tr>
+    <tr><td>Stack while capturing</td><td>Check each plane as it arrives</td><td>It checks and aligns; it does not stack</td></tr>
+    <tr><td>Survey (two meanings)</td><td>Survey (finds the bounds) · Calibrate step</td><td></td></tr>
+    <tr><td>Pi · camera host</td><td>camera host</td><td></td></tr>
+    <tr><td>Save confidence map · Confidence</td><td>Observation balance</td><td>The engine's own caution: it is not a confidence</td></tr>
+  </table>
+</div>

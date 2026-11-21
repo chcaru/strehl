@@ -1,0 +1,89 @@
+<!--meta {"id":"capture","nav":"Capture · plan","kind":"app","station":"capture","title":"Capture: a flight plan instead of a scrolling column","crumbs":["Blue weevil","New stack"],"states":{"capture":"cur","stack":"todo","develop":"todo","export":"todo"},"rig":"on","job":"idle"} -->
+<!--lede-->
+Everything a stack needs is one numbered plan on the right, in the order you do it, and each step says whether it is ready. The pre-flight strip above the live view names what is still missing, so a greyed-out Start never has to be guessed at. The depth rail shows the lens, the bounds and every planned plane.
+<!--body-->
+<div class="body l-insp">
+  <div class="main">
+    <div class="canvas">
+      <div class="preflight glass">
+        <span class="cap">Pre-flight</span>
+        <span class="chip ok">Rig</span><span class="chip ok">Light warm</span><span class="chip ok">Exposure</span><span class="chip ok">Bounds</span><span class="chip ok">Step</span><span class="chip ok">Disk</span><span class="chip ok">Receiver</span>
+        <span class="sp"></span><span class="ok"><b>Ready</b></span><span class="dim">96 planes · 384 RAWs · 9 min · 25.0 GB</span>
+      </div>
+      <div class="photo" style="left:96px;top:60px;width:1140px;height:760px">
+        <div class="base im im-plane-06-large"></div>
+        <div class="lens im im-peaking" style="opacity:.95"></div>
+        <div class="subject"><span>Subject · the survey and the magnifier use this box</span></div>
+        <div class="lvbar glass">
+          <div class="seg"><span class="on">Fit</span><span>100%</span></div>
+          <span class="btn sm quiet on2">Peaking</span><div class="slider" style="width:70px;margin:0"><i style="left:0;width:35%"></i><b style="left:35%"></b></div>
+          <span class="btn sm quiet on2">Clipping</span><span class="btn sm quiet">Grid</span><span class="btn sm quiet on2">Subject box</span><span class="btn sm quiet">Magnifier 6×</span>
+        </div>
+        <div class="expo glass">
+          <div class="row"><span class="cap">Live view</span><span class="dim2">estimate, not the RAW</span></div>
+          <svg width="216" height="52" viewBox="0 0 216 52"><path d="M0 52 L0 30 C10 8 18 4 26 20 C34 38 44 44 60 45 C90 47 110 44 128 40 C146 36 160 30 172 34 C184 38 196 46 216 50 L216 52 Z" fill="var(--ink-3)" opacity=".7"/><rect x="208" y="0" width="8" height="52" fill="var(--warn)" opacity=".25"/></svg>
+          <div class="row"><b>ISO 100</b><b>1/8 s</b><b>f/5.6</b><span class="sp"></span><span class="ok">0.0 % clipped</span></div>
+        </div>
+        <div class="lvstate glass"><span class="led"></span>Live · 14 fps · preview 0.2 s old</div>
+      </div>
+    </div>
+    <div class="rail" data-rail='{"axis":"focus","bounds":[50,216],"ticks":96,"lens":164,"h":104}'>
+      <div class="rail-head"><b>Depth rail</b><span>lens travel, in the camera's focus units</span>
+        <span class="jog"><i>−128</i><i>−16</i><i>−1</i><b>37,556</b><i>+1</i><i>+16</i><i>+128</i></span>
+        <span class="row" style="gap:5px"><i class="sw" style="background:var(--ridge)"></i>survey 21:30: where the subject is sharp</span>
+        <span class="sp"></span><button class="link">Use the survey's bounds</button><button class="link">Survey again</button>
+      </div>
+      <div class="rail-svg"></div>
+    </div>
+  </div>
+  <div class="insp">
+    <div class="insp-body" style="gap:10px">
+      <div class="names">
+        <div><span class="cap">Subject</span><div class="inp">Blue weevil<svg class="i"><use href="#i-down"/></svg></div></div>
+        <div><span class="cap">Stack name</span><div class="inp">Dorsal · 2.8×</div></div>
+      </div>
+      <div class="step ok"><i>1</i><div><div class="row"><b>Rig</b><span class="sp"></span><button class="link" data-pop-open="rig">Rig…</button></div>
+        <span>A7CR on · USB 5 Gbit/s · light 41 W, warm for 3 min</span></div></div>
+      <div class="step ok"><i>2</i><div><div class="row"><b>Exposure</b><span class="sp"></span><button class="btn sm">Test shot</button></div>
+        <div class="pair"><div class="inp">ISO 100<svg class="i"><use href="#i-down"/></svg></div><div class="inp">1/8 s<svg class="i"><use href="#i-down"/></svg></div></div>
+        <span>Test shot 21:31, read from the RAW: nothing clipped, shadows at 1.2 % of full scale</span></div></div>
+      <div class="step ok"><i>3</i><div><div class="row"><b>Depth</b><span class="sp"></span><button class="btn sm">Calibrate step</button></div>
+        <div class="pair"><div class="inp"><span class="dim2">Start</span> 37,100</div><div class="inp"><span class="dim2">End</span> 37,764</div></div>
+        <div class="row" style="margin:2px 0 6px"><button class="btn sm">Mark start here</button><button class="btn sm">Mark end here</button><span class="sp"></span><span class="dim2">664 units</span></div>
+        <table class="steps">
+          <tr><th>Step</th><th>Overlap</th><th>Planes</th><th>Time</th><th>Disk</th></tr>
+          <tr><td>5</td><td>10×</td><td>134</td><td>12.6 min</td><td>34.8 GB</td></tr>
+          <tr class="on"><td>7</td><td>7×</td><td>96</td><td>9.0 min</td><td>25.0 GB</td></tr>
+          <tr><td>10</td><td>5×</td><td>68</td><td>6.4 min</td><td>17.7 GB</td></tr>
+          <tr class="risk"><td>16</td><td>3× ▲</td><td>43</td><td>4.0 min</td><td>11.2 GB</td></tr>
+        </table>
+        <svg class="overlap" width="284" height="34" viewBox="0 0 284 34">
+          <g fill="var(--ok)" opacity=".28"><rect x="4" y="6" width="150" height="10" rx="5"/><rect x="25" y="6" width="150" height="10" rx="5"/><rect x="46" y="6" width="150" height="10" rx="5"/><rect x="67" y="6" width="150" height="10" rx="5"/><rect x="88" y="6" width="150" height="10" rx="5"/><rect x="109" y="6" width="150" height="10" rx="5"/><rect x="130" y="6" width="150" height="10" rx="5"/></g>
+          <line x1="142" x2="142" y1="1" y2="21" stroke="var(--ink)"/><text x="4" y="31" style="font:11px Segoe UI,sans-serif;fill:var(--ink-2)">Calibrated at 21:33: each point is sharp in 7 planes</text>
+        </svg>
+        <div class="row" style="margin-top:6px"><span class="toggle on"></span><span>4-shot pixel shift</span><span class="sp"></span><span class="dim2">Settle</span><div class="inp" style="width:74px">500 ms</div></div>
+      </div></div>
+      <div class="step ok"><i>4</i><div><b>While it runs, and after</b>
+        <div class="opt"><span class="toggle on"></span><span>Check each plane as it arrives</span></div>
+        <div class="opt"><span class="toggle"></span><span>Retake planes that fail <span class="dim2">adds a few seconds each</span></span></div>
+        <div class="opt"><span class="toggle on"></span><span>Stack it when the capture finishes</span></div>
+        <div class="opt"><span class="toggle on"></span><span>Then power the rig down <span class="dim2">after a 2 min grace</span></span></div>
+      </div></div>
+      <div class="sp"></div>
+    </div>
+    <div class="insp-foot" style="flex-direction:column;align-items:stretch">
+      <div class="row dim" style="font-size:12.5px"><span>Ends about <b style="color:var(--ink)">21:47</b></span><span class="sp"></span><span>371 GB free · needs up to 64.7 GB</span></div>
+      <div class="row"><button class="btn primary lg wide" data-go="flight"><svg class="i"><use href="#i-play"/></svg>Start stack</button><button class="btn lg">Schedule…</button></div>
+    </div>
+  </div>
+</div>
+<div class="hint"><span><span class="kbd">←</span><span class="kbd">→</span>focus by 1</span><span><span class="kbd">Shift</span>by 16</span><span><span class="kbd">S</span>mark start</span><span><span class="kbd">E</span>mark end</span><span><span class="kbd">T</span>test shot</span><span><span class="kbd">Enter</span>start</span><span class="sp"></span><span>Camera host online · receiver ready · D:\StrehlCaptures</span></div>
+<span class="pin" style="left:16px;top:76px">1</span><span class="pin new" style="left:1228px;top:742px">2</span><span class="pin" style="left:420px;top:950px">3</span><span class="pin new" style="left:1333px;top:416px">4</span><span class="pin" style="left:1333px;top:86px">5</span><span class="pin" style="left:1333px;top:790px">6</span>
+<!--notes-->
+<div><i>1</i><b>Pre-flight strip.</b> Start has about ten conditions today and shows none of them. Here each one is a chip; an unmet one turns amber and says what to do, for example "Bounds: mark the end".</div>
+<div class="new"><i>2</i><b>Exposure aids and a test shot.</b> ISO and shutter are already in the camera host's command set but not on screen. A test shot reads clipping and shadow level from one real RAW before a long stack is committed.</div>
+<div><i>3</i><b>The rail replaces three number fields.</b> Lens position, start, end and every planned plane are drawn on one axis, over the survey's sharpness profile. Drag the handles or use the keys.</div>
+<div class="new"><i>4</i><b>Step with its consequences.</b> Calibrate step measures the sharp width; the table turns that into planes, minutes and gigabytes for each choice, with the risky row marked.</div>
+<div><i>5</i><b>Named before it is shot.</b> The subject and stack name are asked here, so nothing arrives in the library as "stack-1794611692641-9758".</div>
+<div><i>6</i><b>One place for what happens next.</b> Checking, retakes, automatic stacking and power-down are four switches in one step, instead of three sections apart.</div>
+<div class="legend"><em style="background:#f2b24a"></em>reorganises what exists today<em style="background:#7db8ff"></em>new capability</div>

@@ -1,0 +1,51 @@
+<!--meta {"id":"overview","nav":"Overview","kind":"page","title":""} -->
+<!--body-->
+<div class="page">
+  <span class="tile-k">Design proposal · mockups · 20 November 2026</span>
+  <h2>Strehl Studio 2: one spine from the rig to the finished file</h2>
+  <p class="lede">Strehl began as a focus stacker and grew a capture studio, a diagnostics theatre, an editor and an exporter, each added as another pane beside the last. This proposal re-forms them around the two things they share: the life of one photograph, and the depth that a stack hides inside it.</p>
+  <p>These are interactive mockups, drawn with the owner's own captures. Pick a screen in the bar above, or use the arrow keys. Numbered dots on each screen are explained beneath it; amber dots reorganise what already exists, blue dots are new capabilities. The written proposal with the evidence, the engineering map and the phased plan is <span class="mono">docs/proposals/2026-11-desktop-studio-2.md</span>.</p>
+
+  <h3>The life of a photograph</h3>
+  <div class="flow">
+    <div><b>Subject</b><span>A specimen or object, with its name, notes, optics and scale.</span></div>
+    <div><b>Stack</b><span>One sweep through focus: planes, each one RAW or a four-shot group.</span></div>
+    <div><b>Render</b><span>One run of the stacker with a recipe. Renders are kept side by side.</span></div>
+    <div><b>Version</b><span>A developed look of a render, with its layers.</span></div>
+    <div><b>Export</b><span>A file written from a version, by a preset.</span></div>
+  </div>
+  <h3>Five stations, in the order the work happens</h3>
+  <div class="flow">
+    <div class="go" data-go="library"><b>Library</b><span>What you have and what needs you.</span></div>
+    <div class="go" data-go="capture"><b>Capture</b><span>Plan, shoot, watch the proof arrive.</span></div>
+    <div class="go" data-go="stack"><b>Stack</b><span>The photograph, its checks, its recipe and renders.</span></div>
+    <div class="go" data-go="develop"><b>Develop</b><span>Looks, light, colour, repairs, finishing.</span></div>
+    <div class="go" data-go="export"><b>Export</b><span>Presets, batches, history.</span></div>
+  </div>
+
+  <h3>Nine ideas, each with a screen</h3>
+  <div class="grid g3">
+    <div class="tile go" data-go="stack"><span class="k">1 · Signature</span><h4>The depth rail</h4><p>Depth is what every part of the app is about, and today it is only a row of thumbnails. One instrument carries it everywhere: the lens and bounds when planning, planes filling in while shooting, what each plane holds when checking, the planes to take from when repairing.</p></div>
+    <div class="tile go" data-go="stack"><span class="k">2 · Signature</span><h4>Lenses and the core sample</h4><p>Evidence is painted on the photograph, or shown only inside a loupe under the pointer. A click drills a core sample through the stack at that spot and says in a sentence where its detail came from.</p></div>
+    <div class="tile go" data-go="stack"><span class="k">3</span><h4>Checks in plain words</h4><p>A count and a list of measured facts, each with its evidence one click away and an action where one exists. No blended score.</p></div>
+    <div class="tile go" data-go="capture"><span class="k">4</span><h4>Flight plan and pre-flight</h4><p>Capture becomes four numbered steps and a strip that names whatever is still missing. Step size is chosen from a table of its consequences in planes, minutes and gigabytes.</p></div>
+    <div class="tile go" data-go="flight"><span class="k">5 · Signature</span><h4>The proof</h4><p>The photograph comes into focus on screen while it is being shot, assembled from the previews inside the arriving RAWs. Mistakes show in the first minute, not after two hours.</p></div>
+    <div class="tile go" data-go="glance"><span class="k">6</span><h4>Glance mode and one job tray</h4><p>Every long task (capture, transfer, checks, stack, repair, export, compact, calibrate) has the same five states and lives in one tray. A full-screen view is readable from the doorway.</p></div>
+    <div class="tile go" data-go="subject"><span class="k">7</span><h4>Subjects with a lifecycle</h4><p>The library is organised by what was photographed. Each stack shows its life on a line, and the lineage from render to version to exported file.</p></div>
+    <div class="tile go" data-go="develop"><span class="k">8</span><h4>Depth brush and macro finishing</h4><p>Repair an area from other planes by painting it, with an instant preview. Add healing, backdrop clean-up, crop, white balance picking and a scale bar.</p></div>
+    <div class="tile go" data-go="export"><span class="k">9</span><h4>Presets and batches</h4><p>One photograph leaves as several files. Presets, a batch button, resizing, and a history that says which version made each file.</p></div>
+  </div>
+
+  <h3>What today's application measures</h3>
+  <table class="t">
+    <tr><th>Observation</th><th>Measure</th><th>Answered by</th></tr>
+    <tr><td>The photograph's share of the window after a stack</td><td>8.1 % (463 × 308 of 1680 × 1050)</td><td>Stack: about 55 %</td></tr>
+    <tr><td>Places that show "detail kept, by plane and size"</td><td>9 panels</td><td>Depth rail, core sample, one grid in the engine room</td></tr>
+    <tr><td>Conditions that disable "Start stack" without saying so</td><td>about 10</td><td>Pre-flight strip</td></tr>
+    <tr><td>Stacks in the owner's library named after a camera folder</td><td>21 of 35, seven of them "100MSDCF"</td><td>Subjects, named at import and at capture</td></tr>
+    <tr><td>Library thumbnails</td><td>22 × 18 px, at most 40 cached</td><td>Subject cards</td></tr>
+    <tr><td>Stacks that can wait in a queue</td><td>none: one job, started by hand</td><td>Job tray</td></tr>
+    <tr><td>Type sizes in use</td><td>more than fifteen, from 8 pt</td><td>Six sizes, nothing readable below 12 px</td></tr>
+  </table>
+  <p style="margin-top:14px">See <a href="#today" data-go="today" style="color:#f2b24a">Today</a> for the annotated screenshots behind these numbers.</p>
+</div>

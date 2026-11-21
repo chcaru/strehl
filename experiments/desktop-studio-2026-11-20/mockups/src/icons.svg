@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+<symbol id="i-library" viewBox="0 0 16 16"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></symbol>
+<symbol id="i-camera" viewBox="0 0 16 16"><path d="M2 5.5h2.5l1-1.5h5l1 1.5H14v7H2z"/><circle cx="8" cy="8.8" r="2.3"/></symbol>
+<symbol id="i-stack" viewBox="0 0 16 16"><path d="M8 2l6 3-6 3-6-3z"/><path d="M2 8l6 3 6-3"/><path d="M2 11l6 3 6-3"/></symbol>
+<symbol id="i-develop" viewBox="0 0 16 16"><path d="M2 4h4m3 0h5M2 8h7m3 0h2M2 12h2m3 0h7"/><circle cx="7.5" cy="4" r="1.5"/><circle cx="10.5" cy="8" r="1.5"/><circle cx="5.5" cy="12" r="1.5"/></symbol>
+<symbol id="i-export" viewBox="0 0 16 16"><path d="M8 10V2m0 0L5 5m3-3l3 3"/><path d="M3 9v4h10V9"/></symbol>
+<symbol id="i-search" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4"/><path d="M10 10l3.5 3.5"/></symbol>
+<symbol id="i-eye" viewBox="0 0 16 16"><path d="M1.5 8s2.5-4.5 6.5-4.5S14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/></symbol>
+<symbol id="i-hand" viewBox="0 0 16 16"><path d="M8 2v12M2 8h12M8 2L6 4m2-2l2 2M8 14l-2-2m2 2l2-2M2 8l2-2M2 8l2 2M14 8l-2-2m2 2l-2 2"/></symbol>
+<symbol id="i-crop" viewBox="0 0 16 16"><path d="M4 1.5V12h10.5M1.5 4H12v10.5"/></symbol>
+<symbol id="i-picker" viewBox="0 0 16 16"><path d="M9 4l3 3M10.5 5.5L4.5 11.5 3 13l1.5-1.5"/><path d="M8.5 3.5l1.6-1.6a1.4 1.4 0 012 0l2 2a1.4 1.4 0 010 2L12.5 7.5z"/><path d="M10 6l-6 6-1.5.5.5-1.500 6-6"/></symbol>
+<symbol id="i-brush" viewBox="0 0 16 16"><path d="M9.5 2.5l4 4-6.500 6.500H3v-4z"/><path d="M8 4l4 4"/><path d="M2 14.500h12" opacity=".5"/></symbol>
+<symbol id="i-heal" viewBox="0 0 16 16"><rect x="1.5" y="5.5" width="13" height="5" rx="2.5" transform="rotate(-45 8 8)"/><path d="M6.500 6.500l3 3" opacity=".6"/></symbol>
+<symbol id="i-backdrop" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 11.500c.8-3 1.800-4.500 3-4.500s2.200 1.500 3 4.500"/></symbol>
+<symbol id="i-shape" viewBox="0 0 16 16"><circle cx="6" cy="6" r="3.500"/><rect x="7.500" y="7.500" width="6" height="6" rx="1"/></symbol>
+<symbol id="i-ruler" viewBox="0 0 16 16"><path d="M2 11l9-9 3 3-9 9z"/><path d="M5 8l1.500 1.500M7 6l1.500 1.500M9 4l1.500 1.500"/></symbol>
+<symbol id="i-note" viewBox="0 0 16 16"><path d="M3 2.500h10v8l-3 3H3z"/><path d="M10 13.500v-3h3"/></symbol>
+<symbol id="i-play" viewBox="0 0 16 16"><path d="M5 3l8 5-8 5z" fill="currentColor"/></symbol>
+<symbol id="i-pause" viewBox="0 0 16 16"><path d="M5.500 3v10M10.500 3v10"/></symbol>
+<symbol id="i-disk" viewBox="0 0 16 16"><ellipse cx="8" cy="4.500" rx="5.500" ry="2"/><path d="M2.500 4.500v7c0 1.100 2.500 2 5.500 2s5.500-.9 5.500-2v-7"/><path d="M2.500 8c0 1.100 2.500 2 5.500 2s5.500-.9 5.500-2"/></symbol>
+<symbol id="i-moon" viewBox="0 0 16 16"><path d="M13 9.500A5.500 5.500 0 016.500 3 5.500 5.500 0 1013 9.500z"/></symbol>
+<symbol id="i-plus" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10"/></symbol>
+<symbol id="i-chev" viewBox="0 0 16 16"><path d="M6 4l4 4-4 4"/></symbol>
+<symbol id="i-down" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4"/></symbol>
+<symbol id="i-check" viewBox="0 0 16 16"><path d="M3 8.500l3 3 7-7"/></symbol>
+<symbol id="i-grid" viewBox="0 0 16 16"><path d="M2 4h12M2 8h12M2 12h12"/></symbol>
+<symbol id="i-expand" viewBox="0 0 16 16"><path d="M3 6V3h3M13 6V3h-3M3 10v3h3M13 10v3h-3"/></symbol>
+<symbol id="i-wifi" viewBox="0 0 16 16"><path d="M2 6.500a9 9 0 0112 0M4 9a6 6 0 018 0M6 11.500a3 3 0 014 0"/></symbol>
+<symbol id="i-folder" viewBox="0 0 16 16"><path d="M2 4.500h4l1.500 1.500H14v7H2z"/></symbol>
+<symbol id="i-undo" viewBox="0 0 16 16"><path d="M5 6h5a3.500 3.500 0 010 7H6"/><path d="M7.500 3.500L5 6l2.500 2.500"/></symbol>
+<symbol id="i-bulb" viewBox="0 0 16 16"><path d="M5.500 10a4 4 0 115 0c-.6.5-1 1.200-1 2h-3c0-.8-.4-1.500-1-2z"/><path d="M6.500 14h3"/></symbol>
+<symbol id="i-power" viewBox="0 0 16 16"><path d="M8 2v6"/><path d="M4.500 4.500a5 5 0 107 0"/></symbol>
+<symbol id="i-phone" viewBox="0 0 16 16"><rect x="4.500" y="1.500" width="7" height="13" rx="1.500"/><path d="M7 12.500h2"/></symbol>
+</svg>
