@@ -197,6 +197,8 @@ fn render_effect(
     );
     let mut before = recipe.clone();
     before.clear_adaptive_scope(target);
+    // Prepared once: culling boxes and layer order stay out of the loop.
+    let (before_prepared, recipe_prepared) = (before.prepare(), recipe.prepare());
     let scale = 128.0 / image.width.max(image.height) as f32;
     let width = (image.width as f32 * scale).round().max(1.0) as usize;
     let height = (image.height as f32 * scale).round().max(1.0) as usize;
@@ -212,8 +214,8 @@ fn render_effect(
             let sy = ((y as f64 + 0.5) * image.height as f64 / height as f64) as usize;
             let i = sy.min(image.height as usize - 1) * image.width as usize
                 + sx.min(image.width as usize - 1);
-            let a = image.developed_pixel(i, &before);
-            let b = image.developed_pixel(i, recipe);
+            let a = image.developed_pixel_prepared(i, &before_prepared);
+            let b = image.developed_pixel_prepared(i, &recipe_prepared);
             anyhow::ensure!(
                 a.into_iter().chain(b).all(f32::is_finite),
                 "Nonfinite effect preview sample"

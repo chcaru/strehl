@@ -19,6 +19,8 @@ pub(super) struct PendingExport {
 
 #[derive(Default)]
 pub(super) struct ExportPaneState {
+    /// The Export station's app-side state (presets, batch, history).
+    pub(super) station: super::develop::ExportApp,
     settings: ExportSettings,
     pub(super) destination: Option<PathBuf>,
     destination_document: Option<PathBuf>,
@@ -151,7 +153,7 @@ impl StrehlApp {
                     .loaded
                     .as_ref()
                     .is_some_and(|loaded| pending.snapshot.matches_source(&loaded.image))
-                && pending.snapshot.recipe() == &self.editor.recipe,
+                && pending.snapshot.recipe() == &self.editor.export_recipe(),
             "The photograph changed while choosing a destination. Review it and export again."
         );
         let path = formatted_path(path, pending.settings.format);
@@ -190,7 +192,6 @@ impl StrehlApp {
         let current_photo = self.editor.path == self.result && self.editor.loading.is_none();
         let exporting = self.editor.exporting.is_some() || self.photo_history_busy();
         let can_export = current_photo
-            && !pending_repair
             && !exporting
             && self.editor.dialog.is_none()
             && !self.adaptive_busy()
@@ -234,11 +235,9 @@ impl StrehlApp {
                             )
                             .min_size(egui::vec2(ui.available_width(), 31.0)),
                         )
-                        .on_disabled_hover_text(if pending_repair {
-                            "Re-stack the pending source changes before exporting."
-                        } else {
-                            "Wait for the current photograph operation to finish."
-                        })
+                        .on_disabled_hover_text(
+                            "Wait for the current photograph operation to finish.",
+                        )
                         .clicked()
                     {
                         self.editor.commit_edit();
@@ -270,7 +269,10 @@ impl StrehlApp {
                         }
                     }
                     if pending_repair {
-                        theme::caption(ui, "Source repair is waiting for Re-stack.");
+                        theme::caption(
+                            ui,
+                            "A depth repair is pending: this export uses the last finished pixels.",
+                        );
                     }
                     self.photo_history_panel(ui);
                     if let Some(path) = &self.editor.last_export {

@@ -17,6 +17,8 @@ pub(super) mod controls;
 pub(super) struct EditPaneState {
     document: Option<PathBuf>,
     rename: Option<(String, String)>,
+    /// The Develop station's app-side state, including the depth repair.
+    pub(super) develop: super::develop::DevelopApp,
 }
 
 impl EditPaneState {
@@ -334,6 +336,7 @@ impl StrehlApp {
         self.poll_adaptive(ctx);
         self.poll_presets(ctx);
         self.poll_region_inspector(ctx);
+        self.poll_develop(ctx);
         if let Some((_, time)) = self.editor.pending_edit
             && !ctx.input(|input| input.pointer.any_down())
             && ctx.input(|input| input.time) - time > 0.3
@@ -895,19 +898,28 @@ impl StrehlApp {
         }
         let pending = self.source_repairs_pending();
         ui.add_space(7.0);
-        if pending {
+        if let Some(repair) = &self.edit_pane.develop.repair {
+            ui.colored_label(AMBER, repair.status());
+            theme::caption(
+                ui,
+                "The photograph stays open; exports use the last finished pixels until the rebuild is done.",
+            );
+            if ui.button("Cancel rebuild").clicked() {
+                self.cancel_depth_repair();
+            }
+        } else if pending {
             ui.colored_label(AMBER, "Source change pending · photograph unchanged");
             let blocker = self.stack_start_blocker();
             if ui
                 .add_enabled(
                     blocker.is_none(),
-                    egui::Button::new("Re-stack with source changes"),
+                    egui::Button::new("Rebuild in the background"),
                 )
                 .on_disabled_hover_text(blocker.unwrap_or_default())
                 .clicked()
+                && let Err(error) = self.start_depth_repair()
             {
-                self.editor.commit_edit();
-                self.start_render();
+                self.edit_pane.develop.notice = Some(error.to_string());
             }
         } else {
             theme::caption(ui, "No source changes waiting to be applied.");

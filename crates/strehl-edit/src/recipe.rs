@@ -9,7 +9,9 @@ pub use spatial::{
 
 #[path = "recipe-finishing.rs"]
 mod finishing;
-pub use finishing::{Backdrop, Crop, Heal, MAX_HEALS, ScaleBar, ScaleBarCorner, ScaleBarStyle};
+pub use finishing::{
+    Backdrop, BackdropKey, Crop, Heal, MAX_HEALS, ScaleBar, ScaleBarCorner, ScaleBarStyle,
+};
 
 #[path = "recipe-prepared.rs"]
 mod prepared;
@@ -552,6 +554,69 @@ impl DevelopmentRecipe {
         Ok(())
     }
 
+    /// The recipe an existing master exports while a repair waits for its
+    /// re-stack: tone as it is now, with exactly the source-range repairs the
+    /// master holds (`baked`). Pending repairs keep their tone and lose their
+    /// range; a baked repair the recipe disabled or deleted comes back as a
+    /// neutral region, because its pixels cannot be unbaked. Tone order is
+    /// kept through `layers_order` when the repairs have to move in the list.
+    pub fn with_baked_repairs(&self, baked: Option<&DevelopmentRecipe>) -> Self {
+        let held: Vec<&RegionAdjustment> = baked
+            .map(|b| {
+                b.regions
+                    .iter()
+                    .filter(|r| r.enabled && r.source_range.is_some())
+                    .collect()
+            })
+            .unwrap_or_default();
+        let order: Vec<String> = self
+            .application_order()
+            .into_iter()
+            .map(|i| self.regions[i].id.clone())
+            .collect();
+        let mut recipe = self.clone();
+        for region in &mut recipe.regions {
+            match held.iter().find(|b| b.id == region.id) {
+                Some(b) => {
+                    if !region.enabled {
+                        region.adjustments = Adjustments::default();
+                    }
+                    region.enabled = true;
+                    region.shape = b.shape.clone();
+                    region.feather = b.feather;
+                    region.source_range = b.source_range.clone();
+                }
+                None => region.source_range = None,
+            }
+        }
+        for b in &held {
+            if !recipe.regions.iter().any(|r| r.id == b.id) {
+                recipe.regions.push(RegionAdjustment {
+                    adjustments: Adjustments::default(),
+                    note: String::new(),
+                    ..(*b).clone()
+                });
+            }
+        }
+        // The engine's equality key compares repairs among themselves in list
+        // order: reorder them within their own slots, leaving the rest alone.
+        let rank = |r: &RegionAdjustment| held.iter().position(|b| b.id == r.id);
+        let slots: Vec<usize> = (0..recipe.regions.len())
+            .filter(|&i| rank(&recipe.regions[i]).is_some())
+            .collect();
+        let mut repairs: Vec<RegionAdjustment> =
+            slots.iter().map(|&i| recipe.regions[i].clone()).collect();
+        repairs.sort_by_key(|r| rank(r));
+        for (slot, region) in slots.into_iter().zip(repairs) {
+            recipe.regions[slot] = region;
+        }
+        let listed = recipe.regions.iter().map(|r| &r.id);
+        if !recipe.layers_order.is_empty() || !listed.eq(order.iter()) {
+            recipe.layers_order = order;
+        }
+        recipe
+    }
+
     /// Remove a region with its layer entry and any Adaptive scope on it.
     pub fn remove_region(&mut self, id: &str) -> Option<RegionAdjustment> {
         let index = self.regions.iter().position(|r| r.id == id)?;
@@ -578,7 +643,7 @@ impl DevelopmentRecipe {
     /// the photograph's samples, so `apply_pixel` never applies it; the image
     /// renderers and the export do.
     pub fn has_neighbourhood(&self) -> bool {
-        !self.heals.is_empty() || self.backdrop.is_some()
+        self.heals.iter().any(|h| h.enabled) || self.backdrop.is_some_and(|b| b.enabled)
     }
 
     /// For samples that have already been through the neighbourhood stage.

@@ -126,7 +126,7 @@ impl StrehlApp {
         self.start_adaptive_parameters(strength, intent, parameters, true)
     }
 
-    fn start_adaptive_parameters(
+    pub(super) fn start_adaptive_parameters(
         &mut self,
         strength: f32,
         intent: AdaptiveIntent,
@@ -338,7 +338,7 @@ impl StrehlApp {
 
     // Absolute Amount edits a persisted field without metering again. The outer
     // photo panel groups dragging/reset into the same shared Undo transaction.
-    fn set_spatial_amount(&mut self, amount: f32) -> anyhow::Result<()> {
+    pub(super) fn set_spatial_amount(&mut self, amount: f32) -> anyhow::Result<()> {
         anyhow::ensure!(
             amount.is_finite() && (0.0..=1.0).contains(&amount),
             "Amount must be between 0 and 1"

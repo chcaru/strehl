@@ -578,6 +578,7 @@ fn the_scale_bar_burns_at_its_calibrated_length_and_follows_resize() {
     let image = scene(400, 300, |_, _| [0.0; 3]);
     let recipe = DevelopmentRecipe {
         scale_bar: Some(ScaleBar {
+            enabled: true,
             length_um: 100.0,
             corner: ScaleBarCorner::BottomRight,
             style: ScaleBarStyle::Light,

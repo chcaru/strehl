@@ -219,7 +219,7 @@ impl Stages {
         layout: &Layout,
         um_per_px: Option<f64>,
     ) -> Result<Self> {
-        let scale_bar = match (settings.scale_bar, recipe.scale_bar) {
+        let scale_bar = match (settings.scale_bar, recipe.scale_bar.filter(|b| b.enabled)) {
             (true, Some(bar)) => {
                 let um = um_per_px.ok_or_else(|| {
                     anyhow::anyhow!(
