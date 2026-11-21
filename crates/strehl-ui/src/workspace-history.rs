@@ -20,9 +20,9 @@ pub(crate) use photographs::{PhotoExport, PhotoOwner, PhotoVersion};
 mod subjects;
 #[allow(unused_imports)]
 pub(crate) use subjects::{
-    LibraryIndex, NextStep, Optics, RelocateMismatch, RelocateReport, RunState, ScaleCalibration,
-    ScaleSource, SourcesState, StackLifecycle, StepState, SubjectEdit, SubjectMeta, SubjectSummary,
-    default_stack_name, is_camera_folder,
+    ImportGroup, LibraryIndex, NextStep, Optics, RelocateMismatch, RelocateReport, RunState,
+    ScaleCalibration, ScaleSource, SourcesState, StackLifecycle, StepState, SubjectEdit,
+    SubjectMeta, SubjectSummary, default_stack_name, import_plan, is_camera_folder, sources_state,
 };
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -219,6 +219,9 @@ pub(crate) struct Catalog {
     /// The verified copy of the format-1 file, once written by this window.
     #[serde(skip)]
     legacy_backup: RefCell<Option<PathBuf>>,
+    /// Counts saves (every persisted edit) for views that cache per revision.
+    #[serde(skip)]
+    generation: std::cell::Cell<u64>,
 }
 impl Default for Catalog {
     fn default() -> Self {
@@ -237,6 +240,7 @@ impl Default for Catalog {
             disk_bytes: RefCell::new(None),
             disk_format: std::cell::Cell::new(CATALOG_FORMAT),
             legacy_backup: RefCell::new(None),
+            generation: std::cell::Cell::new(0),
         }
     }
 }
@@ -295,7 +299,18 @@ impl Catalog {
         catalog
     }
     pub fn save(&self) -> anyhow::Result<()> {
+        self.generation.set(self.generation.get().wrapping_add(1));
         self.save_with_limit(MAX_CATALOG_BYTES)
+    }
+    /// Changes with every `save`, including in-memory catalogs, which the app
+    /// calls after each edit. A view that caches per catalog revision keys on
+    /// it together with the record counts.
+    #[cfg_attr(
+        not(test),
+        allow(dead_code, reason = "the shell keys the library on it in P4 stage 2")
+    )]
+    pub(crate) fn generation(&self) -> u64 {
+        self.generation.get()
     }
     fn save_with_limit(&self, limit: usize) -> anyhow::Result<()> {
         let Some(path) = &self.path else {

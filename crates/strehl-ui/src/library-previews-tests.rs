@@ -1,10 +1,10 @@
 use super::*;
 use std::sync::atomic::AtomicBool;
 
-fn tick(cache: &mut ExplorerPreviews, ctx: &egui::Context) -> egui::FullOutput {
+fn tick(cache: &mut LibraryPreviews, ctx: &egui::Context) -> egui::FullOutput {
     ctx.run(egui::RawInput::default(), |ctx| cache.poll(ctx))
 }
-fn settle(cache: &mut ExplorerPreviews, ctx: &egui::Context) {
+fn settle(cache: &mut LibraryPreviews, ctx: &egui::Context) {
     let deadline = std::time::Instant::now() + std::time::Duration::from_secs(10);
     while cache.pending() {
         tick(cache, ctx);
@@ -19,7 +19,7 @@ fn worker_resizes_once_and_failed_rows_do_not_restart_on_paint() {
     image::RgbImage::from_pixel(1200, 700, image::Rgb([20, 80, 180]))
         .save(&path)
         .unwrap();
-    let mut cache = ExplorerPreviews::default();
+    let mut cache = LibraryPreviews::default();
     let ctx = egui::Context::default();
     tick(&mut cache, &ctx);
     assert!(cache.file(&path, false).is_none());
@@ -75,7 +75,7 @@ fn saved_version_uses_saved_controls_without_waiting_for_loaded_identity() {
         &AtomicBool::new(false),
     )
     .unwrap();
-    let mut cache = ExplorerPreviews::default();
+    let mut cache = LibraryPreviews::default();
     let ctx = egui::Context::default();
     cache.set_current(Some(&path), Some(&image), Some(&image));
     tick(&mut cache, &ctx);
@@ -116,7 +116,7 @@ fn saved_version_uses_saved_controls_without_waiting_for_loaded_identity() {
 }
 #[test]
 fn scrolling_discards_old_queued_rows_before_decode() {
-    let mut cache = ExplorerPreviews::default();
+    let mut cache = LibraryPreviews::default();
     let ctx = egui::Context::default();
     tick(&mut cache, &ctx);
     for i in 0..20 {
@@ -141,7 +141,7 @@ fn already_open_photo_never_reopens_its_file_or_waits_for_identity() {
         baseline: None,
         baked_recipe: None,
     });
-    let mut cache = ExplorerPreviews::default();
+    let mut cache = LibraryPreviews::default();
     let ctx = egui::Context::default();
     cache.set_current(Some(missing), Some(&image), Some(&image));
     tick(&mut cache, &ctx);
@@ -190,7 +190,7 @@ fn reconstructed_legacy_version_remains_exact_after_leaving_its_photograph() {
     .unwrap();
     let derivative = directory.path().join(format!("{}.preview", version.id));
     std::fs::remove_file(&derivative).unwrap();
-    let mut cache = ExplorerPreviews::default();
+    let mut cache = LibraryPreviews::default();
     let ctx = egui::Context::default();
     cache.set_current(Some(&path), Some(&image), Some(&image));
     let deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
@@ -233,13 +233,14 @@ fn reconstructed_legacy_version_remains_exact_after_leaving_its_photograph() {
 
 #[test]
 fn cancelled_decoders_keep_their_lanes_until_completion() {
-    let mut cache = ExplorerPreviews::default();
+    let mut cache = LibraryPreviews::default();
     let ctx = egui::Context::default();
     tick(&mut cache, &ctx);
     let gate = Arc::new(std::sync::Barrier::new(WORKERS + 1));
     for i in 0..WORKERS {
         let gate = gate.clone();
         cache.pending.push(Pending {
+            want: Want::default(),
             key: format!("busy-{i}"),
             task: jobs::spawn_task("blocked-test-preview", move |_| {
                 gate.wait();
@@ -278,7 +279,7 @@ fn newly_loaded_photo_invalidates_cached_and_inflight_base_even_after_loading_ga
             baseline: None,
             baked_recipe: None,
         });
-        let mut cache = ExplorerPreviews::default();
+        let mut cache = LibraryPreviews::default();
         let ctx = egui::Context::default();
         cache.set_current(Some(&path), Some(&first), Some(&first));
         tick(&mut cache, &ctx);
@@ -310,7 +311,7 @@ fn newly_loaded_photo_invalidates_cached_and_inflight_base_even_after_loading_ga
         let next = Arc::new((*changed).clone());
         cache.set_current(Some(&path), Some(&next), Some(&next));
         assert!(cache.pending.iter().all(|p| p.task.is_cancelled()));
-        assert!(!cache.queue.iter().any(|(r, _)| r.key() == key));
+        assert!(!cache.queue.iter().any(|q| q.request.key() == key));
         cache.file(&path, false);
         let deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
         let mut color = None;
@@ -330,4 +331,95 @@ fn newly_loaded_photo_invalidates_cached_and_inflight_base_even_after_loading_ga
         );
         assert_ne!(cache.file(&path, false).unwrap().id(), old.id());
     }
+}
+
+fn pictures(directory: &Path, count: usize, size: [u32; 2]) -> Vec<PathBuf> {
+    (0..count)
+        .map(|i| {
+            let path = directory.join(format!("tile-{i}.png"));
+            image::RgbImage::from_pixel(
+                size[0],
+                size[1],
+                image::Rgb([(i * 20 % 256) as u8, 80, 120]),
+            )
+            .save(&path)
+            .unwrap();
+            path
+        })
+        .collect()
+}
+
+#[test]
+fn a_rows_tiles_appear_together_scaled_to_the_tile_side_on_the_worker() {
+    let directory = tempfile::tempdir().unwrap();
+    // Four tiles, three workers: one tile finishes after the others.
+    let row = pictures(directory.path(), 4, [600, 400]);
+    let mut cache = LibraryPreviews::default();
+    let ctx = egui::Context::default();
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(20);
+    let mut polls = 0;
+    loop {
+        tick(&mut cache, &ctx);
+        polls += 1;
+        let shown = row
+            .iter()
+            .filter_map(|path| cache.tile(path, false, TILE_SIDE, 7))
+            .collect::<Vec<_>>();
+        assert!(
+            shown.is_empty() || shown.len() == row.len(),
+            "a row appears whole, not tile by tile ({} of {})",
+            shown.len(),
+            row.len()
+        );
+        assert!(cache.pending.len() <= WORKERS);
+        if shown.len() == row.len() {
+            assert!(
+                shown.iter().all(|t| t.size() == [256, 171]),
+                "scaled on the worker"
+            );
+            break;
+        }
+        assert!(std::time::Instant::now() < deadline);
+        std::thread::sleep(std::time::Duration::from_millis(2));
+    }
+    assert!(polls > 1);
+    assert_eq!(cache.stats().tasks_started, 4);
+    // The tree's 384 px picture of the same file is a separate entry.
+    assert!(cache.file(&row[0], false).is_none());
+}
+
+#[test]
+fn uploads_are_paced_to_the_budget_per_poll() {
+    let directory = tempfile::tempdir().unwrap();
+    // Three rows of five 256 px tiles (262 KB each), requested interleaved so
+    // every row completes in the same poll: 3.9 MB ready at once.
+    let files = pictures(directory.path(), 15, [384, 384]);
+    let ask = |cache: &mut LibraryPreviews| {
+        for column in 0..5 {
+            for row in 0..3u64 {
+                cache.tile(&files[row as usize * 5 + column], false, TILE_SIDE, row);
+            }
+        }
+    };
+    let mut cache = LibraryPreviews::default();
+    let ctx = egui::Context::default();
+    tick(&mut cache, &ctx);
+    ask(&mut cache);
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(20);
+    let mut uploading_polls = 0;
+    while cache.pending() {
+        // Let the running decodes finish before the next poll uploads.
+        std::thread::sleep(std::time::Duration::from_millis(30));
+        tick(&mut cache, &ctx);
+        ask(&mut cache);
+        let stats = cache.stats();
+        assert!(stats.uploaded_last_poll <= UPLOAD_BUDGET, "{stats:?}");
+        uploading_polls += usize::from(stats.uploaded_last_poll > 0);
+        assert!(std::time::Instant::now() < deadline);
+    }
+    assert_eq!(cache.stats().uploads, 15);
+    assert!(
+        uploading_polls >= 3,
+        "three 1.3 MB rows need three 2 MiB polls ({uploading_polls})"
+    );
 }

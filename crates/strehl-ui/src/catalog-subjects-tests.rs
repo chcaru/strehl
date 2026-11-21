@@ -1193,3 +1193,45 @@ fn owner_catalog_copy_migrates_without_loss() {
         serde_json::to_vec(&catalog).unwrap()
     );
 }
+
+#[test]
+fn an_import_plan_groups_camera_folders_by_parent_and_keeps_others_alone() {
+    let path = |p: &str| PathBuf::from(p);
+    let plan = import_plan(&[
+        path("/captures/bug-3/101MSDCF"),
+        path("/captures/macro/chia-seeds"),
+        path("/captures/bug-3/100MSDCF"),
+        path("/captures/macro/tweezers"),
+        path("/captures/bug-3/101MSDCF/"),
+        path("/card/DCIM/100MSDCF"),
+        path("/100MSDCF"),
+        path(""),
+    ]);
+    let summary: Vec<(String, Vec<PathBuf>)> = plan
+        .into_iter()
+        .map(|group| (group.subject, group.folders))
+        .collect();
+    assert_eq!(
+        summary,
+        [
+            (
+                "bug-3".to_owned(),
+                vec![
+                    path("/captures/bug-3/100MSDCF"),
+                    path("/captures/bug-3/101MSDCF")
+                ]
+            ),
+            (
+                "chia-seeds".to_owned(),
+                vec![path("/captures/macro/chia-seeds")]
+            ),
+            (
+                "tweezers".to_owned(),
+                vec![path("/captures/macro/tweezers")]
+            ),
+            ("100MSDCF".to_owned(), vec![path("/card/DCIM/100MSDCF")]),
+            ("100MSDCF".to_owned(), vec![path("/100MSDCF")]),
+        ],
+        "one stack per folder; a repeated folder counts once; DCIM and a root name nothing"
+    );
+}
