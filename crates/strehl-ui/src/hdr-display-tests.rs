@@ -127,7 +127,9 @@ fn photograph(
         source.size(),
     );
     let view = source.create_view(&Default::default());
-    let params = [0.0f32, 0.0, 1.0, 1.0, 2.5, 12.5, 1.0, mode];
+    let params = [
+        0.0f32, 0.0, 1.0, 1.0, 2.5, 12.5, 1.0, mode, 0.0, 0.0, 0.0, 0.0,
+    ];
     let buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
         label: None,
         contents: bytemuck::cast_slice(&params),
@@ -687,5 +689,303 @@ fn registered_sdr_images_preserve_color_crop_alpha_and_deferred_lifetime() {
             assert!(uv_bounds.min.distance(egui::Pos2::ZERO) < 0.00001);
             assert!(uv_bounds.max.distance(egui::pos2(0.75, 0.75)) < 0.00001);
         }
+    }
+}
+
+/// Draw `layers` through `paint_regions` into an 8 x 2 target, full aperture.
+fn draw_regions(
+    presenter: &PhotoPresenter,
+    hdr: bool,
+    layer: &PhotoLayer,
+    nearest: bool,
+) -> Vec<[f32; 4]> {
+    let render = &presenter.0.render;
+    let ctx = &presenter.0.context;
+    let screen_rect = Rect::from_min_max(egui::Pos2::ZERO, egui::pos2(8.0, 2.0));
+    let full = Rect::from_min_max(egui::Pos2::ZERO, egui::pos2(1.0, 1.0));
+    let output = ctx.run(
+        egui::RawInput {
+            screen_rect: Some(screen_rect),
+            ..Default::default()
+        },
+        |ctx| {
+            let painter = ctx.layer_painter(egui::LayerId::background());
+            assert!(presenter.paint_regions(
+                &painter,
+                screen_rect,
+                full,
+                hdr,
+                &[(layer, full, 1.0, nearest)],
+            ));
+        },
+    );
+    let jobs = ctx.tessellate(output.shapes, output.pixels_per_point);
+    assert!(!jobs.is_empty(), "The fixture must draw the layer");
+    let screen = egui_wgpu::ScreenDescriptor {
+        size_in_pixels: [8, 2],
+        pixels_per_point: 1.0,
+    };
+    let texture = target(&render.device, render.target_format);
+    let view = texture.create_view(&Default::default());
+    let mut encoder = render.device.create_command_encoder(&Default::default());
+    let mut renderer = render.renderer.write();
+    let commands =
+        renderer.update_buffers(&render.device, &render.queue, &mut encoder, &jobs, &screen);
+    {
+        let pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+            color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                view: &view,
+                resolve_target: None,
+                depth_slice: None,
+                ops: wgpu::Operations {
+                    load: wgpu::LoadOp::Clear(wgpu::Color::BLACK),
+                    store: wgpu::StoreOp::Store,
+                },
+            })],
+            ..Default::default()
+        });
+        renderer.render(&mut pass.forget_lifetime(), &jobs, &screen);
+    }
+    drop(renderer);
+    render
+        .queue
+        .submit(commands.into_iter().chain([encoder.finish()]));
+    read(&render.device, &render.queue, &texture)
+}
+
+#[test]
+#[ignore = "real GPU: run explicitly with normal desktop permissions"]
+fn magnified_native_texels_stay_square_and_bilinear_remains_the_default() {
+    let instance = wgpu::Instance::new(&wgpu::InstanceDescriptor {
+        backends: if cfg!(windows) {
+            wgpu::Backends::DX12
+        } else {
+            wgpu::Backends::PRIMARY
+        },
+        ..Default::default()
+    });
+    let adapter = block_on(instance.request_adapter(&Default::default())).unwrap();
+    let (device, queue) = block_on(adapter.request_device(&Default::default())).unwrap();
+    eprintln!(
+        "Nearest sampling GPU verification: {:?}",
+        adapter.get_info()
+    );
+    // Two texels drawn 8 pixels wide: 4x magnification.
+    let check = |pixels: &[[f32; 4]], nearest: bool, label: &str| {
+        let row = &pixels[..8];
+        if nearest {
+            for x in 0..8 {
+                let texel = if x < 4 { row[0] } else { row[7] };
+                for c in 0..3 {
+                    assert!((row[x][c] - texel[c]).abs() < 1e-3, "{label}: {row:?}");
+                }
+            }
+            assert!(
+                (row[0][0] - row[7][0]).abs() > 0.1,
+                "{label}: two texels {row:?}"
+            );
+        } else {
+            // Bilinear blends across the texel edge: the negative control.
+            assert!(
+                (row[3][0] - row[0][0]).abs() > 0.02 && (row[4][0] - row[7][0]).abs() > 0.02,
+                "{label}: {row:?}"
+            );
+        }
+    };
+    // Scene-linear float layers through the photo shader (an HDR surface).
+    let hdr = sdr_presenter(
+        &adapter,
+        &device,
+        &queue,
+        wgpu::TextureFormat::Rgba16Float,
+        2.5,
+        egui_wgpu::RendererOptions::PREDICTABLE,
+    );
+    let float = hdr
+        .upload(Arc::new(FloatPhoto {
+            size: [2, 1],
+            rgba: Arc::from([0.1f32, 0.1, 0.1, 1.0, 0.3, 0.3, 0.3, 1.0]),
+            uv: [[0.0, 0.0], [1.0, 1.0]],
+            reference_white_nits: 203.0,
+            peak_nits: 1000.0,
+            origin: ImageOrigin::SceneLinear,
+        }))
+        .unwrap();
+    for nearest in [false, true] {
+        check(&draw_regions(&hdr, true, &float, nearest), nearest, "float");
+    }
+    // Registered SDR layers carry their magnification filter from upload.
+    for format in [
+        wgpu::TextureFormat::Rgba8Unorm,
+        wgpu::TextureFormat::Rgba16Float,
+    ] {
+        let sdr = sdr_presenter(
+            &adapter,
+            &device,
+            &queue,
+            format,
+            1.0,
+            // Production filtering: PREDICTABLE filters in the shader instead.
+            egui_wgpu::RendererOptions {
+                predictable_texture_filtering: false,
+                ..egui_wgpu::RendererOptions::PREDICTABLE
+            },
+        );
+        for nearest in [false, true] {
+            let layer = sdr
+                .upload_sdr_sampled(
+                    [2, 1],
+                    Arc::from([40u8, 40, 40, 255, 220, 220, 220, 255]),
+                    [[0.0, 0.0], [1.0, 1.0]],
+                    nearest,
+                )
+                .unwrap();
+            check(
+                &draw_regions(&sdr, false, &layer, nearest),
+                nearest,
+                &format!("SDR {format:?}"),
+            );
+        }
+    }
+}
+
+/// Frame cost of the HDR path with many tiles: each float tile is one photo
+/// shader callback (uniform buffer and bind group made per frame).
+#[test]
+#[ignore = "real GPU: run explicitly with normal desktop permissions"]
+fn benchmark_float_tile_frames() {
+    let instance = wgpu::Instance::new(&wgpu::InstanceDescriptor {
+        backends: if cfg!(windows) {
+            wgpu::Backends::DX12
+        } else {
+            wgpu::Backends::PRIMARY
+        },
+        ..Default::default()
+    });
+    let adapter = block_on(instance.request_adapter(&Default::default())).unwrap();
+    let (device, queue) = block_on(adapter.request_device(&Default::default())).unwrap();
+    let format = wgpu::TextureFormat::Rgba16Float;
+    let presenter = sdr_presenter(&adapter, &device, &queue, format, 2.5, Default::default());
+    let size = [3290u32, 1750u32];
+    let output = device.create_texture(&wgpu::TextureDescriptor {
+        label: Some("HDR tile benchmark target"),
+        size: wgpu::Extent3d {
+            width: size[0],
+            height: size[1],
+            depth_or_array_layers: 1,
+        },
+        mip_level_count: 1,
+        sample_count: 1,
+        dimension: wgpu::TextureDimension::D2,
+        format,
+        usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
+        view_formats: &[],
+    });
+    let view = output.create_view(&Default::default());
+    for (columns, rows) in [(4usize, 3usize), (7, 4), (8, 5)] {
+        // A grid of 1026 x 1026 float tiles covering the photograph.
+        let pixels: Arc<[f32]> = vec![0.25f32; 1026 * 1026 * 4].into();
+        let tiles = (0..columns * rows)
+            .map(|i| {
+                let (x, y) = ((i % columns) as f32, (i / columns) as f32);
+                let uv = [
+                    [x / columns as f32, y / rows as f32],
+                    [(x + 1.0) / columns as f32, (y + 1.0) / rows as f32],
+                ];
+                let layer = presenter
+                    .upload(Arc::new(FloatPhoto {
+                        size: [1026, 1026],
+                        rgba: pixels.clone(),
+                        uv,
+                        reference_white_nits: 203.0,
+                        peak_nits: 1000.0,
+                        origin: ImageOrigin::SceneLinear,
+                    }))
+                    .unwrap();
+                (layer, Rect::from_min_max(uv[0].into(), uv[1].into()))
+            })
+            .collect::<Vec<_>>();
+        let ctx = &presenter.0.context;
+        let screen =
+            Rect::from_min_size(egui::Pos2::ZERO, egui::vec2(size[0] as f32, size[1] as f32));
+        let mut frames = Vec::new();
+        for frame in 0..240 {
+            let began = Instant::now();
+            // A slow pan keeps every tile's visible part changing.
+            let shift = (frame as f32 * 0.0005).min(0.1);
+            let aperture = Rect::from_min_size(egui::pos2(shift, 0.0), egui::vec2(0.9, 1.0));
+            let out = ctx.run(
+                egui::RawInput {
+                    screen_rect: Some(screen),
+                    ..Default::default()
+                },
+                |ctx| {
+                    let painter = ctx.layer_painter(egui::LayerId::background());
+                    let layers = tiles
+                        .iter()
+                        .map(|(layer, core)| (layer, *core, 1.0, false))
+                        .collect::<Vec<_>>();
+                    assert!(presenter.paint_regions(&painter, screen, aperture, true, &layers));
+                },
+            );
+            let jobs = ctx.tessellate(out.shapes, out.pixels_per_point);
+            let descriptor = egui_wgpu::ScreenDescriptor {
+                size_in_pixels: size,
+                pixels_per_point: 1.0,
+            };
+            let mut encoder = device.create_command_encoder(&Default::default());
+            let render = &presenter.0.render;
+            let commands = render.renderer.write().update_buffers(
+                &device,
+                &queue,
+                &mut encoder,
+                &jobs,
+                &descriptor,
+            );
+            {
+                let pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                    color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                        view: &view,
+                        resolve_target: None,
+                        depth_slice: None,
+                        ops: wgpu::Operations {
+                            load: wgpu::LoadOp::Clear(wgpu::Color::BLACK),
+                            store: wgpu::StoreOp::Store,
+                        },
+                    })],
+                    ..Default::default()
+                });
+                render
+                    .renderer
+                    .read()
+                    .render(&mut pass.forget_lifetime(), &jobs, &descriptor);
+            }
+            let submission = queue.submit(commands.into_iter().chain([encoder.finish()]));
+            let cpu = began.elapsed().as_secs_f64() * 1000.0;
+            device
+                .poll(wgpu::PollType::Wait {
+                    submission_index: Some(submission),
+                    timeout: Some(std::time::Duration::from_secs(10)),
+                })
+                .unwrap();
+            if frame >= 10 {
+                frames.push((cpu, began.elapsed().as_secs_f64() * 1000.0));
+            }
+        }
+        let mut cpu = frames.iter().map(|f| f.0).collect::<Vec<_>>();
+        let mut total = frames.iter().map(|f| f.1).collect::<Vec<_>>();
+        cpu.sort_by(f64::total_cmp);
+        total.sort_by(f64::total_cmp);
+        let at = |v: &[f64], q: f64| v[((v.len() - 1) as f64 * q).round() as usize];
+        eprintln!(
+            "{} float tiles: UI thread median {:.3} p95 {:.3} max {:.3} ms; until GPU done median {:.3} p95 {:.3} max {:.3} ms",
+            columns * rows,
+            at(&cpu, 0.5),
+            at(&cpu, 0.95),
+            at(&cpu, 1.0),
+            at(&total, 0.5),
+            at(&total, 0.95),
+            at(&total, 1.0)
+        );
     }
 }

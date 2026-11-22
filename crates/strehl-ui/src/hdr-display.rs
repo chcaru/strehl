@@ -59,6 +59,12 @@ pub(crate) struct FloatPhoto {
 
 #[derive(Clone)]
 pub(crate) struct PhotoLayer(Arc<Layer>);
+impl PhotoLayer {
+    /// The registered egui texture of an SDR layer, for ordinary meshes.
+    pub fn texture_id(&self) -> Option<egui::TextureId> {
+        self.0.registered.as_ref().map(|r| r.id)
+    }
+}
 struct Layer {
     _texture: wgpu::Texture,
     view: wgpu::TextureView,
@@ -196,6 +202,34 @@ impl PhotoPresenter {
         let mut value = value;
         value.poll();
         Some(value)
+    }
+
+    /// The production SDR presenter for a render state without a window
+    /// (offscreen screenshots and GPU benchmarks): the same off-thread
+    /// uploads and registered-texture painting, never an HDR surface.
+    pub fn offscreen(render: egui_wgpu::RenderState, context: egui::Context) -> Self {
+        let (pipeline, bindings) = photo_pipeline(&render.device, render.target_format);
+        Self(Arc::new(Presenter {
+            render,
+            pipeline,
+            bindings,
+            #[cfg(any(windows, target_os = "macos"))]
+            window: 0,
+            #[cfg(target_os = "macos")]
+            native_color_space: false,
+            context,
+            sdr_retirement: Arc::default(),
+            status: RwLock::new(DisplayStatus {
+                reason: "SDR: offscreen".into(),
+                ..Default::default()
+            }),
+            refresh: Mutex::new(Refresh {
+                next: Instant::now() + Duration::from_secs(365 * 24 * 3600),
+                pending: None,
+                #[cfg(windows)]
+                window: WindowDisplay::default(),
+            }),
+        }))
     }
 
     pub fn status(&self) -> DisplayStatus {
@@ -408,11 +442,24 @@ impl PhotoPresenter {
 
     /// Upload from a background worker. SDR bytes remain gamma encoded so the
     /// ordinary SDR presentation matches egui's existing image interpolation.
+    #[cfg(test)]
     pub fn upload_sdr(
         &self,
         size: [u32; 2],
         rgba: Arc<[u8]>,
         region: [[f32; 2]; 2],
+    ) -> Result<PhotoLayer> {
+        self.upload_sdr_sampled(size, rgba, region, false)
+    }
+
+    /// `upload_sdr`; with `nearest`, magnified texels stay square (true
+    /// pixels above 100 %) while minification still filters linearly.
+    pub fn upload_sdr_sampled(
+        &self,
+        size: [u32; 2],
+        rgba: Arc<[u8]>,
+        region: [[f32; 2]; 2],
+        nearest: bool,
     ) -> Result<PhotoLayer> {
         let [width, height] = size;
         let limit = self.0.render.device.limits().max_texture_dimension_2d;
@@ -465,11 +512,25 @@ impl PhotoPresenter {
         let view = texture.create_view(&Default::default());
         // Upload and immutable bind-group creation both run on the caller's
         // development worker. Painting only emits an ordinary batched mesh.
-        let id = self.0.render.renderer.write().register_native_texture(
-            &self.0.render.device,
-            &view,
-            wgpu::FilterMode::Linear,
-        );
+        let id = self
+            .0
+            .render
+            .renderer
+            .write()
+            .register_native_texture_with_sampler_options(
+                &self.0.render.device,
+                &view,
+                wgpu::SamplerDescriptor {
+                    label: Some("Strehl SDR photograph sampler"),
+                    mag_filter: if nearest {
+                        wgpu::FilterMode::Nearest
+                    } else {
+                        wgpu::FilterMode::Linear
+                    },
+                    min_filter: wgpu::FilterMode::Linear,
+                    ..Default::default()
+                },
+            );
         Ok(PhotoLayer(Arc::new(Layer {
             _texture: texture,
             view,
@@ -486,57 +547,60 @@ impl PhotoPresenter {
         })))
     }
 
-    /// Returns false when the original SDR drawing path should paint instead.
-    pub fn paint(
+    /// Paint layers in order, each clipped to its own photograph-UV rectangle
+    /// (a tile's core, inside its apron). The first is the base. `nearest`
+    /// keeps magnified texels square in the float shader; SDR layers carry
+    /// their magnification filter from upload. Returns false, painting
+    /// nothing, when the original SDR drawing path should paint instead.
+    pub fn paint_regions(
         &self,
         painter: &egui::Painter,
         destination: Rect,
         aperture: Rect,
-        overview: &PhotoLayer,
-        detail: Option<(&PhotoLayer, f32)>,
+        hdr: bool,
+        layers: &[(&PhotoLayer, Rect, f32, bool)],
     ) -> bool {
-        let status = self.status();
-        if !status.active
-            || overview.0.origin != ImageOrigin::SceneLinear
-            || !destination.is_positive()
-            || !aperture.is_positive()
-        {
+        let Some((base, ..)) = layers.first() else {
+            return false;
+        };
+        if !destination.is_positive() || !aperture.is_positive() {
             return false;
         }
-        self.paint_layer(painter, destination, aperture, overview, 1.0, &status);
-        if let Some((layer, alpha)) = detail {
-            self.paint_layer(
-                painter,
-                destination,
-                aperture,
-                layer,
-                alpha.clamp(0.0, 1.0),
-                &status,
-            );
+        if hdr {
+            let status = self.status();
+            if !status.active || base.0.origin != ImageOrigin::SceneLinear {
+                return false;
+            }
+            for (layer, clip, alpha, nearest) in layers {
+                self.paint_layer_clipped(
+                    painter,
+                    destination,
+                    aperture,
+                    layer,
+                    (*clip, *nearest),
+                    alpha.clamp(0.0, 1.0),
+                    &status,
+                );
+            }
+        } else {
+            if !base.0.sdr {
+                return false;
+            }
+            for (layer, clip, alpha, nearest) in layers.iter().filter(|(l, ..)| l.0.sdr) {
+                self.paint_sdr_clipped(
+                    painter,
+                    destination,
+                    aperture,
+                    layer,
+                    (*clip, *nearest),
+                    alpha.clamp(0.0, 1.0),
+                );
+            }
         }
         true
     }
 
-    /// SDR fallback uses the same upload-off-thread path and exact region
-    /// placement. On extended-linear surfaces it follows the OS's SDR white.
-    pub fn paint_sdr(
-        &self,
-        painter: &egui::Painter,
-        destination: Rect,
-        aperture: Rect,
-        overview: &PhotoLayer,
-        detail: Option<(&PhotoLayer, f32)>,
-    ) -> bool {
-        if !overview.0.sdr || !destination.is_positive() || !aperture.is_positive() {
-            return false;
-        }
-        self.paint_sdr_layer(painter, destination, aperture, overview, 1.0);
-        if let Some((layer, alpha)) = detail.filter(|(layer, _)| layer.0.sdr) {
-            self.paint_sdr_layer(painter, destination, aperture, layer, alpha.clamp(0.0, 1.0));
-        }
-        true
-    }
-
+    #[cfg(test)]
     fn paint_sdr_layer(
         &self,
         painter: &egui::Painter,
@@ -545,17 +609,44 @@ impl PhotoPresenter {
         layer: &PhotoLayer,
         alpha: f32,
     ) {
+        self.paint_sdr_clipped(
+            painter,
+            destination,
+            aperture,
+            layer,
+            (layer.0.uv, false),
+            alpha,
+        );
+    }
+
+    fn paint_sdr_clipped(
+        &self,
+        painter: &egui::Painter,
+        destination: Rect,
+        aperture: Rect,
+        layer: &PhotoLayer,
+        (clip, nearest): (Rect, bool),
+        alpha: f32,
+    ) {
         // Upstream egui's sRGB-attachment shader decodes premultiplied gamma
         // colors directly. Keep the existing linear-alpha callback for fades
         // on that fallback format; our extended-linear shader handles it.
         if self.0.render.target_format.is_srgb() && alpha < 1.0 {
-            self.paint_layer(painter, destination, aperture, layer, alpha, &self.status());
+            self.paint_layer_clipped(
+                painter,
+                destination,
+                aperture,
+                layer,
+                (clip, nearest),
+                alpha,
+                &self.status(),
+            );
             return;
         }
         let Some(registered) = &layer.0.registered else {
             return;
         };
-        let visible = aperture.intersect(layer.0.uv);
+        let visible = aperture.intersect(layer.0.uv).intersect(clip);
         if !visible.is_positive() || alpha <= 0.0 {
             return;
         }
@@ -572,16 +663,18 @@ impl PhotoPresenter {
         );
     }
 
-    fn paint_layer(
+    #[allow(clippy::too_many_arguments)]
+    fn paint_layer_clipped(
         &self,
         painter: &egui::Painter,
         destination: Rect,
         aperture: Rect,
         layer: &PhotoLayer,
+        (clip, nearest): (Rect, bool),
         alpha: f32,
         status: &DisplayStatus,
     ) {
-        let visible = aperture.intersect(layer.0.uv);
+        let visible = aperture.intersect(layer.0.uv).intersect(clip);
         if !visible.is_positive() || alpha <= 0.0 {
             return;
         }
@@ -630,7 +723,20 @@ impl PhotoPresenter {
                 0.0,
             )
         };
-        let params = [lo.x, lo.y, hi.x, hi.y, scale, limit, alpha, mode];
+        let params = [
+            lo.x,
+            lo.y,
+            hi.x,
+            hi.y,
+            scale,
+            limit,
+            alpha,
+            mode,
+            if nearest { 1.0 } else { 0.0 },
+            0.0,
+            0.0,
+            0.0,
+        ];
         let buffer = self
             .0
             .render
@@ -712,7 +818,7 @@ fn photo_pipeline(
                 ty: wgpu::BindingType::Buffer {
                     ty: wgpu::BufferBindingType::Uniform,
                     has_dynamic_offset: false,
-                    min_binding_size: std::num::NonZeroU64::new(32),
+                    min_binding_size: std::num::NonZeroU64::new(48),
                 },
                 count: None,
             },

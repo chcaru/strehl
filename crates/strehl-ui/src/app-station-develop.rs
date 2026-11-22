@@ -84,9 +84,10 @@ impl StrehlApp {
         }
         let size = [loaded.image.width as f32, loaded.image.height as f32];
         let ppp = ui.ctx().pixels_per_point();
-        // Points per photograph pixel now, at 1:1 and when fitted.
+        // Points per photograph pixel now, at 1:1 and when fitted. While the
+        // view shows the export's own pixels, 1:1 is one output pixel.
         let scale = image.width() / size[0];
-        let native = 1.0 / ppp;
+        let native = self.editor.viewport.export_scale().unwrap_or(1.0) / ppp;
         let fit = (clip.width() / size[0]).min(clip.height() / size[1]);
         let current = if (scale / native - 1.0).abs() < 0.02 {
             Some(1)
@@ -114,6 +115,32 @@ impl StrehlApp {
         });
     }
 
+    /// `--photo-scale`: hold exact screen pixels per photograph pixel. The
+    /// zoom is relative to the fitted photograph, so it is applied again
+    /// whenever the canvas changes size (the Export history arrives later).
+    fn apply_photo_scale_request(&mut self, ctx: &egui::Context) {
+        // The mapping's second rectangle is the photograph fitted (Scene).
+        let (Some((center, scale, _)), Some((image, fitted)), Some(loaded)) = (
+            self.photo_scale_request,
+            self.process_space.edit_mapping(),
+            self.editor.loaded.as_ref(),
+        ) else {
+            return;
+        };
+        let width = loaded.image.width as f32;
+        let fit = fitted.width() / width;
+        if !(image.is_positive() && fit.is_finite() && fit > 0.0) {
+            return;
+        }
+        let points = scale / ctx.pixels_per_point();
+        let held = (image.width() / width / points - 1.0).abs() < 1e-3;
+        if !held {
+            self.process_space.set_photo_view(center, points / fit);
+            ctx.request_repaint();
+        }
+        self.photo_scale_request = Some((center, scale, held));
+    }
+
     pub(super) fn develop_rail(&mut self, ui: &mut egui::Ui, station: Station) {
         match station {
             Station::Develop => self.show_develop_rail(ui),
@@ -125,6 +152,16 @@ impl StrehlApp {
     /// will write (its crop and, when it burns one, the scale bar). Develop's
     /// overlays run through the editor's canvas hook.
     pub(super) fn develop_canvas_overlay(&mut self, ui: &mut egui::Ui, station: Station) {
+        // Export's view renders what the selected preset writes.
+        let request = (station == Station::Export && !self.editor.repairs_pending())
+            .then(|| self.export_preview_settings())
+            .flatten()
+            .map(|settings| crate::photo_viewport::ExportRequest {
+                settings,
+                um_per_px: self.editor.um_per_px,
+            });
+        self.editor.viewport.want_export(request);
+        self.apply_photo_scale_request(ui.ctx());
         if station != Station::Export {
             return;
         }
@@ -152,9 +189,11 @@ impl StrehlApp {
                 ),
             );
         }
-        let burns = self
-            .export_preview_settings()
-            .is_some_and(|settings| settings.scale_bar);
+        // A shown export preview already holds the burned-in bar.
+        let burns = !self.editor.viewport.export_burns_scale_bar()
+            && self
+                .export_preview_settings()
+                .is_some_and(|settings| settings.scale_bar);
         if burns
             && let (Some(bar), Some(um)) = (
                 recipe.scale_bar.filter(|b| b.enabled),

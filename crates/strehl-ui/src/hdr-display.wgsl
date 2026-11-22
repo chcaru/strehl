@@ -2,6 +2,8 @@ struct Parameters {
     uv: vec4<f32>,
     // native units per developed white, peak in native units, opacity, mode
     light: vec4<f32>,
+    // x >= 0.5: nearest texel (true pixels when magnified); yzw unused
+    sampling: vec4<f32>,
 };
 @group(0) @binding(0) var photograph: texture_2d<f32>;
 @group(0) @binding(1) var<uniform> parameters: Parameters;
@@ -36,9 +38,18 @@ fn sample_linear(uv: vec2<f32>) -> vec3<f32> {
     return mix(mix(c00, c10, t.x), mix(c01, c11, t.x), t.y);
 }
 
+fn sample_nearest(uv: vec2<f32>) -> vec3<f32> {
+    let dimensions = vec2<i32>(textureDimensions(photograph));
+    let p = vec2<i32>(floor(uv * vec2<f32>(dimensions)));
+    return textureLoad(photograph, clamp(p, vec2<i32>(0), dimensions - vec2<i32>(1)), 0).rgb;
+}
+
 @fragment
 fn fragment(in: Vertex) -> @location(0) vec4<f32> {
     var light = sample_linear(in.uv);
+    if parameters.sampling.x >= 0.5 {
+        light = sample_nearest(in.uv);
+    }
     if parameters.light.w >= 1.0 {
         if parameters.light.w >= 2.0 {
             light = select(light / 12.92, pow((light + 0.055) / 1.055, vec3<f32>(2.4)), light > vec3<f32>(0.04045));

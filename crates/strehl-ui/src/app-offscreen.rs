@@ -73,8 +73,12 @@ pub(crate) fn run_offscreen_with(
     ctx.set_pixels_per_point(1.0);
     let mut app = StrehlApp::from_launch(max_texture_side, launch);
     app.apply_theme(&ctx);
-    // No PhotoPresenter window negotiation: the existing SDR photo fallback and
-    // ordinary egui source/metadata textures remain available to the real UI.
+    // The production photograph path without a window: off-thread uploads and
+    // registered textures, always SDR (no display negotiation).
+    app.editor.viewport.presenter = Some(crate::hdr_display::PhotoPresenter::offscreen(
+        render.clone(),
+        ctx.clone(),
+    ));
     let result = (|| -> Result<()> {
         while Instant::now() < deadline {
             let screen = egui::Rect::from_min_size(

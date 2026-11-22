@@ -232,6 +232,9 @@ pub struct StrehlApp {
     screenshot_ranges: Option<Vec<[usize; 2]>>,
     screenshot_ranges_applied_frame: Option<u64>,
     screenshot_requested: bool,
+    /// `--photo-scale`: centre, screen pixels per photograph pixel, and
+    /// whether the canvas currently holds that scale.
+    photo_scale_request: Option<([f32; 2], f32, bool)>,
     screenshot_diagnostic: Option<String>,
     screenshot_diagnostic_opacity: Option<f32>,
     screenshot_diagnostic_sample: Option<[f32; 2]>,
@@ -384,6 +387,9 @@ impl StrehlApp {
             screenshot_ranges: launch.screenshot_ranges,
             screenshot_ranges_applied_frame: None,
             screenshot_requested: false,
+            photo_scale_request: launch
+                .photo_scale
+                .map(|scale| (launch.photo_center.unwrap_or([0.5, 0.5]), scale, false)),
             screenshot_diagnostic: launch.diagnostic_map,
             screenshot_diagnostic_opacity: launch.diagnostic_opacity,
             screenshot_diagnostic_sample: launch.diagnostic_sample,
@@ -2763,6 +2769,7 @@ impl StrehlApp {
             && reveal_ready
             && self.draft_job.is_none()
             && !self.draft_requested
+            && self.photo_scale_request.is_none_or(|(.., held)| held)
             && (self.stack.is_none()
                 || self.browser.has_image(self.preview_target())
                 || self.browser.error(self.preview_target()).is_some())

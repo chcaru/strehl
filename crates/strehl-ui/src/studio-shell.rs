@@ -687,6 +687,10 @@ impl StrehlApp {
         // Develop and Export show the photograph alone (P3 theater mode).
         self.process_space
             .set_photograph_only(matches!(station, Station::Develop | Station::Export));
+        if station != Station::Export {
+            // Only Export's view shows the selected preset's own pixels.
+            self.editor.viewport.want_export(None);
+        }
         if station == Station::Library {
             return self.library_canvas(ui);
         }

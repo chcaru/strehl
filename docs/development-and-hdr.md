@@ -165,18 +165,33 @@ brackets before development, retaining unclipped observations when available.
 
 ## Progressive photograph display
 
-Completed photographs open with a retained overview. The visible area then
-refines according to the window's physical pixel density and the source pixels
-covered by the current view. At close inspection the patch uses the original
-source pixels. Zooming does not enlarge a permanently fixed 1600-pixel preview.
+Completed photographs open with a retained 1600-pixel overview. The visible
+area then refines according to the window's physical pixel density and the
+source pixels covered by the current view: the viewer develops tiles of up to
+1024 x 1024 texels at the coarsest power-of-two level whose texels are no larger
+than a screen pixel, so the photograph is sharp at every zoom on any display. At
+100 % and beyond, tiles hold the master's own pixels, developed exactly as an
+export develops them, and magnification shows them as square pixels (nearest
+neighbour) rather than blurring them.
 
-High-resolution development, validation, and native texture uploads happen on
-background workers. A small initial overview still uses the regular UI upload
-path. The viewer keeps the previous image while work finishes, discards obsolete
-requests, and reveals new detail gradually. A small margin around the visible
-area reuses nearby detail while panning. The patch is bounded to 3072 pixels per
-side and about 6.3 million pixels; this bounds transfer and working memory on large
-displays. Changing the recipe or Before state cannot mix generations of pixels.
+Development, validation, and native texture uploads happen on one background
+worker, nearest the centre of the view first. A small initial overview still uses
+the regular UI upload path. The viewer keeps the previous image while work
+finishes, drops tiles a newer view no longer needs, and reveals new detail
+gradually; a thin ruled mark along the bottom edge shows progress only when
+detail takes longer than 150 ms. A ring of tiles around the view is prepared
+ahead, so ordinary pans stay sharp. Tiles the view no longer shows are kept up
+to a 384 MiB texture budget and then released, least recently used first.
+Changing the recipe or Before state cannot mix generations of pixels; while a
+slider is dragged the overview follows it, and detail returns once the recipe
+rests.
+
+On **Export**, when the selected preset changes pixels (a resize, output
+sharpening or a burned-in scale bar), the view shows the export's own pixels,
+rendered by the export's own pipeline at the output's resolution and placed over
+its crop. **Actual pixels** then means one output pixel per screen pixel. JPEG
+and AVIF compression loss is not simulated, HDR presets show the development,
+and outputs above 40 million pixels are previewed by the development tiles.
 
 Windows DX12 uses extended-linear scRGB when the window's active display has HDR
 enabled. macOS Metal uses the display's current EDR headroom. Photograph storage,
