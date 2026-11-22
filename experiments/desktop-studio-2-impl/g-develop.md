@@ -1,7 +1,9 @@
 # g-develop: Develop and Export actions after the owner's run-through
 
 **Status:** results note. Branch `studio2/g-develop`, based on `7f83d3f22`; the fix,
-tests and docs are `b70cae4b9`, which every check and screenshot below was run on.
+tests and docs are `b70cae4b9`, which every check below was run on. The screenshots come
+from a release build one edit earlier: the effort field's drag rate (`speed(0.05)`, 20 px
+a step), which does not change what is drawn.
 **Date:** 2026-11-21. **Evidence labels** as in `AGENTS.md`.
 
 The owner's feedback (verbatim):
