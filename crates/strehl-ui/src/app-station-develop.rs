@@ -224,6 +224,11 @@ impl StrehlApp {
             .show(&mut child, |ui| {
                 ui.spacing_mut().item_spacing.y = 9.0;
                 self.develop_notes(ui);
+                if self.edit_pane.develop.panel.tab == station::InspectorTab::Versions {
+                    // Save version's name field, progress and result.
+                    let pal = self.edit_pane.develop.palette;
+                    self.develop_version_head(ui, &pal);
+                }
                 let intents = self.show_develop_tab(ui);
                 match self.edit_pane.develop.panel.tab {
                     station::InspectorTab::Adjust => self.develop_more(ui),
@@ -237,9 +242,17 @@ impl StrehlApp {
         self.handle_develop_intents(intents, time);
     }
 
-    /// The editor's error and warnings, and edits kept from another session.
+    /// The station's last notice (an action that could not run, a partial
+    /// white balance), the editor's error and warnings, and edits kept from
+    /// another session.
     fn develop_notes(&mut self, ui: &mut egui::Ui) {
         let t = studio_theme::tokens(ui.ctx());
+        if let Some(notice) = self.edit_pane.develop.notice.clone() {
+            let pal = self.edit_pane.develop.palette;
+            if style::notice_line(ui, &pal, style::Mark::Warn, &notice, &["Dismiss"]).is_some() {
+                self.edit_pane.develop.dismiss_notice();
+            }
+        }
         if let Some(error) = &self.editor.error {
             ui.label(egui::RichText::new(error).size(12.0).color(t.warn));
         }

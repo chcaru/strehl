@@ -247,7 +247,6 @@ fn view<'a>(
         hdr_available: false,
         hdr_display: false,
         display: Vec::new(),
-        can_export: true,
     }
 }
 

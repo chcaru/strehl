@@ -203,7 +203,8 @@ fn the_inspector_shows_the_batch_button_and_ticks_presets() {
                             hdr_photo: true,
                             history: &[],
                             batch: None,
-                            can_export: true,
+                            blocker: None,
+                            feedback: None,
                             note: None,
                             view_bundle: None,
                         };
@@ -256,3 +257,6 @@ fn the_inspector_shows_the_batch_button_and_ticks_presets() {
         vec![ExportIntent::Tick(lib.presets[2].id.clone(), true)]
     );
 }
+
+#[path = "export-station-actions-tests.rs"]
+mod actions;

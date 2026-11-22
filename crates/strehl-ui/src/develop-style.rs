@@ -597,6 +597,52 @@ pub(crate) fn link(ui: &mut Ui, pal: &StudioPalette, label: &str, accent: bool) 
     response
 }
 
+/// What an action came to, in words: a drawn mark, the wrapped text and
+/// links under it (for example Open folder, Dismiss), ruled off from what
+/// follows. Returns the index of the link clicked.
+pub(crate) fn notice_line(
+    ui: &mut Ui,
+    pal: &StudioPalette,
+    kind: Mark,
+    text: &str,
+    links: &[&str],
+) -> Option<usize> {
+    let mut clicked = None;
+    let (left, width) = (ui.cursor().left(), ui.available_width());
+    ui.horizontal_top(|ui| {
+        let (rect, _) = ui.allocate_exact_size(egui::vec2(10.0, 17.0), Sense::hover());
+        mark(ui.painter(), rect.center(), kind, pal);
+        ui.vertical(|ui| {
+            ui.spacing_mut().item_spacing.y = 5.0;
+            let ink = if kind == Mark::Warn || kind == Mark::Bad {
+                pal.ink
+            } else {
+                pal.ink_2
+            };
+            ui.add(egui::Label::new(egui::RichText::new(text).size(12.5).color(ink)).wrap());
+            if !links.is_empty() {
+                ui.horizontal(|ui| {
+                    ui.spacing_mut().item_spacing.x = 14.0;
+                    for (index, label) in links.iter().enumerate() {
+                        if link(ui, pal, label, false).clicked() {
+                            clicked = Some(index);
+                        }
+                    }
+                });
+            }
+        });
+    });
+    ui.add_space(2.0);
+    let y = ui.cursor().top();
+    hairline(
+        ui.painter(),
+        egui::pos2(left, y),
+        egui::pos2(left + width, y),
+        pal.line,
+    );
+    clicked
+}
+
 /// A small boxed tag; `new` tags are information blue.
 pub(crate) fn tag(ui: &mut Ui, pal: &StudioPalette, label: &str, new: bool) {
     let color = if new { pal.info } else { pal.accent };

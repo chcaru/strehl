@@ -116,11 +116,15 @@ log open in the inspector over the station you are on; **Close** returns it.
    regions, the depth brush), **After / Before / Split** and **Clipping** above
    the canvas, and the inspector's **Adjust** (looks such as **Natural** and
    **Signature**, light and colour, detail, crop, display), **Layers** (regions
-   and their notes) and **Versions**. **Save version** keeps a named version;
-   edits are saved beside the result and the rendered pixels are never changed.
+   and their notes) and **Versions**. **Save version** asks for a name at the
+   head of Versions and keeps that version; **Export…** goes to Export. Edits
+   are saved beside the result and the rendered pixels are never changed.
 6. **Export** writes files from presets: **Web**, **HDR**, **Print** and
-   **Archive**, or your own (**New preset…**). Tick the presets, set the name
-   pattern and the folder under **Name and place**, then **Export N files**.
+   **Archive**, or your own (**New preset…**). An AVIF preset's **Encoder
+   effort** trades encoding time against compression; Quality is separate.
+   Tick the presets, set the name pattern and the folder under **Name and
+   place** (the button chooses one if none is set), then **Export N files**;
+   the result, or what went wrong, heads the inspector.
    The table below lists this photograph's exports with **Reveal**, **Copy
    path** and **Export again**.
 
