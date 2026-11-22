@@ -9,6 +9,8 @@ mod display_region;
 mod export;
 #[path = "export-pipeline.rs"]
 mod export_pipeline;
+#[path = "export-preview.rs"]
+mod export_preview;
 mod icc;
 mod image;
 #[path = "learned-asset.rs"]
@@ -50,6 +52,7 @@ pub use export::{
     ExportExtras, ExportFormat, ExportReport, ExportSettings, export_image, export_image_with,
     export_image_with_coverage,
 };
+pub use export_preview::{ExportPreview, render_export_preview};
 pub use image::{
     DisplayBaseline, ImageOrigin, LinearImage, load_tiff, load_tiff_thumbnail, save_linear_tiff,
     save_sdr_tiff,

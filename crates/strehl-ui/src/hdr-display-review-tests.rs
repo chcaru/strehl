@@ -53,9 +53,12 @@ fn draw(
         input.size(),
     );
     let view = input.create_view(&Default::default());
+    // The third vec4 selects sampling; zero is the bilinear default.
+    let mut padded = [0.0f32; 12];
+    padded[..8].copy_from_slice(&parameters);
     let uniform = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
         label: None,
-        contents: bytemuck::cast_slice(&parameters),
+        contents: bytemuck::cast_slice(&padded),
         usage: wgpu::BufferUsages::UNIFORM,
     });
     let group = device.create_bind_group(&wgpu::BindGroupDescriptor {

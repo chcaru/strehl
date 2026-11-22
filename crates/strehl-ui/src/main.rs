@@ -190,6 +190,8 @@ pub struct LaunchOptions {
     pub diagnostic_sample: Option<[f32; 2]>,
     pub photo_zoom: Option<f32>,
     pub photo_center: Option<[f32; 2]>,
+    /// Develop/Export: screen pixels per photograph pixel (1 is 100 %).
+    pub photo_scale: Option<f32>,
     pub size: Option<[f32; 2]>,
     pub activity_log: Option<PathBuf>,
     pub draft: bool,
@@ -373,6 +375,17 @@ fn main() -> eframe::Result {
             } else {
                 launch.diagnostic_opacity = value;
             }
+            continue;
+        }
+        if arg == "--photo-scale" {
+            let value = args
+                .next()
+                .and_then(|v| v.to_str().and_then(|v| v.parse::<f32>().ok()));
+            if !value.is_some_and(|v| v.is_finite() && (0.01..=64.0).contains(&v)) {
+                eprintln!("Use --photo-scale with screen pixels per photograph pixel (0.01..64)");
+                std::process::exit(2);
+            }
+            launch.photo_scale = value;
             continue;
         }
         if arg == "--diagnostic-sample" || arg == "--photo-center" {

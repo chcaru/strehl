@@ -98,6 +98,9 @@ pub(crate) struct ProcessScales {
     painted_aperture: Rect,
     drag: Option<((usize, DiagnosticKind), Pos2)>,
     interaction_hovered: bool,
+    /// Deepest photograph zoom (relative to Scene). Develop and Export raise
+    /// it so true pixels are reachable on any master; maps keep 16x.
+    max_zoom: f32,
 }
 impl Default for ProcessScales {
     fn default() -> Self {
@@ -121,6 +124,7 @@ impl Default for ProcessScales {
             painted_aperture: Rect::from_min_max(Pos2::ZERO, egui::pos2(1.0, 1.0)),
             drag: None,
             interaction_hovered: false,
+            max_zoom: 16.0,
         }
     }
 }
@@ -219,6 +223,15 @@ impl ProcessScales {
             self.retarget(zoom.clamp(2.0, 16.0));
         }
     }
+    pub(crate) fn max_zoom(&self) -> f32 {
+        self.max_zoom
+    }
+    /// Never below 16x, the linked maps' own limit.
+    pub(crate) fn set_max_zoom(&mut self, zoom: f32) {
+        if zoom.is_finite() {
+            self.max_zoom = zoom.clamp(16.0, 4096.0);
+        }
+    }
     pub(crate) fn reset_view(&mut self) {
         self.retarget(1.0);
         self.reset_origin = Some(self.pin);
@@ -230,7 +243,7 @@ impl ProcessScales {
         if !zoom.is_finite() || !pin.x.is_finite() || !pin.y.is_finite() {
             return;
         }
-        let zoom = zoom.clamp(1.0, 16.0);
+        let zoom = zoom.clamp(1.0, self.max_zoom);
         self.retarget(zoom);
         self.magnification = zoom;
         self.zoom_from = zoom;
@@ -251,7 +264,7 @@ impl ProcessScales {
         }
         let anchor = egui::pos2(anchor.x.clamp(0.0, 1.0), anchor.y.clamp(0.0, 1.0));
         let physical = self.painted_aperture.min + self.painted_aperture.size() * anchor.to_vec2();
-        let next = (self.zoom_target * factor).clamp(minimum, 16.0);
+        let next = (self.zoom_target * factor).clamp(minimum, self.max_zoom);
         if (!self.local && factor <= 1.0) || next == self.zoom_target {
             return;
         }

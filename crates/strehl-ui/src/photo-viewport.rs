@@ -1,22 +1,51 @@
-//! One retained overview and one bounded, source-registered detail patch.
-//! Pointer motion only changes geometry; workers develop the latest demand.
+//! One retained overview and a bounded cache of source-registered detail
+//! tiles. Pointer motion only changes geometry; one worker develops the tiles
+//! the latest view needs, nearest its centre first, and supersedes the rest.
+//!
+//! Tiles form a power-of-two pyramid on the master's pixel grid: a tile at
+//! stride `s` holds up to `TILE` x `TILE` texels, each the mean of an `s` x `s`
+//! bin of source pixels developed with the current recipe (stride 1 is the
+//! export's own development, pixel for pixel). The view asks for the coarsest
+//! stride whose texels are no larger than a screen pixel, so the photograph
+//! is sharp at every zoom up to native, and shows true pixels beyond it.
 use crate::{
     development_job::{DevelopmentJob, DevelopmentToken},
     hdr_display::{FloatPhoto, PhotoLayer, PhotoPresenter},
-    jobs::{Task, spawn_notifying_task},
 };
 use eframe::egui::{self, Color32, Pos2, Rect, TextureHandle, Vec2};
 use std::{
-    sync::Arc,
+    collections::{HashMap, HashSet, VecDeque},
+    panic::AssertUnwindSafe,
+    sync::{
+        Arc, Condvar, Mutex,
+        atomic::{AtomicBool, Ordering},
+        mpsc,
+    },
     time::{Duration, Instant},
 };
-use strehl_edit::{DevelopmentRecipe, DisplayRegionRequest, LinearImage};
+#[cfg(test)]
+use strehl_edit::DevelopmentRecipe;
+use strehl_edit::{DisplayRegionRequest, LinearImage};
 
-const MAX_PATCH_SIDE: u32 = 3072;
-const MAX_PATCH_PIXELS: u64 = 6 * 1024 * 1024;
+#[path = "photo-export.rs"]
+mod export;
+pub(crate) use export::ExportRequest;
+
+/// Core texels on a tile's side. Each tile also carries a one-texel apron so
+/// bilinear filtering is continuous across tile edges.
+const TILE: u32 = 1024;
+/// Texture bytes the cache may hold beyond the tiles the view shows.
+const CACHE_BYTES: u64 = 384 << 20;
+/// The tiles a view shows never exceed this many texels; a larger view (an
+/// 8K canvas at nearly 2x oversampling) takes the next coarser level.
+const MAX_VIEW_TEXELS: f32 = 40.0 * 1024.0 * 1024.0;
 const SETTLE: Duration = Duration::from_millis(80);
 const REVEAL: Duration = Duration::from_millis(120);
 const FRAME_DELAY: Duration = Duration::from_millis(16);
+/// Egui-texture uploads per frame when no presenter uploads off-thread.
+const FALLBACK_UPLOADS: usize = 2;
+/// The loading mark appears only once detail has been pending this long.
+const QUIET: Duration = Duration::from_millis(150);
 
 fn request_paced_repaint(ctx: &egui::Context, delay: Duration) {
     // egui subtracts predicted_dt. Compensate so this is an actual future
@@ -48,7 +77,7 @@ pub(super) fn prepare_job(
     job: &DevelopmentJob,
     coarse: bool,
     request: DisplayRegionRequest,
-    cancelled: &std::sync::atomic::AtomicBool,
+    cancelled: &AtomicBool,
     presenter: Option<&PhotoPresenter>,
     hdr: bool,
     retain_fallback: bool,
@@ -59,8 +88,7 @@ pub(super) fn prepare_job(
         request,
         cancelled,
         presenter,
-        hdr,
-        retain_fallback,
+        (hdr, retain_fallback, false),
         job.coverage(),
     )
 }
@@ -70,7 +98,7 @@ pub(super) fn prepare(
     source: &LinearImage,
     recipe: &DevelopmentRecipe,
     request: DisplayRegionRequest,
-    cancelled: &std::sync::atomic::AtomicBool,
+    cancelled: &AtomicBool,
     presenter: Option<&PhotoPresenter>,
     hdr: bool,
     retain_fallback: bool,
@@ -81,21 +109,20 @@ pub(super) fn prepare(
         request,
         cancelled,
         presenter,
-        hdr,
-        retain_fallback,
+        (hdr, retain_fallback, false),
         None,
     )
 }
 
-#[allow(clippy::too_many_arguments)]
+/// `(hdr, retain_fallback, nearest)`: float pixels, keep the SDR bytes for an
+/// egui texture, and keep magnified texels square (native tiles).
 fn prepare_covered(
     source: &LinearImage,
-    recipe: &DevelopmentRecipe,
+    recipe: &strehl_edit::DevelopmentRecipe,
     request: DisplayRegionRequest,
-    cancelled: &std::sync::atomic::AtomicBool,
+    cancelled: &AtomicBool,
     presenter: Option<&PhotoPresenter>,
-    hdr: bool,
-    retain_fallback: bool,
+    (hdr, retain_fallback, nearest): (bool, bool, bool),
     coverage: Option<&crate::photo_coverage::Coverage>,
 ) -> anyhow::Result<PreparedPhoto> {
     let start = Instant::now();
@@ -103,7 +130,7 @@ fn prepare_covered(
     if let Some(coverage) = coverage {
         for y in 0..image.size[1] {
             anyhow::ensure!(
-                !cancelled.load(std::sync::atomic::Ordering::Relaxed),
+                !cancelled.load(Ordering::Relaxed),
                 "Display refinement cancelled"
             );
             for x in 0..image.size[0] {
@@ -158,11 +185,11 @@ fn prepare_covered(
                 .iter()
                 .flat_map(|p| [p[0], p[1], p[2], 255])
                 .collect::<Vec<_>>();
-            presenter.upload_sdr(image.size, rgba.into(), uv)
+            presenter.upload_sdr_sampled(image.size, rgba.into(), uv, nearest)
         }
     });
     anyhow::ensure!(
-        !cancelled.load(std::sync::atomic::Ordering::Relaxed),
+        !cancelled.load(Ordering::Relaxed),
         "Display refinement cancelled"
     );
     let (layer, upload_error) = match uploaded {
@@ -181,46 +208,109 @@ fn prepare_covered(
     })
 }
 
-#[derive(Clone)]
-struct Patch {
-    request: DisplayRegionRequest,
-    texture: Option<TextureHandle>,
-    size: [u32; 2],
-    layer: Option<PhotoLayer>,
-    uv: Rect,
-    published: Instant,
+/// One tile of the pyramid: `stride` source pixels per texel, `side` texels.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub(super) struct TileKey {
+    pub stride: u32,
+    pub side: u32,
+    pub x: u32,
+    pub y: u32,
 }
 
-fn continues_reveal(
-    previous: &Patch,
-    next: DisplayRegionRequest,
-    next_uv: Rect,
-    aperture: Option<Rect>,
-) -> bool {
-    let Some(aperture) = aperture.filter(|r| r.is_finite() && r.is_positive()) else {
-        return false;
-    };
-    // Exact common sample footprints require complete bins on both patches.
-    // Partial coarse edge bins can have different centers despite equal stride.
-    let same_grid = next.stride > 0
-        && previous.request.stride == next.stride
-        && [
-            previous.request.min,
-            previous.request.max,
-            next.min,
-            next.max,
+impl TileKey {
+    fn span(self) -> u32 {
+        self.side * self.stride
+    }
+    /// The tile's own source pixels, maximum excluded.
+    pub(super) fn core(self, source: [u32; 2]) -> [u32; 4] {
+        let span = self.span();
+        let (x0, y0) = (self.x * span, self.y * span);
+        [
+            x0,
+            y0,
+            (x0 + span).min(source[0]),
+            (y0 + span).min(source[1]),
         ]
-        .into_iter()
-        .flatten()
-        .all(|coordinate| coordinate % next.stride == 0);
-    // This is a bounded visual tradeoff: at most 20% newly exposed area may
-    // join the existing reveal. A small pan must not soften already-sharp
-    // pixels, while a large jump still gets the full transition.
-    let overlap = previous.uv.intersect(aperture);
-    same_grid
-        && next_uv.contains_rect(aperture)
-        && overlap.is_positive()
-        && overlap.area() >= aperture.area() * 0.8
+    }
+    /// The core plus one texel of apron on every side inside the photograph.
+    /// Bins stay on the global grid: every edge but the photograph's own is
+    /// a multiple of the stride.
+    pub(super) fn request(self, source: [u32; 2]) -> DisplayRegionRequest {
+        let [x0, y0, x1, y1] = self.core(source);
+        DisplayRegionRequest {
+            min: [
+                x0.saturating_sub(self.stride),
+                y0.saturating_sub(self.stride),
+            ],
+            max: [
+                (x1 + self.stride).min(source[0]),
+                (y1 + self.stride).min(source[1]),
+            ],
+            stride: self.stride,
+        }
+    }
+    fn core_uv(self, source: [u32; 2]) -> Rect {
+        let [x0, y0, x1, y1] = self.core(source);
+        Rect::from_min_max(
+            egui::pos2(x0 as f32 / source[0] as f32, y0 as f32 / source[1] as f32),
+            egui::pos2(x1 as f32 / source[0] as f32, y1 as f32 / source[1] as f32),
+        )
+    }
+}
+
+/// Tile indices `[x0, y0, x1, y1)` covering `aperture` at `stride`.
+fn tile_range(source: [u32; 2], aperture: Rect, stride: u32, side: u32) -> [u32; 4] {
+    let span = (side * stride) as f32;
+    let count = [0, 1].map(|i| source[i].div_ceil(side * stride));
+    let index = |v: f32, i: usize, up: bool| {
+        let t = v * source[i] as f32 / span;
+        let t = if up { t.ceil() } else { t.floor() };
+        (t.max(0.0) as u32).min(count[i])
+    };
+    let x0 = index(aperture.min.x, 0, false).min(count[0] - 1);
+    let y0 = index(aperture.min.y, 1, false).min(count[1] - 1);
+    [
+        x0,
+        y0,
+        index(aperture.max.x, 0, true).max(x0 + 1),
+        index(aperture.max.y, 1, true).max(y0 + 1),
+    ]
+}
+
+/// The coarsest power-of-two stride whose texels are no larger than a screen
+/// pixel, coarsened only while the view would exceed `MAX_VIEW_TEXELS`.
+pub(super) fn target_stride(source: [u32; 2], aperture: Rect, physical: [u32; 2]) -> Option<u32> {
+    if source.contains(&0) || !aperture.is_positive() || !aperture.is_finite() {
+        return None;
+    }
+    let native = [
+        aperture.width() * source[0] as f32,
+        aperture.height() * source[1] as f32,
+    ];
+    let ratio = (native[0] / physical[0].max(1) as f32).min(native[1] / physical[1].max(1) as f32);
+    let mut stride = 1u32;
+    // 1 % tolerance: an exact 50 % view takes stride 2, not twice its pixels.
+    while (stride * 2) as f32 <= ratio * 1.01 && stride < 32768 {
+        stride *= 2;
+    }
+    while native[0] * native[1] / (stride as f32 * stride as f32) > MAX_VIEW_TEXELS
+        && stride < 32768
+    {
+        stride *= 2;
+    }
+    Some(stride)
+}
+
+#[derive(Clone)]
+struct TilePaint {
+    stride: u32,
+    /// Photograph UV the tile owns, and the UV its texture covers (apron).
+    core: Rect,
+    uv: Rect,
+    size: [u32; 2],
+    texture: Option<TextureHandle>,
+    layer: Option<PhotoLayer>,
+    published: Instant,
 }
 
 /// Immutable geometry/pixel generation passed to the photograph painter.
@@ -229,79 +319,380 @@ pub(crate) struct PhotoPaint {
     overview: TextureHandle,
     presenter: Option<PhotoPresenter>,
     layer: Option<PhotoLayer>,
-    detail: Option<Patch>,
+    /// Coarse to fine; every tile shares the overview's recipe.
+    tiles: Arc<Vec<TilePaint>>,
     hdr: bool,
+    /// Visible detail ready, while detail is pending: the quiet loading mark.
+    progress: Option<f32>,
+    /// Export: the selected preset's own pixels over its crop.
+    export: Option<export::ExportPaint>,
 }
 
 impl PhotoPaint {
     pub(crate) fn paint(&self, painter: &egui::Painter, destination: Rect, aperture: Rect) {
-        let opacity = self.detail.as_ref().map_or(0.0, |patch| {
-            (patch.published.elapsed().as_secs_f32() / REVEAL.as_secs_f32()).clamp(0.0, 1.0)
-        });
-        if opacity > 0.0 && opacity < 1.0 {
+        match &self.export {
+            Some(export) if export.covers(aperture) => export.paint(painter, destination, aperture),
+            Some(export) => {
+                self.paint_development(painter, destination, aperture);
+                export.paint(painter, destination, aperture);
+            }
+            None => self.paint_development(painter, destination, aperture),
+        }
+        if let Some(done) = self.progress {
+            paint_progress(painter, destination, done);
+        }
+    }
+
+    fn paint_development(&self, painter: &egui::Painter, destination: Rect, aperture: Rect) {
+        let now = Instant::now();
+        let opacity = |tile: &TilePaint| {
+            (now.saturating_duration_since(tile.published).as_secs_f32() / REVEAL.as_secs_f32())
+                .clamp(0.0, 1.0)
+        };
+        let visible: Vec<(&TilePaint, f32)> = self
+            .tiles
+            .iter()
+            .filter(|tile| tile.core.intersect(aperture).is_positive())
+            .map(|tile| (tile, opacity(tile)))
+            .filter(|(_, alpha)| *alpha > 0.0)
+            .collect();
+        if visible.iter().any(|(_, alpha)| *alpha < 1.0) {
             request_paced_repaint(painter.ctx(), FRAME_DELAY);
         }
+        // The finest level whose opaque tiles cover the aperture is the
+        // whole base: the overview and coarser levels would be overwritten.
+        let base = covering_stride(&visible, aperture);
+        let shown = visible
+            .iter()
+            .filter(|(tile, _)| base.is_none_or(|stride| tile.stride <= stride))
+            .collect::<Vec<_>>();
+        let ppp = painter.ctx().pixels_per_point();
+        // Screen pixels per texel: at or above one, a native tile shows true
+        // pixels (nearest); below one every level filters linearly.
+        let nearest = |tile: &TilePaint| {
+            tile.stride == 1
+                && destination.width() / aperture.width() * tile.uv.width() * ppp
+                    / tile.size[0].max(1) as f32
+                    >= 0.999
+        };
+        let mut painted = false;
         if let (Some(presenter), Some(overview)) = (&self.presenter, &self.layer) {
-            let opaque = self
-                .detail
-                .as_ref()
-                .filter(|patch| opacity >= 1.0 && patch.uv.contains_rect(aperture))
-                .and_then(|patch| patch.layer.as_ref());
-            let detail = self
-                .detail
-                .as_ref()
-                .and_then(|p| p.layer.as_ref())
-                .filter(|_| opaque.is_none())
-                .map(|p| (p, opacity));
-            // An opaque patch covering the viewport is already the whole base.
-            // Avoid shading an overview which would be completely overwritten.
-            let base = opaque.unwrap_or(overview);
-            let painted = if self.hdr {
-                presenter.paint(painter, destination, aperture, base, detail)
-            } else {
-                presenter.paint_sdr(painter, destination, aperture, base, detail)
-            };
-            if painted {
-                return;
+            let everything = Rect::from_min_max(Pos2::ZERO, egui::pos2(1.0, 1.0));
+            let mut layers = vec![(
+                overview,
+                if base.is_some() {
+                    Rect::NOTHING
+                } else {
+                    everything
+                },
+                1.0,
+                false,
+            )];
+            layers.extend(shown.iter().filter_map(|(tile, alpha)| {
+                tile.layer
+                    .as_ref()
+                    .map(|layer| (layer, tile.core, *alpha, nearest(tile)))
+            }));
+            painted = presenter.paint_regions(painter, destination, aperture, self.hdr, &layers);
+        }
+        if !painted {
+            let gaps = shown.iter().any(|(tile, _)| tile.texture.is_none());
+            if base.is_none() || gaps {
+                painter.image(self.overview.id(), destination, aperture, Color32::WHITE);
             }
-        }
-        if !self.detail.as_ref().is_some_and(|patch| {
-            opacity >= 1.0 && patch.texture.is_some() && patch.uv.contains_rect(aperture)
-        }) {
-            painter.image(self.overview.id(), destination, aperture, Color32::WHITE);
-        }
-        if let Some(patch) = &self.detail
-            && let Some(texture) = &patch.texture
-        {
-            let shared = aperture.intersect(patch.uv);
-            if shared.is_positive() {
-                let project = |p: Pos2| {
-                    destination.min + (p - aperture.min) / aperture.size() * destination.size()
+            let project = |p: Pos2| {
+                destination.min + (p - aperture.min) / aperture.size() * destination.size()
+            };
+            for (tile, alpha) in &shown {
+                let Some(texture) = &tile.texture else {
+                    continue;
                 };
-                let local = |p: Pos2| Pos2::ZERO + (p - patch.uv.min) / patch.uv.size();
+                let shared = aperture.intersect(tile.core);
+                let local = |p: Pos2| Pos2::ZERO + (p - tile.uv.min) / tile.uv.size();
                 painter.image(
                     texture.id(),
                     Rect::from_min_max(project(shared.min), project(shared.max)),
                     Rect::from_min_max(local(shared.min), local(shared.max)),
-                    Color32::WHITE.gamma_multiply(opacity),
+                    Color32::WHITE.gamma_multiply(*alpha),
                 );
             }
         }
     }
 }
 
-#[derive(Clone, Copy)]
+/// A one-pixel ruled mark along the bottom of the visible photograph: how
+/// much of the view's detail has arrived. No spinner, no overlay.
+fn paint_progress(painter: &egui::Painter, destination: Rect, done: f32) {
+    let visible = destination.intersect(painter.clip_rect());
+    if !visible.is_positive() {
+        return;
+    }
+    let t = crate::studio_theme::tokens(painter.ctx());
+    let y = visible.bottom() - 1.5;
+    let width = visible.width() * done.clamp(0.0, 1.0);
+    painter.line_segment(
+        [
+            egui::pos2(visible.left(), y),
+            egui::pos2(visible.right(), y),
+        ],
+        egui::Stroke::new(1.0_f32, t.line),
+    );
+    painter.line_segment(
+        [
+            egui::pos2(visible.left(), y),
+            egui::pos2(visible.left() + width, y),
+        ],
+        egui::Stroke::new(1.0_f32, t.accent),
+    );
+}
+
+/// The finest stride whose opaque tiles cover `aperture` completely.
+fn covering_stride(visible: &[(&TilePaint, f32)], aperture: Rect) -> Option<u32> {
+    let mut strides = visible.iter().map(|(t, _)| t.stride).collect::<Vec<_>>();
+    strides.sort_unstable();
+    strides.dedup();
+    strides.into_iter().find(|&stride| {
+        // Tiles of one level own disjoint cores, so an area sum decides.
+        let area = visible
+            .iter()
+            .filter(|(t, alpha)| {
+                t.stride == stride && *alpha >= 1.0 && (t.layer.is_some() || t.texture.is_some())
+            })
+            .map(|(t, _)| t.core.intersect(aperture).area())
+            .sum::<f32>();
+        area >= aperture.area() * (1.0 - 1e-4)
+    })
+}
+
+struct Tile {
+    request: DisplayRegionRequest,
+    core: Rect,
+    uv: Rect,
+    size: [u32; 2],
+    texture: Option<TextureHandle>,
+    layer: Option<PhotoLayer>,
+    bytes: u64,
+    published: Instant,
+    used: u64,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
 struct Demand {
     aperture: Rect,
     physical: [u32; 2],
     source: [u32; 2],
-    request: DisplayRegionRequest,
+    stride: u32,
+    side: u32,
+    /// Tile indices the view shows, at `stride`.
+    visible: [u32; 4],
 }
 
-struct Pending {
+impl Demand {
+    fn keys(&self, range: [u32; 4]) -> impl Iterator<Item = TileKey> + '_ {
+        (range[1]..range[3]).flat_map(move |y| {
+            (range[0]..range[2]).map(move |x| TileKey {
+                stride: self.stride,
+                side: self.side,
+                x,
+                y,
+            })
+        })
+    }
+    fn shows(&self, key: &TileKey) -> bool {
+        key.stride == self.stride
+            && key.side == self.side
+            && (self.visible[0]..self.visible[2]).contains(&key.x)
+            && (self.visible[1]..self.visible[3]).contains(&key.y)
+    }
+    /// One more tile on every side: the pan prefetch.
+    fn ring(&self) -> [u32; 4] {
+        let count = [0, 1].map(|i| self.source[i].div_ceil(self.side * self.stride));
+        [
+            self.visible[0].saturating_sub(1),
+            self.visible[1].saturating_sub(1),
+            (self.visible[2] + 1).min(count[0]),
+            (self.visible[3] + 1).min(count[1]),
+        ]
+    }
+    /// Nearest the view's centre first.
+    fn ordered(&self, mut keys: Vec<TileKey>) -> Vec<TileKey> {
+        let centre = self.aperture.center();
+        let centre = [
+            centre.x * self.source[0] as f32,
+            centre.y * self.source[1] as f32,
+        ];
+        let distance = |k: &TileKey| {
+            let span = k.span() as f32;
+            let c = [(k.x as f32 + 0.5) * span, (k.y as f32 + 0.5) * span];
+            (c[0] - centre[0]).powi(2) + (c[1] - centre[1]).powi(2)
+        };
+        keys.sort_by(|a, b| distance(a).total_cmp(&distance(b)));
+        keys
+    }
+    fn overview_enough(&self, overview: [usize; 2]) -> bool {
+        (0..2).all(|i| overview[i] as u32 >= self.source[i].div_ceil(self.stride))
+    }
+}
+
+struct Work {
+    /// Results from before a reset or a new overview are never published,
+    /// even when a reopened document repeats the identity.
+    epoch: u64,
     identity: Identity,
-    request: DisplayRegionRequest,
-    task: Task<PreparedPhoto>,
+    job: DevelopmentJob,
+    presenter: Option<PhotoPresenter>,
+    retain_fallback: bool,
+    wake: egui::Context,
+    tiles: VecDeque<TileKey>,
+}
+
+#[derive(Default)]
+struct Queue {
+    work: Option<Work>,
+    in_flight: Option<(Identity, TileKey, Arc<AtomicBool>)>,
+    closed: bool,
+}
+
+struct TileResult {
+    epoch: u64,
+    identity: Identity,
+    key: TileKey,
+    source: [u32; 2],
+    outcome: Result<PreparedPhoto, String>,
+    cancelled: bool,
+}
+
+/// One long-lived worker per viewport. Development inside a tile is already
+/// row-parallel, so one tile at a time keeps every core busy while letting a
+/// newer view take over between tiles.
+struct Worker {
+    queue: Arc<(Mutex<Queue>, Condvar)>,
+    results: mpsc::Receiver<TileResult>,
+}
+
+impl Worker {
+    fn start() -> std::io::Result<Self> {
+        let queue = Arc::new((Mutex::new(Queue::default()), Condvar::new()));
+        let (sender, results) = mpsc::channel();
+        let shared = Arc::clone(&queue);
+        std::thread::Builder::new()
+            .name("strehl-photo-tiles".into())
+            .spawn(move || run_worker(&shared, &sender))?;
+        Ok(Self { queue, results })
+    }
+    /// Replace the queue. A tile in flight continues only if still wanted.
+    /// Returns whether a tile in flight was cancelled.
+    fn post(&self, mut work: Work) -> bool {
+        let (lock, ready) = &*self.queue;
+        let mut queue = lock.lock().unwrap();
+        let mut cancelled = false;
+        if let Some((identity, key, cancel)) = &queue.in_flight {
+            if *identity == work.identity && work.tiles.contains(key) {
+                work.tiles.retain(|tile| tile != key);
+            } else if !cancel.swap(true, Ordering::Relaxed) {
+                cancelled = true;
+            }
+        }
+        queue.work = Some(work);
+        drop(queue);
+        ready.notify_one();
+        cancelled
+    }
+    /// Drop the queue and cancel the tile in flight.
+    fn stop(&self) -> bool {
+        let mut queue = self.queue.0.lock().unwrap();
+        queue.work = None;
+        queue
+            .in_flight
+            .as_ref()
+            .is_some_and(|(_, _, cancel)| !cancel.swap(true, Ordering::Relaxed))
+    }
+}
+
+impl Drop for Worker {
+    fn drop(&mut self) {
+        let (lock, ready) = &*self.queue;
+        if let Ok(mut queue) = lock.lock() {
+            queue.closed = true;
+            queue.work = None;
+            if let Some((_, _, cancel)) = &queue.in_flight {
+                cancel.store(true, Ordering::Relaxed);
+            }
+        }
+        ready.notify_all();
+    }
+}
+
+fn run_worker(queue: &(Mutex<Queue>, Condvar), results: &mpsc::Sender<TileResult>) {
+    let (lock, ready) = queue;
+    loop {
+        let (epoch, identity, key, job, presenter, retain_fallback, wake, cancel) = {
+            let mut guard = lock.lock().unwrap();
+            loop {
+                if guard.closed {
+                    return;
+                }
+                if let Some(work) = guard.work.as_mut()
+                    && let Some(key) = work.tiles.pop_front()
+                {
+                    let cancel = Arc::new(AtomicBool::new(false));
+                    let picked = (
+                        work.epoch,
+                        work.identity,
+                        key,
+                        work.job.clone(),
+                        work.presenter.clone(),
+                        work.retain_fallback,
+                        work.wake.clone(),
+                        Arc::clone(&cancel),
+                    );
+                    guard.in_flight = Some((work.identity, key, cancel));
+                    break picked;
+                }
+                guard = ready.wait(guard).unwrap();
+            }
+        };
+        let image = job.image(false);
+        let source = [image.width, image.height];
+        let outcome = std::panic::catch_unwind(AssertUnwindSafe(|| {
+            prepare_covered(
+                image,
+                job.recipe(),
+                key.request(source),
+                &cancel,
+                presenter.as_ref(),
+                (identity.hdr, retain_fallback, key.stride == 1),
+                job.coverage(),
+            )
+        }));
+        {
+            let mut guard = lock.lock().unwrap();
+            if guard
+                .in_flight
+                .as_ref()
+                .is_some_and(|(_, _, current)| Arc::ptr_eq(current, &cancel))
+            {
+                guard.in_flight = None;
+            }
+        }
+        let result = TileResult {
+            epoch,
+            identity,
+            key,
+            source,
+            cancelled: cancel.load(Ordering::Relaxed),
+            outcome: match outcome {
+                Ok(Ok(prepared)) => Ok(prepared),
+                Ok(Err(error)) => Err(format!("{error:#}")),
+                Err(_) => Err("Photo detail worker stopped before publishing its result".into()),
+            },
+        };
+        if results.send(result).is_err() {
+            return;
+        }
+        // A nonzero delay avoids egui's extra immediate pass.
+        request_paced_repaint(&wake, Duration::from_millis(1));
+    }
 }
 
 #[derive(Default)]
@@ -310,41 +701,81 @@ pub(super) struct ViewportRefinement {
     /// Develop's HDR/SDR switch: present an HDR photograph as SDR.
     pub prefer_sdr: bool,
     paint: Option<PhotoPaint>,
+    /// The published overview's identity; every cached tile shares it.
     identity: Option<Identity>,
+    /// The current identity and when it was first seen: detail waits for a
+    /// recipe to rest (a slider drag changes it every frame).
+    seen: Option<(Identity, Instant)>,
     desired: Option<Demand>,
+    /// The last change of detail level (zoom), which must settle.
     since: Option<Instant>,
-    pending: Option<Pending>,
-    failed: Option<(Identity, DisplayRegionRequest)>,
+    worker: Option<Worker>,
+    tiles: HashMap<TileKey, Tile>,
+    /// Posted to the worker and not yet returned, for `posted`'s identity.
+    outstanding: HashSet<TileKey>,
+    posted: Option<(Identity, Vec<TileKey>)>,
+    failed: HashSet<TileKey>,
+    /// Pixels waiting for an egui texture (no presenter: offscreen, tests).
+    staged: VecDeque<(TileKey, [u32; 2], PreparedPhoto)>,
+    /// When the view began to need tiles it does not have.
+    wanting: Option<Instant>,
+    epoch: u64,
+    frame: u64,
+    dirty: bool,
     jobs: u64,
     cancellations: u64,
     reuses: u64,
-    reveal_reused: u64,
-    reveal_restarted: u64,
+    evictions: u64,
     source_samples: u64,
     rendered_pixels: u64,
+    peak_bytes: u64,
     last_ms: f64,
+    last_sharp_ms: Option<f64>,
     last_publication_ms: f64,
     max_publication_ms: f64,
     last_error: Option<String>,
+    export: export::ExportView,
+    /// The device's texture limit, from the latest demand.
+    max_side: u32,
+    /// Tests shrink the cache budget; `None` is `CACHE_BYTES`.
+    #[cfg(test)]
+    budget: Option<u64>,
 }
 
 impl ViewportRefinement {
+    fn cache_budget(&self) -> u64 {
+        #[cfg(test)]
+        if let Some(budget) = self.budget {
+            return budget;
+        }
+        CACHE_BYTES
+    }
     pub fn reset(&mut self) {
+        self.export.reset();
         self.cancel();
         self.paint = None;
         self.identity = None;
+        self.seen = None;
         self.desired = None;
         self.since = None;
-        self.failed = None;
+        self.clear_tiles();
         self.last_error = None;
     }
     fn cancel(&mut self) {
-        if let Some(pending) = &self.pending
-            && !pending.task.is_cancelled()
-        {
-            pending.task.cancel();
+        let stopped = self.worker.as_ref().is_some_and(Worker::stop);
+        if stopped || !self.outstanding.is_empty() {
             self.cancellations += 1;
         }
+        self.outstanding.clear();
+        self.posted = None;
+    }
+    fn clear_tiles(&mut self) {
+        self.epoch += 1;
+        self.tiles.clear();
+        self.staged.clear();
+        self.failed.clear();
+        self.wanting = None;
+        self.dirty = true;
     }
     pub fn publish_overview(
         &mut self,
@@ -354,6 +785,8 @@ impl ViewportRefinement {
     ) -> TextureHandle {
         let publication = Instant::now();
         self.cancel();
+        // Tiles of another recipe generation can never be shown again.
+        self.clear_tiles();
         let texture = ctx.load_texture(
             "developed-overview",
             image.sdr.expect("Overview includes its SDR fallback"),
@@ -364,11 +797,12 @@ impl ViewportRefinement {
             overview: texture.clone(),
             presenter: self.presenter.clone(),
             layer: image.layer,
-            detail: None,
+            tiles: Arc::default(),
             hdr: id.hdr,
+            progress: None,
+            export: None,
         });
         self.identity = Some(id);
-        self.failed = None;
         self.last_ms = image.elapsed_ms;
         self.source_samples += image.source_samples;
         self.record_publication(publication);
@@ -382,35 +816,52 @@ impl ViewportRefinement {
         self.last_publication_ms = start.elapsed().as_secs_f64() * 1000.0;
         self.max_publication_ms = self.max_publication_ms.max(self.last_publication_ms);
     }
+    fn overview_enough(&self, demand: &Demand) -> bool {
+        self.paint
+            .as_ref()
+            .is_some_and(|p| demand.overview_enough(p.overview.size()))
+    }
+    fn has(&self, key: &TileKey) -> bool {
+        self.tiles.contains_key(key) || self.staged.iter().any(|(k, ..)| k == key)
+    }
+    /// The keys neither present nor failed, in their given order.
+    fn missing(&self, keys: impl IntoIterator<Item = TileKey>) -> Vec<TileKey> {
+        keys.into_iter()
+            .filter(|k| !self.has(k) && !self.failed.contains(k))
+            .collect()
+    }
     pub fn settled(&self) -> bool {
-        if self.pending.is_some() {
+        if !self.outstanding.is_empty() || !self.staged.is_empty() {
             return false;
+        }
+        if let Some(id) = self.identity
+            && !self.export.settled(id)
+        {
+            return false;
+        }
+        if let (Some(id), Some(demand)) = (self.identity, self.desired)
+            && self
+                .export
+                .paint(id)
+                .is_some_and(|export| export.covers(demand.aperture))
+        {
+            return true;
         }
         let Some(demand) = self.desired else {
             return true;
         };
-        if self.failed.is_some() && self.failed == self.identity.map(|id| (id, demand.request)) {
-            return true;
-        }
         let Some(paint) = &self.paint else {
             return false;
         };
-        let size = paint.overview.size();
-        let overview_enough =
-            (0..2).all(|i| size[i] as u32 >= demand.source[i].div_ceil(demand.request.stride));
-        let detail_enough = paint.detail.as_ref().is_some_and(|p| {
-            covers(
-                p.request,
-                demand.source,
-                demand.aperture,
-                demand.request.stride,
-            )
-        });
-        (overview_enough || detail_enough)
-            && paint
-                .detail
-                .as_ref()
-                .is_none_or(|p| p.published.elapsed() >= REVEAL)
+        if !self.overview_enough(&demand) && !self.missing(demand.keys(demand.visible)).is_empty() {
+            return false;
+        }
+        let now = Instant::now();
+        paint
+            .tiles
+            .iter()
+            .filter(|t| t.core.intersect(demand.aperture).is_positive())
+            .all(|t| now.saturating_duration_since(t.published) >= REVEAL)
     }
     pub fn refresh_display(&mut self, ctx: &egui::Context) {
         if self.presenter.as_mut().is_some_and(|p| p.poll()) {
@@ -447,44 +898,38 @@ impl ViewportRefinement {
             (visible.width() * pixels_per_point).ceil().max(1.0) as u32,
             (visible.height() * pixels_per_point).ceil().max(1.0) as u32,
         ];
-        // A non-native renderer still gets bounded refinement, with a smaller
-        // texture-transfer ceiling. The production wgpu path uploads off-thread.
-        let max_side = if self.presenter.is_some() {
-            max_side
-        } else {
-            max_side.min(1024)
-        };
-        let Some(request) = plan(source, aperture, physical, max_side) else {
+        let Some(stride) = target_stride(source, aperture, physical) else {
             self.desired = None;
             return;
         };
-        if self
-            .desired
-            .is_none_or(|previous| previous.request != request)
-        {
-            self.since = Some(Instant::now());
-            if self
-                .pending
-                .as_ref()
-                .is_some_and(|pending| !covers(pending.request, source, aperture, request.stride))
-            {
-                self.cancel();
-            }
-            if self
-                .paint
-                .as_ref()
-                .and_then(|p| p.detail.as_ref())
-                .is_some_and(|p| covers(p.request, source, aperture, request.stride))
-            {
-                self.reuses += 1;
-            }
-        }
-        self.desired = Some(Demand {
+        // Tiles and their apron stay within the device's texture limit.
+        self.max_side = max_side;
+        let side = TILE.min(max_side.saturating_sub(2)).max(16);
+        let next = Demand {
             aperture,
             physical,
             source,
-            request,
-        });
+            stride,
+            side,
+            visible: tile_range(source, aperture, stride, side),
+        };
+        match self.desired {
+            Some(previous) if previous.stride == next.stride && previous.side == next.side => {
+                if previous.visible != next.visible {
+                    // A pan onto tiles already cached (the prefetch ring).
+                    self.reuses += next
+                        .keys(next.visible)
+                        .filter(|k| !previous.shows(k) && self.tiles.contains_key(k))
+                        .count() as u64;
+                }
+            }
+            _ => {
+                // A new level waits for the zoom to rest.
+                self.since = Some(Instant::now());
+                self.dirty = true;
+            }
+        }
+        self.desired = Some(next);
     }
 
     pub fn poll_job(
@@ -493,254 +938,397 @@ impl ViewportRefinement {
         job: Option<DevelopmentJob>,
         current: Identity,
     ) {
-        if self
-            .pending
-            .as_ref()
-            .is_some_and(|pending| pending.identity != current)
-        {
+        self.frame += 1;
+        let now = Instant::now();
+        if self.seen.is_none_or(|(id, _)| id != current) {
+            self.seen = Some((current, now));
+        }
+        if self.posted.as_ref().is_some_and(|(id, _)| *id != current) {
             self.cancel();
         }
-        if let Some(pending) = &self.pending {
-            let result = pending.task.receiver.try_recv();
-            if !matches!(result, Err(std::sync::mpsc::TryRecvError::Empty)) {
-                let pending = self.pending.take().unwrap();
-                if pending.identity == current
-                    && self.identity == Some(current)
-                    && !pending.task.is_cancelled()
-                {
-                    let result = result.unwrap_or_else(|_| {
-                        Err("Photo detail worker stopped before publishing its result".into())
-                    });
-                    match result {
-                        Ok(image) => {
-                            let publication = Instant::now();
-                            let uv = Rect::from_min_max(
-                                Pos2::from(image.uv[0]),
-                                Pos2::from(image.uv[1]),
-                            );
-                            self.last_ms = image.elapsed_ms;
-                            self.source_samples += image.source_samples;
-                            self.rendered_pixels +=
-                                u64::from(image.size[0]) * u64::from(image.size[1]);
-                            if let Some(error) = image.upload_error {
-                                self.last_error = Some(error);
-                                self.failed = Some((current, pending.request));
-                                return;
-                            }
-                            let texture = image.sdr.map(|sdr| {
-                                ctx.load_texture(
-                                    "developed-detail",
-                                    sdr,
-                                    egui::TextureOptions::LINEAR,
-                                )
-                            });
-                            if let Some(paint) = &mut self.paint {
-                                // The identity checks above and atomic overview
-                                // replacement guarantee both patches share a recipe.
-                                let continued = paint.detail.as_ref().filter(|previous| {
-                                    continues_reveal(
-                                        previous,
-                                        pending.request,
-                                        uv,
-                                        self.desired.map(|demand| demand.aperture),
-                                    )
-                                });
-                                let published = if let Some(previous) = continued {
-                                    self.reveal_reused += 1;
-                                    previous.published
-                                } else {
-                                    self.reveal_restarted += 1;
-                                    Instant::now()
-                                };
-                                paint.detail = Some(Patch {
-                                    request: pending.request,
-                                    texture,
-                                    size: image.size,
-                                    layer: image.layer,
-                                    uv,
-                                    published,
-                                });
-                            }
-                            self.record_publication(publication);
-                            // This frame paints the publication. The worker already
-                            // woke it, and any active reveal schedules its next frame.
-                        }
-                        Err(error) => {
-                            self.failed = Some((current, pending.request));
-                            self.last_error = Some(error);
-                        }
+        self.receive(current);
+        self.upload_staged(ctx);
+        let ready = self.identity == Some(current);
+        self.export.poll(
+            ctx,
+            job.as_ref().filter(|_| ready && !current.before),
+            current,
+            self.seen.map_or(Duration::ZERO, |(_, at)| now - at),
+            self.presenter.as_ref(),
+            self.max_side,
+        );
+        let exported = self
+            .export
+            .paint(current)
+            .zip(self.desired)
+            .is_some_and(|(export, demand)| export.covers(demand.aperture));
+        let mut wanted = Vec::new();
+        let mut waiting = None;
+        let planning = self
+            .desired
+            .filter(|demand| job.is_some() && ready && !exported && !self.overview_enough(demand));
+        if planning.is_none() {
+            self.wanting = None;
+        }
+        if let Some(demand) = planning {
+            for key in demand.keys(demand.ring()) {
+                if let Some(tile) = self.tiles.get_mut(&key) {
+                    tile.used = self.frame;
+                }
+            }
+            let visible = self.missing(demand.ordered(demand.keys(demand.visible).collect()));
+            if visible.is_empty() {
+                if let Some(at) = self.wanting.take() {
+                    self.last_sharp_ms = Some((now - at).as_secs_f64() * 1000.0);
+                }
+            } else if self.wanting.is_none() {
+                self.wanting = Some(now);
+            }
+            let since = self.since.map_or(Duration::MAX, |at| now - at);
+            let rested = self.seen.map_or(Duration::ZERO, |(_, at)| now - at);
+            let settle = SETTLE.saturating_sub(since.min(rested));
+            if settle.is_zero() {
+                wanted = visible;
+                // Prefetch the ring only within the cache's budget.
+                let budget = self.view_bytes(&demand) + self.cache_budget();
+                let tile_bytes = u64::from(demand.side + 2).pow(2) * self.tile_texel_bytes(current);
+                let mut projected = self.cached_bytes() + wanted.len() as u64 * tile_bytes;
+                let ring = demand
+                    .keys(demand.ring())
+                    .filter(|k| !demand.shows(k))
+                    .collect();
+                for key in self.missing(demand.ordered(ring)) {
+                    if projected + tile_bytes > budget {
+                        break;
                     }
+                    projected += tile_bytes;
+                    wanted.push(key);
+                }
+            } else if !visible.is_empty() {
+                waiting = Some(settle);
+            }
+        }
+        if wanted.is_empty() {
+            if !self.outstanding.is_empty() {
+                // Nothing queued is wanted now (a new level, or the export
+                // preview covers the view).
+                self.cancel();
+            }
+        } else if self.posted.as_ref() != Some(&(current, wanted.clone()))
+            && let Some(job) = job
+        {
+            self.post(ctx, job, current, wanted);
+        }
+        self.evict();
+        self.refresh_paint(now);
+        if let Some(remaining) = waiting {
+            request_paced_repaint(
+                ctx,
+                if remaining.is_zero() {
+                    FRAME_DELAY
+                } else {
+                    remaining
+                },
+            );
+        }
+        if !self.staged.is_empty() {
+            ctx.request_repaint();
+        }
+    }
+
+    fn post(
+        &mut self,
+        ctx: &egui::Context,
+        job: DevelopmentJob,
+        identity: Identity,
+        tiles: Vec<TileKey>,
+    ) {
+        if self.worker.is_none() {
+            match Worker::start() {
+                Ok(worker) => self.worker = Some(worker),
+                Err(error) => {
+                    // Without a worker the overview stays; never retry per frame.
+                    self.last_error = Some(format!("Starting photo detail work: {error}"));
+                    self.failed.extend(tiles);
+                    return;
                 }
             }
         }
-        if let (Some(demand), Some(job)) = (self.desired, job) {
-            let source = job.image(false);
-            let overview_enough = self.paint.as_ref().is_some_and(|p| {
-                let size = p.overview.size();
-                size[0] as u32 >= source.width.div_ceil(demand.request.stride)
-                    && size[1] as u32 >= source.height.div_ceil(demand.request.stride)
-            });
-            let already = overview_enough
-                || self
-                    .paint
-                    .as_ref()
-                    .and_then(|p| p.detail.as_ref())
-                    .is_some_and(|patch| {
-                        covers(
-                            patch.request,
-                            [source.width, source.height],
-                            demand.aperture,
-                            demand.request.stride,
-                        )
-                    });
-            let settled = self.since.is_some_and(|at| at.elapsed() >= SETTLE);
-            if self.presenter.is_some()
-                && self.last_error.is_some()
-                && self.paint.as_ref().is_some_and(|p| p.layer.is_none())
+        let cancelled = self.worker.as_ref().unwrap().post(Work {
+            epoch: self.epoch,
+            identity,
+            job,
+            presenter: self.presenter.clone(),
+            retain_fallback: self.presenter.is_none(),
+            wake: ctx.clone(),
+            tiles: tiles.iter().copied().collect(),
+        });
+        if cancelled {
+            self.cancellations += 1;
+        }
+        self.outstanding = tiles.iter().copied().collect();
+        self.posted = Some((identity, tiles));
+    }
+
+    fn receive(&mut self, current: Identity) {
+        let Some(worker) = &self.worker else {
+            return;
+        };
+        let results = worker.results.try_iter().collect::<Vec<_>>();
+        for result in results {
+            if self
+                .posted
+                .as_ref()
+                .is_some_and(|(id, _)| *id == result.identity)
             {
-                self.failed = Some((current, demand.request));
+                self.outstanding.remove(&result.key);
             }
-            if self.pending.is_none()
-                && !already
-                && settled
-                && self.identity == Some(current)
-                && self.failed != Some((current, demand.request))
+            if result.cancelled
+                || result.epoch != self.epoch
+                || result.identity != current
+                || self.identity != Some(current)
             {
-                let request = demand.request;
-                let presenter = self.presenter.clone();
-                let wake = ctx.clone();
-                self.jobs += 1;
-                self.pending = Some(Pending {
-                    identity: current,
-                    request,
-                    task: spawn_notifying_task(
-                        "strehl-photo-detail",
-                        move |cancelled| {
-                            prepare_job(
-                                &job,
-                                false,
-                                request,
-                                &cancelled,
-                                presenter.as_ref(),
-                                current.hdr,
-                                false,
-                            )
-                        },
-                        move || {
-                            // Pixels (or disconnect) are available before this one-shot
-                            // wake. A nonzero delay avoids egui's extra immediate pass.
-                            request_paced_repaint(&wake, Duration::from_millis(1));
-                        },
-                    ),
-                });
+                continue;
             }
-            if self.pending.is_none() && !already && self.failed != Some((current, demand.request))
-            {
-                let remaining = self
-                    .since
-                    .map_or(SETTLE, |at| SETTLE.saturating_sub(at.elapsed()));
-                request_paced_repaint(
-                    ctx,
-                    if remaining.is_zero() {
-                        FRAME_DELAY
+            match result.outcome {
+                Ok(image) => {
+                    self.jobs += 1;
+                    self.last_ms = image.elapsed_ms;
+                    self.source_samples += image.source_samples;
+                    self.rendered_pixels += u64::from(image.size[0]) * u64::from(image.size[1]);
+                    if let Some(error) = image.upload_error {
+                        self.last_error = Some(error);
+                        self.failed.insert(result.key);
+                    } else if image.layer.is_some() {
+                        let publication = Instant::now();
+                        self.insert(result.key, result.source, image, None);
+                        self.record_publication(publication);
                     } else {
-                        remaining
-                    },
-                );
+                        self.staged.push_back((result.key, result.source, image));
+                    }
+                }
+                Err(error) => {
+                    self.failed.insert(result.key);
+                    self.last_error = Some(error);
+                }
             }
         }
     }
 
-    #[cfg(test)]
-    fn poll(
+    fn upload_staged(&mut self, ctx: &egui::Context) {
+        for _ in 0..FALLBACK_UPLOADS {
+            let Some((key, source, mut image)) = self.staged.pop_front() else {
+                break;
+            };
+            let publication = Instant::now();
+            let texture = image.sdr.take().map(|sdr| {
+                ctx.load_texture(
+                    "developed-detail",
+                    sdr,
+                    egui::TextureOptions {
+                        magnification: if key.stride == 1 {
+                            egui::TextureFilter::Nearest
+                        } else {
+                            egui::TextureFilter::Linear
+                        },
+                        ..egui::TextureOptions::LINEAR
+                    },
+                )
+            });
+            self.insert(key, source, image, texture);
+            self.record_publication(publication);
+        }
+    }
+
+    fn insert(
         &mut self,
-        ctx: &egui::Context,
-        source: Option<Arc<LinearImage>>,
-        recipe: &DevelopmentRecipe,
-        current: Identity,
+        key: TileKey,
+        source: [u32; 2],
+        image: PreparedPhoto,
+        texture: Option<TextureHandle>,
     ) {
-        self.poll_job(
-            ctx,
-            source.map(|source| DevelopmentJob::native(source, recipe.clone())),
-            current,
+        let Some(id) = self.identity else {
+            return;
+        };
+        let bytes = u64::from(image.size[0]) * u64::from(image.size[1]) * self.tile_texel_bytes(id);
+        self.tiles.insert(
+            key,
+            Tile {
+                request: key.request(source),
+                core: key.core_uv(source),
+                uv: Rect::from_min_max(Pos2::from(image.uv[0]), Pos2::from(image.uv[1])),
+                size: image.size,
+                texture,
+                layer: image.layer,
+                bytes,
+                published: Instant::now(),
+                used: self.frame,
+            },
         );
+        self.peak_bytes = self.peak_bytes.max(self.cached_bytes());
+        self.dirty = true;
+    }
+
+    /// Bytes per texel of a tile: its GPU texture, plus the CPU copy egui
+    /// keeps of its own textures when no presenter uploads them.
+    fn tile_texel_bytes(&self, id: Identity) -> u64 {
+        texel_bytes(id) + if self.presenter.is_none() { 4 } else { 0 }
+    }
+    fn cached_bytes(&self) -> u64 {
+        self.tiles.values().map(|t| t.bytes).sum()
+    }
+    fn view_bytes(&self, demand: &Demand) -> u64 {
+        demand
+            .keys(demand.visible)
+            .filter_map(|k| self.tiles.get(&k))
+            .map(|t| t.bytes)
+            .sum()
+    }
+
+    /// Least recently wanted first, never a tile the view shows.
+    fn evict(&mut self) {
+        let Some(demand) = self.desired else {
+            return;
+        };
+        let budget = self.view_bytes(&demand) + self.cache_budget();
+        let mut total = self.cached_bytes();
+        if total <= budget {
+            return;
+        }
+        let mut candidates = self
+            .tiles
+            .iter()
+            .filter(|(k, _)| !demand.shows(k))
+            .map(|(k, t)| (t.used, *k, t.bytes))
+            .collect::<Vec<_>>();
+        candidates.sort_unstable_by_key(|(used, ..)| *used);
+        for (_, key, bytes) in candidates {
+            if total <= budget {
+                break;
+            }
+            self.tiles.remove(&key);
+            total -= bytes;
+            self.evictions += 1;
+            self.dirty = true;
+        }
+    }
+
+    fn refresh_paint(&mut self, now: Instant) {
+        // Only while the view itself lacks detail, and not for quick work.
+        let progress = self.desired.and_then(|demand| {
+            let pending = self.wanting.is_some_and(|at| now - at >= QUIET);
+            pending.then(|| {
+                let total = demand.keys(demand.visible).count().max(1);
+                let missing = self.missing(demand.keys(demand.visible)).len();
+                (total - missing.min(total)) as f32 / total as f32
+            })
+        });
+        let progress = progress.or_else(|| self.export.progress());
+        let export = self.identity.and_then(|id| self.export.paint(id));
+        let Some(paint) = &mut self.paint else {
+            return;
+        };
+        paint.progress = progress;
+        paint.export = export;
+        if !std::mem::take(&mut self.dirty) {
+            return;
+        }
+        // The wanted level, coarser levels while it arrives, and one finer
+        // level just zoomed out of: never minified by more than 2x.
+        let stride = self.desired.map_or(1, |d| d.stride);
+        let mut tiles = self
+            .tiles
+            .iter()
+            .filter(|(k, _)| k.stride * 2 >= stride && k.stride <= stride * 8)
+            .map(|(k, t)| TilePaint {
+                stride: k.stride,
+                core: t.core,
+                uv: t.uv,
+                size: t.size,
+                texture: t.texture.clone(),
+                layer: t.layer.clone(),
+                published: t.published,
+            })
+            .collect::<Vec<_>>();
+        tiles.sort_by_key(|t| std::cmp::Reverse(t.stride));
+        paint.tiles = Arc::new(tiles);
+    }
+
+    /// Export: the preset's request, or `None` on Develop.
+    pub fn want_export(&mut self, request: Option<ExportRequest>) {
+        self.export.want(request);
+    }
+    /// Output pixels per source pixel while the export's own pixels show.
+    pub fn export_scale(&self) -> Option<f32> {
+        self.identity.and_then(|id| self.export.output_scale(id))
+    }
+    /// The shown export already contains its burned-in scale bar.
+    pub fn export_burns_scale_bar(&self) -> bool {
+        self.identity
+            .is_some_and(|id| self.export.burns_scale_bar(id))
     }
 
     pub fn stats(&self) -> serde_json::Value {
         let rect = |r: Rect| [[r.min.x, r.min.y], [r.max.x, r.max.y]];
-        serde_json::json!({
-            "requested": self.desired.map(|d| serde_json::json!({"uv":rect(d.aperture),"physical_pixels":d.physical,"stride":d.request.stride})),
-            "published": self.paint.as_ref().and_then(|p| p.detail.as_ref()).map(|p| serde_json::json!({
-                "uv":rect(p.uv), "pixels":p.size, "stride":p.request.stride,
+        // Published: detail at the wanted level covering the whole view.
+        let published = self.desired.and_then(|demand| {
+            if !self.missing(demand.keys(demand.visible)).is_empty() {
+                return None;
+            }
+            let tiles = self
+                .tiles
+                .iter()
+                .filter(|(k, t)| k.stride == demand.stride && t.core.intersects(demand.aperture))
+                .map(|(_, t)| t)
+                .collect::<Vec<_>>();
+            let first = tiles.first()?;
+            let (uv, min, max) = tiles.iter().fold(
+                (first.core, first.request.min, first.request.max),
+                |(uv, min, max), t| {
+                    (
+                        uv.union(t.core),
+                        [min[0].min(t.request.min[0]), min[1].min(t.request.min[1])],
+                        [max[0].max(t.request.max[0]), max[1].max(t.request.max[1])],
+                    )
+                },
+            );
+            let pixels = [0, 1].map(|i| (max[i] - min[i]).div_ceil(demand.stride));
+            Some(serde_json::json!({
+                "uv":rect(uv), "pixels":pixels, "stride":demand.stride, "tiles":tiles.len(),
                 "revision":self.identity.map(|i|i.revision),"before":self.identity.map(|i|i.before)
+            }))
+        });
+        serde_json::json!({
+            "requested": self.desired.map(|d| serde_json::json!({
+                "uv":rect(d.aperture),"physical_pixels":d.physical,"stride":d.stride,
+                "tiles":d.keys(d.visible).count(),"overview_enough":self.overview_enough(&d)
             })),
+            "published": published,
             "jobs":self.jobs,"cancelled":self.cancellations,"cache_reuses":self.reuses,
-            "reveal_reused":self.reveal_reused,"reveal_restarted":self.reveal_restarted,
-            "source_samples":self.source_samples,"refined_pixels":self.rendered_pixels,"last_development_ms":self.last_ms,
+            "tiles_cached":self.tiles.len(),"cache_bytes":self.cached_bytes(),
+            "peak_cache_bytes":self.peak_bytes,"evictions":self.evictions,
+            "failed_tiles":self.failed.len(),
+            "source_samples":self.source_samples,"refined_pixels":self.rendered_pixels,
+            "last_development_ms":self.last_ms,"last_sharp_ms":self.last_sharp_ms,
             "last_publication_ms":self.last_publication_ms,"max_publication_ms":self.max_publication_ms,
-            "pending":self.pending.is_some(),
+            "pending":!self.outstanding.is_empty(),
             "settled":self.settled(),
             "last_error":self.last_error,
             "hdr_pixels":self.identity.is_some_and(|id|id.hdr),
+            "export":self.identity.map(|id| self.export.stats(id)),
             "display":self.presenter.as_ref().map(|p|p.status())
         })
     }
 }
 
-fn covers(request: DisplayRegionRequest, source: [u32; 2], aperture: Rect, stride: u32) -> bool {
-    request.stride <= stride
-        && (0..2).all(|i| {
-            request.min[i] as f32 <= aperture.min[i] * source[i] as f32 + 0.01
-                && request.max[i] as f32 >= aperture.max[i] * source[i] as f32 - 0.01
-        })
-}
-
-fn plan(
-    source: [u32; 2],
-    aperture: Rect,
-    physical: [u32; 2],
-    max_side: u32,
-) -> Option<DisplayRegionRequest> {
-    if source.contains(&0) || !aperture.is_positive() || !aperture.is_finite() {
-        return None;
-    }
-    let native = [
-        aperture.width() * source[0] as f32,
-        aperture.height() * source[1] as f32,
-    ];
-    let ratio = (native[0] / physical[0].max(1) as f32).min(native[1] / physical[1].max(1) as f32);
-    let mut stride = 1u32;
-    while (stride * 2) as f32 <= ratio && stride < 32768 {
-        stride *= 2;
-    }
-    loop {
-        // Retain enough surrounding detail for a pan, but spend the budget on
-        // visible resolution first. Padding must never force a coarser LOD.
-        for padding in [0.35, 0.12, 0.0] {
-            // With no cache margin, discard the extra 32-bin snap as well;
-            // otherwise its rounding alone could reduce visible resolution.
-            let grid = if padding > 0.0 { stride * 32 } else { stride };
-            let min = std::array::from_fn(|i| {
-                let at = (aperture.min[i] * source[i] as f32 - native[i] * padding).max(0.0) as u32;
-                at / grid * grid
-            });
-            let max = std::array::from_fn(|i| {
-                let at = (aperture.max[i] * source[i] as f32 + native[i] * padding)
-                    .ceil()
-                    .min(source[i] as f32) as u32;
-                at.div_ceil(grid).saturating_mul(grid).min(source[i])
-            });
-            let size: [u32; 2] = std::array::from_fn(|i| (max[i] - min[i]).div_ceil(stride));
-            if size.iter().all(|&n| n <= max_side.clamp(1, MAX_PATCH_SIDE))
-                && u64::from(size[0]) * u64::from(size[1]) <= MAX_PATCH_PIXELS
-            {
-                return Some(DisplayRegionRequest { min, max, stride });
-            }
-        }
-        stride = stride.checked_mul(2)?;
-    }
+fn texel_bytes(id: Identity) -> u64 {
+    if id.hdr { 16 } else { 4 }
 }
 
 #[cfg(test)]
 #[path = "photo-viewport-tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "photo-viewport-bench.rs"]
+mod bench;

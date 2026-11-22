@@ -539,7 +539,8 @@ impl ProcessTheater {
     pub(crate) fn set_photo_view(&mut self, center: Pos2, zoom: f32) {
         let before = self.exploration();
         self.resume_live();
-        self.scales.set_view(center, zoom.clamp(1.0, 8.0));
+        self.scales
+            .set_view(center, zoom.clamp(1.0, self.scales.max_zoom()));
         self.pin = self.scales.pin();
         self.requested_view = Some((center, zoom));
         self.remember(before);
@@ -2755,6 +2756,13 @@ impl ProcessTheater {
         }
         let photo = self.hero.as_ref().unwrap();
         let image = fit(photo.plate.extent, image_box);
+        if self.photograph_only {
+            // Develop and Export: zoom on to 1600 % of the photograph's own
+            // pixels, however large the master is against the canvas.
+            let scene = image.width() / photo.plate.extent.x.max(1.0);
+            let native = (ui.ctx().pixels_per_point() * scene).max(1e-6).recip();
+            self.scales.set_max_zoom(native * 16.0);
+        }
         let aperture = self.scales.aperture();
         let full_size = image.size() / aperture.size();
         self.edit_mapping = Some((

@@ -10,6 +10,7 @@ are not in Git). Prints chrome measurements from the application render: the hei
 bar and hint bar and the inspector's left edge, found by scanning for the theme's hairlines.
 """
 import argparse
+import json
 import os
 import shutil
 import subprocess
@@ -35,6 +36,19 @@ ROUTES = {
     "engine": (["--open-run", RUN, "--route", "engine"], "engine-room.png"),
     "develop": (["--open-run", RUN, "--route", "develop"], "develop.png"),
     "export": (["--open-run", RUN, "--route", "export"], "export.png"),
+    # Zoomed views (g-zoom): --photo-scale is screen pixels per master pixel.
+    "develop-100": (["--open-run", RUN, "--route", "develop", "--photo-scale", "1",
+                     "--photo-center", "0.45,0.42"], "develop.png"),
+    "develop-400": (["--open-run", RUN, "--route", "develop", "--photo-scale", "4",
+                     "--photo-center", "0.45,0.42"], "develop.png"),
+    "develop-50": (["--open-run", RUN, "--route", "develop", "--photo-scale", "0.5",
+                    "--photo-center", "0.45,0.42"], "develop.png"),
+    # The Web preset's 2560-px output at its own 100 % (2560 / 7032 of the master),
+    # and at 400 % of its pixels.
+    "export-actual": (["--open-run", RUN, "--route", "export", "--photo-scale", "0.36405",
+                       "--photo-center", "0.45,0.42"], "export.png"),
+    "export-400": (["--open-run", RUN, "--route", "export", "--photo-scale", "1.4562",
+                    "--photo-center", "0.45,0.42"], "export.png"),
     "capture": (["--route", "capture"], "capture-plan.png"),
     # The Capture station from fabricated states: no camera host is reached.
     "capture-plan": (["--route", "capture", "--capture-fixture", "plan"], "capture-plan.png"),
@@ -159,6 +173,8 @@ def main():
     parser.add_argument("--out", required=True, type=Path)
     parser.add_argument("--reference", type=Path, default=REFERENCE)
     parser.add_argument("--size", default="1680x1050", help="window size, e.g. 1280x800")
+    parser.add_argument("--run", help="open this copy of the render folder instead (the catalog copy "
+                                      "is pointed at it, so nothing is written beside the original)")
     parser.add_argument("names", nargs="*")
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
@@ -171,6 +187,11 @@ def main():
                 stale.unlink()
         catalog = args.out / f"{name}.projects.json"
         shutil.copyfile(catalog_source, catalog)
+        if args.run:
+            text = catalog.read_text(encoding="utf-8")
+            catalog.write_text(text.replace(json.dumps(RUN)[1:-1], json.dumps(args.run)[1:-1]),
+                               encoding="utf-8")
+            extra = [args.run if part == RUN else part for part in extra]
         # A fresh capture settings path keeps every route away from the owner's rig.
         settings = args.out / f"{name}.capture.json"
         if settings.exists():
