@@ -54,6 +54,14 @@ pub trait Camera: Send {
     fn finish_transfers(&mut self) -> Result<()> {
         Ok(())
     }
+    /// Continues an ended run (h-retake: retakes after the capture): its
+    /// journal at `directory`, `frames` RAWs and `planes` planes recorded so
+    /// far, so new files take the next names and a retake keeps its plane's
+    /// number.
+    fn resume_run(&mut self, directory: &Path, frames: usize, planes: usize) -> Result<()> {
+        let _ = (frames, planes);
+        self.sync_journal(directory)
+    }
     /// Error correction: the PC checker's verdict on a captured group (its
     /// camera group id, or its frame name for a single shot). `None` while
     /// it is pending; an error when this backend or receiver cannot answer.
@@ -649,6 +657,193 @@ pub fn demo_image(focus: u16, width: u32, height: u32) -> RgbImage {
             (light * 130.0) as u8,
         ])
     })
+}
+
+/// A simulated four-shot camera storing to the PC (tests): planes numbered
+/// as `PcCamera` numbers them (a retake keeps its plane's number; a resumed
+/// run continues its names), and a scripted checker.
+#[cfg(test)]
+pub(crate) mod sim {
+    use super::*;
+    use std::sync::{
+        Mutex,
+        atomic::{AtomicU8, Ordering},
+    };
+
+    /// How the checker judges one try.
+    #[derive(Clone, Copy, Debug)]
+    pub(crate) enum Fail {
+        /// Fails and asks for a retake ("witness tiles disagree locally").
+        Retake,
+        /// Fails and does not ask (the shift-pattern rule).
+        Kept,
+    }
+
+    pub(crate) struct PcSim {
+        pub demo: Demo,
+        /// `(plane, try)` -> how it fails; every other try passes.
+        pub fail: Vec<((u64, usize), Fail)>,
+        /// Each group taken: its plane and identity, in order.
+        pub groups: Vec<(u64, String)>,
+        pub focuses: Vec<u16>,
+        pub asked: Vec<String>,
+        planes: usize,
+        ordinal: usize,
+        retake: Option<u64>,
+        repeat: bool,
+        /// At its n-th capture (from 1): queue these manual retakes into the
+        /// shared state, as a desktop's request would.
+        pub inject: Vec<(usize, Vec<u64>, Arc<Mutex<crate::worker::Snapshot>>)>,
+        /// At its n-th capture: request Stop.
+        pub stop_at: Option<(usize, Arc<AtomicU8>)>,
+        /// Each verdict is pending for this many asks first.
+        pub late: usize,
+    }
+
+    impl PcSim {
+        pub fn new(fail: Vec<((u64, usize), Fail)>) -> Self {
+            Self {
+                demo: Demo {
+                    shots: 4,
+                    delay_ms: 2,
+                    ..Demo::default()
+                },
+                fail,
+                groups: Vec::new(),
+                focuses: Vec::new(),
+                asked: Vec::new(),
+                planes: 0,
+                ordinal: 0,
+                retake: None,
+                repeat: false,
+                inject: Vec::new(),
+                stop_at: None,
+                late: 0,
+            }
+        }
+        /// The tries of `plane` taken, in order.
+        pub fn tries(&self, plane: u64) -> usize {
+            self.groups.iter().filter(|(p, _)| *p == plane).count()
+        }
+    }
+
+    impl Camera for PcSim {
+        fn identity(&self) -> Value {
+            self.demo.identity()
+        }
+        fn status(&mut self) -> Result<Value> {
+            let mut s = self.demo.status()?;
+            s["capture_destination"] = json!("host-pc");
+            s["raw_max_bytes"] = json!(crate::ptp::MEMBER_LIMIT);
+            Ok(s)
+        }
+        fn configure(&mut self) -> Result<()> {
+            Ok(())
+        }
+        fn set_pixel_shift(&mut self, shots: usize) -> Result<()> {
+            self.demo.set_pixel_shift(shots)
+        }
+        fn set_exposure(&mut self, iso: u64, shutter: u64) -> Result<()> {
+            self.demo.set_exposure(iso, shutter)
+        }
+        fn focus(&mut self, target: u16, settle_ms: u32) -> Result<Value> {
+            self.focuses.push(target);
+            self.demo.focus(target, settle_ms)
+        }
+        fn capture(&mut self, _: u32) -> Result<Value> {
+            let plane = match self
+                .retake
+                .take()
+                .filter(|p| (1..=self.planes as u64).contains(p))
+            {
+                Some(p) => {
+                    self.repeat = false;
+                    p
+                }
+                None => {
+                    if !std::mem::take(&mut self.repeat) || self.planes == 0 {
+                        self.planes += 1;
+                    }
+                    self.planes as u64
+                }
+            };
+            let group = format!("ptp-sim-{}", self.groups.len() + 1);
+            let files: Vec<_> = (1..=4)
+                .map(|k| json!({"name":format!("frame-{:06}.ARW",self.ordinal+k),"bytes":122_968_064,
+                    "sha256":"a".repeat(64),"durable":false,"plane":plane,"group_id":group,"member_index":k,"members":4}))
+                .collect();
+            self.ordinal += 4;
+            self.groups.push((plane, group));
+            let n = self.groups.len();
+            for (at, planes, shared) in &self.inject {
+                if *at == n {
+                    let mut v = shared.lock().unwrap();
+                    v.retake_queue.extend(planes.iter().copied());
+                }
+            }
+            if let Some((at, control)) = &self.stop_at
+                && *at == n
+            {
+                control.store(crate::worker::STOP, Ordering::SeqCst);
+            }
+            Ok(
+                json!({"destination":"host-pc-queue","completion":"ram-queued-sha256","file_verification":"ram-sha256",
+                "raw_compression":"uncompressed","pixel_shift_shots":4,"group_complete":true,"files":files,
+                "camera_reply":{"completion":"ptp-group-complete","group_idle":true,"buffer_empty":true}}),
+            )
+        }
+        fn preview(&mut self) -> Result<Preview> {
+            self.demo.preview()
+        }
+        fn magnify(&mut self, _: u32, _: u16, _: u16) -> Result<()> {
+            Ok(())
+        }
+        fn disconnect(&mut self) -> Result<Value> {
+            self.demo.disconnect()
+        }
+        fn resume_run(&mut self, _: &Path, frames: usize, planes: usize) -> Result<()> {
+            self.ordinal = frames;
+            self.planes = planes;
+            self.retake = None;
+            self.repeat = false;
+            Ok(())
+        }
+        fn verdict(&mut self, group: &str) -> Result<Option<Value>> {
+            self.asked.push(group.to_owned());
+            if self.asked.iter().filter(|g| *g == group).count() <= self.late {
+                return Ok(None);
+            }
+            let Some(index) = self.groups.iter().position(|(_, g)| g == group) else {
+                return Ok(None);
+            };
+            let plane = self.groups[index].0;
+            let attempt = self.groups[..=index]
+                .iter()
+                .filter(|(p, _)| *p == plane)
+                .count();
+            let fail = self
+                .fail
+                .iter()
+                .find(|(k, _)| *k == (plane, attempt))
+                .map(|(_, f)| *f);
+            Ok(Some(match fail {
+                None => json!({"state":"checked","verdict":"pass","retake":false}),
+                Some(Fail::Retake) => json!({"state":"checked","verdict":"demote","retake":true,
+                    "reason":"witness tiles disagree locally"}),
+                Some(Fail::Kept) => json!({"state":"checked","verdict":"demote","retake":false,
+                    "reason":"offsets do not cover the four CFA parities"}),
+            }))
+        }
+        fn repeat_plane(&mut self) {
+            self.repeat = true;
+        }
+        fn retake_plane(&mut self, plane: Option<u64>) {
+            match plane {
+                Some(p) => self.retake = Some(p),
+                None => self.repeat = true,
+            }
+        }
+    }
 }
 
 #[cfg(test)]

@@ -13,12 +13,16 @@
 //!
 //! Retakes are the host's error correction (`strehl_capture::worker`): a
 //! group the PC's checker demotes with `retake: true` is taken again after
-//! the next plane, at most [`MAX_RETAKES`] times; the plane's last group is
-//! the one the stack uses, folded to its first shot when it failed.
+//! the next plane, at most the run's own number of times (the host's
+//! `retakes.max`, 2 on an older host); the plane's last group is the one the
+//! stack uses, folded to its first shot when it failed. A plane left from
+//! one shot can be retaken by hand ("Retake" on its row), during the capture
+//! or after it; a run of such planes too long for the calibrated overlap is
+//! named above the feed with what it costs and "Retake planes A–B"
+//! (h-retake: [`risk_spans`], [`RiskSpan`]).
 use std::{collections::VecDeque, sync::Arc, time::Instant};
 
 use eframe::egui::{self, Align2, Rect, Sense, TextureId, Ui};
-use strehl_capture::worker::MAX_RETAKES;
 
 use super::follow::{FeedItem, Progress, Tally, Verdict};
 use super::rail::{FlightTicks, TickState};
@@ -278,7 +282,9 @@ pub(crate) fn health(s: &Snapshot, progress: Option<&Progress>, checking: bool) 
     };
     let checks = match (progress, checking) {
         (Some(p), _) => {
-            let t = &p.tally;
+            let mut t = p.tally;
+            t.resolve(host.max_retakes() as usize);
+            let t = &t;
             let mut text = format!("{} checked", count(p.checked, "plane", "planes"));
             if t.first_try > 0 {
                 text.push_str(&format!(" · {} passed first time", t.first_try));
@@ -479,6 +485,23 @@ impl Failure {
             _ => "Not retaken: a retake fails the same way.",
         }
     }
+    /// [`Self::policy`], its "up to two times" said with the run's own
+    /// limit (h-retake).
+    pub fn policy_for(self, max: u32) -> String {
+        let times = match max {
+            0 => "never (retakes are set to 0)".to_owned(),
+            1 => "up to once".to_owned(),
+            2 => "up to two times".to_owned(),
+            n => format!("up to {n} times"),
+        };
+        let policy = self.policy();
+        if max == 0
+            && let Some(rest) = policy.strip_prefix("Retaken, up to two times: ")
+        {
+            return format!("Retaken never (retakes are set to 0), though {rest}");
+        }
+        policy.replacen("up to two times", &times, 1)
+    }
     /// Whether the checker asks for a retake of this failure, and why.
     pub fn policy(self) -> &'static str {
         match self {
@@ -544,12 +567,37 @@ impl RowSize {
 }
 
 /// What the feed's rows depend on besides the items.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(crate) struct FeedContext {
     /// The host retakes what the checker asks (error correction is on).
     pub error_correction: bool,
     /// The capture has ended: a retake asked for will not come.
     pub ended: bool,
+    /// Error correction's retakes of a plane in this run (h-retake).
+    pub max_retakes: u32,
+    /// The host takes retakes asked for by hand (h-retake).
+    pub manual: bool,
+}
+
+impl Default for FeedContext {
+    fn default() -> Self {
+        Self {
+            error_correction: false,
+            ended: false,
+            max_retakes: strehl_capture::worker::MAX_RETAKES as u32,
+            manual: false,
+        }
+    }
+}
+
+/// What a row offers for retaking its plane by hand (h-retake).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum RetakeOffer {
+    None,
+    /// "Retake": the plane's last try failed and nothing will retake it.
+    Offer,
+    /// Asked for; not taken yet.
+    Queued,
 }
 
 /// One feed row in words.
@@ -564,10 +612,22 @@ pub(crate) struct FeedRow {
     /// The whole story, with the policy and the engine's own reason.
     pub tip: String,
     pub size: RowSize,
+    /// Retake by hand (h-retake).
+    pub retake: RetakeOffer,
 }
 
 /// The feed's row for `item`; `next`: the plane's next try, once checked.
 pub(crate) fn feed_row(item: &FeedItem, next: Option<&FeedItem>, cx: FeedContext) -> FeedRow {
+    feed_row_with(item, next, cx, false)
+}
+
+/// [`feed_row`], with whether the plane's retake by hand is `queued`.
+pub(crate) fn feed_row_with(
+    item: &FeedItem,
+    next: Option<&FeedItem>,
+    cx: FeedContext,
+    queued: bool,
+) -> FeedRow {
     let size = RowSize::of(item);
     let single = item.verdict == Verdict::Decoded || item.members == 1;
     let what = if single {
@@ -592,6 +652,7 @@ pub(crate) fn feed_row(item: &FeedItem, next: Option<&FeedItem>, cx: FeedContext
                     item.plane
                 ),
                 size,
+                retake: RetakeOffer::None,
             }
         } else {
             FeedRow {
@@ -601,10 +662,11 @@ pub(crate) fn feed_row(item: &FeedItem, next: Option<&FeedItem>, cx: FeedContext
                 detail: String::new(),
                 tip: format!("Plane {}: {}.", item.plane, what.to_lowercase()),
                 size,
+                retake: RetakeOffer::None,
             }
         };
     };
-    let tries_left = (MAX_RETAKES as u32 + 1).saturating_sub(item.attempt);
+    let tries_left = (cx.max_retakes + 1).saturating_sub(item.attempt);
     // The status says what the stack gets: a retake (to come or taken), or
     // this try's first shot.
     let (mark, status, then) = if failure == Failure::Missing {
@@ -620,6 +682,12 @@ pub(crate) fn feed_row(item: &FeedItem, next: Option<&FeedItem>, cx: FeedContext
             "retaken",
             format!("Retaken: try {} {outcome}.", n.attempt),
         )
+    } else if item.retake && cx.max_retakes == 0 && item.attempt == 1 && cx.error_correction {
+        (
+            Mark::Bad,
+            "one shot",
+            "Not retaken: retakes are set to 0.".to_owned(),
+        )
     } else if item.retake && tries_left == 0 {
         (
             Mark::Bad,
@@ -633,7 +701,7 @@ pub(crate) fn feed_row(item: &FeedItem, next: Option<&FeedItem>, cx: FeedContext
             format!(
                 "Taking it again (try {} of {}).",
                 item.attempt + 1,
-                MAX_RETAKES + 1
+                cx.max_retakes + 1
             ),
         )
     } else if item.retake {
@@ -646,9 +714,32 @@ pub(crate) fn feed_row(item: &FeedItem, next: Option<&FeedItem>, cx: FeedContext
     } else {
         (Mark::Bad, "one shot", failure.not_retaken().to_owned())
     };
+    // Nothing else will take it again: it may be retaken by hand.
+    let open = next.is_none() && matches!(status, "one shot" | "incomplete");
+    let retake = if !open || !cx.manual {
+        RetakeOffer::None
+    } else if queued {
+        RetakeOffer::Queued
+    } else {
+        RetakeOffer::Offer
+    };
+    let (mark, status, then) = if retake == RetakeOffer::Queued {
+        (
+            Mark::Warn,
+            "queued",
+            if cx.ended {
+                "Retake asked for.".to_owned()
+            } else {
+                "Retake asked for: taken between planes.".to_owned()
+            },
+        )
+    } else {
+        (mark, status, then)
+    };
     let stacked = match status {
         "one shot" => "\nThe stack uses this try's first shot: one shot's detail there, not four.",
         "retaken" | "retaking" => "\nThe stack uses the plane's last try.",
+        "queued" => "\nThe stack uses the plane's newest try: the retake, once taken.",
         _ => "",
     };
     let title = if item.attempt > 1 {
@@ -657,12 +748,16 @@ pub(crate) fn feed_row(item: &FeedItem, next: Option<&FeedItem>, cx: FeedContext
         failure.title().to_owned()
     };
     let detail = format!("{} {then}", failure.cause());
+    let by_hand = match retake {
+        RetakeOffer::Offer => "\nRetake takes this plane again by hand.",
+        _ => "",
+    };
     let tip = format!(
-        "Plane {}, try {}: {}\n{then}{stacked}\n{}{engine}",
+        "Plane {}, try {}: {}\n{then}{stacked}{by_hand}\n{}{engine}",
         item.plane,
         item.attempt,
         failure.cause(),
-        failure.policy()
+        failure.policy_for(cx.max_retakes)
     );
     FeedRow {
         mark,
@@ -671,6 +766,7 @@ pub(crate) fn feed_row(item: &FeedItem, next: Option<&FeedItem>, cx: FeedContext
         detail,
         tip,
         size,
+        retake,
     }
 }
 
@@ -772,6 +868,380 @@ pub(crate) fn failure_kinds(feed: &[FeedItem]) -> Vec<KindCount> {
     kinds
 }
 
+// ----- retakes by hand and the stack's coverage (h-retake) ------------------
+
+/// The feed's context from the view's inputs.
+pub(crate) fn feed_context(inputs: &FlightInputs<'_>) -> FeedContext {
+    let host = &inputs.s.host;
+    FeedContext {
+        error_correction: host.error_correction == Some(true),
+        ended: inputs.ended,
+        max_retakes: host.max_retakes(),
+        manual: host.takes_manual_retakes() && inputs.s.fresh(),
+    }
+}
+
+/// Each plane's newest checked try, by plane: `feed`'s last item of it.
+fn newest_tries(feed: &[FeedItem]) -> std::collections::BTreeMap<u64, &FeedItem> {
+    let mut newest = std::collections::BTreeMap::new();
+    for (i, item) in feed.iter().enumerate() {
+        if item.next.is_none_or(|n| i + n as usize >= feed.len()) {
+            newest.insert(item.plane, item);
+        }
+    }
+    newest
+}
+
+/// Why a plane's newest try leaves it to one shot, for good: `None` when it
+/// passed or error correction will still retake it.
+pub(crate) fn one_shot_why(item: &FeedItem, cx: FeedContext) -> Option<String> {
+    let failure = Failure::of(item)?;
+    if failure == Failure::Missing {
+        return Some("RAWs missing".into());
+    }
+    let pending = item.retake && cx.error_correction && !cx.ended && item.attempt <= cx.max_retakes;
+    if pending {
+        return None;
+    }
+    Some(if item.retake {
+        if item.attempt > 1 {
+            "failed every try".into()
+        } else if cx.error_correction && cx.max_retakes == 0 {
+            "not retaken (retakes are set to 0)".into()
+        } else if !cx.error_correction {
+            "not retaken (error correction is off)".into()
+        } else {
+            "not retaken (the capture ended first)".into()
+        }
+    } else {
+        let why = failure
+            .not_retaken()
+            .trim_start_matches("Not retaken")
+            .trim_start_matches([',', ':'])
+            .trim()
+            .trim_end_matches('.');
+        format!("not retaken: {} ({why})", failure.title().to_lowercase())
+    })
+}
+
+/// The planes whose every try failed (error correction gave up on them):
+/// the review offers them for a retake by hand.
+pub(crate) fn exhausted_planes(feed: &[FeedItem], cx: FeedContext) -> Vec<u64> {
+    newest_tries(feed)
+        .into_iter()
+        .filter(|(_, item)| {
+            item.retake && item.attempt > cx.max_retakes && Failure::of(item).is_some()
+        })
+        .map(|(plane, _)| plane)
+        .collect()
+}
+
+/// A run of neighbouring planes stacked from one shot, wide enough that
+/// depth between them is sharp in no four-shot plane (h-retake).
+#[derive(Clone, Debug, PartialEq)]
+pub(crate) struct RiskSpan {
+    pub first: u64,
+    pub last: u64,
+    /// Focus units between the four-shot planes either side.
+    pub gap: f64,
+    /// The sharp width the rule used, and whether it was assumed.
+    pub width: f64,
+    pub assumed: bool,
+    /// Focus units of depth farther than a quarter of the sharp width from
+    /// any four-shot plane.
+    pub band: f64,
+    /// Why its planes are from one shot, with how many, most first.
+    pub why: Vec<(String, usize)>,
+}
+
+impl RiskSpan {
+    pub fn planes(&self) -> Vec<u64> {
+        (self.first..=self.last).collect()
+    }
+    pub fn count(&self) -> usize {
+        (self.last - self.first + 1) as usize
+    }
+}
+
+/// The sharp width assumed without a calibration: the step a calibration
+/// suggests is width / 7 (`strehl focus-step`'s SAFE), so a plan made that
+/// way holds a point sharp over 7 steps.
+pub(crate) const ASSUMED_OVERLAP: f64 = 7.0;
+
+/// What [`risk_spans`] was computed from.
+type RiskKey = (usize, super::follow::Tally, FeedContext, u16, u64);
+
+/// The runs of planes left to one shot that put the stack at risk.
+///
+/// The rule (ARGUED, h-retake.md): a plane stacked from one shot still adds
+/// its depth's detail at one shot's resolution, so what a run of them loses
+/// is four-shot detail, and only where no four-shot plane is sharp enough.
+/// Sharpness falls to half its peak at half the calibrated sharp width
+/// (`strehl focus-step` measures the width at half height) and to about 84 %
+/// at a quarter of it (for a peak of that width). With the four-shot planes
+/// either side `gap = (k + 1) × step` apart, the depth midway is `gap / 2`
+/// from both; it is at risk once that is more than a quarter of the width,
+/// that is `gap > width / 2`: fewer than two four-shot planes hold that
+/// depth sharp. The band at risk is `gap − width / 2`. At the suggested step
+/// (width / 7) that is three planes in a row; one plane alone only at a step
+/// coarser than width / 4, past the measured knee (width / 5).
+/// Planes whose retake is still to come, and planes not checked yet, break
+/// a run (no warning before it is known).
+pub(crate) fn risk_spans(
+    feed: &[FeedItem],
+    cx: FeedContext,
+    step: u16,
+    width: Option<f64>,
+) -> Vec<RiskSpan> {
+    let step = f64::from(step.max(1));
+    let (width, assumed) = match width.filter(|w| w.is_finite() && *w > 0.0) {
+        Some(w) => (w, false),
+        None => (ASSUMED_OVERLAP * step, true),
+    };
+    let mut spans = Vec::new();
+    let mut run: Vec<(u64, String)> = Vec::new();
+    let mut close = |run: &mut Vec<(u64, String)>| {
+        if run.is_empty() {
+            return;
+        }
+        let gap = (run.len() + 1) as f64 * step;
+        if gap > width / 2.0 {
+            let mut why: Vec<(String, usize)> = Vec::new();
+            for (_, w) in run.iter() {
+                match why.iter_mut().find(|(k, _)| k == w) {
+                    Some(k) => k.1 += 1,
+                    None => why.push((w.clone(), 1)),
+                }
+            }
+            why.sort_by_key(|(_, n)| std::cmp::Reverse(*n));
+            spans.push(RiskSpan {
+                first: run[0].0,
+                last: run[run.len() - 1].0,
+                gap,
+                width,
+                assumed,
+                band: gap - width / 2.0,
+                why,
+            });
+        }
+        run.clear();
+    };
+    for (plane, item) in newest_tries(feed) {
+        let why = one_shot_why(item, cx);
+        let follows = run.last().is_some_and(|(p, _)| *p + 1 == plane);
+        if !follows {
+            close(&mut run);
+        }
+        match why {
+            Some(w) => run.push((plane, w)),
+            None => close(&mut run),
+        }
+    }
+    close(&mut run);
+    spans
+}
+
+/// "30–33", "30, 41 and 52", or the first and the count.
+pub(crate) fn plane_list(planes: &[u64]) -> String {
+    match planes {
+        [] => String::new(),
+        [one] => one.to_string(),
+        _ if planes.windows(2).all(|w| w[1] == w[0] + 1) => {
+            format!("{}–{}", planes[0], planes[planes.len() - 1])
+        }
+        _ if planes.len() <= 4 => {
+            let (last, rest) = planes.split_last().unwrap();
+            format!(
+                "{} and {last}",
+                rest.iter()
+                    .map(u64::to_string)
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            )
+        }
+        _ => format!("{} and {} more", planes[0], planes.len() - 1),
+    }
+}
+
+/// The warning's title and its sentence for one span.
+pub(crate) fn risk_sentence(span: &RiskSpan) -> (String, String) {
+    let title = format!(
+        "Planes {}–{}: {} in a row from one shot",
+        span.first,
+        span.last,
+        span.count()
+    );
+    let width = if span.assumed {
+        format!("{:.0}, assumed; Calibrate step measures it", span.width)
+    } else {
+        format!("{:.0}", span.width)
+    };
+    let why = span
+        .why
+        .iter()
+        .map(|(w, n)| format!("{n} {w}"))
+        .collect::<Vec<_>>()
+        .join("; ");
+    (
+        title,
+        format!(
+            "The four-shot planes either side are {:.0} units apart, more than half the sharp width ({width}): about {:.0} units of depth there get one shot's detail, not four. {}.",
+            span.gap,
+            span.band,
+            why[..1].to_uppercase() + &why[1..]
+        ),
+    )
+}
+
+/// The coverage warning above the feed: each risky span (two at most, the
+/// longest), what it costs, and "Retake planes A–B"; `list` less the
+/// warning's height is returned for the feed.
+#[allow(clippy::too_many_arguments)]
+fn risk_banner(
+    ui: &mut Ui,
+    list: Rect,
+    progress: &Progress,
+    inputs: &FlightInputs<'_>,
+    cx: FeedContext,
+    view: &mut FlightView,
+    palette: &CapturePalette,
+    out: &mut Vec<FlightIntent>,
+) -> Rect {
+    let Some(step) = inputs.retakes.step else {
+        return list;
+    };
+    let key: RiskKey = (
+        progress.feed.len(),
+        progress.tally,
+        cx,
+        step,
+        inputs.retakes.width.unwrap_or(0.0).to_bits(),
+    );
+    if view.risk.as_ref().is_none_or(|(k, _)| *k != key) {
+        let spans = risk_spans(&progress.feed, cx, step, inputs.retakes.width);
+        view.risk = Some((key, Arc::new(spans)));
+    }
+    let spans = view
+        .risk
+        .as_ref()
+        .map(|(_, s)| s.clone())
+        .unwrap_or_default();
+    if spans.is_empty() {
+        return list;
+    }
+    let in_hand = &inputs.retakes.in_hand;
+    let open = |planes: Vec<u64>| -> Vec<u64> {
+        planes
+            .into_iter()
+            .filter(|p| in_hand.binary_search(p).is_err())
+            .collect()
+    };
+    let mut shown: Vec<&RiskSpan> = spans.iter().collect();
+    shown.sort_by_key(|s| std::cmp::Reverse(s.count()));
+    shown.truncate(2);
+    shown.sort_by_key(|s| s.first);
+    let p = ui.painter().clone();
+    let inner = list.width() - 22.0;
+    let x = list.left() + 18.0;
+    let mut y = list.top() + 8.0;
+    let mut actions: Vec<(Rect, String, Vec<u64>)> = Vec::new();
+    let mut texts: Vec<(egui::Pos2, Arc<egui::Galley>)> = Vec::new();
+    for span in &shown {
+        let (title, detail) = risk_sentence(span);
+        let mut job = style::job(&title, 12.5, palette.ink, 0.0);
+        job.wrap.max_width = inner;
+        let g = p.layout_job(job);
+        texts.push((egui::pos2(x, y), g.clone()));
+        y += g.size().y + 2.0;
+        let mut job = style::job(&detail, 12.0, palette.ink2, 0.0);
+        job.wrap.max_width = inner;
+        let g = p.layout_job(job);
+        texts.push((egui::pos2(x, y), g.clone()));
+        y += g.size().y + 6.0;
+        let todo = open(span.planes());
+        if !cx.manual {
+            // The host cannot take retakes by hand: the warning alone.
+        } else if todo.is_empty() {
+            let mut job = style::job(
+                &format!("Retakes asked for planes {}–{}.", span.first, span.last),
+                12.0,
+                palette.ink3,
+                0.0,
+            );
+            job.wrap.max_width = inner;
+            let g = p.layout_job(job);
+            texts.push((egui::pos2(x, y), g.clone()));
+            y += g.size().y + 6.0;
+        } else {
+            let r = Rect::from_min_size(egui::pos2(x, y), egui::vec2(inner.min(260.0), 26.0));
+            actions.push((
+                r,
+                format!("Retake planes {}–{}", span.first, span.last),
+                todo,
+            ));
+            y += 26.0 + 8.0;
+        }
+    }
+    if spans.len() > shown.len() {
+        let all: Vec<u64> = open(spans.iter().flat_map(RiskSpan::planes).collect());
+        let mut job = style::job(
+            &format!("{} more runs like these.", spans.len() - shown.len()),
+            12.0,
+            palette.ink2,
+            0.0,
+        );
+        job.wrap.max_width = inner;
+        let g = p.layout_job(job);
+        texts.push((egui::pos2(x, y), g.clone()));
+        y += g.size().y + 6.0;
+        if cx.manual && !all.is_empty() {
+            let r = Rect::from_min_size(egui::pos2(x, y), egui::vec2(inner.min(260.0), 26.0));
+            actions.push((r, format!("Retake all {} planes", all.len()), all));
+            y += 26.0 + 8.0;
+        }
+    }
+    let banner = Rect::from_min_max(list.left_top(), egui::pos2(list.right(), y + 2.0));
+    p.rect_filled(banner, 0.0, palette.panel);
+    p.rect_stroke(
+        banner,
+        0.0,
+        egui::Stroke::new(1.0_f32, palette.warn),
+        egui::StrokeKind::Inside,
+    );
+    style::mark(
+        &p,
+        egui::pos2(list.left() + 9.0, list.top() + 17.0),
+        Mark::Warn,
+        7.0,
+        palette,
+    );
+    for (at, g) in texts {
+        p.galley(at, g, palette.ink);
+    }
+    for (r, label, planes) in actions {
+        let tip = format!(
+            "Takes planes {} again by hand, each through the approach as error correction does{}",
+            plane_list(&planes),
+            if cx.ended {
+                ""
+            } else {
+                ", between the next planes"
+            }
+        );
+        let clicked = ui
+            .scope_builder(egui::UiBuilder::new().max_rect(r), |ui| {
+                style::button_sized(ui, &label, ButtonKind::Plain, r.size(), true, palette)
+                    .on_hover_text(tip)
+                    .clicked()
+            })
+            .inner;
+        if clicked {
+            out.push(FlightIntent::QueueRetakes(planes));
+        }
+    }
+    Rect::from_min_max(egui::pos2(list.left(), banner.bottom() + 14.0), list.max)
+}
+
 /// The rail's ticks in flight: each planned plane checked, retaken, needing
 /// attention, on the camera host or to come.
 pub(crate) fn flight_ticks(
@@ -860,6 +1330,19 @@ pub(crate) struct FlightInputs<'a> {
     pub ended: bool,
     /// When it ended, local time ("15:04").
     pub ended_at: Option<String>,
+    /// Retakes by hand and the stack's coverage (h-retake).
+    pub retakes: RetakeInputs,
+}
+
+/// What the retake actions and the coverage warning need (h-retake).
+#[derive(Clone, Debug, Default, PartialEq)]
+pub(crate) struct RetakeInputs {
+    /// Planes asked to be retaken and not taken yet, ascending.
+    pub in_hand: Vec<u64>,
+    /// The plan's step, in focus units.
+    pub step: Option<u16>,
+    /// The calibrated sharp width (`strehl focus-step`), in focus units.
+    pub width: Option<f64>,
 }
 
 /// What the user asked of the in-flight view.
@@ -881,6 +1364,8 @@ pub(crate) enum FlightIntent {
         plane: u64,
         raw: Option<Arc<str>>,
     },
+    /// Take these planes again by hand (h-retake).
+    QueueRetakes(Vec<u64>),
     /// The capture has ended and the user is done with its review.
     Done,
 }
@@ -900,6 +1385,8 @@ pub(crate) struct FlightView {
     scroll: Option<(f32, f32)>,
     /// Rows laid out last frame (performance checks).
     pub rows_drawn: usize,
+    /// The coverage warning's spans and what they were computed from.
+    risk: Option<(RiskKey, Arc<Vec<RiskSpan>>)>,
 }
 
 impl FlightView {
@@ -974,10 +1461,7 @@ pub(crate) fn canvas(
     let latest = Rect::from_min_size(side, egui::vec2(side_w, (side_w * 2.0 / 3.0).round()));
     let latest_shown = picture(&p, latest, inputs.latest, palette);
     let progress = inputs.progress;
-    let cx = FeedContext {
-        error_correction: inputs.s.host.error_correction == Some(true),
-        ended: inputs.ended,
-    };
+    let cx = feed_context(inputs);
     let newest = progress.and_then(|p| p.feed.last());
     let latest_text = match newest {
         Some(item) => {
@@ -999,7 +1483,19 @@ pub(crate) fn canvas(
         egui::pos2(side.x + side_w, r.bottom() - 16.0),
     );
     match progress {
-        Some(progress) => feed_ui(ui, list, progress, cx, view, palette, &mut out),
+        Some(progress) => {
+            let list = risk_banner(ui, list, progress, inputs, cx, view, palette, &mut out);
+            feed_ui(
+                ui,
+                list,
+                progress,
+                cx,
+                &inputs.retakes.in_hand,
+                view,
+                palette,
+                &mut out,
+            )
+        }
         None => {
             style::paint_job(
                 &p,
@@ -1250,17 +1746,21 @@ impl WithColor for egui::text::LayoutJob {
 /// the order it was checked, newest at the bottom. It fills its area and
 /// scrolls; it follows the newest unless the user scrolled up. Only the
 /// rows in view are laid out.
+#[allow(clippy::too_many_arguments)]
 fn feed_ui(
     ui: &mut Ui,
     list: Rect,
     progress: &Progress,
     cx: FeedContext,
+    in_hand: &[u64],
     view: &mut FlightView,
     palette: &CapturePalette,
     out: &mut Vec<FlightIntent>,
 ) {
     let p = ui.painter().clone();
-    let t = &progress.tally;
+    let mut tally = progress.tally;
+    tally.resolve(cx.max_retakes as usize);
+    let t = &tally;
     style::paint_job(
         &p,
         list.left_top(),
@@ -1319,6 +1819,15 @@ fn feed_ui(
     // and why each kind of failure was or was not retaken; it scrolls with
     // the rows, so it never runs past the column.
     let mut header: Vec<(Option<Mark>, std::sync::Arc<egui::Galley>)> = Vec::new();
+    // The review's own retake: every plane that failed every try (h-retake).
+    let exhausted: Vec<u64> = if cx.ended && cx.manual {
+        exhausted_planes(&progress.feed, cx)
+            .into_iter()
+            .filter(|p| in_hand.binary_search(p).is_err())
+            .collect()
+    } else {
+        Vec::new()
+    };
     if cx.ended {
         let wrap = area.width() - FEED_GUTTER;
         let mut job = style::job(&summary_sentence(t, true), 12.5, palette.ink, 0.0);
@@ -1353,10 +1862,12 @@ fn feed_ui(
             header.push((Some(mark), p.layout_job(job)));
         }
     }
+    const ACTION_H: f32 = 36.0;
+    let action_h = if exhausted.is_empty() { 0.0 } else { ACTION_H };
     let header_h = if header.is_empty() {
         0.0
     } else {
-        header.iter().map(|(_, g)| g.size().y + 8.0).sum::<f32>() + 12.0
+        header.iter().map(|(_, g)| g.size().y + 8.0).sum::<f32>() + 12.0 + action_h
     };
     let feed = &progress.feed;
     let last = view.scroll;
@@ -1390,7 +1901,7 @@ fn feed_ui(
         let origin = ui.max_rect().left_top();
         let painter = ui.painter().clone();
         let mut hy = 6.0;
-        for (mark, galley) in &header {
+        for (i, (mark, galley)) in header.iter().enumerate() {
             let x = if let Some(mark) = mark {
                 style::mark(
                     &painter,
@@ -1405,6 +1916,32 @@ fn feed_ui(
             };
             painter.galley(origin + egui::vec2(x, hy), galley.clone(), palette.ink);
             hy += galley.size().y + 8.0;
+            // Under the summary: the planes that failed every try, again.
+            if i == 0 && !exhausted.is_empty() {
+                let r = Rect::from_min_size(
+                    origin + egui::vec2(0.0, hy),
+                    egui::vec2((width - FEED_GUTTER).clamp(120.0, 300.0), 28.0),
+                );
+                let label = format!(
+                    "Retake the {} that failed every try",
+                    count(exhausted.len(), "plane", "planes")
+                );
+                let tip = format!(
+                    "Planes {}: each taken again by hand, through the approach, as error correction does",
+                    plane_list(&exhausted)
+                );
+                let clicked = ui
+                    .scope_builder(egui::UiBuilder::new().max_rect(r), |ui| {
+                        style::button_sized(ui, &label, ButtonKind::Plain, r.size(), true, palette)
+                            .on_hover_text(tip)
+                            .clicked()
+                    })
+                    .inner;
+                if clicked {
+                    out.push(FlightIntent::QueueRetakes(exhausted.clone()));
+                }
+                hy += ACTION_H;
+            }
         }
         if header_h > 0.0 {
             style::hairline(
@@ -1427,7 +1964,8 @@ fn feed_ui(
             let item = &feed[i];
             drawn += 1;
             let next = item.next.and_then(|n| feed.get(i + n as usize));
-            let row = feed_row(item, next, cx);
+            let queued = next.is_none() && in_hand.binary_search(&item.plane).is_ok();
+            let row = feed_row_with(item, next, cx, queued);
             let top = header_h + rows_h - tops[i] - row.size.height();
             let rect = Rect::from_min_size(
                 origin + egui::vec2(0.0, top),
@@ -1513,10 +2051,11 @@ fn feed_row_ui(
         detail.wrap.max_rows = if row.size == RowSize::Three { 2 } else { 1 };
         let g = p.layout_job(detail);
         p.galley(egui::pos2(text_left, rect.top() + 25.0), g, palette.ink2);
-        // Show, under the plane's number: this try's RAW (or the plane's
-        // last).
+        // Show, under the mark and the plane's number: this try's RAW (or
+        // the plane's last). At the row's left edge, so "Retake" under it
+        // clears the detail's column.
         let link = Rect::from_min_size(
-            egui::pos2(rect.left() + 16.0, rect.top() + 27.0),
+            egui::pos2(rect.left() + 2.0, rect.top() + 27.0),
             egui::vec2(38.0, 16.0),
         );
         let resp = ui
@@ -1545,6 +2084,47 @@ fn feed_row_ui(
                 plane: item.plane,
                 raw: item.first.clone(),
             });
+        }
+        // Retake, under Show: this plane again, by hand (h-retake).
+        if row.retake != RetakeOffer::None {
+            let link = Rect::from_min_size(
+                egui::pos2(rect.left() + 2.0, rect.top() + 44.0),
+                egui::vec2(40.0, 16.0),
+            );
+            let offered = row.retake == RetakeOffer::Offer;
+            let resp = ui.interact(
+                link,
+                ui.id().with(("capture-feed-retake", index)),
+                if offered {
+                    Sense::click()
+                } else {
+                    Sense::hover()
+                },
+            );
+            let resp = if offered {
+                resp.on_hover_text("Take this plane again by hand")
+            } else {
+                resp.on_hover_text("Asked for; not taken yet")
+            };
+            style::paint_job(
+                p,
+                link.left_center() + egui::vec2(2.0, 0.0),
+                Align2::LEFT_CENTER,
+                style::caps_job(
+                    if offered { "Retake" } else { "Asked" },
+                    9.5,
+                    if !offered {
+                        palette.ink3
+                    } else if resp.hovered() {
+                        palette.ink
+                    } else {
+                        palette.warn
+                    },
+                ),
+            );
+            if offered && resp.clicked() {
+                intent = Some(FlightIntent::QueueRetakes(vec![item.plane]));
+            }
         }
     }
     hover.on_hover_text(&row.tip);
@@ -1855,3 +2435,7 @@ fn health_row(ui: &mut Ui, line: &HealthLine, palette: &CapturePalette) {
 #[cfg(test)]
 #[path = "capture-flight-tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "capture-retake-tests.rs"]
+mod retake_tests;

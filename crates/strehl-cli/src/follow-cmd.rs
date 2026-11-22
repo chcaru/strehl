@@ -45,6 +45,27 @@ pub struct FollowArgs {
     pub stack_args: Vec<String>,
 }
 
+/// The capture host is taking retakes the user asked for after the capture
+/// ended (h-retake): its journal has a `followup_started` with no
+/// `followup_finished` after it. Such a run is not finished although its
+/// `result.json` exists.
+pub(crate) fn followup_open(dir: &Path) -> bool {
+    let Ok(text) = std::fs::read_to_string(dir.join("events.jsonl")) else {
+        return false;
+    };
+    let mut open = false;
+    for line in text.lines().filter(|l| l.contains("\"followup_")) {
+        if let Ok(v) = serde_json::from_str::<Value>(line) {
+            match v["event"].as_str() {
+                Some("followup_started") => open = true,
+                Some("followup_finished") => open = false,
+                _ => {}
+            }
+        }
+    }
+    open
+}
+
 fn journal_path(dir: &Path) -> Result<PathBuf> {
     journal_in(&crate::align_cmd::cache_root(), dir)
 }
@@ -298,7 +319,9 @@ pub fn run(args: &FollowArgs) -> Result<()> {
             admitted += 1;
             last_progress = Instant::now();
         }
-        let finished = args.dir.join("result.json").is_file();
+        // Retakes the user asked for after the capture ended go into the
+        // same run (h-retake): until they end, it is not finished.
+        let finished = args.dir.join("result.json").is_file() && !followup_open(&args.dir);
         let pending = groups
             .iter()
             .filter(|g| !done.contains_key(&g.key()))

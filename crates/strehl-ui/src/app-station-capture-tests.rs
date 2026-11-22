@@ -305,7 +305,9 @@ fn capture_station_pointer_sweeps() {
 #[ignore = "benchmark: prints ms per frame"]
 fn capture_flight_feed_sweeps() {
     let ctx = context();
-    for fixture in ["flight", "flight+long"] {
+    // `flight+retakes` (h-retake): the coverage warning over the feed and
+    // a retake asked for (an older build reads it as `flight`).
+    for fixture in ["flight", "flight+long", "flight+retakes"] {
         let (_dir, mut app) = station(fixture);
         for _ in 0..5 {
             frame(&mut app, &ctx, vec![]);

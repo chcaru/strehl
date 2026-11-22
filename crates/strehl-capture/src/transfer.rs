@@ -1110,6 +1110,17 @@ impl Camera for PcCamera {
         }
         self.uploads.snapshot(directory, run)
     }
+    fn resume_run(&mut self, directory: &Path, frames: usize, planes: usize) -> Result<()> {
+        // Registers the run again when this connection is new (the camera
+        // was switched off after the capture); the receiver keeps its folder.
+        self.sync_journal(directory)?;
+        self.ordinal = frames;
+        self.planes = planes;
+        self.repeat = false;
+        self.retake = None;
+        self.planned_frames += frames;
+        Ok(())
+    }
     fn verdict(&mut self, group: &str) -> Result<Option<Value>> {
         let run = self.run.clone().context("PC run is not registered")?;
         let value = Sink::response(

@@ -85,6 +85,8 @@ fn rows_of(p: &Progress, plane: u64, cx: FeedContext) -> Vec<FeedRow> {
 const ENDED: FeedContext = FeedContext {
     error_correction: true,
     ended: true,
+    max_retakes: 2,
+    manual: false,
 };
 
 /// The owner's run as the feed tells it: every try its own item in the
@@ -96,18 +98,9 @@ fn the_owners_run_is_told_try_by_try() {
     let p = owner_progress();
     assert_eq!(p.feed.len(), 260);
     assert_eq!((p.retakes, p.retaken), (49, 34));
-    assert_eq!(
-        p.tally,
-        follow::Tally {
-            planes: 211,
-            first_try: 159,
-            retake_passed: 25,
-            retake_failed: 9,
-            not_retaken: 18,
-            asked: 0,
-            incomplete: 0,
-        }
-    );
+    // planes, first try, retake passed, retake failed, not retaken, asked,
+    // incomplete
+    assert_eq!(p.tally.counts(), [211, 159, 25, 9, 18, 0, 0]);
     assert_eq!(p.tally.single_shot(), 27);
     // Plane 3's retake is its own item, after plane 4 (as it was taken).
     let order: Vec<(u64, u32)> = p.feed[..5].iter().map(|i| (i.plane, i.attempt)).collect();
@@ -186,6 +179,7 @@ fn a_retake_asked_for_is_pending_until_it_comes() {
     let running = FeedContext {
         error_correction: true,
         ended: false,
+        ..FeedContext::default()
     };
     let row = feed_row(item, None, running);
     assert_eq!((row.status, row.mark), ("retaking", Mark::Warn));
@@ -251,6 +245,7 @@ fn feed_rows_fit_their_lines_at_the_narrowest() {
     let running = FeedContext {
         error_correction: true,
         ended: false,
+        ..FeedContext::default()
     };
     let mut checked = 0;
     let _ = ctx.run(RawInput::default(), |ctx| {
@@ -474,6 +469,7 @@ fn inputs<'a>(s: &'a Snapshot, p: Option<&'a Progress>) -> FlightInputs<'a> {
         plain_pace: Some(5.6),
         ended: false,
         ended_at: None,
+        retakes: RetakeInputs::default(),
     }
 }
 

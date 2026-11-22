@@ -113,6 +113,8 @@ pub(crate) enum PlanIntent {
     SetFourShot(bool),
     SetCheck(bool),
     SetRetake(bool),
+    /// Error correction's retakes of one plane (h-retake).
+    SetMaxRetakes(u8),
     SetStackWhenDone(bool),
     SetPowerDown(bool),
     Start,

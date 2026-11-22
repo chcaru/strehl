@@ -230,6 +230,39 @@ pub(crate) struct Capabilities {
     pub test_shot: bool,
     /// `exposure.mode` and `exposure.problem` (H1).
     pub exposure_check: bool,
+    /// `error_correction` takes `max_retakes`; `retakes.max` (h-retake).
+    pub max_retakes: bool,
+    /// `queue_retakes`; `retakes.queued` and `retakes.followup` (h-retake).
+    pub queue_retakes: bool,
+}
+
+/// `retakes` (h-retake): the setting and the manual retakes in hand.
+#[derive(Clone, Debug, Default, Deserialize, PartialEq)]
+#[serde(default)]
+pub(crate) struct Retakes {
+    /// Error correction's retakes of one plane.
+    pub max: Option<u64>,
+    /// The most it may be set to.
+    pub limit: Option<u64>,
+    /// The current (or last) capture takes manual retakes.
+    pub accepted: bool,
+    /// Planes asked for during the capture and not yet taken.
+    #[serde(deserialize_with = "lenient")]
+    pub queued: Vec<u64>,
+    /// The current (or last) capture's run folder name.
+    pub run: Option<String>,
+    /// Retakes after the capture, while they run.
+    #[serde(deserialize_with = "lenient")]
+    pub followup: Option<Followup>,
+}
+
+/// `retakes.followup`.
+#[derive(Clone, Debug, Default, Deserialize, PartialEq)]
+#[serde(default)]
+pub(crate) struct Followup {
+    pub planes: Vec<u64>,
+    pub taken: u64,
+    pub skipped: u64,
 }
 
 /// Every field of `/api/state` the desktop reads.
@@ -292,6 +325,9 @@ pub(crate) struct HostState {
     /// `None` from a host without error correction.
     pub error_correction: Option<bool>,
     pub capabilities: Capabilities,
+    /// Absent from an older host (h-retake).
+    #[serde(deserialize_with = "lenient")]
+    pub retakes: Option<Retakes>,
 }
 
 /// The top-level keys [`HostState`] reads. A test holds this against the
@@ -341,6 +377,7 @@ pub(crate) const KNOWN_KEYS: &[&str] = &[
     "schedule",
     "error_correction",
     "capabilities",
+    "retakes",
 ];
 
 impl HostState {
@@ -367,6 +404,32 @@ impl HostState {
     }
     pub fn schedule_stage(&self) -> Option<&str> {
         self.schedule.as_ref()?.job.as_ref()?.stage.as_deref()
+    }
+    /// Error correction's retakes of a plane for this host's runs: its
+    /// setting, or the fixed two of a host without one (h-retake).
+    pub fn max_retakes(&self) -> u32 {
+        self.retakes
+            .as_ref()
+            .and_then(|r| r.max)
+            .filter(|_| self.capabilities.max_retakes)
+            .map_or(strehl_capture::worker::MAX_RETAKES as u32, |m| m as u32)
+    }
+    /// The host takes manual retakes of the current (or last) capture.
+    pub fn takes_manual_retakes(&self) -> bool {
+        self.capabilities.queue_retakes && self.retakes.as_ref().is_some_and(|r| r.accepted)
+    }
+    /// Planes asked to be taken again and not taken yet: queued during the
+    /// capture, or in the retakes after it.
+    pub fn retakes_in_hand(&self) -> Vec<u64> {
+        let Some(r) = &self.retakes else {
+            return Vec::new();
+        };
+        let mut planes = r.queued.clone();
+        if let Some(f) = &r.followup {
+            let done = (f.taken + f.skipped) as usize;
+            planes.extend(f.planes.iter().skip(done));
+        }
+        planes
     }
     pub fn exposure_problem(&self) -> Option<&str> {
         self.exposure.as_ref()?.problem.as_deref()

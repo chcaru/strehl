@@ -230,7 +230,8 @@ pub struct LaunchOptions {
     /// `--capture-fixture plan|flight|glance` (`plan+rig`, `plan+guide`,
     /// `plan+schedule`... with a panel open; `flight+long`, a 6,000-plane
     /// stack; `flight+done`, the review once it ended; `flight+show`, a
-    /// try's RAW from the feed): the Capture station from a fabricated
+    /// try's RAW from the feed; `flight+retakes` and `flight+retakes-done`,
+    /// retakes by hand and a run of one-shot planes): the Capture station from a fabricated
     /// state (offscreen checks); nothing reaches a camera.
     pub(crate) capture_fixture: Option<String>,
     /// `--capture-rail-view LO-HI`: the Capture station's depth rail opens

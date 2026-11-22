@@ -109,6 +109,59 @@ pub(crate) struct Station {
     pinned: Option<PinnedPlane>,
     /// The checker's journal of a fixture (`--capture-fixture`).
     fixture_progress: Option<Arc<super::follow::Progress>>,
+    /// Retakes this desktop asked for (h-retake), shown as asked until the
+    /// plane's next try is checked or the host no longer holds them.
+    asked: Vec<AskedRetake>,
+}
+
+/// A retake asked for by hand: the plane, its tries when asked, when, and
+/// the capture (sequence) it was asked of.
+#[derive(Clone, Debug, PartialEq)]
+pub(crate) struct AskedRetake {
+    pub plane: u64,
+    pub tries: u32,
+    pub at: Instant,
+    pub sequence: Option<u64>,
+}
+
+/// How long a retake asked for is shown as asked without the host saying
+/// so: the state is polled five times a second, a request answered in well
+/// under a second.
+const ASKED_GRACE: Duration = Duration::from_secs(3);
+
+/// The planes asked to be retaken and not taken yet, ascending: the host's
+/// (queued, or in its retakes after the capture) and this desktop's own
+/// requests until the plane's next try is checked or, the host no longer
+/// running, holding nothing for it (h-retake).
+pub(crate) fn retakes_in_hand(
+    s: &Snapshot,
+    asked: &[AskedRetake],
+    progress: Option<&super::follow::Progress>,
+    now: Instant,
+) -> Vec<u64> {
+    let mut planes = s.host.retakes_in_hand();
+    let tries = |plane: u64| {
+        progress
+            .and_then(|p| {
+                p.feed
+                    .iter()
+                    .rev()
+                    .find(|i| i.plane == plane)
+                    .map(|i| i.attempt)
+            })
+            .unwrap_or(0)
+    };
+    for a in asked {
+        let same_run = a.sequence == s.host.sequence_id;
+        let untaken = tries(a.plane) <= a.tries;
+        let held = s.host.phase.capturing() || now.duration_since(a.at) < ASKED_GRACE;
+        if same_run && untaken && held {
+            planes.push(a.plane);
+        }
+    }
+    planes.sort_unstable();
+    planes.dedup();
+    planes
 }
 
 /// Which screen the station shows.
@@ -252,9 +305,16 @@ impl CaptureWorkspace {
         // `flight+done`: the capture ended, under review; `flight+show`: a
         // plane's RAW shown from the feed.
         let long = (which != Fixture::Plan && open == "long").then(fixture::long_progress);
+        // `flight+retakes`, `flight+retakes-done` (h-retake): a plane asked
+        // to be retaken by hand and a run of one-shot planes.
+        let retakes = which != Fixture::Plan && open.starts_with("retakes");
+        let open = if open == "retakes-done" { "done" } else { open };
         let mut snapshot = fixture::snapshot(which);
         if let Some((_, groups)) = &long {
             fixture::lengthen(&mut snapshot, *groups);
+        }
+        if retakes {
+            fixture::add_retakes(&mut snapshot, open == "done");
         }
         if which != Fixture::Plan && open == "done" {
             fixture::finish(&mut snapshot);
@@ -300,6 +360,7 @@ impl CaptureWorkspace {
         if which != Fixture::Plan {
             self.station.fixture_progress = Some(Arc::new(match long {
                 Some((progress, _)) => progress,
+                None if retakes => fixture::retake_progress(open == "done").0,
                 None if open == "done" => fixture::finished_progress().0,
                 None => fixture::progress(),
             }));
@@ -677,6 +738,11 @@ impl CaptureWorkspace {
                     .format("%H:%M")
                     .to_string()
             }),
+            retakes: flight::RetakeInputs {
+                in_hand: retakes_in_hand(s, &self.station.asked, progress, Instant::now()),
+                step: s.host.plan.as_ref().map(|p| p.step),
+                width: self.calibration_result()["width"].as_f64(),
+            },
         }
     }
 
@@ -1151,7 +1217,30 @@ impl CaptureWorkspace {
                 },
             ),
             PlanIntent::SetCheck(on) => self.set_follow(on),
-            PlanIntent::SetRetake(on) => self.command(s, Command::ErrorCorrection { enabled: on }),
+            // The setting travels with the switch: a host given no
+            // `max_retakes` goes back to two (h-retake).
+            PlanIntent::SetRetake(on) => self.command(
+                s,
+                Command::ErrorCorrection {
+                    enabled: on,
+                    max_retakes: s
+                        .host
+                        .capabilities
+                        .max_retakes
+                        .then(|| s.host.max_retakes() as u8),
+                },
+            ),
+            PlanIntent::SetMaxRetakes(max) => {
+                if s.host.capabilities.max_retakes {
+                    self.command(
+                        s,
+                        Command::ErrorCorrection {
+                            enabled: s.host.error_correction == Some(true),
+                            max_retakes: Some(max),
+                        },
+                    )
+                }
+            }
             PlanIntent::SetStackWhenDone(on) => self.stack_when_done = on,
             PlanIntent::SetPowerDown(on) => self.command(s, Command::PowerPlan { enabled: on }),
             PlanIntent::Start => {
@@ -1209,11 +1298,50 @@ impl CaptureWorkspace {
             FlightIntent::SetStackWhenDone(on) => self.stack_when_done = on,
             FlightIntent::SetPowerDown(on) => self.command(s, Command::PowerPlan { enabled: on }),
             FlightIntent::ShowPlane { plane, raw } => self.station.show_plane = Some((plane, raw)),
+            FlightIntent::QueueRetakes(planes) => self.queue_retakes(s, planes),
             FlightIntent::Done => {
                 self.station.review = false;
                 self.station.pinned = None;
             }
         }
+    }
+
+    /// Asks the camera host to take `planes` again (h-retake): between the
+    /// planes while the capture runs, into its run once it has ended.
+    fn queue_retakes(&mut self, s: &Snapshot, planes: Vec<u64>) {
+        if planes.is_empty() {
+            return;
+        }
+        if !s.host.takes_manual_retakes() {
+            self.error =
+                Some("This camera host cannot take retakes by hand; update the Pi's Strehl".into());
+            return;
+        }
+        let progress = self.station_progress();
+        let now = Instant::now();
+        for &plane in &planes {
+            let tries = progress
+                .as_ref()
+                .and_then(|p| {
+                    p.feed
+                        .iter()
+                        .rev()
+                        .find(|i| i.plane == plane)
+                        .map(|i| i.attempt)
+                })
+                .unwrap_or(0);
+            self.station.asked.retain(|a| a.plane != plane);
+            self.station.asked.push(AskedRetake {
+                plane,
+                tries,
+                at: now,
+                sequence: s.host.sequence_id,
+            });
+        }
+        // Old requests of other captures go.
+        let sequence = s.host.sequence_id;
+        self.station.asked.retain(|a| a.sequence == sequence);
+        self.command(s, Command::QueueRetakes { planes });
     }
 
     /// Stage 1: the station inside today's Capture tab, laid out as the
@@ -1288,3 +1416,7 @@ pub(super) fn note_calibration(station: &mut Station, before: &str, after: &Cali
 #[cfg(test)]
 #[path = "capture-station-tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "capture-retake-station-tests.rs"]
+mod retake_station_tests;
