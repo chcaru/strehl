@@ -17,7 +17,7 @@
 //! says it is from the camera previews, not the RAW stack: for the reason
 //! above it cannot predict the RAW merge.
 
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -939,38 +939,22 @@ fn proof_worker(
     }
 }
 
-/// Follows a capture's transfer receipts: one RAW a plane, in arrival order.
-#[allow(dead_code)]
-struct RunTail {
-    run: PathBuf,
-    shots: u64,
+/// A growing JSON-lines file, read on from where the last read stopped.
+#[derive(Default)]
+struct LineTail {
     offset: u64,
     partial: Vec<u8>,
-    planes: BTreeSet<u64>,
-    ended: bool,
 }
 
-#[allow(dead_code)]
-impl RunTail {
-    fn new(run: PathBuf, shots: u64) -> Self {
-        Self {
-            run,
-            shots: shots.max(1),
-            offset: 0,
-            partial: Vec::new(),
-            planes: BTreeSet::new(),
-            ended: false,
-        }
-    }
-    /// The new planes' files, and whether the capture has just ended (its
-    /// result written and every receipt read).
-    fn poll(&mut self) -> (Vec<PathBuf>, bool) {
+impl LineTail {
+    /// The complete lines written since the last call (at most 1 MiB a
+    /// call), and whether the file was read to its end.
+    fn lines(&mut self, path: &Path) -> (Vec<Vec<u8>>, bool) {
         use std::io::{Read, Seek, SeekFrom};
+        let len = std::fs::metadata(path).map_or(0, |m| m.len());
         let mut out = Vec::new();
-        let receipts = self.run.join("transfer-receipts.jsonl");
-        let len = std::fs::metadata(&receipts).map_or(0, |m| m.len());
         if len > self.offset
-            && let Ok(mut file) = std::fs::File::open(&receipts)
+            && let Ok(mut file) = std::fs::File::open(path)
             && file.seek(SeekFrom::Start(self.offset)).is_ok()
         {
             let mut chunk = Vec::new();
@@ -984,39 +968,140 @@ impl RunTail {
                 if let Some(end) = self.partial.iter().rposition(|b| *b == b'\n') {
                     let rest = self.partial.split_off(end + 1);
                     let lines = std::mem::replace(&mut self.partial, rest);
-                    for line in lines.split(|b| *b == b'\n') {
-                        if let Some(path) = self.plane_file(line) {
-                            out.push(path);
-                        }
-                    }
+                    out.extend(
+                        lines
+                            .split(|b| *b == b'\n')
+                            .filter(|l| !l.is_empty())
+                            .map(<[u8]>::to_vec),
+                    );
                 }
             }
         }
-        let ended = !self.ended && self.offset >= len && self.run.join("result.json").is_file();
+        (out, self.offset >= len)
+    }
+}
+
+/// Follows a capture's transfer receipts: one RAW a plane, in arrival
+/// order. Each RAW's plane is the capture journal's binding of it
+/// (`events.jsonl`: the files of `capture_buffered` and `capture_complete`
+/// carry `name` and `plane`), so a retake, a later group of a plane already
+/// offered, is not taken for a new plane. A receipt whose binding has not
+/// arrived yet (the journal follows the RAWs) waits for it; without
+/// bindings (a host that writes none) a plane is every `shots` RAWs.
+#[allow(dead_code)]
+struct RunTail {
+    run: PathBuf,
+    shots: u64,
+    receipts: LineTail,
+    events: LineTail,
+    /// Each RAW's plane, by its name, from the journal.
+    bindings: HashMap<String, u64>,
+    /// Durable RAW receipts not offered yet: name and stored file.
+    waiting: std::collections::VecDeque<(String, PathBuf)>,
+    planes: BTreeSet<u64>,
+    ended: bool,
+}
+
+#[allow(dead_code)]
+impl RunTail {
+    fn new(run: PathBuf, shots: u64) -> Self {
+        Self {
+            run,
+            shots: shots.max(1),
+            receipts: LineTail::default(),
+            events: LineTail::default(),
+            bindings: HashMap::new(),
+            waiting: std::collections::VecDeque::new(),
+            planes: BTreeSet::new(),
+            ended: false,
+        }
+    }
+    /// The new planes' files, and whether the capture has just ended (its
+    /// result written and every receipt read).
+    fn poll(&mut self) -> (Vec<PathBuf>, bool) {
+        // The journal first: a RAW's binding is written after the RAW.
+        let journal_path = self.run.join("events.jsonl");
+        let journal = journal_path.is_file();
+        let (events, _) = self.events.lines(&journal_path);
+        for line in events {
+            self.bind(&line);
+        }
+        let (receipts, at_end) = self
+            .receipts
+            .lines(&self.run.join("transfer-receipts.jsonl"));
+        for line in receipts {
+            if let Some(raw) = Self::raw(&self.run, &line) {
+                self.waiting.push_back(raw);
+            }
+        }
+        let ended = !self.ended && at_end && self.run.join("result.json").is_file();
         self.ended |= ended;
+        let mut out = Vec::new();
+        while let Some((name, _)) = self.waiting.front() {
+            let plane = match self.bindings.get(name) {
+                Some(plane) => Some(*plane),
+                // No binding will come: the run ended, the journal binds
+                // later RAWs already, or it binds none at all.
+                None if self.ended
+                    || self
+                        .waiting
+                        .iter()
+                        .any(|(n, _)| self.bindings.contains_key(n))
+                    || (self.bindings.is_empty()
+                        && (!journal || self.waiting.len() as u64 > 2 * self.shots)) =>
+                {
+                    Self::ordinal(name).map(|n| n.saturating_sub(1) / self.shots + 1)
+                }
+                None => break,
+            };
+            let (_, path) = self.waiting.pop_front().expect("front");
+            if let Some(plane) = plane
+                && self.planes.insert(plane)
+            {
+                out.push(path);
+            }
+        }
         (out, ended)
     }
-    /// The stored file of a receipt line, if it is the first RAW seen of
-    /// its plane.
-    fn plane_file(&mut self, line: &[u8]) -> Option<PathBuf> {
+    /// Records the planes a journal line binds RAWs to.
+    fn bind(&mut self, line: &[u8]) {
+        let needle = |n: &[u8]| line.windows(n.len()).any(|w| w == n);
+        if !needle(b"\"capture_buffered\"") && !needle(b"\"capture_complete\"") {
+            return;
+        }
+        let Ok(v) = serde_json::from_slice::<serde_json::Value>(line) else {
+            return;
+        };
+        for file in v["data"]["response"]["files"]
+            .as_array()
+            .into_iter()
+            .flatten()
+        {
+            if let (Some(name), Some(plane)) = (file["name"].as_str(), file["plane"].as_u64()) {
+                self.bindings.insert(name.to_owned(), plane);
+            }
+        }
+    }
+    /// The RAW of a durable receipt line: its name and stored file.
+    fn raw(run: &Path, line: &[u8]) -> Option<(String, PathBuf)> {
         let r: serde_json::Value = serde_json::from_slice(line).ok()?;
         if r["ok"] != true || r["durable"] != true {
             return None;
         }
         let name = r["logical_name"].as_str()?;
-        let ordinal: u64 = name
-            .strip_prefix("frame-")?
-            .strip_suffix(".ARW")?
-            .parse()
-            .ok()?;
-        let plane = ordinal.checked_sub(1)? / self.shots;
-        if !self.planes.insert(plane) {
-            return None;
-        }
-        Some(self.run.join(match r["storage_encoding"].as_str() {
+        Self::ordinal(name)?;
+        let file = run.join(match r["storage_encoding"].as_str() {
             Some("identity") | None => name.to_owned(),
             Some(_) => format!("{name}.straw"),
-        }))
+        });
+        Some((name.to_owned(), file))
+    }
+    /// A RAW's capture ordinal (`frame-000017.ARW`: 17).
+    fn ordinal(name: &str) -> Option<u64> {
+        name.strip_prefix("frame-")?
+            .strip_suffix(".ARW")?
+            .parse()
+            .ok()
     }
 }
 
@@ -1367,6 +1452,68 @@ mod tests {
         assert_eq!(tail.poll(), (vec![], false), "the end is reported once");
     }
 
+    /// With the capture journal's bindings, a retake (a later group of a
+    /// plane already offered) is not offered as a new plane, and a RAW
+    /// waits for its binding; the planes offered are the run's planes. The
+    /// owner's run of 2026-11-21 retook plane 3 as frames 17-20, after
+    /// plane 4: the tail used to offer it as a fifth plane.
+    #[test]
+    fn the_run_tail_knows_a_retake_by_its_binding() {
+        let dir = tempfile::tempdir().unwrap();
+        let mut tail = RunTail::new(dir.path().to_path_buf(), 4);
+        let receipt = |n: u64| {
+            format!(
+                "{{\"logical_name\":\"frame-{n:06}.ARW\",\"ok\":true,\"durable\":true,\"storage_encoding\":\"strehl-archive-v2\"}}\n"
+            )
+        };
+        // Group n of the run: its plane, and frames 4n-3 to 4n.
+        let planes = [1u64, 2, 3, 4, 3, 5];
+        let binding = |group: usize| {
+            let files: Vec<serde_json::Value> = (0..4)
+                .map(|k| {
+                    serde_json::json!({"name":format!("frame-{:06}.ARW", group * 4 + k + 1),
+                        "plane":planes[group],"member_index":k + 1})
+                })
+                .collect();
+            format!(
+                "{}\n",
+                serde_json::json!({"event":"capture_buffered","data":{"ordinal":planes[group] - 1,
+                    "response":{"files":files}}})
+            )
+        };
+        let mut receipts = String::new();
+        let mut events = String::from("{\"event\":\"created\",\"data\":{}}\n");
+        std::fs::write(dir.path().join("events.jsonl"), &events).unwrap();
+        let mut offered = Vec::new();
+        for group in 0..planes.len() {
+            // The RAWs arrive, then their binding.
+            for k in 0..4 {
+                receipts.push_str(&receipt((group * 4 + k + 1) as u64));
+            }
+            std::fs::write(dir.path().join("transfer-receipts.jsonl"), &receipts).unwrap();
+            let (paths, _) = tail.poll();
+            assert!(paths.is_empty(), "group {group} waits for its binding");
+            events.push_str(&binding(group));
+            std::fs::write(dir.path().join("events.jsonl"), &events).unwrap();
+            offered.extend(tail.poll().0);
+        }
+        let names: Vec<String> = offered
+            .iter()
+            .map(|p| p.file_name().unwrap().to_string_lossy().into_owned())
+            .collect();
+        assert_eq!(
+            names,
+            [
+                "frame-000001.ARW.straw",
+                "frame-000005.ARW.straw",
+                "frame-000009.ARW.straw",
+                "frame-000013.ARW.straw",
+                "frame-000021.ARW.straw"
+            ],
+            "five planes; the retake of plane 3 (frames 17-20) is not a sixth"
+        );
+    }
+
     /// A TIFF container holding one camera JPEG, as a RAW's embedded preview.
     fn preview_file(path: &Path, image: &PreviewImage) {
         let rgb: Vec<u8> = image
@@ -1653,6 +1800,111 @@ mod tests {
                 assert!((actual.0 - (2.0 * sx + 0.5)).abs() < 1e-10);
                 assert!((actual.1 - (2.0 * sy + 0.5)).abs() < 1e-10);
             }
+        }
+    }
+
+    /// The proof against a copy of a real run, its receipts written as the
+    /// receiver writes them: `STREHL_PROOF_RUN=<folder>` holding RAWs and
+    /// `transfer-receipts.full.jsonl` (a scratch copy; the folder's
+    /// `transfer-receipts.jsonl` and `result.json` are rewritten).
+    /// `cargo test --release -p strehl-ui proof_follows_a_real_run -- --ignored --nocapture`.
+    #[test]
+    #[ignore = "needs a scratch copy of a real capture"]
+    fn proof_follows_a_real_run() {
+        use std::io::Write;
+        let Some(run) = std::env::var_os("STREHL_PROOF_RUN").map(PathBuf::from) else {
+            return;
+        };
+        let pace = std::env::var("STREHL_PROOF_PACE_MS")
+            .ok()
+            .and_then(|v| v.parse().ok())
+            .unwrap_or(150u64);
+        let full = std::fs::read_to_string(run.join("transfer-receipts.full.jsonl")).unwrap();
+        let lines: Vec<&str> = full
+            .lines()
+            .filter(|l| {
+                serde_json::from_str::<serde_json::Value>(l).is_ok_and(|r| {
+                    r["logical_name"].as_str().is_some_and(|n| {
+                        !n.starts_with("frame-") || run.join(format!("{n}.straw")).is_file()
+                    })
+                })
+            })
+            .collect();
+        let receipts = run.join("transfer-receipts.jsonl");
+        std::fs::write(&receipts, "").unwrap();
+        let _ = std::fs::remove_file(run.join("result.json"));
+        // The capture journal's bindings (written ahead: every RAW's plane).
+        if let Ok(events) = std::fs::read(run.join("events.full.jsonl")) {
+            std::fs::write(run.join("events.jsonl"), events).unwrap();
+        }
+        let out = std::env::var_os("STREHL_PROOF_OUT").map(PathBuf::from);
+        // The first member of each plane, by the decoder alone.
+        for line in lines.iter().take(12) {
+            let r: serde_json::Value = serde_json::from_str(line).unwrap();
+            let name = r["logical_name"].as_str().unwrap();
+            if !name.starts_with("frame-") {
+                continue;
+            }
+            let at = Instant::now();
+            let path = run.join(format!("{name}.straw"));
+            match load_draft_source(&path, DRAFT_SIDE, &AtomicBool::new(false)) {
+                Ok(image) => println!(
+                    "{name}: preview {:?} from {:?} in {:.3} s",
+                    image.size,
+                    image.source_size,
+                    at.elapsed().as_secs_f64()
+                ),
+                Err(e) => println!("{name}: {e:#}"),
+            }
+        }
+        let job = ProofJob::for_run(run.clone(), 4);
+        let started = Instant::now();
+        let show = |event: ProofEvent| match event {
+            ProofEvent::Updated(u) => {
+                println!(
+                    "{:>6.1} s: revision {} · {} offered · {} used · stride {} · warnings {:?}",
+                    started.elapsed().as_secs_f64(),
+                    u.revision,
+                    u.received,
+                    u.used,
+                    u.stride,
+                    u.draft.warnings
+                );
+                if let Some(out) = &out {
+                    let image = &u.draft.image;
+                    image::save_buffer(
+                        out.join(format!("proof-{:03}-{}.png", u.revision, u.received)),
+                        &image.rgba,
+                        image.size[0] as u32,
+                        image.size[1] as u32,
+                        image::ColorType::Rgba8,
+                    )
+                    .unwrap();
+                }
+            }
+            ProofEvent::Failed(e) => {
+                println!("{:>6.1} s: failed: {e}", started.elapsed().as_secs_f64())
+            }
+        };
+        for line in &lines {
+            let mut f = std::fs::OpenOptions::new()
+                .append(true)
+                .open(&receipts)
+                .unwrap();
+            writeln!(f, "{line}").unwrap();
+            drop(f);
+            thread::sleep(Duration::from_millis(pace));
+            while let Some(event) = job.poll() {
+                show(event);
+            }
+        }
+        std::fs::write(run.join("result.json"), "{}").unwrap();
+        let end = Instant::now() + Duration::from_secs(60);
+        while Instant::now() < end {
+            if let Some(event) = job.poll() {
+                show(event);
+            }
+            thread::sleep(Duration::from_millis(100));
         }
     }
 }

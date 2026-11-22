@@ -44,8 +44,8 @@ impl StrehlApp {
         {
             egui::Popup::open_id(ctx, id);
         }
-        if let Some(plane) = self.capture.take_show_plane() {
-            self.capture_show_plane(plane);
+        if let Some((plane, raw)) = self.capture.take_show_plane() {
+            self.capture_show_plane(plane, raw.as_deref());
         }
         self.capture_finished();
         self.capture_confirm_window(ctx);
@@ -229,10 +229,12 @@ impl StrehlApp {
         }
     }
 
-    /// "Show" on a retaken plane: the plane in the Stack station when its
-    /// run is open there, else its RAW's preview in the Capture canvas.
-    fn capture_show_plane(&mut self, plane: u64) {
-        let path = self.capture.plane_raw(plane);
+    /// "Show" in the in-flight feed: the try asked for (its first RAW,
+    /// `raw`; else the plane's last try) in the Stack station when its run
+    /// is open there and the stack holds it (only a plane's last try is a
+    /// stack frame), else that RAW's preview in the Capture canvas.
+    fn capture_show_plane(&mut self, plane: u64, raw: Option<&str>) {
+        let path = self.capture.plane_raw(plane, raw);
         if let (Some(path), Some(stack)) = (&path, &self.stack) {
             let name = path.file_name();
             let index = stack.frames.iter().position(|f| {

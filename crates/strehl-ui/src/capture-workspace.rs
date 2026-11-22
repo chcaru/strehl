@@ -1329,10 +1329,8 @@ impl CaptureWorkspace {
                     host.total.max(host.completed)
                 )
             };
-            let left = host
-                .timer
-                .as_ref()
-                .and_then(|t| t.remaining)
+            let left = self
+                .time_left(&s)
                 .map(|r| format!(" · {} left", duration(Some(r))))
                 .unwrap_or_default();
             let paused = if host.phase == HostPhase::Paused {
@@ -1392,10 +1390,8 @@ impl CaptureWorkspace {
                     (host.phase != HostPhase::Scanning).then_some(host.total.max(host.completed)),
                 )
                 .with_cancel(CancelMode::Cooperative);
-                status.eta = host
-                    .timer
-                    .as_ref()
-                    .and_then(|t| t.remaining)
+                status.eta = self
+                    .time_left(&s)
                     .map(|r| std::time::Duration::from_secs_f64(r.max(0.0)));
                 if paused {
                     status.state = ActivityState::Waiting {

@@ -816,3 +816,96 @@ fn rail_zoom_cost() {
         );
     }
 }
+
+// ----- the rail in flight --------------------------------------------------
+
+/// A stack in flight: planes 37,100-37,764, 61 checked.
+fn flight_ticks() -> FlightTicks {
+    FlightTicks {
+        positions: planned(37_100, 37_764, 7),
+        states: (0..96)
+            .map(|i| {
+                if i < 61 {
+                    TickState::Checked
+                } else {
+                    TickState::ToCome
+                }
+            })
+            .collect(),
+        revision: 1,
+    }
+}
+
+/// In flight the rail fits the stack being captured: neither a wider survey
+/// nor the lens (which goes below a plane to retake it) moves the fit.
+#[test]
+fn in_flight_the_fit_is_the_stack() {
+    let wide: Vec<SurveySample> = (0..40)
+        .map(|i| SurveySample {
+            position: 30_000 + i * 400,
+            scores: vec![Some(0.5); 24],
+        })
+        .collect();
+    let flight = flight_ticks();
+    let mut input = inputs(&wide, Some(&flight));
+    let (lo, hi) = domain(&input);
+    assert_eq!((lo, hi), (37_100 - 66, 37_764 + 66));
+    input.lens = Some(36_900);
+    assert_eq!(domain(&input), (lo, hi), "a retake's approach");
+    // Planning, the survey and the lens count.
+    let plan = inputs(&wide, None);
+    assert_eq!(domain(&plan).0, 30_000 - 1_560);
+}
+
+/// A view zoomed while planning is let go when the capture starts: the
+/// rail fits the stack and stays fitted as planes are taken; a wheel in
+/// flight holds the user's view until Fit.
+#[test]
+fn a_capture_starts_fitted_and_fit_restores_following() {
+    let ctx = egui::Context::default();
+    let s = samples();
+    let mut rail = FocusRail::default();
+    let mut time = 0.0;
+    let plan = inputs(&s, None);
+    frame(&ctx, &mut rail, &plan, time, vec![]);
+    rail.set_view(Some(RailView::of((37_500, 37_620))));
+    frame(&ctx, &mut rail, &plan, time + 0.01, vec![]);
+    assert_eq!(rail.view(), Some(RailView::of((37_500, 37_620))));
+    // The capture starts.
+    let flight = flight_ticks();
+    let input = inputs(&s, Some(&flight));
+    let fitted = RailView::of(domain(&input));
+    settle(&ctx, &mut rail, &input, &mut time);
+    assert_eq!(rail.view(), Some(fitted));
+    // Planes are taken and the lens moves on: still fitted.
+    let mut more = flight.clone();
+    more.states[61] = TickState::Checked;
+    more.revision = 2;
+    let mut next = inputs(&s, Some(&more));
+    next.lens = Some(37_534);
+    settle(&ctx, &mut rail, &next, &mut time);
+    assert_eq!(rail.view(), Some(fitted));
+    // The user zooms in flight: the view is theirs...
+    let at = egui::pos2(Axis::new(CHART, fitted).xf(37_400.0), 100.0);
+    time += 1.0 / 60.0;
+    frame(
+        &ctx,
+        &mut rail,
+        &next,
+        time,
+        vec![Event::PointerMoved(at), wheel(2.0, false)],
+    );
+    settle(&ctx, &mut rail, &next, &mut time);
+    let zoomed = rail.view().unwrap();
+    assert!((zoomed.span - fitted.span / 2.0).abs() < 1e-6);
+    let mut later = more.clone();
+    later.states[62] = TickState::Checked;
+    later.revision = 3;
+    let later_input = inputs(&s, Some(&later));
+    settle(&ctx, &mut rail, &later_input, &mut time);
+    assert_eq!(rail.view(), Some(zoomed), "the user's view holds");
+    // ...until Fit, which follows the stack again.
+    rail.fit();
+    settle(&ctx, &mut rail, &later_input, &mut time);
+    assert_eq!(rail.view(), Some(fitted));
+}

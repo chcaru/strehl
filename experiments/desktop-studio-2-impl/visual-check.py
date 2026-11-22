@@ -80,6 +80,17 @@ ROUTES = {
     "develop-lightbox": (["--open-run", RUN, "--route", "develop", "--theme", "lightbox"], "develop.png"),
     "export-lightbox": (["--open-run", RUN, "--route", "export", "--theme", "lightbox"], "export.png"),
     "glance-lightbox": (["--route", "capture", "--capture-fixture", "glance", "--theme", "lightbox"], "glance.png"),
+    # The flight view after the owner's run-through (g-flight): the feed of every try, a 6,000-plane
+    # stack, the review once the capture ended, and a try's RAW shown from the feed.
+    "capture-flight-instrument": (["--route", "capture", "--capture-fixture", "flight", "--theme", "instrument"],
+                                  "capture-flight.png"),
+    "capture-flight-long": (["--route", "capture", "--capture-fixture", "flight+long"], "capture-flight.png"),
+    "capture-flight-done": (["--route", "capture", "--capture-fixture", "flight+done"], "capture-flight.png"),
+    "capture-flight-done-lightbox": (["--route", "capture", "--capture-fixture", "flight+done", "--theme",
+                                      "lightbox"], "capture-flight.png"),
+    "capture-flight-show": (["--route", "capture", "--capture-fixture", "flight+show"], "capture-flight.png"),
+    "capture-flight-show-instrument": (["--route", "capture", "--capture-fixture", "flight+show", "--theme",
+                                        "instrument"], "capture-flight.png"),
     # The shell's own surfaces over a station (no reference: compare across themes).
     "projects-drawer": (["--open-run", RUN, "--route", "develop", "--overlay", "projects"], "develop.png"),
     "projects-drawer-lightbox": (["--open-run", RUN, "--route", "develop", "--overlay", "projects",

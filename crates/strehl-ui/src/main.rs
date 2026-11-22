@@ -226,8 +226,10 @@ pub struct LaunchOptions {
     /// checks of the rail it shares with the Stack station).
     pub(crate) depth_brush: bool,
     /// `--capture-fixture plan|flight|glance` (`plan+rig`, `plan+guide`,
-    /// `plan+schedule`... with a panel open): the Capture station from a
-    /// fabricated state (offscreen checks); nothing reaches a camera.
+    /// `plan+schedule`... with a panel open; `flight+long`, a 6,000-plane
+    /// stack; `flight+done`, the review once it ended; `flight+show`, a
+    /// try's RAW from the feed): the Capture station from a fabricated
+    /// state (offscreen checks); nothing reaches a camera.
     pub(crate) capture_fixture: Option<String>,
     /// `--capture-rail-view LO-HI`: the Capture station's depth rail opens
     /// zoomed to focus units LO to HI (offscreen checks of the rail's scale).

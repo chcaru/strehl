@@ -174,6 +174,8 @@ pub(crate) struct GlanceInputs<'a> {
     pub proof: Option<(TextureId, egui::Vec2)>,
     /// "Blue weevil · Dorsal · 2.8× · proof from planes 1–61".
     pub caption: String,
+    /// The time left as shown (`flight::LeftClock`), the same as in flight.
+    pub left: Option<f64>,
     pub next: Next,
 }
 
@@ -184,7 +186,8 @@ pub(crate) fn show(ui: &mut Ui, inputs: &GlanceInputs<'_>, palette: &CapturePale
     let p = ui.painter().clone();
     let bg = Color32::from_rgb(6, 6, 7);
     p.rect_filled(r, 0.0, bg);
-    let h = flight::headline(inputs.s);
+    let mut h = flight::headline(inputs.s, inputs.progress);
+    h.left = inputs.left.or(h.left);
     let state = glance_state(inputs.s, &h);
     let color = state.color(palette);
     p.rect_filled(
@@ -248,16 +251,18 @@ pub(crate) fn show(ui: &mut Ui, inputs: &GlanceInputs<'_>, palette: &CapturePale
     let left = h
         .left
         .filter(|_| state == GlanceState::Fine || matches!(state, GlanceState::NeedsYou(_)));
-    style::paint_job(
+    // Figures in fixed cells, centred by their width: the time ticks by
+    // the second without the digits shifting.
+    let text = left.map(style::clock).unwrap_or_else(|| "—".into());
+    let width = style::figures(&p, &text, 136.0, palette.ink, -2.0).1;
+    style::paint_figures(
         &p,
-        center + egui::vec2(0.0, 22.0),
-        Align2::CENTER_BOTTOM,
-        style::job(
-            &left.map(style::clock).unwrap_or_else(|| "—".into()),
-            136.0,
-            palette.ink,
-            -2.0,
-        ),
+        center + egui::vec2(-width / 2.0, -36.0),
+        false,
+        &text,
+        136.0,
+        palette.ink,
+        -2.0,
     );
     let ends = h
         .left
@@ -274,7 +279,17 @@ pub(crate) fn show(ui: &mut Ui, inputs: &GlanceInputs<'_>, palette: &CapturePale
         center + egui::vec2(0.0, radius + 52.0),
         Align2::CENTER_TOP,
         style::caps_job(
-            &format!("Plane {} of {}", h.plane, h.total),
+            &if h.retakes > 0 {
+                format!(
+                    "Plane {} of {} · {} retake{}",
+                    h.plane,
+                    h.total,
+                    h.retakes,
+                    if h.retakes == 1 { "" } else { "s" }
+                )
+            } else {
+                format!("Plane {} of {}", h.plane, h.total)
+            },
             14.0,
             palette.ink2,
         ),
@@ -375,10 +390,10 @@ mod tests {
     fn glance_reads_each_state() {
         let palette = CapturePalette::default();
         let s = snapshot(capturing());
-        let h = flight::headline(&s);
+        let h = flight::headline(&s, None);
         assert_eq!(
-            (h.plane, h.total, h.raws_taken, h.raws_total),
-            (61, 96, 244, 384)
+            (h.plane, h.total, h.raws_taken, h.raws_for_retakes),
+            (61, 96, 244, 0)
         );
         assert!((h.per_plane.unwrap() - 5.6).abs() < 0.01);
         let fine = glance_state(&s, &h);
@@ -397,14 +412,14 @@ mod tests {
         let mut paused = capturing();
         paused["phase"] = json!("paused");
         let s = snapshot(paused);
-        let state = glance_state(&s, &flight::headline(&s));
+        let state = glance_state(&s, &flight::headline(&s, None));
         assert!(matches!(&state, GlanceState::NeedsYou(m) if m.contains("Paused at plane 61")));
         assert_eq!(state.color(&palette), palette.warn);
         let mut stopped = capturing();
         stopped["phase"] = json!("fault");
         stopped["failure"] = json!({"message":"Camera disconnected","exposure_uncertain":false});
         let s = snapshot(stopped);
-        let state = glance_state(&s, &flight::headline(&s));
+        let state = glance_state(&s, &flight::headline(&s, None));
         assert!(
             matches!(&state, GlanceState::Stopped(m) if m.starts_with("Camera disconnected at plane 62"))
         );
@@ -413,14 +428,14 @@ mod tests {
         done["phase"] = json!("complete");
         done["completed"] = json!(96);
         let s = snapshot(done);
-        let state = glance_state(&s, &flight::headline(&s));
+        let state = glance_state(&s, &flight::headline(&s, None));
         assert!(matches!(&state, GlanceState::Done(_)));
         assert_eq!(state.color(&palette), palette.info);
         let mut lost = snapshot(capturing());
         lost.receiver = json!(null);
         lost.receiver_error = Some("refused".into());
         assert!(
-            matches!(glance_state(&lost, &flight::headline(&lost)), GlanceState::NeedsYou(m) if m.contains("receiver"))
+            matches!(glance_state(&lost, &flight::headline(&lost, None)), GlanceState::NeedsYou(m) if m.contains("receiver"))
         );
     }
 
@@ -436,6 +451,7 @@ mod tests {
             progress: None,
             proof: None,
             caption: "proof from planes 1–61".into(),
+            left: None,
             next: Next::default(),
         };
         let palette = CapturePalette::default();

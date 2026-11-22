@@ -32,7 +32,7 @@ use super::{
     test_shot::TestShot,
     tools::Calibration,
 };
-use crate::capture_client::{Connection, Snapshot};
+use crate::capture_client::{Connection, Snapshot, host::HostPhase};
 use crate::draft_preview::{ProofEvent, ProofJob, ProofUpdate};
 
 /// What the flight ticks depend on: the plan, the counts and the
@@ -59,9 +59,11 @@ pub(crate) struct MarkAt {
     pub since: Instant,
 }
 
-/// A plane's RAW shown in the canvas ("Show" on a retaken plane).
+/// A plane's RAW shown in the canvas ("Show" in the in-flight feed).
 pub(crate) struct PinnedPlane {
     pub plane: u64,
+    /// The RAW's file name.
+    pub name: String,
     task: Option<crate::jobs::Task<crate::preview::PreviewImage>>,
     texture: Option<TextureHandle>,
     error: Option<String>,
@@ -80,7 +82,20 @@ pub(crate) struct Station {
     /// The flight rail's ticks and what they were built from.
     ticks: Option<(TicksKey, Arc<FlightTicks>)>,
     rig_requested: bool,
-    show_plane: Option<u64>,
+    /// A plane to show, and the first RAW of the try asked for.
+    show_plane: Option<(u64, Option<Arc<str>>)>,
+    /// The in-flight view's state (the feed's row positions).
+    pub flight: flight::FlightView,
+    /// What retakes cost the capture, and the time left as shown.
+    retake_clock: flight::RetakeClock,
+    left_clock: flight::LeftClock,
+    left: Option<f64>,
+    /// The phase seen at the last poll, and whether the capture that ended
+    /// is shown for review (the flight view, until Back to planning).
+    was_capturing: bool,
+    pub review: bool,
+    /// When the reviewed capture was seen to end.
+    ended_at: Option<SystemTime>,
     pub calibrated_at: Option<SystemTime>,
     recover_open: bool,
     settings_open: bool,
@@ -190,11 +205,15 @@ impl CaptureWorkspace {
             .or_else(|| self.station.fixture_progress.clone())
     }
 
-    /// The RAW file of `plane` in the run being (or last) followed: its
-    /// first member, as stored on this PC.
-    pub fn plane_raw(&self, plane: u64) -> Option<PathBuf> {
+    /// The RAW file of `plane` in the run being (or last) followed, as
+    /// stored on this PC: the try whose first RAW is `raw`, else the
+    /// plane's last try (the one the stack uses), its first member.
+    pub fn plane_raw(&self, plane: u64, raw: Option<&str>) -> Option<PathBuf> {
         let progress = self.station_progress()?;
-        let name = progress.plane(plane)?["names"][0].as_str()?.to_owned();
+        let name = match raw {
+            Some(name) => name.to_owned(),
+            None => progress.plane(plane)?["names"][0].as_str()?.to_owned(),
+        };
         let run = self.follower.as_ref().map(|f| f.run.clone())?;
         [format!("{name}.straw"), name]
             .into_iter()
@@ -205,11 +224,16 @@ impl CaptureWorkspace {
     /// Shows `path` (a plane's RAW) in the canvas until dismissed: its camera
     /// preview, read on a worker.
     pub fn show_plane_raw(&mut self, plane: u64, path: PathBuf) {
+        let name = path
+            .file_name()
+            .map(|n| n.to_string_lossy().replace(".straw", ""))
+            .unwrap_or_default();
         let task = crate::jobs::spawn_task("strehl-capture-plane", move |cancelled| {
             crate::source_preview::load_draft_source(&path, 1920, &cancelled)
         });
         self.station.pinned = Some(PinnedPlane {
             plane,
+            name,
             task: Some(task),
             texture: None,
             error: None,
@@ -224,7 +248,39 @@ impl CaptureWorkspace {
         let (name, open) = name.split_once('+').unwrap_or((name, ""));
         let which = Fixture::parse(name)
             .ok_or_else(|| anyhow::anyhow!("Use --capture-fixture plan, flight or glance"))?;
-        self.connection = Some(Connection::fixture(fixture::snapshot(which)));
+        // `flight+long`: a 6,000-plane stack with hundreds of retakes;
+        // `flight+done`: the capture ended, under review; `flight+show`: a
+        // plane's RAW shown from the feed.
+        let long = (which != Fixture::Plan && open == "long").then(fixture::long_progress);
+        let mut snapshot = fixture::snapshot(which);
+        if let Some((_, groups)) = &long {
+            fixture::lengthen(&mut snapshot, *groups);
+        }
+        if which != Fixture::Plan && open == "done" {
+            fixture::finish(&mut snapshot);
+            self.station.review = true;
+            self.station.ended_at = Some(SystemTime::now());
+        }
+        self.connection = Some(Connection::fixture(snapshot));
+        if which != Fixture::Plan && open == "show" {
+            let task = crate::jobs::spawn_task("strehl-capture-plane", |_| {
+                let image = fixture::subject_image(960, 640, 0.6);
+                Ok(crate::preview::PreviewImage {
+                    path: PathBuf::from("fixture"),
+                    source_size: [960, 640],
+                    size: [960, 640],
+                    rgba: image.pixels.iter().flat_map(|p| p.to_array()).collect(),
+                    is_overview: false,
+                })
+            });
+            self.station.pinned = Some(PinnedPlane {
+                plane: 52,
+                name: "frame-000213.ARW".into(),
+                task: Some(task),
+                texture: None,
+                error: None,
+            });
+        }
         if which == Fixture::Plan {
             let trace = fixture::focus_trace(&self.station_snapshot());
             self.station.live.trace.seed(trace);
@@ -242,7 +298,11 @@ impl CaptureWorkspace {
         self.test_shot_exposure = Some((100, 65544));
         self.open_fixture_panel(open);
         if which != Fixture::Plan {
-            self.station.fixture_progress = Some(Arc::new(fixture::progress()));
+            self.station.fixture_progress = Some(Arc::new(match long {
+                Some((progress, _)) => progress,
+                None if open == "done" => fixture::finished_progress().0,
+                None => fixture::progress(),
+            }));
             let image = fixture::subject_image(960, 640, 0.8);
             let rgba = image.pixels.iter().flat_map(|p| p.to_array()).collect();
             let update = ProofUpdate {
@@ -279,9 +339,10 @@ impl CaptureWorkspace {
         Ok(())
     }
 
-    /// Plan, or flight while a capture runs or is paused.
+    /// Plan, or flight while a capture runs or is paused, and while the
+    /// capture that ended is reviewed.
     pub fn station_mode(&self) -> StationMode {
-        if self.station_snapshot().host.phase.capturing()
+        if (self.station.review || self.station_snapshot().host.phase.capturing())
             && !self.calibrating()
             && !self.test_shot.running()
         {
@@ -309,9 +370,10 @@ impl CaptureWorkspace {
         std::mem::take(&mut self.station.rig_requested)
     }
 
-    /// A plane the user asked to see (a retaken one, from "Last planes").
+    /// A plane the user asked to see from the in-flight feed, and the
+    /// first RAW of the try asked for.
     #[allow(dead_code)]
-    pub fn take_show_plane(&mut self) -> Option<u64> {
+    pub fn take_show_plane(&mut self) -> Option<(u64, Option<Arc<str>>)> {
         self.station.show_plane.take()
     }
 
@@ -345,11 +407,48 @@ impl CaptureWorkspace {
                 ],
                 note,
             },
+            StationMode::Flight if self.station.review => StationHints {
+                keys: vec![],
+                note: "The capture has ended; Back to planning for the next stack".into(),
+            },
             StationMode::Flight => StationHints {
                 keys: vec![("Space", "pause"), ("G", "glance mode")],
                 note: "Stop asks first, and keeps the planes already taken".into(),
             },
         }
+    }
+
+    /// The retakes' cost, the time left as shown, and the review of a
+    /// capture that ended: a capture this desktop watched that completes or
+    /// is stopped stays in the flight view, with what happened to every
+    /// plane, until Back to planning (or the next capture).
+    fn observe_flight(&mut self, s: &Snapshot) {
+        let host = &s.host;
+        // A test shot or a calibration's survey is not a stack.
+        let other = self.test_shot.running()
+            || self.calibrating()
+            || s.in_progress.as_ref().is_some_and(|r| r.test);
+        let station = &mut self.station;
+        station.retake_clock.observe(s);
+        station.left = station.left_clock.update(
+            host.timer
+                .as_ref()
+                .and_then(|t| t.remaining)
+                .filter(|_| host.phase.capturing()),
+            host.sequence_id,
+            host.phase == HostPhase::Capturing,
+            Instant::now(),
+        );
+        let capturing = host.phase.capturing();
+        if capturing {
+            station.review = false;
+        } else if station.was_capturing
+            && matches!(host.phase, HostPhase::Complete | HostPhase::Stopped)
+        {
+            station.review = true;
+            station.ended_at = Some(SystemTime::now());
+        }
+        station.was_capturing = capturing && !other;
     }
 
     /// Advances the proof and a dragged bound; called with the other polls.
@@ -407,6 +506,7 @@ impl CaptureWorkspace {
                 None => {}
             }
         }
+        self.observe_flight(s);
         // A dragged bound: once the lens is there and the camera idle, mark.
         if let Some(at) = self.station.mark_at {
             let host = &s.host;
@@ -452,11 +552,12 @@ impl CaptureWorkspace {
             }
         }
         let (_, t) = proof.texture.as_ref()?;
-        Some((
-            t.id(),
-            t.size_vec2(),
-            format!("planes 1–{}", update.received),
-        ))
+        let what = if update.stride > 1 {
+            format!("planes 1–{}, one in {}", update.received, update.stride)
+        } else {
+            format!("planes 1–{}", update.received)
+        };
+        Some((t.id(), t.size_vec2(), what))
     }
 
     /// The pre-flight strip, in the control strip's slot.
@@ -519,21 +620,63 @@ impl CaptureWorkspace {
                 self.station.live.sync_textures(ui.ctx(), s, &palette);
                 let latest = self.station.live.preview_texture();
                 let progress = self.station_progress();
-                let inputs = FlightInputs {
-                    s,
-                    progress: progress.as_deref(),
-                    checking: self.follow_enabled,
-                    proof,
-                    latest,
-                    stack_when_done: self.stack_when_done,
-                    power_down: s.host.power.as_ref().map(|p| p.manage_stack),
-                    confirm_stop: self.confirm == Some(Confirm::Stop),
-                };
-                let intents = flight::canvas(ui, &inputs, &palette);
+                let mut inputs = self.flight_inputs(s, progress.as_deref());
+                inputs.proof = proof;
+                inputs.latest = latest;
+                let mut view = std::mem::take(&mut self.station.flight);
+                let intents = flight::canvas(ui, &inputs, &mut view, &palette);
+                self.station.flight = view;
                 for intent in intents {
                     self.apply_flight(s, intent);
                 }
+                // The time left counts down by the second.
+                if s.host.phase == HostPhase::Capturing {
+                    ui.ctx().request_repaint_after(Duration::from_millis(250));
+                }
             }
+        }
+    }
+
+    /// The time left as the station shows it (eased, see
+    /// `flight::LeftClock`), else the host's estimate: the top bar and the
+    /// status line say the same as the flight view.
+    pub(crate) fn time_left(&self, s: &Snapshot) -> Option<f64> {
+        self.station
+            .left
+            .or_else(|| s.host.timer.as_ref().and_then(|t| t.remaining))
+    }
+
+    /// What the in-flight view shows, but its pictures.
+    fn flight_inputs<'a>(
+        &self,
+        s: &'a Snapshot,
+        progress: Option<&'a super::follow::Progress>,
+    ) -> FlightInputs<'a> {
+        let clock = &self.station.retake_clock;
+        let proof_note = self.station.proof.as_ref().and_then(|p| {
+            p.error
+                .as_ref()
+                .map(|e| format!("its last update failed: {e}"))
+        });
+        FlightInputs {
+            s,
+            progress,
+            checking: self.follow_enabled,
+            proof: None,
+            proof_note,
+            latest: None,
+            stack_when_done: self.stack_when_done,
+            power_down: s.host.power.as_ref().map(|p| p.manage_stack),
+            confirm_stop: self.confirm == Some(Confirm::Stop),
+            left: self.station.left,
+            retake_cost: clock.cost(progress.map_or(0, |p| p.retakes as u64)),
+            plain_pace: clock.plain_pace(),
+            ended: self.station.review && !s.host.phase.capturing(),
+            ended_at: self.station.ended_at.map(|t| {
+                chrono::DateTime::<chrono::Local>::from(t)
+                    .format("%H:%M")
+                    .to_string()
+            }),
         }
     }
 
@@ -560,8 +703,43 @@ impl CaptureWorkspace {
                 Err(e) => pinned.error = Some(e),
             }
         }
-        let photo = super::live::photo_rect(rect, 1.5);
+        // A head row inside the canvas (the plane, what the picture is, the
+        // way back), the picture fitted whole below it.
+        use super::style;
+        let inner = rect.shrink2(egui::vec2(24.0, 16.0));
+        let back_w = 160.0;
         let p = ui.painter();
+        let title = style::paint_job(
+            p,
+            inner.left_top(),
+            egui::Align2::LEFT_TOP,
+            style::caps_job(
+                &format!("Plane {} · {}", pinned.plane, pinned.name),
+                10.5,
+                palette.ink,
+            ),
+        );
+        let sentence = match &pinned.error {
+            Some(e) => format!("Its RAW could not be shown: {e}"),
+            None if pinned.texture.is_none() => "Reading its RAW's camera preview…".to_owned(),
+            None => {
+                "Its RAW's camera preview, as the camera made it; not the RAW stack.".to_owned()
+            }
+        };
+        let mut job = style::job(&sentence, 12.5, palette.ink2, 0.0);
+        job.wrap.max_width = (inner.width() - back_w - 16.0).max(80.0);
+        let galley = p.layout_job(job);
+        let text_h = galley.size().y;
+        p.galley(
+            egui::pos2(inner.left(), title.bottom() + 5.0),
+            galley,
+            palette.ink2,
+        );
+        let head_h = (title.height() + 5.0 + text_h).max(28.0);
+        let photo = Rect::from_min_max(
+            egui::pos2(inner.left(), inner.top() + head_h + 12.0),
+            inner.max,
+        );
         p.rect_filled(photo, 0.0, egui::Color32::BLACK);
         if let Some(t) = &pinned.texture {
             let size = t.size_vec2();
@@ -575,22 +753,9 @@ impl CaptureWorkspace {
         } else if pinned.task.is_some() {
             ui.ctx().request_repaint_after(Duration::from_millis(100));
         }
-        let caption = match &pinned.error {
-            Some(e) => format!("Plane {} · {e}", pinned.plane),
-            None => format!(
-                "Plane {} · from its RAW's camera preview, not the RAW stack",
-                pinned.plane
-            ),
-        };
-        super::style::paint_job(
-            p,
-            photo.left_top() - egui::vec2(0.0, 8.0),
-            egui::Align2::LEFT_BOTTOM,
-            super::style::caps_job(&caption, 10.5, palette.ink2),
-        );
         let back = Rect::from_min_size(
-            photo.right_top() + egui::vec2(-130.0, -30.0),
-            egui::vec2(130.0, 24.0),
+            egui::pos2(inner.right() - back_w, inner.top()),
+            egui::vec2(back_w, 28.0),
         );
         let mut close = false;
         ui.scope_builder(egui::UiBuilder::new().max_rect(back), |ui| {
@@ -754,16 +919,7 @@ impl CaptureWorkspace {
             }
             StationMode::Flight => {
                 let progress = self.station_progress();
-                let inputs = FlightInputs {
-                    s: &s,
-                    progress: progress.as_deref(),
-                    checking: self.follow_enabled,
-                    proof: None,
-                    latest: None,
-                    stack_when_done: self.stack_when_done,
-                    power_down: s.host.power.as_ref().map(|p| p.manage_stack),
-                    confirm_stop: self.confirm == Some(Confirm::Stop),
-                };
+                let inputs = self.flight_inputs(&s, progress.as_deref());
                 let intents = flight::inspector(ui, &inputs, &palette);
                 for intent in intents {
                     self.apply_flight(&s, intent);
@@ -801,6 +957,7 @@ impl CaptureWorkspace {
             progress: progress.as_deref(),
             proof,
             caption,
+            left: self.station.left,
             next: Next {
                 stack: self.follow_enabled && self.stack_when_done,
                 power_down: s.host.power.as_ref().is_some_and(|p| p.manage_stack),
@@ -1051,7 +1208,11 @@ impl CaptureWorkspace {
             FlightIntent::Glance => self.station.glance = true,
             FlightIntent::SetStackWhenDone(on) => self.stack_when_done = on,
             FlightIntent::SetPowerDown(on) => self.command(s, Command::PowerPlan { enabled: on }),
-            FlightIntent::ShowPlane(plane) => self.station.show_plane = Some(plane),
+            FlightIntent::ShowPlane { plane, raw } => self.station.show_plane = Some((plane, raw)),
+            FlightIntent::Done => {
+                self.station.review = false;
+                self.station.pinned = None;
+            }
         }
     }
 

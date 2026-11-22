@@ -282,7 +282,8 @@ fn pointer_motion_over_the_station_rebuilds_nothing() {
 #[ignore = "benchmark: prints ms per frame"]
 fn capture_station_pointer_sweeps() {
     let ctx = context();
-    for fixture in ["plan", "flight"] {
+    // `flight+long`: 5,400 of 6,000 planes checked, hundreds retaken.
+    for fixture in ["plan", "flight", "flight+long"] {
         let (_dir, mut app) = station(fixture);
         for _ in 0..5 {
             frame(&mut app, &ctx, vec![]);
@@ -291,6 +292,64 @@ fn capture_station_pointer_sweeps() {
         let ms: Vec<f64> = runs.iter().map(|r| r.0).collect();
         println!(
             "capture_{fixture}_cpu_ms_per_frame {ms:?} min={:.3} final_vertices={}",
+            ms.iter().copied().fold(f64::INFINITY, f64::min),
+            runs[5].1
+        );
+    }
+}
+
+/// The in-flight canvas's CPU cost with the pointer over the planes' feed
+/// and the wheel scrolling it, on the 61-plane fixture and on the long run:
+/// `cargo test --release -p strehl-ui capture_flight_feed_sweeps -- --ignored --nocapture`.
+#[test]
+#[ignore = "benchmark: prints ms per frame"]
+fn capture_flight_feed_sweeps() {
+    let ctx = context();
+    for fixture in ["flight", "flight+long"] {
+        let (_dir, mut app) = station(fixture);
+        for _ in 0..5 {
+            frame(&mut app, &ctx, vec![]);
+        }
+        let mut runs = Vec::new();
+        for _ in 0..6 {
+            let start = Instant::now();
+            let mut vertices = 0;
+            let steps = 80;
+            for step in 0..steps {
+                let f = step as f32 / (steps - 1) as f32;
+                // Down the side column, scrolling back and forth.
+                let at = egui::pos2(1150.0 + 120.0 * f, 450.0 + 400.0 * f);
+                let delta = if (step / 10) % 2 == 0 { -60.0 } else { 60.0 };
+                let out = frame(
+                    &mut app,
+                    &ctx,
+                    vec![
+                        egui::Event::PointerMoved(at),
+                        egui::Event::MouseWheel {
+                            unit: egui::MouseWheelUnit::Point,
+                            delta: egui::vec2(0.0, delta),
+                            modifiers: Default::default(),
+                        },
+                    ],
+                );
+                let primitives = ctx.tessellate(out.shapes, out.pixels_per_point);
+                vertices = primitives
+                    .iter()
+                    .map(|p| match &p.primitive {
+                        egui::epaint::Primitive::Mesh(mesh) => mesh.vertices.len(),
+                        _ => 0,
+                    })
+                    .sum();
+                std::hint::black_box(primitives);
+            }
+            runs.push((
+                start.elapsed().as_secs_f64() * 1000.0 / steps as f64,
+                vertices,
+            ));
+        }
+        let ms: Vec<f64> = runs.iter().map(|r| r.0).collect();
+        println!(
+            "capture_{fixture}_feed_cpu_ms_per_frame {ms:?} min={:.3} final_vertices={}",
             ms.iter().copied().fold(f64::INFINITY, f64::min),
             runs[5].1
         );

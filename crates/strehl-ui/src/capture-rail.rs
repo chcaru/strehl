@@ -256,6 +256,9 @@ struct Zoom {
     /// The ease under way: the view it began from, when (the input's
     /// time), and the view it runs to.
     tween: Option<(RailView, f64, RailView)>,
+    /// The rail showed a capture in flight last frame: entering or leaving
+    /// flight fits the view again, so a capture opens fitted to its stack.
+    flight: bool,
 }
 
 /// The rail's cached geometry and drag state.
@@ -341,8 +344,10 @@ pub(crate) fn profile_max(sorted: &[(u16, f32)], a: f64, b: f64) -> f32 {
     m
 }
 
-/// The focus range the rail fits: the survey, the bounds and the lens,
-/// padded by a tenth (at least 32 units) each side.
+/// The focus range the rail fits, padded by a tenth (at least 32 units)
+/// each side: while planning, the survey, the bounds and the lens; in
+/// flight, the stack being captured (its planned planes and bounds) alone,
+/// so the fit does not move as the lens goes back for a retake.
 pub(crate) fn domain(inputs: &RailInputs<'_>) -> (u16, u16) {
     let mut lo = u16::MAX;
     let mut hi = 0u16;
@@ -350,16 +355,19 @@ pub(crate) fn domain(inputs: &RailInputs<'_>) -> (u16, u16) {
         lo = lo.min(p);
         hi = hi.max(p);
     };
-    for s in inputs.samples {
-        take(s.position);
+    let flight = inputs.flight.filter(|f| !f.positions.is_empty());
+    if flight.is_none() {
+        for s in inputs.samples {
+            take(s.position);
+        }
+        if let Some(p) = inputs.lens {
+            take(p);
+        }
     }
-    for p in [inputs.start, inputs.end, inputs.lens]
-        .into_iter()
-        .flatten()
-    {
+    for p in [inputs.start, inputs.end].into_iter().flatten() {
         take(p);
     }
-    if let Some(f) = inputs.flight
+    if let Some(f) = flight
         && let (Some(a), Some(b)) = (f.positions.first(), f.positions.last())
     {
         take(*a);
@@ -607,6 +615,14 @@ impl FocusRail {
         let head = Rect::from_min_size(slot.min, egui::vec2(slot.width(), HEAD));
         let chart = Rect::from_min_max(egui::pos2(slot.left(), head.bottom()), slot.max);
         let fit = RailView::of(domain(inputs));
+        // A capture starts (and ends) fitted to its stack: a view the user
+        // zoomed while planning is let go. A wheel or a pan in flight holds
+        // the user's view until Fit.
+        let flight = inputs.flight.is_some();
+        if flight != self.zoom.flight {
+            self.zoom.flight = flight;
+            self.fit();
+        }
         self.wheel(ui, slot, chart, fit, inputs.lens);
         self.follow_lens(inputs.lens);
         self.ease(ui, fit);
@@ -756,11 +772,23 @@ impl FocusRail {
                 ui.label(style::caps_job("Depth rail", 10.5, palette.ink))
                     .on_hover_text("Lens travel, in the camera's focus units");
                 if inputs.flight.is_some() {
-                    style::text(ui, "each tick is a plane", 12.0, palette.ink3);
+                    // A narrow rail (a 1280 px window) keeps the legend
+                    // short, clear of the scale at the right.
+                    let roomy = head.width() >= 1200.0;
+                    if roomy {
+                        style::text(ui, "each tick is a plane", 12.0, palette.ink3);
+                    }
                     for (color, label) in [
                         (palette.ok, "checked"),
                         (palette.warn, "retaken"),
-                        (palette.info, "on the camera host, not yet here"),
+                        (
+                            palette.info,
+                            if roomy {
+                                "on the camera host, not yet here"
+                            } else {
+                                "on the host"
+                            },
+                        ),
                         (palette.line2, "to come"),
                     ] {
                         ui.horizontal(|ui| {

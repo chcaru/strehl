@@ -1304,8 +1304,9 @@ fn after_approach(settle_ms: u32) -> u32 {
     settle_ms.max(AFTER_APPROACH_MS)
 }
 
-/// Error correction: retakes of one plane before keeping what it has.
-const MAX_RETAKES: usize = 2;
+/// Error correction: retakes of one plane before keeping what it has
+/// (public for the desktop, which says how many tries a plane has left).
+pub const MAX_RETAKES: usize = 2;
 /// How long a group's check may take to arrive. It normally arrives about
 /// 1.5-2 s after the group (the last RAW reaches the PC in 1.1-1.3 s and the
 /// check takes 0.2-0.4 s), during the next plane; without one, error
