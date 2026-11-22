@@ -650,7 +650,7 @@ pub(crate) fn stack_menu(
         .collect();
     let move_to = |stacks: &[NodeId]| {
         let mut items = vec![SubItem {
-            label: "New subject".into(),
+            label: "New subject…".into(),
             detail: String::new(),
             intent: LibraryIntent::MoveStacksToNewSubject(stacks.to_vec()),
         }];

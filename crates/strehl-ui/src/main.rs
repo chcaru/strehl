@@ -513,6 +513,11 @@ fn main() -> eframe::Result {
                         | "subject-menu"
                         | "subject-menu-move"
                         | "subject-select"
+                        | "library-new-menu"
+                        | "library-new-subject"
+                        | "library-new-subject-taken"
+                        | "subject-move"
+                        | "subject-new-subject"
                         | "develop-save-version"
                         | "export-hdr"
                         | "export-result"
@@ -522,8 +527,9 @@ fn main() -> eframe::Result {
                     "Use --overlay projects|activity|agent|palette|preferences|library-menu|\
                      library-menu-move|library-select|library-list|library-delete|\
                      library-delete-sources|library-delete-confirm|subject-menu|\
-                     subject-menu-move|subject-select|develop-save-version|export-hdr|\
-                     export-result"
+                     subject-menu-move|subject-select|library-new-menu|library-new-subject|\
+                     library-new-subject-taken|subject-move|subject-new-subject|\
+                     develop-save-version|export-hdr|export-result"
                 );
                 std::process::exit(2);
             }

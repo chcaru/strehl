@@ -712,37 +712,21 @@ impl LibraryPreviews {
     pub(crate) fn paint(ui: &egui::Ui, rect: Rect, texture: Option<&TextureHandle>) {
         ui.painter().rect_filled(rect, 0.0, crate::theme::RAISED);
         if let Some(texture) = texture {
-            let size = texture.size_vec2();
-            let scale = (rect.width() / size.x).min(rect.height() / size.y);
-            ui.painter().image(
+            Self::paint_fit(ui.painter(), rect, texture);
+        }
+    }
+    /// The whole picture inside `rect`, its aspect kept and centred, on
+    /// whatever ground the cell painted (owner feedback, 2026-11-22: the
+    /// previews "crop the actual subject"). Nothing is cropped.
+    pub(crate) fn paint_fit(painter: &egui::Painter, rect: Rect, texture: &TextureHandle) {
+        if let Some(fitted) = fitted(rect, texture.size_vec2()) {
+            painter.image(
                 texture.id(),
-                Rect::from_center_size(rect.center(), size * scale),
+                fitted,
                 Rect::from_min_max(egui::Pos2::ZERO, egui::pos2(1.0, 1.0)),
                 egui::Color32::WHITE,
             );
         }
-    }
-    /// Fill `rect`, cropping the picture's longer side about its centre.
-    pub(crate) fn paint_cover(painter: &egui::Painter, rect: Rect, texture: &TextureHandle) {
-        let size = texture.size_vec2();
-        if size.x <= 0.0 || size.y <= 0.0 || rect.width() <= 0.0 || rect.height() <= 0.0 {
-            return;
-        }
-        let (picture, frame) = (size.x / size.y, rect.width() / rect.height());
-        let uv = if picture > frame {
-            let keep = frame / picture;
-            Rect::from_min_max(
-                egui::pos2((1.0 - keep) * 0.5, 0.0),
-                egui::pos2((1.0 + keep) * 0.5, 1.0),
-            )
-        } else {
-            let keep = picture / frame;
-            Rect::from_min_max(
-                egui::pos2(0.0, (1.0 - keep) * 0.5),
-                egui::pos2(1.0, (1.0 + keep) * 0.5),
-            )
-        };
-        painter.image(texture.id(), rect, uv, egui::Color32::WHITE);
     }
     pub(crate) fn hover(ui: &mut egui::Ui, texture: Option<&TextureHandle>, caption: &str) {
         if let Some(texture) = texture {
@@ -752,6 +736,16 @@ impl LibraryPreviews {
         }
         ui.label(egui::RichText::new(caption).small());
     }
+}
+
+/// The largest rectangle of the picture's aspect (`size`) inside `rect`,
+/// centred; None when either is empty.
+pub(crate) fn fitted(rect: Rect, size: egui::Vec2) -> Option<Rect> {
+    if size.x <= 0.0 || size.y <= 0.0 || rect.width() <= 0.0 || rect.height() <= 0.0 {
+        return None;
+    }
+    let scale = (rect.width() / size.x).min(rect.height() / size.y);
+    Some(Rect::from_center_size(rect.center(), size * scale))
 }
 
 /// Downscale on the worker so the UI thread uploads only the tile's pixels.

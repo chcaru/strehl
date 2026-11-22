@@ -29,11 +29,13 @@ use super::{
     preflight::{self, Fix},
     rail::{FlightTicks, FocusRail, RailInputs, RailIntent},
     style::CapturePalette,
+    subject::{self, Destination, SubjectChoice},
     test_shot::TestShot,
     tools::Calibration,
 };
 use crate::capture_client::{Connection, Snapshot, host::HostPhase};
 use crate::draft_preview::{ProofEvent, ProofJob, ProofUpdate};
+use crate::workspace_history::NodeId;
 
 /// What the flight ticks depend on: the plan, the counts and the
 /// checker's published progress.
@@ -101,14 +103,31 @@ pub(crate) struct Station {
     settings_open: bool,
     /// The catalog's subjects, for the plan's subject field, and the
     /// catalog revision they were read at.
-    subjects: Vec<String>,
+    pub(super) subjects: Vec<SubjectChoice>,
     subjects_revision: Option<u64>,
+    /// Where a new subject is made ("Bugs"), for the plan's line.
+    pub(super) subject_home: String,
     /// The names the plan gave captures, by run folder (newest last).
-    named_runs: std::collections::VecDeque<(PathBuf, String, String)>,
+    named_runs: std::collections::VecDeque<(PathBuf, RunNames)>,
+    /// The run that took the plan's names; they are cleared for the next
+    /// capture once it is over.
+    names_taken_by: Option<PathBuf>,
+    /// A fixture's subject choice, made once the catalog's subjects arrive
+    /// (`plan+existing`, `plan+taken`; offscreen pictures only).
+    fixture_subject: Option<&'static str>,
     /// A plane's RAW in the canvas, until dismissed.
     pinned: Option<PinnedPlane>,
     /// The checker's journal of a fixture (`--capture-fixture`).
     fixture_progress: Option<Arc<super::follow::Progress>>,
+}
+
+/// The names the plan gave one capture.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub(crate) struct RunNames {
+    pub subject: String,
+    pub stack: String,
+    /// The existing subject chosen on purpose, if one was.
+    pub chosen: Option<NodeId>,
 }
 
 /// Which screen the station shows.
@@ -145,9 +164,37 @@ impl CaptureWorkspace {
             .set_view(Some(super::rail::RailView::of((lo, hi))));
     }
 
-    /// The catalog's subject names, offered by the plan's subject field.
-    pub fn set_subjects(&mut self, subjects: Vec<String>) {
+    /// The catalog's subjects, offered by the plan's subject field.
+    pub fn set_subjects(&mut self, subjects: Vec<SubjectChoice>) {
+        if let Some(first) = subjects.first()
+            && let Some(how) = self.station.fixture_subject.take()
+        {
+            let plan = &mut self.station.plan;
+            if how == "existing" {
+                plan.subject = first.name.clone();
+                plan.chosen = Some(first.id);
+            } else {
+                plan.subject = first.name.to_lowercase();
+                plan.chosen = None;
+            }
+        }
         self.station.subjects = subjects;
+    }
+
+    /// Where a new subject is made, named for the plan ("Bugs").
+    pub fn set_subject_home(&mut self, home: &str) {
+        if self.station.subject_home != home {
+            home.clone_into(&mut self.station.subject_home);
+        }
+    }
+
+    /// Where a capture started now would go (`capture-subject.rs`).
+    pub(crate) fn plan_destination(&self) -> Destination {
+        subject::destination(
+            &self.station.plan.subject,
+            self.station.plan.chosen,
+            &self.station.subjects,
+        )
     }
 
     /// Whether the subject names were read before catalog `revision`;
@@ -159,8 +206,19 @@ impl CaptureWorkspace {
     }
 
     /// Records the plan's names for the capture in `run` (the newest 16).
+    #[cfg(test)]
     pub(crate) fn remember_names(&mut self, run: PathBuf, subject: String, stack: String) {
-        self.station.named_runs.push_back((run, subject, stack));
+        self.remember_run(
+            run,
+            RunNames {
+                subject,
+                stack,
+                chosen: None,
+            },
+        );
+    }
+    pub(crate) fn remember_run(&mut self, run: PathBuf, names: RunNames) {
+        self.station.named_runs.push_back((run, names));
         if self.station.named_runs.len() > 16 {
             self.station.named_runs.pop_front();
         }
@@ -182,19 +240,32 @@ impl CaptureWorkspace {
     }
 
     /// A new stack asked for from a subject in the Library: the plan names
-    /// that subject.
-    pub fn set_plan_subject(&mut self, subject: &str) {
+    /// that subject, chosen on purpose.
+    pub fn set_plan_subject(&mut self, id: NodeId, subject: &str) {
         self.station.plan.subject = subject.to_owned();
+        self.station.plan.chosen = Some(id);
     }
 
-    /// The subject and stack name the plan gave the capture in `run`.
-    pub fn names_for(&self, run: &std::path::Path) -> Option<(String, String)> {
+    /// A new stack into a new subject ("New subject > From the camera"):
+    /// the plan's subject is cleared, to be named.
+    pub fn clear_plan_subject(&mut self) {
+        self.station.plan.subject.clear();
+        self.station.plan.chosen = None;
+    }
+
+    /// The existing subject chosen in the plan, if one is.
+    pub fn plan_chosen(&self) -> Option<NodeId> {
+        self.station.plan.chosen
+    }
+
+    /// Everything the plan gave the capture in `run`.
+    pub fn run_names(&self, run: &std::path::Path) -> Option<RunNames> {
         self.station
             .named_runs
             .iter()
             .rev()
-            .find(|(r, _, _)| r == run)
-            .map(|(_, subject, stack)| (subject.clone(), stack.clone()))
+            .find(|(r, _)| r == run)
+            .map(|(_, names)| names.clone())
     }
 
     /// The checker's progress: the follower's, or a fixture's.
@@ -297,6 +368,24 @@ impl CaptureWorkspace {
         self.station.calibrated_at = Some(fixture::earlier(14));
         self.test_shot_exposure = Some((100, 65544));
         self.open_fixture_panel(open);
+        // The subject's states (owner feedback, 2026-11-22): unnamed, its
+        // list open, an existing subject chosen, or one's name typed.
+        match open {
+            "unnamed" => self.clear_plan_subject(),
+            "subjects" => {
+                self.clear_plan_subject();
+                self.station.plan.focus_subject = true;
+            }
+            "existing" | "taken" => {
+                self.clear_plan_subject();
+                self.station.fixture_subject = Some(if open == "existing" {
+                    "existing"
+                } else {
+                    "taken"
+                });
+            }
+            _ => {}
+        }
         if which != Fixture::Plan {
             self.station.fixture_progress = Some(Arc::new(match long {
                 Some((progress, _)) => progress,
@@ -485,16 +574,18 @@ impl CaptureWorkspace {
                 .station
                 .named_runs
                 .iter()
-                .any(|(r, _, _)| *r == run.folder)
+                .any(|(r, _)| *r == run.folder)
         {
-            let (subject, stack) = (
-                self.station.plan.subject.trim().to_owned(),
-                self.station.plan.stack_name.trim().to_owned(),
-            );
-            if !subject.is_empty() || !stack.is_empty() {
-                let folder = run.folder.clone();
-                self.remember_names(folder, subject, stack);
+            let names = RunNames {
+                subject: self.station.plan.subject.trim().to_owned(),
+                stack: self.station.plan.stack_name.trim().to_owned(),
+                chosen: self.station.plan.chosen,
+            };
+            let folder = run.folder.clone();
+            if names != RunNames::default() {
+                self.remember_run(folder.clone(), names);
             }
+            self.station.names_taken_by = Some(folder);
         }
         if let Some(proof) = &mut self.station.proof {
             match proof.job.poll() {
@@ -507,6 +598,13 @@ impl CaptureWorkspace {
             }
         }
         self.observe_flight(s);
+        // A capture took the names: once it is over (and reviewed), the
+        // next one starts from a new, unnamed subject again.
+        if self.station.names_taken_by.is_some() && self.station_mode() == StationMode::Plan {
+            self.station.names_taken_by = None;
+            self.clear_plan_subject();
+            self.station.plan.stack_name.clear();
+        }
         // A dragged bound: once the lens is there and the camera idle, mark.
         if let Some(at) = self.station.mark_at {
             let host = &s.host;
@@ -877,6 +975,7 @@ impl CaptureWorkspace {
                     },
                     engine: self.engine.is_some(),
                     subjects: &self.station.subjects,
+                    subject_home: &self.station.subject_home,
                 };
                 let mut intents = self.station.plan.show(ui, &inputs, &palette);
                 // The comparison panel ("What changes"), left of the inspector.
@@ -1063,6 +1162,7 @@ impl CaptureWorkspace {
                     self.stop_test_shot();
                 }
             }
+            Fix::NameSubject => self.station.plan.focus_subject = true,
         }
     }
 

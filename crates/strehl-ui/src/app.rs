@@ -42,6 +42,8 @@ mod frame_performance;
 mod history;
 #[path = "app-library-manage.rs"]
 mod library_manage;
+#[path = "app-library-subject.rs"]
+mod library_subject;
 #[path = "output-destination.rs"]
 mod output_destination;
 #[path = "app-photo-history.rs"]

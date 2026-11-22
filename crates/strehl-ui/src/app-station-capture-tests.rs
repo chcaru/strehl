@@ -408,3 +408,115 @@ fn the_station_follows_all_three_themes() {
         }
     }
 }
+
+/// Owner feedback, 2026-11-22: "the stack went to the wrong subject, when it
+/// should have been new". A capture the plan named nothing for (an agent's,
+/// or one opened from the captures list) never lands in the most recently
+/// opened stack's subject: it starts a subject named for its folder, beside
+/// that one, unless a stack of the folder is already in a subject.
+#[test]
+fn an_unnamed_capture_never_lands_in_the_most_recent_subject() {
+    use crate::library_station::tests::draft;
+    let (_dir, mut app) = station("plan");
+    let bugs = app.catalog.create_project("Bugs").unwrap();
+    let recent = app.catalog.create_subject(bugs, "bug-8").unwrap();
+    let source = "D:/macro/bug-8/100MSDCF";
+    let stack = app
+        .catalog
+        .create_stack(recent, "100MSDCF", draft(source, 1))
+        .unwrap();
+    app.catalog.selected = Some(stack);
+    let run = PathBuf::from("D:/Captures/stack-1795400000000-7");
+    app.capture_names(&run);
+    let made = app.capture_parent.expect("a subject");
+    assert_ne!(made, recent, "not the most recent subject");
+    let node = app.catalog.node(made).unwrap();
+    assert_eq!(
+        (node.name.as_str(), node.kind, node.parent),
+        ("stack-1795400000000-7", NodeKind::Subject, Some(bugs))
+    );
+    // A folder that is already a stack stays in its subject.
+    app.capture_parent = None;
+    app.capture_names(std::path::Path::new(source));
+    assert_eq!(app.capture_parent, Some(recent));
+}
+
+/// A subject chosen on purpose is found by its identity, not its name: two
+/// subjects may share one.
+#[test]
+fn a_chosen_subject_is_found_by_identity_and_the_library_sets_or_clears_it() {
+    use crate::capture_workspace::station::RunNames;
+    let (_dir, mut app) = station("plan");
+    let ctx = context();
+    let a = app.catalog.create_project("A").unwrap();
+    let b = app.catalog.create_project("B").unwrap();
+    let moth_a = app.catalog.create_subject(a, "Moth").unwrap();
+    let moth_b = app.catalog.create_subject(b, "Moth").unwrap();
+    app.catalog.selected = Some(moth_a);
+    let run = PathBuf::from("D:/Captures/stack-1795400000000-8");
+    app.capture.remember_run(
+        run.clone(),
+        RunNames {
+            subject: "Moth".into(),
+            stack: String::new(),
+            chosen: Some(moth_b),
+        },
+    );
+    app.capture_names(&run);
+    assert_eq!(app.capture_parent, Some(moth_b));
+    // "New stack of this subject" chooses it in the plan...
+    app.library_intent(
+        &ctx,
+        crate::library_station::LibraryIntent::NewStackFromCamera {
+            collection: None,
+            subject: Some(moth_b),
+        },
+    );
+    assert_eq!(app.capture.plan_chosen(), Some(moth_b));
+    assert_eq!(app.capture.plan_names().0, "Moth");
+    app.capture_subjects();
+    assert!(app.capture.plan_destination().ready());
+    assert!(app.library.target.is_some(), "kept while the plan keeps it");
+    // ...and the Library lets go of it once the plan names another.
+    app.capture.clear_plan_subject();
+    app.capture_subjects();
+    assert_eq!(app.library.target, None);
+    // "New subject > From the camera" in a collection: unnamed, made there.
+    app.capture.set_plan_subject(moth_a, "Moth");
+    app.library_intent(
+        &ctx,
+        crate::library_station::LibraryIntent::NewStackFromCamera {
+            collection: Some(b),
+            subject: None,
+        },
+    );
+    assert_eq!(app.capture.plan_chosen(), None);
+    assert_eq!(app.capture.plan_names().0, "");
+    assert!(!app.capture.plan_destination().ready());
+    assert_eq!(app.capture_home(), Some(b));
+}
+
+/// The plan says where the stack goes, and the strip's Subject chip and the
+/// Start line say what to do while the subject is unnamed.
+#[test]
+fn the_plan_says_where_the_stack_goes() {
+    let (_dir, mut app) = station("plan");
+    let ctx = context();
+    for _ in 0..3 {
+        frame(&mut app, &ctx, vec![]);
+    }
+    let out = frame(&mut app, &ctx, vec![]);
+    assert!(
+        find(
+            &out,
+            "Goes to a new subject, \u{201c}Blue weevil\u{201d}, in Captures"
+        )
+        .is_some()
+    );
+    app.capture.clear_plan_subject();
+    frame(&mut app, &ctx, vec![]);
+    let out = frame(&mut app, &ctx, vec![]);
+    let sentence = "Name the new subject this stack starts, or choose an existing one";
+    assert!(find(&out, sentence).is_some());
+    assert!(find(&out, "Subject").is_some(), "the strip's chip");
+}

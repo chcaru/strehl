@@ -738,3 +738,75 @@ fn right_clicking_the_subjects_picture_offers_the_subjects_own_menu() {
     assert!(entries.iter().any(|e| matches!(e,
         MenuEntry::Item { intent: Some(LibraryIntent::Delete(ids)), .. } if *ids == vec![f.subject])));
 }
+
+/// Owner feedback, 2026-11-22: moving a stack is offered on the stack
+/// itself. Its lineage has "Move to subject…": a menu of a new subject and
+/// every other subject, which moves it.
+#[test]
+fn a_stacks_lineage_offers_move_to_subject() {
+    let mut f = fixture();
+    let project = f.catalog.nodes[0].id;
+    let beetle = f.catalog.create_subject(project, "Ground beetle").unwrap();
+    let mut harness = Harness::new();
+    harness.frame(&f, vec![]);
+    harness.page.open = Some(f.lateral);
+    assert_eq!(harness.click_text(&f, "Move to subject…"), None);
+    let entries = harness.page.menu_entries().expect("the move menu").to_vec();
+    let items = entries
+        .iter()
+        .find_map(|e| match e {
+            MenuEntry::Sub { items, .. } => Some(items.clone()),
+            _ => None,
+        })
+        .expect("its subjects, in a submenu that scrolls");
+    let labels: Vec<(&str, &str)> = items
+        .iter()
+        .map(|i| (i.label.as_str(), i.detail.as_str()))
+        .collect();
+    assert_eq!(labels, [("New subject…", ""), ("Ground beetle", "Insects")]);
+    let (output, _) = harness.frame(&f, vec![]);
+    let target = find(&output, "Ground beetle").expect("shown open");
+    assert_eq!(
+        press_with(
+            &mut harness,
+            &f,
+            target,
+            PointerButton::Primary,
+            Modifiers::NONE
+        ),
+        Some(LibraryIntent::MoveStacks {
+            stacks: vec![f.lateral],
+            subject: beetle
+        })
+    );
+}
+
+/// The selection bar's Move to subject opens the same scrolling submenu,
+/// for every stack selected.
+#[test]
+fn the_selection_bars_move_opens_the_scrolling_submenu_for_the_selection() {
+    let mut f = fixture();
+    let project = f.catalog.nodes[0].id;
+    let beetle = f.catalog.create_subject(project, "Ground beetle").unwrap();
+    let mut harness = Harness::new();
+    harness.frame(&f, vec![]);
+    assert!(harness.page.launch_select(2));
+    let chosen = harness.page.selection.ids().to_vec();
+    assert_eq!(harness.click_text(&f, "Move to subject"), None);
+    let entries = harness.page.menu_entries().expect("the move menu").to_vec();
+    assert!(entries.contains(&MenuEntry::Caption("2 stacks selected".into())));
+    let items = entries
+        .iter()
+        .find_map(|e| match e {
+            MenuEntry::Sub { items, .. } => Some(items.clone()),
+            _ => None,
+        })
+        .unwrap();
+    assert_eq!(
+        items.last().unwrap().intent,
+        LibraryIntent::MoveStacks {
+            stacks: chosen,
+            subject: beetle
+        }
+    );
+}

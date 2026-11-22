@@ -486,16 +486,22 @@ fn moves_merges_and_new_subjects_go_through_the_window_undo() {
     app.observe_edits(&ctx);
     assert!(app.undo_edit(false));
     assert_eq!(app.catalog.subject_of(stack3), Some(s3));
-    // A stack into a new subject beside its own, named for renaming.
+    // A stack into a new subject beside its own: named first, in a dialog.
     app.library_intent(&ctx, LibraryIntent::MoveStacksToNewSubject(vec![stack3]));
+    assert_eq!(
+        app.catalog.subject_of(stack3),
+        Some(s3),
+        "nothing moves unnamed"
+    );
+    let mut draft = app.library.new_subject.take().expect("the naming dialog");
+    assert_eq!(draft.container, Some(minerals), "beside its own subject");
+    assert_eq!(draft.stacks, vec![stack3]);
+    draft.name = "Subject 003 lateral".into();
+    app.library_make_subject(draft);
     let made = app.catalog.subject_of(stack3).unwrap();
     assert_ne!(made, s3);
     assert_eq!(app.catalog.node(made).unwrap().parent, Some(minerals));
-    assert_eq!(app.catalog.node(made).unwrap().name, "Subject 003 2");
-    assert!(
-        app.library.rename.is_some(),
-        "the new subject is named next"
-    );
+    assert_eq!(app.catalog.node(made).unwrap().name, "Subject 003 lateral");
     // Moving to a stack's own place is refused and changes nothing.
     app.library_intent(
         &ctx,

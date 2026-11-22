@@ -161,41 +161,6 @@ impl StrehlApp {
                     });
                 self.library_moved(result, plural(stacks.len(), "stack", "stacks"), subject);
             }
-            LibraryIntent::MoveStacksToNewSubject(stacks) => {
-                let Some(&first) = stacks.first() else {
-                    return;
-                };
-                let Some(home) = self.catalog.subject_of(first) else {
-                    return;
-                };
-                let container = self.catalog.node(home).and_then(|n| n.parent);
-                let base = self
-                    .catalog
-                    .node(home)
-                    .map_or_else(|| "Subject".to_owned(), |n| n.name.clone());
-                let name = self.library_unique_name(&base);
-                let made = self
-                    .project_explorer
-                    .organize(&mut self.catalog, |catalog| {
-                        let container = container
-                            .ok_or_else(|| anyhow::anyhow!("The subject has no collection"))?;
-                        let subject = catalog.create_subject(container, &name)?;
-                        for &stack in &stacks {
-                            catalog.can_move(stack, Some(subject))?;
-                        }
-                        for &stack in &stacks {
-                            catalog.move_node(stack, Some(subject))?;
-                        }
-                        Ok(subject)
-                    });
-                match made {
-                    Ok(subject) => {
-                        self.persist_catalog();
-                        self.library_rename(subject);
-                    }
-                    Err(error) => self.library_notice(Severity::Warning, format!("{error:#}")),
-                }
-            }
             LibraryIntent::MoveSubjects {
                 subjects,
                 collection,
@@ -772,6 +737,31 @@ impl StrehlApp {
             "subject-menu" => subject.launch_menu(ctx, catalog, false),
             "subject-menu-move" => subject.launch_menu(ctx, catalog, true),
             "subject-select" => subject.launch_select(2),
+            "subject-move" => subject.launch_move(ctx, catalog),
+            "library-new-menu" => station.launch_new_menu(),
+            // The naming of a new subject (`app-library-subject.rs`).
+            "library-new-subject" | "library-new-subject-taken" | "subject-new-subject" => {
+                let first = station.visible().first().copied();
+                let stacks: Vec<NodeId> = match overlay.as_str() {
+                    "subject-new-subject" => subject
+                        .model()
+                        .and_then(|m| m.stacks.first())
+                        .map(|s| s.id)
+                        .into_iter()
+                        .collect(),
+                    _ => Vec::new(),
+                };
+                let name = match (overlay.as_str(), first.and_then(|id| catalog.node(id))) {
+                    ("library-new-subject-taken", Some(node)) => node.name.to_lowercase(),
+                    ("subject-new-subject", _) => "Harvestman".to_owned(),
+                    _ => String::new(),
+                };
+                self.library_new_subject(None, stacks);
+                if let Some(draft) = self.library.new_subject.as_mut() {
+                    draft.name = name;
+                }
+                true
+            }
             "library-delete" | "library-delete-sources" | "library-delete-confirm" => {
                 match (
                     self.library.manage.dialog.as_mut(),

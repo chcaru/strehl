@@ -48,6 +48,9 @@ pub(crate) enum Check {
     TestShot,
     /// A request is being sent.
     Sending,
+    /// The stack's subject is not named or chosen (owner feedback,
+    /// 2026-11-22: a capture starts a new subject unless one is chosen).
+    Subject,
     /// The schedule editor is open.
     Schedule,
 }
@@ -65,6 +68,8 @@ pub(crate) enum Fix {
     StartReceiver,
     /// Stop waiting for the desktop's own camera work.
     StopWaiting,
+    /// Put the cursor in the plan's subject field.
+    NameSubject,
 }
 
 /// One reason Start is not available.
@@ -239,6 +244,9 @@ pub(crate) fn start_blockers(s: &Snapshot, ui: &CaptureWorkspace) -> Vec<Blocker
             None,
         ));
     }
+    if let Some(subject) = super::subject::blocker(&ui.plan_destination()) {
+        out.push(subject);
+    }
     if ui.schedule_ui.editing() {
         out.push(blocker(
             C::Schedule,
@@ -286,6 +294,7 @@ const GROUPS: &[(&str, &[Check])] = &[
     ("Step", &[Check::Edits, Check::Focus]),
     ("Disk", &[Check::Capacity]),
     ("Receiver", &[Check::Receiver]),
+    ("Subject", &[Check::Subject]),
     ("Schedule", &[Check::Schedule]),
 ];
 
@@ -314,7 +323,7 @@ pub(crate) fn strip_chips(s: &Snapshot, blockers: &[Blocker]) -> Vec<StripChip> 
             },
             None => StripChip {
                 label,
-                mark: if fresh || *label == "Step" {
+                mark: if fresh || *label == "Step" || *label == "Subject" {
                     Mark::Ok
                 } else {
                     Mark::Idle

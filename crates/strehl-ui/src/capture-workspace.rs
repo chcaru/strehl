@@ -48,6 +48,8 @@ mod schedule_ui;
 pub(crate) mod station;
 #[path = "capture-style.rs"]
 pub(crate) mod style;
+#[path = "capture-subject.rs"]
+pub(crate) mod subject;
 #[path = "capture-test-shot.rs"]
 pub(crate) mod test_shot;
 #[path = "capture-tools.rs"]
