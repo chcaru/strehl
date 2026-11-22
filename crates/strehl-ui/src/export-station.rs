@@ -100,20 +100,50 @@ const AVIF_BYTES_PER_PIXEL: [(u8, f64, f64); 6] = [
     (100, 1.1004, 1.7947),
 ];
 
+/// AVIF encode (with development) seconds per megapixel at encoder effort
+/// 4: (quality, SDR, HDR), measured with the sizes above. HDR quality 100 is
+/// the mean of two runs (39.04 s and 33.43 s).
+const AVIF_SECONDS_PER_MP: [(u8, f64, f64); 6] = [
+    (50, 0.3868, 0.4332),
+    (70, 0.4620, 0.5897),
+    (85, 0.5266, 0.6689),
+    (90, 0.5964, 0.7220),
+    (95, 0.6853, 0.9774),
+    (100, 1.0766, 1.0992),
+];
+
+/// Encode time against effort, relative to effort 4: geometric means of the
+/// ratios measured at SDR quality 85, HDR quality 85 and HDR quality 100.
+const AVIF_EFFORT_TIME: [(u8, f64); 3] = [(0, 0.3455), (4, 1.0), (8, 4.851)];
+
+/// Straight lines through `points` in log value, continued past either end
+/// with the nearest segment's slope.
+fn log_interpolate(points: &[(f64, f64)], x: f64) -> f64 {
+    let i = (1..points.len())
+        .find(|&i| x <= points[i].0)
+        .unwrap_or(points.len() - 1);
+    let ((x0, y0), (x1, y1)) = (points[i - 1], points[i]);
+    let (l0, l1) = (y0.ln(), y1.ln());
+    (l0 + (x - x0) * (l1 - l0) / (x1 - x0)).exp()
+}
+
 /// Bytes per pixel of an AVIF at `quality`: straight lines between the
 /// measurements in log size (size grows geometrically as the quantizer
 /// falls), the first segment's slope below quality 50.
 pub(crate) fn avif_bytes_per_pixel(quality: u8, hdr: bool) -> f64 {
-    let at = |i: usize| {
-        let (q, sdr, high) = AVIF_BYTES_PER_PIXEL[i];
-        (f64::from(q), if hdr { high } else { sdr }.ln())
-    };
-    let q = f64::from(quality.clamp(1, 100));
-    let segment = (1..AVIF_BYTES_PER_PIXEL.len())
-        .find(|&i| q <= at(i).0)
-        .unwrap_or(AVIF_BYTES_PER_PIXEL.len() - 1);
-    let ((q0, y0), (q1, y1)) = (at(segment - 1), at(segment));
-    (y0 + (q - q0) * (y1 - y0) / (q1 - q0)).exp()
+    let points =
+        AVIF_BYTES_PER_PIXEL.map(|(q, sdr, high)| (f64::from(q), if hdr { high } else { sdr }));
+    log_interpolate(&points, f64::from(quality.clamp(1, 100)))
+}
+
+/// Seconds per megapixel to develop and encode an AVIF: the quality table
+/// at effort 4 times the effort factor (both interpolated in log time).
+pub(crate) fn avif_seconds_per_mp(quality: u8, hdr: bool, effort: u8) -> f64 {
+    let quality_points =
+        AVIF_SECONDS_PER_MP.map(|(q, sdr, high)| (f64::from(q), if hdr { high } else { sdr }));
+    let effort_points = AVIF_EFFORT_TIME.map(|(e, factor)| (f64::from(e), factor));
+    log_interpolate(&quality_points, f64::from(quality.clamp(1, 100)))
+        * log_interpolate(&effort_points, f64::from(effort.min(10)))
 }
 
 /// A rough file size: bytes per pixel measured on the owner's 33 MP weevil
@@ -146,10 +176,8 @@ pub(crate) fn human_bytes(bytes: u64) -> String {
 }
 
 /// Seconds for a batch, from encoder times measured on the 33 MP master
-/// (the SDR formats under 2 s). AVIF time grows geometrically with encoder
-/// effort: HDR, quality 100, release build, the weevil copy took 11.8 s at
-/// effort 0, 39.0 s at 4 and 172.5 s at 8 (g-develop note), fitted as
-/// 0.36 s per megapixel times 1.4 per step of effort.
+/// (the SDR formats under 2 s). AVIF time depends on quality, range and
+/// encoder effort (`avif_seconds_per_mp`; g-develop note).
 pub(crate) fn estimate_seconds(outputs: &[&PresetOutput], size: [u32; 2]) -> f64 {
     outputs
         .iter()
@@ -160,7 +188,8 @@ pub(crate) fn estimate_seconds(outputs: &[&PresetOutput], size: [u32; 2]) -> f64
                 PresetOutput::Archive => 0.02 * mp,
                 PresetOutput::Image(image) => match image.settings.format {
                     ExportFormat::Avif => {
-                        0.36 * mp * 1.4_f64.powi(i32::from(effort_of(image.settings.speed)))
+                        let s = &image.settings;
+                        mp * avif_seconds_per_mp(s.quality, s.hdr, effort_of(s.speed))
                     }
                     _ => 0.05 * mp + 0.2,
                 },

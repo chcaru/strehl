@@ -124,10 +124,8 @@ master `strehl-1793781369068-68052-3`, 7032 x 4688, its own recipe, HDR Rec.2020
 | 8 (2) | 172.50 s | 57,631,824 bytes |
 
 The old estimate (0.5 s/MP x (1 + 0.4 x effort)) said 16, 43 and 69 s: the curve is
-geometric, not linear. `estimate_seconds` now uses 0.36 s/MP x 1.4^effort (DERIVED fit):
-12, 46 and 175 s, within 20 % of each measurement (VERIFIED by
-`the_time_estimate_follows_the_measured_effort_curve`). Effort 10 (about 5.6 min) is an
-extrapolation (UNVERIFIED).
+geometric, not linear. `b70cae4b9` fitted 0.36 s/MP x 1.4^effort to these three points;
+that fit ignored quality and was replaced by the model in the follow-up below.
 
 ## The AVIF size estimate (follow-up)
 
@@ -170,9 +168,37 @@ model was first written with the other five points, as a held-out check: it pred
 HDR preset's label, size rising with quality from 1 to 100); with the old constant its
 label assertion reads 13.8 MB and fails (ARGUED).
 
-**Found, not changed:** encode time also depends on quality (12.8 s at SDR quality 50
-against 35.5 s at 100, both effort 4). The time estimate is calibrated at HDR quality 100,
-the HDR preset's setting, so it overstates lower qualities by up to about 2.5 times.
+## The AVIF time estimate's quality (second follow-up)
+
+Encode time also depends on quality: at effort 4, SDR quality 50 took 12.75 s and quality
+100 took 35.49 s (the table above). The single quality-100 curve therefore said 46 s for
+SDR quality 50. The estimate is now `avif_seconds_per_mp(quality, hdr, effort)` (DERIVED):
+
+- **Quality and range:** the table's effort 4 times per megapixel (32.966 MP), interpolated
+  in log time between qualities, the first segment's slope below 50. HDR quality 100 uses
+  the mean of its two runs (39.04 s in the time table, 33.43 s in the size run: the
+  run-to-run spread of one setting is about 15 %).
+- **Effort:** a factor relative to effort 4, interpolated in log time through effort 0, 4
+  and 8 and continued past 8 with the last slope. Effort 0 is 0.3455 and effort 8 is 4.851,
+  the geometric means of the ratios measured at SDR quality 85 (0.320, 5.589), HDR quality
+  85 (0.427, 4.622) and HDR quality 100 (0.302, 4.419). Effort changes time far more than
+  quality does; the ratios differ by setting, so one factor is accurate to about 20 %.
+
+Held out (MEASURED after the model's constants were fixed; same probe and script, a
+fresh copy of only the master and recipe, deleted afterwards; host CPU load 0 to 11 %):
+
+| Setting | Predicted | Measured |
+| --- | --- | --- |
+| SDR quality 50, effort 0 | 4.4 s | 4.65 s (-5 %) |
+| SDR quality 50, effort 8 | 61.9 s | 74.25 s (-17 %) |
+| HDR quality 70, effort 6 | 42.8 s | 47.88 s (-11 %) |
+
+Every measured setting (19 fitted and 3 held out) is within 20 % of the estimate, largest
+-19 % (HDR quality 85, effort 0) (VERIFIED by
+`the_time_estimate_follows_quality_range_and_effort`, which also checks that time rises
+with quality and with effort). Effort 9 and 10 are extrapolated (UNVERIFIED; about 6.5 min
+for this photograph at HDR quality 100, effort 10). Neither model covers resized output
+beyond scaling by its pixel count, or other photographs (one master measured).
 
 ## Tests and checks
 
@@ -190,7 +216,7 @@ Commands, in `C:\w\g-develop`, `CARGO_BUILD_JOBS=12`, never `-q`:
 
 | Check | Result |
 | --- | --- |
-| `cargo test --locked -p strehl-ui` | 1478 passed, 0 failed, 36 ignored at `b70cae4b9`; 1479 passed, 0 failed, 36 ignored with the size model (VERIFIED, "Compiling strehl-ui", exit 0) |
+| `cargo test --locked -p strehl-ui` | 1478 passed, 0 failed, 36 ignored at `b70cae4b9`; 1479 passed, 0 failed, 36 ignored with the size and time models (VERIFIED, "Compiling strehl-ui", exit 0) |
 | `cargo test --locked -p strehl-ui actions::` after the last edit | 10 passed (VERIFIED) |
 | `cargo clippy --locked -p strehl-ui --all-targets --no-deps -- -D warnings` | Clean, exit 0; re-run after touching `export-station.rs` with `-v` shows `clippy-driver` running on strehl-ui (VERIFIED) |
 | `cargo fmt -p strehl-ui -- --check` | Clean (VERIFIED) |
@@ -215,11 +241,13 @@ looking at each):
 - `export-hdr-lightbox-inspector-crop.png`: a native 348 x 450 crop of the inspector.
 
 Every new part is square and ruled (hairlines, tracked capitals, drawn marks), in all three
-themes. The screenshots predate the size model: their HDR preset line still reads 13.8 MB.
+themes. The screenshots predate the size and time models: their HDR preset line still reads
+13.8 MB and its time "about 46 s" (now 59.2 MB and about 36 s).
 
 ## Not done
 
 - No click-through in the windowed desktop: the presses were exercised through the shell
   with egui input and offscreen renders. The folder dialog that **Choose a folder…** opens
   is native and is not opened by any test.
-- The time estimate's dependence on quality (above).
+- The size and time models rest on one photograph; another subject or a resized preset
+  will differ.

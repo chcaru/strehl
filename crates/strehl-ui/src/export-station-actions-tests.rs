@@ -106,12 +106,47 @@ fn effort_is_ten_minus_speed_and_defaults_to_four() {
 }
 
 #[test]
-fn the_time_estimate_follows_the_measured_effort_curve() {
-    // HDR quality 100 on the 7032 x 4688 weevil (MEASURED, release build):
-    // effort 0, 4 and 8 took 11.8 s, 39.0 s and 172.5 s.
-    let hdr = |effort| {
+fn the_time_estimate_follows_quality_range_and_effort() {
+    // MEASURED on the 7032 x 4688 weevil, release build (g-develop note):
+    // (quality, HDR, effort, seconds). The last three were held out of the
+    // fit and measured after it.
+    let measured: [(u8, bool, u8, f64); 22] = [
+        // The single q100 curve said 46 s here.
+        (50, false, 4, 12.75),
+        (70, false, 4, 15.23),
+        (85, false, 4, 17.36),
+        (90, false, 4, 19.66),
+        (95, false, 4, 22.59),
+        (100, false, 4, 35.49),
+        (50, true, 4, 14.28),
+        (70, true, 4, 19.44),
+        (85, true, 4, 22.05),
+        (90, true, 4, 23.80),
+        (95, true, 4, 32.22),
+        (100, true, 4, 39.04),
+        (100, true, 4, 33.43),
+        (100, true, 0, 11.80),
+        (100, true, 8, 172.50),
+        (85, false, 0, 5.55),
+        (85, false, 8, 97.02),
+        (85, true, 0, 9.41),
+        (85, true, 8, 101.92),
+        // Held out.
+        (50, false, 0, 4.65),
+        (50, false, 8, 74.25),
+        (70, true, 6, 47.88),
+    ];
+    let avif = |quality, hdr, effort| {
         PresetOutput::Image(crate::export_presets::ImagePreset {
             settings: ExportSettings {
+                format: ExportFormat::Avif,
+                color_space: if hdr {
+                    OutputColorSpace::Rec2020
+                } else {
+                    OutputColorSpace::Srgb
+                },
+                hdr,
+                quality,
                 speed: speed_of(effort),
                 ..Default::default()
             },
@@ -119,12 +154,19 @@ fn the_time_estimate_follows_the_measured_effort_curve() {
             description: false,
         })
     };
-    for (effort, measured) in [(0, 11.8), (4, 39.0), (8, 172.5)] {
-        let estimate = estimate_seconds(&[&hdr(effort)], [7032, 4688]);
+    for (quality, hdr, effort, seconds) in measured {
+        let estimate = estimate_seconds(&[&avif(quality, hdr, effort)], [7032, 4688]);
         assert!(
-            (estimate / measured - 1.0).abs() < 0.2,
-            "effort {effort}: estimate {estimate:.1} s, measured {measured} s"
+            (estimate / seconds - 1.0).abs() < 0.2,
+            "q{quality} hdr {hdr} effort {effort}: estimate {estimate:.1} s, measured {seconds} s"
         );
+    }
+    // Time rises with quality and with effort everywhere.
+    for hdr in [false, true] {
+        let by_quality: Vec<f64> = (1..=100).map(|q| avif_seconds_per_mp(q, hdr, 4)).collect();
+        assert!(by_quality.windows(2).all(|w| w[0] < w[1]));
+        let by_effort: Vec<f64> = (0..=10).map(|e| avif_seconds_per_mp(90, hdr, e)).collect();
+        assert!(by_effort.windows(2).all(|w| w[0] < w[1]));
     }
 }
 
