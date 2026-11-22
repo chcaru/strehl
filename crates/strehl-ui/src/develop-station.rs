@@ -422,7 +422,6 @@ pub(crate) struct DevelopView<'a> {
     pub hdr_display: bool,
     /// What the display reports: state, monitor, reason, luminance.
     pub display: Vec<String>,
-    pub can_export: bool,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -1238,6 +1237,8 @@ pub(crate) fn inspector_body(
 }
 
 /// The foot: Export… and Save version, into the shell's footer row.
+/// Export… goes to the Export station (the mockup's `data-go="export"`), so
+/// it is always enabled; the Export station says what an export waits for.
 pub(crate) fn inspector_footer(ui: &mut Ui, view: &DevelopView<'_>) -> Vec<DevelopIntent> {
     let pal = view.palette;
     let mut intents = Vec::new();
@@ -1249,8 +1250,9 @@ pub(crate) fn inspector_footer(ui: &mut Ui, view: &DevelopView<'_>) -> Vec<Devel
         "Export…",
         ButtonKind::Primary,
         egui::vec2(export_width, 28.0),
-        view.can_export,
-    );
+        true,
+    )
+    .on_hover_text("Go to Export with this edit");
     // The mockup's chevron: Export is the next station.
     style::icon(
         ui.painter(),
@@ -1259,11 +1261,7 @@ pub(crate) fn inspector_footer(ui: &mut Ui, view: &DevelopView<'_>) -> Vec<Devel
             egui::vec2(12.0, 12.0),
         ),
         Icon::Chevron,
-        if view.can_export {
-            pal.accent_ink
-        } else {
-            pal.ink_3
-        },
+        pal.accent_ink,
     );
     if export.clicked() {
         intents.push(DevelopIntent::Export);
@@ -1276,11 +1274,85 @@ pub(crate) fn inspector_footer(ui: &mut Ui, view: &DevelopView<'_>) -> Vec<Devel
         egui::vec2(save_width, 28.0),
         true,
     )
+    .on_hover_text("Name this edit and keep it under Versions")
     .clicked()
     {
         intents.push(DevelopIntent::SaveVersion);
     }
     intents
+}
+
+/// What the version name field asks for.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum NameAction {
+    Save,
+    Cancel,
+}
+
+/// Save version's name field at the head of Versions: a ruled field with
+/// Save and Cancel. Enter saves and Escape cancels while it has the keyboard;
+/// `focus` gives it the keyboard (the frame Save version was pressed).
+pub(crate) fn version_name_field(
+    ui: &mut Ui,
+    pal: &StudioPalette,
+    name: &mut String,
+    focus: bool,
+    busy: bool,
+) -> Option<NameAction> {
+    style::sect(ui, pal, "Save this edit as", None);
+    let field = ui.add(
+        egui::TextEdit::singleline(name)
+            .font(egui::FontId::proportional(style::BODY))
+            .char_limit(120)
+            .margin(egui::Margin::symmetric(8, 5))
+            .min_size(egui::vec2(0.0, 26.0))
+            .desired_width(f32::INFINITY),
+    );
+    if focus {
+        field.request_focus();
+    }
+    let mut action = None;
+    if field.lost_focus() {
+        ui.input(|i| {
+            if i.key_pressed(egui::Key::Enter) {
+                action = Some(NameAction::Save);
+            } else if i.key_pressed(egui::Key::Escape) {
+                action = Some(NameAction::Cancel);
+            }
+        });
+    }
+    ui.horizontal(|ui| {
+        ui.spacing_mut().item_spacing.x = 8.0;
+        let can_save = !busy && !name.trim().is_empty();
+        if style::button(
+            ui,
+            pal,
+            "Save",
+            ButtonKind::Primary,
+            egui::vec2(92.0, 26.0),
+            can_save,
+        )
+        .clicked()
+        {
+            action = Some(NameAction::Save);
+        }
+        if style::button(
+            ui,
+            pal,
+            "Cancel",
+            ButtonKind::Plain,
+            egui::vec2(72.0, 26.0),
+            true,
+        )
+        .clicked()
+        {
+            action = Some(NameAction::Cancel);
+        }
+    });
+    if action == Some(NameAction::Save) && (busy || name.trim().is_empty()) {
+        action = None;
+    }
+    action
 }
 
 /// Tabs, body and foot together: the whole 348 px inspector, for callers

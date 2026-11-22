@@ -251,7 +251,11 @@ fn develop_intents_route_to_the_editor_or_the_app() {
     );
     assert_eq!(app.editor.recipe.global.temperature, 30.0);
     assert_eq!(app.editor.develop.tool, station::DevelopTool::WhiteBalance);
-    assert!(app.edit_pane.develop.export_requested);
+    // Export… goes to the Export station.
+    assert_eq!(
+        app.shell.navigator.station(),
+        super::super::studio_route::Station::Export
+    );
     // The picker sets warmth and tint from the sampled neutral.
     app.handle_develop_intents(vec![DevelopIntent::SampleNeutral([0.5, 0.5])], 2.0);
     let pick = app

@@ -87,8 +87,17 @@ pub(super) struct DevelopApp {
     /// The theme's palette, refreshed each frame the station draws.
     pub(super) palette: StudioPalette,
     carry: Option<Task<DevelopmentRecipe>>,
-    /// Set by the Export… intent; the shell routes to the Export station.
-    pub(super) export_requested: bool,
+    /// A `--overlay develop-*` or `export-*` state for offscreen checks,
+    /// applied once the photograph and the export presets are open.
+    pub(super) launch: Option<String>,
+}
+
+impl DevelopApp {
+    /// Dismiss the inline notice; the same words later are a new notice.
+    pub(super) fn dismiss_notice(&mut self) {
+        self.notice = None;
+        self.notice_shown = None;
+    }
 }
 
 /// One recorded export's check: its id, its file's state, and its version's
@@ -109,13 +118,39 @@ pub(super) struct ExportApp {
     version_recipes: HashMap<String, DevelopmentRecipe>,
     checking: Option<Task<Vec<HistoryCheck>>>,
     folder: Option<Task<Option<PathBuf>>>,
+    /// Reveal and Open folder, kept so a failure is reported, not dropped.
+    reveals: Vec<Task<()>>,
     pub(super) error: Option<String>,
     error_shown: Option<String>,
+    /// The last success in words, and whether it offers Open folder.
+    pub(super) done: Option<(String, bool)>,
+}
+
+impl ExportApp {
+    /// An error replaces the last success at the head of the inspector.
+    pub(super) fn fail(&mut self, error: impl Into<String>) {
+        self.error = Some(error.into());
+        self.done = None;
+    }
+
+    pub(super) fn succeed(&mut self, text: impl Into<String>, folder: bool) {
+        self.done = Some((text.into(), folder));
+        self.error = None;
+        self.error_shown = None;
+    }
+
+    pub(super) fn dismiss(&mut self) {
+        self.error = None;
+        self.error_shown = None;
+        self.done = None;
+    }
 }
 
 pub(super) struct RunningBatch {
     pub(super) progress: Arc<BatchProgress>,
     task: Task<(Option<crate::workspace_history::PhotoVersion>, BatchDone)>,
+    /// Where the files go, for the result line.
+    folder: PathBuf,
 }
 
 /// Local `9 Nov 22:10` for a Unix time.
@@ -303,7 +338,6 @@ impl StrehlApp {
             hdr_available: self.editor.viewport.hdr_available(loaded.image.origin),
             hdr_display: self.editor.viewport.hdr_active(loaded.image.origin),
             display: self.develop_display_lines(),
-            can_export: self.develop_can_export(),
         };
         let canvas = &self.editor.develop;
         let panel = &mut self.edit_pane.develop.panel;
@@ -402,14 +436,28 @@ impl StrehlApp {
     /// Export is enabled whenever a photograph is open and idle; a pending
     /// depth repair no longer blocks it (P7c).
     pub(super) fn develop_can_export(&self) -> bool {
-        self.editor.loaded.is_some()
-            && self.editor.path == self.result
-            && self.editor.loading.is_none()
-            && self.editor.exporting.is_none()
-            && !self.photo_history_busy()
-            && self.editor.dialog.is_none()
-            && !self.adaptive_busy()
-            && !self.presets_busy()
+        self.develop_export_blocker().is_none()
+    }
+
+    /// What an export waits for, in words; `None` when it can start.
+    pub(super) fn develop_export_blocker(&self) -> Option<&'static str> {
+        if self.editor.loaded.is_none() {
+            Some("Open a completed photograph first")
+        } else if self.editor.loading.is_some() || self.editor.path != self.result {
+            Some("Wait for the photograph to finish opening")
+        } else if self.editor.exporting.is_some() {
+            Some("Wait for the current export to finish")
+        } else if self.photo_history_busy() {
+            Some("Wait for the version being saved to finish")
+        } else if self.editor.dialog.is_some() {
+            Some("Close the open file dialog first")
+        } else if self.adaptive_busy() {
+            Some("Wait for the look to finish calculating")
+        } else if self.presets_busy() {
+            Some("Wait for the saved look to finish applying")
+        } else {
+            None
+        }
     }
 
     /// Shown wherever an export starts while a repair waits.
@@ -497,10 +545,20 @@ impl StrehlApp {
                 });
             }
             DevelopIntent::StartRepair => self.start_depth_repair()?,
-            DevelopIntent::SaveVersion => self.open_save_edit_version(),
+            DevelopIntent::SaveVersion => {
+                // The name field is at the head of Versions, where the saved
+                // version will be listed.
+                self.open_save_edit_version();
+                self.edit_pane.develop.panel.tab = station::InspectorTab::Versions;
+            }
             DevelopIntent::OpenVersion(id) if !id.is_empty() => self.restore_edit_version(id)?,
             DevelopIntent::CarryVersion(id) if !id.is_empty() => self.carry_version(id)?,
-            DevelopIntent::Export => self.edit_pane.develop.export_requested = true,
+            DevelopIntent::Export => {
+                // Export… is the way to the next station (mockup
+                // `data-go="export"`), carrying the edit as it stands.
+                self.editor.commit_edit();
+                self.go_station(super::studio_route::Station::Export);
+            }
             DevelopIntent::SetHdr(on) => self.editor.viewport.prefer_sdr = !on,
             _ => {}
         }
@@ -557,6 +615,7 @@ impl StrehlApp {
         }
         let (_, _, um_per_px) = self.develop_subject();
         self.editor.um_per_px = um_per_px;
+        self.apply_develop_launch(ctx);
         let intents = self.editor.develop.take_intents();
         if !intents.is_empty() {
             let time = ctx.input(|i| i.time);
@@ -587,6 +646,47 @@ impl StrehlApp {
         }
         self.poll_depth_repair(ctx);
         self.poll_export_station(ctx);
+    }
+
+    /// The `--overlay` states of these stations, for offscreen screenshots:
+    /// Save version's name field, the HDR (AVIF) preset in the editor, and
+    /// a sample result line (its words are a fixture; nothing is written).
+    fn apply_develop_launch(&mut self, ctx: &egui::Context) {
+        if self.edit_pane.develop.launch.is_none()
+            || self.editor.loaded.is_none()
+            || self.editor.path.is_none()
+            || self.export_pane.station.library.is_none()
+        {
+            return;
+        }
+        let Some(launch) = self.edit_pane.develop.launch.take() else {
+            return;
+        };
+        match launch.as_str() {
+            "develop-save-version" => {
+                let time = ctx.input(|i| i.time);
+                self.handle_develop_intents(vec![DevelopIntent::SaveVersion], time);
+            }
+            "export-hdr" => {
+                let station = &mut self.export_pane.station;
+                station.panel.selected = station.library.as_ref().and_then(|library| {
+                    library
+                        .presets
+                        .iter()
+                        .find(|p| p.name == "HDR")
+                        .map(|p| p.id.clone())
+                });
+            }
+            "export-result" => {
+                let text = format!(
+                    "Wrote 2 files to {}",
+                    crate::display_path::display_path(&self.output)
+                );
+                self.export_pane.station.succeed(text, true);
+            }
+            _ => {}
+        }
+        ctx.request_repaint();
     }
 
     // -------------------------------------------------------- depth repair
@@ -976,6 +1076,25 @@ impl StrehlApp {
         let history = self.export_history_rows();
         let destination = library.destination(&subject_key).map(Path::to_path_buf);
         let note = self.repair_export_note();
+        let blocker = self.develop_export_blocker();
+        // Owned here: the panel is lent mutably beside the view.
+        let (error, done) = (
+            self.export_pane.station.error.clone(),
+            self.export_pane.station.done.clone(),
+        );
+        let feedback = match (&error, &done) {
+            (Some(error), _) => Some(exporting::Feedback {
+                ok: false,
+                text: error.as_str(),
+                folder: false,
+            }),
+            (None, Some((text, folder))) => Some(exporting::Feedback {
+                ok: true,
+                text: text.as_str(),
+                folder: *folder,
+            }),
+            (None, None) => None,
+        };
         let view = ExportView {
             palette: &palette,
             library: &library,
@@ -997,7 +1116,8 @@ impl StrehlApp {
                 .batch
                 .as_ref()
                 .map(|b| b.progress.snapshot()),
-            can_export: self.develop_can_export(),
+            blocker,
+            feedback,
             note,
             view_bundle: self
                 .view_bundle_source()
@@ -1129,7 +1249,7 @@ impl StrehlApp {
                     station.library = Some(loaded.library);
                     station.library_bytes = loaded.bytes;
                 }
-                Err(error) => station.error = Some(error),
+                Err(error) => station.fail(error),
             }
         }
         if let Some(result) = station
@@ -1140,8 +1260,22 @@ impl StrehlApp {
             station.saving = None;
             match result {
                 Ok(bytes) => station.library_bytes = Some(bytes),
-                Err(error) => station.error = Some(error),
+                Err(error) => station.fail(error),
             }
+        }
+        let mut failed = None;
+        station
+            .reveals
+            .retain(|task| match task.receiver.try_recv() {
+                Ok(Err(error)) => {
+                    failed = Some(error);
+                    false
+                }
+                Ok(Ok(())) | Err(std::sync::mpsc::TryRecvError::Disconnected) => false,
+                Err(std::sync::mpsc::TryRecvError::Empty) => true,
+            });
+        if let Some(error) = failed {
+            station.fail(format!("Could not show the file: {error}"));
         }
         if station.save_again && station.saving.is_none() {
             station.save_again = false;
@@ -1154,12 +1288,24 @@ impl StrehlApp {
             .and_then(|t| t.receiver.try_recv().ok())
         {
             station.folder = None;
+            if let Err(error) = &result {
+                station.fail(format!("The folder dialog failed: {error}"));
+            }
             if let Ok(Some(folder)) = result {
                 let (key, _, _) = self.develop_subject();
                 if let Some(library) = self.export_pane.station.library.as_mut() {
                     match library.remember_destination(&key, &folder) {
-                        Ok(()) => self.save_export_library(),
-                        Err(error) => self.export_pane.station.error = Some(error.to_string()),
+                        Ok(()) => {
+                            self.save_export_library();
+                            self.export_pane.station.succeed(
+                                format!(
+                                    "Files for this subject go to {}",
+                                    crate::display_path::display_path(&folder)
+                                ),
+                                true,
+                            );
+                        }
+                        Err(error) => self.export_pane.station.fail(error.to_string()),
                     }
                 }
             }
@@ -1276,7 +1422,7 @@ impl StrehlApp {
     ) {
         for intent in intents {
             if let Err(error) = self.handle_export_intent(ctx, intent) {
-                self.export_pane.station.error = Some(error.to_string());
+                self.export_pane.station.fail(error.to_string());
             }
         }
     }
@@ -1346,33 +1492,44 @@ impl StrehlApp {
             }
             ExportIntent::OpenFolder => {
                 let (key, _, _) = self.develop_subject();
-                if let Some(folder) = self
+                let folder = self
                     .export_pane
                     .station
                     .library
                     .as_ref()
                     .and_then(|l| l.destination(&key))
                     .map(Path::to_path_buf)
-                {
-                    jobs::spawn_task("strehl-open-export-folder", move |_| {
-                        crate::reveal_path::reveal(&folder)?;
-                        Ok(())
-                    });
-                }
+                    .ok_or_else(|| anyhow::anyhow!("No folder is chosen for this subject yet"))?;
+                let task = jobs::spawn_task("strehl-open-export-folder", move |_| {
+                    crate::reveal_path::reveal(&folder)?;
+                    Ok(())
+                });
+                self.export_pane.station.reveals.push(task);
             }
             ExportIntent::Reveal(path) => {
-                jobs::spawn_task("strehl-reveal-export", move |_| {
+                let task = jobs::spawn_task("strehl-reveal-export", move |_| {
                     crate::reveal_path::reveal(&path)?;
                     Ok(())
                 });
+                self.export_pane.station.reveals.push(task);
             }
-            ExportIntent::CopyPath(path) => ctx.copy_text(crate::display_path::display_path(&path)),
+            ExportIntent::CopyPath(path) => {
+                let text = crate::display_path::display_path(&path);
+                ctx.copy_text(text.clone());
+                self.export_pane
+                    .station
+                    .succeed(format!("Copied {text}"), false);
+            }
+            ExportIntent::DismissFeedback => self.export_pane.station.dismiss(),
             ExportIntent::ExportTicked => self.start_export_batch(None)?,
             ExportIntent::ExportAgain(id) => self.start_export_batch(Some(id))?,
             ExportIntent::ExportViewBundle => {
-                if !self.picker_active() && self.view_bundle_export.is_none() {
-                    self.pick(Dialog::ViewBundleExport);
-                }
+                anyhow::ensure!(
+                    self.view_bundle_export.is_none(),
+                    "A view bundle is already being written"
+                );
+                anyhow::ensure!(!self.picker_active(), "A file dialog is already open");
+                self.pick(Dialog::ViewBundleExport);
             }
             ExportIntent::CancelViewBundle => {
                 if let Some(task) = &self.view_bundle_export {
@@ -1398,10 +1555,9 @@ impl StrehlApp {
             self.export_pane.station.batch.is_none(),
             "An export batch is already running"
         );
-        anyhow::ensure!(
-            self.develop_can_export(),
-            "Wait for the current photograph operation to finish"
-        );
+        if let Some(blocker) = self.develop_export_blocker() {
+            anyhow::bail!(blocker);
+        }
         let library = self
             .export_pane
             .station
@@ -1522,7 +1678,12 @@ impl StrehlApp {
                 exporting::run_batch(planned, &context, &worker_progress),
             ))
         });
-        self.export_pane.station.batch = Some(RunningBatch { progress, task });
+        self.export_pane.station.batch = Some(RunningBatch {
+            progress,
+            task,
+            folder: folder.clone(),
+        });
+        self.export_pane.station.dismiss();
         Ok(())
     }
 
@@ -1531,9 +1692,14 @@ impl StrehlApp {
             return;
         };
         ctx.request_repaint_after(Duration::from_millis(100));
-        let Ok(result) = batch.task.receiver.try_recv() else {
-            return;
+        let result = match batch.task.receiver.try_recv() {
+            Ok(result) => result,
+            Err(std::sync::mpsc::TryRecvError::Empty) => return,
+            Err(std::sync::mpsc::TryRecvError::Disconnected) => {
+                Err("The export worker ended without a result; try again".into())
+            }
         };
+        let folder = batch.folder.clone();
         self.export_pane.station.batch = None;
         match result {
             Ok((version, done)) => {
@@ -1549,19 +1715,50 @@ impl StrehlApp {
                     self.catalog.save()
                 })();
                 let written = done.written.len();
-                self.export_pane.station.error = match (result, done.failed.first()) {
-                    (Err(error), _) => Some(format!("Recording the exports: {error}")),
-                    (Ok(()), Some((path, error))) => Some(format!(
-                        "{} failed: {error}",
-                        crate::display_path::display_path(path)
+                let files = |n: usize| {
+                    if n == 1 {
+                        "1 file".into()
+                    } else {
+                        format!("{n} files")
+                    }
+                };
+                let station = &mut self.export_pane.station;
+                match (result, done.failed.first()) {
+                    (Err(error), _) => station.fail(format!("Recording the exports: {error}")),
+                    (Ok(()), Some((path, error))) => station.fail(format!(
+                        "{} failed: {error}{}",
+                        crate::display_path::display_path(path),
+                        if written > 0 {
+                            format!(" ({} written)", files(written))
+                        } else {
+                            String::new()
+                        }
                     )),
                     (Ok(()), None) if done.cancelled => {
-                        Some(format!("Cancelled after {written} file(s)"))
+                        station.succeed(format!("Cancelled after {}", files(written)), written > 0)
                     }
-                    _ => None,
-                };
+                    (Ok(()), None) => {
+                        let text = match done.written.as_slice() {
+                            [(file, _)] => {
+                                format!("Wrote {}", crate::display_path::display_path(&file.path))
+                            }
+                            _ => format!(
+                                "Wrote {} to {}",
+                                files(written),
+                                crate::display_path::display_path(&folder)
+                            ),
+                        };
+                        self.shell.notices.push(
+                            crate::notices::Severity::Done,
+                            crate::notices::Source::Export,
+                            text.clone(),
+                            None,
+                        );
+                        self.export_pane.station.succeed(text, true);
+                    }
+                }
             }
-            Err(error) => self.export_pane.station.error = Some(error),
+            Err(error) => self.export_pane.station.fail(error),
         }
     }
 }

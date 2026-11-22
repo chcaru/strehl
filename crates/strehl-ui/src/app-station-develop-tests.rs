@@ -194,7 +194,8 @@ fn export_fills_presets_footer_history_and_preview() {
         "HDR",
         "Print",
         "Archive",
-        "Export 2 files",
+        // No folder is chosen for this subject yet: the button chooses one.
+        "Choose a folder…",
         "EXPORTS OF THIS PHOTOGRAPH",
         "PREVIEW OF",
     ] {
@@ -655,3 +656,6 @@ fn benchmark_develop_latency_on_a_real_master() {
         app.editor.viewport.stats()["jobs"].as_u64()
     );
 }
+
+#[path = "app-station-develop-actions-tests.rs"]
+mod actions;

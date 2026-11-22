@@ -58,6 +58,10 @@ pub(super) struct PhotoHistoryState {
     status: Option<String>,
     dirty: bool,
     failed_operation: bool,
+    /// The version being saved, for the Develop station's progress line.
+    saving: Option<String>,
+    /// The last error already raised as a notice.
+    error_noticed: Option<String>,
 }
 
 impl StrehlApp {
@@ -158,12 +162,84 @@ impl StrehlApp {
 
     pub(super) fn open_save_edit_version(&mut self) {
         if let Some(path) = self.editor.path.clone() {
+            // "Version 3": one more than the versions saved by name (an
+            // export batch saves its own, named "Export batch").
+            let named = self
+                .catalog
+                .photo_versions
+                .iter()
+                .filter(|v| v.owner.output == path && v.name != "Export batch")
+                .count();
             self.photo_history.draft = Some(NameDraft {
                 path,
-                name: "Untitled edit".into(),
+                name: format!("Version {}", named + 1),
                 focus: true,
             });
             self.photo_history.error = None;
+            self.photo_history.status = None;
+        }
+    }
+
+    /// The head of Develop's Versions tab: Save version's name field, the
+    /// history operation running, and what the last one came to, in words.
+    pub(super) fn develop_version_head(
+        &mut self,
+        ui: &mut egui::Ui,
+        pal: &crate::develop_station::style::StudioPalette,
+    ) {
+        use crate::develop_station::{self as station, style};
+        if self
+            .photo_history
+            .draft
+            .as_ref()
+            .is_some_and(|d| self.editor.path.as_ref() != Some(&d.path))
+        {
+            self.photo_history.draft = None;
+        }
+        let busy = self.photo_history_busy();
+        let action = self.photo_history.draft.as_mut().and_then(|draft| {
+            let focus = std::mem::take(&mut draft.focus);
+            station::version_name_field(ui, pal, &mut draft.name, focus, busy)
+        });
+        match action {
+            Some(station::NameAction::Save) => {
+                let name = self
+                    .photo_history
+                    .draft
+                    .as_ref()
+                    .map(|d| d.name.clone())
+                    .unwrap_or_default();
+                match self.save_edit_version(&name) {
+                    Ok(()) => self.photo_history.draft = None,
+                    Err(e) => self.photo_history.error = Some(e.to_string()),
+                }
+            }
+            Some(station::NameAction::Cancel) => self.photo_history.draft = None,
+            None => {}
+        }
+        if self.photo_history_busy() {
+            let text = match &self.photo_history.saving {
+                Some(name) => format!("Saving \u{201c}{name}\u{201d}\u{2026}"),
+                None => "Working on this photograph\u{2019}s versions\u{2026}".into(),
+            };
+            style::notice_line(ui, pal, style::Mark::Run, &text, &[]);
+            ui.ctx().request_repaint_after(Duration::from_millis(60));
+        } else if let Some(error) = self.photo_history.error.clone() {
+            let retry = self.photo_history.dirty;
+            let links: &[&str] = if retry {
+                &["Retry saving history"]
+            } else {
+                &["Dismiss"]
+            };
+            if style::notice_line(ui, pal, style::Mark::Warn, &error, links).is_some() {
+                self.photo_history.error = None;
+                self.photo_history.error_noticed = None;
+                self.photo_history.failed_operation = false;
+            }
+        } else if let Some(status) = self.photo_history.status.clone()
+            && style::notice_line(ui, pal, style::Mark::Ok, &status, &["Dismiss"]).is_some()
+        {
+            self.photo_history.status = None;
         }
     }
 
@@ -183,6 +259,8 @@ impl StrehlApp {
         let image = guard.image.clone();
         let source = guard.source.clone();
         let recipe = self.editor.recipe.clone();
+        self.photo_history.saving = Some(name.clone());
+        self.photo_history.status = None;
         self.photo_history.pending = Some(Pending {
             export: None,
             durable: true,
@@ -418,6 +496,7 @@ impl StrehlApp {
                 });
         if let Some(ready) = ready {
             let pending = self.photo_history.pending.take().unwrap();
+            self.photo_history.saving = None;
             let current = pending
                 .guard
                 .as_ref()
@@ -427,6 +506,7 @@ impl StrehlApp {
                     Prepared::Saved(version) => {
                         let output = version.owner.output.clone();
                         let id = version.id.clone();
+                        let saved = format!("Saved version \u{201c}{}\u{201d}", version.name);
                         self.catalog.add_photo_version(version)?;
                         if self.editor.path.as_ref() == Some(&output) {
                             self.project_explorer.reveal_photo_history(
@@ -435,7 +515,13 @@ impl StrehlApp {
                                 Some(&id),
                             );
                         }
-                        self.photo_history.status = Some("Edit version saved.".into());
+                        self.shell.notices.push(
+                            crate::notices::Severity::Done,
+                            crate::notices::Source::Develop,
+                            saved.clone(),
+                            None,
+                        );
+                        self.photo_history.status = Some(saved);
                         self.photo_history.dirty = true;
                     }
                     Prepared::Unchanged { version_id } => {
@@ -544,6 +630,18 @@ impl StrehlApp {
                     self.photo_history.error = Some(format!("Saving photograph history: {e}"))
                 }
             }
+        }
+        if self.photo_history.error.is_some()
+            && self.photo_history.error != self.photo_history.error_noticed
+        {
+            self.photo_history.error_noticed = self.photo_history.error.clone();
+            let text = self.photo_history.error.clone().unwrap_or_default();
+            self.shell.notices.push(
+                crate::notices::Severity::Warning,
+                crate::notices::Source::Develop,
+                text,
+                None,
+            );
         }
         if self.photo_history_busy() {
             ctx.request_repaint_after(Duration::from_millis(60));

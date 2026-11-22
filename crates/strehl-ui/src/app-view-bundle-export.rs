@@ -76,6 +76,8 @@ impl StrehlApp {
                     "Exported complete view bundle to {}",
                     crate::display_path::display_path(&path)
                 );
+                // The Export station says so where the press was made.
+                self.export_pane.station.succeed(self.status.clone(), false);
                 self.last_view_bundle_export = Some(path);
             }
             Err(error) => {

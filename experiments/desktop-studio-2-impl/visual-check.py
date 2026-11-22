@@ -79,6 +79,12 @@ ROUTES = {
     "develop-instrument": (["--open-run", RUN, "--route", "develop", "--theme", "instrument"], "develop.png"),
     "develop-lightbox": (["--open-run", RUN, "--route", "develop", "--theme", "lightbox"], "develop.png"),
     "export-lightbox": (["--open-run", RUN, "--route", "export", "--theme", "lightbox"], "export.png"),
+    # Develop and Export action states (g-develop): Save version's name field, the HDR (AVIF)
+    # preset with its encoder effort, and a sample result line. None of them writes.
+    "develop-save-version": (["--open-run", RUN, "--route", "develop", "--overlay", "develop-save-version"],
+                             "develop-versions.png"),
+    "export-hdr": (["--open-run", RUN, "--route", "export", "--overlay", "export-hdr"], "export.png"),
+    "export-result": (["--open-run", RUN, "--route", "export", "--overlay", "export-result"], "export.png"),
     "glance-lightbox": (["--route", "capture", "--capture-fixture", "glance", "--theme", "lightbox"], "glance.png"),
     # The shell's own surfaces over a station (no reference: compare across themes).
     "projects-drawer": (["--open-run", RUN, "--route", "develop", "--overlay", "projects"], "develop.png"),

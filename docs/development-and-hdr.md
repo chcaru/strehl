@@ -141,8 +141,9 @@ for conversion semantics, including the SDR appearance policy.
 
 Quality 100 is the highest setting for AVIF and JPEG, not lossless compression.
 Encoder effort is separate: faster searches can change distortion and file size
-at the same quality setting. The default balances these; the pane exposes the
-tradeoff under Encoding options. Output size remains the photograph's full
+at the same quality setting. The default balances these; an AVIF preset on the
+Export station shows the tradeoff as **Encoder effort** (0 fastest, 10 slowest,
+default 4), beside Quality. Output size remains the photograph's full
 resolution, independent of the on-screen preview.
 
 The built-in Rust encoder writes **10-bit 4:4:4 AV1**, full range, BT.2020 primaries by default,

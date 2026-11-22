@@ -87,9 +87,68 @@ pub(crate) fn output_size(output: &PresetOutput, size: [u32; 2]) -> [u32; 2] {
     }
 }
 
+/// AVIF bytes per pixel against quality: (quality, SDR sRGB, HDR Rec.2020
+/// PQ), measured at encoder effort 4 on the 7032 x 4688 weevil with its own
+/// recipe (g-develop note). Other efforts measured -6 % to +17 % of these
+/// (effort 0 largest); the estimate leaves effort out.
+const AVIF_BYTES_PER_PIXEL: [(u8, f64, f64); 6] = [
+    (50, 0.0595, 0.0517),
+    (70, 0.1144, 0.1763),
+    (85, 0.2019, 0.4209),
+    (90, 0.2802, 0.6340),
+    (95, 0.4814, 1.0145),
+    (100, 1.1004, 1.7947),
+];
+
+/// AVIF encode (with development) seconds per megapixel at encoder effort
+/// 4: (quality, SDR, HDR), measured with the sizes above. HDR quality 100 is
+/// the mean of two runs (39.04 s and 33.43 s).
+const AVIF_SECONDS_PER_MP: [(u8, f64, f64); 6] = [
+    (50, 0.3868, 0.4332),
+    (70, 0.4620, 0.5897),
+    (85, 0.5266, 0.6689),
+    (90, 0.5964, 0.7220),
+    (95, 0.6853, 0.9774),
+    (100, 1.0766, 1.0992),
+];
+
+/// Encode time against effort, relative to effort 4: geometric means of the
+/// ratios measured at SDR quality 85, HDR quality 85 and HDR quality 100.
+const AVIF_EFFORT_TIME: [(u8, f64); 3] = [(0, 0.3455), (4, 1.0), (8, 4.851)];
+
+/// Straight lines through `points` in log value, continued past either end
+/// with the nearest segment's slope.
+fn log_interpolate(points: &[(f64, f64)], x: f64) -> f64 {
+    let i = (1..points.len())
+        .find(|&i| x <= points[i].0)
+        .unwrap_or(points.len() - 1);
+    let ((x0, y0), (x1, y1)) = (points[i - 1], points[i]);
+    let (l0, l1) = (y0.ln(), y1.ln());
+    (l0 + (x - x0) * (l1 - l0) / (x1 - x0)).exp()
+}
+
+/// Bytes per pixel of an AVIF at `quality`: straight lines between the
+/// measurements in log size (size grows geometrically as the quantizer
+/// falls), the first segment's slope below quality 50.
+pub(crate) fn avif_bytes_per_pixel(quality: u8, hdr: bool) -> f64 {
+    let points =
+        AVIF_BYTES_PER_PIXEL.map(|(q, sdr, high)| (f64::from(q), if hdr { high } else { sdr }));
+    log_interpolate(&points, f64::from(quality.clamp(1, 100)))
+}
+
+/// Seconds per megapixel to develop and encode an AVIF: the quality table
+/// at effort 4 times the effort factor (both interpolated in log time).
+pub(crate) fn avif_seconds_per_mp(quality: u8, hdr: bool, effort: u8) -> f64 {
+    let quality_points =
+        AVIF_SECONDS_PER_MP.map(|(q, sdr, high)| (f64::from(q), if hdr { high } else { sdr }));
+    let effort_points = AVIF_EFFORT_TIME.map(|(e, factor)| (f64::from(e), factor));
+    log_interpolate(&quality_points, f64::from(quality.clamp(1, 100)))
+        * log_interpolate(&effort_points, f64::from(effort.min(10)))
+}
+
 /// A rough file size: bytes per pixel measured on the owner's 33 MP weevil
-/// (P7 model note: JPEG q90 0.39, AVIF HDR q100 0.42, PNG 16-bit P3 4.2,
-/// TIFF 16-bit 6.0; the master 12).
+/// (P7 model note: JPEG q90 0.39, PNG 16-bit P3 4.2, TIFF 16-bit 6.0; the
+/// master 12; AVIF from `AVIF_BYTES_PER_PIXEL`).
 pub(crate) fn estimate_bytes(output: &PresetOutput, size: [u32; 2]) -> u64 {
     let [w, h] = output_size(output, size);
     let pixels = f64::from(w) * f64::from(h);
@@ -97,7 +156,7 @@ pub(crate) fn estimate_bytes(output: &PresetOutput, size: [u32; 2]) -> u64 {
         PresetOutput::Archive => 12.0,
         PresetOutput::Image(image) => match image.settings.format {
             ExportFormat::Jpeg => 0.39 * f64::from(image.settings.quality) / 90.0,
-            ExportFormat::Avif => 0.42,
+            ExportFormat::Avif => avif_bytes_per_pixel(image.settings.quality, image.settings.hdr),
             ExportFormat::Png => 4.2,
             ExportFormat::Tiff => 6.0,
         },
@@ -116,8 +175,9 @@ pub(crate) fn human_bytes(bytes: u64) -> String {
     }
 }
 
-/// Seconds for a batch, from encoder speeds measured on the 33 MP master
-/// (AVIF speed 10 about 16 s, the SDR formats under 2 s).
+/// Seconds for a batch, from encoder times measured on the 33 MP master
+/// (the SDR formats under 2 s). AVIF time depends on quality, range and
+/// encoder effort (`avif_seconds_per_mp`; g-develop note).
 pub(crate) fn estimate_seconds(outputs: &[&PresetOutput], size: [u32; 2]) -> f64 {
     outputs
         .iter()
@@ -128,13 +188,25 @@ pub(crate) fn estimate_seconds(outputs: &[&PresetOutput], size: [u32; 2]) -> f64
                 PresetOutput::Archive => 0.02 * mp,
                 PresetOutput::Image(image) => match image.settings.format {
                     ExportFormat::Avif => {
-                        0.5 * mp * (1.0 + f64::from(10 - image.settings.speed.min(10)) * 0.4)
+                        let s = &image.settings;
+                        mp * avif_seconds_per_mp(s.quality, s.hdr, effort_of(s.speed))
                     }
                     _ => 0.05 * mp + 0.2,
                 },
             }
         })
         .sum()
+}
+
+/// Encoder effort as the Export station shows it: 0 fastest, 10 slowest.
+/// The settings keep the AV1 speed (10 fastest), so effort is `10 - speed`;
+/// the default speed 6 is effort 4 (the export pane's "Encoder effort").
+pub(crate) fn effort_of(speed: u8) -> u8 {
+    10 - speed.min(10)
+}
+
+pub(crate) fn speed_of(effort: u8) -> u8 {
+    10 - effort.min(10)
 }
 
 // ------------------------------------------------------------------- history
@@ -176,12 +248,25 @@ pub(crate) struct ExportView<'a> {
     pub hdr_photo: bool,
     pub history: &'a [HistoryRow],
     pub batch: Option<BatchSnapshot>,
-    pub can_export: bool,
+    /// Why an export cannot start now (a look still calculating, a version
+    /// being saved); the press then says so instead of doing nothing.
+    pub blocker: Option<&'a str>,
+    /// What the last action came to, at the head of the inspector.
+    pub feedback: Option<Feedback<'a>>,
     /// For example: a depth repair is pending; files use the last finished pixels.
     pub note: Option<&'a str>,
     /// An independent-views session can leave as a view bundle; `true`
     /// while one is being written.
     pub view_bundle: Option<bool>,
+}
+
+/// The last batch's result or an error, in words.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub(crate) struct Feedback<'a> {
+    pub ok: bool,
+    pub text: &'a str,
+    /// Offer Open folder (the files went to this subject's folder).
+    pub folder: bool,
 }
 
 /// Panel state that is not the library itself.
@@ -209,6 +294,7 @@ pub(crate) enum ExportIntent {
     /// Copy every bound photograph, master, focus map and receipt.
     ExportViewBundle,
     CancelViewBundle,
+    DismissFeedback,
 }
 
 /// Sharpening choices "for the size". `Screen` is the conservative default
@@ -258,6 +344,9 @@ pub(crate) fn inspector_body(
         .auto_shrink([false, false])
         .show(&mut body_ui, |ui| {
             ui.spacing_mut().item_spacing.y = 8.0;
+            if let Some(feedback) = view.feedback {
+                feedback_line(ui, view.palette, feedback, &mut intents);
+            }
             presets_list(ui, panel, view, &mut intents);
             if let Some(preset) = panel
                 .selected
@@ -317,9 +406,13 @@ pub(crate) fn inspector_footer(ui: &mut Ui, view: &ExportView<'_>) -> Vec<Export
             intents.push(ExportIntent::CancelBatch);
         }
     } else {
+        // Every press answers: it starts the batch, opens the folder dialog,
+        // or (when something must finish first) says what in the inspector.
         let count = ticked.len();
+        let no_folder = view.destination.is_none() && count > 0;
         let label = match count {
             0 => "Tick a preset to export".to_owned(),
+            _ if no_folder => "Choose a folder…".to_owned(),
             1 => "Export 1 file".to_owned(),
             n => format!("Export {n} files"),
         };
@@ -329,33 +422,58 @@ pub(crate) fn inspector_footer(ui: &mut Ui, view: &ExportView<'_>) -> Vec<Export
         );
         let estimate_width = 64.0;
         let width = (ui.available_width() - estimate_width - 8.0).max(80.0);
+        let hover = if no_folder {
+            "Choose where this subject's files go, then export"
+        } else {
+            view.blocker
+                .unwrap_or("Ctrl+E · existing files are never overwritten")
+        };
         if style::button(
             ui,
             pal,
             &label,
             ButtonKind::Primary,
             egui::vec2(width, 28.0),
-            count > 0 && view.can_export && view.destination.is_some(),
+            count > 0,
         )
-        .on_hover_text(if view.destination.is_none() {
-            "Choose where the files go"
-        } else {
-            "Ctrl+E · existing files are never overwritten"
-        })
+        .on_hover_text(hover)
         .clicked()
         {
-            intents.push(ExportIntent::ExportTicked);
+            intents.push(if no_folder {
+                ExportIntent::ChangeDestination
+            } else {
+                ExportIntent::ExportTicked
+            });
         }
         style::text(ui, &estimate, style::SMALL, pal.ink_3);
     }
     if ui.input(|i| i.modifiers.command && i.key_pressed(egui::Key::E))
         && view.batch.is_none()
-        && view.can_export
         && view.destination.is_some()
     {
         intents.push(ExportIntent::ExportTicked);
     }
     intents
+}
+
+/// The last batch's result (with Open folder) or an error, with Dismiss.
+fn feedback_line(
+    ui: &mut Ui,
+    pal: &StudioPalette,
+    feedback: Feedback<'_>,
+    intents: &mut Vec<ExportIntent>,
+) {
+    let links: &[&str] = if feedback.folder {
+        &["Open folder", "Dismiss"]
+    } else {
+        &["Dismiss"]
+    };
+    let kind = if feedback.ok { Mark::Ok } else { Mark::Warn };
+    match style::notice_line(ui, pal, kind, feedback.text, links) {
+        Some(0) if feedback.folder => intents.push(ExportIntent::OpenFolder),
+        Some(_) => intents.push(ExportIntent::DismissFeedback),
+        None => {}
+    }
 }
 
 /// Body and foot together, for callers without the shell (tests).
@@ -486,13 +604,10 @@ fn presets_list(
     }
 }
 
-fn row(ui: &mut Ui, pal: &StudioPalette, label: &str, new: bool, add: impl FnOnce(&mut Ui)) {
+fn row(ui: &mut Ui, pal: &StudioPalette, label: &str, add: impl FnOnce(&mut Ui)) {
     ui.horizontal(|ui| {
         ui.set_min_height(24.0);
         style::text(ui, label, style::BODY, pal.ink_2);
-        if new {
-            style::tag(ui, pal, "new", true);
-        }
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), add);
     });
 }
@@ -527,7 +642,7 @@ fn preset_editor(
         ExportFormat::Png,
         ExportFormat::Jpeg,
     ];
-    row(ui, pal, "Format", false, |ui| {
+    row(ui, pal, "Format", |ui| {
         // Right-to-left: list in reverse so AVIF stays first on screen.
         if let Some(i) = style::seg(
             ui,
@@ -547,7 +662,7 @@ fn preset_editor(
         OutputColorSpace::DisplayP3,
         OutputColorSpace::Rec2020,
     ];
-    row(ui, pal, "Colour space", false, |ui| {
+    row(ui, pal, "Colour space", |ui| {
         if let Some(i) = style::seg(
             ui,
             pal,
@@ -558,13 +673,13 @@ fn preset_editor(
         }
     });
     if s.format == ExportFormat::Avif && view.hdr_photo {
-        row(ui, pal, "Range", false, |ui| {
+        row(ui, pal, "Range", |ui| {
             if let Some(i) = style::seg(ui, pal, &["HDR", "SDR"], Some(usize::from(!s.hdr))) {
                 s.hdr = i == 0;
             }
         });
     }
-    row(ui, pal, "Size", true, |ui| {
+    row(ui, pal, "Size", |ui| {
         let mut long = s.resize.map(|r| r.long_edge).unwrap_or(0);
         let response = ui.add(
             egui::DragValue::new(&mut long)
@@ -585,14 +700,14 @@ fn preset_editor(
         }
     });
     let choices = sharpen_choices();
-    row(ui, pal, "Sharpen for the size", true, |ui| {
+    row(ui, pal, "Sharpen for the size", |ui| {
         let current = choices.iter().position(|(_, c)| *c == s.sharpen);
         if let Some(i) = style::seg(ui, pal, &["Off", "Screen", "Print"], current) {
             s.sharpen = choices[i].1;
         }
     });
     if matches!(s.format, ExportFormat::Jpeg | ExportFormat::Avif) {
-        row(ui, pal, "Quality", false, |ui| {
+        row(ui, pal, "Quality", |ui| {
             let mut q = s.quality;
             if ui
                 .add(egui::DragValue::new(&mut q).range(1..=100))
@@ -601,6 +716,32 @@ fn preset_editor(
                 s.quality = q;
             }
         });
+    }
+    if s.format == ExportFormat::Avif {
+        // The AV1 encoder's time against compression, separate from quality:
+        // effort is 10 - speed, as in the export pane before Studio 2.
+        row(ui, pal, "Encoder effort", |ui| {
+            let mut effort = effort_of(s.speed);
+            if ui
+                .add(egui::DragValue::new(&mut effort).range(0..=10).speed(0.05))
+                .on_hover_text(
+                    "0 is the fastest encode, 10 the slowest. Quality is set separately.",
+                )
+                .changed()
+            {
+                s.speed = speed_of(effort);
+            }
+        });
+        let seconds = estimate_seconds(&[&PresetOutput::Image(next.clone())], view.size);
+        style::text(
+            ui,
+            &format!(
+                "About {} for this photograph. Less effort finishes sooner; more searches longer and can compress better.",
+                format_seconds(seconds)
+            ),
+            style::SMALL,
+            pal.ink_3,
+        );
     }
     if next != *image {
         intents.push(ExportIntent::Edit(

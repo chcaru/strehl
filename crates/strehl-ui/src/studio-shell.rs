@@ -262,6 +262,11 @@ impl StrehlApp {
             other if other.starts_with("library-") || other.starts_with("subject-") => {
                 self.library.manage.overlay = Some(other.to_owned());
             }
+            // Develop and Export states, once the photograph is open
+            // (`app-develop.rs`).
+            other if other.starts_with("develop-") || other.starts_with("export-") => {
+                self.edit_pane.develop.launch = Some(other.to_owned());
+            }
             _ => {}
         }
     }
