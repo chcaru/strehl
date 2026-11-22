@@ -23,6 +23,8 @@ pub(crate) enum Key {
     Settle,
     Timeout,
     Warmup,
+    /// Error correction's retakes of one plane (h-retake).
+    MaxRetakes,
 }
 
 /// Its range, default, unit, the values the steppers walk and its line.
@@ -41,7 +43,7 @@ pub(crate) struct Spec {
 /// 100-30000 ms, exposure timeout 5-3600 s) and the light warm-up 0-300 s
 /// (`Schedule::set_warmup`); defaults from `Plan::default` and the power
 /// configuration's `default_warmup` (5 s).
-pub(crate) const SPECS: [Spec; 4] = [
+pub(crate) const SPECS: [Spec; 5] = [
     Spec {
         key: Key::Approach,
         label: "Approach",
@@ -83,6 +85,18 @@ pub(crate) const SPECS: [Spec; 4] = [
         default: 5,
         ladder: &[0, 5, 10, 15, 30, 60, 90, 120, 180, 300],
         help: "With Manage power, the light is on this long before the first plane. It dimmed 9 % over its first minute (measured).",
+    },
+    // The host's 0-5 (`strehl_capture::worker::MAX_RETAKES_LIMIT`, where the
+    // range is argued); 2 as before it could be set.
+    Spec {
+        key: Key::MaxRetakes,
+        label: "Retakes a plane",
+        unit: "retakes",
+        min: 0,
+        max: strehl_capture::worker::MAX_RETAKES_LIMIT as u32,
+        default: strehl_capture::worker::MAX_RETAKES as u32,
+        ladder: &[0, 1, 2, 3, 4, 5],
+        help: "With error correction, a failed plane is taken again up to this often; a later try passed about half the time (measured). 0 checks every plane and retakes none. Retake on a plane takes it again by hand.",
     },
 ];
 
@@ -154,6 +168,9 @@ pub(crate) struct RigValues {
     pub warmup: Option<u32>,
     pub manage_power: Option<bool>,
     pub error_correction: Option<bool>,
+    /// Error correction's retakes of a plane; `None` from a host that does
+    /// not take the setting (it retakes twice).
+    pub max_retakes: Option<u32>,
     /// Plan settings may be sent (a ready camera, nothing running).
     pub plan_editable: bool,
     /// Between sequences: power, warm-up and error correction may change.
@@ -175,6 +192,7 @@ impl RigValues {
             warmup: power.and_then(|p| p.warmup_seconds).map(|w| w as u32),
             manage_power: power.map(|p| p.manage_stack),
             error_correction: host.error_correction,
+            max_retakes: host.capabilities.max_retakes.then(|| host.max_retakes()),
             plan_editable: s.fresh() && host.editable && !s.pending && plan.is_some(),
             between,
             checking,
@@ -186,11 +204,13 @@ impl RigValues {
             Key::Settle => self.settle,
             Key::Timeout => self.timeout,
             Key::Warmup => self.warmup,
+            Key::MaxRetakes => self.max_retakes,
         }
     }
     fn editable(&self, key: Key) -> bool {
         match key {
             Key::Warmup => self.between && self.warmup.is_some(),
+            Key::MaxRetakes => self.between && self.max_retakes.is_some(),
             _ => self.plan_editable,
         }
     }
@@ -232,6 +252,7 @@ pub(crate) fn intent(key: Key, value: u32) -> PlanIntent {
         Key::Settle => PlanIntent::SetSettle(value),
         Key::Timeout => PlanIntent::SetCaptureTimeout(value),
         Key::Warmup => PlanIntent::SetWarmup(value),
+        Key::MaxRetakes => PlanIntent::SetMaxRetakes(value.min(u32::from(u8::MAX)) as u8),
     }
 }
 
@@ -256,7 +277,7 @@ impl RigEditor {
         ui.add_space(6.0);
         let left = ui.max_rect().left();
         let right = ui.max_rect().right();
-        for spec in &SPECS {
+        for spec in SPECS.iter().filter(|s| s.key != Key::MaxRetakes) {
             let top = ui.cursor().top();
             style::hairline(
                 ui.painter(),
@@ -279,7 +300,7 @@ impl RigEditor {
                 "Error correction",
                 v.error_correction,
                 v.between && (v.checking || v.error_correction == Some(true)),
-                "Each plane waits for this PC's check; failed planes are retaken later, about 8.5 s each. Needs Check each plane.",
+                "Each plane waits for this PC's check; failed planes are retaken later, about 10 s each (measured). Needs Check each plane.",
             ),
         ];
         for (i, (label, value, enabled, help)) in switches.into_iter().enumerate() {
@@ -314,6 +335,19 @@ impl RigEditor {
             });
             help_line(ui, help, palette);
             ui.add_space(6.0);
+            // Error correction's own setting, under its switch (h-retake).
+            if i == 1 {
+                let top = ui.cursor().top();
+                style::hairline(
+                    ui.painter(),
+                    egui::pos2(left, top + 0.5),
+                    egui::pos2(right, top + 0.5),
+                    palette.line,
+                );
+                ui.add_space(6.0);
+                self.number_row(ui, spec(Key::MaxRetakes), v, plan, palette, out);
+                ui.add_space(6.0);
+            }
         }
         let top = ui.cursor().top();
         style::hairline(
@@ -356,6 +390,8 @@ impl RigEditor {
                         ui,
                         if spec.key == Key::Warmup {
                             "no studio outlets"
+                        } else if spec.key == Key::MaxRetakes {
+                            "2, fixed on this host"
                         } else {
                             "—"
                         },

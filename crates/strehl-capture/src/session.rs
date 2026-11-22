@@ -5,7 +5,7 @@ use crate::{
     power::Outlet,
     schedule::{self, Recipe, StackPower, Stage, Store},
     timing,
-    worker::{Action, PAUSE, STOP, Snapshot, Worker},
+    worker::{Action, MAX_RETAKES, MAX_RETAKES_LIMIT, PAUSE, STOP, Snapshot, Worker},
 };
 use anyhow::{Context, Result, ensure};
 use serde::{Deserialize, Serialize};
@@ -202,6 +202,20 @@ impl Session {
             "test_shot": true,
             // `exposure.mode` and `exposure.problem` (H1).
             "exposure_check": true,
+            // `error_correction` with `max_retakes`, and `retakes.max` (h-retake).
+            "max_retakes": true,
+            // `queue_retakes`, and `retakes.queued`/`retakes.followup` (h-retake).
+            "queue_retakes": true,
+        });
+        // Retakes (h-retake): the setting, the planes asked for during the
+        // capture and not yet taken, and the retakes after it while they run.
+        state["retakes"] = json!({
+            "max": s.max_retakes,
+            "limit": MAX_RETAKES_LIMIT,
+            "accepted": s.capture_run && s.retakes_accepted,
+            "queued": s.retake_queue,
+            "run": s.journal.as_ref().and_then(|d| d.file_name()).and_then(|n| n.to_str()),
+            "followup": s.followup.as_ref().map(|f| json!({"planes":f.planes,"taken":f.taken,"skipped":f.skipped})),
         });
         state
     }
@@ -267,6 +281,47 @@ impl Session {
             } else {
                 store.cancel(id)?;
             }
+            c.revision += 1;
+            return Ok(());
+        }
+        if let Command::QueueRetakes { planes } = &request.command {
+            // Like Pause and Stop, bound to the capture it names rather than
+            // to the latest revision: the state changes with every plane.
+            ensure!(
+                request.sequence_id == s.sequence_id && s.capture_run,
+                "That capture is no longer the camera's latest"
+            );
+            ensure!(
+                (1..=4096).contains(&planes.len()),
+                "Choose 1-4096 planes to retake"
+            );
+            if matches!(s.phase, Phase::Capturing | Phase::Paused) {
+                return self.worker.queue_retakes(s.sequence_id, planes);
+            }
+            ensure!(
+                !self.schedule.as_ref().is_some_and(|store| store
+                    .lock()
+                    .unwrap()
+                    .job()
+                    .is_some_and(|j| j.stage == Stage::Running)),
+                "A scheduled stack is running"
+            );
+            ensure!(
+                !s.command_pending && !s.phase.active(),
+                "Wait for the active camera operation"
+            );
+            let total = s.total as u64;
+            ensure!(
+                planes.iter().all(|p| (1..=total).contains(p)),
+                "Choose planes 1-{total}"
+            );
+            self.worker.request_resume();
+            self.worker.send(
+                s.revision,
+                Action::Followup {
+                    planes: planes.clone(),
+                },
+            )?;
             c.revision += 1;
             return Ok(());
         }
@@ -375,12 +430,23 @@ impl Session {
                 );
                 action = Some(Action::PowerPlan(enabled));
             }
-            Command::ErrorCorrection { enabled } => {
+            Command::ErrorCorrection {
+                enabled,
+                max_retakes,
+            } => {
                 ensure!(
                     !s.phase.active() && !s.command_pending,
                     "Change error correction between stacks"
                 );
-                action = Some(Action::ErrorCorrection(enabled));
+                let max_retakes = usize::from(max_retakes.unwrap_or(MAX_RETAKES as u8));
+                ensure!(
+                    max_retakes <= MAX_RETAKES_LIMIT,
+                    "Choose 0-{MAX_RETAKES_LIMIT} retakes of a plane"
+                );
+                action = Some(Action::ErrorCorrection {
+                    enabled,
+                    max_retakes,
+                });
             }
             Command::Connect {} => {
                 ensure!(!s.connected, "Camera is already connected");
@@ -663,6 +729,20 @@ pub enum Command {
     /// a group that failed for a fault of its exposures in place.
     ErrorCorrection {
         enabled: bool,
+        /// Retakes of one plane before it keeps what it has, 0 to
+        /// [`crate::worker::MAX_RETAKES_LIMIT`] (h-retake). Omitted: 2, as
+        /// before it could be set; send it only to a controller whose state
+        /// has `capabilities.max_retakes`.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        max_retakes: Option<u8>,
+    },
+    /// Take these planes (the numbers their files carry) of the capture
+    /// `sequence_id` names again (h-retake): while it runs, between planes
+    /// as error correction's retakes are; once it has ended, into the same
+    /// run. Send only to a controller whose state has
+    /// `capabilities.queue_retakes`.
+    QueueRetakes {
+        planes: Vec<u64>,
     },
     Connect {},
     Disconnect {},
@@ -969,6 +1049,161 @@ mod tests {
             session.state()["initial_seconds"],
             before["initial_seconds"]
         );
+    }
+    /// h-retake: an older desktop's `error_correction` (no `max_retakes`)
+    /// still parses and sets the old two; a newer one's is bounded; the
+    /// request serialises without the field unless it is set.
+    #[test]
+    fn max_retakes_is_optional_bounded_and_reported() {
+        let old: Command =
+            serde_json::from_value(json!({"op":"error_correction","enabled":true})).unwrap();
+        assert!(matches!(
+            old,
+            Command::ErrorCorrection {
+                enabled: true,
+                max_retakes: None
+            }
+        ));
+        assert_eq!(
+            serde_json::to_value(Command::ErrorCorrection {
+                enabled: false,
+                max_retakes: None
+            })
+            .unwrap(),
+            json!({"op":"error_correction","enabled":false})
+        );
+        let temp = tempfile::tempdir().unwrap();
+        let session = Session::new(
+            Arc::new(Worker::new(PathBuf::new(), true)),
+            Arc::new(Mutex::new(Controls::new(temp.path().into()))),
+            true,
+        );
+        let state = session.state();
+        assert_eq!(state["capabilities"]["max_retakes"], true);
+        assert_eq!(state["capabilities"]["queue_retakes"], true);
+        assert_eq!(state["retakes"]["max"], 2);
+        assert_eq!(state["retakes"]["limit"], 5);
+        assert_eq!(state["retakes"]["queued"], json!([]));
+        assert!(state["retakes"]["followup"].is_null());
+        let set = |id: &str, max: Option<u8>| {
+            session.dispatch(request(
+                &session,
+                id,
+                Command::ErrorCorrection {
+                    enabled: true,
+                    max_retakes: max,
+                },
+            ))
+        };
+        set("ec-max-four", Some(4)).unwrap();
+        until(&session, |s| s.max_retakes == 4 && !s.command_pending);
+        assert!(set("ec-max-six", Some(6)).is_err());
+        set("ec-max-zero", Some(0)).unwrap();
+        until(&session, |s| s.max_retakes == 0 && !s.command_pending);
+        // An older desktop's request: back to two.
+        set("ec-older-desk", None).unwrap();
+        let s = until(&session, |s| s.max_retakes == 2 && !s.command_pending);
+        assert!(s.error_correction);
+        assert_eq!(session.state()["retakes"]["max"], 2);
+    }
+    /// h-retake, end to end on the simulated PC camera through the
+    /// controller: a retake queued while the capture is paused is taken when
+    /// it resumes; after the capture another is taken into the same run;
+    /// a request naming another capture is refused.
+    #[test]
+    fn retakes_are_queued_during_and_after_a_capture() {
+        use crate::backend::sim::{Fail, PcSim};
+        let temp = tempfile::tempdir().unwrap();
+        let worker = Worker::with_factory(Box::new(|| {
+            let mut sim = PcSim::new(vec![((1, 1), Fail::Kept), ((3, 1), Fail::Kept)]);
+            sim.demo.delay_ms = 40;
+            Ok(Box::new(sim) as Box<dyn crate::backend::Camera>)
+        }));
+        let session = Session::new(
+            Arc::new(worker),
+            Arc::new(Mutex::new(Controls::new(temp.path().into()))),
+            false,
+        );
+        session
+            .dispatch(request(&session, "connect-rt", Command::Connect {}))
+            .unwrap();
+        until(&session, |s| s.phase == Phase::Ready && !s.command_pending);
+        session
+            .dispatch(request(
+                &session,
+                "ec-on-rt",
+                Command::ErrorCorrection {
+                    enabled: true,
+                    max_retakes: Some(1),
+                },
+            ))
+            .unwrap();
+        until(&session, |s| s.error_correction && !s.command_pending);
+        for (id, command) in [
+            ("focus-rt-a", Command::Focus { target: 60500 }),
+            ("mark-rt-a", Command::Mark { start: true }),
+            ("focus-rt-b", Command::Focus { target: 60505 }),
+            ("mark-rt-b", Command::Mark { start: false }),
+        ] {
+            session.dispatch(request(&session, id, command)).unwrap();
+            until(&session, |s| !s.command_pending && s.phase == Phase::Ready);
+        }
+        session
+            .dispatch(request(&session, "start-rt-01", Command::Start {}))
+            .unwrap();
+        until(&session, |s| s.completed >= 2);
+        session
+            .dispatch(request(&session, "pause-rt-01", Command::Pause {}))
+            .unwrap();
+        until(&session, |s| s.phase == Phase::Paused);
+        let queue = |id: &str, planes: Vec<u64>| {
+            session.dispatch(request(&session, id, Command::QueueRetakes { planes }))
+        };
+        assert!(queue("queue-rt-bad", vec![99]).is_err(), "beyond the stack");
+        queue("queue-rt-mid", vec![1]).unwrap();
+        queue("queue-rt-twice", vec![1]).unwrap();
+        assert_eq!(session.state()["retakes"]["queued"], json!([1]));
+        let mut stale = request(
+            &session,
+            "queue-rt-old",
+            Command::QueueRetakes { planes: vec![1] },
+        );
+        stale.sequence_id -= 1;
+        assert!(session.dispatch(stale).is_err(), "another capture's");
+        session
+            .dispatch(request(&session, "resume-rt-01", Command::Resume {}))
+            .unwrap();
+        let done = until(&session, |s| {
+            s.phase == Phase::Complete && !s.command_pending
+        });
+        let journal = done.journal.clone().unwrap();
+        let events = || std::fs::read_to_string(journal.join("events.jsonl")).unwrap();
+        let manual = |text: &str| {
+            text.lines()
+                .filter(|l| l.contains("\"retake_intent\"") && l.contains("\"manual\":true"))
+                .count()
+        };
+        assert_eq!(manual(&events()), 1);
+        assert_eq!(session.state()["retakes"]["accepted"], true);
+        // After the capture: plane 3, into the same run.
+        queue("queue-rt-after", vec![3]).unwrap();
+        // Pending from the request until the retakes have ended.
+        let s = until(&session, |s| {
+            s.phase == Phase::Complete && !s.command_pending && s.followup.is_none()
+        });
+        assert_eq!(s.sequence_id, done.sequence_id, "the same capture");
+        let text = events();
+        assert_eq!(manual(&text), 2);
+        assert!(text.contains("\"followup_finished\""));
+        assert_eq!(std::fs::read_dir(temp.path()).unwrap().count(), 1);
+        // A newer sequence (a survey) is not that capture any more.
+        let mut old = request(
+            &session,
+            "queue-rt-late",
+            Command::QueueRetakes { planes: vec![3] },
+        );
+        old.sequence_id += 1;
+        assert!(session.dispatch(old).is_err());
     }
     fn request(session: &Session, id: &str, command: Command) -> CommandRequest {
         let state = session.state();

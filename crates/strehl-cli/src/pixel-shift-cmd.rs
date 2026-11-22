@@ -1713,6 +1713,50 @@ mod tests {
         let _ = std::fs::remove_dir_all(&dir);
     }
 
+    /// h-retake: a retake the user asked for after the capture ended is
+    /// recorded after its `finished` event, in the same journal, under its
+    /// plane's number; it is the plane's last complete group, so the stack
+    /// uses it. The checker keeps the run open until the retakes end.
+    #[test]
+    fn a_retake_after_the_capture_is_the_group_the_stack_uses() {
+        let dir = capture_folder(
+            "followup",
+            &[
+                (1, "g1", 1, 4),
+                (2, "g2", 5, 4),
+                (3, "g3", 9, 4),
+                (2, "g2m", 13, 4),
+            ],
+        );
+        // The capture's end, then the retakes' start, between groups 3 and
+        // the manual retake of plane 2, as the host writes them.
+        let text = std::fs::read_to_string(dir.join("events.jsonl")).unwrap();
+        let mut lines: Vec<&str> = text.lines().collect();
+        let finished = json!({"event":"finished","data":{"outcome":"complete"}}).to_string();
+        let started =
+            json!({"event":"followup_started","data":{"planes":[2],"manual":true}}).to_string();
+        lines.insert(3, &started);
+        lines.insert(3, &finished);
+        std::fs::write(dir.join("events.jsonl"), lines.join("\n") + "\n").unwrap();
+        std::fs::write(dir.join("result.json"), "{}").unwrap();
+        let groups = recorded_groups(&dir).unwrap();
+        let chosen: Vec<(u64, &str)> = groups
+            .iter()
+            .map(|g| (g.plane, g.group_id.as_str()))
+            .collect();
+        assert_eq!(chosen, [(1, "g1"), (2, "g2m"), (3, "g3")]);
+        assert!(crate::follow_cmd::followup_open(&dir));
+        let mut text = std::fs::read_to_string(dir.join("events.jsonl")).unwrap();
+        text.push_str(
+            &(json!({"event":"followup_finished","data":{"outcome":"complete","taken":1,"skipped":0}})
+                .to_string()
+                + "\n"),
+        );
+        std::fs::write(dir.join("events.jsonl"), text).unwrap();
+        assert!(!crate::follow_cmd::followup_open(&dir));
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
     /// A retake is suggested only for a fault of the exposures, never for a
     /// plane a retake would fail the same way.
     #[test]

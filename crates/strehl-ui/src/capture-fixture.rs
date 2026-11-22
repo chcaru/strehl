@@ -85,7 +85,9 @@ fn plan_state() -> Value {
         "preview":{"available":true,"fresh":true,"generation":7,"age_seconds":0.2,"width":960,"height":640},
         "samples":samples,"magnifier_ratios":[0,59,117],"magnifier_current":59,
         "suggestion":{"start":37100,"end":37764,"supported_tiles":20,"clipped":false,"explanation":"Sharp detail from 37,100 to 37,764"},
-        "capabilities":{"test_shot":true,"exposure_check":true},"error_correction":false,
+        "capabilities":{"test_shot":true,"exposure_check":true,"max_retakes":true,"queue_retakes":true},
+        "retakes":{"max":2,"limit":5,"accepted":false,"queued":[],"run":null,"followup":null},
+        "error_correction":false,
         "schedule":{"job":null,"error":null},"pending_control":0,"completed":0,"total":0})
 }
 
@@ -285,6 +287,50 @@ pub(crate) fn finish(s: &mut Snapshot) {
     state["storage"]["captured_frames"] = json!(groups * 4);
     state["storage"]["saved_frames"] = json!(groups * 4);
     state["storage"]["pending_frames"] = json!(0);
+    s.set_state(state);
+}
+
+/// The retake fixture's checks (`--capture-fixture flight+retakes`,
+/// h-retake): the flight fixture's, and a run of four planes left to one
+/// shot (44-47: two the checker does not retake, one that failed every
+/// try, one whose shots were out of line after compensation), too long for
+/// the calibrated overlap (width 50, step 7).
+pub(crate) fn retake_checks(plane: u64) -> Vec<Check> {
+    use Check::*;
+    match plane {
+        44 | 46 => vec![Demote(PATTERN, false)],
+        45 => vec![
+            Demote(MOTION, true),
+            Demote(MOTION, true),
+            Demote(MOTION, true),
+        ],
+        47 => vec![Demote(RESIDUAL, false)],
+        _ => flight_checks(plane),
+    }
+}
+
+/// The retake fixture's journal in flight (as [`progress`]: plane 60's
+/// retake still being checked) or, `done`, once all 96 planes ended; and
+/// its groups.
+pub(crate) fn retake_progress(done: bool) -> (Progress, u64) {
+    let planes = if done { 96 } else { 61 };
+    let (lines, groups) = journal(37_100, planes, retake_checks);
+    let lines: Vec<Value> = lines
+        .into_iter()
+        .filter(|l| done || !(l["plane"] == 60 && l["verdict"] == "pass"))
+        .collect();
+    (progress_of(&lines), groups)
+}
+
+/// The host's retake state for the retake fixture: the setting, and plane
+/// 59 (a shift-pattern failure) asked to be retaken by hand, while it runs.
+pub(crate) fn add_retakes(s: &mut Snapshot, done: bool) {
+    let mut state = s.state.clone();
+    state["capabilities"]["max_retakes"] = json!(true);
+    state["capabilities"]["queue_retakes"] = json!(true);
+    state["retakes"] = json!({"max":2,"limit":5,"accepted":true,
+        "queued": if done { json!([]) } else { json!([59]) },
+        "run":"stack-fixture","followup":null});
     s.set_state(state);
 }
 

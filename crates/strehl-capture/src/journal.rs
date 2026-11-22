@@ -85,6 +85,31 @@ impl Journal {
         journal.record("created", json!({}))?;
         Ok(journal)
     }
+    /// An ended run's journal opened again to append to (h-retake: retakes
+    /// after the capture). Its events continue the numbering; nothing
+    /// already written is changed.
+    pub fn reopen(directory: &Path) -> Result<Self> {
+        let path = directory.join("events.jsonl");
+        let text =
+            std::fs::read_to_string(&path).with_context(|| format!("Read {}", path.display()))?;
+        let sequence = text
+            .lines()
+            .rev()
+            .find_map(|line| serde_json::from_str::<Value>(line).ok()?["sequence"].as_u64())
+            .unwrap_or(0);
+        let manifest: Value =
+            serde_json::from_slice(&std::fs::read(directory.join("manifest.json"))?)?;
+        let stream = OpenOptions::new()
+            .append(true)
+            .open(&path)
+            .with_context(|| format!("Open {} to append", path.display()))?;
+        Ok(Self {
+            directory: directory.to_owned(),
+            stream,
+            sequence,
+            host: manifest["raw_destination"] == "host-pc",
+        })
+    }
     pub fn record(&mut self, event: &str, data: Value) -> Result<()> {
         self.sequence += 1;
         serde_json::to_writer(

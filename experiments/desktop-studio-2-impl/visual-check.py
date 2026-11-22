@@ -111,6 +111,16 @@ ROUTES = {
     "capture-flight-show": (["--route", "capture", "--capture-fixture", "flight+show"], "capture-flight.png"),
     "capture-flight-show-instrument": (["--route", "capture", "--capture-fixture", "flight+show", "--theme",
                                         "instrument"], "capture-flight.png"),
+    # Retakes by hand (h-retake): a plane asked for, "Retake" on the rows, the warning for a run of
+    # one-shot planes too long for the overlap, and the review's retake of the planes that failed.
+    "capture-flight-retakes": (["--route", "capture", "--capture-fixture", "flight+retakes"], "capture-flight.png"),
+    "capture-flight-retakes-lightbox": (["--route", "capture", "--capture-fixture", "flight+retakes", "--theme",
+                                         "lightbox"], "capture-flight.png"),
+    "capture-flight-retakes-done": (["--route", "capture", "--capture-fixture", "flight+retakes-done"],
+                                    "capture-flight.png"),
+    "capture-flight-retakes-done-lightbox": (["--route", "capture", "--capture-fixture", "flight+retakes-done",
+                                              "--theme", "lightbox"], "capture-flight.png"),
+    "capture-plan-rig-retakes": (["--route", "capture", "--capture-fixture", "plan+rig"], "capture-plan.png"),
     # The shell's own surfaces over a station (no reference: compare across themes).
     "projects-drawer": (["--open-run", RUN, "--route", "develop", "--overlay", "projects"], "develop.png"),
     "projects-drawer-lightbox": (["--open-run", RUN, "--route", "develop", "--overlay", "projects",

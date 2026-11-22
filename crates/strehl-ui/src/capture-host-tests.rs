@@ -65,11 +65,19 @@ fn the_simulators_state_reads_typed_through_a_whole_capture() {
         host.capabilities,
         Capabilities {
             test_shot: true,
-            exposure_check: true
+            exposure_check: true,
+            max_retakes: true,
+            queue_retakes: true,
         }
     );
     assert_eq!(host.error_correction, Some(false));
     assert!(host.demo);
+    // h-retake: the setting and nothing in hand.
+    assert_eq!(host.max_retakes(), 2);
+    let retakes = host.retakes.as_ref().unwrap();
+    assert_eq!((retakes.max, retakes.limit), (Some(2), Some(5)));
+    assert!(retakes.queued.is_empty() && retakes.followup.is_none());
+    assert!(!host.takes_manual_retakes(), "no capture yet");
 
     send(&session, "connect-typed", Command::Connect {});
     let (state, host) = until(&session, |h| h.phase == HostPhase::Ready && !h.busy);
@@ -142,6 +150,10 @@ fn an_older_hosts_state_reads_with_its_newer_fields_absent() {
     );
     assert_eq!(host.exposure.as_ref().unwrap().mode, None);
     assert_eq!(host.exposure_problem(), None);
+    // h-retake: an older host retakes twice and takes none by hand.
+    assert_eq!(host.retakes, None);
+    assert_eq!(host.max_retakes(), 2);
+    assert!(!host.takes_manual_retakes() && host.retakes_in_hand().is_empty());
     assert!(host.pixel_shift_options.is_empty() && !host.offers_four_shot());
     assert!(host.schedule.is_none() && host.usb_speed_mbps.is_none());
     assert_eq!(host.shots(), 1);

@@ -161,7 +161,7 @@ impl FeedItem {
 }
 
 /// Each plane's outcome, by its last checked group and how many it had.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(crate) struct Tally {
     /// Planes in the journal.
     pub planes: usize,
@@ -176,10 +176,19 @@ pub(crate) struct Tally {
     /// of that failure): folded to its first shot.
     pub not_retaken: usize,
     /// The last try failed and asked for a retake the host can still take
-    /// (fewer than [`strehl_capture::worker::MAX_RETAKES`] retakes so far).
+    /// (fewer retakes so far than the run's limit, [`Tally::max`]).
     pub asked: usize,
     /// Its RAWs did not all arrive.
     pub incomplete: usize,
+    /// The run's limit on error correction's retakes of a plane, which the
+    /// counts above are resolved by (h-retake; 2 unless told).
+    pub max: usize,
+    /// The raw counts the resolved ones come from: planes whose last try
+    /// failed and asked for a retake, by tries (index `min(tries, 7)`), and
+    /// those whose last try failed without asking, after a retake or not.
+    asked_by_tries: [usize; 8],
+    kept_after_retake: usize,
+    kept_first: usize,
 }
 
 /// A plane's last line and how many groups it had: what the tally counts.
@@ -188,6 +197,24 @@ struct Outcome {
     verdict: Verdict,
     retake: bool,
     attempts: u32,
+}
+
+impl Default for Tally {
+    fn default() -> Self {
+        Self {
+            planes: 0,
+            first_try: 0,
+            retake_passed: 0,
+            retake_failed: 0,
+            not_retaken: 0,
+            asked: 0,
+            incomplete: 0,
+            max: strehl_capture::worker::MAX_RETAKES,
+            asked_by_tries: [0; 8],
+            kept_after_retake: 0,
+            kept_first: 0,
+        }
+    }
 }
 
 impl Tally {
@@ -200,15 +227,50 @@ impl Tally {
             }
         } else if o.verdict == Verdict::Incomplete {
             &mut self.incomplete
-        } else if o.retake && (o.attempts as usize) <= strehl_capture::worker::MAX_RETAKES {
-            &mut self.asked
+        } else if o.retake {
+            &mut self.asked_by_tries[(o.attempts as usize).clamp(1, 7)]
         } else if o.attempts > 1 {
-            &mut self.retake_failed
+            &mut self.kept_after_retake
         } else {
-            &mut self.not_retaken
+            &mut self.kept_first
         };
         *slot = slot.saturating_add_signed(by);
         self.planes = self.planes.saturating_add_signed(by);
+        self.resolve(self.max);
+    }
+    /// The counts for a run that retakes a plane at most `max` times: a
+    /// last try asking for a retake is still to be retaken while the plane
+    /// has had fewer than `max` retakes (at most `max` tries); past that
+    /// it failed every try (or, with no retakes allowed, was not retaken).
+    pub fn resolve(&mut self, max: usize) {
+        self.max = max;
+        let (mut asked, mut exhausted_after, mut exhausted_first) = (0, 0, 0);
+        for (tries, n) in self.asked_by_tries.iter().enumerate().skip(1) {
+            if tries <= max {
+                asked += n;
+            } else if tries > 1 {
+                exhausted_after += n;
+            } else {
+                exhausted_first += n;
+            }
+        }
+        self.asked = asked;
+        self.retake_failed = self.kept_after_retake + exhausted_after;
+        self.not_retaken = self.kept_first + exhausted_first;
+    }
+    /// The resolved counts in order: planes, first try, retake passed,
+    /// retake failed, not retaken, asked, incomplete.
+    #[cfg(test)]
+    pub fn counts(&self) -> [usize; 7] {
+        [
+            self.planes,
+            self.first_try,
+            self.retake_passed,
+            self.retake_failed,
+            self.not_retaken,
+            self.asked,
+            self.incomplete,
+        ]
     }
     /// Planes the stack folds to one shot as things stand.
     pub fn single_shot(&self) -> usize {
@@ -282,6 +344,15 @@ pub(crate) struct JournalReader {
 }
 
 impl JournalReader {
+    /// The run's limit on retakes of a plane (h-retake): the tally's counts
+    /// are resolved by it. `true` when it changed.
+    pub fn set_max_retakes(&mut self, max: usize) -> bool {
+        if self.progress.tally.max == max {
+            return false;
+        }
+        self.progress.tally.resolve(max);
+        true
+    }
     /// Takes the next bytes of the journal; returns the complete lines read,
     /// parsed (the caller relays their verdicts).
     pub fn feed(&mut self, bytes: &[u8]) -> Vec<Value> {
@@ -453,6 +524,8 @@ struct ReaderShared {
     exited: AtomicBool,
     /// Set when the follower is stopped or dropped.
     stop: AtomicBool,
+    /// The run's limit on retakes of a plane (h-retake), set by the UI.
+    max_retakes: std::sync::atomic::AtomicUsize,
 }
 
 /// The paths the reader thread needs.
@@ -495,6 +568,7 @@ fn reader_thread(
             return;
         }
         let exited = shared.exited.load(Ordering::SeqCst);
+        let resolved = reader.set_max_retakes(shared.max_retakes.load(Ordering::SeqCst));
         let before = reader.offset();
         loop {
             let (lines, more) = read_chunk(&paths.journal, &mut reader);
@@ -503,7 +577,7 @@ fn reader_thread(
                 break;
             }
         }
-        let mut changed = reader.offset() != before;
+        let mut changed = reader.offset() != before || resolved;
         if exited {
             let last = reader.flush();
             send_verdicts(&relay, &mut relayed, last);
@@ -642,7 +716,10 @@ impl Follower {
             child: None,
             observing,
             state: State::Running,
-            shared: Arc::new(ReaderShared::default()),
+            shared: Arc::new(ReaderShared {
+                max_retakes: strehl_capture::worker::MAX_RETAKES.into(),
+                ..ReaderShared::default()
+            }),
             progress: Arc::new(Progress::default()),
             revision: 0,
             exit: None,
@@ -697,6 +774,12 @@ impl Follower {
 
     pub fn running(&self) -> bool {
         self.state == State::Running
+    }
+
+    /// The run's limit on retakes of a plane, which the counts are resolved
+    /// by (h-retake): the host's setting while it runs.
+    pub fn set_max_retakes(&self, max: usize) {
+        self.shared.max_retakes.store(max, Ordering::SeqCst);
     }
 
     /// What the checker has recorded so far, with each plane's journal line.
@@ -855,18 +938,16 @@ mod tests {
         // Lines without group ids: each is a try of its plane.
         assert_eq!(p.feed.len(), 6);
         assert_eq!(p.retakes, 1);
-        assert_eq!(
-            p.tally,
-            Tally {
-                planes: 5,
-                first_try: 2,
-                retake_passed: 1,
-                retake_failed: 0,
-                not_retaken: 0,
-                asked: 1,
-                incomplete: 1,
-            }
-        );
+        // planes, first try, retake passed, retake failed, not retaken,
+        // asked, incomplete
+        assert_eq!(p.tally.counts(), [5, 2, 1, 0, 0, 1, 1]);
+        // h-retake: resolved by the run's own limit. With none allowed,
+        // plane 2's retake asked for will never come: not retaken.
+        let mut none = p.tally;
+        none.resolve(0);
+        assert_eq!(none.counts(), [5, 2, 1, 0, 1, 0, 1]);
+        none.resolve(2);
+        assert_eq!(none, p.tally);
         assert_eq!(progress(""), Progress::default());
         // Each plane keeps its last line, as the stack uses its last group.
         assert_eq!(p.planes.len(), 5);

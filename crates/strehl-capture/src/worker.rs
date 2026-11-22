@@ -54,6 +54,26 @@ pub struct Snapshot {
     /// Hold focus after each group until the PC's check arrives, and take a
     /// group that failed for a fault of its exposures again in place.
     pub error_correction: bool,
+    /// Error correction's retakes of one plane before it keeps what it has
+    /// (h-retake: the owner's setting, [`MAX_RETAKES_LIMIT`] at most).
+    pub max_retakes: usize,
+    /// The current (or last) capture takes manual retakes: a stack stored on
+    /// the PC, not a test shot. Kept after it ends, for retakes afterwards.
+    pub retakes_accepted: bool,
+    /// Planes (the numbers their files carry) the user asked to take again
+    /// during the capture, not yet taken.
+    pub retake_queue: Vec<u64>,
+    /// Manual retakes taken after the capture ended, while they run.
+    pub followup: Option<Followup>,
+}
+/// Manual retakes of an ended capture, taken into the same run (h-retake).
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct Followup {
+    /// The planes asked for, in the order they are taken.
+    pub planes: Vec<u64>,
+    /// Taken so far, and skipped (their last try passed).
+    pub taken: usize,
+    pub skipped: usize,
 }
 impl Default for Snapshot {
     fn default() -> Self {
@@ -85,6 +105,10 @@ impl Default for Snapshot {
             power_error: None,
             standby_at: None,
             error_correction: false,
+            max_retakes: MAX_RETAKES,
+            retakes_accepted: false,
+            retake_queue: Vec::new(),
+            followup: None,
         }
     }
 }
@@ -101,7 +125,15 @@ pub enum Action {
         on: bool,
     },
     PowerPlan(bool),
-    ErrorCorrection(bool),
+    ErrorCorrection {
+        enabled: bool,
+        max_retakes: usize,
+    },
+    /// Take these planes of the last capture again, into the same run, now
+    /// that it has ended (h-retake: manual retakes after a capture).
+    Followup {
+        planes: Vec<u64>,
+    },
     PixelShift {
         shots: usize,
     },
@@ -248,6 +280,21 @@ impl Worker {
             );
             self.control.store(RUN, Ordering::SeqCst);
         }
+        if matches!(&action, Action::Followup { .. }) {
+            ensure!(
+                matches!(state.phase, Phase::Complete | Phase::Stopped)
+                    && state.capture_run
+                    && state.retakes_accepted
+                    && !state.exposure_uncertain
+                    && state.failure.is_none(),
+                "Retakes after a capture need it to have ended cleanly, stored on the PC"
+            );
+            ensure!(
+                state.connected || (self.power.is_some() && state.manage_power),
+                "Connect the camera first"
+            );
+            self.control.store(RUN, Ordering::SeqCst);
+        }
         if matches!(&action, Action::Scheduled { .. }) {
             ensure!(
                 !state.phase.active() && !state.exposure_uncertain && state.failure.is_none(),
@@ -278,6 +325,35 @@ impl Worker {
     }
     pub fn request_stop(&self) {
         self.control.store(STOP, Ordering::SeqCst);
+    }
+    /// Queues manual retakes of planes already taken in the capture that is
+    /// running (`sequence`): taken between planes like error correction's
+    /// own (h-retake), or, while retakes after the capture run, added to
+    /// them. Planes already queued are not queued twice.
+    pub fn queue_retakes(&self, sequence: u64, planes: &[u64]) -> Result<()> {
+        let mut state = self.state.lock().unwrap();
+        ensure!(
+            state.sequence_id == sequence
+                && matches!(state.phase, Phase::Capturing | Phase::Paused),
+            "That capture is no longer running"
+        );
+        ensure!(
+            state.capture_run && state.retakes_accepted,
+            "This capture does not take manual retakes (a test shot, or RAWs kept on the card)"
+        );
+        ensure!(self.pending() != STOP, "Stop is already pending");
+        let total = state.total as u64;
+        ensure!(
+            planes.iter().all(|p| (1..=total).contains(p)),
+            "Choose planes 1-{total}"
+        );
+        for &p in planes {
+            if !state.retake_queue.contains(&p) {
+                state.retake_queue.push(p);
+            }
+        }
+        state.revision += 1;
+        Ok(())
     }
     pub fn pending(&self) -> u8 {
         self.control.load(Ordering::SeqCst)
@@ -518,8 +594,56 @@ fn run(
                             ensure!(power.is_some(), "Studio outlets are not configured");
                             update(&s, |v| v.manage_power = enabled);
                         }
-                        Action::ErrorCorrection(enabled) => {
-                            update(&s, |v| v.error_correction = enabled);
+                        Action::ErrorCorrection {
+                            enabled,
+                            max_retakes,
+                        } => {
+                            update(&s, |v| {
+                                v.error_correction = enabled;
+                                v.max_retakes = max_retakes.min(MAX_RETAKES_LIMIT);
+                            });
+                        }
+                        Action::Followup { planes } => {
+                            if camera.is_none() {
+                                // Managed power switched the camera off after
+                                // the capture: wake it, keeping the run's
+                                // record (connecting starts a fresh one).
+                                let (timing, phase) = {
+                                    let v = s.lock().unwrap();
+                                    (v.timing.clone(), v.phase.clone())
+                                };
+                                wake_camera(
+                                    power.as_deref().context("Connect the camera first")?,
+                                    &factory,
+                                    &mut camera,
+                                    &s,
+                                )?;
+                                update(&s, |v| {
+                                    v.timing = timing;
+                                    v.capture_run = true;
+                                    v.phase = phase;
+                                });
+                            }
+                            let options = if s.lock().unwrap().manage_power {
+                                StackPower::managed()
+                            } else {
+                                StackPower::default()
+                            };
+                            run_stack(
+                                &mut camera,
+                                &s,
+                                &control,
+                                power.as_deref(),
+                                StackRun {
+                                    plan: Plan::default(),
+                                    root: PathBuf::new(),
+                                    positions: None,
+                                    options,
+                                    warmup: power.as_ref().map_or(0, |rig| rig.warmup_seconds()),
+                                    test: false,
+                                    followup: Some(planes),
+                                },
+                            )?;
                         }
                         Action::Power { device, on } => {
                             let rig = power
@@ -747,6 +871,7 @@ fn run(
                                     options,
                                     warmup: power.as_ref().map_or(0, |rig| rig.warmup_seconds()),
                                     test,
+                                    followup: None,
                                 },
                             )?;
                         }
@@ -809,6 +934,7 @@ fn run(
                                     options: recipe.power,
                                     warmup: recipe.warmup_seconds,
                                     test: false,
+                                    followup: None,
                                 },
                             )?;
                         }
@@ -943,6 +1069,9 @@ struct StackRun {
     options: StackPower,
     warmup: u32,
     test: bool,
+    /// Manual retakes of the last capture's planes (`plan`, `root` and
+    /// `positions` unused: the run's own manifest says them).
+    followup: Option<Vec<u64>>,
 }
 fn run_stack(
     camera: &mut Option<Box<dyn Camera>>,
@@ -971,15 +1100,11 @@ fn run_stack(
         positions,
         test: run.test,
     });
-    capture(
-        camera.as_mut().context("Connect a camera first")?.as_mut(),
-        s,
-        control,
-        run.plan,
-        run.root,
-        explicit,
-        lamp,
-    )?;
+    let c = camera.as_mut().context("Connect a camera first")?.as_mut();
+    match run.followup {
+        Some(planes) => followup(c, s, control, planes, lamp)?,
+        None => capture(c, s, control, run.plan, run.root, explicit, lamp)?,
+    }
     // Both writes follow the final durable journal receipt. Attempt the other
     // requested outlet even if the first reports a fault.
     if let Some(rig) = rig.filter(|_| p.light_off || p.camera_off) {
@@ -1091,37 +1216,33 @@ fn capture(
     // Error correction needs the PC's checker, so only a run stored there.
     // A test shot is never checked there: holding it for a verdict would
     // only add the 15 s wait before error correction gives up.
-    let mut verify = host && !test && s.lock().unwrap().error_correction;
+    let (error_correction, max_retakes) = {
+        let v = s.lock().unwrap();
+        (v.error_correction, v.max_retakes.min(MAX_RETAKES_LIMIT))
+    };
+    // Manual retakes (h-retake) bind to the plane numbers the PC records,
+    // so only a stack stored there takes them; never a test shot.
+    update(s, |v| {
+        v.retakes_accepted = host && !test;
+        v.retake_queue.clear();
+        v.followup = None;
+    });
+    let mut r = Retakes {
+        verify: host && !test && error_correction,
+        max: max_retakes,
+        ..Retakes::default()
+    };
+    if host && !test {
+        log.record(
+            "error_correction",
+            json!({"enabled":r.verify,"max_retakes":max_retakes}),
+        )?;
+    }
     let result = (|| -> Result<bool> {
         if let Some((rig, warmup)) = managed {
-            update(s, |v| {
-                v.power_error = None;
-                v.message = format!("Studio light on · warming for {warmup} s");
-            });
             light_requested = true;
-            rig.set(Outlet::Light, true)?;
-            let until = Instant::now() + Duration::from_secs(u64::from(warmup));
-            while Instant::now() < until {
-                if !checkpoint(c, s, control, Phase::Capturing)? {
-                    return Ok(false);
-                }
-                thread::sleep(Duration::from_millis(100));
-            }
-            // The meter can still show the previous zero for a moment after the relay closes.
-            let meter_deadline = Instant::now() + Duration::from_secs(5);
-            loop {
-                let reading = rig.read(Outlet::Light)?;
-                if reading["on"] == true && reading["watts"].as_f64().is_some_and(|w| w > 0.) {
-                    break;
-                }
-                ensure!(
-                    reading["on"] == true && Instant::now() < meter_deadline,
-                    "Light outlet has no measured load. Switch the KL 1500 LCD on and check its power cord before starting"
-                );
-                if !checkpoint(c, s, control, Phase::Capturing)? {
-                    return Ok(false);
-                }
-                thread::sleep(Duration::from_millis(200));
+            if !warm_light(c, s, control, rig, warmup)? {
+                return Ok(false);
             }
         }
         if !checkpoint(c, s, control, Phase::Capturing)? {
@@ -1150,22 +1271,19 @@ fn capture(
         // through the approach move, and the run goes on. MEASURED: a plane
         // revisited that way lands within about one step of the first visit,
         // far inside the depth a point stays sharp over, and a hold cost
-        // 1.5-2 s a plane.
-        let mut owed: Vec<Owed> = Vec::new();
+        // 1.5-2 s a plane. Manual retakes (h-retake) are taken at the same
+        // points, the same way.
         for (ordinal, target) in positions.into_iter().enumerate() {
             if !checkpoint(c, s, control, Phase::Capturing)? {
                 return Ok(false);
             }
-            if verify {
-                let Some(due) = collect_verdicts(c, &ctx, &mut log, &mut owed, &mut verify, false)?
-                else {
+            let Some(due) = due_retakes(c, &ctx, &mut log, &mut r, completed, false)? else {
+                return Ok(false);
+            };
+            for (o, reason) in due {
+                let next = Some((target, plan.settle_ms));
+                if !retake(c, &ctx, &mut log, &mut r, o, &reason, next)? {
                     return Ok(false);
-                };
-                for (o, reason) in due {
-                    let next = Some((target, plan.settle_ms));
-                    if !retake(c, &ctx, &mut log, &mut owed, o, &reason, next)? {
-                        return Ok(false);
-                    }
                 }
             }
             log.record("focus_intent", json!({"ordinal":ordinal,"target":target}))?;
@@ -1201,34 +1319,41 @@ fn capture(
                     timing.complete_cycle(Instant::now());
                 }
             });
-            if verify {
-                owed.push(Owed {
-                    ordinal,
-                    target,
-                    plane: plane_of(&response),
-                    group: group_key(&response).context("Captured group has no identity")?,
-                    retakes: 0,
-                    since: Instant::now(),
+            r.taken(ordinal, target, &response, 0, false)?;
+        }
+        // The last planes' checks: wait for them, retaking as asked, and
+        // any manual retakes still queued.
+        loop {
+            let waiting = r.verify && !r.owed.is_empty();
+            if !waiting && s.lock().unwrap().retake_queue.is_empty() {
+                break;
+            }
+            if waiting {
+                update(s, |v| {
+                    v.message = "Checking the last planes on the PC…".into()
                 });
             }
-        }
-        // The last planes' checks: wait for them, retaking as asked.
-        while verify && !owed.is_empty() {
-            update(s, |v| {
-                v.message = "Checking the last planes on the PC…".into()
-            });
-            let Some(due) = collect_verdicts(c, &ctx, &mut log, &mut owed, &mut verify, true)?
-            else {
+            let Some(due) = due_retakes(c, &ctx, &mut log, &mut r, completed, waiting)? else {
                 return Ok(false);
             };
             for (o, reason) in due {
-                if !retake(c, &ctx, &mut log, &mut owed, o, &reason, None)? {
+                if !retake(c, &ctx, &mut log, &mut r, o, &reason, None)? {
                     return Ok(false);
                 }
             }
         }
         Ok(true)
     })();
+    // Retakes asked for once the run could no longer take them (it was
+    // stopped, or ended as they arrived): said in the journal, and the
+    // queue is empty for the desktop to offer them again.
+    let dropped = std::mem::take(&mut s.lock().unwrap().retake_queue);
+    if !dropped.is_empty() {
+        log.record(
+            "manual_retakes_dropped",
+            json!({"planes":dropped,"reason":"the capture ended before they were taken"}),
+        )?;
+    }
     let result = result.and_then(|done| {
         if host {
             update(s, |v| {
@@ -1304,9 +1429,18 @@ fn after_approach(settle_ms: u32) -> u32 {
     settle_ms.max(AFTER_APPROACH_MS)
 }
 
-/// Error correction: retakes of one plane before keeping what it has
-/// (public for the desktop, which says how many tries a plane has left).
+/// Error correction: retakes of one plane before keeping what it has, by
+/// default and for a desktop that does not set it (public for the desktop,
+/// which says how many tries a plane has left on an older host).
 pub const MAX_RETAKES: usize = 2;
+/// The most retakes of one plane a run may be set to (h-retake). In the
+/// owner's run of 2026-11-21 (211 planes, 34 retaken) the second try passed
+/// 18 of 34 times and the third 7 of 15 (MEASURED, checker journal): a later
+/// try still passes about half the time, so more than two can help; each
+/// costs about 10.2 s (MEASURED, 49 retakes), so five is at most about 51 s
+/// on one plane, and a plane still failing after six tries is better left
+/// to a manual retake. 0 checks every plane and retakes none.
+pub const MAX_RETAKES_LIMIT: usize = 5;
 /// How long a group's check may take to arrive. It normally arrives about
 /// 1.5-2 s after the group (the last RAW reaches the PC in 1.1-1.3 s and the
 /// check takes 0.2-0.4 s), during the next plane; without one, error
@@ -1333,7 +1467,8 @@ struct Run<'a> {
     initial: &'a Value,
 }
 
-/// A group the PC is still checking (error correction).
+/// A group the PC is still checking (error correction), or a plane due to
+/// be taken again.
 struct Owed {
     ordinal: usize,
     target: u16,
@@ -1342,6 +1477,96 @@ struct Owed {
     group: String,
     retakes: usize,
     since: Instant,
+    /// A retake the user asked for (h-retake): its own one try, never
+    /// followed by error correction's retakes of it.
+    manual: bool,
+}
+
+/// What a run knows of each plane taken: where it is, the number its
+/// files carry, its newest group, its retakes and its newest check.
+#[derive(Clone, Debug, Default)]
+struct PlaneRecord {
+    target: u16,
+    plane: Option<u64>,
+    group: String,
+    retakes: usize,
+    /// The newest group's check: passed or not; `None` while unchecked.
+    passed: Option<bool>,
+}
+
+/// Error correction's and the user's retakes during one run.
+#[derive(Default)]
+struct Retakes {
+    /// Groups the PC is still checking.
+    owed: Vec<Owed>,
+    /// The PC's checks are awaited (error correction on and answering).
+    verify: bool,
+    /// Error correction's retakes of a plane ([`Snapshot::max_retakes`]).
+    max: usize,
+    /// Every plane taken, by ordinal.
+    planes: std::collections::BTreeMap<usize, PlaneRecord>,
+}
+
+impl Retakes {
+    /// Records a group just taken of plane `ordinal` (its `retakes`-th
+    /// retake) and owes its check when checks are awaited.
+    fn taken(
+        &mut self,
+        ordinal: usize,
+        target: u16,
+        response: &Value,
+        retakes: usize,
+        manual: bool,
+    ) -> Result<()> {
+        // A card's RAWs carry no names here: nothing to check or retake by
+        // hand, only a group the PC checks needs its identity.
+        let group = match group_key(response) {
+            Some(group) => group,
+            None if !self.verify => String::new(),
+            None => bail!("Captured group has no identity"),
+        };
+        let record = self.planes.entry(ordinal).or_default();
+        record.target = target;
+        record.plane = record.plane.or_else(|| plane_of(response));
+        record.group = group.clone();
+        record.retakes = retakes;
+        record.passed = None;
+        if self.verify {
+            self.owed.push(Owed {
+                ordinal,
+                target,
+                plane: record.plane,
+                group,
+                retakes,
+                since: Instant::now(),
+                manual,
+            });
+        }
+        Ok(())
+    }
+    /// The ordinal of the plane numbered `plane`: by the number its files
+    /// carry, else by its place in the run (planes are numbered from 1).
+    fn ordinal_of(&self, plane: u64) -> Option<usize> {
+        self.planes
+            .iter()
+            .find(|(_, r)| r.plane == Some(plane))
+            .map(|(o, _)| *o)
+            .or_else(|| {
+                usize::try_from(plane.checked_sub(1)?)
+                    .ok()
+                    .filter(|o| self.planes.get(o).is_some_and(|r| r.plane.is_none()))
+            })
+    }
+}
+
+/// Whether a check says the stack uses the group as taken: `pass` or
+/// `decoded`; a check without a verdict (an older checker) passes unless it
+/// asks for a retake.
+fn check_passed(v: &Value) -> bool {
+    match v["verdict"].as_str() {
+        Some(verdict) => matches!(verdict, "pass" | "decoded"),
+        None => v["retake"] != true,
+    }
 }
 
 /// The plane number a captured group's files carry.
@@ -1427,31 +1652,36 @@ fn collect_verdicts(
     c: &mut dyn Camera,
     ctx: &Run,
     log: &mut Journal,
-    owed: &mut Vec<Owed>,
-    verify: &mut bool,
+    r: &mut Retakes,
     wait: bool,
 ) -> Result<Option<Vec<(Owed, String)>>> {
     let mut due = Vec::new();
     loop {
         let mut i = 0;
-        while i < owed.len() {
-            let unanswered = match c.verdict(&owed[i].group) {
+        while i < r.owed.len() {
+            let unanswered = match c.verdict(&r.owed[i].group) {
                 Ok(Some(v)) => {
-                    let o = owed.remove(i);
+                    let o = r.owed.remove(i);
+                    if let Some(record) = r.planes.get_mut(&o.ordinal)
+                        && record.group == o.group
+                    {
+                        record.passed = Some(check_passed(&v));
+                    }
                     if v["retake"] == true {
                         let reason = v["reason"].as_str().unwrap_or("check failed").to_owned();
-                        if o.retakes < MAX_RETAKES {
+                        if !o.manual && o.retakes < r.max {
                             due.push((o, reason));
                         } else {
                             log.record(
                                 "retake_exhausted",
-                                json!({"ordinal":o.ordinal,"target":o.target,"group":o.group,"retakes":o.retakes,"reason":reason}),
+                                json!({"ordinal":o.ordinal,"target":o.target,"group":o.group,"retakes":o.retakes,
+                                    "max_retakes":r.max,"manual":o.manual,"reason":reason}),
                             )?;
                         }
                     }
                     continue;
                 }
-                Ok(None) => (owed[i].since.elapsed() >= VERDICT_WAIT)
+                Ok(None) => (r.owed[i].since.elapsed() >= VERDICT_WAIT)
                     .then(|| format!("no check from the PC within {} s", VERDICT_WAIT.as_secs())),
                 Err(e) => {
                     // A receiver without the verdict store, or a backend
@@ -1464,17 +1694,17 @@ fn collect_verdicts(
                 }
             };
             if let Some(why) = unanswered {
-                *verify = false;
+                r.verify = false;
                 log.record(
                     "error_correction_off",
-                    json!({"ordinal":owed[i].ordinal,"group":owed[i].group,"reason":why}),
+                    json!({"ordinal":r.owed[i].ordinal,"group":r.owed[i].group,"reason":why}),
                 )?;
-                owed.clear();
+                r.owed.clear();
                 return Ok(Some(due));
             }
             i += 1;
         }
-        if !wait || owed.is_empty() || !due.is_empty() {
+        if !wait || r.owed.is_empty() || !due.is_empty() {
             return Ok(Some(due));
         }
         if !checkpoint(c, ctx.s, ctx.control, Phase::Capturing)? {
@@ -1484,6 +1714,94 @@ fn collect_verdicts(
     }
 }
 
+/// The retakes due now, between planes: error correction's (the PC's
+/// checks collected, `wait`ing for one as [`collect_verdicts`] does) and
+/// the user's queued ones (h-retake). `captured`: planes taken so far.
+/// `None` when the run was stopped.
+fn due_retakes(
+    c: &mut dyn Camera,
+    ctx: &Run,
+    log: &mut Journal,
+    r: &mut Retakes,
+    captured: usize,
+    wait: bool,
+) -> Result<Option<Vec<(Owed, String)>>> {
+    let mut due = Vec::new();
+    if r.verify {
+        match collect_verdicts(c, ctx, log, r, wait)? {
+            Some(d) => due = d,
+            None => return Ok(None),
+        }
+    }
+    let manual = manual_due(ctx, log, r, captured, &due)?;
+    due.extend(manual);
+    Ok(Some(due))
+}
+
+/// The user's queued retakes that can be taken now. A plane whose newest
+/// group is still being checked waits for its check; one whose newest try
+/// passed, or that error correction is retaking anyway, is not taken again
+/// (a later try is the one the stack uses, so a retake could only replace a
+/// pass); one not taken yet is refused. Each is said in the journal.
+fn manual_due(
+    ctx: &Run,
+    log: &mut Journal,
+    r: &Retakes,
+    captured: usize,
+    auto: &[(Owed, String)],
+) -> Result<Vec<(Owed, String)>> {
+    let queue = std::mem::take(&mut ctx.s.lock().unwrap().retake_queue);
+    let mut keep = Vec::new();
+    let mut out = Vec::new();
+    for plane in queue {
+        let skip = |log: &mut Journal, why: &str| {
+            log.record("manual_retake_skipped", json!({"plane":plane,"reason":why}))
+        };
+        let Some(ordinal) = r.ordinal_of(plane).filter(|o| *o < captured) else {
+            skip(log, "not taken yet")?;
+            continue;
+        };
+        if out
+            .iter()
+            .any(|(o, _): &(Owed, String)| o.ordinal == ordinal)
+        {
+            continue;
+        }
+        if auto.iter().any(|(o, _)| o.ordinal == ordinal) {
+            skip(log, "error correction is taking it again")?;
+            continue;
+        }
+        if r.owed.iter().any(|o| o.ordinal == ordinal) {
+            keep.push(plane);
+            continue;
+        }
+        let record = &r.planes[&ordinal];
+        if record.passed == Some(true) {
+            skip(log, "its newest try passed")?;
+            continue;
+        }
+        out.push((
+            Owed {
+                ordinal,
+                target: record.target,
+                plane: record.plane,
+                group: record.group.clone(),
+                retakes: record.retakes,
+                since: Instant::now(),
+                manual: true,
+            },
+            "asked for by the user".to_owned(),
+        ));
+    }
+    if !keep.is_empty() {
+        let mut v = ctx.s.lock().unwrap();
+        keep.append(&mut v.retake_queue);
+        v.retake_queue = keep;
+    }
+    out.sort_by_key(|(o, _)| o.ordinal);
+    Ok(out)
+}
+
 /// Visits a plane again for a retake: below it by the approach move, so it
 /// is reached from the capture side as before, then a group recorded under
 /// the plane's own number. Its check is owed like any other group's.
@@ -1491,22 +1809,33 @@ fn retake(
     c: &mut dyn Camera,
     ctx: &Run,
     log: &mut Journal,
-    owed: &mut Vec<Owed>,
+    r: &mut Retakes,
     o: Owed,
     reason: &str,
     next: Option<(u16, u32)>,
 ) -> Result<bool> {
     let n = o.retakes + 1;
-    log.record(
-        "retake_intent",
-        json!({"ordinal":o.ordinal,"target":o.target,"group":o.group,"retake":n,"reason":reason}),
-    )?;
+    let mut intent =
+        json!({"ordinal":o.ordinal,"target":o.target,"group":o.group,"retake":n,"reason":reason});
+    if o.manual {
+        intent["manual"] = json!(true);
+        intent["plane"] = json!(o.plane.unwrap_or(o.ordinal as u64 + 1));
+    }
+    log.record("retake_intent", intent)?;
     update(ctx.s, |v| {
-        v.message = format!(
-            "Plane {} of {} · retaking: {reason}",
-            o.ordinal + 1,
-            v.total
-        )
+        v.message = if o.manual {
+            format!(
+                "Plane {} of {} · retaking, as asked",
+                o.ordinal + 1,
+                v.total
+            )
+        } else {
+            format!(
+                "Plane {} of {} · retaking: {reason}",
+                o.ordinal + 1,
+                v.total
+            )
+        }
     });
     let below =
         u16::try_from(i32::from(o.target) - ctx.plan.direction() * i32::from(ctx.plan.approach))
@@ -1524,15 +1853,380 @@ fn retake(
     let Some(response) = take_group(c, ctx, log, o.ordinal, o.target, next)? else {
         return Ok(false);
     };
-    owed.push(Owed {
-        ordinal: o.ordinal,
-        target: o.target,
-        plane: o.plane.or_else(|| plane_of(&response)),
-        group: group_key(&response).context("Captured group has no identity")?,
-        retakes: n,
-        since: Instant::now(),
-    });
+    r.planes.entry(o.ordinal).or_default().plane = o.plane;
+    r.taken(o.ordinal, o.target, &response, n, o.manual)?;
     Ok(true)
+}
+
+/// Managed power: the light on and warmed before the first exposure, its
+/// load confirmed. `false` when the run was stopped meanwhile.
+fn warm_light(
+    c: &mut dyn Camera,
+    s: &Shared,
+    control: &AtomicU8,
+    rig: &RigPower,
+    warmup: u32,
+) -> Result<bool> {
+    update(s, |v| {
+        v.power_error = None;
+        v.message = format!("Studio light on · warming for {warmup} s");
+    });
+    rig.set(Outlet::Light, true)?;
+    let until = Instant::now() + Duration::from_secs(u64::from(warmup));
+    while Instant::now() < until {
+        if !checkpoint(c, s, control, Phase::Capturing)? {
+            return Ok(false);
+        }
+        thread::sleep(Duration::from_millis(100));
+    }
+    // The meter can still show the previous zero for a moment after the relay closes.
+    let meter_deadline = Instant::now() + Duration::from_secs(5);
+    loop {
+        let reading = rig.read(Outlet::Light)?;
+        if reading["on"] == true && reading["watts"].as_f64().is_some_and(|w| w > 0.) {
+            return Ok(true);
+        }
+        ensure!(
+            reading["on"] == true && Instant::now() < meter_deadline,
+            "Light outlet has no measured load. Switch the KL 1500 LCD on and check its power cord before starting"
+        );
+        if !checkpoint(c, s, control, Phase::Capturing)? {
+            return Ok(false);
+        }
+        thread::sleep(Duration::from_millis(200));
+    }
+}
+
+/// An ended capture as its journal records it: what a retake afterwards
+/// needs to take a plane exactly as the capture did.
+struct RunRecord {
+    plan: Plan,
+    positions: Vec<u16>,
+    shots: u64,
+    /// The camera's status at the start: the exposure every group must match.
+    initial: Value,
+    /// RAWs recorded, and planes numbered, so far.
+    frames: usize,
+    planes: usize,
+    /// Each plane's groups so far and its newest group's identity.
+    tries: std::collections::BTreeMap<u64, (usize, String)>,
+}
+
+impl RunRecord {
+    fn read(directory: &std::path::Path) -> Result<Self> {
+        let manifest: Value = serde_json::from_slice(
+            &std::fs::read(directory.join("manifest.json"))
+                .context("Read the capture's manifest")?,
+        )?;
+        ensure!(
+            matches!(
+                manifest["capture_kind"].as_str(),
+                Some("plan" | "positions")
+            ),
+            "Only a stack's planes can be retaken"
+        );
+        ensure!(
+            manifest["raw_destination"] == "host-pc",
+            "Retakes bind to the PC's plane records; this capture kept its RAWs on the card"
+        );
+        ensure!(
+            directory.join("result.json").is_file(),
+            "The capture has not ended yet"
+        );
+        let plan: Plan = serde_json::from_value(manifest["plan"].clone())?;
+        let positions: Vec<u16> = serde_json::from_value(manifest["focus_positions"].clone())?;
+        let mut record = Self {
+            plan,
+            positions,
+            shots: manifest["pixel_shift_shots"].as_u64().unwrap_or(1),
+            initial: manifest["initial_status"].clone(),
+            frames: 0,
+            planes: 0,
+            tries: Default::default(),
+        };
+        let events = std::fs::read_to_string(directory.join("events.jsonl"))
+            .context("Read the capture's journal")?;
+        for line in events.lines() {
+            let Ok(v) = serde_json::from_str::<Value>(line) else {
+                continue;
+            };
+            if !matches!(
+                v["event"].as_str(),
+                Some("capture_buffered" | "capture_complete")
+            ) {
+                continue;
+            }
+            let response = &v["data"]["response"];
+            let files = response["files"].as_array().map_or(0, Vec::len);
+            record.frames += files;
+            let plane = plane_of(response)
+                .or_else(|| v["data"]["ordinal"].as_u64().map(|o| o + 1))
+                .context("A captured group has no plane")?;
+            record.planes = record.planes.max(plane as usize);
+            let entry = record.tries.entry(plane).or_default();
+            entry.0 += 1;
+            if let Some(group) = group_key(response) {
+                entry.1 = group;
+            }
+        }
+        Ok(record)
+    }
+}
+
+/// Manual retakes after a capture ended (h-retake): each plane asked for is
+/// visited again through the approach move, as error correction does, and
+/// a group recorded under its own plane number in the same run, so the
+/// stack, which uses a plane's last complete group, uses it. The camera must
+/// be as the capture was: the same body, RAWs a plane, program, ISO, shutter
+/// and aperture. A plane whose newest try passed its check is not taken
+/// again. The journal records the start and the end
+/// (`followup_started`/`followup_finished`), and each retake as the user's.
+fn followup(
+    c: &mut dyn Camera,
+    s: &Shared,
+    control: &AtomicU8,
+    planes: Vec<u64>,
+    managed: Option<(&RigPower, u32)>,
+) -> Result<()> {
+    let directory = s
+        .lock()
+        .unwrap()
+        .journal
+        .clone()
+        .context("No capture to retake planes of")?;
+    let record = RunRecord::read(&directory)?;
+    let mut planes = planes;
+    planes.sort_unstable();
+    planes.dedup();
+    let count = record.positions.len() as u64;
+    ensure!(
+        !planes.is_empty() && planes.iter().all(|p| (1..=count).contains(p)),
+        "Choose planes 1-{count}"
+    );
+    ensure!(
+        planes.iter().all(|p| record.tries.contains_key(p)),
+        "Only planes the capture took can be taken again"
+    );
+    let status = refresh(c, s)?;
+    validate_exposure(&status)?;
+    ensure!(
+        status["capture_destination"] == "host-pc",
+        "Retakes go to the PC, as the capture did; the camera is saving to its card"
+    );
+    ensure!(
+        status["model"] == record.initial["model"],
+        "This is not the camera the capture was taken with"
+    );
+    ensure!(
+        status["pixel_shift_shots"].as_u64().unwrap_or(1) == record.shots,
+        "Set the camera back to {} RAW{} a plane, as the capture was taken",
+        record.shots,
+        if record.shots == 1 { "" } else { "s" }
+    );
+    for key in [
+        "ExposureProgramMode",
+        "IsoSensitivity",
+        "ShutterSpeed",
+        "FNumber",
+    ] {
+        ensure!(
+            property(&status, key) == property(&record.initial, key),
+            "{key} differs from the capture's; set it back before retaking its planes"
+        );
+    }
+    let shots = record.shots;
+    c.prepare_stack(
+        planes.len() * shots as usize,
+        crate::capacity::raw_limit(&status),
+    )?;
+    let mut log = Journal::reopen(&directory)?;
+    c.resume_run(&directory, record.frames, record.planes)?;
+    while !c.prepare_capture()? {
+        thread::sleep(Duration::from_millis(100));
+    }
+    let before = s.lock().unwrap().phase.clone();
+    let asked = planes.clone();
+    update(s, |v| {
+        v.phase = Phase::Capturing;
+        v.failure = None;
+        v.retake_queue.clear();
+        v.followup = Some(Followup {
+            planes: asked,
+            taken: 0,
+            skipped: 0,
+        });
+        v.message = format!(
+            "Retaking {} plane{} of the capture…",
+            planes.len(),
+            if planes.len() == 1 { "" } else { "s" }
+        );
+    });
+    log.record("followup_started", json!({"planes":planes,"manual":true}))?;
+    c.sync_journal(&directory)?;
+    let mut light_requested = false;
+    let (mut taken, mut skipped) = (0usize, 0usize);
+    let result = (|| -> Result<bool> {
+        if let Some((rig, warmup)) = managed {
+            light_requested = true;
+            if !warm_light(c, s, control, rig, warmup)? {
+                return Ok(false);
+            }
+        }
+        let ctx = Run {
+            s,
+            control,
+            plan: &record.plan,
+            shots,
+            initial: &record.initial,
+        };
+        let mut r = Retakes::default();
+        let mut next = 0;
+        loop {
+            // Planes asked for meanwhile join the list, in turn.
+            let more = std::mem::take(&mut s.lock().unwrap().retake_queue);
+            for plane in more {
+                if planes.contains(&plane) {
+                    continue;
+                }
+                if !record.tries.contains_key(&plane) {
+                    log.record(
+                        "manual_retake_skipped",
+                        json!({"plane":plane,"reason":"not taken by the capture"}),
+                    )?;
+                    continue;
+                }
+                planes.push(plane);
+                update(s, |v| {
+                    if let Some(f) = &mut v.followup {
+                        f.planes.push(plane);
+                    }
+                });
+            }
+            let Some(&plane) = planes.get(next) else {
+                break;
+            };
+            next += 1;
+            if !checkpoint(c, s, control, Phase::Capturing)? {
+                return Ok(false);
+            }
+            let ordinal = (plane - 1) as usize;
+            let (tries, group) = record.tries[&plane].clone();
+            // Its newest try passed (a retake during the capture): a later
+            // try would replace it in the stack.
+            if !group.is_empty()
+                && let Ok(Some(v)) = c.verdict(&group)
+                && check_passed(&v)
+            {
+                skipped += 1;
+                log.record(
+                    "manual_retake_skipped",
+                    json!({"plane":plane,"reason":"its newest try passed"}),
+                )?;
+                update(s, |v| {
+                    if let Some(f) = &mut v.followup {
+                        f.skipped = skipped;
+                    }
+                });
+                continue;
+            }
+            let o = Owed {
+                ordinal,
+                target: record.positions[ordinal],
+                plane: Some(plane),
+                group,
+                retakes: tries.saturating_sub(1),
+                since: Instant::now(),
+                manual: true,
+            };
+            if !retake(
+                c,
+                &ctx,
+                &mut log,
+                &mut r,
+                o,
+                "asked for by the user after the capture",
+                None,
+            )? {
+                return Ok(false);
+            }
+            taken += 1;
+            update(s, |v| {
+                if let Some(f) = &mut v.followup {
+                    f.taken = taken;
+                }
+            });
+        }
+        Ok(true)
+    })();
+    let dropped = std::mem::take(&mut s.lock().unwrap().retake_queue);
+    if !dropped.is_empty() {
+        log.record(
+            "manual_retakes_dropped",
+            json!({"planes":dropped,"reason":"the retakes ended before they were taken"}),
+        )?;
+    }
+    let result = result.and_then(|done| {
+        update(s, |v| {
+            v.message = "Saving the retaken RAWs on the PC…".into()
+        });
+        c.finish_transfers()?;
+        Ok(done)
+    });
+    match result {
+        Ok(done) => {
+            log.record(
+                "followup_finished",
+                json!({"outcome":if done {"complete"} else {"stopped"},"taken":taken,"skipped":skipped}),
+            )?;
+            c.sync_journal(&directory)?;
+            c.finish_transfers()?;
+            update(s, |v| {
+                v.followup = None;
+                v.phase = if matches!(before, Phase::Complete | Phase::Stopped) {
+                    before
+                } else {
+                    Phase::Complete
+                };
+                v.message = format!(
+                    "{} · {taken} plane{} retaken{}; RAWs saved on the PC",
+                    if done {
+                        "Retakes done"
+                    } else {
+                        "Retakes stopped"
+                    },
+                    if taken == 1 { "" } else { "s" },
+                    if skipped > 0 {
+                        format!(", {skipped} skipped (their newest try passed)")
+                    } else {
+                        String::new()
+                    }
+                );
+            });
+            Ok(())
+        }
+        Err(e) => {
+            if let Some((rig, _)) = managed
+                && light_requested
+                && !s.lock().unwrap().exposure_uncertain
+                && let Err(power_error) = rig.set(Outlet::Light, false)
+            {
+                update(s, |v| {
+                    v.power_error = Some(format!("Check the light outlet: {power_error:#}"))
+                });
+            }
+            if log
+                .record(
+                    "followup_finished",
+                    json!({"outcome":"uncertain","taken":taken,"skipped":skipped,"message":format!("{e:#}")}),
+                )
+                .is_ok()
+            {
+                let _ = c.sync_journal(&directory);
+            }
+            update(s, |v| v.followup = None);
+            Err(e)
+        }
+    }
 }
 
 /// Explicit positions must keep the plan's approach direction so that every
@@ -1789,6 +2483,10 @@ fn scan(
     }
     Ok(())
 }
+
+#[cfg(test)]
+#[path = "worker-retake-tests.rs"]
+mod retake_tests;
 
 #[cfg(test)]
 mod tests {

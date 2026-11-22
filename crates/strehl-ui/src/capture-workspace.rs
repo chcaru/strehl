@@ -555,7 +555,47 @@ impl CaptureWorkspace {
                 && self.unfollowed_sequence == s.host.sequence_id
                 && capturing);
         let current = s.in_progress.as_ref().filter(|_| !not_a_stack);
+        // Retakes after the capture ended (h-retake) go into its run: its
+        // checker, finished with the capture, checks them too.
+        let followup_run = s
+            .host
+            .retakes
+            .as_ref()
+            .filter(|r| r.followup.is_some() && capturing)
+            .and_then(|r| r.run.clone());
+        if let Some(name) = followup_run
+            && self.follow_enabled
+            && let Some(engine) = engine
+        {
+            let folder = self
+                .follower
+                .as_ref()
+                .map(|f| f.run.clone())
+                .into_iter()
+                .chain(s.completed.iter().map(|c| c.folder.clone()))
+                .chain(s.stopped.iter().map(|c| c.folder.clone()))
+                .find(|f| f.file_name().and_then(|n| n.to_str()) == Some(name.as_str()));
+            let idle = self.follower.as_ref().is_none_or(|f| !f.running());
+            if let Some(folder) = folder
+                && idle
+                && self
+                    .follow_refused
+                    .as_ref()
+                    .is_none_or(|(r, _)| *r != folder)
+            {
+                match follow::Follower::start(engine, &folder, Some(self.config.clone())) {
+                    Ok(f) => {
+                        // Its capture was offered once already.
+                        let mut f = f;
+                        f.offered = true;
+                        self.follower = Some(f);
+                    }
+                    Err(e) => self.follow_refused = Some((folder, format!("{e:#}"))),
+                }
+            }
+        }
         if let Some(f) = &mut self.follower {
+            f.set_max_retakes(s.host.max_retakes() as usize);
             f.poll();
             if f.running() {
                 let followed = current.filter(|r| r.folder == f.run);
