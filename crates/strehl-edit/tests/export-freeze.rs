@@ -2,9 +2,119 @@
 //! The hashes were recorded by this file at commit 61effa01b, before the P7
 //! export split. Failure witness: any change to development, encoding or
 //! serialization of an option-free export makes a hash differ.
+//!
+//! Since h-develop (2026-11-22) every PNG, JPEG and AVIF also names Strehl
+//! (`metadata.rs`). The stamp is purely additive, and this file proves it:
+//! the stamp's chunks (PNG) and segments (JPEG) are removed, and an AVIF is
+//! rebuilt from its own AV1 payload and colour properties without the Exif
+//! item, and the result must still hash to the 61effa01b bytes. TIFFs carried
+//! their stamp (Software) already and are compared whole.
+mod common;
+
 use sha2::{Digest, Sha256};
 use std::sync::atomic::AtomicBool;
 use strehl_edit::*;
+
+/// The file as it was before the stamp, after checking that the stamp is
+/// there and says Strehl.
+fn unstamped(name: &str, bytes: &[u8]) -> Vec<u8> {
+    if name.contains("-Tiff") || name == "coverage-Tiff" {
+        return bytes.to_vec();
+    }
+    if name.contains("-Png") || name == "coverage-Png" {
+        let mut out = bytes[..8].to_vec();
+        let (mut software, mut xmp) = (false, false);
+        let mut at = 8;
+        while at < bytes.len() {
+            let n = u32::from_be_bytes(bytes[at..at + 4].try_into().unwrap()) as usize;
+            let chunk = &bytes[at..at + 12 + n];
+            let (kind, data) = (&chunk[4..8], &chunk[8..8 + n]);
+            if kind == b"tEXt" && data == b"Software\0Strehl" {
+                software = true;
+            } else if kind == b"iTXt" && data.starts_with(b"XML:com.adobe.xmp\0") {
+                let text = std::str::from_utf8(&data[22..]).unwrap();
+                assert!(text.contains("<xmp:CreatorTool>Strehl</xmp:CreatorTool>"));
+                xmp = true;
+            } else {
+                out.extend_from_slice(chunk);
+            }
+            at += 12 + n;
+        }
+        assert!(software && xmp, "{name} is not stamped");
+        return out;
+    }
+    if name.contains("-Jpeg") {
+        let mut out = bytes[..2].to_vec();
+        let (mut exif, mut xmp) = (false, false);
+        let mut at = 2;
+        loop {
+            let marker = bytes[at + 1];
+            let n = u16::from_be_bytes([bytes[at + 2], bytes[at + 3]]) as usize;
+            let segment = &bytes[at..at + 2 + n];
+            let payload = &segment[4..];
+            if marker == 0xe1 && payload.starts_with(b"Exif\0\0") {
+                assert_eq!(
+                    common::ifd_ascii(&payload[6..]),
+                    vec![(305, "Strehl".into())]
+                );
+                exif = true;
+            } else if marker == 0xe1 && payload.starts_with(b"http://ns.adobe.com/xap/1.0/\0") {
+                let text = std::str::from_utf8(&payload[29..]).unwrap();
+                assert!(text.contains("<xmp:CreatorTool>Strehl</xmp:CreatorTool>"));
+                xmp = true;
+            } else {
+                out.extend_from_slice(segment);
+            }
+            at += 2 + n;
+            if marker == 0xda {
+                out.extend_from_slice(&bytes[at..]);
+                break;
+            }
+        }
+        assert!(exif && xmp, "{name} is not stamped");
+        return out;
+    }
+    assert!(name.contains("-Avif"), "{name}");
+    let avif = common::read_avif(bytes);
+    assert_eq!(
+        common::ifd_ascii(avif.exif_tiff().expect("an Exif item")),
+        vec![(305, "Strehl".into())],
+        "{name}"
+    );
+    use avif_serialize::{Aviffy, constants as c};
+    let hdr = name.ends_with("-true");
+    let (primaries, matrix) = if name.contains("-Rec2020-") {
+        (c::ColorPrimaries::Bt2020, c::MatrixCoefficients::Bt2020Ncl)
+    } else if name.contains("-DisplayP3-") {
+        (c::ColorPrimaries::DisplayP3, c::MatrixCoefficients::Bt709)
+    } else {
+        (c::ColorPrimaries::Bt709, c::MatrixCoefficients::Bt709)
+    };
+    let transfer = if hdr {
+        c::TransferCharacteristics::Smpte2084
+    } else {
+        c::TransferCharacteristics::Srgb
+    };
+    let colr = avif.colr.expect("colour properties");
+    assert_eq!(
+        colr,
+        (primaries as u16, transfer as u16, matrix as u16, true),
+        "{name}"
+    );
+    let mut container = Aviffy::new();
+    container
+        .set_color_primaries(primaries)
+        .set_transfer_characteristics(transfer)
+        .set_matrix_coefficients(matrix)
+        .set_full_color_range(true)
+        .set_chroma_subsampling((false, false));
+    if hdr {
+        let (max, average) = avif.clli.expect("an HDR file states its light level");
+        container.set_content_light_level(max, average);
+    }
+    let payload = avif.item(b"av01").expect("the image item");
+    container.to_vec(payload, None, avif.size[0], avif.size[1], 10)
+}
 
 fn hex(bytes: &[u8]) -> String {
     Sha256::digest(bytes)
@@ -572,7 +682,11 @@ fn option_free_exports_are_byte_identical_to_the_pre_p7_build() {
     assert_eq!(actual.len(), FROZEN.len(), "fixture set changed");
     for ((name, bytes), (frozen_name, frozen)) in actual.iter().zip(FROZEN) {
         assert_eq!(name, frozen_name);
-        assert_eq!(&hex(bytes), frozen, "{name} changed bytes");
+        assert_eq!(
+            &hex(&unstamped(name, bytes)),
+            frozen,
+            "{name} changed bytes"
+        );
     }
 }
 

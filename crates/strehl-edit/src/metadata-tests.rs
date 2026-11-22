@@ -35,12 +35,12 @@ fn civil_dates_and_offsets_are_exact() {
 
 #[test]
 fn xmp_packet_round_trips_unicode_and_escapes_markup() {
-    assert!(
-        xmp_packet(&ExportMetadata::default(), None)
-            .unwrap()
-            .is_none()
-    );
-    let packet = xmp_packet(&meta(), Some(&date())).unwrap().unwrap();
+    // Without text or date the packet still names Strehl, and nothing else.
+    let bare = String::from_utf8(xmp_packet(&ExportMetadata::default(), None).unwrap()).unwrap();
+    assert!(bare.contains("<xmp:CreatorTool>Strehl</xmp:CreatorTool>"));
+    assert!(!bare.contains("<dc:"), "{bare}");
+    assert!(!bare.contains("CreateDate"));
+    let packet = xmp_packet(&meta(), Some(&date())).unwrap();
     let text = String::from_utf8(packet.clone()).unwrap();
     assert!(text.starts_with("<?xpacket begin=\"\u{feff}\""));
     assert!(text.ends_with("<?xpacket end=\"w\"?>"));
@@ -105,8 +105,12 @@ fn ifd_ascii(block: &[u8]) -> Vec<(u16, String)> {
 
 #[test]
 fn exif_block_is_a_sorted_ascii_ifd() {
-    assert!(exif_block(&ExportMetadata::default(), None).is_none());
-    let tags = ifd_ascii(&exif_block(&meta(), Some(&date())).unwrap());
+    // Without text or date the block holds the Strehl stamp alone.
+    assert_eq!(
+        ifd_ascii(&exif_block(&ExportMetadata::default(), None)),
+        vec![(305, "Strehl".to_owned())]
+    );
+    let tags = ifd_ascii(&exif_block(&meta(), Some(&date())));
     assert_eq!(
         tags,
         vec![

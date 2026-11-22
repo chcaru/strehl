@@ -114,8 +114,10 @@ log open in the inspector over the station you are on; **Close** returns it.
    the band matrix, the accumulating image and the capture timeline.
 5. **Develop** finishes the photograph: the tools along the left (move, crop,
    regions, the depth brush), **After / Before / Split** and **Clipping** above
-   the canvas, and the inspector's **Adjust** (looks such as **Natural** and
-   **Signature**, light and colour, detail, crop, display), **Layers** (regions
+   the canvas (in **Split**, drag the line anywhere along it; it keeps its
+   place on screen while you zoom and pan, for the session), and the
+   inspector's **Adjust** (looks such as **Natural** and **Signature**, light
+   and colour, detail, crop, display), **Layers** (regions
    and their notes) and **Versions**. **Save version** asks for a name at the
    head of Versions and keeps that version; **Export…** goes to Export. Edits
    are saved beside the result and the rendered pixels are never changed.
@@ -125,6 +127,12 @@ log open in the inspector over the station you are on; **Close** returns it.
    Tick the presets, set the name pattern and the folder under **Name and
    place** (the button chooses one if none is set), then **Export N files**;
    the result, or what went wrong, heads the inspector.
+   **Copyright and description** (under **In every file**) shows the lines it
+   writes and takes them there: your **Artist** and **Copyright**, kept for
+   every photograph (also under the Strehl menu, **Preferences…**, **Exports**),
+   and this photograph's **Description**. Presets keep only the switch; an
+   empty line writes nothing. Every exported file names Strehl as the software
+   that made it, whatever the switches say.
    The table below lists this photograph's exports with **Reveal**, **Copy
    path** and **Export again**.
 

@@ -57,7 +57,7 @@ pub use image::{
     DisplayBaseline, ImageOrigin, LinearImage, load_tiff, load_tiff_thumbnail, save_linear_tiff,
     save_sdr_tiff,
 };
-pub use metadata::{ExportDateTime, ExportMetadata};
+pub use metadata::{CREATOR_TOOL, ExportDateTime, ExportMetadata};
 pub use neighbourhood::Neighbourhood;
 pub use recipe::{
     AdaptiveParameters, AdaptiveToneRange, Adjustments, Backdrop, BackdropKey, Crop,

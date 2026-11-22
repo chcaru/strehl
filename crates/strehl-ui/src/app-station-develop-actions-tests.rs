@@ -283,3 +283,270 @@ fn a_develop_action_that_cannot_run_says_why_in_the_inspector() {
     frame(&mut app, &ctx, time, click(dismiss.center()));
     assert!(app.edit_pane.develop.notice.is_none());
 }
+
+// ------------------------------------------------- copyright and description
+
+/// The JPEG's Exif IFD0 ASCII entries and its XMP packet, read back from the
+/// file's APP1 segments.
+fn jpeg_said(path: &Path) -> (Vec<(u16, String)>, String) {
+    let bytes = std::fs::read(path).unwrap();
+    assert_eq!(&bytes[..2], [0xff, 0xd8]);
+    let (mut exif, mut xmp) = (Vec::new(), String::new());
+    let mut at = 2;
+    while bytes[at + 1] != 0xda {
+        let n = u16::from_be_bytes([bytes[at + 2], bytes[at + 3]]) as usize;
+        let payload = &bytes[at + 4..at + 2 + n];
+        if bytes[at + 1] == 0xe1 && payload.starts_with(b"Exif\0\0") {
+            let block = &payload[6..];
+            let ifd = u32::from_le_bytes(block[4..8].try_into().unwrap()) as usize;
+            let count = u16::from_le_bytes([block[ifd], block[ifd + 1]]) as usize;
+            for i in 0..count {
+                let e = &block[ifd + 2 + i * 12..ifd + 14 + i * 12];
+                let n = u32::from_le_bytes(e[4..8].try_into().unwrap()) as usize;
+                let text = if n <= 4 {
+                    &e[8..8 + n]
+                } else {
+                    let off = u32::from_le_bytes(e[8..12].try_into().unwrap()) as usize;
+                    &block[off..off + n]
+                };
+                exif.push((
+                    u16::from_le_bytes([e[0], e[1]]),
+                    String::from_utf8(text[..n - 1].to_vec()).unwrap(),
+                ));
+            }
+        } else if bytes[at + 1] == 0xe1 && payload.starts_with(b"http://ns.adobe.com/xap/1.0/\0") {
+            xmp = String::from_utf8(payload[29..].to_vec()).unwrap();
+        }
+        at += 2 + n;
+    }
+    (exif, xmp)
+}
+
+/// Every JPEG in `folder`, oldest name first.
+fn jpegs(folder: &Path) -> Vec<PathBuf> {
+    let mut found: Vec<PathBuf> = std::fs::read_dir(folder)
+        .unwrap()
+        .map(|e| e.unwrap().path())
+        .filter(|p| p.extension().is_some_and(|e| e == "jpg"))
+        .collect();
+    found.sort();
+    found
+}
+
+fn export_now(app: &mut StrehlApp, ctx: &egui::Context, time: &mut f64, label: &str) {
+    press(app, ctx, time, label);
+    frames_until(app, ctx, time, "the export batch", |app| {
+        app.export_pane.station.batch.is_none()
+    });
+    assert!(
+        app.export_pane.station.error.is_none(),
+        "{:?}",
+        app.export_pane.station.error
+    );
+}
+
+/// Owner feedback, 2026-11-22: "where is the copyright and description
+/// configured? i see the option in export to use it, but no idea what
+/// they'll be?" Export shows exactly what the switch writes, takes the text
+/// there, and the file carries it; the presets never do.
+#[test]
+fn copyright_and_description_show_what_they_write_and_the_file_says_it() {
+    let dir = tempfile::tempdir().unwrap();
+    let ctx = context();
+    let mut time = 0.0;
+    let mut app = on_disk(dir.path());
+    app.shell.prefs.artist = "Chris Caruso".into();
+    app.shell.prefs.copyright = "© 2026 Chris Caruso".into();
+    let folder = dir.path().join("exports");
+    std::fs::create_dir_all(&folder).unwrap();
+    exporting(&mut app, &folder, &["Web"]);
+    for _ in 0..3 {
+        time += 0.05;
+        frame(&mut app, &ctx, time, vec![]);
+    }
+    let output = frame(&mut app, &ctx, time, vec![]);
+    // The standing text is on screen under the switch, with the stamp.
+    for shown in ["Chris Caruso", "© 2026 Chris Caruso", "SOFTWARE", "Strehl"] {
+        assert!(find(&output, shown).is_some(), "{shown} is not shown");
+    }
+    assert!(find(&output, "Not set · what it shows").is_some());
+    // Turn the switch on (its toggle sits left of the label).
+    let label = find(&output, "Copyright and description").unwrap();
+    time += 0.05;
+    frame(
+        &mut app,
+        &ctx,
+        time,
+        click(egui::pos2(label.left() - 22.0, label.center().y)),
+    );
+    let ticked = |app: &StrehlApp| {
+        app.export_pane
+            .station
+            .library
+            .as_ref()
+            .unwrap()
+            .presets
+            .iter()
+            .find(|p| p.name == "Web")
+            .map(|p| match &p.output {
+                crate::export_presets::PresetOutput::Image(i) => i.copyright && i.description,
+                _ => false,
+            })
+            .unwrap()
+    };
+    assert!(ticked(&app), "the switch did not turn on");
+    // Type this photograph's description where it is shown, then leave it.
+    time += 0.05;
+    let output = frame(&mut app, &ctx, time, vec![]);
+    let field = find(&output, "Not set · what it shows").unwrap();
+    time += 0.05;
+    frame(&mut app, &ctx, time, click(field.center()));
+    time += 0.05;
+    frame(
+        &mut app,
+        &ctx,
+        time,
+        vec![egui::Event::Text("Weevil on moss".into())],
+    );
+    time += 0.05;
+    let output = frame(&mut app, &ctx, time, vec![]);
+    let heading = find(&output, "IN EVERY FILE").unwrap();
+    time += 0.05;
+    frame(&mut app, &ctx, time, click(heading.center()));
+    let photo = app.editor.path.clone().unwrap();
+    assert_eq!(
+        app.catalog
+            .photo_descriptions
+            .get(&photo)
+            .map(String::as_str),
+        Some("Weevil on moss")
+    );
+    let catalog = std::fs::read_to_string(dir.path().join("projects.json")).unwrap();
+    assert!(
+        catalog.contains("Weevil on moss"),
+        "the catalog was not saved"
+    );
+    let reread = crate::workspace_history::Catalog::load(Some(dir.path().join("projects.json")));
+    assert_eq!(
+        reread.photo_descriptions.get(&photo).map(String::as_str),
+        Some("Weevil on moss"),
+        "{:?}",
+        reread.load_error
+    );
+    export_now(&mut app, &ctx, &mut time, "Export 1 file");
+    let written = jpegs(&folder);
+    assert_eq!(written.len(), 1, "{written:?}");
+    let (exif, xmp) = jpeg_said(&written[0]);
+    let tag = |t: u16| exif.iter().find(|(k, _)| *k == t).map(|(_, v)| v.as_str());
+    assert_eq!(tag(270), Some("Weevil on moss"));
+    assert_eq!(tag(305), Some("Strehl"));
+    assert_eq!(tag(315), Some("Chris Caruso"));
+    assert_eq!(tag(33_432), Some("(c) 2026 Chris Caruso"));
+    assert!(xmp.contains("© 2026 Chris Caruso") && xmp.contains("Weevil on moss"));
+    assert!(xmp.contains("<xmp:CreatorTool>Strehl</xmp:CreatorTool>"));
+    // The presets on disk carry the switch, never the text.
+    let presets = std::fs::read_to_string(crate::export_presets::library_path(
+        &dir.path().join("projects.json"),
+    ))
+    .unwrap();
+    assert!(presets.contains("\"copyright\": true"), "{presets}");
+    assert!(!presets.contains("Chris") && !presets.contains("Weevil"));
+    // Switched off, the next file says only that Strehl made it (and when).
+    time += 0.05;
+    let output = frame(&mut app, &ctx, time, vec![]);
+    let label = find(&output, "Copyright and description").unwrap();
+    time += 0.05;
+    frame(
+        &mut app,
+        &ctx,
+        time,
+        click(egui::pos2(label.left() - 22.0, label.center().y)),
+    );
+    assert!(!ticked(&app));
+    export_now(&mut app, &ctx, &mut time, "Export 1 file");
+    let written = jpegs(&folder);
+    assert_eq!(written.len(), 2, "{written:?}");
+    let plain = written
+        .iter()
+        .find(|p| p.to_string_lossy().contains("(2)"))
+        .unwrap();
+    let (exif, xmp) = jpeg_said(plain);
+    let tags: Vec<u16> = exif.iter().map(|(k, _)| *k).collect();
+    assert_eq!(tags, vec![305, 306], "{exif:?}");
+    assert!(!xmp.contains("Chris") && !xmp.contains("Weevil"));
+}
+
+/// An empty field writes nothing; emptying the description removes it.
+#[test]
+fn an_empty_field_writes_nothing_and_a_cleared_description_is_forgotten() {
+    let dir = tempfile::tempdir().unwrap();
+    let ctx = context();
+    let mut time = 0.0;
+    let mut app = on_disk(dir.path());
+    app.shell.prefs.artist = String::new();
+    app.shell.prefs.copyright = "© 2026 Chris Caruso".into();
+    let folder = dir.path().join("exports");
+    std::fs::create_dir_all(&folder).unwrap();
+    exporting(&mut app, &folder, &["Web"]);
+    app.handle_export_intents(
+        &ctx,
+        vec![crate::export_station::ExportIntent::Edit(
+            app.export_pane
+                .station
+                .library
+                .as_ref()
+                .unwrap()
+                .presets
+                .iter()
+                .find(|p| p.name == "Web")
+                .unwrap()
+                .id
+                .clone(),
+            {
+                let mut web = crate::export_presets::default_presets()[0].output.clone();
+                if let crate::export_presets::PresetOutput::Image(i) = &mut web {
+                    i.copyright = true;
+                    i.description = true;
+                }
+                web
+            },
+        )],
+    );
+    let photo = app.editor.path.clone().unwrap();
+    app.handle_export_intents(
+        &ctx,
+        vec![crate::export_station::ExportIntent::SetWords(
+            crate::export_station::WordsField::Description,
+            "  Weevil  \n".into(),
+        )],
+    );
+    assert_eq!(app.catalog.photo_descriptions[&photo], "Weevil");
+    app.handle_export_intents(
+        &ctx,
+        vec![crate::export_station::ExportIntent::SetWords(
+            crate::export_station::WordsField::Description,
+            "   ".into(),
+        )],
+    );
+    assert!(!app.catalog.photo_descriptions.contains_key(&photo));
+    // Reserved wording is refused in words, and nothing is kept.
+    app.handle_export_intents(
+        &ctx,
+        vec![crate::export_station::ExportIntent::SetWords(
+            crate::export_station::WordsField::Description,
+            "BakedSourceRecipe: {}".into(),
+        )],
+    );
+    assert!(app.export_pane.station.error.is_some());
+    assert!(!app.catalog.photo_descriptions.contains_key(&photo));
+    app.export_pane.station.dismiss();
+    for _ in 0..3 {
+        time += 0.05;
+        frame(&mut app, &ctx, time, vec![]);
+    }
+    export_now(&mut app, &ctx, &mut time, "Export 1 file");
+    let (exif, xmp) = jpeg_said(&jpegs(&folder)[0]);
+    let tags: Vec<u16> = exif.iter().map(|(k, _)| *k).collect();
+    assert_eq!(tags, vec![305, 306, 33_432], "{exif:?}");
+    assert!(!xmp.contains("dc:creator") && !xmp.contains("dc:description"));
+}

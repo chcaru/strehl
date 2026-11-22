@@ -239,13 +239,12 @@ pub(crate) fn export_avif_job(
     if settings.hdr {
         container.set_content_light_level(max_content_light_nits, average_light_nits);
     }
-    let mut written = Vec::new();
-    if let Some(exif) =
-        crate::metadata::exif_block(&settings.metadata, job.extras.date_time.as_ref())
-    {
-        container.set_exif(exif);
-        written.push("exif".to_owned());
-    }
+    // Always: the Exif item carries the Strehl stamp (Software).
+    container.set_exif(crate::metadata::exif_block(
+        &settings.metadata,
+        job.extras.date_time.as_ref(),
+    ));
+    let written = vec!["exif".to_owned()];
     let data = container.to_vec(&payload, None, width, height, 10);
     crate::publish::new_file_checked(
         path,

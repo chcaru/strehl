@@ -1780,7 +1780,10 @@ struct CropDrag {
 pub(crate) struct DevelopCanvas {
     pub tool: DevelopTool,
     pub compare: Compare,
-    /// Split position as a fraction of the photograph's width.
+    /// Split position as a fraction of the visible photograph's width (the
+    /// part on screen), so the line keeps its place on screen while the view
+    /// zooms and pans beneath it. Kept for the session, across photographs;
+    /// a new session starts in the middle (see `h-develop.md`).
     pub split: f32,
     pub surround: Surround,
     /// The surround is painted only once chosen, so today's canvas is unchanged.
@@ -1797,7 +1800,9 @@ pub(crate) struct DevelopCanvas {
     stroke: Vec<[f32; 2]>,
     crop_drag: Option<CropDrag>,
     crop_draft: Option<Crop>,
-    split_drag: bool,
+    /// While the split line is dragged: the pointer's offset from the line
+    /// at the press, so the line does not jump to the pointer.
+    split_drag: Option<f32>,
     /// Intents raised by pointer gestures on the photograph.
     pub outbox: Vec<DevelopIntent>,
 }
@@ -1819,7 +1824,7 @@ impl Default for DevelopCanvas {
             stroke: Vec::new(),
             crop_drag: None,
             crop_draft: None,
-            split_drag: false,
+            split_drag: None,
             outbox: Vec::new(),
         }
     }
@@ -1857,14 +1862,22 @@ impl DevelopCanvas {
         self.stroke.clear();
         self.crop_drag = None;
         self.crop_draft = None;
-        self.split_drag = false;
+        self.split_drag = None;
         self.outbox.clear();
         self.repair_range = None;
     }
 
     /// True while a Develop tool takes the pointer from panning and regions.
     pub(crate) fn owns_pointer(&self) -> bool {
-        self.tool.owns_canvas() || self.split_drag
+        self.tool.owns_canvas() || self.split_drag.is_some()
+    }
+
+    /// The split line's x on screen for the photograph at `image` clipped to
+    /// `clip`, or `None` when Split is not shown.
+    pub(crate) fn split_x(&self, image: Rect, clip: Rect) -> Option<f32> {
+        let visible = image.intersect(clip);
+        (self.compare == Compare::Split && visible.is_positive())
+            .then(|| visible.left() + split_fraction(self.split, visible) * visible.width())
     }
 
     pub(crate) fn take_intents(&mut self) -> Vec<DevelopIntent> {
@@ -1887,8 +1900,13 @@ impl DevelopCanvas {
                 Color32::WHITE,
             );
         }
-        if self.compare == Compare::Split {
-            self.split_view(ui, &painter, image, visible, view);
+        // The split view is painted here, under the crop frame and the tools,
+        // but its line takes the pointer last, on top of the tools' canvas,
+        // so it can be dragged whichever tool is out. Its shapes fill this
+        // slot once the line's position for this frame is known.
+        let split_slot = (self.compare == Compare::Split).then(|| painter.add(egui::Shape::Noop));
+        if self.compare != Compare::Split {
+            self.split_drag = None;
         }
         if let Some(crop) = self.crop_draft.or(view.recipe.crop)
             && (self.tool == DevelopTool::Crop || self.crop_draft.is_some())
@@ -1900,9 +1918,23 @@ impl DevelopCanvas {
         {
             paint_scale_bar(&painter, image, &bar, um, view.image_size, view.palette);
         }
-        if !self.tool.owns_canvas() {
-            return;
+        if self.tool.owns_canvas() {
+            self.tool_gesture(ui, &painter, image, visible, view);
         }
+        if let Some(slot) = split_slot {
+            let shapes = self.split_view(ui, &painter, image, visible, view);
+            painter.set(slot, egui::Shape::Vec(shapes));
+        }
+    }
+
+    fn tool_gesture(
+        &mut self,
+        ui: &mut Ui,
+        painter: &egui::Painter,
+        image: Rect,
+        visible: Rect,
+        view: &CanvasView<'_>,
+    ) {
         let response = ui.interact(
             visible,
             ui.id().with("develop-canvas"),
@@ -1921,7 +1953,7 @@ impl DevelopCanvas {
                     ui.ctx().set_cursor_icon(egui::CursorIcon::Crosshair);
                 }
             }
-            DevelopTool::DepthBrush => self.brush_gesture(ui, &painter, &response, image, view),
+            DevelopTool::DepthBrush => self.brush_gesture(ui, painter, &response, image, view),
             DevelopTool::Heal => {
                 if let Some(at) = response.hover_pos() {
                     painter.circle_stroke(
@@ -2078,6 +2110,9 @@ impl DevelopCanvas {
         }
     }
 
+    /// The split line: its drag first (anywhere along the line, within
+    /// `SPLIT_REACH` of it), then the shapes for this frame's position: the
+    /// before half, the line, its grip and the two captions.
     fn split_view(
         &mut self,
         ui: &mut Ui,
@@ -2085,11 +2120,38 @@ impl DevelopCanvas {
         image: Rect,
         visible: Rect,
         view: &CanvasView<'_>,
-    ) {
-        let x = image.left() + self.split.clamp(0.0, 1.0) * image.width();
+    ) -> Vec<egui::Shape> {
+        let x_of = |split: f32| visible.left() + split_fraction(split, visible) * visible.width();
+        let x = x_of(self.split);
+        let hit = Rect::from_min_max(
+            egui::pos2(x - SPLIT_REACH, visible.top()),
+            egui::pos2(x + SPLIT_REACH, visible.bottom()),
+        );
+        let response = ui.interact(hit, ui.id().with("develop-split"), Sense::drag());
+        if response.drag_started() {
+            // Keep the pointer where it took the line: no jump on press.
+            let origin = ui
+                .input(|i| i.pointer.press_origin())
+                .map_or(0.0, |at| at.x - x);
+            self.split_drag = Some(origin.clamp(-SPLIT_REACH, SPLIT_REACH));
+        }
+        if response.dragged()
+            && let (Some(offset), Some(at)) = (self.split_drag, response.interact_pointer_pos())
+        {
+            let split = (at.x - offset - visible.left()) / visible.width();
+            self.split = split_fraction(split, visible);
+        }
+        if !response.dragged() {
+            self.split_drag = None;
+        }
+        let active = response.hovered() || self.split_drag.is_some();
+        if active {
+            ui.ctx().set_cursor_icon(egui::CursorIcon::ResizeHorizontal);
+        }
+        let x = x_of(self.split);
+        let mut shapes = Vec::with_capacity(8);
         if let Some((texture, uv)) = view.before {
-            let left =
-                Rect::from_min_max(image.min, egui::pos2(x, image.bottom())).intersect(visible);
+            let left = Rect::from_min_max(visible.min, egui::pos2(x, visible.bottom()));
             if left.is_positive() {
                 // The before overview covers the whole photograph; map the
                 // visible left part into its UV rectangle.
@@ -2099,7 +2161,7 @@ impl DevelopCanvas {
                 let v = |sy: f32| {
                     uv[0][1] + (sy - image.top()) / image.height() * (uv[1][1] - uv[0][1])
                 };
-                painter.image(
+                shapes.push(egui::Shape::image(
                     texture.id(),
                     left,
                     Rect::from_min_max(
@@ -2107,29 +2169,51 @@ impl DevelopCanvas {
                         egui::pos2(u(left.right()), v(left.bottom())),
                     ),
                     Color32::WHITE,
-                );
+                ));
             }
         }
-        painter.line_segment(
+        let ink = if active {
+            view.palette.accent
+        } else {
+            Color32::WHITE.gamma_multiply(0.8)
+        };
+        shapes.push(egui::Shape::line_segment(
             [
                 egui::pos2(x, visible.top()),
                 egui::pos2(x, visible.bottom()),
             ],
-            Stroke::new(1.0_f32, Color32::WHITE.gamma_multiply(0.8)),
+            Stroke::new(1.0_f32, ink),
+        ));
+        // The grip: a square-cornered ruled tab with two ticks, so the line
+        // reads as something to take hold of.
+        let grip = Rect::from_center_size(
+            egui::pos2(x, visible.center().y),
+            egui::vec2(9.0, 30.0_f32.min(visible.height() * 0.5)),
         );
-        let label = |text: &str, at: Pos2, align: Align2| {
-            painter.galley(
-                align
-                    .anchor_size(
-                        at,
-                        painter
-                            .layout_job(style::caps_job(text, 10.0, Color32::WHITE))
-                            .size(),
-                    )
-                    .min,
-                painter.layout_job(style::caps_job(text, 10.0, Color32::WHITE)),
-                Color32::WHITE,
-            );
+        shapes.push(egui::Shape::rect_filled(
+            grip,
+            CornerRadius::ZERO,
+            Color32::from_black_alpha(170),
+        ));
+        shapes.push(egui::Shape::rect_stroke(
+            grip,
+            CornerRadius::ZERO,
+            Stroke::new(1.0_f32, ink),
+            StrokeKind::Inside,
+        ));
+        for dx in [-1.5_f32, 1.5] {
+            shapes.push(egui::Shape::line_segment(
+                [
+                    egui::pos2(x + dx, grip.center().y - 5.0),
+                    egui::pos2(x + dx, grip.center().y + 5.0),
+                ],
+                Stroke::new(1.0_f32, ink),
+            ));
+        }
+        let mut label = |text: &str, at: Pos2, align: Align2| {
+            let galley = painter.layout_job(style::caps_job(text, 10.0, Color32::WHITE));
+            let min = align.anchor_size(at, galley.size()).min;
+            shapes.push(egui::Shape::galley(min, galley, Color32::WHITE));
         };
         label(
             if view.before.is_some() {
@@ -2145,18 +2229,24 @@ impl DevelopCanvas {
             egui::pos2(x + 8.0, visible.top() + 8.0),
             Align2::LEFT_TOP,
         );
-        let grip =
-            Rect::from_center_size(egui::pos2(x, visible.center().y), egui::vec2(12.0, 40.0));
-        let response = ui.interact(grip, ui.id().with("develop-split"), Sense::drag());
-        if response.hovered() || response.dragged() {
-            ui.ctx().set_cursor_icon(egui::CursorIcon::ResizeHorizontal);
-        }
-        self.split_drag = response.dragged();
-        if response.dragged()
-            && let Some(at) = response.interact_pointer_pos()
-        {
-            self.split = ((at.x - image.left()) / image.width()).clamp(0.02, 0.98);
-        }
+        shapes
+    }
+}
+
+/// How far either side of the split line a press takes it, in points.
+const SPLIT_REACH: f32 = 6.0;
+/// The nearest the split line comes to either edge of the visible photograph,
+/// in points, so it can always be taken again.
+const SPLIT_MARGIN: f32 = 8.0;
+
+/// `split` clamped so the line stays `SPLIT_MARGIN` inside `visible`.
+fn split_fraction(split: f32, visible: Rect) -> f32 {
+    let width = visible.width().max(1.0);
+    let margin = (SPLIT_MARGIN / width).min(0.5);
+    if split.is_finite() {
+        split.clamp(margin, 1.0 - margin)
+    } else {
+        0.5
     }
 }
 

@@ -632,6 +632,64 @@ fn benchmark_develop_latency_on_a_real_master() {
         }],
         false,
     );
+    let jobs_after = app.editor.viewport.stats()["jobs"].as_u64();
+    // h-develop: the same at 4x, where the tiles hold full resolution and
+    // the line stays on screen (a fraction of the visible photograph).
+    zoom.set(4.0);
+    wait("sharp at 4x", &mut app, &sharp);
+    let (image4, clip4) = mapping(&app).unwrap();
+    let shown = image4.intersect(clip4);
+    let y4 = shown.top() + shown.height() * 0.3;
+    let sweep4 = |i: usize| shown.left() + shown.width() * (0.1 + 0.8 * i as f32 / 119.0);
+    app.editor.develop.compare = station::Compare::After;
+    for i in 0..120 {
+        live(
+            &mut app,
+            vec![egui::Event::PointerMoved(egui::pos2(sweep4(i), y4))],
+            true,
+        );
+    }
+    let plain4 = frame_ms.take();
+    app.editor.develop.compare = station::Compare::Split;
+    app.editor.develop.split = 0.1;
+    // One frame with the line drawn, so the press finds it (as a person's
+    // would: the line is on screen before it is taken).
+    live(&mut app, vec![], false);
+    let jobs4 = app.editor.viewport.stats()["jobs"].as_u64();
+    let grip4 = egui::pos2(sweep4(0), y4);
+    live(
+        &mut app,
+        vec![
+            egui::Event::PointerMoved(grip4),
+            egui::Event::PointerButton {
+                pos: grip4,
+                button: egui::PointerButton::Primary,
+                pressed: true,
+                modifiers: Default::default(),
+            },
+        ],
+        false,
+    );
+    for i in 0..120 {
+        live(
+            &mut app,
+            vec![egui::Event::PointerMoved(egui::pos2(sweep4(i), y4))],
+            true,
+        );
+    }
+    let split4 = frame_ms.take();
+    let split4_end = app.editor.develop.split;
+    live(
+        &mut app,
+        vec![egui::Event::PointerButton {
+            pos: egui::pos2(sweep4(119), y4),
+            button: egui::PointerButton::Primary,
+            pressed: false,
+            modifiers: Default::default(),
+        }],
+        false,
+    );
+    let jobs4_end = app.editor.viewport.stats()["jobs"].as_u64();
     let stats = |mut v: Vec<f64>| {
         v.sort_by(f64::total_cmp);
         let at = |q: f64| v[((v.len() - 1) as f64 * q).round() as usize];
@@ -653,9 +711,20 @@ fn benchmark_develop_latency_on_a_real_master() {
         "split moved 0.10 -> {split_end:.2}; revision unchanged {}; viewport jobs {:?} -> {:?}",
         app.editor.revision == revision,
         jobs_before,
-        app.editor.viewport.stats()["jobs"].as_u64()
+        jobs_after,
+    );
+    eprintln!("pointer sweep at 4x, After: {} ms per frame", stats(plain4));
+    eprintln!("split line drag at 4x: {} ms per frame", stats(split4));
+    eprintln!(
+        "split at 4x moved 0.10 -> {split4_end:.2}; revision unchanged {}; viewport jobs {:?} -> {:?}",
+        app.editor.revision == revision,
+        jobs4,
+        jobs4_end
     );
 }
 
 #[path = "app-station-develop-actions-tests.rs"]
 mod actions;
+
+#[path = "app-station-develop-split-tests.rs"]
+mod split;

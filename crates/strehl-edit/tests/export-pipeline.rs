@@ -739,7 +739,8 @@ fn metadata_reaches_every_format_without_changing_pixels() {
     )
     .unwrap();
     assert_eq!(tiff16(&tiff).2, tiff16(&plain).2);
-    // PNG: an iTXt XMP chunk before the image data.
+    // PNG: the Software tEXt chunk (the Strehl stamp, always) and an iTXt
+    // XMP chunk before the image data.
     let (report, png) = export(
         dir.path(),
         "m.png",
@@ -749,7 +750,7 @@ fn metadata_reaches_every_format_without_changing_pixels() {
         &metadata(),
     )
     .unwrap();
-    assert_eq!(report.metadata, vec!["xmp"]);
+    assert_eq!(report.metadata, vec!["png-text", "xmp"]);
     let bytes = std::fs::read(&png).unwrap();
     let itxt = find(&bytes, b"iTXtXML:com.adobe.xmp\0").unwrap();
     assert!(itxt < find(&bytes, b"IDAT").unwrap());

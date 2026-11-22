@@ -136,7 +136,9 @@ pub struct ExportReport {
     pub sharpened: bool,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub scale_bar: Option<ScaleBarReport>,
-    /// Metadata containers written: `tiff-tags`, `xmp`, `exif`, `recipe`.
+    /// Metadata containers written: `tiff-tags`, `xmp`, `exif`, `png-text`,
+    /// `recipe`. PNG, JPEG and AVIF always carry the Strehl stamp (`png-text`
+    /// and `xmp`, `exif` and `xmp`, `exif`); a TIFF's is its Software tag.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub metadata: Vec<String>,
 }
@@ -378,7 +380,9 @@ fn save_sdr(path: &Path, job: &Job<'_>) -> Result<(Option<StageReport>, Vec<Stri
     let coverage = alpha.as_deref();
     let meta = &settings.metadata;
     let date = job.extras.date_time.as_ref();
+    // Always built: it carries the Strehl stamp (`xmp:CreatorTool`).
     let xmp = metadata::xmp_packet(meta, date)?;
+    let described = metadata::has_text(meta, date);
     let mut written = Vec::new();
     let profile = crate::icc::icc_output_v2(settings.color_space, false);
     crate::publish::new_file_checked(
@@ -420,11 +424,13 @@ fn save_sdr(path: &Path, job: &Job<'_>) -> Result<(Option<StageReport>, Vec<Stri
                             if let Some(stamp) = &stamp {
                                 output.encoder().write_tag(Tag::DateTime, stamp.as_str())?;
                             }
-                            if let Some(packet) = &xmp {
+                            // Software (305) above is the TIFF's Strehl stamp,
+                            // so the packet is written only with text or a date.
+                            if described {
                                 // TIFF tag 700, XMLPacket, as BYTE.
                                 output
                                     .encoder()
-                                    .write_tag(Tag::Unknown(700), packet.as_slice())?;
+                                    .write_tag(Tag::Unknown(700), xmp.as_slice())?;
                             }
                             if coverage.is_some() {
                                 output
@@ -440,10 +446,8 @@ fn save_sdr(path: &Path, job: &Job<'_>) -> Result<(Option<StageReport>, Vec<Stri
                     } else {
                         write_tiff!(colortype::RGB16, &pixels);
                     }
-                    if !(meta.is_empty() && date.is_none()) {
+                    if described {
                         written.push("tiff-tags".to_owned());
-                    }
-                    if xmp.is_some() {
                         written.push("xmp".to_owned());
                     }
                     if settings.embed_recipe {
@@ -463,63 +467,35 @@ fn save_sdr(path: &Path, job: &Job<'_>) -> Result<(Option<StageReport>, Vec<Stri
                     } else {
                         image::ExtendedColorType::Rgb16
                     };
-                    if let Some(packet) = &xmp {
-                        let mut inserter = metadata::PngChunkInserter::new(
-                            &mut buffered,
-                            metadata::png_xmp_chunk(packet),
-                        );
-                        let mut encoder = image::codecs::png::PngEncoder::new(&mut inserter);
-                        encoder.set_icc_profile(profile)?;
-                        encoder.write_image(&bytes, width, height, color)?;
-                        inserter.finish()?;
-                        written.push("xmp".to_owned());
-                    } else {
-                        let mut encoder = image::codecs::png::PngEncoder::new(&mut buffered);
-                        encoder.set_icc_profile(profile)?;
-                        encoder.write_image(&bytes, width, height, color)?;
-                    }
+                    let mut chunks = metadata::png_software_chunk();
+                    chunks.extend_from_slice(&metadata::png_xmp_chunk(&xmp));
+                    let mut inserter = metadata::PngChunkInserter::new(&mut buffered, chunks);
+                    let mut encoder = image::codecs::png::PngEncoder::new(&mut inserter);
+                    encoder.set_icc_profile(profile)?;
+                    encoder.write_image(&bytes, width, height, color)?;
+                    inserter.finish()?;
+                    written.push("png-text".to_owned());
+                    written.push("xmp".to_owned());
                 }
                 ExportFormat::Jpeg => {
                     let bytes: Vec<u8> = pixels
                         .iter()
                         .map(|&v| ((u32::from(v) + 128) / 257) as u8)
                         .collect();
-                    let exif = metadata::exif_block(meta, date);
-                    if let Some(packet) = &xmp {
-                        let mut inserter = metadata::JpegSegmentInserter::new(
-                            &mut buffered,
-                            metadata::jpeg_xmp_segment(packet)?,
-                        );
-                        let mut encoder = image::codecs::jpeg::JpegEncoder::new_with_quality(
-                            &mut inserter,
-                            settings.quality,
-                        );
-                        encoder.set_icc_profile(profile)?;
-                        if let Some(exif) = exif {
-                            encoder.set_exif_metadata(exif)?;
-                            written.push("exif".to_owned());
-                        }
-                        encoder.write_image(
-                            &bytes,
-                            width,
-                            height,
-                            image::ExtendedColorType::Rgb8,
-                        )?;
-                        inserter.finish()?;
-                        written.push("xmp".to_owned());
-                    } else {
-                        let mut encoder = image::codecs::jpeg::JpegEncoder::new_with_quality(
-                            &mut buffered,
-                            settings.quality,
-                        );
-                        encoder.set_icc_profile(profile)?;
-                        encoder.write_image(
-                            &bytes,
-                            width,
-                            height,
-                            image::ExtendedColorType::Rgb8,
-                        )?;
-                    }
+                    let mut inserter = metadata::JpegSegmentInserter::new(
+                        &mut buffered,
+                        metadata::jpeg_xmp_segment(&xmp)?,
+                    );
+                    let mut encoder = image::codecs::jpeg::JpegEncoder::new_with_quality(
+                        &mut inserter,
+                        settings.quality,
+                    );
+                    encoder.set_icc_profile(profile)?;
+                    encoder.set_exif_metadata(metadata::exif_block(meta, date))?;
+                    encoder.write_image(&bytes, width, height, image::ExtendedColorType::Rgb8)?;
+                    inserter.finish()?;
+                    written.push("exif".to_owned());
+                    written.push("xmp".to_owned());
                 }
                 ExportFormat::Avif => unreachable!("AVIF has its own encoder"),
             }

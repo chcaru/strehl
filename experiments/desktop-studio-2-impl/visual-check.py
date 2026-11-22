@@ -99,6 +99,29 @@ ROUTES = {
                              "develop-versions.png"),
     "export-hdr": (["--open-run", RUN, "--route", "export", "--overlay", "export-hdr"], "export.png"),
     "export-result": (["--open-run", RUN, "--route", "export", "--overlay", "export-result"], "export.png"),
+    # The before/after split line at set places (h-develop; --develop-split is where the line sits, a
+    # fraction of the visible photograph), fitted and at 400 %; the line keeps its screen place when zoomed.
+    "develop-split-25": (["--open-run", RUN, "--route", "develop", "--develop-split", "0.25"], "develop.png"),
+    "develop-split-50": (["--open-run", RUN, "--route", "develop", "--develop-split", "0.5"], "develop.png"),
+    "develop-split-75": (["--open-run", RUN, "--route", "develop", "--develop-split", "0.75"], "develop.png"),
+    "develop-split-25-lightbox": (["--open-run", RUN, "--route", "develop", "--develop-split", "0.25",
+                                   "--theme", "lightbox"], "develop.png"),
+    "develop-split-75-lightbox": (["--open-run", RUN, "--route", "develop", "--develop-split", "0.75",
+                                   "--theme", "lightbox"], "develop.png"),
+    "develop-split-60-instrument": (["--open-run", RUN, "--route", "develop", "--develop-split", "0.6",
+                                     "--theme", "instrument"], "develop.png"),
+    "develop-split-30-400": (["--open-run", RUN, "--route", "develop", "--develop-split", "0.3",
+                              "--photo-scale", "4", "--photo-center", "0.45,0.42"], "develop.png"),
+    # Export's "Copyright and description" with sample text (in memory only), off, and Preferences.
+    "export-words": (["--open-run", RUN, "--route", "export", "--overlay", "export-words"], "export.png"),
+    "export-words-lightbox": (["--open-run", RUN, "--route", "export", "--overlay", "export-words",
+                               "--theme", "lightbox"], "export.png"),
+    "export-words-instrument": (["--open-run", RUN, "--route", "export", "--overlay", "export-words",
+                                 "--theme", "instrument"], "export.png"),
+    "export-words-off": (["--open-run", RUN, "--route", "export", "--overlay", "export-words-off"], "export.png"),
+    "preferences": (["--route", "library", "--overlay", "preferences"], "library.png"),
+    "preferences-lightbox": (["--route", "library", "--overlay", "preferences", "--theme", "lightbox"],
+                             "library.png"),
     "glance-lightbox": (["--route", "capture", "--capture-fixture", "glance", "--theme", "lightbox"], "glance.png"),
     # The flight view after the owner's run-through (g-flight): the feed of every try, a 6,000-plane
     # stack, the review once the capture ended, and a try's RAW shown from the feed.

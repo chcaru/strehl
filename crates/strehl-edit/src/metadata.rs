@@ -1,7 +1,16 @@
 //! Export metadata: TIFF tags, an XMP packet (dc:creator, dc:rights,
 //! dc:description) for PNG, JPEG and TIFF, and a TIFF-structured Exif block for
-//! JPEG and AVIF. Nothing is written unless the export asks for it, so an
-//! export without metadata keeps its earlier bytes.
+//! JPEG and AVIF. The personal text is written only when the export asks for
+//! it, and an empty field writes nothing.
+//!
+//! Every export names Strehl as the software that made it, whatever the
+//! settings say (owner, 2026-11-22: "this wouldn't be configurable. every image
+//! would get it"): TIFF Software (305), PNG `tEXt` Software and XMP
+//! `xmp:CreatorTool`, JPEG Exif Software and XMP `xmp:CreatorTool`, AVIF Exif
+//! Software. The stamp is [`CREATOR_TOOL`] without a version or commit, so an
+//! export's bytes stay a function of the photograph and its settings alone.
+//! A TIFF says it already ("Strehl development v1"), so a TIFF without text or
+//! date keeps its earlier bytes; PNG, JPEG and AVIF gained the stamp.
 //!
 //! AVIF: `avif-serialize` 0.8.9 can add an Exif item (`Aviffy::set_exif`) but
 //! has no XMP or other MIME item, so AVIF carries the Exif block only.
@@ -12,6 +21,10 @@ use quick_xml::{
 };
 use serde::{Deserialize, Serialize};
 use std::io::{self, Write};
+
+/// The software every export names: Exif/TIFF Software, PNG `tEXt` Software
+/// and XMP `xmp:CreatorTool`. Not configurable.
+pub const CREATOR_TOOL: &str = "Strehl";
 
 const MAX_ARTIST: usize = 256;
 const MAX_COPYRIGHT: usize = 512;
@@ -198,14 +211,14 @@ pub(crate) fn json_ascii<T: Serialize>(value: &T) -> Result<String> {
     Ok(out)
 }
 
-/// The XMP packet, or `None` when there is nothing to say.
-pub(crate) fn xmp_packet(
-    meta: &ExportMetadata,
-    date: Option<&ExportDateTime>,
-) -> Result<Option<Vec<u8>>> {
-    if meta.is_empty() && date.is_none() {
-        return Ok(None);
-    }
+/// True when the export carries text or a date beyond the Strehl stamp.
+pub(crate) fn has_text(meta: &ExportMetadata, date: Option<&ExportDateTime>) -> bool {
+    !meta.is_empty() || date.is_some()
+}
+
+/// The XMP packet: always `xmp:CreatorTool`, then whatever text and date the
+/// export carries.
+pub(crate) fn xmp_packet(meta: &ExportMetadata, date: Option<&ExportDateTime>) -> Result<Vec<u8>> {
     let mut w = Writer::new(Vec::new());
     w.write_event(Event::PI(BytesPI::new(
         "xpacket begin=\"\u{feff}\" id=\"W5M0MpCehiHzreSzNTczkc9d\"",
@@ -252,7 +265,7 @@ pub(crate) fn xmp_packet(
     if !meta.description.is_empty() {
         container(&mut w, "dc:description", "rdf:Alt", &meta.description)?;
     }
-    text(&mut w, "xmp:CreatorTool", "Strehl")?;
+    text(&mut w, "xmp:CreatorTool", CREATOR_TOOL)?;
     if let Some(date) = date {
         text(&mut w, "xmp:CreateDate", &date.xmp())?;
         text(&mut w, "xmp:ModifyDate", &date.xmp())?;
@@ -261,12 +274,13 @@ pub(crate) fn xmp_packet(
     w.write_event(Event::End(BytesEnd::new("rdf:RDF")))?;
     w.write_event(Event::End(BytesEnd::new("x:xmpmeta")))?;
     w.write_event(Event::PI(BytesPI::new("xpacket end=\"w\"")))?;
-    Ok(Some(w.into_inner()))
+    Ok(w.into_inner())
 }
 
 /// A little-endian TIFF block holding IFD0 ASCII tags, the form JPEG APP1 and
-/// the AVIF Exif item take. `None` when there is nothing to say.
-pub(crate) fn exif_block(meta: &ExportMetadata, date: Option<&ExportDateTime>) -> Option<Vec<u8>> {
+/// the AVIF Exif item take: always Software, then whatever text and date the
+/// export carries.
+pub(crate) fn exif_block(meta: &ExportMetadata, date: Option<&ExportDateTime>) -> Vec<u8> {
     let mut entries: Vec<(u16, String)> = Vec::new();
     let mut push = |tag: u16, text: &str| {
         if !text.is_empty() {
@@ -274,15 +288,12 @@ pub(crate) fn exif_block(meta: &ExportMetadata, date: Option<&ExportDateTime>) -
         }
     };
     push(270, &meta.description.replace('\n', " "));
-    push(305, "Strehl");
+    push(305, CREATOR_TOOL);
     if let Some(date) = date {
         push(306, &date.tiff());
     }
     push(315, &meta.artist);
     push(33_432, &meta.copyright);
-    if meta.is_empty() && date.is_none() {
-        return None;
-    }
     entries.sort_by_key(|(tag, _)| *tag);
     let mut out = Vec::new();
     out.extend_from_slice(b"II");
@@ -312,7 +323,7 @@ pub(crate) fn exif_block(meta: &ExportMetadata, date: Option<&ExportDateTime>) -
     }
     out.extend_from_slice(&0u32.to_le_bytes());
     out.extend_from_slice(&data);
-    Some(out)
+    out
 }
 
 fn crc32(bytes: &[u8]) -> u32 {
@@ -345,6 +356,20 @@ pub(crate) fn png_xmp_chunk(packet: &[u8]) -> Vec<u8> {
     chunk
 }
 
+/// A PNG `tEXt` chunk with `Software`, one of the keywords the PNG
+/// specification predefines: the program that made the file.
+pub(crate) fn png_software_chunk() -> Vec<u8> {
+    let mut body = Vec::with_capacity(32);
+    body.extend_from_slice(b"tEXt");
+    body.extend_from_slice(b"Software\0");
+    body.extend_from_slice(CREATOR_TOOL.as_bytes());
+    let mut chunk = Vec::with_capacity(body.len() + 8);
+    chunk.extend_from_slice(&((body.len() - 4) as u32).to_be_bytes());
+    chunk.extend_from_slice(&body);
+    chunk.extend_from_slice(&crc32(&body).to_be_bytes());
+    chunk
+}
+
 enum PngState {
     Signature(usize),
     Header([u8; 8], usize),
@@ -352,7 +377,7 @@ enum PngState {
     Done,
 }
 
-/// Inserts one chunk before the first `IDAT` of a PNG stream, passing every
+/// Inserts whole chunks before the first `IDAT` of a PNG stream, passing every
 /// other byte through unchanged.
 pub(crate) struct PngChunkInserter<W> {
     inner: W,

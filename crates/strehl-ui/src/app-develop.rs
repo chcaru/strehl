@@ -684,6 +684,29 @@ impl StrehlApp {
                 );
                 self.export_pane.station.succeed(text, true);
             }
+            // "Copyright and description" on, with sample text, in memory
+            // only: an offscreen launch never saves preferences, the catalog
+            // or the presets.
+            "export-words" | "export-words-off" => {
+                let on = launch == "export-words";
+                if on {
+                    self.shell.prefs.artist = "A. N. Photographer".into();
+                    self.shell.prefs.copyright = "© 2026 A. N. Photographer".into();
+                    if let Some(path) = self.editor.path.clone() {
+                        self.catalog
+                            .photo_descriptions
+                            .insert(path, "Weevil on moss, dorsal view".into());
+                    }
+                }
+                if let Some(library) = self.export_pane.station.library.as_mut() {
+                    for preset in &mut library.presets {
+                        if let presets::PresetOutput::Image(image) = &mut preset.output {
+                            image.copyright = on;
+                            image.description = on;
+                        }
+                    }
+                }
+            }
             _ => {}
         }
         ctx.request_repaint();
@@ -1050,6 +1073,98 @@ impl StrehlApp {
         self.catalog.path.as_deref().map(presets::library_path)
     }
 
+    /// This photograph's description for its exports (empty: none).
+    pub(super) fn photo_description(&self) -> String {
+        self.editor
+            .path
+            .as_ref()
+            .and_then(|path| self.catalog.photo_descriptions.get(path))
+            .cloned()
+            .unwrap_or_default()
+    }
+
+    /// The text "Copyright and description" writes, as a batch takes it:
+    /// cleaned as Preferences keeps it, the description as the catalog does.
+    pub(super) fn export_batch_text(&self) -> BatchText {
+        use crate::studio_preferences::{MAX_ARTIST_BYTES, MAX_COPYRIGHT_BYTES, export_line};
+        BatchText {
+            artist: export_line(&self.shell.prefs.artist, MAX_ARTIST_BYTES),
+            copyright: export_line(&self.shell.prefs.copyright, MAX_COPYRIGHT_BYTES),
+            description: self.photo_description(),
+        }
+    }
+
+    /// Keep what was typed into a words line in Export: the artist and
+    /// copyright in Preferences (`studio.json`), the description in the
+    /// catalog against this photograph. Empty removes it.
+    pub(super) fn set_export_words(
+        &mut self,
+        field: exporting::WordsField,
+        text: &str,
+    ) -> anyhow::Result<()> {
+        use crate::studio_preferences::{MAX_ARTIST_BYTES, MAX_COPYRIGHT_BYTES, export_line};
+        use exporting::WordsField;
+        match field {
+            WordsField::Artist | WordsField::Copyright => {
+                let max = if field == WordsField::Artist {
+                    MAX_ARTIST_BYTES
+                } else {
+                    MAX_COPYRIGHT_BYTES
+                };
+                let line = export_line(text, max);
+                let prefs = &mut self.shell.prefs;
+                let slot = if field == WordsField::Artist {
+                    &mut prefs.artist
+                } else {
+                    &mut prefs.copyright
+                };
+                if *slot != line {
+                    *slot = line;
+                    self.shell.prefs_dirty = true;
+                }
+            }
+            WordsField::Description => {
+                let path = self
+                    .editor
+                    .path
+                    .clone()
+                    .ok_or_else(|| anyhow::anyhow!("Open a photograph first"))?;
+                let description = text
+                    .replace("\r\n", "\n")
+                    .lines()
+                    .map(str::trim_end)
+                    .collect::<Vec<_>>()
+                    .join("\n")
+                    .trim()
+                    .to_owned();
+                strehl_edit::ExportMetadata {
+                    description: description.clone(),
+                    ..Default::default()
+                }
+                .validate()?;
+                let previous = if description.is_empty() {
+                    self.catalog.photo_descriptions.remove(&path)
+                } else {
+                    self.catalog
+                        .photo_descriptions
+                        .insert(path.clone(), description)
+                };
+                if let Err(error) = self.catalog.save() {
+                    match previous {
+                        Some(previous) => {
+                            self.catalog.photo_descriptions.insert(path, previous);
+                        }
+                        None => {
+                            self.catalog.photo_descriptions.remove(&path);
+                        }
+                    }
+                    return Err(error.context("The description was not saved"));
+                }
+            }
+        }
+        Ok(())
+    }
+
     /// Build the Export view for this frame and run `show` with it.
     fn with_export_view<R>(
         &mut self,
@@ -1095,6 +1210,11 @@ impl StrehlApp {
             }),
             (None, None) => None,
         };
+        let (artist, copyright) = (
+            self.shell.prefs.artist.clone(),
+            self.shell.prefs.copyright.clone(),
+        );
+        let description = self.photo_description();
         let view = ExportView {
             palette: &palette,
             library: &library,
@@ -1122,6 +1242,11 @@ impl StrehlApp {
             view_bundle: self
                 .view_bundle_source()
                 .map(|_| self.view_bundle_export.is_some()),
+            words: exporting::Words {
+                artist: &artist,
+                copyright: &copyright,
+                description: &description,
+            },
         };
         let panel = &mut self.export_pane.station.panel;
         Some(show(&view, panel))
@@ -1521,6 +1646,7 @@ impl StrehlApp {
                     .succeed(format!("Copied {text}"), false);
             }
             ExportIntent::DismissFeedback => self.export_pane.station.dismiss(),
+            ExportIntent::SetWords(field, text) => self.set_export_words(field, &text)?,
             ExportIntent::ExportTicked => self.start_export_batch(None)?,
             ExportIntent::ExportAgain(id) => self.start_export_batch(Some(id))?,
             ExportIntent::ExportViewBundle => {
@@ -1584,7 +1710,13 @@ impl StrehlApp {
                     .cloned()
                     .ok_or_else(|| anyhow::anyhow!("This export is no longer listed"))?;
                 let mut settings = record.settings.clone();
-                settings.metadata = Default::default();
+                // Again with the switches the file was written with; the
+                // text is today's (a preset never carries it).
+                let written = std::mem::take(&mut settings.metadata);
+                let (copyright, description) = (
+                    !(written.artist.is_empty() && written.copyright.is_empty()),
+                    !written.description.is_empty(),
+                );
                 let mut one = library.clone();
                 one.presets.clear();
                 let stem = record
@@ -1598,8 +1730,8 @@ impl StrehlApp {
                     &presets::sanitize_stem(&stem),
                     presets::PresetOutput::Image(presets::ImagePreset {
                         settings,
-                        copyright: false,
-                        description: false,
+                        copyright,
+                        description,
                     }),
                 )?;
                 one
@@ -1630,7 +1762,7 @@ impl StrehlApp {
             .file_stem()
             .map_or_else(|| "photograph".into(), |s| s.to_string_lossy().into_owned());
         let date = date_text();
-        let text = BatchText::default();
+        let text = self.export_batch_text();
         let planned = exporting::plan_batch(
             &library,
             &NameFields {

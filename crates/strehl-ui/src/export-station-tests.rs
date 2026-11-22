@@ -109,7 +109,7 @@ fn job() -> crate::development_job::DevelopmentJob {
 fn a_batch_writes_every_file_through_one_job_with_a_phase_per_file() {
     let dir = tempfile::tempdir().unwrap();
     let master = dir.path().join("master.tiff");
-    std::fs::write(&master, b"linear master bytes").unwrap();
+    strehl_edit::save_linear_tiff(&master, job().image(false)).unwrap();
     let mut lib = library();
     for preset in &mut lib.presets {
         preset.enabled = preset.name != "HDR";
@@ -146,8 +146,27 @@ fn a_batch_writes_every_file_through_one_job_with_a_phase_per_file() {
     let archive = files.iter().find(|f| f.preset == "Archive").unwrap();
     assert_eq!(
         std::fs::read(&archive.path).unwrap(),
-        b"linear master bytes"
+        std::fs::read(&master).unwrap()
     );
+    // Every file of the batch names Strehl (h-develop): the Web JPEG in its
+    // Exif and XMP, the Print TIFF in its Software tag, and the Archive, a
+    // copy of the master, in the master's. `strehl-edit`'s `export-stamp.rs`
+    // reads each container properly; here the batch path is checked.
+    for (preset, stamp) in [
+        ("Web", &b"<xmp:CreatorTool>Strehl</xmp:CreatorTool>"[..]),
+        ("Print", b"Strehl development v1\0"),
+        ("Archive", b"Strehl scene-linear master v1\0"),
+    ] {
+        let file = files.iter().find(|f| f.preset == preset).unwrap();
+        let bytes = std::fs::read(&file.path).unwrap();
+        assert!(
+            bytes.windows(stamp.len()).any(|w| w == stamp),
+            "{preset} does not name Strehl"
+        );
+        if preset == "Web" {
+            assert!(bytes.windows(6).any(|w| w == b"Exif\0\0"));
+        }
+    }
     let end = progress.snapshot();
     assert_eq!((end.phase, end.fraction()), (BatchPhase::Done, 1.0));
     // A second run never overwrites: the same plan now fails file by file.
@@ -207,6 +226,7 @@ fn the_inspector_shows_the_batch_button_and_ticks_presets() {
                             feedback: None,
                             note: None,
                             view_bundle: None,
+                            words: Words::default(),
                         };
                         intents = inspector(ui, panel, &view);
                     });
