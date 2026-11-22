@@ -941,41 +941,57 @@ pub(crate) fn progress_bar(
     painter.rect_filled(filled, 0.0, color);
 }
 
-/// The Strehl mark from `assets/strehl.svg` (64-unit viewBox): three focal
-/// planes stroked in the accent, nearest at full strength, and the resolved
-/// point filled.
-pub(crate) fn brand_mark(painter: &egui::Painter, rect: Rect, t: &Tokens) {
-    let scale = rect.width().min(rect.height()) / 64.0;
-    let origin = rect.center() - egui::vec2(32.0, 32.0) * scale;
-    let at = |x: f32, y: f32| origin + egui::vec2(x, y) * scale;
-    let stroke_width = (3.0 * scale).max(1.0);
-    for (y, opacity) in [(40.0, 0.4), (32.0, 0.7), (24.0, 1.0)] {
-        let points = vec![
-            at(8.0, y),
-            at(32.0, y - 14.0),
-            at(56.0, y),
-            at(32.0, y + 14.0),
-        ];
+/// The Strehl mark from `assets/strehl.svg`: a disc cut into planes, the gold
+/// plane in focus and the rest thinning and darkening below it. The mark keeps
+/// the application icon's colours in every theme. At title-bar size it uses the
+/// generator's hand-fitted 20 px rows, with each edge on a physical pixel.
+pub(crate) fn brand_mark(painter: &egui::Painter, rect: Rect) {
+    const INKS: [[u8; 3]; 5] = [
+        [0xe6, 0xb4, 0x50],
+        [0xe0, 0x89, 0x3e],
+        [0xcc, 0x5a, 0x33],
+        [0xa2, 0x3f, 0x2c],
+        [0x74, 0x37, 0x2a],
+    ];
+    const ROWS: [(f32, f32); 5] = [
+        (0.0, 9.0),
+        (10.0, 12.0),
+        (13.0, 14.0),
+        (16.0, 17.0),
+        (19.0, 20.0),
+    ];
+    let pixel = 1.0 / painter.pixels_per_point();
+    let snap = |y: f32| (y / pixel).round() * pixel;
+    let radius = rect.width().min(rect.height()) / 2.0;
+    let centre = rect.center();
+    let unit = radius / 10.0;
+    let top = centre.y - radius;
+    let half_width = |y: f32| (radius * radius - (y - centre.y).powi(2)).max(0.0).sqrt();
+    for ((first, end), [r, g, b]) in ROWS.into_iter().zip(INKS) {
+        let y0 = snap(top + first * unit);
+        let y1 = snap(top + end * unit).max(y0 + pixel);
+        let steps = 8;
+        let rows: Vec<f32> = (0..=steps)
+            .map(|step| y0 + (y1 - y0) * step as f32 / steps as f32)
+            .collect();
+        let mut points: Vec<Pos2> = rows
+            .iter()
+            .map(|&y| egui::pos2(centre.x + half_width(y), y))
+            .collect();
+        points.extend(
+            rows.iter()
+                .rev()
+                .map(|&y| egui::pos2(centre.x - half_width(y), y)),
+        );
+        if points.first() == points.last() {
+            points.pop();
+        }
         painter.add(egui::Shape::convex_polygon(
-            points.clone(),
-            t.panel,
+            points,
+            Color32::from_rgb(r, g, b),
             Stroke::NONE,
         ));
-        painter.add(egui::Shape::closed_line(
-            points,
-            Stroke::new(stroke_width, t.accent.gamma_multiply(opacity)),
-        ));
     }
-    painter.add(egui::Shape::convex_polygon(
-        vec![
-            at(25.0, 24.0),
-            at(32.0, 20.0),
-            at(39.0, 24.0),
-            at(32.0, 28.0),
-        ],
-        t.accent,
-        Stroke::NONE,
-    ));
 }
 
 #[cfg(test)]

@@ -13,19 +13,37 @@ import zlib
 
 ROOT = Path(__file__).resolve().parent
 SIZES = (16, 20, 24, 32, 40, 48, 64, 128, 256)
-DARK = "#141821"
-GOLD = "#e6b450"
-# Back to front: three focal planes, with one resolved point on the top plane.
-PLANES = (
-    (((8, 40), (32, 26), (56, 40), (32, 54)), "#8f7748"),
-    (((8, 32), (32, 18), (56, 32), (32, 46)), "#b99a59"),
-    (((8, 24), (32, 10), (56, 24), (32, 38)), GOLD),
-)
-FOCUS = ((25, 24), (32, 20), (39, 24), (32, 28))
+# Sunset: a disc cut into horizontal planes. The plane in focus is the solid gold
+# cap; the planes below it thin out and darken as they fall away from focus.
+INKS = ("#e6b450", "#e0893e", "#cc5a33", "#a23f2c", "#74372a", "#74372a")
+# The vector master in a 64-unit frame: a disc of radius 30 about (32, 32), and
+# the top and bottom edge of each plane.
+RADIUS = 30
+BANDS = ((2, 27.75), (29.75, 35.25), (38, 42.25), (46, 49.25), (53.5, 55.75), (60.5, 62))
+# Up to 48 px the planes are fitted by hand to whole pixel rows, because rounding
+# the master merges planes or leaves smudges: the disc radius, then each plane's
+# first row and the row after its last. Every gap keeps at least one pixel.
+FITTED = {
+    16: (8, ((0, 7), (8, 10), (11, 12), (13, 14), (15, 16))),
+    20: (10, ((0, 9), (10, 12), (13, 14), (16, 17), (19, 20))),
+    24: (12, ((0, 10), (11, 13), (14, 16), (17, 18), (20, 21), (23, 24))),
+    32: (15, ((1, 14), (15, 18), (19, 21), (23, 25), (27, 28), (30, 31))),
+    40: (19, ((1, 17), (19, 22), (24, 26), (29, 31), (34, 35), (38, 39))),
+    48: (23, ((1, 21), (23, 27), (29, 32), (35, 37), (40, 42), (46, 47))),
+}
 
 
 def color(hex_value):
     return tuple(bytes.fromhex(hex_value.removeprefix("#"))) + (255,)
+
+
+def layout(size):
+    """The disc radius and each plane's pixel rows at one icon size."""
+    if size in FITTED:
+        return FITTED[size]
+    factor = size / 64
+    snap = lambda value: math.floor(value * factor + 0.5)
+    return RADIUS * factor, tuple((snap(top), snap(bottom)) for top, bottom in BANDS)
 
 
 class Image:
@@ -46,30 +64,6 @@ class Image:
             offset = (y * self.width + left) * 4
             self.pixels[offset:offset + (right - left) * 4] = bytes(ink) * (right - left)
 
-    def polygon(self, points, ink):
-        edges = list(zip(points, points[1:] + points[:1]))
-        for y in range(math.floor(min(p[1] for p in points)), math.ceil(max(p[1] for p in points))):
-            scan = y + 0.5
-            crossings = sorted(x1 + (scan - y1) * (x2 - x1) / (y2 - y1)
-                               for (x1, y1), (x2, y2) in edges
-                               if min(y1, y2) <= scan < max(y1, y2))
-            for left, right in zip(crossings[::2], crossings[1::2]):
-                self.span(y, left, right, ink)
-
-    def outline(self, points, ink, width):
-        radius = width / 2
-        for (x1, y1), (x2, y2) in zip(points, points[1:] + points[:1]):
-            length = math.hypot(x2 - x1, y2 - y1)
-            dx, dy = -(y2 - y1) * radius / length, (x2 - x1) * radius / length
-            self.polygon(((x1 + dx, y1 + dy), (x2 + dx, y2 + dy),
-                          (x2 - dx, y2 - dy), (x1 - dx, y1 - dy)), ink)
-        for x, y in points:
-            for row in range(math.floor(y - radius), math.ceil(y + radius)):
-                delta = row + 0.5 - y
-                if abs(delta) <= radius:
-                    half = math.sqrt(radius * radius - delta * delta)
-                    self.span(row, x - half, x + half, ink)
-
     def paste(self, image, left, top):
         for y in range(image.height):
             for x in range(image.width):
@@ -81,37 +75,30 @@ class Image:
 
 
 def render(size):
-    scale = 8
-    image = Image(size * scale)
-    factor = size * scale / 64
-    point = lambda p: tuple(v * factor for v in p)
-    # At 16 and 20 px, keep a full physical pixel of edge rather than thinning
-    # the mark into an indistinct hairline. The vector master is the large form.
-    width = max(size * 3 / 64, 1) * scale
-    for vertices, ink in PLANES:
-        points = tuple(map(point, vertices))
-        image.polygon(points, color(DARK))
-        image.outline(points, color(ink), width)
-    image.polygon(tuple(map(point, FOCUS)), color(GOLD))
+    """Every plane starts and ends on a pixel row, so only the disc edge needs
+    coverage. Each pixel keeps its plane's full colour and carries the disc's
+    coverage as alpha: no dark fringe on light desktops or light fringe on dark."""
+    radius, planes = layout(size)
+    centre = size / 2
     result = Image(size)
-    # Area sampling in premultiplied-alpha space preserves the gold edge on
-    # both light and dark desktops without a black fringe or resize ringing.
-    for y in range(size):
-        for x in range(size):
-            red = green = blue = count = 0
-            for dy in range(scale):
-                offset = (((y * scale + dy) * image.width) + x * scale) * 4
-                for dx in range(scale):
-                    at = offset + dx * 4
-                    if image.pixels[at + 3]:
-                        red += image.pixels[at]
-                        green += image.pixels[at + 1]
-                        blue += image.pixels[at + 2]
-                        count += 1
-            if count:
-                at = (y * size + x) * 4
-                result.pixels[at:at + 4] = bytes((round(red / count), round(green / count),
-                                                round(blue / count), round(255 * count / scale**2)))
+    steps = 16
+    for index, (top, bottom) in enumerate(planes):
+        ink = color(INKS[index])[:3]
+        for y in range(top, bottom):
+            cover = [0.0] * size
+            for step in range(steps):
+                dy = y + (step + 0.5) / steps - centre
+                if abs(dy) >= radius:
+                    continue
+                half = math.sqrt(radius * radius - dy * dy)
+                left, right = centre - half, centre + half
+                for x in range(max(0, math.floor(left)), min(size, math.ceil(right))):
+                    cover[x] += max(0.0, min(x + 1, right) - max(x, left)) / steps
+            for x, amount in enumerate(cover):
+                alpha = round(255 * min(1.0, amount))
+                if alpha:
+                    at = (y * size + x) * 4
+                    result.pixels[at:at + 4] = bytes(ink + (alpha,))
     return result
 
 
@@ -157,25 +144,22 @@ def ico(images):
 
 
 def svg():
-    shapes = []
-    for vertices, color in PLANES:
-        points = " ".join(f"{x},{y}" for x, y in vertices)
-        shapes.append(f'  <polygon points="{points}" fill="{DARK}" stroke="{color}" stroke-width="3" stroke-linejoin="round"/>')
-    points = " ".join(f"{x},{y}" for x, y in FOCUS)
-    shapes.append(f'  <polygon points="{points}" fill="{GOLD}"/>')
+    shapes = [f'    <rect x="2" y="{top}" width="60" height="{bottom - top}" fill="{ink}"/>'
+              for (top, bottom), ink in zip(BANDS, INKS)]
     return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">\n'
-            '  <title>Strehl — three focal planes, one resolved point</title>\n'
-            + "\n".join(shapes) + "\n</svg>\n").encode()
+            '  <title>Strehl: the plane in focus, and the stack falling away below it</title>\n'
+            f'  <clipPath id="disc"><circle cx="32" cy="32" r="{RADIUS}"/></clipPath>\n'
+            '  <g clip-path="url(#disc)">\n' + "\n".join(shapes) + "\n  </g>\n</svg>\n").encode()
 
 
 def preview(images):
-    sheet = Image(720, 260, color("#10141c"))
+    sheet = Image(720, 260, color("#111112"))
     digits = {
         "0": (7, 5, 5, 5, 7), "1": (2, 6, 2, 2, 7), "2": (7, 1, 7, 4, 7),
         "3": (7, 1, 7, 1, 7), "4": (5, 5, 7, 1, 1), "5": (7, 4, 7, 1, 7),
         "6": (7, 4, 7, 5, 7), "7": (7, 1, 2, 2, 2), "8": (7, 5, 7, 5, 7),
     }
-    for row, background in enumerate(("#10141c", "#ededeb")):
+    for row, background in enumerate(("#111112", "#ededeb")):
         for y in range(row * 130, (row + 1) * 130):
             sheet.span(y, 0, 720, color(background))
         x = 20

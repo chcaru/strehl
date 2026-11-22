@@ -1,9 +1,18 @@
 # Strehl application artwork
 
-Three focal planes and one resolved point. The mark uses the workspace's Ayu
-gold and dark ink, with a transparent outer silhouette. Small Windows frames
-have a minimum one-pixel edge. UI navigation uses the related line vocabulary
-in `src/workspace-icons.rs`.
+Sunset: a disc cut into horizontal planes. The plane in focus is the solid gold
+cap, the workspace's accent; the planes below it thin out and darken from
+orange to brown as they fall away from focus. The disc sits on a transparent
+silhouette, so it carries no tile and reads on dark and light taskbars alike.
+Up to 48 px every plane is fitted by hand to whole pixel rows and every gap
+keeps at least one pixel; larger sizes round the vector master to pixel rows.
+Only the disc edge is antialiased, as alpha over the plane's own colour. The
+title bar draws the same mark (`brand_mark` in `src/studio-widgets.rs`) from
+the 20 px rows. UI navigation uses the line vocabulary in
+`src/workspace-icons.rs`.
+
+The mark came out of three rounds of candidates, drawn by
+`experiments/app-icon-2026-11-21/build.py`; this is round 2's Sunset.
 
 The icon sources, generator and generated assets are MIT OR Apache-2.0, like
 Strehl. No third-party artwork or icon font is included.

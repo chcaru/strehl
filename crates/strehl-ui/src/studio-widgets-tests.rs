@@ -443,31 +443,36 @@ fn a_check_row_reports_its_link_and_the_tab_marks_the_open_one() {
 }
 
 #[test]
-fn the_brand_mark_draws_three_planes_and_the_resolved_point_inside_its_square() {
+fn the_brand_mark_draws_the_gold_plane_and_the_darkening_planes_inside_its_square() {
     let ctx = context();
     let rect = Rect::from_min_size(egui::pos2(14.0, 12.0), egui::vec2(19.0, 19.0));
     let output = frame(&ctx, 0.0, vec![], |ui| {
-        brand_mark(ui.painter(), rect, &GRAPHITE);
+        brand_mark(ui.painter(), rect);
     });
-    let outlines: Vec<_> = output
+    let planes: Vec<_> = output
         .shapes
         .iter()
         .filter_map(|shape| match &shape.shape {
-            egui::Shape::Path(path) if path.closed && path.fill == Color32::TRANSPARENT => {
-                match path.stroke.color {
-                    egui::epaint::ColorMode::Solid(color) => Some(color),
-                    _ => None,
-                }
+            egui::Shape::Path(path) if path.closed && path.fill != Color32::TRANSPARENT => {
+                Some((path.fill, shape.shape.visual_bounding_rect()))
             }
             _ => None,
         })
         .collect();
-    assert_eq!(outlines.len(), 3);
+    assert_eq!(planes.len(), 5);
     assert_eq!(
-        outlines[2], GRAPHITE.accent,
-        "the nearest plane is full strength"
+        planes[0].0, GRAPHITE.accent,
+        "the plane in focus is the accent gold"
     );
-    assert!(outlines[0].a() < outlines[2].a());
+    for pair in planes.windows(2) {
+        assert!(pair[1].0.r() < pair[0].0.r(), "each lower plane is darker");
+        assert!(
+            pair[1].1.top() > pair[0].1.bottom(),
+            "a gap separates the planes"
+        );
+    }
+    assert!((planes[0].1.top() - rect.top()).abs() < 1.0);
+    assert!((planes[4].1.bottom() - rect.bottom()).abs() < 1.0);
     for shape in painted(&output) {
         assert!(rect.expand(1.0).contains_rect(shape.visual_bounding_rect()));
     }

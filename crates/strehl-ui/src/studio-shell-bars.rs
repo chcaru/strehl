@@ -632,7 +632,7 @@ impl StrehlApp {
             egui::pos2(rect.left() + 9.5, rect.center().y),
             egui::vec2(19.0, 19.0),
         );
-        w::brand_mark(ui.painter(), mark, t);
+        w::brand_mark(ui.painter(), mark);
         w::paint_galley_at(
             ui.painter(),
             mark.right() + 9.0,
