@@ -1508,7 +1508,7 @@ impl StrehlApp {
 
     fn preferences_window(&mut self, ctx: &egui::Context) {
         let mut open = true;
-        let mut prefs = self.shell.prefs;
+        let mut prefs = self.shell.prefs.clone();
         egui::Window::new("Preferences")
             .id(egui::Id::new("studio-preferences"))
             .open(&mut open)
@@ -1555,6 +1555,47 @@ impl StrehlApp {
                         egui::RichText::new(
                             "The surround is the canvas around the photograph. Views not yet \
                              redrawn for Studio 2 keep the Graphite palette on Lightbox.",
+                        )
+                        .size(scale::SECONDARY)
+                        .color(studio_theme::tokens(ui.ctx()).ink3),
+                    )
+                    .wrap(),
+                );
+                // The owner's standing text for exports (h-develop).
+                w::section(ui, "Exports", |_| {});
+                for (label, text, hint, max) in [
+                    (
+                        "Artist",
+                        &mut prefs.artist,
+                        "Your name",
+                        crate::studio_preferences::MAX_ARTIST_BYTES,
+                    ),
+                    (
+                        "Copyright",
+                        &mut prefs.copyright,
+                        "© 2026 Your name",
+                        crate::studio_preferences::MAX_COPYRIGHT_BYTES,
+                    ),
+                ] {
+                    ui.horizontal(|ui| {
+                        ui.label(label);
+                        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                            ui.add(
+                                egui::TextEdit::singleline(text)
+                                    .id_salt(("preferences-export", label))
+                                    .hint_text(hint)
+                                    .char_limit(max)
+                                    .desired_width(250.0),
+                            );
+                        });
+                    });
+                }
+                ui.add(
+                    egui::Label::new(
+                        egui::RichText::new(
+                            "Written into exported files when Copyright and description is on \
+                             in Export. An empty field writes nothing. Every export also names \
+                             Strehl as the software that made it, always.",
                         )
                         .size(scale::SECONDARY)
                         .color(studio_theme::tokens(ui.ctx()).ink3),

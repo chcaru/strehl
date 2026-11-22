@@ -139,6 +139,7 @@ fn agent_exports_use_the_real_writer_and_preserve_existing_files() {
     std::fs::create_dir(&destination).unwrap();
     app.output = destination.join("not-the-chosen-destination");
     app.set_export_directory(destination.clone()).unwrap();
+    app.shell.prefs.artist = "Chris Caruso".into();
     let recipe = app.editor.recipe.clone();
     for (format, suffix, image_format) in [
         ("tiff", "tiff", image::ImageFormat::Tiff),
@@ -164,6 +165,22 @@ fn agent_exports_use_the_real_writer_and_preserve_existing_files() {
         let bytes = std::fs::read(&path).unwrap();
         let decoded = image::load_from_memory_with_format(&bytes, image_format).unwrap();
         assert_eq!((decoded.width(), decoded.height()), (16, 12));
+        // Every export names Strehl, the agent's too (h-develop); the owner's
+        // words go only where a preset's switch asks for them.
+        let contains = |needle: &[u8]| bytes.windows(needle.len()).any(|w| w == needle);
+        assert!(
+            match suffix {
+                "tiff" => contains(b"Strehl development v1"),
+                "png" => contains(b"tEXtSoftware\0Strehl"),
+                _ =>
+                    contains(b"Exif\0\0") && contains(b"<xmp:CreatorTool>Strehl</xmp:CreatorTool>"),
+            },
+            "{name} does not name Strehl"
+        );
+        assert!(
+            !contains(b"Chris Caruso"),
+            "{name} carries the owner's words"
+        );
         assert!(app.apply_agent_command(export(value)).is_err());
         assert!(app.editor.exporting.is_none());
         assert_eq!(std::fs::read(path).unwrap(), bytes);

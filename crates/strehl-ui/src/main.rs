@@ -227,6 +227,10 @@ pub struct LaunchOptions {
     /// `--depth-brush`: Develop opens with the depth brush out (offscreen
     /// checks of the rail it shares with the Stack station).
     pub(crate) depth_brush: bool,
+    /// `--develop-split F`: Develop opens in the before/after split view with
+    /// the line at F (0 to 1) of the visible photograph (offscreen checks;
+    /// the screenshot path cannot drag).
+    pub(crate) develop_split: Option<f32>,
     /// `--capture-fixture plan|flight|glance` (`plan+rig`, `plan+guide`,
     /// `plan+schedule`... with a panel open; `flight+long`, a 6,000-plane
     /// stack; `flight+done`, the review once it ended; `flight+show`, a
@@ -516,6 +520,8 @@ fn main() -> eframe::Result {
                         | "develop-save-version"
                         | "export-hdr"
                         | "export-result"
+                        | "export-words"
+                        | "export-words-off"
                 )
             }) {
                 eprintln!(
@@ -523,7 +529,7 @@ fn main() -> eframe::Result {
                      library-menu-move|library-select|library-list|library-delete|\
                      library-delete-sources|library-delete-confirm|subject-menu|\
                      subject-menu-move|subject-select|develop-save-version|export-hdr|\
-                     export-result"
+                     export-result|export-words|export-words-off"
                 );
                 std::process::exit(2);
             }
@@ -531,6 +537,17 @@ fn main() -> eframe::Result {
         }
         if arg == "--depth-brush" {
             launch.depth_brush = true;
+            continue;
+        }
+        if arg == "--develop-split" {
+            launch.develop_split = args
+                .next()
+                .and_then(|v| v.to_str().and_then(|v| v.parse::<f32>().ok()))
+                .filter(|v| v.is_finite() && (0.0..=1.0).contains(v));
+            if launch.develop_split.is_none() {
+                eprintln!("Use --develop-split F (where the line sits, 0 to 1)");
+                std::process::exit(2);
+            }
             continue;
         }
         if arg == "--plane-hold" {

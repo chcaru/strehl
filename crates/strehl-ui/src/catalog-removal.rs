@@ -28,6 +28,7 @@ pub(crate) struct RemovedRecords {
     pub versions: Vec<(usize, PhotoVersion)>,
     pub exports: Vec<(usize, PhotoExport)>,
     pub export_directories: Vec<(PathBuf, PathBuf)>,
+    pub photo_descriptions: Vec<(PathBuf, String)>,
     pub selected: Option<NodeId>,
 }
 impl RemovedRecords {
@@ -298,6 +299,7 @@ impl Catalog {
             versions: Vec::new(),
             exports: Vec::new(),
             export_directories: Vec::new(),
+            photo_descriptions: Vec::new(),
             selected: self.selected,
         };
         records.nodes = take_where(&mut self.nodes, |n| ids.contains(&n.id));
@@ -317,6 +319,17 @@ impl Catalog {
         for key in keys {
             if let Some(value) = self.export_directories.remove(&key) {
                 records.export_directories.push((key, value));
+            }
+        }
+        let keys: Vec<PathBuf> = self
+            .photo_descriptions
+            .keys()
+            .filter(|k| outputs.contains(*k))
+            .cloned()
+            .collect();
+        for key in keys {
+            if let Some(value) = self.photo_descriptions.remove(&key) {
+                records.photo_descriptions.push((key, value));
             }
         }
         if self.selected.is_some_and(|id| ids.contains(&id)) {
@@ -380,6 +393,9 @@ impl Catalog {
             for (key, _) in &records.export_directories {
                 self.export_directories.remove(key);
             }
+            for (key, _) in &records.photo_descriptions {
+                self.photo_descriptions.remove(key);
+            }
             return Err(error);
         }
         Ok(())
@@ -392,6 +408,9 @@ impl Catalog {
         put_where(&mut self.photo_exports, &records.exports);
         for (key, value) in &records.export_directories {
             self.export_directories.insert(key.clone(), value.clone());
+        }
+        for (key, value) in &records.photo_descriptions {
+            self.photo_descriptions.insert(key.clone(), value.clone());
         }
         if records.selected.is_some_and(|id| self.node(id).is_some()) {
             self.selected = records.selected;

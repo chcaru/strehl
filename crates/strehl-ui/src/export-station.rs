@@ -258,6 +258,26 @@ pub(crate) struct ExportView<'a> {
     /// An independent-views session can leave as a view bundle; `true`
     /// while one is being written.
     pub view_bundle: Option<bool>,
+    /// What "Copyright and description" writes.
+    pub words: Words<'a>,
+}
+
+/// The text "Copyright and description" writes: the owner's artist and
+/// copyright (Preferences, `studio.json`) and this photograph's description
+/// (the catalog). Presets carry only the switch.
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub(crate) struct Words<'a> {
+    pub artist: &'a str,
+    pub copyright: &'a str,
+    pub description: &'a str,
+}
+
+/// One of the three texts, as edited in Export.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum WordsField {
+    Artist,
+    Copyright,
+    Description,
 }
 
 /// The last batch's result or an error, in words.
@@ -275,6 +295,10 @@ pub(crate) struct ExportPanel {
     /// The preset shown in the editor (and in the canvas preview).
     pub selected: Option<String>,
     pub template_draft: Option<String>,
+    /// A words field's text while it has the keyboard; `None` otherwise, so
+    /// the field always shows the current text (another photograph's
+    /// description never lingers).
+    pub words_draft: Option<(WordsField, String)>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -295,6 +319,9 @@ pub(crate) enum ExportIntent {
     ExportViewBundle,
     CancelViewBundle,
     DismissFeedback,
+    /// Artist or copyright (into Preferences) or this photograph's
+    /// description (into the catalog), as typed.
+    SetWords(WordsField, String),
 }
 
 /// Sharpening choices "for the size". `Screen` is the conservative default
@@ -355,7 +382,7 @@ pub(crate) fn inspector_body(
             {
                 preset_editor(ui, view, preset, &mut intents);
             }
-            every_file(ui, view, &mut intents);
+            every_file(ui, panel, view, &mut intents);
             name_and_place(ui, panel, view, &mut intents);
             if let Some(running) = view.view_bundle {
                 view_bundle(ui, view.palette, running, &mut intents);
@@ -751,7 +778,12 @@ fn preset_editor(
     }
 }
 
-fn every_file(ui: &mut Ui, view: &ExportView<'_>, intents: &mut Vec<ExportIntent>) {
+fn every_file(
+    ui: &mut Ui,
+    panel: &mut ExportPanel,
+    view: &ExportView<'_>,
+    intents: &mut Vec<ExportIntent>,
+) {
     let pal = view.palette;
     style::sect(ui, pal, "In every file", None);
     let images: Vec<(&ExportPreset, &ImagePreset)> = view
@@ -822,6 +854,7 @@ fn every_file(ui: &mut Ui, view: &ExportView<'_>, intents: &mut Vec<ExportIntent
             !words_on,
         );
     }
+    words_lines(ui, panel, view, words_on, intents);
     let tiffs: Vec<_> = images
         .iter()
         .filter(|(_, i)| i.settings.format == ExportFormat::Tiff)
@@ -850,6 +883,113 @@ fn every_file(ui: &mut Ui, view: &ExportView<'_>, intents: &mut Vec<ExportIntent
             style::text(ui, note, style::SMALL, pal.ink_2);
         });
     }
+}
+
+/// Under "Copyright and description": exactly what it writes, each line
+/// editable in place. Artist and copyright are the owner's (kept in
+/// Preferences, for every photograph), the description this photograph's
+/// (kept in the catalog). Then the Strehl stamp, which every file carries.
+fn words_lines(
+    ui: &mut Ui,
+    panel: &mut ExportPanel,
+    view: &ExportView<'_>,
+    on: bool,
+    intents: &mut Vec<ExportIntent>,
+) {
+    let pal = view.palette;
+    let ink = if on { pal.ink } else { pal.ink_3 };
+    let fields = [
+        (
+            WordsField::Artist,
+            "Artist",
+            view.words.artist,
+            "Not set · your name",
+            crate::studio_preferences::MAX_ARTIST_BYTES,
+        ),
+        (
+            WordsField::Copyright,
+            "Copyright",
+            view.words.copyright,
+            "Not set · © 2026 Your name",
+            crate::studio_preferences::MAX_COPYRIGHT_BYTES,
+        ),
+        (
+            WordsField::Description,
+            "Description",
+            view.words.description,
+            "Not set · what it shows",
+            2048,
+        ),
+    ];
+    for (field, label, value, hint, limit) in fields {
+        ui.horizontal_top(|ui| {
+            ui.spacing_mut().item_spacing.x = 8.0;
+            words_label(ui, label, pal);
+            let mut text = match panel.words_draft.take() {
+                Some((f, text)) if f == field => text,
+                other => {
+                    panel.words_draft = other;
+                    value.to_owned()
+                }
+            };
+            let edit = if field == WordsField::Description {
+                egui::TextEdit::multiline(&mut text).desired_rows(1)
+            } else {
+                egui::TextEdit::singleline(&mut text)
+            };
+            let response = ui.add(
+                edit.id_salt(("export-words", label))
+                    .hint_text(egui::RichText::new(hint).color(pal.ink_3))
+                    .char_limit(limit)
+                    .font(egui::FontId::proportional(style::BODY))
+                    .text_color(ink)
+                    .frame(false)
+                    .margin(egui::Margin::symmetric(0, 3))
+                    .desired_width(f32::INFINITY),
+            );
+            style::hairline(
+                ui.painter(),
+                response.rect.left_bottom(),
+                response.rect.right_bottom(),
+                if response.has_focus() {
+                    pal.accent
+                } else {
+                    pal.line
+                },
+            );
+            if response.has_focus() {
+                panel.words_draft = Some((field, text));
+            } else if response.lost_focus() && text.trim() != value.trim() {
+                intents.push(ExportIntent::SetWords(field, text));
+            }
+        });
+    }
+    style::text(
+        ui,
+        if on {
+            "Written into every ticked image. Artist and copyright are yours, for every photograph (also under Strehl › Preferences); the description is this photograph's. An empty field writes nothing."
+        } else {
+            "Off: none of these is written. Artist and copyright are kept under Strehl › Preferences; the description with this photograph."
+        },
+        style::SMALL,
+        pal.ink_3,
+    );
+    ui.horizontal(|ui| {
+        ui.spacing_mut().item_spacing.x = 8.0;
+        words_label(ui, "Software", pal);
+        style::text(ui, strehl_edit::CREATOR_TOOL, style::BODY, pal.ink);
+        style::text(ui, "every file, always", style::SMALL, pal.ink_3);
+    });
+}
+
+/// A words line's tracked caption in its fixed column.
+fn words_label(ui: &mut Ui, label: &str, pal: &StudioPalette) {
+    let (rect, _) = ui.allocate_exact_size(egui::vec2(82.0, 22.0), Sense::hover());
+    let galley = ui
+        .painter()
+        .layout_job(style::caps_job(label, style::CAPS, pal.ink_3));
+    let at = egui::pos2(rect.left(), rect.center().y - galley.size().y * 0.5);
+    ui.painter().galley(at, galley, pal.ink_3);
 }
 
 fn name_and_place(

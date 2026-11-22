@@ -273,6 +273,7 @@ impl StrehlApp {
         // station the owner last used.
         let launch_route = launch.route;
         let launch_depth_brush = launch.depth_brush;
+        let launch_develop_split = launch.develop_split;
         let launch_subject = launch.route_subject.clone();
         let launch_overlay = launch.overlay.clone();
         let restore_station = launch_route.is_none()
@@ -534,6 +535,10 @@ impl StrehlApp {
         }
         if launch_depth_brush {
             app.editor.develop.tool = crate::develop_station::DevelopTool::DepthBrush;
+        }
+        if let Some(split) = launch_develop_split {
+            app.editor.develop.compare = crate::develop_station::Compare::Split;
+            app.editor.develop.split = split;
         }
         // Adopt the launch flags above, then apply an explicit route.
         app.sync_route();
@@ -2793,6 +2798,11 @@ impl StrehlApp {
             ) || self.result.is_none()
                 || self.editor.loaded.is_some()
                 || self.editor.error.is_some())
+            // Develop's split view waits for its "before" (h-develop).
+            && (station != studio_route::Station::Develop
+                || self.editor.develop.compare != crate::develop_station::Compare::Split
+                || self.editor.loaded.is_none()
+                || self.editor.before_overview.is_some())
 
             && (!self.bracket_browser.active() || self.bracket_browser.settled(now))
             && (!self.process_view

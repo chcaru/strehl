@@ -49,6 +49,7 @@ fn view<'a>(
         feedback: None,
         note: None,
         view_bundle: None,
+        words: Words::default(),
     }
 }
 

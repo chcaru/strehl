@@ -21,6 +21,7 @@ fn state(catalog: &Catalog) -> serde_json::Value {
         "versions": catalog.photo_versions,
         "exports": catalog.photo_exports,
         "directories": catalog.export_directories,
+        "descriptions": catalog.photo_descriptions,
         "selected": catalog.selected,
     })
 }
@@ -41,6 +42,10 @@ fn a_removed_subject_takes_its_stacks_renders_versions_and_exports_and_comes_bac
     catalog
         .export_directories
         .insert(output.clone(), PathBuf::from("/exports/elsewhere"));
+    // The photograph's export description (h-develop) leaves and returns too.
+    catalog
+        .photo_descriptions
+        .insert(output.clone(), "Weevil on moss".into());
     catalog.selected = Some(stack);
     let before = state(&catalog);
     let scope = catalog.removal_scope(&[subject]);
@@ -69,6 +74,7 @@ fn a_removed_subject_takes_its_stacks_renders_versions_and_exports_and_comes_bac
     );
     assert_eq!(catalog.photo_exports.len(), 1, "subject 007's export stays");
     assert!(!catalog.export_directories.contains_key(&output));
+    assert!(!catalog.photo_descriptions.contains_key(&output));
     // The selection falls back to the removed item's container.
     assert!(
         catalog

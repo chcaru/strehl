@@ -214,6 +214,11 @@ pub(crate) struct Catalog {
     pub photo_exports: Vec<PhotoExport>,
     /// Explicit alternate destinations, keyed by the photograph, not a stack's RAW folder.
     pub export_directories: BTreeMap<PathBuf, PathBuf>,
+    /// The description written into a photograph's exports when its preset
+    /// asks for one, keyed like `export_directories` by the photograph. A
+    /// photograph without one is absent (h-develop).
+    #[serde(skip_serializing_if = "BTreeMap::is_empty")]
+    pub photo_descriptions: BTreeMap<PathBuf, String>,
     next_node_id: NodeId,
     #[serde(skip)]
     pub path: Option<PathBuf>,
@@ -242,6 +247,7 @@ impl Default for Catalog {
             photo_versions: Vec::new(),
             photo_exports: Vec::new(),
             export_directories: BTreeMap::new(),
+            photo_descriptions: BTreeMap::new(),
             next_node_id: 0,
             path: None,
             load_error: None,
@@ -940,7 +946,8 @@ impl Catalog {
         anyhow::ensure!(
             self.photo_versions.len() <= 8192
                 && self.photo_exports.len() <= 16384
-                && self.export_directories.len() <= 8192,
+                && self.export_directories.len() <= 8192
+                && self.photo_descriptions.len() <= 8192,
             "Photograph history exceeds its limit"
         );
         let mut version_ids = HashSet::new();
