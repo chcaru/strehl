@@ -129,6 +129,58 @@ fn the_time_estimate_follows_the_measured_effort_curve() {
 }
 
 #[test]
+fn the_avif_size_estimate_follows_quality_and_range() {
+    // MEASURED at effort 4 on the 7032 x 4688 weevil (g-develop note):
+    // (quality, SDR bytes, HDR bytes).
+    let measured: [(u8, f64, f64); 6] = [
+        (50, 1_962_728.0, 1_704_501.0),
+        (70, 3_769_846.0, 5_812_210.0),
+        (85, 6_656_658.0, 13_876_666.0),
+        (90, 9_236_099.0, 20_899_095.0),
+        (95, 15_871_122.0, 33_442_454.0),
+        (100, 36_276_821.0, 59_165_477.0),
+    ];
+    let avif = |quality, hdr| {
+        PresetOutput::Image(crate::export_presets::ImagePreset {
+            settings: ExportSettings {
+                format: ExportFormat::Avif,
+                color_space: if hdr {
+                    OutputColorSpace::Rec2020
+                } else {
+                    OutputColorSpace::Srgb
+                },
+                hdr,
+                quality,
+                ..Default::default()
+            },
+            copyright: false,
+            description: false,
+        })
+    };
+    let size = [7032, 4688];
+    for (quality, sdr, hdr) in measured {
+        for (range, bytes) in [(false, sdr), (true, hdr)] {
+            let estimate = estimate_bytes(&avif(quality, range), size) as f64;
+            assert!(
+                (estimate / bytes - 1.0).abs() < 0.01,
+                "q{quality} hdr {range}: estimate {estimate}, measured {bytes}"
+            );
+        }
+    }
+    // The HDR preset (quality 100) reads about 59 MB, not the 13.8 MB of
+    // the old constant.
+    let lib = library();
+    let hdr = &lib.presets.iter().find(|p| p.name == "HDR").unwrap().output;
+    assert_eq!(human_bytes(estimate_bytes(hdr, size)), "59.2 MB");
+    // Between and below the measurements the size still rises with quality.
+    for range in [false, true] {
+        let sizes: Vec<f64> = (1..=100).map(|q| avif_bytes_per_pixel(q, range)).collect();
+        assert!(sizes.windows(2).all(|w| w[0] < w[1]), "{sizes:?}");
+        assert!(sizes[0] > 0.0);
+    }
+}
+
+#[test]
 fn avif_presets_show_encoder_effort_beside_quality_and_no_new_tags() {
     let ctx = egui::Context::default();
     let lib = library();

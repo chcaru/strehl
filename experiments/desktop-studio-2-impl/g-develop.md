@@ -129,11 +129,50 @@ geometric, not linear. `estimate_seconds` now uses 0.36 s/MP x 1.4^effort (DERIV
 `the_time_estimate_follows_the_measured_effort_curve`). Effort 10 (about 5.6 min) is an
 extrapolation (UNVERIFIED).
 
-**Found, not changed:** the size estimate for AVIF (0.42 bytes a pixel, "13.8 MB" for this
-photograph) is about four times low for HDR quality 100: the three files above are 1.75 to
-1.86 bytes a pixel (MEASURED), and the history table's earlier `result-edited.avif` is
-57 MB. Only quality 100 was measured, so the constant was left for a measurement across
-qualities.
+## The AVIF size estimate (follow-up)
+
+The Export station estimated every AVIF at 0.42 bytes a pixel ("13.8 MB" for the HDR preset
+on this photograph); the HDR quality 100 files above are 1.75 to 1.86 bytes a pixel, and
+the history table's earlier `result-edited.avif` is 57 MB. 0.42 is what HDR quality 85
+measures below, so the constant ignored quality and range.
+
+Measurements (MEASURED): the same probe, binary and inputs as the time table (P7 probe
+built from this branch's unchanged `strehl-edit`, release, temporarily copied into
+`crates/strehl-edit/examples` and removed again; the copied weevil master, 7032 x 4688 =
+32,966,016 pixels, its own recipe). SDR is sRGB, HDR is Rec.2020 PQ. Script
+`C:\strehl-scratch\g-develop\size-quality.ps1`, run as
+`pwsh -NoProfile -File size-quality.ps1 [-speed S -qualities Q]`, which calls
+`p7-export-freeze.exe export <master> <recipe> '{"format":"avif","color_space":…,"hdr":…,"quality":Q,"speed":S}' <out>`
+and deletes each file after reading its size. Host CPU load 0 to 3 % before each run,
+up to 14 % after; nothing else of mine ran.
+
+| Quality | SDR bytes | SDR B/px | SDR time | HDR bytes | HDR B/px | HDR time |
+| --- | --- | --- | --- | --- | --- | --- |
+| 50 | 1,962,728 | 0.0595 | 12.75 s | 1,704,501 | 0.0517 | 14.28 s |
+| 70 | 3,769,846 | 0.1144 | 15.23 s | 5,812,210 | 0.1763 | 19.44 s |
+| 85 | 6,656,658 | 0.2019 | 17.36 s | 13,876,666 | 0.4209 | 22.05 s |
+| 90 | 9,236,099 | 0.2802 | 19.66 s | 20,899,095 | 0.6340 | 23.80 s |
+| 95 | 15,871,122 | 0.4814 | 22.59 s | 33,442,454 | 1.0145 | 32.22 s |
+| 100 | 36,276,821 | 1.1004 | 35.49 s | 59,165,477 | 1.7947 | 33.43 s |
+
+All at effort 4 (speed 6). Effort spot-checks at quality 85: SDR 7,799,088 bytes at effort
+0 (+17 %) and 6,285,604 at effort 8 (-6 %); HDR 15,062,561 (+9 %) and 13,328,217 (-4 %). At
+HDR quality 100 (the time table): +4 % and -3 %. Effort changes size much less than
+quality does, and lower effort makes larger files.
+
+Model (DERIVED): `avif_bytes_per_pixel(quality, hdr)` interpolates the table on straight
+lines in log size (size grows geometrically as rav1e's quantizer falls), with the first
+segment's slope below quality 50; effort is left out. Quality 95 was measured after the
+model was first written with the other five points, as a held-out check: it predicted
+0.555 (SDR) and 1.067 (HDR) bytes a pixel against 0.481 and 1.015 measured (+15 % and
++5 %), and was then added to the table. The HDR preset now reads "59.2 MB". VERIFIED by
+`the_avif_size_estimate_follows_quality_and_range` (each measured point within 1 %, the
+HDR preset's label, size rising with quality from 1 to 100); with the old constant its
+label assertion reads 13.8 MB and fails (ARGUED).
+
+**Found, not changed:** encode time also depends on quality (12.8 s at SDR quality 50
+against 35.5 s at 100, both effort 4). The time estimate is calibrated at HDR quality 100,
+the HDR preset's setting, so it overstates lower qualities by up to about 2.5 times.
 
 ## Tests and checks
 
@@ -151,7 +190,7 @@ Commands, in `C:\w\g-develop`, `CARGO_BUILD_JOBS=12`, never `-q`:
 
 | Check | Result |
 | --- | --- |
-| `cargo test --locked -p strehl-ui` | 1478 passed, 0 failed, 36 ignored (VERIFIED, "Compiling strehl-ui", exit 0) |
+| `cargo test --locked -p strehl-ui` | 1478 passed, 0 failed, 36 ignored at `b70cae4b9`; 1479 passed, 0 failed, 36 ignored with the size model (VERIFIED, "Compiling strehl-ui", exit 0) |
 | `cargo test --locked -p strehl-ui actions::` after the last edit | 10 passed (VERIFIED) |
 | `cargo clippy --locked -p strehl-ui --all-targets --no-deps -- -D warnings` | Clean, exit 0; re-run after touching `export-station.rs` with `-v` shows `clippy-driver` running on strehl-ui (VERIFIED) |
 | `cargo fmt -p strehl-ui -- --check` | Clean (VERIFIED) |
@@ -171,15 +210,16 @@ looking at each):
   catalog that points at the copy: `develop-save-version-{graphite,lightbox,instrument}`,
   `export-hdr-{…}` (Encoder effort under Quality, the time line wrapped, not clipped) and
   `export-result-{…}` (the result line with Open folder and Dismiss). A before/after listing
-  of the copy showed no file changed by these renders.
+  of the copy showed no file changed by these renders. The copy was deleted after the size
+  measurements.
 - `export-hdr-lightbox-inspector-crop.png`: a native 348 x 450 crop of the inspector.
 
 Every new part is square and ruled (hairlines, tracked capitals, drawn marks), in all three
-themes.
+themes. The screenshots predate the size model: their HDR preset line still reads 13.8 MB.
 
 ## Not done
 
 - No click-through in the windowed desktop: the presses were exercised through the shell
   with egui input and offscreen renders. The folder dialog that **Choose a folder…** opens
   is native and is not opened by any test.
-- The AVIF size estimate (above).
+- The time estimate's dependence on quality (above).

@@ -87,9 +87,38 @@ pub(crate) fn output_size(output: &PresetOutput, size: [u32; 2]) -> [u32; 2] {
     }
 }
 
+/// AVIF bytes per pixel against quality: (quality, SDR sRGB, HDR Rec.2020
+/// PQ), measured at encoder effort 4 on the 7032 x 4688 weevil with its own
+/// recipe (g-develop note). Other efforts measured -6 % to +17 % of these
+/// (effort 0 largest); the estimate leaves effort out.
+const AVIF_BYTES_PER_PIXEL: [(u8, f64, f64); 6] = [
+    (50, 0.0595, 0.0517),
+    (70, 0.1144, 0.1763),
+    (85, 0.2019, 0.4209),
+    (90, 0.2802, 0.6340),
+    (95, 0.4814, 1.0145),
+    (100, 1.1004, 1.7947),
+];
+
+/// Bytes per pixel of an AVIF at `quality`: straight lines between the
+/// measurements in log size (size grows geometrically as the quantizer
+/// falls), the first segment's slope below quality 50.
+pub(crate) fn avif_bytes_per_pixel(quality: u8, hdr: bool) -> f64 {
+    let at = |i: usize| {
+        let (q, sdr, high) = AVIF_BYTES_PER_PIXEL[i];
+        (f64::from(q), if hdr { high } else { sdr }.ln())
+    };
+    let q = f64::from(quality.clamp(1, 100));
+    let segment = (1..AVIF_BYTES_PER_PIXEL.len())
+        .find(|&i| q <= at(i).0)
+        .unwrap_or(AVIF_BYTES_PER_PIXEL.len() - 1);
+    let ((q0, y0), (q1, y1)) = (at(segment - 1), at(segment));
+    (y0 + (q - q0) * (y1 - y0) / (q1 - q0)).exp()
+}
+
 /// A rough file size: bytes per pixel measured on the owner's 33 MP weevil
-/// (P7 model note: JPEG q90 0.39, AVIF HDR q100 0.42, PNG 16-bit P3 4.2,
-/// TIFF 16-bit 6.0; the master 12).
+/// (P7 model note: JPEG q90 0.39, PNG 16-bit P3 4.2, TIFF 16-bit 6.0; the
+/// master 12; AVIF from `AVIF_BYTES_PER_PIXEL`).
 pub(crate) fn estimate_bytes(output: &PresetOutput, size: [u32; 2]) -> u64 {
     let [w, h] = output_size(output, size);
     let pixels = f64::from(w) * f64::from(h);
@@ -97,7 +126,7 @@ pub(crate) fn estimate_bytes(output: &PresetOutput, size: [u32; 2]) -> u64 {
         PresetOutput::Archive => 12.0,
         PresetOutput::Image(image) => match image.settings.format {
             ExportFormat::Jpeg => 0.39 * f64::from(image.settings.quality) / 90.0,
-            ExportFormat::Avif => 0.42,
+            ExportFormat::Avif => avif_bytes_per_pixel(image.settings.quality, image.settings.hdr),
             ExportFormat::Png => 4.2,
             ExportFormat::Tiff => 6.0,
         },
