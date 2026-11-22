@@ -107,7 +107,9 @@ fn click(
 
 fn workspace() -> (tempfile::TempDir, CaptureWorkspace) {
     let dir = tempfile::tempdir().unwrap();
-    let ui = CaptureWorkspace::new(Some(dir.path().join("capture.json")));
+    let mut ui = CaptureWorkspace::new(Some(dir.path().join("capture.json")));
+    // A new subject named, so only the rig decides Start.
+    ui.station.plan.subject = "Harvestman".into();
     (dir, ui)
 }
 

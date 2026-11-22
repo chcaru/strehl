@@ -10,15 +10,17 @@
 //! `capacity::required`, the expected size from `StoredRaws::expected`.
 use std::time::SystemTime;
 
-use eframe::egui::{self, Align2, Rect, Sense, Stroke, Ui};
+use eframe::egui::{self, Align2, Rect, Response, Sense, Stroke, Ui};
 use serde_json::Value;
 
 use super::guide::{self, DetailKept, GuideTab, Tone};
 use super::preflight::{Blocker, Check, Fix};
 use super::rig_settings::{self, RigEditor, RigValues};
 use super::style::{self, ButtonKind, CapturePalette, Mark};
+use super::subject::{self, SubjectChoice};
 use crate::capture_client::Snapshot;
 use crate::capture_workspace::test_shot::RawLevels;
+use crate::workspace_history::NodeId;
 
 /// Steps offered in the table besides the plan's and the calibrated one.
 pub(crate) const CANDIDATE_STEPS: [u16; 4] = [5, 7, 10, 16];
@@ -78,7 +80,9 @@ pub(crate) struct PlanInputs<'a> {
     /// The desktop can run the engine (calibration needs it).
     pub engine: bool,
     /// The catalog's subjects, offered for the subject field.
-    pub subjects: &'a [String],
+    pub subjects: &'a [SubjectChoice],
+    /// Where a new subject is made ("Bugs").
+    pub subject_home: &'a str,
 }
 
 /// What the user asked of the plan.
@@ -147,6 +151,11 @@ pub(crate) struct StepRow {
 #[derive(Default)]
 pub(crate) struct PlanView {
     pub subject: String,
+    /// The existing subject chosen on purpose (from the field's list or the
+    /// Library); None makes a new subject of `subject`.
+    pub chosen: Option<NodeId>,
+    /// Put the cursor in the subject field (the pre-flight fix).
+    pub focus_subject: bool,
     pub stack_name: String,
     /// The Rig step's settings are open.
     pub rig_open: bool,
@@ -465,7 +474,7 @@ impl PlanView {
                     .auto_shrink([false, false])
                     .show(ui, |ui| {
                         ui.spacing_mut().item_spacing.y = 0.0;
-                        self.names(ui, inputs.subjects, palette, &mut out);
+                        self.names(ui, inputs, palette, &mut out);
                         ui.add_space(10.0);
                         rig_step(
                             ui,
@@ -499,27 +508,31 @@ impl PlanView {
     fn names(
         &mut self,
         ui: &mut Ui,
-        subjects: &[String],
+        inputs: &PlanInputs<'_>,
         palette: &CapturePalette,
         out: &mut Vec<PlanIntent>,
     ) {
+        let subjects = inputs.subjects;
         let w = (ui.available_width() - 10.0) / 2.0;
         ui.horizontal(|ui| {
             ui.spacing_mut().item_spacing.x = 10.0;
-            for (label, value, subject) in [
-                ("Subject", &mut self.subject, true),
-                ("Stack name", &mut self.stack_name, false),
-            ] {
+            for (label, subject) in [("Subject", true), ("Stack name", false)] {
                 ui.vertical(|ui| {
                     ui.set_width(w);
                     style::caps(ui, label, palette);
                     ui.add_space(5.0);
+                    let value = if subject {
+                        &mut self.subject
+                    } else {
+                        &mut self.stack_name
+                    };
                     let edit = egui::TextEdit::singleline(value)
+                        .id_salt(("capture-plan-name", subject))
                         .desired_width(w)
                         .min_size(egui::vec2(w, 28.0))
                         .vertical_align(egui::Align::Center)
                         .hint_text(if subject {
-                            "Name the subject"
+                            "Name the new subject"
                         } else {
                             "Name this stack"
                         })
@@ -528,6 +541,9 @@ impl PlanView {
                         .background_color(palette.bg)
                         .margin(egui::Margin::symmetric(9, 4));
                     let r = ui.add(edit);
+                    if subject && std::mem::take(&mut self.focus_subject) {
+                        r.request_focus();
+                    }
                     if r.lost_focus() {
                         consume_enter(ui);
                     }
@@ -538,37 +554,50 @@ impl PlanView {
                         egui::StrokeKind::Inside,
                     );
                     if r.changed() {
-                        out.push(if subject {
-                            PlanIntent::SetSubject(value.clone())
+                        if subject {
+                            // Typing names a new subject; choosing is on purpose.
+                            self.chosen = None;
+                            out.push(PlanIntent::SetSubject(self.subject.clone()));
                         } else {
-                            PlanIntent::SetStackName(value.clone())
-                        });
+                            out.push(PlanIntent::SetStackName(self.stack_name.clone()));
+                        }
                     }
-                    // The catalog's subjects that match what is typed.
+                    // The catalog's subjects that match what is typed, to
+                    // choose one on purpose.
                     let list_id = ui.id().with("capture-subjects");
                     let over_list = ui.data(|d| d.get_temp::<bool>(list_id).unwrap_or(false));
-                    if subject && (r.has_focus() || over_list) && !subjects.is_empty() {
-                        let typed = value.trim().to_lowercase();
-                        let matches: Vec<&String> = subjects
+                    if subject
+                        && self.chosen.is_none()
+                        && (r.has_focus() || over_list)
+                        && !subjects.is_empty()
+                    {
+                        let typed = self.subject.trim().to_lowercase();
+                        let matches: Vec<&SubjectChoice> = subjects
                             .iter()
-                            .filter(|s| typed.is_empty() || s.to_lowercase().contains(&typed))
-                            .filter(|s| s.to_lowercase() != typed)
+                            .filter(|s| typed.is_empty() || s.name.to_lowercase().contains(&typed))
                             .take(8)
                             .collect();
                         if !matches.is_empty() {
                             let area = egui::Area::new(list_id)
                                 .order(egui::Order::Foreground)
                                 .fixed_pos(r.rect.left_bottom() + egui::vec2(0.0, 2.0));
+                            let wide = (2.0 * w + 10.0).max(w);
                             let shown = area.show(ui.ctx(), |ui| {
                                 egui::Frame::new()
                                     .fill(palette.panel)
                                     .stroke(Stroke::new(1.0_f32, palette.line2))
                                     .show(ui, |ui| {
-                                        ui.set_width(w - 2.0);
-                                        for name in matches {
-                                            if ui.selectable_label(false, name.as_str()).clicked() {
-                                                *value = name.clone();
-                                                out.push(PlanIntent::SetSubject(name.clone()));
+                                        ui.set_width(wide - 2.0);
+                                        style::caps(ui, "Add this stack to", palette);
+                                        for choice in matches {
+                                            if subject_row(ui, choice, wide - 2.0, palette)
+                                                .clicked()
+                                            {
+                                                self.subject = choice.name.clone();
+                                                self.chosen = Some(choice.id);
+                                                out.push(PlanIntent::SetSubject(
+                                                    choice.name.clone(),
+                                                ));
                                             }
                                         }
                                     });
@@ -582,7 +611,69 @@ impl PlanView {
                 });
             }
         });
+        // Where the stack goes, said plainly (owner feedback, 2026-11-22).
+        let destination = subject::destination(&self.subject, self.chosen, subjects);
+        let ready = destination.ready();
+        ui.add_space(7.0);
+        ui.horizontal_top(|ui| {
+            ui.spacing_mut().item_spacing.x = 7.0;
+            let (mark_rect, _) = ui.allocate_exact_size(egui::vec2(8.0, 16.0), Sense::hover());
+            style::mark(
+                ui.painter(),
+                mark_rect.center(),
+                if ready { Mark::Ok } else { Mark::Warn },
+                7.0,
+                palette,
+            );
+            let job = style::job(
+                &subject::sentence(&destination, inputs.subject_home),
+                12.5,
+                if ready { palette.ink2 } else { palette.ink },
+                0.0,
+            );
+            ui.add(egui::Label::new(job).wrap());
+        });
+        if self.chosen.is_some()
+            && style::link(ui, "A new subject instead", true, palette).clicked()
+        {
+            self.subject.clear();
+            self.chosen = None;
+            self.focus_subject = true;
+            out.push(PlanIntent::SetSubject(String::new()));
+        }
     }
+}
+
+/// One subject in the subject field's list: its name, and its collection
+/// and stacks at the right.
+fn subject_row(
+    ui: &mut Ui,
+    choice: &SubjectChoice,
+    width: f32,
+    palette: &CapturePalette,
+) -> Response {
+    let (rect, response) = ui.allocate_exact_size(egui::vec2(width, 26.0), Sense::click());
+    if response.hovered() {
+        ui.painter().rect_filled(rect, 0.0, palette.raised);
+    }
+    let name = style::paint_job(
+        ui.painter(),
+        egui::pos2(rect.left() + 8.0, rect.center().y),
+        Align2::LEFT_CENTER,
+        style::job(&choice.name, 13.0, palette.ink, 0.0),
+    );
+    if !choice.detail.is_empty() {
+        let mut job = style::job(&choice.detail, 12.0, palette.ink3, 0.0);
+        job.wrap.max_width = (rect.right() - 8.0 - name.right() - 12.0).max(0.0);
+        job.wrap.max_rows = 1;
+        style::paint_job(
+            ui.painter(),
+            egui::pos2(rect.right() - 8.0, rect.center().y),
+            Align2::RIGHT_CENTER,
+            job,
+        );
+    }
+    response
 }
 
 /// A numbered step: its numeral (green when ready) and content.

@@ -423,3 +423,36 @@ fn uploads_are_paced_to_the_budget_per_poll() {
         "three 1.3 MB rows need three 2 MiB polls ({uploading_polls})"
     );
 }
+
+/// Owner feedback, 2026-11-22: "the preview images aren't the correct
+/// ratio. they crop the actual subject." A preview is fitted whole inside
+/// its cell, aspect kept and centred, whatever the two shapes are.
+#[test]
+fn previews_are_fitted_whole_inside_their_cell_never_cropped() {
+    let cell = Rect::from_min_size(egui::pos2(10.0, 20.0), egui::vec2(264.0, 172.0));
+    for size in [
+        egui::vec2(256.0, 171.0), // 3:2, the camera's
+        egui::vec2(171.0, 256.0), // portrait
+        egui::vec2(256.0, 64.0),  // a panorama
+        egui::vec2(264.0, 172.0), // the cell's own shape
+        egui::vec2(2000.0, 10.0), // extreme
+    ] {
+        let fit = fitted(cell, size).unwrap();
+        assert!(
+            ((fit.width() / fit.height()) / (size.x / size.y) - 1.0).abs() < 1e-4,
+            "aspect kept for {size:?}: {fit:?}"
+        );
+        assert!(
+            cell.expand(1e-3).contains_rect(fit),
+            "inside the cell: {fit:?}"
+        );
+        assert!(
+            (fit.width() - cell.width()).abs() < 1e-3
+                || (fit.height() - cell.height()).abs() < 1e-3,
+            "as large as fits: {fit:?}"
+        );
+        assert!((fit.center() - cell.center()).length() < 1e-3, "centred");
+    }
+    assert_eq!(fitted(cell, egui::vec2(0.0, 10.0)), None);
+    assert_eq!(fitted(Rect::NOTHING, egui::vec2(10.0, 10.0)), None);
+}

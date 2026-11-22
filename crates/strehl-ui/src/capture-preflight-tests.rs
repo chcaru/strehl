@@ -29,7 +29,13 @@ fn checks(s: &Snapshot, ui: &CaptureWorkspace) -> Vec<Check> {
     start_blockers(s, ui).into_iter().map(|b| b.check).collect()
 }
 
+/// A workspace whose plan names a new subject (`unnamed()` names none).
 fn workspace() -> (tempfile::TempDir, CaptureWorkspace) {
+    let (dir, mut ui) = unnamed();
+    ui.station.plan.subject = "Harvestman".into();
+    (dir, ui)
+}
+fn unnamed() -> (tempfile::TempDir, CaptureWorkspace) {
     let dir = tempfile::tempdir().unwrap();
     let ui = CaptureWorkspace::new(Some(dir.path().join("capture.json")));
     (dir, ui)
@@ -237,4 +243,24 @@ fn blockers_come_in_the_order_to_resolve_them() {
             Check::Receiver
         ]
     );
+}
+
+/// Owner feedback, 2026-11-22: with nothing named, the subject is the one
+/// blocker, the strip's Subject chip says so and its fix puts the cursor in
+/// the field; named, the chip is met.
+#[test]
+fn an_unnamed_subject_blocks_start_and_its_chip_says_so() {
+    let (_dir, mut ui) = unnamed();
+    let s = snapshot(ready_state());
+    assert_eq!(checks(&s, &ui), vec![Check::Subject]);
+    let blockers = start_blockers(&s, &ui);
+    assert_eq!(blockers[0].fix, Some(Fix::NameSubject));
+    let chips = strip_chips(&s, &blockers);
+    let chip = chips.iter().find(|c| c.label == "Subject").unwrap();
+    assert_eq!(chip.mark, Mark::Warn);
+    assert_eq!(chip.fix, Some(Fix::NameSubject));
+    ui.station.plan.subject = "Harvestman".into();
+    let chips = strip_chips(&s, &start_blockers(&s, &ui));
+    let chip = chips.iter().find(|c| c.label == "Subject").unwrap();
+    assert_eq!((chip.mark, chip.sentence.as_ref()), (Mark::Ok, None));
 }

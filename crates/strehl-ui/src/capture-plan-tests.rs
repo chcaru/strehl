@@ -64,6 +64,7 @@ fn inputs<'a>(s: &'a Snapshot, blockers: &'a [Blocker]) -> PlanInputs<'a> {
         },
         engine: true,
         subjects: &[],
+        subject_home: "Captures",
     }
 }
 

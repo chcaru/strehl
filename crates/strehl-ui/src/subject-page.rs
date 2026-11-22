@@ -29,6 +29,8 @@ pub(crate) const LEFT_WIDTH: f32 = 500.0;
 const ROW: f32 = 116.0;
 const LINEAGE: f32 = 158.0;
 const JOURNAL_ROW: f32 = 34.0;
+/// The note of a subject without stacks.
+const EMPTY: f32 = 96.0;
 const MAX_JOURNAL: usize = 40;
 
 pub(crate) struct SubjectInputs<'a> {
@@ -464,6 +466,9 @@ enum RowInput {
     Menu(NodeId, Pos2),
     /// Right-click on the subject's picture or name: the subject's menu.
     SubjectMenu(Pos2),
+    /// "Move to subject…" in a stack's lineage: the subjects to move it
+    /// (or the selection it is in) to, under the button.
+    MoveMenu(NodeId, Rect),
 }
 
 impl SubjectPage {
@@ -693,6 +698,9 @@ impl SubjectPage {
                     menu::stack_menu(catalog, &targets, flags),
                 ));
             }
+            RowInput::MoveMenu(id, button) => {
+                self.move_menu(ctx, catalog, id, button.left_bottom());
+            }
             RowInput::SubjectMenu(at) => {
                 let flags = menu::SubjectFlags {
                     stacking: queue.busy,
@@ -732,23 +740,10 @@ impl SubjectPage {
         let ids = self.selection.ids().to_vec();
         match index {
             0 => {
-                let entries = menu::stack_menu(catalog, &ids, menu::StackFlags::default());
-                let items = entries.into_iter().find_map(|e| match e {
-                    MenuEntry::Sub { items, .. } => Some(items),
-                    _ => None,
-                })?;
-                let entries = items
-                    .into_iter()
-                    .map(|item| {
-                        let label = if item.detail.is_empty() {
-                            item.label
-                        } else {
-                            format!("{} · {}", item.label, item.detail)
-                        };
-                        MenuEntry::item(label, item.intent)
-                    })
-                    .collect();
-                self.context = Some(ContextMenu::above(ui.ctx(), button, entries));
+                // The submenu that scrolls, open above the button (it keeps
+                // to the screen).
+                let first = *ids.first()?;
+                self.move_menu(ui.ctx(), catalog, first, button.left_top());
                 None
             }
             1 => Some(LibraryIntent::Delete(ids)),
@@ -759,6 +754,41 @@ impl SubjectPage {
         }
     }
 
+    /// "Move to subject…": a new subject and every other subject `id` (or
+    /// the selection it is in) can move to, at `at`: the stack menu's own
+    /// submenu, open, so a long library scrolls in it.
+    fn move_menu(&mut self, ctx: &egui::Context, catalog: &Catalog, id: NodeId, at: Pos2) {
+        let targets = self.selection.targets(id);
+        let mut entries: Vec<MenuEntry> =
+            menu::stack_menu(catalog, &targets, menu::StackFlags::default())
+                .into_iter()
+                .filter(|e| matches!(e, MenuEntry::Sub { .. } | MenuEntry::Caption(_)))
+                .collect();
+        let sub = entries
+            .iter()
+            .position(|e| matches!(e, MenuEntry::Sub { .. }));
+        if entries.is_empty() {
+            return;
+        }
+        if let Some(MenuEntry::Sub { label, .. }) = sub.and_then(|i| entries.get_mut(i)) {
+            *label = "Move to".into();
+        }
+        let mut open = ContextMenu::new(ctx, at, entries);
+        open.open_sub = sub;
+        self.context = Some(open);
+    }
+    /// Offscreen look checks: the first stack's "Move to subject…" menu,
+    /// with its lineage open. False until a row has been painted.
+    pub(crate) fn launch_move(&mut self, ctx: &egui::Context, catalog: &Catalog) -> bool {
+        let Some((id, row)) = self.first_row else {
+            return false;
+        };
+        self.open = Some(id);
+        // Under the lineage's button, where a click opens it.
+        let at = Pos2::new(row.right() - 200.0, row.bottom() + 4.0 + 24.0 + 28.0 + 22.0);
+        self.move_menu(ctx, catalog, id, at);
+        true
+    }
     /// Offscreen look checks: open the first stack row's menu (with its
     /// first submenu when `sub`), or select the first `count` stacks.
     pub(crate) fn launch_menu(
@@ -874,7 +904,7 @@ impl SubjectPage {
         if let Some((path, source)) = &picture
             && let Some(texture) = previews.file(path, *source)
         {
-            LibraryPreviews::paint_cover(&painter, hero, &texture);
+            LibraryPreviews::paint_fit(&painter, hero, &texture);
         }
         let mut y = hero.bottom() + 14.0;
         if let Some(draft) = self.editing.as_mut() {
@@ -1073,6 +1103,7 @@ impl SubjectPage {
             })
             .sum::<f32>()
             + 70.0
+            + if order.is_empty() { EMPTY } else { 0.0 }
             + model.journal.len() as f32 * JOURNAL_ROW
             + 20.0;
         let body = Rect::from_min_max(Pos2::new(x0, top + 38.0), Pos2::new(x1, right.bottom()));
@@ -1139,6 +1170,40 @@ impl SubjectPage {
                             painted += 1;
                         }
                         y += height;
+                    }
+                    if order.is_empty() {
+                        // A new, empty subject says how stacks come to it.
+                        let painter = ui.painter();
+                        let at = |dy: f32| Pos2::new(origin.x, origin.y + y + dy);
+                        paint::text(
+                            painter,
+                            at(28.0),
+                            Align2::LEFT_CENTER,
+                            "No stacks yet",
+                            15.0,
+                            palette.ink,
+                            None,
+                        );
+                        paint::text(
+                            painter,
+                            at(54.0),
+                            Align2::LEFT_CENTER,
+                            "Move stacks here from another subject: click a stack there and \
+                             choose Move to subject…, or right-click it.",
+                            12.5,
+                            palette.ink_2,
+                            Some(width),
+                        );
+                        paint::text(
+                            painter,
+                            at(74.0),
+                            Align2::LEFT_CENTER,
+                            "Or capture a new stack of it (N), or drop folders of photographs here.",
+                            12.5,
+                            palette.ink_2,
+                            Some(width),
+                        );
+                        y += EMPTY;
                     }
                     paint::hline(
                         ui.painter(),
@@ -1250,7 +1315,7 @@ impl SubjectPage {
         let thumb = Rect::from_min_size(row.min + Vec2::new(0.0, 14.0), Vec2::new(132.0, 88.0));
         painter.rect_filled(thumb, CornerRadius::ZERO, palette.raised);
         if let Some(texture) = previews.first_tile(&stack.pictures, TILE_SIDE, stack.id) {
-            LibraryPreviews::paint_cover(&painter, thumb, &texture);
+            LibraryPreviews::paint_fit(&painter, thumb, &texture);
         }
         if marked {
             paint::outline(&painter, thumb, 1.5, palette.accent);
@@ -1487,7 +1552,7 @@ impl SubjectPage {
             let painter = ui.painter();
             painter.rect_filled(picture, CornerRadius::ZERO, palette.raised);
             if let Some(texture) = &texture {
-                LibraryPreviews::paint_cover(painter, picture, texture);
+                LibraryPreviews::paint_fit(painter, picture, texture);
             }
             if on {
                 paint::outline(painter, picture, 1.5, palette.accent);
@@ -1723,7 +1788,23 @@ impl SubjectPage {
         {
             intent = Some(LibraryIntent::ShootAgain(stack.id));
         }
-        let reveal = actions.translate(Vec2::new(0.0, 28.0));
+        // Moving a stack to another subject, said on the stack itself (owner
+        // feedback, 2026-11-22); the right-click menu offers the same.
+        let move_to = actions.translate(Vec2::new(0.0, 28.0));
+        if paint::button(
+            ui,
+            move_to,
+            ("subject-move", stack.id),
+            "Move to subject…",
+            None,
+            ButtonStyle::Outline,
+            palette,
+        )
+        .clicked()
+        {
+            self.row_input = Some(RowInput::MoveMenu(stack.id, move_to));
+        }
+        let reveal = actions.translate(Vec2::new(0.0, 56.0));
         if paint::button(
             ui,
             reveal,

@@ -27,6 +27,7 @@ fn ready() -> Value {
 fn workspace(state: Value) -> (tempfile::TempDir, CaptureWorkspace, TestInbox, Snapshot) {
     let dir = tempfile::tempdir().unwrap();
     let mut ws = CaptureWorkspace::new(Some(dir.path().join("capture.json")));
+    ws.station.plan.subject = "Harvestman".into();
     let s = snapshot(state);
     let (connection, inbox) = Connection::detached(s.clone());
     ws.connection = Some(connection);
@@ -360,4 +361,103 @@ fn an_ended_capture_is_reviewed_until_back_to_planning() {
     ws.poll_station(&ended);
     assert!(!ws.station.review);
     assert_eq!(ws.station_mode(), StationMode::Plan);
+}
+
+/// Owner feedback, 2026-11-22: a capture goes to a new subject unless one
+/// is chosen on purpose. Start waits for the new subject's name (or a
+/// choice); a test shot does not. The capture takes the names, keeps them
+/// while it runs and is reviewed, and the next plan starts unnamed again.
+#[test]
+fn each_capture_names_its_subject_and_the_next_one_starts_unnamed() {
+    use super::super::subject::SubjectChoice;
+    let (_dir, mut ws, inbox, s) = workspace(ready());
+    let sent = |ws: &mut CaptureWorkspace, intent: PlanIntent| {
+        ws.apply_plan(&s, intent);
+        let request = inbox.command();
+        ws.connection.as_ref().unwrap().replace(s.clone());
+        request.map(|r| r.command)
+    };
+    ws.clear_plan_subject();
+    assert!(
+        sent(&mut ws, PlanIntent::Start).is_none(),
+        "unnamed: Start waits"
+    );
+    let blockers = preflight::start_blockers(&s, &ws);
+    assert_eq!(
+        blockers.iter().map(|b| b.check).collect::<Vec<_>>(),
+        [preflight::Check::Subject]
+    );
+    assert!(
+        !preflight::can_schedule(&blockers),
+        "nor is a stack scheduled"
+    );
+    // An existing subject's name typed is not a choice; choosing it is.
+    ws.set_subjects(vec![SubjectChoice {
+        id: 7,
+        name: "Blue weevil".into(),
+        detail: "Bugs · 2 stacks".into(),
+    }]);
+    ws.station.plan.subject = "blue weevil".into();
+    assert!(sent(&mut ws, PlanIntent::Start).is_none());
+    ws.set_plan_subject(7, "Blue weevil");
+    assert!(matches!(
+        sent(&mut ws, PlanIntent::Start),
+        Some(Command::Start {})
+    ));
+    // A new subject, named: the capture that starts takes the names.
+    ws.clear_plan_subject();
+    ws.station.plan.subject = "Harvestman".into();
+    ws.station.plan.stack_name = "Dorsal".into();
+    let run = PathBuf::from("D:/Captures/stack-1795400000000-1");
+    let mut capturing = ready();
+    capturing["phase"] = json!("capturing");
+    capturing["editable"] = json!(false);
+    let mut running = snapshot(capturing.clone());
+    running.in_progress = Some(crate::capture_client::InProgress {
+        folder: run.clone(),
+        idle: Duration::ZERO,
+        test: false,
+    });
+    ws.connection.as_ref().unwrap().replace(running.clone());
+    ws.poll_station(&running);
+    let names = ws.run_names(&run).expect("the capture took the names");
+    assert_eq!(
+        (names.subject.as_str(), names.stack.as_str(), names.chosen),
+        ("Harvestman", "Dorsal", None)
+    );
+    assert_eq!(ws.station.plan.subject, "Harvestman", "kept while it runs");
+    // It ends and is reviewed: still named. Back to planning: unnamed.
+    let mut complete = capturing;
+    complete["phase"] = json!("complete");
+    complete["editable"] = json!(true);
+    let ended = snapshot(complete);
+    ws.connection.as_ref().unwrap().replace(ended.clone());
+    ws.poll_station(&ended);
+    assert_eq!(ws.station_mode(), StationMode::Flight);
+    assert_eq!(ws.station.plan.subject, "Harvestman");
+    ws.apply_flight(&ended, FlightIntent::Done);
+    ws.poll_station(&ended);
+    assert_eq!(
+        (
+            ws.station.plan.subject.as_str(),
+            ws.station.plan.stack_name.as_str(),
+            ws.station.plan.chosen
+        ),
+        ("", "", None),
+        "the next capture starts a new, unnamed subject"
+    );
+    assert_eq!(ws.run_names(&run).unwrap().subject, "Harvestman");
+    assert!(
+        preflight::start_blockers(&ended, &ws)
+            .iter()
+            .any(|b| b.check == preflight::Check::Subject)
+    );
+    // A test shot makes no stack: it does not ask for a subject.
+    assert!(matches!(
+        sent(&mut ws, PlanIntent::TestShot),
+        Some(Command::CapturePositions {
+            kind: PositionsKind::Test,
+            ..
+        })
+    ));
 }

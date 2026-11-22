@@ -891,3 +891,118 @@ fn benchmark_list_rows_with_signatures() {
         times
     );
 }
+
+/// Every picture mesh in a painted frame: (screen rect, uv rect).
+fn picture_meshes(output: &egui::FullOutput) -> Vec<(Rect, Rect)> {
+    fn visit(shape: &egui::Shape, found: &mut Vec<(Rect, Rect)>) {
+        match shape {
+            egui::Shape::Mesh(mesh) if mesh.texture_id != egui::TextureId::default() => {
+                let rect =
+                    Rect::from_points(&mesh.vertices.iter().map(|v| v.pos).collect::<Vec<_>>());
+                let uv = Rect::from_points(&mesh.vertices.iter().map(|v| v.uv).collect::<Vec<_>>());
+                found.push((rect, uv));
+            }
+            egui::Shape::Vec(shapes) => shapes.iter().for_each(|s| visit(s, found)),
+            _ => {}
+        }
+    }
+    let mut found = Vec::new();
+    for clipped in &output.shapes {
+        visit(&clipped.shape, &mut found);
+    }
+    found
+}
+
+/// Owner feedback, 2026-11-22: the cards "crop the actual subject". Every
+/// picture on the grid and the list is drawn whole (uv 0..1) at its own
+/// 3:2 aspect, inside a cell of another shape.
+#[test]
+fn grid_and_list_pictures_are_whole_at_their_own_aspect() {
+    let pictures = tempfile::tempdir().unwrap();
+    write_pictures(pictures.path(), 12);
+    let catalog = catalog(12, Some(pictures.path()));
+    for view in [LibraryView::Grid, LibraryView::List] {
+        let mut harness = Harness::new();
+        harness.station.view = view;
+        harness.settle(&catalog);
+        let (output, _) = harness.frame(&catalog, vec![]);
+        let meshes = picture_meshes(&output);
+        assert!(
+            meshes.len() >= 10,
+            "{view:?}: pictures painted: {}",
+            meshes.len()
+        );
+        for (rect, uv) in meshes {
+            assert!(
+                uv == Rect::from_min_max(Pos2::ZERO, Pos2::new(1.0, 1.0)),
+                "{view:?}: the whole picture, uncropped; uv x {}..{} y {}..{}",
+                uv.min.x,
+                uv.max.x,
+                uv.min.y,
+                uv.max.y
+            );
+            assert!(
+                (rect.width() / rect.height() - 1.5).abs() < 0.02,
+                "{view:?}: drawn at the picture's 3:2, not the cell's shape: {rect:?}"
+            );
+        }
+    }
+}
+
+/// The grid scrolled with every picture resident: CPU paint plus
+/// tessellation per frame (pictures 3:2, cells not). Release:
+/// `cargo test --release -p strehl-ui -- --ignored benchmark_grid_scroll_with_pictures --nocapture`.
+#[test]
+#[ignore = "explicit CPU paint+tessellation benchmark of the grid scrolling with pictures"]
+fn benchmark_grid_scroll_with_pictures() {
+    let pictures = tempfile::tempdir().unwrap();
+    write_pictures(pictures.path(), 200);
+    let catalog = catalog(200, Some(pictures.path()));
+    let mut harness = Harness::new();
+    harness.station.sort = LibrarySort::Name;
+    let at = Pos2::new(800.0, 600.0);
+    let wheel = |dy: f32| {
+        vec![
+            Event::PointerMoved(at),
+            Event::MouseWheel {
+                unit: egui::MouseWheelUnit::Point,
+                delta: Vec2::new(0.0, dy),
+                modifiers: Modifiers::NONE,
+            },
+        ]
+    };
+    // Warm: walk the whole grid and back until every tile is resident.
+    harness.settle(&catalog);
+    for dy in [-240.0, 240.0] {
+        for _ in 0..50 {
+            harness.frame(&catalog, wheel(dy));
+            harness.settle(&catalog);
+        }
+    }
+    let warm = harness.previews.stats();
+    let mut times = Vec::new();
+    let mut images = 0;
+    for _ in 0..5 {
+        let started = std::time::Instant::now();
+        for step in 0..120 {
+            let (output, _) = harness.frame(&catalog, wheel(if step < 60 { -40.0 } else { 40.0 }));
+            images = picture_meshes(&output).len();
+            std::hint::black_box(
+                harness
+                    .ctx
+                    .tessellate(output.shapes, output.pixels_per_point),
+            );
+        }
+        times.push(started.elapsed().as_secs_f64() * 1000.0 / 120.0);
+    }
+    let after = harness.previews.stats();
+    assert_eq!(
+        after.tasks_started, warm.tasks_started,
+        "the measured scroll decodes nothing: every tile is resident"
+    );
+    assert!(images >= 15, "pictures were drawn: {images}");
+    eprintln!(
+        "library grid scroll, 200 subjects, {} tiles resident, {images} pictures per frame: {:.3?} ms per frame",
+        warm.entries, times
+    );
+}

@@ -13,6 +13,54 @@ use crate::studio_theme::{self, scale};
 use crate::studio_widgets as w;
 use crate::workspace_history::{NodeId, NodeKind};
 
+/// The collection new subjects of captures go in when nothing else says.
+const NEW_HOME: &str = "Captures";
+
+/// The catalog's subjects for the plan's list, by name, each with its
+/// collection and stack count.
+pub(super) fn subject_choices(
+    catalog: &crate::workspace_history::Catalog,
+) -> Vec<crate::capture_workspace::subject::SubjectChoice> {
+    use std::collections::HashMap;
+    let mut stacks: HashMap<NodeId, usize> = HashMap::new();
+    for node in &catalog.nodes {
+        if node.kind == NodeKind::Stack
+            && let Some(parent) = node.parent
+        {
+            *stacks.entry(parent).or_default() += 1;
+        }
+    }
+    let collection = |id: NodeId| {
+        let mut at = catalog.node(id)?.parent?;
+        for _ in 0..64 {
+            match catalog.node(at)?.parent {
+                Some(parent) => at = parent,
+                None => break,
+            }
+        }
+        catalog.node(at).map(|n| n.name.clone())
+    };
+    let mut choices: Vec<_> = catalog
+        .nodes
+        .iter()
+        .filter(|n| n.kind == NodeKind::Subject)
+        .map(|n| {
+            let count = stacks.get(&n.id).copied().unwrap_or(0);
+            let count = crate::library_paint::plural(count, "stack", "stacks");
+            crate::capture_workspace::subject::SubjectChoice {
+                id: n.id,
+                name: n.name.clone(),
+                detail: match collection(n.id) {
+                    Some(home) => format!("{home} · {count}"),
+                    None => count,
+                },
+            }
+        })
+        .collect();
+    choices.sort_by_cached_key(|c| (c.name.to_lowercase(), c.id));
+    choices
+}
+
 /// The rail's height in the shell: a 30 px head, the chart and a hairline
 /// (the mockups' 135 px while planning, 127 px in flight).
 const RAIL_PLAN: f32 = 135.0;
@@ -51,23 +99,67 @@ impl StrehlApp {
         self.capture_confirm_window(ctx);
     }
 
-    /// The catalog's subject names for the plan, rebuilt only when the
-    /// catalog changes.
+    /// The catalog's subjects for the plan, rebuilt only when the catalog
+    /// changes, and where a new subject would be made.
     fn capture_subjects(&mut self) {
+        // The Library's "New stack of this subject" holds while the plan
+        // keeps that subject; once the plan names another, it is let go.
+        if let Some(target) = &self.library.target
+            && target.subject.is_some()
+            && target.subject != self.capture.plan_chosen()
+        {
+            self.library.target = None;
+        }
+        let home = self.capture_home();
+        let home_name = home
+            .and_then(|id| self.catalog.node(id))
+            .map_or(NEW_HOME, |n| n.name.as_str())
+            .to_owned();
+        self.capture.set_subject_home(&home_name);
         let revision = self.shell.catalog_revision();
         if !self.capture.subjects_stale(revision) {
             return;
         }
-        let mut names: Vec<String> = self
-            .catalog
-            .nodes
-            .iter()
-            .filter(|n| n.kind == NodeKind::Subject)
-            .map(|n| n.name.clone())
-            .collect();
-        names.sort_by_key(|n| n.to_lowercase());
-        names.dedup();
-        self.capture.set_subjects(names);
+        self.capture.set_subjects(subject_choices(&self.catalog));
+    }
+
+    /// Where a new subject of a capture is made: the collection the Library
+    /// asked for, else beside the selected stack's subject (or in the
+    /// selected collection or folder), else the "Captures" collection
+    /// (None: it is made with the subject).
+    pub(super) fn capture_home(&self) -> Option<NodeId> {
+        let container = |id: NodeId| {
+            self.catalog
+                .node(id)
+                .is_some_and(|n| matches!(n.kind, NodeKind::Project | NodeKind::Folder))
+        };
+        let asked = self
+            .library
+            .target
+            .as_ref()
+            .filter(|t| t.subject.is_none())
+            .and_then(|t| t.collection)
+            .filter(|&id| container(id));
+        asked
+            .or_else(|| {
+                let id = self.catalog.selected_container()?;
+                let node = self.catalog.node(id)?;
+                if node.kind == NodeKind::Subject {
+                    node.parent
+                } else {
+                    Some(id)
+                }
+            })
+            .filter(|&id| container(id))
+            .or_else(|| {
+                self.catalog
+                    .nodes
+                    .iter()
+                    .find(|n| {
+                        n.kind == NodeKind::Project && n.parent.is_none() && n.name == NEW_HOME
+                    })
+                    .map(|n| n.id)
+            })
     }
 
     /// Where a finished capture goes: the plan's subject (found by name, or
@@ -81,44 +173,53 @@ impl StrehlApp {
         }
     }
 
-    /// The plan's subject for `folder` (found by name, or created beside the
-    /// selected one; None when the plan names none) and the stack's name.
+    /// The subject `folder`'s capture goes to, and the stack's name. The
+    /// plan chose an existing subject on purpose, or named a new one (found
+    /// by name if it was made meanwhile); a capture the plan named nothing
+    /// for (started by an agent, or opened from the captures list) stays
+    /// where a stack of that folder already is, else starts a new subject
+    /// named for the folder: never the most recent subject (owner feedback,
+    /// 2026-11-22).
     pub(super) fn capture_destination(
         &mut self,
         folder: &std::path::Path,
     ) -> (Option<NodeId>, String) {
-        let (subject, stack) = self.capture.names_for(folder).unwrap_or_default();
-        let stack = if stack.trim().is_empty() {
+        let names = self.capture.run_names(folder).unwrap_or_default();
+        let stack = if names.stack.trim().is_empty() {
             crate::workspace_history::default_stack_name(folder)
         } else {
-            stack.trim().to_owned()
+            names.stack.trim().to_owned()
         };
-        let subject = subject.trim();
-        if subject.is_empty() {
-            return (None, stack);
-        }
-        if let Some(id) = self.capture_find_subject(subject) {
+        if let Some(id) = names.chosen.filter(|&id| {
+            self.catalog
+                .node(id)
+                .is_some_and(|n| n.kind == NodeKind::Subject)
+        }) {
             return (Some(id), stack);
         }
-        // A new subject sits in the selected project or folder.
-        let container = self.catalog.selected_container().and_then(|id| {
-            let node = self.catalog.node(id)?;
-            if node.kind == NodeKind::Subject {
-                node.parent
-            } else {
-                Some(id)
+        let named = names.subject.trim();
+        if named.is_empty() {
+            let already = self.catalog.nodes.iter().find(|n| {
+                n.kind == NodeKind::Stack
+                    && n.stack
+                        .as_ref()
+                        .is_some_and(|d| d.source.as_path() == folder)
+            });
+            if let Some(subject) = already.and_then(|n| self.catalog.subject_of(n.id)) {
+                return (Some(subject), stack);
             }
-        });
-        // With nothing selected: the "Captures" project, made once.
-        let captures = self
-            .catalog
-            .nodes
-            .iter()
-            .find(|n| n.kind == NodeKind::Project && n.parent.is_none() && n.name == "Captures")
-            .map(|n| n.id);
-        let parent = match container.or(captures) {
+        }
+        let subject = if named.is_empty() {
+            crate::workspace_history::default_stack_name(folder)
+        } else {
+            named.to_owned()
+        };
+        if let Some(id) = self.capture_find_subject(&subject) {
+            return (Some(id), stack);
+        }
+        let parent = match self.capture_home() {
             Some(id) => id,
-            None => match self.catalog.create_project("Captures") {
+            None => match self.catalog.create_project(NEW_HOME) {
                 Ok(id) => id,
                 Err(error) => {
                     self.capture.error = Some(error.to_string());
@@ -126,7 +227,7 @@ impl StrehlApp {
                 }
             },
         };
-        match self.catalog.create_subject(parent, subject) {
+        match self.catalog.create_subject(parent, &subject) {
             Ok(id) => {
                 self.persist_catalog();
                 (Some(id), stack)

@@ -408,6 +408,35 @@ impl Catalog {
         Ok(id)
     }
 
+    /// The first subject (catalog order) called `name`, trimmed and ignoring
+    /// case: the names a person would read as the same.
+    pub fn subject_named(&self, name: &str) -> Option<NodeId> {
+        let wanted = name.trim().to_lowercase();
+        if wanted.is_empty() {
+            return None;
+        }
+        self.nodes
+            .iter()
+            .find(|n| n.kind == NodeKind::Subject && n.name.trim().to_lowercase() == wanted)
+            .map(|n| n.id)
+    }
+
+    /// `name` checked as the name of a new subject: given, a valid name, and
+    /// not the name of a subject already in the library (ignoring case).
+    pub fn new_subject_name(&self, name: &str) -> anyhow::Result<String> {
+        let name = super::checked_name(name).map_err(|_| match name.trim() {
+            "" => anyhow::anyhow!("Name the subject"),
+            _ => anyhow::anyhow!(
+                "Use a name of at most {MAX_TEXT_CHARS} characters, without control characters"
+            ),
+        })?;
+        if let Some(id) = self.subject_named(&name) {
+            let existing = &self.node(id).unwrap().name;
+            anyhow::bail!("A subject named \"{existing}\" is already in the library");
+        }
+        Ok(name)
+    }
+
     /// Validates the whole edit before changing anything.
     pub fn set_subject_meta(&mut self, id: NodeId, edit: SubjectEdit) -> anyhow::Result<()> {
         let node = self

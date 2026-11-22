@@ -466,6 +466,24 @@ impl ProjectExplorer {
             counterpart.remove = restore.0.ids();
         }
         previous.apply(catalog);
+        if !previous.remove.is_empty() {
+            // A creation: the subjects it made leave again. One that holds
+            // something now (it cannot, while the journal is unbroken) stays.
+            let empty: Vec<NodeId> = previous
+                .remove
+                .iter()
+                .copied()
+                .filter(|&id| {
+                    catalog.node(id).is_some()
+                        && !catalog.nodes.iter().any(|n| n.parent == Some(id))
+                })
+                .collect();
+            if !empty.is_empty()
+                && let Ok(records) = catalog.remove_nodes(&empty)
+            {
+                counterpart.restore = Some(Restored(Arc::new(records)));
+            }
+        }
         self.redo.push(counterpart);
         self.note_evidence(catalog);
         self.edit = None;
@@ -480,6 +498,14 @@ impl ProjectExplorer {
             return false;
         };
         let mut counterpart = Organization::capture(catalog);
+        if let Some(restore) = &next.restore {
+            // A creation undone: the subjects it made come back first.
+            if catalog.restore_nodes(&restore.0).is_err() {
+                self.clear_history();
+                return false;
+            }
+            counterpart.remove = restore.0.ids();
+        }
         next.apply(catalog);
         if !next.remove.is_empty() {
             match catalog.remove_nodes(&next.remove) {
@@ -498,6 +524,49 @@ impl ProjectExplorer {
         self.history_focus = None;
         self.history_revision = self.history_revision.wrapping_add(1);
         true
+    }
+    /// Organization edits that make subjects (a new empty subject, stacks
+    /// moved into a new one): `change` edits and returns the subjects it
+    /// made. Atomic: when it fails, the catalog is put back. One undo step
+    /// takes the edit back and the made subjects out of the library, so
+    /// Ctrl Z leaves no empty subject behind; redo brings them back.
+    pub(crate) fn organize_creating<T>(
+        &mut self,
+        catalog: &mut Catalog,
+        change: impl FnOnce(&mut Catalog) -> anyhow::Result<(T, Vec<NodeId>)>,
+    ) -> anyhow::Result<T> {
+        self.sync_evidence(catalog);
+        let mut before = Organization::capture(catalog);
+        let (value, created) = match change(catalog) {
+            Ok(done) => done,
+            Err(error) => {
+                // Stacks go back first, then the subjects made leave, then
+                // the containers made for them.
+                before.apply(catalog);
+                let made: Vec<NodeId> = catalog
+                    .nodes
+                    .iter()
+                    .filter(|n| n.kind == NodeKind::Subject)
+                    .filter(|n| !before.nodes.iter().any(|saved| saved.id == n.id))
+                    .filter(|n| !catalog.nodes.iter().any(|c| c.parent == Some(n.id)))
+                    .map(|n| n.id)
+                    .collect();
+                if !made.is_empty() && catalog.remove_nodes(&made).is_ok() {
+                    before.apply(catalog);
+                }
+                return Err(error);
+            }
+        };
+        before.remove = created;
+        self.undo.push(before);
+        if self.undo.len() > 80 {
+            self.undo.remove(0);
+        }
+        self.redo.clear();
+        self.history_focus = None;
+        self.history_revision = self.history_revision.wrapping_add(1);
+        self.history_commits = self.history_commits.wrapping_add(1);
+        Ok(value)
     }
     /// Organization edits that also take subjects or stacks out of the
     /// library: `change` edits (atomically: it changes nothing when it

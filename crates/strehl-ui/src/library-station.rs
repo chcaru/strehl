@@ -88,6 +88,11 @@ pub(crate) enum LibraryIntent {
         edit: SubjectEdit,
     },
     NewCollection,
+    /// Name a new, empty subject (in `collection` when given): nothing to
+    /// choose, so stacks can be moved into it.
+    NewSubject {
+        collection: Option<NodeId>,
+    },
     ReviewStorage,
     /// Back from a subject to the library.
     Back,
@@ -105,7 +110,8 @@ pub(crate) enum LibraryIntent {
         stacks: Vec<NodeId>,
         subject: NodeId,
     },
-    /// Move stacks into a new subject beside the first one's subject.
+    /// Name a new subject beside the first stack's subject and move the
+    /// stacks into it.
     MoveStacksToNewSubject(Vec<NodeId>),
     /// Move subjects into a collection.
     MoveSubjects {
@@ -663,6 +669,11 @@ impl LibraryStation {
                 .position(|e| matches!(e, MenuEntry::Sub { .. }));
         }
         self.context = Some(open);
+        true
+    }
+    /// Offscreen look checks: the New subject button's menu, open.
+    pub(crate) fn launch_new_menu(&mut self) -> bool {
+        self.menu_open = true;
         true
     }
     /// Offscreen look checks: select the first `count` cards shown.
@@ -1298,7 +1309,7 @@ impl LibraryStation {
             return None;
         }
         let anchor: Rect = ui.ctx().data(|d| d.get_temp(menu_anchor_id()))?;
-        let size = Vec2::new(220.0, 74.0);
+        let size = Vec2::new(220.0, 2.0 + 36.0 * 3.0);
         let rect = Rect::from_min_size(
             Pos2::new(anchor.right() - size.x, anchor.bottom() + 4.0),
             size,
@@ -1319,6 +1330,7 @@ impl LibraryStation {
                 for (index, (icon, label)) in [
                     (Icon::Camera, "From the camera"),
                     (Icon::Folder, "From folders…"),
+                    (Icon::Add, "Empty subject…"),
                 ]
                 .into_iter()
                 .enumerate()
@@ -1350,16 +1362,16 @@ impl LibraryStation {
                         None,
                     );
                     if response.clicked() {
-                        intent = Some(if index == 0 {
-                            LibraryIntent::NewStackFromCamera {
+                        intent = Some(match index {
+                            0 => LibraryIntent::NewStackFromCamera {
                                 collection,
                                 subject: None,
-                            }
-                        } else {
-                            LibraryIntent::PickFolders {
+                            },
+                            1 => LibraryIntent::PickFolders {
                                 collection,
                                 subject: None,
-                            }
+                            },
+                            _ => LibraryIntent::NewSubject { collection },
                         });
                     }
                 }
@@ -1892,7 +1904,7 @@ fn rig_strip(
     );
     painter.rect_filled(picture, CornerRadius::ZERO, palette.raised);
     if let Some(texture) = &rig.picture {
-        LibraryPreviews::paint_cover(&painter, picture, texture);
+        LibraryPreviews::paint_fit(&painter, picture, texture);
     }
     let x = picture.right() + 16.0;
     let tag = paint::tag(
@@ -2104,7 +2116,7 @@ fn paint_card(
     let picture = Rect::from_min_size(rect.min, Vec2::new(rect.width(), PICTURE));
     painter.rect_filled(picture, CornerRadius::ZERO, palette.raised);
     if let Some(texture) = texture {
-        LibraryPreviews::paint_cover(&painter, picture, texture);
+        LibraryPreviews::paint_fit(&painter, picture, texture);
     }
     if state.capturing || state.marked {
         paint::outline(&painter, picture, 1.5, palette.accent);
@@ -2237,7 +2249,7 @@ fn paint_row(
     let picture = Rect::from_min_size(rect.min + Vec2::new(0.0, 6.0), Vec2::new(96.0, 64.0));
     painter.rect_filled(picture, CornerRadius::ZERO, palette.raised);
     if let Some(texture) = texture {
-        LibraryPreviews::paint_cover(&painter, picture, texture);
+        LibraryPreviews::paint_fit(&painter, picture, texture);
     }
     if state.capturing || state.marked {
         paint::outline(&painter, picture, 1.5, palette.accent);

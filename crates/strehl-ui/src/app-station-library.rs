@@ -97,6 +97,8 @@ pub(super) struct LibraryState {
     waiting: Vec<NodeId>,
     /// Delete, move, merge and Show in Explorer (`app-library-manage.rs`).
     pub(super) manage: super::library_manage::ManageState,
+    /// The naming of a new subject, while open (`app-library-subject.rs`).
+    pub(super) new_subject: Option<super::library_subject::NewSubjectDraft>,
 }
 
 impl StrehlApp {
@@ -144,6 +146,7 @@ impl StrehlApp {
             _ => None,
         };
         self.library_dialog_keys(ui.ctx());
+        self.library_new_subject_keys(ui.ctx());
         let running = self
             .job
             .as_ref()
@@ -224,13 +227,15 @@ impl StrehlApp {
                 .signatures
                 .want_subjects(state.station.painted_rows().iter().copied()),
         }
-        // The confirmation is modal: what the Library asks meanwhile waits.
-        if let Some(intent) = intent.filter(|_| self.library.manage.dialog.is_none()) {
+        // The dialogs are modal: what the Library asks meanwhile waits.
+        let modal = self.library.manage.dialog.is_some() || self.library.new_subject.is_some();
+        if let Some(intent) = intent.filter(|_| !modal) {
             self.library_intent(ui.ctx(), intent);
         }
         self.library_apply_overlay(ui.ctx());
         self.library_rename_window(ui.ctx());
         self.library_delete_window(ui.ctx());
+        self.library_new_subject_window(ui.ctx());
     }
 
     /// Carry out what the Library or a subject page asked for.
@@ -356,9 +361,16 @@ impl StrehlApp {
                     Err(error) => self.library_notice(Severity::Warning, format!("{error:#}")),
                 }
             }
+            LibraryIntent::NewSubject { collection } => {
+                self.library_new_subject(collection, Vec::new());
+            }
+            LibraryIntent::MoveStacksToNewSubject(stacks) => {
+                if !stacks.is_empty() {
+                    self.library_new_subject(None, stacks);
+                }
+            }
             intent @ (LibraryIntent::Delete(_)
             | LibraryIntent::MoveStacks { .. }
-            | LibraryIntent::MoveStacksToNewSubject(_)
             | LibraryIntent::MoveSubjects { .. }
             | LibraryIntent::MoveSubjectsToNewCollection(_)
             | LibraryIntent::MergeSubjects { .. }
@@ -422,8 +434,10 @@ impl StrehlApp {
             .map(|node| node.name.clone())
             .unwrap_or_default();
         self.capture_parent = subject.or(collection);
-        if !subject_name.is_empty() {
-            self.capture.set_plan_subject(&subject_name);
+        match subject {
+            Some(id) => self.capture.set_plan_subject(id, &subject_name),
+            // A new subject: the plan asks for its name.
+            None => self.capture.clear_plan_subject(),
         }
         self.library.target = Some(CaptureTarget {
             subject,
