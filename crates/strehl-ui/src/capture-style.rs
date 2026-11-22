@@ -235,6 +235,109 @@ pub(crate) fn paint_job(painter: &Painter, pos: Pos2, anchor: Align2, layout: La
     rect
 }
 
+/// The first row's baseline in `galley`, from its top.
+pub(crate) fn baseline(galley: &egui::Galley) -> f32 {
+    galley
+        .rows
+        .first()
+        .and_then(|row| row.glyphs.first().map(|g| row.pos.y + g.pos.y))
+        .unwrap_or(galley.size().y * 0.8)
+}
+
+/// Paints `layout` with its first baseline at `pos.y` and its left, centre
+/// or right (`align`) at `pos.x`, so texts of different sizes share a line.
+/// Returns its rectangle.
+pub(crate) fn paint_on_baseline(
+    painter: &Painter,
+    pos: Pos2,
+    align: egui::Align,
+    layout: LayoutJob,
+) -> Rect {
+    let galley = painter.layout_job(layout);
+    let size = galley.size();
+    let left = match align {
+        egui::Align::Min => pos.x,
+        egui::Align::Center => pos.x - size.x / 2.0,
+        egui::Align::Max => pos.x - size.x,
+    };
+    let min = egui::pos2(left, pos.y - baseline(&galley));
+    let color = galley
+        .job
+        .sections
+        .first()
+        .map_or(Color32::WHITE, |s| s.format.color);
+    painter.galley(min, galley, color);
+    Rect::from_min_size(min, size)
+}
+
+/// Figures in cells as wide as the widest digit (the face's own figures are
+/// proportional), so a number that changes keeps its width and nothing
+/// beside it moves: the layout and its width. Other characters keep their
+/// own width.
+pub(crate) fn figures(
+    painter: &Painter,
+    text: &str,
+    size: f32,
+    color: Color32,
+    tracking: f32,
+) -> (LayoutJob, f32) {
+    let font = FontId::new(size, FontFamily::Proportional);
+    let (cell, widths) = painter.fonts_mut(|f| {
+        let cell = ('0'..='9')
+            .map(|d| f.glyph_width(&font, d))
+            .fold(0.0, f32::max);
+        let widths: Vec<(char, f32)> = text.chars().map(|c| (c, f.glyph_width(&font, c))).collect();
+        (cell, widths)
+    });
+    let mut job = LayoutJob::default();
+    let mut carry = 0.0;
+    let mut width = 0.0;
+    for (i, (c, w)) in widths.into_iter().enumerate() {
+        let pad = if c.is_ascii_digit() { cell - w } else { 0.0 };
+        let gap = if i > 0 { tracking } else { 0.0 };
+        let mut buf = [0u8; 4];
+        job.append(
+            c.encode_utf8(&mut buf),
+            carry + gap + pad / 2.0,
+            egui::TextFormat {
+                font_id: font.clone(),
+                color,
+                ..Default::default()
+            },
+        );
+        carry = pad / 2.0;
+        width += gap + w + pad;
+    }
+    job.wrap.max_width = f32::INFINITY;
+    (job, width)
+}
+
+/// The width [`figures`] gives `template` ("0:00:00"): the slot a changing
+/// number is drawn in.
+pub(crate) fn figures_width(painter: &Painter, template: &str, size: f32, tracking: f32) -> f32 {
+    figures(painter, template, size, Color32::WHITE, tracking).1
+}
+
+/// Paints [`figures`] with the baseline at `pos.y`, ending at `pos.x`
+/// (`right`) or starting there. Returns its rectangle, the figures' width.
+pub(crate) fn paint_figures(
+    painter: &Painter,
+    pos: Pos2,
+    right: bool,
+    text: &str,
+    size: f32,
+    color: Color32,
+    tracking: f32,
+) -> Rect {
+    let (job, width) = figures(painter, text, size, color, tracking);
+    let galley = painter.layout_job(job);
+    let left = if right { pos.x - width } else { pos.x };
+    let min = egui::pos2(left, pos.y - baseline(&galley));
+    let height = galley.size().y;
+    painter.galley(min, galley, color);
+    Rect::from_min_size(min, egui::vec2(width, height))
+}
+
 /// A tracked-capitals caption as a widget.
 pub(crate) fn caps(ui: &mut Ui, text: &str, palette: &CapturePalette) -> Response {
     ui.label(caps_job(text, 10.5, palette.ink3))

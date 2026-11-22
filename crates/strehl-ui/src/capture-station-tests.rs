@@ -181,8 +181,15 @@ fn rail_live_and_flight_intents() {
     assert_eq!(ws.confirm, None);
     ws.apply_flight(&s, FlightIntent::Glance);
     assert!(ws.glance_open());
-    ws.apply_flight(&s, FlightIntent::ShowPlane(39));
-    assert_eq!(ws.take_show_plane(), Some(39));
+    let raw: Option<std::sync::Arc<str>> = Some("frame-000157.ARW".into());
+    ws.apply_flight(
+        &s,
+        FlightIntent::ShowPlane {
+            plane: 39,
+            raw: raw.clone(),
+        },
+    );
+    assert_eq!(ws.take_show_plane(), Some((39, raw)));
 }
 
 fn texts(out: &egui::FullOutput) -> Vec<String> {
@@ -241,4 +248,116 @@ fn the_station_draws_and_glance_returns() {
         |ctx| ws.show_station(ctx),
     );
     assert!(!ws.glance_open());
+}
+
+/// The proof as the station runs it, through `poll_station` and its
+/// texture, on a scratch copy of a real capture: `STREHL_PROOF_RUN` as for
+/// `draft_preview`'s `proof_follows_a_real_run` (its RAWs,
+/// `transfer-receipts.full.jsonl` and optionally `events.full.jsonl`).
+/// `cargo test --release -p strehl-ui the_station_proof_follows_a_real_run -- --ignored --nocapture`.
+#[test]
+#[ignore = "needs a scratch copy of a real capture"]
+fn the_station_proof_follows_a_real_run() {
+    use std::io::Write;
+    let Some(run) = std::env::var_os("STREHL_PROOF_RUN").map(PathBuf::from) else {
+        return;
+    };
+    let full = std::fs::read_to_string(run.join("transfer-receipts.full.jsonl")).unwrap();
+    let lines: Vec<&str> = full
+        .lines()
+        .filter(|l| {
+            serde_json::from_str::<Value>(l).is_ok_and(|r| {
+                r["logical_name"].as_str().is_some_and(|n| {
+                    !n.starts_with("frame-") || run.join(format!("{n}.straw")).is_file()
+                })
+            })
+        })
+        .collect();
+    let receipts = run.join("transfer-receipts.jsonl");
+    std::fs::write(&receipts, "").unwrap();
+    let _ = std::fs::remove_file(run.join("result.json"));
+    if let Ok(events) = std::fs::read(run.join("events.full.jsonl")) {
+        std::fs::write(run.join("events.jsonl"), events).unwrap();
+    }
+    let mut state = ready();
+    state["phase"] = json!("capturing");
+    state["shots_per_plane"] = json!(4);
+    state["completed"] = json!(1);
+    state["total"] = json!(211);
+    let (_dir, mut ws, _inbox, mut s) = workspace(state);
+    s.in_progress = Some(crate::capture_client::InProgress {
+        folder: run.clone(),
+        idle: Duration::ZERO,
+        test: false,
+    });
+    ws.connection.as_ref().unwrap().replace(s.clone());
+    let ctx = egui::Context::default();
+    let started = Instant::now();
+    let mut shown = Vec::new();
+    let seen = |ws: &mut CaptureWorkspace, shown: &mut Vec<(f64, String)>| {
+        let s = ws.station_snapshot();
+        ws.poll_station(&s);
+        if let Some((_, _, what)) = ws.proof_texture(&ctx)
+            && shown.last().is_none_or(|(_, w)| *w != what)
+        {
+            println!("{:>6.1} s: {what}", started.elapsed().as_secs_f64());
+            shown.push((started.elapsed().as_secs_f64(), what));
+        }
+    };
+    for line in &lines {
+        let mut f = std::fs::OpenOptions::new()
+            .append(true)
+            .open(&receipts)
+            .unwrap();
+        writeln!(f, "{line}").unwrap();
+        drop(f);
+        std::thread::sleep(Duration::from_millis(100));
+        seen(&mut ws, &mut shown);
+    }
+    let end = Instant::now() + Duration::from_secs(20);
+    while Instant::now() < end {
+        std::thread::sleep(Duration::from_millis(100));
+        seen(&mut ws, &mut shown);
+    }
+    let errors = ws.station.proof.as_ref().and_then(|p| p.error.clone());
+    println!("updates shown: {}; last error: {errors:?}", shown.len());
+    assert!(shown.len() > 3, "{shown:?}");
+}
+
+/// A capture this desktop watched that completes (or is stopped) stays in
+/// the flight view, saying what happened, until Back to planning; a test
+/// shot's run does not.
+#[test]
+fn an_ended_capture_is_reviewed_until_back_to_planning() {
+    let mut capturing = ready();
+    capturing["phase"] = json!("capturing");
+    capturing["editable"] = json!(false);
+    let (_dir, mut ws, _inbox, s) = workspace(capturing.clone());
+    ws.poll_station(&s);
+    assert_eq!(ws.station_mode(), StationMode::Flight);
+    let mut complete = capturing.clone();
+    complete["phase"] = json!("complete");
+    complete["editable"] = json!(true);
+    let ended = snapshot(complete.clone());
+    ws.connection.as_ref().unwrap().replace(ended.clone());
+    ws.poll_station(&ended);
+    assert!(ws.station.review);
+    assert_eq!(ws.station_mode(), StationMode::Flight);
+    assert!(ws.station.ended_at.is_some());
+    assert!(ws.station_hints().keys.is_empty());
+    ws.apply_flight(&ended, FlightIntent::Done);
+    assert_eq!(ws.station_mode(), StationMode::Plan);
+    // A test shot's run ends without a review.
+    let mut test = snapshot(capturing);
+    test.in_progress = Some(crate::capture_client::InProgress {
+        folder: PathBuf::from("test-run"),
+        idle: Duration::ZERO,
+        test: true,
+    });
+    ws.connection.as_ref().unwrap().replace(test.clone());
+    ws.poll_station(&test);
+    ws.connection.as_ref().unwrap().replace(ended.clone());
+    ws.poll_station(&ended);
+    assert!(!ws.station.review);
+    assert_eq!(ws.station_mode(), StationMode::Plan);
 }

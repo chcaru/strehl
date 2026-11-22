@@ -655,15 +655,25 @@ pub(crate) fn follow_status(
 ) -> ActivityStatus {
     use crate::capture_workspace::follow::State;
     let progress = follower.progress();
+    let tally = &progress.tally;
     let mut detail = format!(
         "{} checked as they arrived",
         plural(progress.checked, "plane", "planes")
     );
-    if progress.retaken > 0 {
-        detail.push_str(&format!(" · {} retaken", progress.retaken));
+    // The words of the in-flight feed (capture-flight.rs): how retakes went
+    // and how many planes the stack folds to one shot.
+    if tally.retaken() > 0 {
+        detail.push_str(&format!(
+            " · {} retaken, {} then passed",
+            tally.retaken(),
+            tally.retake_passed
+        ));
     }
-    if progress.attention > 0 {
-        detail.push_str(&format!(" · {} to look at", progress.attention));
+    if tally.single_shot() > 0 {
+        detail.push_str(&format!(" · {} stacked from one shot", tally.single_shot()));
+    }
+    if tally.incomplete > 0 {
+        detail.push_str(&format!(" · {} incomplete", tally.incomplete));
     }
     let state = match &follower.state {
         State::Running if follower.observing => ActivityState::Waiting {

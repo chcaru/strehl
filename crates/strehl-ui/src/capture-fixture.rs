@@ -93,6 +93,7 @@ fn plan_state() -> Value {
 pub(crate) fn snapshot(fixture: Fixture) -> Snapshot {
     let mut state = plan_state();
     if fixture != Fixture::Plan {
+        let captured = flight_groups() * 4;
         for (key, value) in [
             ("phase", json!("capturing")),
             ("editable", json!(false)),
@@ -100,14 +101,16 @@ pub(crate) fn snapshot(fixture: Fixture) -> Snapshot {
             ("total", json!(96)),
             ("position", json!(37520)),
             ("message", json!("Plane 61 of 96 · focus 37520")),
+            ("error_correction", json!(true)),
             (
                 "timer",
                 json!({"elapsed":341.6,"remaining":198.0,"finished":false,"paused":false}),
             ),
             (
                 "storage",
-                json!({"mode":"host-pc","free_bytes":355_000_000_000u64,"pipelined":true,"captured_frames":244,
-                    "saved_frames":242,"pending_frames":2,"receipt":{"wire_MB_per_second":38.2}}),
+                json!({"mode":"host-pc","free_bytes":355_000_000_000u64,"pipelined":true,
+                    "captured_frames":captured,"saved_frames":captured - 2,"pending_frames":2,
+                    "receipt":{"wire_MB_per_second":38.2}}),
             ),
         ] {
             state[key] = value;
@@ -137,30 +140,205 @@ pub(crate) fn snapshot(fixture: Fixture) -> Snapshot {
     s
 }
 
-/// The checker's journal for the flight fixture: 61 planes, plane 39 retaken.
-pub(crate) fn progress() -> Progress {
+/// The engine's reasons as `strehl follow` writes them (`pixel-shift-cmd.rs`
+/// `demotion`), for fabricated journals.
+pub(crate) const MOTION: &str =
+    "witness tiles disagree locally (p99/median z^2 3.26): motion, a focus slip or a wrong member";
+pub(crate) const PATTERN: &str =
+    "offsets [(0, -1), (1, -1), (1, 1)] do not cover the four CFA parities";
+pub(crate) const RESIDUAL: &str =
+    "witness pairs misregistered by 0.204 photosite after residual compensation";
+pub(crate) const MISREGISTERED: &str =
+    "witness pairs misregistered by 0.228 photosite after residual compensation";
+
+/// What one fabricated group's check says.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum Check {
+    Pass,
+    /// Demoted, with the engine's reason and whether a retake could help.
+    Demote(&'static str, bool),
+}
+
+/// A journal line as `strehl follow` writes it (the fields the desktop
+/// reads), for a stack starting at focus `start` with a step of 7.
+pub(crate) fn journal_line(
+    start: u64,
+    plane: u64,
+    attempt: u32,
+    frame: u64,
+    check: Check,
+) -> Value {
+    let target = start + (plane - 1) * 7;
+    let group = if attempt == 1 {
+        format!("g{plane}")
+    } else {
+        format!("g{plane}-{attempt}")
+    };
+    let names: Vec<String> = (0..4)
+        .map(|k| format!("frame-{:06}.ARW", frame + k))
+        .collect();
+    let seconds = 0.26 + (plane % 3) as f64 * 0.01;
+    match check {
+        Check::Pass => json!({"plane":plane,"target":target,"group_id":group,"verdict":"pass",
+            "reason":null,"retake":false,"members":4,"names":names,"seconds":seconds}),
+        Check::Demote(reason, retake) => json!({"plane":plane,"target":target,"group_id":group,
+            "verdict":"demote","reason":reason,"retake":retake,"members":4,"names":names,
+            "seconds":seconds}),
+    }
+}
+
+/// A fabricated run's journal in the order the checker writes it: a retake
+/// is taken after the next plane (the host's deferred retake), so its line
+/// follows that plane's. `checks(plane)` gives each try's check, first try
+/// first. Returns the lines and the groups captured.
+pub(crate) fn journal(
+    start: u64,
+    planes: u64,
+    checks: impl Fn(u64) -> Vec<Check>,
+) -> (Vec<Value>, u64) {
     let mut lines = Vec::new();
-    for plane in 1..=61u64 {
-        let target = 37_100 + (plane - 1) * 7;
-        if plane == 39 {
-            lines.push(
-                json!({"plane":plane,"target":target,"group_id":"g39","verdict":"demote",
-                "reason":"moved between shots","retake":true,"members":4,"seconds":2.0}),
-            );
-            lines.push(
-                json!({"plane":plane,"target":target,"group_id":"g39b","verdict":"pass",
-                "retake":false,"members":4,"seconds":2.2}),
-            );
-        } else {
-            let seconds = 1.9 + (plane % 3) as f64 * 0.1;
-            lines.push(
-                json!({"plane":plane,"target":target,"group_id":format!("g{plane}"),
-                "verdict":"pass","retake":false,"members":4,"seconds":seconds}),
-            );
+    let mut frame = 1;
+    // Retakes owed: (plane, its remaining tries, the try number).
+    let mut owed: Vec<(u64, Vec<Check>, u32)> = Vec::new();
+    for plane in 1..=planes {
+        let mut tries = checks(plane);
+        let first = tries.remove(0);
+        lines.push(journal_line(start, plane, 1, frame, first));
+        frame += 4;
+        for (p, rest, attempt) in std::mem::take(&mut owed) {
+            let mut rest = rest;
+            let check = rest.remove(0);
+            lines.push(journal_line(start, p, attempt, frame, check));
+            frame += 4;
+            if !rest.is_empty() {
+                owed.push((p, rest, attempt + 1));
+            }
+        }
+        if !tries.is_empty() {
+            owed.push((plane, tries, 2));
         }
     }
+    (lines, (frame - 1) / 4)
+}
+
+fn progress_of(lines: &[Value]) -> Progress {
     let text: Vec<String> = lines.iter().map(Value::to_string).collect();
     follow::progress(&text.join("\n"))
+}
+
+/// The flight fixture's checks, modelled on the owner's run of 2026-11-21
+/// (`stack-1795300522964-6430`): planes retaken and passing, one still
+/// failing after two retakes, and failures the checker does not retake.
+pub(crate) fn flight_checks(plane: u64) -> Vec<Check> {
+    use Check::*;
+    match plane {
+        3 => vec![Demote(MISREGISTERED, true), Pass],
+        24 => vec![Demote(PATTERN, false)],
+        27 => vec![Demote(RESIDUAL, false)],
+        39 => vec![Demote(MOTION, true), Pass],
+        52 => vec![
+            Demote(MOTION, true),
+            Demote(MOTION, true),
+            Demote(MOTION, true),
+        ],
+        55 => vec![Demote(MOTION, true), Demote(MOTION, true), Pass],
+        59 => vec![Demote(PATTERN, false)],
+        // Its retake is taken after plane 61 and not checked yet.
+        60 => vec![Demote(MOTION, true), Pass],
+        _ => vec![Pass],
+    }
+}
+
+/// The checker's journal for the flight fixture: 61 planes (see
+/// [`flight_checks`]); the retake of plane 60 is still being checked.
+pub(crate) fn progress() -> Progress {
+    let (lines, _) = journal(37_100, 61, flight_checks);
+    let lines: Vec<Value> = lines
+        .into_iter()
+        .filter(|l| !(l["plane"] == 60 && l["verdict"] == "pass"))
+        .collect();
+    progress_of(&lines)
+}
+
+/// The groups the flight fixture's camera has captured: 61 planes and their
+/// retakes so far (plane 60's included).
+pub(crate) fn flight_groups() -> u64 {
+    journal(37_100, 61, flight_checks).1
+}
+
+/// The flight fixture's capture once ended (`--capture-fixture
+/// flight+done`): all 96 planes and every retake checked; and its groups.
+pub(crate) fn finished_progress() -> (Progress, u64) {
+    let (lines, groups) = journal(37_100, 96, flight_checks);
+    (progress_of(&lines), groups)
+}
+
+/// The flight fixture's host state once the capture completed.
+pub(crate) fn finish(s: &mut Snapshot) {
+    let mut state = s.state.clone();
+    let groups = finished_progress().1;
+    state["phase"] = json!("complete");
+    state["editable"] = json!(true);
+    state["completed"] = json!(96);
+    state["message"] = json!("Capture complete");
+    state["timer"] = json!({"elapsed":602.4,"remaining":0.0,"finished":true,"paused":false});
+    state["storage"]["captured_frames"] = json!(groups * 4);
+    state["storage"]["saved_frames"] = json!(groups * 4);
+    state["storage"]["pending_frames"] = json!(0);
+    s.set_state(state);
+}
+
+/// A long run's checks (`--capture-fixture flight+long`): about one plane
+/// in 23 retaken once, one in 211 failing after two retakes, one in 97 and
+/// one in 151 failing checks the checker does not retake.
+pub(crate) fn long_checks(plane: u64) -> Vec<Check> {
+    use Check::*;
+    if plane % 211 == 7 {
+        vec![
+            Demote(MOTION, true),
+            Demote(MOTION, true),
+            Demote(MOTION, true),
+        ]
+    } else if plane % 97 == 5 {
+        vec![Demote(PATTERN, false)]
+    } else if plane % 151 == 11 {
+        vec![Demote(RESIDUAL, false)]
+    } else if plane.is_multiple_of(23) {
+        vec![Demote(MOTION, true), Pass]
+    } else {
+        vec![Pass]
+    }
+}
+
+/// The long fixture's planes taken so far, and planned, from focus 20,000
+/// every 7 units.
+pub(crate) const LONG_DONE: u64 = 5_400;
+pub(crate) const LONG_TOTAL: u64 = 6_000;
+pub(crate) const LONG_START: u64 = 20_000;
+
+/// The long fixture's journal ([`LONG_DONE`] planes) and its groups.
+pub(crate) fn long_progress() -> (Progress, u64) {
+    let (lines, groups) = journal(LONG_START, LONG_DONE, long_checks);
+    (progress_of(&lines), groups)
+}
+
+/// The flight fixture's host state for the long run: [`LONG_DONE`] of
+/// [`LONG_TOTAL`] planes and `groups` groups captured.
+pub(crate) fn lengthen(s: &mut Snapshot, groups: u64) {
+    let mut state = s.state.clone();
+    let end = LONG_START + (LONG_TOTAL - 1) * 7;
+    state["plan"]["start"] = json!(LONG_START);
+    state["plan"]["end"] = json!(end);
+    state["planned"] = json!(LONG_TOTAL);
+    state["completed"] = json!(LONG_DONE);
+    state["total"] = json!(LONG_TOTAL);
+    state["position"] = json!(LONG_START + (LONG_DONE - 1) * 7);
+    state["message"] = json!(format!("Plane {LONG_DONE} of {LONG_TOTAL}"));
+    state["timer"] =
+        json!({"elapsed":31_150.0,"remaining":3_400.0,"finished":false,"paused":false});
+    state["storage"]["captured_frames"] = json!(groups * 4);
+    state["storage"]["saved_frames"] = json!(groups * 4 - 2);
+    s.set_state(state);
 }
 
 /// The test shot the plan fixture shows.

@@ -69,6 +69,155 @@ pub(crate) struct Progress {
     /// `align_seconds` as the engine wrote them. The newest
     /// [`MAX_PLANE_RECORDS`] planes.
     pub planes: BTreeMap<u64, Value>,
+    /// Every checked group in the order the checker wrote it: a plane's
+    /// first try and each retake are separate items (the in-flight feed).
+    /// The newest [`MAX_FEED_ITEMS`].
+    pub feed: Vec<FeedItem>,
+    /// Groups checked beyond each plane's first: the retakes taken.
+    pub retakes: usize,
+    /// Each plane's outcome so far, by how it got there.
+    pub tally: Tally,
+}
+
+/// The most feed items [`Progress::feed`] keeps: every group of a
+/// 6,000-plane stack with every plane retaken twice fits; beyond it the
+/// oldest are dropped (the counts still cover every plane).
+pub(crate) const MAX_FEED_ITEMS: usize = 32_768;
+
+/// A checked group's verdict (`strehl follow`'s `verdict`).
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub(crate) enum Verdict {
+    /// A four-shot group the stack assembles.
+    #[default]
+    Pass,
+    /// A single shot, decoded and aligned.
+    Decoded,
+    /// A four-shot group the stack folds to its first shot.
+    Demote,
+    /// Not readable.
+    Failed,
+    /// Its RAWs did not all arrive.
+    Incomplete,
+    /// A verdict this desktop does not know.
+    Other,
+}
+
+impl Verdict {
+    pub fn of(verdict: &str) -> Self {
+        match verdict {
+            "pass" => Self::Pass,
+            "decoded" => Self::Decoded,
+            "demote" => Self::Demote,
+            "failed" => Self::Failed,
+            "incomplete" => Self::Incomplete,
+            _ => Self::Other,
+        }
+    }
+    /// The stack uses the group as taken.
+    pub fn passed(self) -> bool {
+        matches!(self, Self::Pass | Self::Decoded)
+    }
+}
+
+/// One checked group, as the feed shows it.
+#[derive(Clone, Debug, Default, PartialEq)]
+pub(crate) struct FeedItem {
+    pub plane: u64,
+    /// 1 for the plane's first group, 2 for its first retake, ...
+    pub attempt: u32,
+    pub verdict: Verdict,
+    /// The checker asked for another try (`retake`).
+    pub retake: bool,
+    /// The engine's reason, as it wrote it.
+    pub reason: Option<Arc<str>>,
+    /// How long the check took.
+    pub seconds: Option<f32>,
+    pub target: Option<u16>,
+    /// Members in the group (4 for a four-shot group).
+    pub members: u8,
+    /// The group's first RAW (`names[0]`).
+    pub first: Option<Arc<str>>,
+    /// How many items later the plane's next try is, once it was checked.
+    pub next: Option<u32>,
+}
+
+impl FeedItem {
+    fn of(v: &Value, plane: u64, attempt: u32) -> Self {
+        Self {
+            plane,
+            attempt,
+            verdict: Verdict::of(v["verdict"].as_str().unwrap_or("")),
+            retake: v["retake"] == true,
+            reason: v["reason"].as_str().map(Arc::from),
+            seconds: v["seconds"].as_f64().map(|s| s as f32),
+            target: v["target"].as_u64().and_then(|t| u16::try_from(t).ok()),
+            members: v["members"]
+                .as_u64()
+                .map_or(0, |m| u8::try_from(m).unwrap_or(u8::MAX)),
+            first: v["names"][0].as_str().map(Arc::from),
+            next: None,
+        }
+    }
+}
+
+/// Each plane's outcome, by its last checked group and how many it had.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub(crate) struct Tally {
+    /// Planes in the journal.
+    pub planes: usize,
+    /// Passed with their first group.
+    pub first_try: usize,
+    /// Failed, retaken, and a retake passed.
+    pub retake_passed: usize,
+    /// Retaken, and the last try failed too: the stack folds it to that
+    /// try's first shot.
+    pub retake_failed: usize,
+    /// Failed once and not retaken (the checker does not ask for a retake
+    /// of that failure): folded to its first shot.
+    pub not_retaken: usize,
+    /// The last try failed and asked for a retake the host can still take
+    /// (fewer than [`strehl_capture::worker::MAX_RETAKES`] retakes so far).
+    pub asked: usize,
+    /// Its RAWs did not all arrive.
+    pub incomplete: usize,
+}
+
+/// A plane's last line and how many groups it had: what the tally counts.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+struct Outcome {
+    verdict: Verdict,
+    retake: bool,
+    attempts: u32,
+}
+
+impl Tally {
+    fn add(&mut self, o: Outcome, by: isize) {
+        let slot = if o.verdict.passed() {
+            if o.attempts > 1 {
+                &mut self.retake_passed
+            } else {
+                &mut self.first_try
+            }
+        } else if o.verdict == Verdict::Incomplete {
+            &mut self.incomplete
+        } else if o.retake && (o.attempts as usize) <= strehl_capture::worker::MAX_RETAKES {
+            &mut self.asked
+        } else if o.attempts > 1 {
+            &mut self.retake_failed
+        } else {
+            &mut self.not_retaken
+        };
+        *slot = slot.saturating_add_signed(by);
+        self.planes = self.planes.saturating_add_signed(by);
+    }
+    /// Planes the stack folds to one shot as things stand.
+    pub fn single_shot(&self) -> usize {
+        self.retake_failed + self.not_retaken
+    }
+    /// Planes taken again at least once.
+    pub fn retaken(&self) -> usize {
+        self.retake_passed + self.retake_failed
+    }
 }
 
 /// For the in-flight screen's last planes and rail (Studio 2, 7.4).
@@ -125,6 +274,11 @@ pub(crate) struct JournalReader {
     counted: BTreeMap<u64, Counted>,
     /// The groups recorded per plane: more than one means it was retaken.
     groups: BTreeMap<u64, BTreeSet<String>>,
+    /// Each plane's tries so far, its last line's outcome, and its last
+    /// feed item (counted from the first item ever made).
+    tries: BTreeMap<u64, (Outcome, usize)>,
+    /// Feed items dropped from the front ([`MAX_FEED_ITEMS`]).
+    dropped: usize,
 }
 
 impl JournalReader {
@@ -163,12 +317,53 @@ impl JournalReader {
             let Some(plane) = v["plane"].as_u64() else {
                 continue;
             };
+            // A line for a group already read (a resumed checker) is not a
+            // new try.
+            let mut new_try = true;
             if let Some(group) = v["group_id"].as_str() {
                 let groups = self.groups.entry(plane).or_default();
-                if groups.insert(group.to_owned()) && groups.len() == 2 {
+                new_try = groups.insert(group.to_owned());
+                if new_try && groups.len() == 2 {
                     p.retaken += 1;
                     p.retaken_planes.insert(plane);
                 }
+            }
+            let item = self.dropped + p.feed.len();
+            let (before, last) = self.tries.get(&plane).copied().unzip();
+            let attempts = before.map_or(0, |o| o.attempts) + u32::from(new_try);
+            let outcome = Outcome {
+                verdict: Verdict::of(v["verdict"].as_str().unwrap_or("")),
+                retake: v["retake"] == true,
+                attempts: attempts.max(1),
+            };
+            if let Some(before) = before {
+                p.tally.add(before, -1);
+            }
+            p.tally.add(outcome, 1);
+            if new_try {
+                if attempts > 1 {
+                    p.retakes += 1;
+                }
+                if let Some(last) = last.filter(|l| *l >= self.dropped) {
+                    p.feed[last - self.dropped].next = u32::try_from(item - last).ok();
+                }
+                p.feed.push(FeedItem::of(v, plane, outcome.attempts));
+                self.tries.insert(plane, (outcome, item));
+                if p.feed.len() > MAX_FEED_ITEMS {
+                    let drop = MAX_FEED_ITEMS / 8;
+                    p.feed.drain(..drop);
+                    self.dropped += drop;
+                }
+            } else {
+                // The same group again: its item says what the line says.
+                if let Some(last) = last.filter(|l| *l >= self.dropped) {
+                    let next = p.feed[last - self.dropped].next;
+                    p.feed[last - self.dropped] = FeedItem {
+                        next,
+                        ..FeedItem::of(v, plane, outcome.attempts)
+                    };
+                }
+                self.tries.insert(plane, (outcome, last.unwrap_or(item)));
             }
             let new = Counted::of(v);
             let old = self.counted.insert(plane, new).unwrap_or_default();
@@ -646,19 +841,30 @@ mod tests {
         .join("\n");
         let p = progress(&journal);
         assert_eq!(
-            Progress {
-                planes: BTreeMap::new(),
-                ..p.clone()
-            },
-            Progress {
-                checked: 4,
-                passed: 2,
-                attention: 2,
-                retake: vec![90, 110],
-                align_pairs: 6,
-                retaken: 0,
-                retaken_planes: BTreeSet::new(),
-                planes: BTreeMap::new(),
+            (
+                p.checked,
+                p.passed,
+                p.attention,
+                p.retake.clone(),
+                p.align_pairs,
+                p.retaken,
+                p.retaken_planes.clone()
+            ),
+            (4, 2, 2, vec![90, 110], 6, 0, BTreeSet::new())
+        );
+        // Lines without group ids: each is a try of its plane.
+        assert_eq!(p.feed.len(), 6);
+        assert_eq!(p.retakes, 1);
+        assert_eq!(
+            p.tally,
+            Tally {
+                planes: 5,
+                first_try: 2,
+                retake_passed: 1,
+                retake_failed: 0,
+                not_retaken: 0,
+                asked: 1,
+                incomplete: 1,
             }
         );
         assert_eq!(progress(""), Progress::default());
