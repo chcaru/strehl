@@ -273,6 +273,9 @@ pub(crate) struct FocusRail {
     profile: Option<(u64, Vec<(u16, f32)>)>,
     /// The planned positions and the (start, end, step) they are of.
     planned: Option<((u16, u16, u16), Vec<u16>)>,
+    /// The head's right-hand controls' width last frame, so the survey's
+    /// legend can shorten before it reaches them.
+    head_right: f32,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -822,6 +825,25 @@ impl FocusRail {
                         }
                     });
                     if let Some(survey) = &inputs.survey {
+                        // The legend shortens to what fits before the scale
+                        // at the right (its width measured last frame): the
+                        // words, then "survey", then the swatch alone.
+                        let right = if self.head_right > 0.0 {
+                            self.head_right
+                        } else {
+                            640.0
+                        };
+                        let room = head.right() - 14.0 - right - 24.0 - ui.cursor().left() - 21.0;
+                        let width = |text: &str| {
+                            ui.painter()
+                                .layout_job(style::job(text, 12.0, palette.ink3, 0.0))
+                                .size()
+                                .x
+                        };
+                        let label = [survey.as_str(), "survey"]
+                            .into_iter()
+                            .find(|text| width(text) <= room)
+                            .unwrap_or("");
                         ui.horizontal(|ui| {
                             ui.spacing_mut().item_spacing.x = 7.0;
                             let (r, _) =
@@ -837,30 +859,40 @@ impl FocusRail {
                                     palette.ok.gamma_multiply(0.75),
                                 );
                             }
-                            style::text(ui, survey, 12.0, palette.ink3);
-                        });
+                            if !label.is_empty() {
+                                style::text(ui, label, 12.0, palette.ink3);
+                            }
+                        })
+                        .response
+                        .on_hover_text(survey.as_str());
                     }
                 }
-                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    ui.spacing_mut().item_spacing.x = 16.0;
-                    if inputs.flight.is_none() {
-                        if style::link(ui, "Survey again", inputs.editable, palette).clicked() {
-                            intents.push(RailIntent::SurveyAgain);
+                let right =
+                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                        ui.spacing_mut().item_spacing.x = 16.0;
+                        if inputs.flight.is_none() {
+                            if style::link(ui, "Survey again", inputs.editable, palette).clicked() {
+                                intents.push(RailIntent::SurveyAgain);
+                            }
+                            if style::link(
+                                ui,
+                                "Use the survey's bounds",
+                                inputs.editable && inputs.can_use_survey,
+                                palette,
+                            )
+                            .clicked()
+                            {
+                                intents.push(RailIntent::UseSurveyBounds);
+                            }
+                            ui.add_space(10.0);
                         }
-                        if style::link(
-                            ui,
-                            "Use the survey's bounds",
-                            inputs.editable && inputs.can_use_survey,
-                            palette,
-                        )
-                        .clicked()
-                        {
-                            intents.push(RailIntent::UseSurveyBounds);
-                        }
-                        ui.add_space(10.0);
-                    }
-                    self.scale_controls(ui, chart, inputs.lens, palette, fit);
-                });
+                        // A narrow head (a 1280 px window) folds the span readout into
+                        // the slider's hover, clear of the jog buttons.
+                        let compact = head.width() < 1040.0;
+                        self.scale_controls(ui, chart, inputs.lens, palette, fit, compact);
+                        ui.min_rect().width()
+                    });
+                self.head_right = right.inner;
             },
         );
     }
@@ -874,6 +906,7 @@ impl FocusRail {
         lens: Option<u16>,
         palette: &CapturePalette,
         fit: RailView,
+        compact: bool,
     ) {
         ui.spacing_mut().item_spacing.x = 9.0;
         let width = f64::from(axis_width(chart));
@@ -889,19 +922,24 @@ impl FocusRail {
             style::focus_units(shown.span.round().clamp(0.0, TRAVEL) as u16),
             per_pixel(shown.span / width)
         );
-        let (r, _) = ui.allocate_exact_size(egui::vec2(124.0, 16.0), Sense::hover());
-        style::paint_job(
-            ui.painter(),
-            r.left_center(),
-            Align2::LEFT_CENTER,
-            style::job(&readout, 12.0, palette.ink2, 0.0),
-        );
+        if !compact {
+            let (r, _) = ui.allocate_exact_size(egui::vec2(124.0, 16.0), Sense::hover());
+            style::paint_job(
+                ui.painter(),
+                r.left_center(),
+                Align2::LEFT_CENTER,
+                style::job(&readout, 12.0, palette.ink2, 0.0),
+            );
+        }
         let (response, span) = scale_slider(ui, shown.span, fit.span, palette);
-        let response = response.on_hover_text(
-            "The rail's scale. The wheel over the rail zooms around the pointer; Shift and \
+        let help = "The rail's scale. The wheel over the rail zooms around the pointer; Shift and \
              the wheel, or a drag on the empty rail, pans; double-click or Fit returns to \
-             the bounds",
-        );
+             the bounds";
+        let response = if compact {
+            response.on_hover_text(format!("{readout}. {help}"))
+        } else {
+            response.on_hover_text(help)
+        };
         if response.double_clicked() {
             self.fit();
         } else if let Some(span) = span {
