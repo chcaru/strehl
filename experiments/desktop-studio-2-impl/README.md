@@ -127,6 +127,51 @@ The owner captured, stacked, developed and exported one subject (capture `stack-
 
 Merged into `main` with no conflicts. On the merged tree: `cargo test --locked -p strehl-ui` 1,497 passed, 0 failed, 43 ignored; `-p strehl-edit` all passed including the export byte-freeze; `-p strehl-capture` 63 passed; clippy `-D warnings` (ui, edit, capture) and fmt clean (VERIFIED, Compiling/Checking seen). Package `desktop-7990a64e93447314`; all 76 `visual-check.py` routes rendered from the packaged `Strehl.exe` and were looked at (VERIFIED). No host behaviour change (one constant made public); the Pi needs no redeploy. Nothing in this round was tried on the rig or in the owner's window.
 
+### Owner feedback round 3 (2026-11-22, after using the installed build)
+
+Before this round the application icon became round 2's Sunset (`d359bbe28`; candidates in `experiments/app-icon-2026-11-21/`). The owner then listed eleven fixes across Library, Capture, Develop and export metadata. Four agents built them in parallel worktrees (`studio2/h-subjects`, `studio2/h-proof`, `studio2/h-retake`, `studio2/h-develop`). Each note has the owner's words, decisions, measurements and open questions:
+
+- [h-subjects.md](h-subjects.md):
+  - Library: New subject > Empty subject… makes an empty subject on the spot (named, never a duplicate, undoable).
+  - Moving stacks: Move to subject… on a stack's lineage and in the selection bar.
+  - Every preview is drawn whole at its own aspect; the disk caches were never cropped.
+  - Capture starts a new subject unless one is chosen on purpose. Start and Schedule wait for its name, and the plan says where the stack goes. Unnamed (agent) captures no longer land in the most recent subject.
+- [h-proof.md](h-proof.md): "Proof so far" is replaced by a plane view:
+  - The newest or a picked plane at full resolution, as the stack uses it (four shots combined), in 1024 px tiles.
+  - Sharp and Checks overlays, the facts about the plane, and a history strip of every plane's sharp share.
+  - It decodes RAWs only when the detail can be seen.
+  - Open: 14–28 ms frames while zoomed in during full-resolution builds (cause not found; a separate process for the builds is the suggested fix).
+- [h-retake.md](h-retake.md):
+  - Retakes a plane is a per-run setting (0–5, default 2; an older host reports it fixed at 2).
+  - Retake by hand: on a plane left to one shot, during the run or after it, into the same capture with the same plane numbers. The stack uses a plane's last complete group, so a passing retake wins.
+  - A warning when a run of one-shot planes is wider than half the calibrated sharp width, with Retake planes A–B.
+  - The host gains `queue_retakes`, `max_retakes` and follow-up runs: **a Pi deploy is needed**, and none of it is rig-tested.
+- [h-develop.md](h-develop.md):
+  - Develop's split line drags anywhere along it and stays put while zooming.
+  - Artist and copyright, which nothing had ever set (Export always wrote empty text), live in Preferences > Exports and show in Export under the switch. The description is per photograph.
+  - Every exported file names Strehl as its software, always: PNG, JPEG and AVIF from agent and CLI exports had no stamp before.
+
+Merging: h-retake, h-develop and h-subjects merged cleanly apart from one overlay allow-list in `main.rs` (both kept). h-proof conflicted with h-retake in `capture-flight.rs` and `capture-station.rs`; I kept both lanes' fields and actions, h-proof's layout, and h-retake's feed context. Two fixes followed on the merged tree (`c0d33dc84`):
+
+- The flight headline overlapped in a 1280 px window (row 2 with the owner's numbers, row 1 in `flight+long`). Its texts now give way in order, checked offscreen at 1280 and 1680 px.
+- A library test raced a background sources check (1 failure in 4 full runs). It passed in all 6 runs after the fix.
+
+On the merged tree:
+
+| Check | Result |
+| --- | --- |
+| `cargo test --locked -p strehl-ui` | 1,538 passed, 0 failed, 49 ignored (6 runs) |
+| `cargo test --locked -p strehl-capture` | 75 passed |
+| `cargo test --locked -p strehl-edit` | 193 passed (export byte-freeze included) |
+| clippy `-D warnings` (ui, capture, edit) | clean |
+| fmt (ui, edit) | clean; strehl-capture's `receiver.rs` differs as at base |
+| `cargo test --locked -p strehl-cli` | 293 passed, 8 failed |
+| clippy on strehl-cli | 33 findings |
+
+The 8 strehl-cli failures are research controls (native probe and m194g private-corpus) and the clippy findings are in files untouched this round. Both are identical at base `d359bbe28` (the same 8 tests fail; 33 clippy errors), so they are not this round's. All VERIFIED (Compiling/Checking seen).
+
+Nothing in this round was tried in the owner's window or on the rig.
+
 ### Package and install
 
 - A source-inclusive package of `191e4fadb` was built with `scripts/package-desktop.ps1` (build id `desktop-2b8da1787c8409c4`). Five routes rendered offscreen from the packaged `Strehl.exe` on a copy of the catalog (VERIFIED).
