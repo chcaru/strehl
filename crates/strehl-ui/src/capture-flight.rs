@@ -1,7 +1,7 @@
 //! A capture in flight (Studio 2, 7.4; mockup `flight.html`): the headline
-//! (plane, bar, time left, finishing time, RAWs and retakes), the proof, the
-//! latest plane with its verdict, the feed of every checked group from the
-//! checker's journal, and the health column with the "when it finishes"
+//! (plane, bar, time left, finishing time, RAWs and retakes), the plane
+//! view's place (`capture-plane-view.rs` draws it), the feed of every
+//! checked group from the checker's journal, and the health column with the "when it finishes"
 //! switches, Pause, Stop and Glance. Once the capture has ended the same
 //! view says what happened to every plane, until the user goes back to
 //! planning.
@@ -17,7 +17,7 @@
 //! the one the stack uses, folded to its first shot when it failed.
 use std::{collections::VecDeque, sync::Arc, time::Instant};
 
-use eframe::egui::{self, Align2, Rect, Sense, TextureId, Ui};
+use eframe::egui::{self, Align2, Rect, Sense, Ui};
 use strehl_capture::worker::MAX_RETAKES;
 
 use super::follow::{FeedItem, Progress, Tally, Verdict};
@@ -839,12 +839,6 @@ pub(crate) struct FlightInputs<'a> {
     pub progress: Option<&'a Progress>,
     /// The checker is on.
     pub checking: bool,
-    /// The proof's texture and what it stands for ("planes 1–61").
-    pub proof: Option<(TextureId, egui::Vec2, String)>,
-    /// Why the proof is not what it should be (its last update failed).
-    pub proof_note: Option<String>,
-    /// The live preview, as the latest plane's picture.
-    pub latest: Option<(TextureId, egui::Vec2)>,
     pub stack_when_done: bool,
     /// "Manage power"; `None` without studio outlets.
     pub power_down: Option<bool>,
@@ -900,6 +894,9 @@ pub(crate) struct FlightView {
     scroll: Option<(f32, f32)>,
     /// Rows laid out last frame (performance checks).
     pub rows_drawn: usize,
+    /// Where the plane view goes (`capture-plane-view.rs`), set by
+    /// [`canvas`] each frame.
+    pub plane: Option<Rect>,
 }
 
 impl FlightView {
@@ -929,7 +926,7 @@ impl FlightView {
     }
 }
 
-/// The canvas part: headline, proof, latest plane, the feed.
+/// The canvas part: headline, the plane view's place, the feed.
 pub(crate) fn canvas(
     ui: &mut Ui,
     inputs: &FlightInputs<'_>,
@@ -946,58 +943,22 @@ pub(crate) fn canvas(
         egui::vec2(r.width() - 48.0, 108.0),
     );
     head_ui(&p, head, &h, inputs, palette);
-    // The proof (as large as fits) and the side column.
+    // The plane view (as large as fits; drawn by the station into
+    // `view.plane`) and the side column.
     let top = head.bottom() + 20.0;
     let side_w = (r.width() * 0.25).clamp(340.0, 460.0);
-    let proof = Rect::from_min_max(
+    let plane = Rect::from_min_max(
         egui::pos2(r.left() + 24.0, top),
         egui::pos2(r.right() - 24.0 - side_w - 14.0, r.bottom() - 16.0),
     );
-    let shown = picture(
-        &p,
-        proof,
-        inputs.proof.as_ref().map(|(t, s, _)| (*t, *s)),
-        palette,
-    );
-    let mut proof_label = inputs
-        .proof
-        .as_ref()
-        .map(|(_, _, what)| format!("{what} · from the camera previews, not the RAW stack"))
-        .unwrap_or_else(|| {
-            "appears after the first planes · from the camera previews, not the RAW stack".into()
-        });
-    if let Some(note) = &inputs.proof_note {
-        proof_label = format!("{proof_label} · {note}");
-    }
-    label(&p, shown, "Proof so far", &proof_label, palette);
-    let side = egui::pos2(proof.right() + 14.0, top);
-    let latest = Rect::from_min_size(side, egui::vec2(side_w, (side_w * 2.0 / 3.0).round()));
-    let latest_shown = picture(&p, latest, inputs.latest, palette);
+    view.plane = Some(plane);
+    let side = egui::pos2(plane.right() + 14.0, top);
     let progress = inputs.progress;
     let cx = FeedContext {
         error_correction: inputs.s.host.error_correction == Some(true),
         ended: inputs.ended,
     };
-    let newest = progress.and_then(|p| p.feed.last());
-    let latest_text = match newest {
-        Some(item) => {
-            let row = feed_row(item, None, cx);
-            let focus = item
-                .target
-                .map(|t| format!("focus {} · ", style::focus_units(t)))
-                .unwrap_or_default();
-            (
-                format!("Plane {}", item.plane),
-                format!("{focus}{}", row.title.to_lowercase()),
-            )
-        }
-        None => (format!("Plane {}", h.plane), "live view".into()),
-    };
-    label(&p, latest_shown, &latest_text.0, &latest_text.1, palette);
-    let list = Rect::from_min_max(
-        egui::pos2(side.x, latest.bottom() + 17.0),
-        egui::pos2(side.x + side_w, r.bottom() - 16.0),
-    );
+    let list = Rect::from_min_max(side, egui::pos2(side.x + side_w, r.bottom() - 16.0));
     match progress {
         Some(progress) => feed_ui(ui, list, progress, cx, view, palette, &mut out),
         None => {
@@ -1550,74 +1511,6 @@ fn feed_row_ui(
     hover.on_hover_text(&row.tip);
     style::hairline(p, rect.left_bottom(), rect.right_bottom(), palette.line);
     intent
-}
-
-/// A picture fitted whole (its aspect kept) and centred in `rect`, the rest
-/// in the background; returns the picture's rectangle (`rect` without one).
-fn picture(
-    p: &egui::Painter,
-    rect: Rect,
-    texture: Option<(TextureId, egui::Vec2)>,
-    palette: &CapturePalette,
-) -> Rect {
-    p.rect_filled(rect, 0.0, palette.bg);
-    let mut shown = rect;
-    if let Some((id, size)) = texture
-        && size.x > 0.0
-        && size.y > 0.0
-    {
-        let scale = (rect.width() / size.x).min(rect.height() / size.y);
-        shown = Rect::from_center_size(rect.center(), size * scale);
-        p.image(
-            id,
-            shown,
-            Rect::from_min_max(egui::Pos2::ZERO, egui::pos2(1.0, 1.0)),
-            egui::Color32::WHITE,
-        );
-    }
-    p.rect_stroke(
-        shown,
-        0.0,
-        egui::Stroke::new(1.0_f32, egui::Color32::from_white_alpha(15)),
-        egui::StrokeKind::Inside,
-    );
-    shown
-}
-
-/// The caption at the foot of a picture (`.lbl`), its text cut to the
-/// picture's width.
-fn label(p: &egui::Painter, rect: Rect, name: &str, text: &str, palette: &CapturePalette) {
-    let band = Rect::from_min_max(egui::pos2(rect.left(), rect.bottom() - 30.0), rect.max);
-    let mut mesh = egui::Mesh::default();
-    let clear = egui::Color32::TRANSPARENT;
-    let dark = egui::Color32::from_black_alpha(178);
-    let i = mesh.vertices.len() as u32;
-    for (pos, c) in [
-        (band.left_top(), clear),
-        (band.right_top(), clear),
-        (band.right_bottom(), dark),
-        (band.left_bottom(), dark),
-    ] {
-        mesh.colored_vertex(pos, c);
-    }
-    mesh.add_triangle(i, i + 1, i + 2);
-    mesh.add_triangle(i, i + 2, i + 3);
-    p.add(egui::Shape::mesh(mesh));
-    let name_rect = style::paint_job(
-        p,
-        egui::pos2(band.left() + 10.0, band.bottom() - 9.0),
-        Align2::LEFT_BOTTOM,
-        style::caps_job(name, 10.5, palette.ink),
-    );
-    let mut job = style::job(text, 12.0, palette.ink.gamma_multiply(0.65), 0.0);
-    job.wrap.max_width = (band.right() - 10.0 - name_rect.right() - 10.0).max(20.0);
-    job.wrap.max_rows = 1;
-    style::paint_job(
-        p,
-        egui::pos2(name_rect.right() + 10.0, band.bottom() - 9.0),
-        Align2::LEFT_BOTTOM,
-        job,
-    );
 }
 
 /// The inspector part: the health column, the switches and the foot.

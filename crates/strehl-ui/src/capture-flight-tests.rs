@@ -463,9 +463,6 @@ fn inputs<'a>(s: &'a Snapshot, p: Option<&'a Progress>) -> FlightInputs<'a> {
         s,
         progress: p,
         checking: true,
-        proof: None,
-        proof_note: None,
-        latest: None,
         stack_when_done: true,
         power_down: Some(true),
         confirm_stop: false,
@@ -637,7 +634,6 @@ fn the_canvas_reads_the_headline_and_g_opens_glance() {
         !all.iter()
             .any(|t| t.contains("RAWs taken") && t.contains(" of "))
     );
-    assert!(all.iter().any(|t| t.contains("not the RAW stack")));
     // The big number and the small "of 96" stand on one line.
     let a = baseline_of(&out, "61");
     let b = baseline_of(&out, "of 96");
@@ -883,40 +879,33 @@ fn feed_rows_are_positioned_once() {
     assert_eq!((tops.len(), tops[0]), (250, 0.0));
 }
 
-/// The proof fills the space beside the side column and keeps its aspect.
+/// The plane view's place fills the canvas beside the side column, under
+/// the headline; the feed starts at the same height (no picture above it).
 #[test]
-fn the_proof_is_fitted_whole_into_its_space() {
+fn the_plane_view_has_the_space_beside_the_feed() {
     let ctx = egui::Context::default();
     let s = snapshot(capturing());
     let p = journal();
-    let texture = ctx.load_texture(
-        "proof",
-        egui::ColorImage::filled([960, 640], egui::Color32::GRAY),
-        egui::TextureOptions::LINEAR,
-    );
-    let mut input = inputs(&s, Some(&p));
-    input.proof = Some((texture.id(), texture.size_vec2(), "planes 1–61".into()));
+    let input = inputs(&s, Some(&p));
     let mut view = FlightView::default();
-    for ((w, h), side) in [((1332.0, 855.0), 340.0), ((2212.0, 1229.0), 460.0)] {
+    for ((w, h), side) in [
+        ((1332.0, 855.0), 340.0),
+        ((940.0, 600.0), 340.0),
+        ((2212.0, 1229.0), 460.0),
+    ] {
         let size = egui::vec2(w, h);
         let (out, _) = canvas_frame(&ctx, &input, &mut view, size, vec![]);
-        let image = out
-            .shapes
-            .iter()
-            .find_map(|s| match &s.shape {
-                egui::Shape::Mesh(m) if m.texture_id == texture.id() => {
-                    let points: Vec<Pos2> = m.vertices.iter().map(|v| v.pos).collect();
-                    Some(Rect::from_points(&points))
-                }
-                _ => None,
-            })
-            .expect("the proof is drawn");
+        let plane = view.plane.expect("the canvas places the plane view");
         // Head (20 + 108 + 20 above), 16 below; 24 + 14 + side + 24 across.
-        let room = egui::vec2(w - 48.0 - 14.0 - side, h - 148.0 - 16.0);
-        assert!((image.width() / image.height() - 1.5).abs() < 0.01);
+        assert_eq!(plane.width(), w - 48.0 - 14.0 - side, "{plane:?}");
+        assert_eq!(plane.height(), h - 148.0 - 16.0, "{plane:?}");
+        let planes = texts(&out)
+            .into_iter()
+            .find(|t| t.0.starts_with("PLANES ·"))
+            .expect("the feed's head");
         assert!(
-            (image.width() - room.x).abs() < 1.0 || (image.height() - room.y).abs() < 1.0,
-            "{image:?} in {room:?}"
+            (planes.1.top() - plane.top()).abs() < 4.0 && planes.1.left() > plane.right(),
+            "{planes:?} beside {plane:?}"
         );
     }
 }

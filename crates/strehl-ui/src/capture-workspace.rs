@@ -36,6 +36,10 @@ pub(crate) mod guide;
 pub(crate) mod live;
 #[path = "capture-plan.rs"]
 pub(crate) mod plan;
+#[path = "capture-plane-view.rs"]
+pub(crate) mod plane_view;
+#[path = "capture-planes.rs"]
+pub(crate) mod planes;
 #[path = "capture-preflight.rs"]
 pub(crate) mod preflight;
 #[path = "capture-rail.rs"]

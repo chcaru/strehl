@@ -408,3 +408,420 @@ fn the_station_follows_all_three_themes() {
         }
     }
 }
+
+/// The plane view through the production GPU path (h-proof): an offscreen
+/// egui-wgpu target and the offscreen presenter, so tiles are uploaded and
+/// registered on the plane view's workers as in the window. Frames are paced
+/// at 60 Hz while the view steps a plane a second (each step a full build,
+/// as a plane arriving is), at fit, at 100 % and while panning at 100 %.
+/// Prints the UI thread's time a frame (egui, tessellation, buffers,
+/// submit) and until the GPU is done, the builds and the process's CPU.
+///
+/// `STREHL_BENCH_FIXTURE` (default `flight`; `flight+long` is 5,400 planes)
+/// and `STREHL_BENCH_SIZE` (default `1680x1050`); with `STREHL_FIXTURE_RUN`
+/// and `STREHL_FIXTURE_JOURNAL` the planes are a real run's RAWs, and with
+/// `STREHL_FIXTURE_REPLAY_MS` they arrive at that pace while the view
+/// follows (`STREHL_BENCH_SECONDS` a phase, no stepping):
+/// `cargo test --release -p strehl-ui capture_plane_view_frames -- --ignored --nocapture`.
+#[test]
+#[ignore = "benchmark: needs a GPU"]
+fn capture_plane_view_frames() {
+    use eframe::egui_wgpu;
+    use std::time::Duration;
+    fn block_on<T>(future: impl std::future::Future<Output = T>) -> T {
+        struct Wake(std::thread::Thread);
+        impl std::task::Wake for Wake {
+            fn wake(self: std::sync::Arc<Self>) {
+                self.0.unpark();
+            }
+        }
+        let waker = std::task::Waker::from(std::sync::Arc::new(Wake(std::thread::current())));
+        let mut task = std::task::Context::from_waker(&waker);
+        let mut future = std::pin::pin!(future);
+        loop {
+            match future.as_mut().poll(&mut task) {
+                std::task::Poll::Ready(value) => return value,
+                std::task::Poll::Pending => std::thread::park_timeout(Duration::from_millis(1)),
+            }
+        }
+    }
+    #[cfg(windows)]
+    fn cpu_seconds() -> f64 {
+        use windows_sys::Win32::Foundation::FILETIME;
+        use windows_sys::Win32::System::Threading::{GetCurrentProcess, GetProcessTimes};
+        let zero = FILETIME {
+            dwLowDateTime: 0,
+            dwHighDateTime: 0,
+        };
+        let (mut a, mut b, mut k, mut u) = (zero, zero, zero, zero);
+        // SAFETY: the current process's pseudo-handle and four out-params.
+        unsafe { GetProcessTimes(GetCurrentProcess(), &mut a, &mut b, &mut k, &mut u) };
+        let t = |f: FILETIME| {
+            ((u64::from(f.dwHighDateTime) << 32) | u64::from(f.dwLowDateTime)) as f64 * 1e-7
+        };
+        t(k) + t(u)
+    }
+    #[cfg(not(windows))]
+    fn cpu_seconds() -> f64 {
+        0.0
+    }
+    /// This thread's CPU cycles and the process's page faults so far: a
+    /// slow step that ran (cycles) differs from one that waited.
+    #[cfg(windows)]
+    fn cycles_and_faults() -> (u64, u32) {
+        #[link(name = "kernel32")]
+        unsafe extern "system" {
+            fn GetCurrentThread() -> *mut std::ffi::c_void;
+            fn QueryThreadCycleTime(thread: *mut std::ffi::c_void, cycles: *mut u64) -> i32;
+            fn GetCurrentProcess() -> *mut std::ffi::c_void;
+            fn K32GetProcessMemoryInfo(
+                process: *mut std::ffi::c_void,
+                counters: *mut [u32; 20],
+                size: u32,
+            ) -> i32;
+        }
+        let mut cycles = 0u64;
+        let mut counters = [0u32; 20];
+        // SAFETY: pseudo-handles and out-params of the documented sizes
+        // (PROCESS_MEMORY_COUNTERS: cb, PageFaultCount, then sizes).
+        unsafe {
+            QueryThreadCycleTime(GetCurrentThread(), &mut cycles);
+            counters[0] = 72;
+            K32GetProcessMemoryInfo(GetCurrentProcess(), &mut counters, 72);
+        }
+        (cycles, counters[1])
+    }
+    #[cfg(not(windows))]
+    fn cycles_and_faults() -> (u64, u32) {
+        (0, 0)
+    }
+    // Slow frames' spans, matched with the workers' steps after each phase
+    // (a step is recorded when it ends).
+    static SLOW: std::sync::Mutex<Vec<(Instant, Instant)>> = std::sync::Mutex::new(Vec::new());
+    let meanwhile = || {
+        let slow = std::mem::take(&mut *SLOW.lock().unwrap());
+        let trace = crate::capture_workspace::planes::TRACE.lock().unwrap();
+        for (a, b) in slow {
+            let during: Vec<String> = trace
+                .iter()
+                .filter(|(s, e, _)| *e >= a && *s <= b)
+                .map(|(s, e, w)| format!("{w} {:.0} ms", (*e - *s).as_secs_f64() * 1000.0))
+                .collect();
+            println!(
+                "    {:.1} ms frame; workers meanwhile: {during:?}",
+                (b - a).as_secs_f64() * 1000.0
+            );
+        }
+    };
+    let fixture = std::env::var("STREHL_BENCH_FIXTURE").unwrap_or_else(|_| "flight".into());
+    let size: [u32; 2] = std::env::var("STREHL_BENCH_SIZE")
+        .ok()
+        .and_then(|s| {
+            let (w, h) = s.split_once('x')?;
+            Some([w.parse().ok()?, h.parse().ok()?])
+        })
+        .unwrap_or([1680, 1050]);
+    let config = crate::hdr_display::configuration();
+    let instance = block_on(config.wgpu_setup.new_instance());
+    let render = block_on(egui_wgpu::RenderState::create(
+        &config,
+        &instance,
+        None,
+        egui_wgpu::RendererOptions::default(),
+    ))
+    .unwrap();
+    println!("adapter: {:?}", render.adapter.get_info().name);
+    let canvas = render.device.create_texture(&wgpu::TextureDescriptor {
+        label: Some("plane view benchmark"),
+        size: wgpu::Extent3d {
+            width: size[0],
+            height: size[1],
+            depth_or_array_layers: 1,
+        },
+        mip_level_count: 1,
+        sample_count: 1,
+        dimension: wgpu::TextureDimension::D2,
+        format: render.target_format,
+        usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
+        view_formats: &[],
+    });
+    let ctx = context();
+    ctx.set_pixels_per_point(1.0);
+    let (_dir, mut app) = station(&fixture);
+    app.apply_theme(&ctx);
+    app.editor.viewport.presenter = Some(crate::hdr_display::PhotoPresenter::offscreen(
+        render.clone(),
+        ctx.clone(),
+    ));
+    let started = Instant::now();
+    let frame_gpu = |app: &mut StrehlApp, events: Vec<egui::Event>| -> (f64, f64) {
+        let began = Instant::now();
+        let screen =
+            egui::Rect::from_min_size(egui::Pos2::ZERO, egui::vec2(size[0] as f32, size[1] as f32));
+        let output = ctx.run(
+            egui::RawInput {
+                screen_rect: Some(screen),
+                time: Some(started.elapsed().as_secs_f64()),
+                predicted_dt: 1.0 / 60.0,
+                focused: true,
+                events,
+                ..Default::default()
+            },
+            |ctx| app.update_workspace(ctx),
+        );
+        let ran = began.elapsed();
+        // How long the context's lock takes to get (another thread holding
+        // it stalls the frame here, not in the tessellator).
+        let probe = Instant::now();
+        ctx.input(|_| ());
+        let lock_ms = probe.elapsed().as_secs_f64() * 1000.0;
+        let shapes = output.shapes.len();
+        let kept = output.shapes.clone();
+        let (c0, f0) = cycles_and_faults();
+        let primitives = ctx.tessellate(output.shapes, output.pixels_per_point);
+        let tessellated = began.elapsed();
+        let (c1, f1) = cycles_and_faults();
+        if (tessellated - ran).as_secs_f64() > 0.008 {
+            // Which shape: each tessellated alone, the slowest three.
+            let mut each: Vec<(f64, String)> = kept
+                .iter()
+                .map(|s| {
+                    let t = Instant::now();
+                    let _ = ctx.tessellate(vec![s.clone()], output.pixels_per_point);
+                    let kind = match &s.shape {
+                        egui::Shape::Vec(v) => format!("Vec of {}", v.len()),
+                        egui::Shape::Mesh(m) => format!("Mesh {} vertices", m.vertices.len()),
+                        egui::Shape::Text(t) => format!(
+                            "Text {:?}",
+                            t.galley.text().chars().take(30).collect::<String>()
+                        ),
+                        other => format!("{:?}", other.visual_bounding_rect()),
+                    };
+                    (
+                        t.elapsed().as_secs_f64() * 1000.0,
+                        format!("{kind} clip {:?}", s.clip_rect),
+                    )
+                })
+                .collect();
+            each.sort_by(|a, b| b.0.total_cmp(&a.0));
+            println!("    slowest shapes: {:?}", &each[..3.min(each.len())]);
+        }
+        let vertices: usize = primitives
+            .iter()
+            .map(|p| match &p.primitive {
+                egui::epaint::Primitive::Mesh(m) => m.vertices.len(),
+                _ => 0,
+            })
+            .sum();
+        let descriptor = egui_wgpu::ScreenDescriptor {
+            size_in_pixels: size,
+            pixels_per_point: output.pixels_per_point,
+        };
+        let mut encoder = render.device.create_command_encoder(&Default::default());
+        let commands = {
+            let mut renderer = render.renderer.write();
+            for (id, image) in &output.textures_delta.set {
+                renderer.update_texture(&render.device, &render.queue, *id, image);
+            }
+            renderer.update_buffers(
+                &render.device,
+                &render.queue,
+                &mut encoder,
+                &primitives,
+                &descriptor,
+            )
+        };
+        let updated = began.elapsed();
+        let view = canvas.create_view(&Default::default());
+        {
+            let pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                label: None,
+                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                    view: &view,
+                    resolve_target: None,
+                    ops: wgpu::Operations {
+                        load: wgpu::LoadOp::Clear(wgpu::Color::BLACK),
+                        store: wgpu::StoreOp::Store,
+                    },
+                    depth_slice: None,
+                })],
+                depth_stencil_attachment: None,
+                timestamp_writes: None,
+                occlusion_query_set: None,
+            });
+            render
+                .renderer
+                .read()
+                .render(&mut pass.forget_lifetime(), &primitives, &descriptor);
+        }
+        let submission = render
+            .queue
+            .submit(commands.into_iter().chain([encoder.finish()]));
+        for id in &output.textures_delta.free {
+            render.renderer.write().free_texture(id);
+        }
+        let cpu = began.elapsed().as_secs_f64() * 1000.0;
+        if cpu > 8.0 {
+            SLOW.lock()
+                .unwrap()
+                .push((began, began + Duration::from_secs_f64(cpu / 1000.0)));
+            let ms = |d: Duration| d.as_secs_f64() * 1000.0;
+            println!(
+                "  slow frame {cpu:.2} ms: egui {:.2}, context lock {lock_ms:.2}, tessellate {:.2} ({shapes} shapes, {vertices} vertices; {} M cycles on this thread, {} process page faults meanwhile), textures+buffers {:.2}, render+submit {:.2}",
+                ms(ran),
+                ms(tessellated - ran),
+                (c1 - c0) / 1_000_000,
+                f1.wrapping_sub(f0),
+                ms(updated - tessellated),
+                cpu - ms(updated)
+            );
+        }
+        render
+            .device
+            .poll(wgpu::PollType::Wait {
+                submission_index: Some(submission),
+                timeout: Some(Duration::from_secs(10)),
+            })
+            .unwrap();
+        (cpu, began.elapsed().as_secs_f64() * 1000.0)
+    };
+    // Settle: every try measured and the newest built.
+    let settle = Instant::now();
+    let mut warm = 0;
+    let unsettled = std::env::var_os("STREHL_BENCH_NO_UPLOAD").is_some()
+        || std::env::var_os("STREHL_BENCH_NO_BUILD").is_some();
+    while !((unsettled || app.capture.plane_view_settled()) && warm > 30) {
+        frame_gpu(&mut app, vec![]);
+        warm += 1;
+        assert!(settle.elapsed() < Duration::from_secs(240), "never settled");
+        std::thread::sleep(Duration::from_millis(16));
+    }
+    println!(
+        "{fixture} {}x{}: settled in {:.1} s ({warm} frames)",
+        size[0],
+        size[1],
+        settle.elapsed().as_secs_f64()
+    );
+    let key = |k| egui::Event::Key {
+        key: k,
+        physical_key: None,
+        pressed: true,
+        repeat: false,
+        modifiers: Default::default(),
+    };
+    let summary = |label: &str,
+                   ui: &mut Vec<f64>,
+                   gpu: &mut Vec<f64>,
+                   builds: &[f64],
+                   cpu: f64,
+                   secs: f64| {
+        ui.sort_by(f64::total_cmp);
+        gpu.sort_by(f64::total_cmp);
+        let q = |v: &[f64], p: f64| v[((v.len() - 1) as f64 * p) as usize];
+        let built = if builds.is_empty() {
+            String::new()
+        } else {
+            let mut b = builds.to_vec();
+            b.sort_by(f64::total_cmp);
+            format!(
+                ", build median {:.0} ms max {:.0} ms",
+                q(&b, 0.5),
+                b[b.len() - 1]
+            )
+        };
+        println!(
+            "{label}: {} frames; UI ms median {:.2} p99 {:.2} max {:.2}, over 16 ms {}; until GPU done median {:.2} max {:.2}; {} builds{built}; process CPU {:.2} cores over {secs:.0} s",
+            ui.len(),
+            q(ui, 0.5),
+            q(ui, 0.99),
+            ui[ui.len() - 1],
+            ui.iter().filter(|t| **t > 16.0).count(),
+            q(gpu, 0.5),
+            gpu[gpu.len() - 1],
+            builds.len(),
+            cpu / secs,
+        );
+    };
+    let follow = std::env::var_os("STREHL_FIXTURE_REPLAY_MS").is_some();
+    let seconds: f64 = std::env::var("STREHL_BENCH_SECONDS")
+        .ok()
+        .and_then(|s| s.parse().ok())
+        .unwrap_or(15.0);
+    let phases: [(&str, Option<f32>, bool); 3] = if follow {
+        [
+            ("following arrivals, fit", None, false),
+            ("following arrivals, 100 %", Some(1.0), false),
+            ("following arrivals, 100 %, panning", Some(1.0), true),
+        ]
+    } else {
+        [
+            ("fit, a plane a second", None, false),
+            ("100 %, a plane a second", Some(1.0), false),
+            ("100 %, panning, a plane a second", Some(1.0), true),
+        ]
+    };
+    let overlays = std::env::var("STREHL_BENCH_OVERLAYS").map_or(true, |v| v != "0");
+    for (label, zoom, pan) in phases {
+        {
+            let (view, ..) = app.capture.plane_view_parts();
+            view.set_zoom(zoom, egui::pos2(0.45, 0.5));
+            view.sharp = overlays;
+            view.checks = overlays;
+        }
+        let (mut ui, mut gpu, mut builds) = (Vec::new(), Vec::new(), Vec::new());
+        let mut last_id = app.capture.plane_view_parts().1.map_or(0, |i| i.id);
+        let cpu0 = cpu_seconds();
+        let phase = Instant::now();
+        let mut next_step = 0.5;
+        let mut n = 0u64;
+        while phase.elapsed().as_secs_f64() < seconds {
+            let tick = Instant::now();
+            let mut events = Vec::new();
+            if !follow && phase.elapsed().as_secs_f64() >= next_step {
+                events.push(key(egui::Key::ArrowLeft));
+                next_step += 1.0;
+            }
+            if pan {
+                let (view, ..) = app.capture.plane_view_parts();
+                let x = 0.3 + 0.4 * (0.5 + 0.5 * (n as f32 * 0.02).sin());
+                view.set_zoom(zoom, egui::pos2(x, 0.5));
+            }
+            let (c, g) = frame_gpu(&mut app, events);
+            ui.push(c);
+            gpu.push(g);
+            let (view, _, _, poll) = app.capture.plane_view_parts();
+            if c > 8.0 {
+                println!(
+                    "  slow frame {c:.2} ms: deck poll {poll:.2} ms, panel {:.2} ms",
+                    view.paint_ms
+                );
+            }
+            if let (_, Some(image), ..) = app.capture.plane_view_parts()
+                && image.id != last_id
+            {
+                last_id = image.id;
+                if image.kind != crate::capture_workspace::planes::ImageKind::Preview {
+                    builds.push(image.cost.iter().sum());
+                }
+            }
+            n += 1;
+            std::thread::sleep(Duration::from_secs_f64(1.0 / 60.0).saturating_sub(tick.elapsed()));
+        }
+        let cpu = cpu_seconds() - cpu0;
+        summary(label, &mut ui, &mut gpu, &builds, cpu, seconds);
+        meanwhile();
+        let (_, image, tiles, _) = app.capture.plane_view_parts();
+        if let Some(image) = image {
+            println!(
+                "  shown: plane {} try {} {:?} {}x{}, {} MB of pyramid, {tiles} tiles uploaded, cost {:?} ms",
+                image.key.plane,
+                image.key.attempt,
+                image.kind,
+                image.size[0],
+                image.size[1],
+                image.bytes() / 1_000_000,
+                image.cost.map(|c| c.round()),
+            );
+        }
+    }
+}

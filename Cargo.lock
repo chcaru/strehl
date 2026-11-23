@@ -4345,6 +4345,7 @@ dependencies = [
  "objc",
  "qrcode",
  "raw-window-handle",
+ "rayon",
  "reqwest",
  "rfd",
  "serde",

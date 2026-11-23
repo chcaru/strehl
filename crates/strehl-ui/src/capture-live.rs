@@ -452,10 +452,6 @@ pub(crate) fn photo_rect(canvas: Rect, aspect: f32) -> Rect {
 }
 
 impl LiveView {
-    /// The live preview's texture, once uploaded.
-    pub(crate) fn preview_handle(&self) -> Option<&TextureHandle> {
-        self.preview.as_ref().map(|(_, t)| t)
-    }
     /// Uploads the preview (and its overlays) when its generation changed.
     pub(crate) fn sync_textures(
         &mut self,
