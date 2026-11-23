@@ -941,7 +941,7 @@ fn proof_worker(
 
 /// A growing JSON-lines file, read on from where the last read stopped.
 #[derive(Default)]
-struct LineTail {
+pub(crate) struct LineTail {
     offset: u64,
     partial: Vec<u8>,
 }
@@ -949,7 +949,7 @@ struct LineTail {
 impl LineTail {
     /// The complete lines written since the last call (at most 1 MiB a
     /// call), and whether the file was read to its end.
-    fn lines(&mut self, path: &Path) -> (Vec<Vec<u8>>, bool) {
+    pub(crate) fn lines(&mut self, path: &Path) -> (Vec<Vec<u8>>, bool) {
         use std::io::{Read, Seek, SeekFrom};
         let len = std::fs::metadata(path).map_or(0, |m| m.len());
         let mut out = Vec::new();
@@ -1126,7 +1126,7 @@ fn add_frame(
 /// never competes with the capture's own work.
 #[cfg(windows)]
 #[allow(dead_code)]
-fn lower_thread_priority() {
+pub(crate) fn lower_thread_priority() {
     #[link(name = "kernel32")]
     unsafe extern "system" {
         fn GetCurrentThread() -> *mut std::ffi::c_void;
@@ -1141,7 +1141,7 @@ fn lower_thread_priority() {
 }
 #[cfg(not(windows))]
 #[allow(dead_code)]
-fn lower_thread_priority() {}
+pub(crate) fn lower_thread_priority() {}
 
 fn srgb_to_linear(value: f32) -> f32 {
     if value <= 0.04045 {

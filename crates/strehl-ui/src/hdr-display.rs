@@ -461,6 +461,19 @@ impl PhotoPresenter {
         region: [[f32; 2]; 2],
         nearest: bool,
     ) -> Result<PhotoLayer> {
+        self.upload_sdr_slice(size, &rgba, region, nearest)
+    }
+
+    /// [`Self::upload_sdr_sampled`] from borrowed texels: a caller that
+    /// uploads tile after tile reuses one buffer rather than allocating
+    /// each (the capture plane view, `capture-planes.rs`).
+    pub fn upload_sdr_slice(
+        &self,
+        size: [u32; 2],
+        rgba: &[u8],
+        region: [[f32; 2]; 2],
+        nearest: bool,
+    ) -> Result<PhotoLayer> {
         let [width, height] = size;
         let limit = self.0.render.device.limits().max_texture_dimension_2d;
         ensure!(
@@ -501,7 +514,7 @@ impl PhotoPresenter {
             });
         self.0.render.queue.write_texture(
             texture.as_image_copy(),
-            &rgba,
+            rgba,
             wgpu::TexelCopyBufferLayout {
                 offset: 0,
                 bytes_per_row: Some(width * 4),

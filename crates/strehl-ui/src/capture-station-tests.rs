@@ -182,7 +182,9 @@ fn rail_live_and_flight_intents() {
     assert_eq!(ws.confirm, None);
     ws.apply_flight(&s, FlightIntent::Glance);
     assert!(ws.glance_open());
+    // "Show" picks that try in the plane view, which stops following.
     let raw: Option<std::sync::Arc<str>> = Some("frame-000157.ARW".into());
+    assert!(ws.station.plane_view.following);
     ws.apply_flight(
         &s,
         FlightIntent::ShowPlane {
@@ -190,7 +192,12 @@ fn rail_live_and_flight_intents() {
             raw: raw.clone(),
         },
     );
-    assert_eq!(ws.take_show_plane(), Some((39, raw)));
+    assert!(!ws.station.plane_view.following);
+    ws.apply_flight(&s, FlightIntent::Done);
+    assert!(
+        ws.station.plane_view.following,
+        "Done returns to the newest"
+    );
 }
 
 fn texts(out: &egui::FullOutput) -> Vec<String> {

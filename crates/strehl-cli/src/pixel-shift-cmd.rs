@@ -924,6 +924,16 @@ pub fn measure_with_witness(
     measure_impl(frames, noise, true)
 }
 
+/// [`measure`], also returning the witness without its photon-transfer bins:
+/// its tile map and pair shifts, from the same sums as the group check. The
+/// desktop's plane view draws them on the picture.
+pub fn measure_with_tiles(
+    frames: [&strehl_raw::Frame; 4],
+    noise: &strehl_core::noise::NoiseModel,
+) -> (GroupMeasurement, Option<pixel_shift::Witness>) {
+    measure_impl(frames, noise, false)
+}
+
 fn measure_impl(
     frames: [&strehl_raw::Frame; 4],
     noise: &strehl_core::noise::NoiseModel,

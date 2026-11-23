@@ -3,8 +3,8 @@
 //! the health column in the inspector, and glance mode over the window. The
 //! screens themselves live in `capture-*.rs`; this file places them in the
 //! shell's slots and connects what belongs to the app: the catalog's
-//! subjects and the naming of a finished capture, the rig popover, the Stack
-//! station for a retaken plane, the hint bar, notices and the top bar.
+//! subjects and the naming of a finished capture, the rig popover, the
+//! hint bar, notices and the top bar.
 use super::studio_route::Station;
 use super::studio_shell::StationLayout;
 use super::*;
@@ -92,9 +92,8 @@ impl StrehlApp {
         {
             egui::Popup::open_id(ctx, id);
         }
-        if let Some((plane, raw)) = self.capture.take_show_plane() {
-            self.capture_show_plane(plane, raw.as_deref());
-        }
+        self.capture
+            .set_presenter(self.editor.viewport.presenter.as_ref());
         self.capture_finished();
         self.capture_confirm_window(ctx);
     }
@@ -326,35 +325,6 @@ impl StrehlApp {
             } else {
                 self.capture_names(&folder);
                 self.import(folder);
-            }
-        }
-    }
-
-    /// "Show" in the in-flight feed: the try asked for (its first RAW,
-    /// `raw`; else the plane's last try) in the Stack station when its run
-    /// is open there and the stack holds it (only a plane's last try is a
-    /// stack frame), else that RAW's preview in the Capture canvas.
-    fn capture_show_plane(&mut self, plane: u64, raw: Option<&str>) {
-        let path = self.capture.plane_raw(plane, raw);
-        if let (Some(path), Some(stack)) = (&path, &self.stack) {
-            let name = path.file_name();
-            let index = stack.frames.iter().position(|f| {
-                f.path.file_name() == name
-                    || f.path
-                        .file_name()
-                        .map(|n| n.to_string_lossy().replace(".straw", ""))
-                        == name.map(|n| n.to_string_lossy().replace(".straw", ""))
-            });
-            if let Some(index) = index {
-                self.selected = index;
-                self.go_station(Station::Stack);
-                return;
-            }
-        }
-        match path {
-            Some(path) => self.capture.show_plane_raw(plane, path),
-            None => {
-                self.capture.error = Some(format!("Plane {plane}'s RAW is not on this PC yet"));
             }
         }
     }

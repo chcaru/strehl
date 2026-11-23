@@ -7,8 +7,8 @@
 //! Calls for the shell, in its frame slots:
 //! `station_strip`, `station_canvas`, `station_rail`, `station_inspector`,
 //! and `station_glance` over the whole window while `glance_open()`;
-//! `station_hints()` for the hint bar; `take_open_rig()` and
-//! `take_show_plane()` for what belongs to the shell.
+//! `station_hints()` for the hint bar; `take_open_rig()` for what belongs
+//! to the shell.
 //! Until the shell is merged, `STREHL_CAPTURE_STATION=1` lays the station
 //! out inside today's Capture tab (`show_station`).
 use std::{
@@ -26,6 +26,8 @@ use super::{
     glance::{self, GlanceInputs, Next},
     live::{LiveIntent, LiveView},
     plan::{CalibrationView, PlanInputs, PlanIntent, PlanView, Switches, TestShotView},
+    plane_view::{self, PlaneInputs, PlaneView},
+    planes::PlaneDeck,
     preflight::{self, Fix},
     rail::{FlightTicks, FocusRail, RailInputs, RailIntent},
     style::CapturePalette,
@@ -61,16 +63,6 @@ pub(crate) struct MarkAt {
     pub since: Instant,
 }
 
-/// A plane's RAW shown in the canvas ("Show" in the in-flight feed).
-pub(crate) struct PinnedPlane {
-    pub plane: u64,
-    /// The RAW's file name.
-    pub name: String,
-    task: Option<crate::jobs::Task<crate::preview::PreviewImage>>,
-    texture: Option<TextureHandle>,
-    error: Option<String>,
-}
-
 /// The station's views and their state.
 #[derive(Default)]
 pub(crate) struct Station {
@@ -84,8 +76,6 @@ pub(crate) struct Station {
     /// The flight rail's ticks and what they were built from.
     ticks: Option<(TicksKey, Arc<FlightTicks>)>,
     rig_requested: bool,
-    /// A plane to show, and the first RAW of the try asked for.
-    show_plane: Option<(u64, Option<Arc<str>>)>,
     /// The in-flight view's state (the feed's row positions).
     pub flight: flight::FlightView,
     /// What retakes cost the capture, and the time left as shown.
@@ -115,8 +105,11 @@ pub(crate) struct Station {
     /// A fixture's subject choice, made once the catalog's subjects arrive
     /// (`plan+existing`, `plan+taken`; offscreen pictures only).
     fixture_subject: Option<&'static str>,
-    /// A plane's RAW in the canvas, until dismissed.
-    pinned: Option<PinnedPlane>,
+    /// The plane view's data (one deck a run, kept for its review) and
+    /// state, and the window's presenter its textures are uploaded with.
+    planes: Option<PlaneDeck>,
+    pub plane_view: PlaneView,
+    presenter: Option<crate::hdr_display::PhotoPresenter>,
     /// The checker's journal of a fixture (`--capture-fixture`).
     fixture_progress: Option<Arc<super::follow::Progress>>,
     /// Retakes this desktop asked for (h-retake), shown as asked until the
@@ -329,39 +322,44 @@ impl CaptureWorkspace {
             .or_else(|| self.station.fixture_progress.clone())
     }
 
-    /// The RAW file of `plane` in the run being (or last) followed, as
-    /// stored on this PC: the try whose first RAW is `raw`, else the
-    /// plane's last try (the one the stack uses), its first member.
-    pub fn plane_raw(&self, plane: u64, raw: Option<&str>) -> Option<PathBuf> {
-        let progress = self.station_progress()?;
-        let name = match raw {
-            Some(name) => name.to_owned(),
-            None => progress.plane(plane)?["names"][0].as_str()?.to_owned(),
-        };
-        let run = self.follower.as_ref().map(|f| f.run.clone())?;
-        [format!("{name}.straw"), name]
-            .into_iter()
-            .map(|n| run.join(n))
-            .find(|p| p.is_file())
+    /// The window's presenter: the plane view uploads its tiles with it,
+    /// off the UI thread.
+    pub fn set_presenter(&mut self, presenter: Option<&crate::hdr_display::PhotoPresenter>) {
+        if self.station.presenter.is_none() {
+            self.station.presenter = presenter.cloned();
+        }
     }
 
-    /// Shows `path` (a plane's RAW) in the canvas until dismissed: its camera
-    /// preview, read on a worker.
-    pub fn show_plane_raw(&mut self, plane: u64, path: PathBuf) {
-        let name = path
-            .file_name()
-            .map(|n| n.to_string_lossy().replace(".straw", ""))
-            .unwrap_or_default();
-        let task = crate::jobs::spawn_task("strehl-capture-plane", move |cancelled| {
-            crate::source_preview::load_draft_source(&path, 1920, &cancelled)
-        });
-        self.station.pinned = Some(PinnedPlane {
-            plane,
-            name,
-            task: Some(task),
-            texture: None,
-            error: None,
-        });
+    /// The plane view's state, the picture it shows and its tiles
+    /// (benchmarks).
+    #[cfg(test)]
+    pub(crate) fn plane_view_parts(
+        &mut self,
+    ) -> (
+        &mut PlaneView,
+        Option<Arc<super::planes::PlaneImage>>,
+        usize,
+        f64,
+    ) {
+        let image = self
+            .station
+            .planes
+            .as_ref()
+            .and_then(|d| d.image().cloned());
+        let tiles = self
+            .station
+            .planes
+            .as_ref()
+            .map_or(0, PlaneDeck::tile_count);
+        let poll = self.station.planes.as_ref().map_or(0.0, |d| d.poll_ms);
+        (&mut self.station.plane_view, image, tiles, poll)
+    }
+
+    /// Whether the plane view shows what it asked for (offscreen
+    /// screenshots wait for it).
+    pub fn plane_view_settled(&self) -> bool {
+        self.station_mode() != StationMode::Flight
+            || self.station.planes.as_ref().is_none_or(PlaneDeck::settled)
     }
 
     /// Loads a fixture (`--capture-fixture plan|flight|glance`): the
@@ -393,25 +391,6 @@ impl CaptureWorkspace {
             self.station.ended_at = Some(SystemTime::now());
         }
         self.connection = Some(Connection::fixture(snapshot));
-        if which != Fixture::Plan && open == "show" {
-            let task = crate::jobs::spawn_task("strehl-capture-plane", |_| {
-                let image = fixture::subject_image(960, 640, 0.6);
-                Ok(crate::preview::PreviewImage {
-                    path: PathBuf::from("fixture"),
-                    source_size: [960, 640],
-                    size: [960, 640],
-                    rgba: image.pixels.iter().flat_map(|p| p.to_array()).collect(),
-                    is_overview: false,
-                })
-            });
-            self.station.pinned = Some(PinnedPlane {
-                plane: 52,
-                name: "frame-000213.ARW".into(),
-                task: Some(task),
-                texture: None,
-                error: None,
-            });
-        }
         if which == Fixture::Plan {
             let trace = fixture::focus_trace(&self.station_snapshot());
             self.station.live.trace.seed(trace);
@@ -484,9 +463,94 @@ impl CaptureWorkspace {
                 texture: None,
                 error: None,
             });
+            self.load_fixture_planes(open);
         }
         self.station.glance = which == Fixture::Glance;
         Ok(())
+    }
+
+    /// The flight fixtures' planes: a synthetic subject tilted in depth, its
+    /// verdicts from the fixture's journal (`flight+show` shows plane 52's
+    /// first try, as "Show" in the feed does). With `STREHL_FIXTURE_RUN` (a
+    /// capture folder, read only) and `STREHL_FIXTURE_JOURNAL` (a copy of
+    /// its checker journal) the planes are that run's RAWs instead.
+    fn load_fixture_planes(&mut self, open: &str) {
+        use super::planes::FixtureSource;
+        let run = std::env::var_os("STREHL_FIXTURE_RUN").map(PathBuf::from);
+        let journal = std::env::var_os("STREHL_FIXTURE_JOURNAL")
+            .and_then(|j| std::fs::read_to_string(j).ok());
+        if let (Some(run), Some(journal)) = (run, journal) {
+            let progress = super::follow::progress(&journal);
+            let planes = progress.planes.keys().next_back().copied().unwrap_or(0);
+            if let Some(c) = self.connection.as_ref() {
+                let mut s = c.snapshot();
+                let mut state = s.state.clone();
+                state["completed"] = serde_json::json!(planes);
+                state["total"] = serde_json::json!(planes);
+                state["message"] = serde_json::json!(format!("Plane {planes} of {planes}"));
+                s.set_state(state);
+                self.connection = Some(Connection::fixture(s));
+            }
+            self.station.fixture_progress = Some(Arc::new(progress));
+            // `STREHL_FIXTURE_REPLAY_MS`: its tries arrive one at that pace.
+            let replay = std::env::var("STREHL_FIXTURE_REPLAY_MS")
+                .ok()
+                .and_then(|m| m.parse().ok())
+                .map(Duration::from_millis);
+            self.station.planes = Some(match replay {
+                Some(every) => PlaneDeck::start(
+                    run.clone(),
+                    Box::new(super::planes::ReplaySource::new(run, 4, every)),
+                ),
+                None => PlaneDeck::for_run(run, 4),
+            });
+        } else {
+            let progress = self.station.fixture_progress.clone().unwrap_or_default();
+            let planes = self.station_snapshot().host.total.max(1);
+            // Smaller pictures under test; about a 24 MP sensor otherwise.
+            // `STREHL_FIXTURE_SIZE=WxH` sizes them (benchmarks).
+            let size = std::env::var("STREHL_FIXTURE_SIZE")
+                .ok()
+                .and_then(|s| {
+                    let (w, h) = s.split_once('x')?;
+                    Some([w.parse().ok()?, h.parse().ok()?])
+                })
+                .unwrap_or(if cfg!(test) { [960, 640] } else { [6000, 4000] });
+            let source = FixtureSource::new(&progress, planes, size);
+            self.station.planes =
+                Some(PlaneDeck::start(PathBuf::from("fixture"), Box::new(source)));
+        }
+        self.station.plane_view = PlaneView::default();
+        // Offscreen checks: `STREHL_FIXTURE_SHOW=<plane>` shows that plane's
+        // last try, `STREHL_FIXTURE_ZOOM=<screen px a photosite>,<u>,<v>`
+        // zooms about a point.
+        if let Some(plane) = std::env::var("STREHL_FIXTURE_SHOW")
+            .ok()
+            .and_then(|p| p.parse().ok())
+        {
+            self.station.plane_view.show(plane, None);
+        }
+        if let Some([z, u, v]) = std::env::var("STREHL_FIXTURE_ZOOM").ok().and_then(|z| {
+            let v: Vec<f32> = z.split(',').filter_map(|p| p.trim().parse().ok()).collect();
+            <[f32; 3]>::try_from(v).ok()
+        }) {
+            self.station.plane_view.set_zoom(Some(z), egui::pos2(u, v));
+        }
+        // A benchmark's baseline: the flight view without the plane view's
+        // workers.
+        #[cfg(test)]
+        if std::env::var_os("STREHL_BENCH_NO_DECK").is_some() {
+            self.station.planes = None;
+        }
+        if open == "show" {
+            let first = self
+                .station
+                .fixture_progress
+                .as_ref()
+                .and_then(|p| p.feed.iter().find(|i| i.plane == 52))
+                .and_then(|i| i.first.clone());
+            self.station.plane_view.show(52, first);
+        }
     }
 
     /// Plan, or flight while a capture runs or is paused, and while the
@@ -518,13 +582,6 @@ impl CaptureWorkspace {
     #[allow(dead_code)]
     pub fn take_open_rig(&mut self) -> bool {
         std::mem::take(&mut self.station.rig_requested)
-    }
-
-    /// A plane the user asked to see from the in-flight feed, and the
-    /// first RAW of the try asked for.
-    #[allow(dead_code)]
-    pub fn take_show_plane(&mut self) -> Option<(u64, Option<Arc<str>>)> {
-        self.station.show_plane.take()
     }
 
     /// The keys the station answers, for the hint bar.
@@ -562,7 +619,12 @@ impl CaptureWorkspace {
                 note: "The capture has ended; Back to planning for the next stack".into(),
             },
             StationMode::Flight => StationHints {
-                keys: vec![("Space", "pause"), ("G", "glance mode")],
+                keys: vec![
+                    ("Space", "pause"),
+                    ("G", "glance mode"),
+                    ("← →", "planes"),
+                    ("End", "newest"),
+                ],
                 note: "Stop asks first, and keeps the planes already taken".into(),
             },
         }
@@ -626,6 +688,24 @@ impl CaptureWorkspace {
                 texture: None,
                 error: None,
             });
+        }
+        // So does the plane view's deck, kept after the capture for review.
+        if let Some(run) = s
+            .in_progress
+            .as_ref()
+            .filter(|r| !r.test && s.host.phase.capturing())
+            && self
+                .station
+                .planes
+                .as_ref()
+                .is_none_or(|d| d.run != run.folder)
+        {
+            self.station.planes = Some(PlaneDeck::for_run(run.folder.clone(), s.host.shots()));
+            self.station.plane_view = PlaneView::default();
+        }
+        // Back to planning: the deck and its picture (a few hundred MB) go.
+        if self.station.planes.is_some() && self.station_mode() == StationMode::Plan {
+            self.station.planes = None;
         }
         if let Some(run) = s
             .in_progress
@@ -763,10 +843,6 @@ impl CaptureWorkspace {
 
     fn station_canvas_body(&mut self, ui: &mut Ui, s: &Snapshot, palette: &CapturePalette) {
         let palette = palette.on_canvas();
-        if self.station.pinned.is_some() {
-            self.pinned_canvas(ui, &palette);
-            return;
-        }
         match self.station_mode() {
             StationMode::Plan => {
                 let intents = self.station.live.show(ui, s, &palette);
@@ -775,16 +851,37 @@ impl CaptureWorkspace {
                 }
             }
             StationMode::Flight => {
-                let proof = self.proof_texture(ui.ctx());
-                self.station.live.sync_textures(ui.ctx(), s, &palette);
-                let latest = self.station.live.preview_texture();
                 let progress = self.station_progress();
-                let mut inputs = self.flight_inputs(s, progress.as_deref());
-                inputs.proof = proof;
-                inputs.latest = latest;
+                let inputs = self.flight_inputs(s, progress.as_deref());
                 let mut view = std::mem::take(&mut self.station.flight);
                 let intents = flight::canvas(ui, &inputs, &mut view, &palette);
+                let plane_rect = view.plane.unwrap_or(Rect::NOTHING);
                 self.station.flight = view;
+                // The plane view, in the place the canvas left for it.
+                if let Some(deck) = &mut self.station.planes {
+                    deck.set_uploader(self.station.presenter.as_ref(), ui.ctx());
+                    deck.poll();
+                }
+                let exposure = s.host.exposure.as_ref().and_then(|e| {
+                    let iso = e.iso.map(super::style::iso_label);
+                    let shutter = e.shutter.map(super::style::shutter_label);
+                    let parts: Vec<String> = [iso, shutter].into_iter().flatten().collect();
+                    (!parts.is_empty()).then(|| parts.join(" · "))
+                });
+                let plane_inputs = PlaneInputs {
+                    progress: progress.as_deref(),
+                    total: s.host.total,
+                    checking: self.follow_enabled,
+                    exposure,
+                };
+                plane_view::panel(
+                    ui,
+                    plane_rect,
+                    self.station.planes.as_mut(),
+                    &mut self.station.plane_view,
+                    &plane_inputs,
+                    &palette,
+                );
                 for intent in intents {
                     self.apply_flight(s, intent);
                 }
@@ -812,18 +909,10 @@ impl CaptureWorkspace {
         progress: Option<&'a super::follow::Progress>,
     ) -> FlightInputs<'a> {
         let clock = &self.station.retake_clock;
-        let proof_note = self.station.proof.as_ref().and_then(|p| {
-            p.error
-                .as_ref()
-                .map(|e| format!("its last update failed: {e}"))
-        });
         FlightInputs {
             s,
             progress,
             checking: self.follow_enabled,
-            proof: None,
-            proof_note,
-            latest: None,
             stack_when_done: self.stack_when_done,
             power_down: s.host.power.as_ref().map(|p| p.manage_stack),
             confirm_stop: self.confirm == Some(Confirm::Stop),
@@ -841,100 +930,6 @@ impl CaptureWorkspace {
                 step: s.host.plan.as_ref().map(|p| p.step),
                 width: self.calibration_result()["width"].as_f64(),
             },
-        }
-    }
-
-    /// A plane's RAW in the canvas, with the way back to the live view.
-    fn pinned_canvas(&mut self, ui: &mut Ui, palette: &CapturePalette) {
-        let rect = ui.max_rect();
-        ui.painter().rect_filled(rect, 0.0, palette.surround);
-        let Some(pinned) = &mut self.station.pinned else {
-            return;
-        };
-        if let Some(task) = &pinned.task
-            && let Ok(result) = task.receiver.try_recv()
-        {
-            pinned.task = None;
-            match result {
-                Ok(image) => {
-                    let color = egui::ColorImage::from_rgba_unmultiplied(image.size, &image.rgba);
-                    pinned.texture = Some(ui.ctx().load_texture(
-                        "capture-plane-raw",
-                        color,
-                        TextureOptions::LINEAR,
-                    ));
-                }
-                Err(e) => pinned.error = Some(e),
-            }
-        }
-        // A head row inside the canvas (the plane, what the picture is, the
-        // way back), the picture fitted whole below it.
-        use super::style;
-        let inner = rect.shrink2(egui::vec2(24.0, 16.0));
-        let back_w = 160.0;
-        let p = ui.painter();
-        let title = style::paint_job(
-            p,
-            inner.left_top(),
-            egui::Align2::LEFT_TOP,
-            style::caps_job(
-                &format!("Plane {} · {}", pinned.plane, pinned.name),
-                10.5,
-                palette.ink,
-            ),
-        );
-        let sentence = match &pinned.error {
-            Some(e) => format!("Its RAW could not be shown: {e}"),
-            None if pinned.texture.is_none() => "Reading its RAW's camera preview…".to_owned(),
-            None => {
-                "Its RAW's camera preview, as the camera made it; not the RAW stack.".to_owned()
-            }
-        };
-        let mut job = style::job(&sentence, 12.5, palette.ink2, 0.0);
-        job.wrap.max_width = (inner.width() - back_w - 16.0).max(80.0);
-        let galley = p.layout_job(job);
-        let text_h = galley.size().y;
-        p.galley(
-            egui::pos2(inner.left(), title.bottom() + 5.0),
-            galley,
-            palette.ink2,
-        );
-        let head_h = (title.height() + 5.0 + text_h).max(28.0);
-        let photo = Rect::from_min_max(
-            egui::pos2(inner.left(), inner.top() + head_h + 12.0),
-            inner.max,
-        );
-        p.rect_filled(photo, 0.0, egui::Color32::BLACK);
-        if let Some(t) = &pinned.texture {
-            let size = t.size_vec2();
-            let scale = (photo.width() / size.x).min(photo.height() / size.y);
-            p.image(
-                t.id(),
-                Rect::from_center_size(photo.center(), size * scale),
-                Rect::from_min_max(egui::Pos2::ZERO, egui::pos2(1.0, 1.0)),
-                egui::Color32::WHITE,
-            );
-        } else if pinned.task.is_some() {
-            ui.ctx().request_repaint_after(Duration::from_millis(100));
-        }
-        let back = Rect::from_min_size(
-            egui::pos2(inner.right() - back_w, inner.top()),
-            egui::vec2(back_w, 28.0),
-        );
-        let mut close = false;
-        ui.scope_builder(egui::UiBuilder::new().max_rect(back), |ui| {
-            close = super::style::button_sized(
-                ui,
-                "Back to the capture",
-                super::style::ButtonKind::Plain,
-                back.size(),
-                true,
-                palette,
-            )
-            .clicked();
-        });
-        if close || ui.input(|i| i.key_pressed(egui::Key::Escape)) {
-            self.station.pinned = None;
         }
     }
 
@@ -1397,11 +1392,12 @@ impl CaptureWorkspace {
             FlightIntent::Glance => self.station.glance = true,
             FlightIntent::SetStackWhenDone(on) => self.stack_when_done = on,
             FlightIntent::SetPowerDown(on) => self.command(s, Command::PowerPlan { enabled: on }),
-            FlightIntent::ShowPlane { plane, raw } => self.station.show_plane = Some((plane, raw)),
+            // "Show" in the feed: that try in the plane view.
+            FlightIntent::ShowPlane { plane, raw } => self.station.plane_view.show(plane, raw),
             FlightIntent::QueueRetakes(planes) => self.queue_retakes(s, planes),
             FlightIntent::Done => {
                 self.station.review = false;
-                self.station.pinned = None;
+                self.station.plane_view.follow();
             }
         }
     }
@@ -1496,13 +1492,6 @@ impl CaptureWorkspace {
                 });
             });
         self.flush_focus(&s);
-    }
-}
-
-impl LiveView {
-    /// The live preview's texture, for the in-flight view's latest plane.
-    pub(crate) fn preview_texture(&self) -> Option<(egui::TextureId, egui::Vec2)> {
-        self.preview_handle().map(|t| (t.id(), t.size_vec2()))
     }
 }
 

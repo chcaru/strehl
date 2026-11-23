@@ -2793,6 +2793,8 @@ impl StrehlApp {
             && (!self.projects_visible() || !self.project_explorer.preview_pending())
             // The Library waits for its pictures and folder scans.
             && (station != studio_route::Station::Library || !self.library_loading())
+            // Capture in flight waits for its plane view.
+            && (station != studio_route::Station::Capture || self.capture.plane_view_settled())
             // Develop and Export show the photograph they act on.
             && (!matches!(
                 station,
