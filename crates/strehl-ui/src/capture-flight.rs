@@ -1620,15 +1620,39 @@ fn head_ui(
         (Mark::Ok, "On track")
     };
     style::mark(p, egui::pos2(grow.left() + 3.5, row1), mark, 7.0, palette);
-    let pace = inputs.plain_pace.or(h.per_plane);
+    let pace = inputs
+        .plain_pace
+        .or(h.per_plane)
+        .map(|s| format!("{s:.1} s a plane"))
+        .unwrap_or_default();
+    let started = h
+        .elapsed
+        .map(|e| format!("started {}", style::local_time_in(-e)))
+        .unwrap_or_default();
+    // In a narrow bar the start time goes first, then the pace, so nothing
+    // overlaps (the finishing time stays under ENDS).
+    let width = |text: &str| {
+        if text.is_empty() {
+            0.0
+        } else {
+            p.layout_job(style::job(text, 12.5, palette.ink2, 0.0))
+                .size()
+                .x
+        }
+    };
+    let room = grow.width() - 13.0 - 24.0;
+    let state_w = width(state);
+    let pace_w = if pace.is_empty() {
+        0.0
+    } else {
+        width(&pace) + 10.0
+    };
+    let show_started = state_w + pace_w + width(&started) <= room;
+    let show_pace = state_w + pace_w <= room + 24.0;
     let mut x = grow.left() + 13.0;
     for (text, color) in [
         (state.to_owned(), palette.ink),
-        (
-            pace.map(|s| format!("{s:.1} s a plane"))
-                .unwrap_or_default(),
-            palette.ink2,
-        ),
+        (if show_pace { pace } else { String::new() }, palette.ink2),
     ] {
         if text.is_empty() {
             continue;
@@ -1641,45 +1665,70 @@ fn head_ui(
         );
         x = rr.right() + 10.0;
     }
-    if let Some(e) = h.elapsed {
+    if show_started && !started.is_empty() {
         style::paint_job(
             p,
             egui::pos2(grow.right(), row1),
             Align2::RIGHT_CENTER,
-            style::job(
-                &format!("started {}", style::local_time_in(-e)),
-                12.5,
-                palette.ink2,
-                0.0,
-            ),
+            style::job(&started, 12.5, palette.ink2, 0.0),
         );
     }
-    // RAWs: every one taken, and those of retakes; never "X of Y".
-    let mut raws = format!("{} RAWs taken", h.raws_taken);
-    if h.raws_for_retakes > 0 {
-        raws.push_str(&format!(" · {} for retakes", h.raws_for_retakes));
-    }
-    style::paint_job(
-        p,
-        egui::pos2(grow.left() + 13.0, row2),
-        Align2::LEFT_CENTER,
-        style::job(&raws, 12.5, palette.ink2, 0.0),
-    );
-    if h.retakes > 0 {
+    // RAWs: every one taken, and those of retakes; never "X of Y". In a
+    // narrow window the two texts shorten, the RAWs first, so they never
+    // overlap.
+    let raws_short = format!("{} RAWs taken", h.raws_taken);
+    let raws_full = if h.raws_for_retakes > 0 {
+        format!("{raws_short} · {} for retakes", h.raws_for_retakes)
+    } else {
+        raws_short.clone()
+    };
+    let (retakes_full, retakes_short) = if h.retakes > 0 {
         let cost = inputs
             .retake_cost
             .map(|c| format!(" · +{}", style::minutes(c)))
             .unwrap_or_default();
-        let text = format!(
-            "{} of {}{cost}",
-            count(h.retakes as usize, "retake", "retakes"),
-            count(h.retaken_planes as usize, "plane", "planes")
-        );
+        let retakes = count(h.retakes as usize, "retake", "retakes");
+        (
+            format!(
+                "{retakes} of {}{cost}",
+                count(h.retaken_planes as usize, "plane", "planes")
+            ),
+            format!("{retakes}{cost}"),
+        )
+    } else {
+        (String::new(), String::new())
+    };
+    let width = |text: &str| {
+        if text.is_empty() {
+            0.0
+        } else {
+            p.layout_job(style::job(text, 12.5, palette.ink2, 0.0))
+                .size()
+                .x
+        }
+    };
+    // The warning mark and a gap of 24 pt between the two.
+    let room = grow.width() - 13.0 - 24.0 - 12.0;
+    let (raws, retakes) = [
+        (&raws_full, &retakes_full),
+        (&raws_short, &retakes_full),
+        (&raws_short, &retakes_short),
+    ]
+    .into_iter()
+    .find(|(left, right)| width(left) + width(right) <= room)
+    .unwrap_or((&raws_short, &retakes_short));
+    style::paint_job(
+        p,
+        egui::pos2(grow.left() + 13.0, row2),
+        Align2::LEFT_CENTER,
+        style::job(raws, 12.5, palette.ink2, 0.0),
+    );
+    if !retakes.is_empty() {
         let rr = style::paint_job(
             p,
             egui::pos2(grow.right(), row2),
             Align2::RIGHT_CENTER,
-            style::job(&text, 12.5, palette.warn, 0.0),
+            style::job(retakes, 12.5, palette.warn, 0.0),
         );
         style::mark(
             p,

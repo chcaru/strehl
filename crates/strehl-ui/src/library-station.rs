@@ -615,6 +615,11 @@ impl LibraryStation {
     }
     #[cfg(test)]
     pub(crate) fn set_sources(&mut self, states: HashMap<NodeId, SourcesState>) {
+        // A check still running would land after this and replace the
+        // states set here (the test's sources never exist): cancel it.
+        if let Some(task) = self.sources.task.take() {
+            task.cancel();
+        }
         self.sources.states = states;
     }
 
