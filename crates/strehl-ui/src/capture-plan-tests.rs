@@ -164,6 +164,11 @@ fn lines_say_what_the_rig_test_shot_and_calibration_found() {
         shadow_level: 0.012,
         median_level: 0.2,
         highlight_level: 0.9,
+        colours: [crate::capture_workspace::test_shot::ColourLevels {
+            highlight_level: 0.9,
+            ..Default::default()
+        }; 3],
+        brightest: 1,
     };
     let line = test_shot_sentence(&TestShotView {
         stage: "done",
@@ -175,7 +180,7 @@ fn lines_say_what_the_rig_test_shot_and_calibration_found() {
     .unwrap();
     assert_eq!(
         line,
-        "Test shot read from the RAW: nothing clipped, shadows at 1.2 % of full scale"
+        "Test shot read from the RAW: nothing clipped, green brightest at 90 %, shadows at 1.2 % of full scale"
     );
     let view = CalibrationView {
         stage: "done",
@@ -417,6 +422,11 @@ fn tested(highlight: f64) -> TestShotView {
             shadow_level: 0.012,
             median_level: 0.2,
             highlight_level: highlight,
+            colours: [crate::capture_workspace::test_shot::ColourLevels {
+                highlight_level: highlight,
+                ..Default::default()
+            }; 3],
+            brightest: 1,
         }),
         exposure: Some((100, 65544)),
         taken: None,

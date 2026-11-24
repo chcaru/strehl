@@ -400,6 +400,11 @@ pub(crate) fn test_levels() -> RawLevels {
         shadow_level: 0.012,
         median_level: 0.21,
         highlight_level: 0.24,
+        colours: [crate::capture_workspace::test_shot::ColourLevels {
+            highlight_level: 0.24,
+            ..Default::default()
+        }; 3],
+        brightest: 1,
     }
 }
 

@@ -25,6 +25,11 @@ fn levels(highlight: f64, clipped: f64, iso: f32) -> RawLevels {
         shadow_level: 0.012,
         median_level: 0.1,
         highlight_level: highlight,
+        colours: [crate::capture_workspace::test_shot::ColourLevels {
+            highlight_level: highlight,
+            ..Default::default()
+        }; 3],
+        brightest: 1,
     }
 }
 

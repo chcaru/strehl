@@ -347,10 +347,15 @@ pub(crate) fn test_shot_sentence(view: &TestShotView) -> Option<String> {
                     .to_string()
             })
             .unwrap_or_default();
+        // Per colour (plan Q4): the brightest colour is named.
+        let colour = super::test_shot::colour_name(levels.brightest);
         let clipped = if levels.clipped_share <= 0.0 {
-            "nothing clipped".to_owned()
+            format!(
+                "nothing clipped, {colour} brightest at {:.0} %",
+                100.0 * levels.highlight_level
+            )
         } else {
-            format!("{:.2} % clipped", 100.0 * levels.clipped_share)
+            format!("{colour} {:.2} % clipped", 100.0 * levels.clipped_share)
         };
         return Some(format!(
             "Test shot {when}read from the RAW: {clipped}, shadows at {:.1} % of full scale",

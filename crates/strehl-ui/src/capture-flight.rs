@@ -1370,6 +1370,9 @@ pub(crate) struct FlightInputs<'a> {
     pub ended: bool,
     /// When it ended, local time ("15:04").
     pub ended_at: Option<String>,
+    /// A capture stopped by hand with this many complete planes (at least
+    /// two): it can be stacked as it stands (plan Q6).
+    pub stack_stopped: Option<usize>,
     /// Retakes by hand and the stack's coverage (h-retake).
     pub retakes: RetakeInputs,
 }
@@ -1410,6 +1413,8 @@ pub(crate) enum FlightIntent {
     Done,
     /// Done with the review, and the next capture starts from nothing.
     NewCapture,
+    /// Stack a stopped capture's complete planes as they stand (plan Q6).
+    StackStopped,
 }
 
 /// The view's state across frames: where each feed row starts.
@@ -2269,11 +2274,32 @@ pub(crate) fn inspector(
             if inputs.ended {
                 // Two ways on (owner feedback, 2026-11-23): a clean plan for
                 // the next subject, or back to this one's plan as it stands.
-                let w = (ui.available_width() - 8.0) / 2.0;
+                let parts = if inputs.stack_stopped.is_some() { 3.0 } else { 2.0 };
+                let w = (ui.available_width() - 8.0 * (parts - 1.0)) / parts;
+                if let Some(planes) = inputs.stack_stopped
+                    && style::button_sized(
+                        ui,
+                        &format!("Stack {planes} planes"),
+                        ButtonKind::Primary,
+                        egui::vec2(w, 28.0),
+                        true,
+                        palette,
+                    )
+                    .on_hover_text(
+                        "Stack the planes this capture completed before it was stopped, as they stand",
+                    )
+                    .clicked()
+                {
+                    out.push(FlightIntent::StackStopped);
+                }
                 if style::button_sized(
                     ui,
                     "New capture",
-                    ButtonKind::Primary,
+                    if inputs.stack_stopped.is_some() {
+                        ButtonKind::Plain
+                    } else {
+                        ButtonKind::Primary
+                    },
                     egui::vec2(w, 28.0),
                     true,
                     palette,

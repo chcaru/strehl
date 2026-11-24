@@ -32,14 +32,34 @@ pub(crate) struct RawLevels {
     pub white: f32,
     /// Active-area samples read.
     pub samples: u64,
-    /// Share of samples at or above the white level.
+    /// Share of the brightest colour's samples at or above the white level
+    /// (plan Q4: pooled colours hid a pinned green).
     pub clipped_share: f64,
-    /// The 1st percentile above black, as a share of black to white.
+    /// The 1st percentile above black, as a share of black to white (all
+    /// colours).
     pub shadow_level: f64,
-    /// The median, the same way.
+    /// The median, the same way (all colours).
     pub median_level: f64,
-    /// The 99.9th percentile, the same way.
+    /// The brightest colour's 99.9th percentile, the same way.
     pub highlight_level: f64,
+    /// Red, green (both sites) and blue on their own.
+    pub colours: [ColourLevels; 3],
+    /// Which of them is brightest at the 99.9th percentile (0 red, 1 green,
+    /// 2 blue); the advice reads that one.
+    pub brightest: usize,
+}
+
+/// One colour's levels in a test RAW.
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub(crate) struct ColourLevels {
+    pub clipped_share: f64,
+    pub median_level: f64,
+    pub highlight_level: f64,
+}
+
+/// "red", "green", "blue".
+pub(crate) fn colour_name(colour: usize) -> &'static str {
+    ["red", "green", "blue"][colour.min(2)]
 }
 
 impl RawLevels {
@@ -47,61 +67,101 @@ impl RawLevels {
         json!({"path":self.path,"camera":self.camera,"iso":self.iso,"black":self.black,"white":self.white,
             "samples":self.samples,"clipped_share":self.clipped_share,"shadow_level":self.shadow_level,
             "median_level":self.median_level,"highlight_level":self.highlight_level,
-            "basis":"the test RAW's decoded active area, against its own black and white levels"})
+            "brightest":colour_name(self.brightest),
+            "colours":self.colours.iter().enumerate().map(|(i,c)|json!({"colour":colour_name(i),
+                "clipped_share":c.clipped_share,"median_level":c.median_level,"highlight_level":c.highlight_level})).collect::<Vec<_>>(),
+            "basis":"the test RAW's decoded active area per colour (RGGB), against its own black and white levels; clipped share and highlight are the brightest colour's"})
     }
 }
 
-/// Levels of CFA samples against `black` and `white` (a full 16-bit
-/// histogram: exact percentiles, no sampling).
+/// Pooled levels: samples, clipped share, 1st, 50th and 99.9th percentile.
+type Pooled = (u64, f64, f64, f64, f64);
+
+/// Levels of RGGB samples (red at the active area's origin) against `black`
+/// and `white`, pooled and per colour (full 16-bit histograms: exact
+/// percentiles, no sampling).
 fn levels_of<'a>(
     rows: impl Iterator<Item = &'a [u16]>,
     black: f32,
     white: f32,
-) -> Result<(u64, f64, f64, f64, f64)> {
+) -> Result<(Pooled, [ColourLevels; 3])> {
     ensure!(
         white > black,
         "The RAW reports no usable range between black and white"
     );
-    let mut histogram = vec![0u64; 65536];
-    for row in rows {
-        for &v in row {
-            histogram[usize::from(v)] += 1;
+    let mut histograms = vec![vec![0u64; 65536]; 3];
+    for (y, row) in rows.enumerate() {
+        for (x, &v) in row.iter().enumerate() {
+            let colour = match (y % 2, x % 2) {
+                (0, 0) => 0,
+                (1, 1) => 2,
+                _ => 1,
+            };
+            histograms[colour][usize::from(v)] += 1;
         }
     }
-    let samples: u64 = histogram.iter().sum();
-    ensure!(samples > 0, "The RAW has no active samples");
+    let pooled: Vec<u64> = (0..65536)
+        .map(|i| histograms.iter().map(|h| h[i]).sum())
+        .collect();
     let clip_from = white.ceil().clamp(0.0, 65535.0) as usize;
-    let clipped: u64 = histogram[clip_from..].iter().sum();
-    let level = |share: f64| -> f64 {
-        let target = ((share * samples as f64).ceil() as u64).max(1);
-        let mut seen = 0;
-        let code = histogram
-            .iter()
-            .position(|n| {
-                seen += n;
-                seen >= target
-            })
-            .unwrap_or(65535);
-        ((code as f64 - f64::from(black)) / f64::from(white - black)).clamp(0.0, 1.0)
+    let stats = |histogram: &[u64]| {
+        let samples: u64 = histogram.iter().sum();
+        let clipped: u64 = histogram[clip_from..].iter().sum();
+        let level = |share: f64| -> f64 {
+            let target = ((share * samples as f64).ceil() as u64).max(1);
+            let mut seen = 0;
+            let code = histogram
+                .iter()
+                .position(|n| {
+                    seen += n;
+                    seen >= target
+                })
+                .unwrap_or(65535);
+            ((code as f64 - f64::from(black)) / f64::from(white - black)).clamp(0.0, 1.0)
+        };
+        (
+            samples,
+            clipped as f64 / samples.max(1) as f64,
+            level(0.01),
+            level(0.5),
+            level(0.999),
+        )
     };
-    Ok((
-        samples,
-        clipped as f64 / samples as f64,
-        level(0.01),
-        level(0.5),
-        level(0.999),
-    ))
+    let all = stats(&pooled);
+    ensure!(all.0 > 0, "The RAW has no active samples");
+    let colours = [0, 1, 2].map(|c| {
+        let (_, clipped_share, _, median_level, highlight_level) = stats(&histograms[c]);
+        ColourLevels {
+            clipped_share,
+            median_level,
+            highlight_level,
+        }
+    });
+    Ok((all, colours))
+}
+
+/// The colour the advice reads: the most clipped, else the brightest.
+fn brightest_of(colours: &[ColourLevels; 3]) -> usize {
+    (0..3)
+        .max_by(|&a, &b| {
+            let key = |c: &ColourLevels| (c.clipped_share, c.highlight_level);
+            key(&colours[a])
+                .partial_cmp(&key(&colours[b]))
+                .unwrap_or(std::cmp::Ordering::Equal)
+        })
+        .unwrap_or(1)
 }
 
 /// Decodes `path` and reads its levels. Worker thread only: a full decode.
 pub(crate) fn read_levels(path: &Path) -> Result<RawLevels> {
     let frame = strehl_raw::decode(path)
         .with_context(|| format!("Decoding {}", crate::display_path::display_path(path)))?;
-    let (samples, clipped_share, shadow_level, median_level, highlight_level) = levels_of(
+    let ((samples, _, shadow_level, median_level, _), colours) = levels_of(
         (0..frame.active.height).map(|y| frame.active_row(y)),
         frame.levels.black,
         frame.levels.white,
     )?;
+    let brightest = brightest_of(&colours);
     Ok(RawLevels {
         path: path.to_owned(),
         camera: frame.camera.clone(),
@@ -109,10 +169,12 @@ pub(crate) fn read_levels(path: &Path) -> Result<RawLevels> {
         black: frame.levels.black,
         white: frame.levels.white,
         samples,
-        clipped_share,
+        clipped_share: colours[brightest].clipped_share,
         shadow_level,
         median_level,
-        highlight_level,
+        highlight_level: colours[brightest].highlight_level,
+        colours,
+        brightest,
     })
 }
 
@@ -303,7 +365,7 @@ mod tests {
         row.extend(std::iter::repeat_n(8448u16, 980));
         row.extend([15360u16; 5]);
         row.extend([16383u16; 5]);
-        let (samples, clipped, shadow, median, highlight) =
+        let ((samples, clipped, shadow, median, highlight), _) =
             levels_of([row.as_slice()].into_iter(), 512.0, 15360.0).unwrap();
         assert_eq!(samples, 1000);
         assert!((clipped - 0.01).abs() < 1e-12);
@@ -313,6 +375,35 @@ mod tests {
         assert_eq!(highlight, 1.0);
         assert!(levels_of([row.as_slice()].into_iter(), 100.0, 100.0).is_err());
         assert!(levels_of(std::iter::empty(), 0.0, 1.0).is_err());
+    }
+
+    /// Plan Q4: a frame whose green pins while red and blue sit low reads
+    /// green clipped, at green's own share, not the pooled figure (the
+    /// scarab's plane 162 pooled 0.71 with green pinned).
+    #[test]
+    fn levels_are_per_colour_and_the_brightest_is_named() {
+        // RGGB rows: R G / G B. Green at the pin on every third green site.
+        let width = 600;
+        let rows: Vec<Vec<u16>> = (0..400)
+            .map(|y| {
+                (0..width)
+                    .map(|x| match (y % 2, x % 2) {
+                        (0, 0) => 3000,
+                        (1, 1) => 2000,
+                        _ if (x + y) % 3 == 0 => 16383,
+                        _ => 9000,
+                    })
+                    .collect()
+            })
+            .collect();
+        let ((_, pooled_clipped, ..), colours) =
+            levels_of(rows.iter().map(Vec::as_slice), 512.0, 15360.0).unwrap();
+        let green = brightest_of(&colours);
+        assert_eq!(colour_name(green), "green");
+        assert!(colours[1].clipped_share > 0.3, "{:?}", colours[1]);
+        assert_eq!(colours[0].clipped_share, 0.0);
+        assert_eq!(colours[1].highlight_level, 1.0);
+        assert!(colours[1].clipped_share > 1.9 * pooled_clipped);
     }
 
     #[test]

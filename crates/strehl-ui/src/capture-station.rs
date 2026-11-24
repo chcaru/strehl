@@ -342,6 +342,19 @@ impl CaptureWorkspace {
         }
     }
 
+    /// The reviewed capture, when it was stopped (by hand or by a fault)
+    /// and the host lists it with its planes (`verify_stopped`).
+    fn stopped_under_review<'a>(
+        &self,
+        s: &'a Snapshot,
+    ) -> Option<&'a crate::capture_client::StoppedCapture> {
+        if !self.station.review || s.host.phase.capturing() {
+            return None;
+        }
+        let run = self.station.planes.as_ref().map(|deck| &deck.run)?;
+        s.stopped.iter().find(|c| &c.folder == run)
+    }
+
     /// The existing subject chosen in the plan, if one is.
     pub fn plan_chosen(&self) -> Option<NodeId> {
         self.station.plan.chosen
@@ -963,6 +976,10 @@ impl CaptureWorkspace {
             retake_cost: clock.cost(progress.map_or(0, |p| p.retakes as u64)),
             plain_pace: clock.plain_pace(),
             ended: self.station.review && !s.host.phase.capturing(),
+            stack_stopped: self
+                .stopped_under_review(s)
+                .map(|run| run.planes.min(run.frames / run.shots_per_plane.max(1)))
+                .filter(|planes| *planes >= 2),
             ended_at: self.station.ended_at.map(|t| {
                 chrono::DateTime::<chrono::Local>::from(t)
                     .format("%H:%M")
@@ -1444,6 +1461,17 @@ impl CaptureWorkspace {
                 self.station.plane_view.follow();
             }
             FlightIntent::NewCapture => self.new_capture(false),
+            FlightIntent::StackStopped => {
+                // As a finished capture is: opened and stacked, or queued
+                // behind a stack being rendered (`capture_finished`).
+                if let Some(run) = self.stopped_under_review(s) {
+                    self.finished_capture = Some(run.folder.clone());
+                    self.follow_note = Some(format!(
+                        "Stacking the {} planes taken before the stop.",
+                        run.planes
+                    ));
+                }
+            }
         }
     }
 

@@ -466,6 +466,7 @@ fn inputs<'a>(s: &'a Snapshot, p: Option<&'a Progress>) -> FlightInputs<'a> {
         plain_pace: Some(5.6),
         ended: false,
         ended_at: None,
+        stack_stopped: None,
         retakes: RetakeInputs::default(),
     }
 }
@@ -531,6 +532,16 @@ fn stop_asks_first_and_glance_opens() {
     assert_eq!(
         click(&ctx, &input, "Back to the plan"),
         [FlightIntent::Done]
+    );
+    assert_eq!(
+        click(&ctx, &input, "New capture"),
+        [FlightIntent::NewCapture]
+    );
+    // Plan Q6: a capture stopped with planes taken offers to stack them.
+    input.stack_stopped = Some(24);
+    assert_eq!(
+        click(&ctx, &input, "Stack 24 planes"),
+        [FlightIntent::StackStopped]
     );
     assert_eq!(
         click(&ctx, &input, "New capture"),
