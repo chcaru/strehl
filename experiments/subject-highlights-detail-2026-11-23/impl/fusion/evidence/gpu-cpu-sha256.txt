@@ -1,0 +1,2 @@
+9353e6a01e2163a8f671fca33336d046a661147fdaced7ae257f49747741364d *C:/w/shd-x4-out/final/rig/every1-master-fused/master.tif
+9353e6a01e2163a8f671fca33336d046a661147fdaced7ae257f49747741364d *C:/w/shd-x4-out/final/rig/every1-master-cpu/master.tif

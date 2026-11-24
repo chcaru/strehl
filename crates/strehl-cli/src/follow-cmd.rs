@@ -26,6 +26,8 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::time::{Duration, Instant};
 
+use crate::pixel_shift_cmd::Tier;
+
 #[derive(clap::Args, Debug)]
 pub struct FollowArgs {
     /// Capture run folder (manifest.json, events.jsonl, transfer-receipts.jsonl).
@@ -130,6 +132,9 @@ fn check_plane(
     subject: Option<&mut SubjectState>,
 ) -> Value {
     let started = Instant::now();
+    // Plan X5: the subject's rings for the pinned count.
+    let rings: Option<Vec<strehl_core::subject::Ring>> =
+        subject.as_ref().map(|(s, _)| s.rings.clone());
     let frames: Result<Vec<strehl_raw::Frame>> = g
         .files
         .par_iter()
@@ -138,7 +143,7 @@ fn check_plane(
     let frames = match frames {
         Ok(f) => f,
         Err(e) => {
-            return json!({"plane":g.plane,"target":g.target,"group_id":g.key(),"verdict":"failed","reason":format!("decode: {e:#}"),"retake":true});
+            return json!({"plane":g.plane,"target":g.target,"group_id":g.key(),"tier":g.tier.name(),"verdict":"failed","reason":format!("decode: {e:#}"),"retake":g.tier == Tier::Base});
         }
     };
     let first = &frames[0];
@@ -153,6 +158,7 @@ fn check_plane(
         )
     });
     let mut out = json!({"plane":g.plane,"target":g.target,"group_id":g.key(),"members":frames.len(),
+        "tier":g.tier.name(),
         "names":g.files.iter().map(|f| f.name.clone()).collect::<Vec<_>>()});
     // The render's alignment plane is the group's first member: measure its
     // ladder pairs now, into the edge journal the closing render reads.
@@ -229,6 +235,18 @@ fn check_plane(
         out["verdict"] = json!("decoded");
         out["retake"] = json!(false);
     }
+    // Plan X5's cue: CFA sites of member 1 at or near the raw pin (the level
+    // from which the highlight fusion replaces a site), inside the subject
+    // when the plan has one.
+    out["pinned"] = json!(crate::highlight_fusion::pinned_sites(
+        &frames[0],
+        rings.as_deref()
+    ));
+    out["pinned_scope"] = json!(if rings.is_some() {
+        "subject"
+    } else {
+        "frame"
+    });
     out["seconds"] = json!(started.elapsed().as_secs_f64());
     out
 }
@@ -330,8 +348,11 @@ pub fn run(args: &FollowArgs) -> Result<()> {
     };
     let forced = forced_retakes()?;
     // A forced plane's first group only, also across a resumed session.
-    let mut forced_done: std::collections::HashSet<u64> =
-        done.values().filter_map(|v| v["plane"].as_u64()).collect();
+    let mut forced_done: std::collections::HashSet<u64> = done
+        .values()
+        .filter(|v| v["tier"].is_null())
+        .filter_map(|v| v["plane"].as_u64())
+        .collect();
     if !forced.is_empty() {
         println!("forced retakes  : planes {forced:?} (STREHL_FOLLOW_RETAKE_PLANES)");
     }
@@ -343,7 +364,9 @@ pub fn run(args: &FollowArgs) -> Result<()> {
         // complete group is the one the stack uses.
         read_subject(&mut subject)?;
         let all = crate::pixel_shift_cmd::all_groups(&args.dir)?;
-        recorded = all.len();
+        // Only base groups make the plane list: a highlight group (plan X3)
+        // shares its plane's number and is neither a retake nor a try.
+        recorded = all.iter().filter(|g| g.tier == Tier::Base).count();
         planes = crate::pixel_shift_cmd::plane_groups(all.clone());
         let groups = &planes;
         let mut admitted = 0;
@@ -352,6 +375,37 @@ pub fn run(args: &FollowArgs) -> Result<()> {
             .filter(|g| g.complete && !done.contains_key(&g.key()))
             .collect();
         for g in fresh {
+            if g.tier != Tier::Base {
+                // Measured for the render's group journal (the fusion reads
+                // it), never judged for a retake, never an alignment plane.
+                let mut v = check_plane(
+                    g,
+                    &mut noise,
+                    groups_journal.as_ref(),
+                    None,
+                    subject.as_mut(),
+                );
+                v["group_verdict"] = v["verdict"].clone();
+                v["verdict"] = json!(g.tier.name());
+                v["tier"] = json!(g.tier.name());
+                v["retake"] = json!(false);
+                println!(
+                    "plane {:>4}      : {} group {}{}",
+                    g.plane,
+                    g.tier.name(),
+                    v["group_verdict"].as_str().unwrap_or("?"),
+                    v["seconds"]
+                        .as_f64()
+                        .map(|s| format!(" ({s:.2} s)"))
+                        .unwrap_or_default()
+                );
+                writeln!(sink, "{v}")?;
+                sink.flush()?;
+                done.insert(g.key(), v);
+                admitted += 1;
+                last_progress = Instant::now();
+                continue;
+            }
             let mut v = check_plane(
                 g,
                 &mut noise,
@@ -399,7 +453,7 @@ pub fn run(args: &FollowArgs) -> Result<()> {
             // Finished but some planes can never complete (missing or
             // undurable members): report and stop rather than wait forever.
             for g in groups.iter().filter(|g| !g.complete) {
-                let v = json!({"plane":g.plane,"target":g.target,"group_id":g.key(),"verdict":"incomplete","retake":true,
+                let v = json!({"plane":g.plane,"target":g.target,"group_id":g.key(),"tier":g.tier.name(),"verdict":"incomplete","retake":true,
                     "reason":"a bound member has no durable receipt with its hash"});
                 println!("plane {:>4}      : incomplete", g.plane);
                 writeln!(sink, "{v}")?;

@@ -70,6 +70,36 @@ pub struct BoundFile {
     pub durable: bool,
 }
 
+/// The exposure tier a group was taken in (plan X3, `impl/tiers.md`): the
+/// journal's `tier`, absent meaning [`Tier::Base`]. Only base groups make
+/// the stack; a highlight group is a companion of a base group
+/// (`highlight_fusion`); any other tier (`shadow`) is recorded and not used.
+#[derive(Clone, Debug, Default, PartialEq, Eq, Hash)]
+pub enum Tier {
+    #[default]
+    Base,
+    Highlight,
+    Other(String),
+}
+
+impl Tier {
+    fn parse(v: &Value) -> Option<Self> {
+        Some(match v.as_str()? {
+            "base" => Tier::Base,
+            "highlight" => Tier::Highlight,
+            other => Tier::Other(other.into()),
+        })
+    }
+
+    pub fn name(&self) -> &str {
+        match self {
+            Tier::Base => "base",
+            Tier::Highlight => "highlight",
+            Tier::Other(s) => s,
+        }
+    }
+}
+
 /// One focal plane's group as recorded.
 #[derive(Clone, Debug)]
 pub struct RecordedGroup {
@@ -81,6 +111,11 @@ pub struct RecordedGroup {
     /// All `members` files present, ordered 1..=n, each with a durable receipt
     /// whose hash matches the binding.
     pub complete: bool,
+    /// The group's exposure tier (absent in the journal: base).
+    pub tier: Tier,
+    /// The commanded ShutterSpeed code the journal records for the group
+    /// (`data.exposure.shutter`), if any.
+    pub shutter: Option<u64>,
 }
 
 fn jsonl(path: &Path) -> Result<Vec<Value>> {
@@ -132,10 +167,17 @@ pub fn recorded_groups(dir: &Path) -> Result<Vec<RecordedGroup>> {
     Ok(plane_groups(all_groups(dir)?))
 }
 
-/// [`recorded_groups`]'s choice among [`all_groups`].
+/// [`recorded_groups`]'s choice among [`all_groups`]: base groups only, so a
+/// highlight group taken at a plane never replaces the plane's group.
 pub fn plane_groups(groups: Vec<RecordedGroup>) -> Vec<RecordedGroup> {
+    tier_groups(groups, &Tier::Base).into_values().collect()
+}
+
+/// The last complete group of each plane in `tier` (or the last group, if
+/// none of the plane's is complete), by plane number.
+pub fn tier_groups(groups: Vec<RecordedGroup>, tier: &Tier) -> BTreeMap<u64, RecordedGroup> {
     let mut planes: BTreeMap<u64, RecordedGroup> = BTreeMap::new();
-    for g in groups {
+    for g in groups.into_iter().filter(|g| &g.tier == tier) {
         match planes.get(&g.plane) {
             Some(kept) if kept.complete && !g.complete => {}
             _ => {
@@ -143,7 +185,47 @@ pub fn plane_groups(groups: Vec<RecordedGroup>) -> Vec<RecordedGroup> {
             }
         }
     }
-    planes.into_values().collect()
+    planes
+}
+
+/// The capture's highlight plan (`manifest.json` `plan.highlight`) and the
+/// base shutter, as far as the run records them.
+#[derive(Clone, Debug, Default)]
+pub struct HighlightPlan {
+    /// `every`: a highlight group at every plane (1) or every second (2).
+    pub every: Option<u64>,
+    /// The highlight groups' commanded ShutterSpeed code.
+    pub shutter: Option<u64>,
+    /// The run's ShutterSpeed code at its start (the base exposure).
+    pub base_shutter: Option<u64>,
+}
+
+/// [`HighlightPlan`] from `dir/manifest.json` (all fields absent when the
+/// manifest or the plan is).
+pub fn highlight_plan(dir: &Path) -> HighlightPlan {
+    let Ok(text) = std::fs::read_to_string(dir.join("manifest.json")) else {
+        return HighlightPlan::default();
+    };
+    let Ok(m) = serde_json::from_str::<Value>(&text) else {
+        return HighlightPlan::default();
+    };
+    let h = &m["plan"]["highlight"];
+    HighlightPlan {
+        every: h["every"].as_u64(),
+        shutter: h["shutter"].as_u64(),
+        base_shutter: m["initial_status"]["properties"]["ShutterSpeed"]["value"].as_u64(),
+    }
+}
+
+/// Seconds of a Sony ShutterSpeed code (`numerator << 16 | denominator`;
+/// as `strehl_capture::timing::shutter_seconds`), `None` for bulb or an
+/// unknown code.
+pub fn shutter_seconds(code: u64) -> Option<f64> {
+    if code == 0 || code >= u64::from(u32::MAX) {
+        return None;
+    }
+    let (n, d) = (code >> 16, code & 0xffff);
+    (n > 0 && d > 0).then(|| n as f64 / d as f64)
 }
 
 /// Every group the run recorded, retakes included, in recording order.
@@ -168,7 +250,12 @@ pub fn all_groups(dir: &Path) -> Result<Vec<RecordedGroup>> {
             continue;
         };
         let target = e["data"]["target"].as_u64();
+        // The exposure tier (plan X3): per file, else the event's; absent
+        // means base, as every run before tiers.
+        let event_tier = Tier::parse(&e["data"]["tier"]).unwrap_or_default();
+        let shutter = e["data"]["exposure"]["shutter"].as_u64();
         for f in files {
+            let tier = Tier::parse(&f["tier"]).unwrap_or_else(|| event_tier.clone());
             let (Some(name), Some(plane), Some(sha)) = (
                 f["name"].as_str(),
                 f["plane"].as_u64(),
@@ -206,6 +293,8 @@ pub fn all_groups(dir: &Path) -> Result<Vec<RecordedGroup>> {
                     group_id: bound.group_id.clone(),
                     files: Vec::new(),
                     complete: false,
+                    tier: tier.clone(),
+                    shutter,
                 });
                 groups.len() - 1
             });
@@ -872,6 +961,46 @@ pub fn measure_journaled(
     (m, witness)
 }
 
+/// [`measure`] of one group through this process's measurements and then
+/// `journal`, journaling a fresh one: for a highlight companion
+/// (`highlight_fusion`), measured as the stack measures its own groups.
+pub(crate) fn measure_cached(
+    journal: Option<&GroupJournal>,
+    paths: [&Path; 4],
+    frames: [&strehl_raw::Frame; 4],
+    noise: &strehl_core::noise::NoiseModel,
+    plane: usize,
+) -> std::sync::Arc<GroupMeasurement> {
+    let key = MeasurementKey {
+        members: paths.map(Path::to_path_buf),
+        noise: format!("{noise:?}"),
+    };
+    if let Some(m) = measured_groups().lock().unwrap().get(&key).cloned() {
+        return m;
+    }
+    let journal_key = journal.and_then(|_| GroupJournal::key(paths, noise));
+    let known = match (journal, journal_key.as_ref()) {
+        (Some(j), Some(k)) => j.get(k),
+        _ => None,
+    };
+    let m = match known {
+        Some(m) => m,
+        None => {
+            let m = measure(frames, noise);
+            if let (Some(j), Some(k)) = (journal, journal_key) {
+                j.append(k, plane, &m);
+            }
+            m
+        }
+    };
+    let m = std::sync::Arc::new(m);
+    measured_groups()
+        .lock()
+        .unwrap()
+        .insert(key, std::sync::Arc::clone(&m));
+    m
+}
+
 /// A group's identity for [`measured_groups`]: its four files and the noise
 /// model the witness was measured under.
 #[derive(Clone, PartialEq, Eq, Hash)]
@@ -926,7 +1055,10 @@ pub struct StackGroups {
     mode: GroupMode,
     residual: ResidualMode,
     /// `STREHL_GROUP_JOURNAL`: measurements kept across processes.
-    journal: Option<GroupJournal>,
+    journal: Option<std::sync::Arc<GroupJournal>>,
+    /// Plan X4: the banner's line about the capture's highlight companions
+    /// (installed for the render by `highlight_fusion::companions`).
+    companion_line: Option<String>,
 }
 
 fn views_of<'a>(frames: [&'a strehl_raw::Frame; 4]) -> [MemberView<'a>; 4] {
@@ -1316,13 +1448,15 @@ impl StackGroups {
     }
 
     pub fn discover(dir: &Path, limit: Option<usize>, mode: GroupMode) -> Result<Self> {
+        let all = all_groups(dir)?;
+        let base = plane_groups(all.clone());
         let PlaneList {
             mut planes,
             members,
             four,
             single,
             incomplete,
-        } = plane_list(&recorded_groups(dir)?);
+        } = plane_list(&base);
         if let Some(n) = limit {
             planes.truncate(n);
         }
@@ -1334,7 +1468,21 @@ impl StackGroups {
         ensure!(!planes.is_empty(), "no focal planes to stack");
         let journal = match mode {
             GroupMode::Member1 => None,
-            _ => GroupJournal::open(dir)?,
+            _ => GroupJournal::open(dir)?.map(std::sync::Arc::new),
+        };
+        let residual = ResidualMode::from_env()?;
+        // Plan X4: each base plane's highlight companion, installed for the
+        // render by member-1 path (none in the member-1 comparison arm).
+        let companion_line = match mode {
+            GroupMode::Member1 => None,
+            _ => crate::highlight_fusion::companions(
+                dir,
+                &all,
+                &base,
+                &planes,
+                journal.clone(),
+                residual,
+            )?,
         };
         Ok(Self {
             noise: Default::default(),
@@ -1344,8 +1492,9 @@ impl StackGroups {
             demoted: Default::default(),
             recorded: (four, single, incomplete),
             mode,
-            residual: ResidualMode::from_env()?,
+            residual,
             journal,
+            companion_line,
         })
     }
 
@@ -1382,7 +1531,11 @@ impl StackGroups {
                   members' measured sub-photosite residuals COMPENSATED at the assembly (first order); the witness gate judges what compensation leaves (STREHL_PIXEL_SHIFT_RESIDUAL=compensate)",
             ResidualMode::Negate => "
                   members' residuals applied REVERSED: placebo arm (STREHL_PIXEL_SHIFT_RESIDUAL=negate)",
-        }
+        } + &self
+            .companion_line
+            .as_ref()
+            .map(|l| format!("\n{l}"))
+            .unwrap_or_default()
     }
 
     /// Decode and check frame `index`'s other members; park a passing group.
@@ -1513,6 +1666,7 @@ impl StackGroups {
                         offsets: c.offsets,
                         gains: c.gains,
                         residuals: self.residual.sign().map(|s| (c.residual, s)),
+                        keep: false,
                     },
                 );
             }
@@ -1601,6 +1755,7 @@ impl StackGroups {
                 offsets: c.offsets,
                 gains: c.gains,
                 residuals: self.residual.sign().map(|s| (c.residual, s)),
+                keep: false,
             },
         );
         Ok(valid)
@@ -1652,7 +1807,7 @@ impl StackGroups {
 }
 
 #[cfg(test)]
-mod tests {
+pub(crate) mod tests {
     use super::*;
 
     /// A four-member group of a smooth, textured scene: member `k` sees the
@@ -1872,6 +2027,82 @@ mod tests {
         assert_eq!(groups[1].files[0].name, "frame-000009.ARW");
         assert_eq!(groups[1].key(), "g2b");
         let _ = std::fs::remove_dir_all(&plain);
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    /// Plan X3/X4: a highlight group under its base group's plane number is
+    /// neither a retake nor the plane's group; the tier is read per file,
+    /// else per event, and absent means base.
+    #[test]
+    fn a_highlight_group_never_replaces_its_plane() {
+        let dir = capture_folder(
+            "tiers",
+            &[
+                (1, "b1", 1, 4),
+                (1, "h1", 5, 4),
+                (2, "b2", 9, 4),
+                (2, "h2", 13, 4),
+                (3, "s3", 17, 4),
+            ],
+        );
+        // Tag the groups as the Pi does: h1 per file, h2 per event only.
+        let text = std::fs::read_to_string(dir.join("events.jsonl")).unwrap();
+        let lines: Vec<String> = text
+            .lines()
+            .map(|l| {
+                let mut v: Value = serde_json::from_str(l).unwrap();
+                let id = v["data"]["response"]["files"][0]["group_id"]
+                    .as_str()
+                    .unwrap()
+                    .to_string();
+                match id.as_str() {
+                    "h1" => {
+                        for f in v["data"]["response"]["files"].as_array_mut().unwrap() {
+                            f["tier"] = json!("highlight");
+                        }
+                        v["data"]["exposure"] = json!({"iso": 100, "shutter": 65540});
+                    }
+                    "h2" => {
+                        v["data"]["tier"] = json!("highlight");
+                        v["data"]["exposure"] = json!({"iso": 100, "shutter": 65540});
+                    }
+                    "s3" => v["data"]["tier"] = json!("shadow"),
+                    "b1" => {
+                        v["data"]["tier"] = json!("base");
+                        v["data"]["exposure"] = json!({"iso": 100, "shutter": 1310730});
+                    }
+                    _ => {}
+                }
+                v.to_string()
+            })
+            .collect();
+        std::fs::write(dir.join("events.jsonl"), lines.join("\n") + "\n").unwrap();
+        let all = all_groups(&dir).unwrap();
+        let tiers: Vec<(&str, Tier, Option<u64>)> = all
+            .iter()
+            .map(|g| (g.group_id.as_str(), g.tier.clone(), g.shutter))
+            .collect();
+        assert_eq!(
+            tiers,
+            [
+                ("b1", Tier::Base, Some(1310730)),
+                ("h1", Tier::Highlight, Some(65540)),
+                ("b2", Tier::Base, None),
+                ("h2", Tier::Highlight, Some(65540)),
+                ("s3", Tier::Other("shadow".into()), None),
+            ]
+        );
+        let planes: Vec<(u64, String)> = recorded_groups(&dir)
+            .unwrap()
+            .iter()
+            .map(|g| (g.plane, g.group_id.clone()))
+            .collect();
+        assert_eq!(planes, [(1, "b1".into()), (2, "b2".into())]);
+        let highlights = tier_groups(all, &Tier::Highlight);
+        assert_eq!(highlights.keys().copied().collect::<Vec<_>>(), [1, 2]);
+        assert_eq!(shutter_seconds(1310730), Some(2.0));
+        assert_eq!(shutter_seconds(65540), Some(0.25));
+        assert_eq!(shutter_seconds(0), None);
         let _ = std::fs::remove_dir_all(&dir);
     }
 

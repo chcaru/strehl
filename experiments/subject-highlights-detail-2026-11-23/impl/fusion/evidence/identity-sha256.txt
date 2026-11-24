@@ -1,0 +1,4 @@
+69ed7b4be13bdc7aee1edff92640e582c3c93c05bf38675c69a413c1a841f10f *C:/w/shd-x4-out/final/identity/id-base-weevil/result.tiff
+69ed7b4be13bdc7aee1edff92640e582c3c93c05bf38675c69a413c1a841f10f *C:/w/shd-x4-out/final/identity/id-new-weevil/result.tiff
+edc94c5d1198948e1e5bb1a69c1aab08c1d4886c1438389ec0998f84453d5973 *C:/w/shd-x4-out/final/identity/id-base-scarab/result.tiff
+edc94c5d1198948e1e5bb1a69c1aab08c1d4886c1438389ec0998f84453d5973 *C:/w/shd-x4-out/final/identity/id-new-scarab/result.tiff

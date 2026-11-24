@@ -1,0 +1,5 @@
+plane comp  ratio  corr_EV  handover(med,spread,n)   shift_px      patched  w=1  pinned unrepl comp_pin  base_m1 comp_m1  steps_s
+    1    1 21.241  +0.123  1.0000 0.0200  68214  -0.24,-0.15    731205  426263 136988     0     0  False no   0.13 0.09 0.08 0.07 0.07 0.25
+    2    2 20.369  +0.063  0.9982 0.0184  78099  -0.20,-0.24    776425  387740 120203     0     1  False no   0.00 0.09 0.08 0.05 0.14 0.20
+    3    3 18.985  -0.039  0.9983 0.0196  36771  -0.26,-0.12   1151298  619349 192458     0     0  False no   0.00 0.08 0.11 0.03 0.08 0.09
+fused 3 of 3; hand-over medians 0.9982..1.0000 (median 0.9983); pinned-not-fully-replaced total 0; fusion seconds total 1.7

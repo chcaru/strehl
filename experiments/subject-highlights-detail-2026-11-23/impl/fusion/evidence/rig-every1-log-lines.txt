@@ -1,0 +1,25 @@
+highlights      : 17 planes fused (14 of them a demoted base group's member 1, 17 with a demoted highlight group's member 1), 4 the base exposure alone; ratio 7.718-8.203; 8068069 sites replaced or blended (2540369 with a pinned sample in their footprint, 0 of those not fully replaced; 218 near the companion's own pin); hand-over median 0.9953 (planes 0.9754-1.0052); 9.6 s
+highlights      : 21 of 21 four-shot planes have a highlight companion (21 their own plane's, 0 the nearest plane's; every 1); replaced near the raw pin at the gather, ratio measured per pair
+highlights      : 4 planes fused (4 of them a demoted base group's member 1, 4 with a demoted highlight group's member 1), 1 the base exposure alone; ratio 7.797-8.203; 666171 sites replaced or blended (213484 with a pinned sample in their footprint, 0 of those not fully replaced; 18 near the companion's own pin); hand-over median 0.9953 (planes 0.9848-1.0016); 1.8 s
+highlights      : plane 10: its exposure ratio was refused: textured patches disagree after the ratio (worst residual 0.241 of the texture's power): focus, motion or placement; this plane is the base exposure alone
+highlights      : plane 11: its exposure ratio was refused: textured patches disagree after the ratio (worst residual 0.182 of the texture's power): focus, motion or placement; this plane is the base exposure alone
+highlights      : plane 12: its exposure ratio was refused: textured patches disagree after the ratio (worst residual 0.125 of the texture's power): focus, motion or placement; this plane is the base exposure alone
+highlights      : plane 19: its exposure ratio was refused: textured patches disagree after the ratio (worst residual 0.111 of the texture's power): focus, motion or placement; this plane is the base exposure alone
+pixel shift     : frame 0 demoted to member 1: witness tiles disagree locally by 0.76 px at p99 (limit 0.51): motion, a focus slip or a wrong member
+pixel shift     : frame 1 demoted to member 1: offsets [(0, -1), (1, -2), (1, 0)] do not cover the four CFA parities: a shot slipped by a whole photosite
+pixel shift     : frame 10 demoted to member 1: offsets [(0, -2), (1, -1), (1, 0)] do not cover the four CFA parities: a shot slipped by a whole photosite
+pixel shift     : frame 12 demoted to member 1: offsets [(0, -1), (1, -1), (0, -1)] do not cover the four CFA parities: a shot slipped by a whole photosite
+pixel shift     : frame 14 demoted to member 1: offsets [(0, -1), (0, -2), (0, -2)] do not cover the four CFA parities: a shot slipped by a whole photosite
+pixel shift     : frame 15 demoted to member 1: witness tiles disagree locally by 1.33 px at p99 (limit 0.51): motion, a focus slip or a wrong member
+pixel shift     : frame 17 demoted to member 1: witness tiles disagree locally by 2.05 px at p99 (limit 0.51): motion, a focus slip or a wrong member
+pixel shift     : frame 18 demoted to member 1: offsets [(0, 0), (1, 0), (1, 0)] do not cover the four CFA parities: a shot slipped by a whole photosite
+pixel shift     : frame 2 demoted to member 1: witness tiles disagree locally by 1.18 px at p99 (limit 0.51): motion, a focus slip or a wrong member
+pixel shift     : frame 20 demoted to member 1: witness pairs misregistered by 0.203 photosite after residual compensation
+pixel shift     : frame 3 demoted to member 1: offsets [(0, -1), (1, -1), (1, 1)] do not cover the four CFA parities: a shot slipped by a whole photosite
+pixel shift     : frame 4 demoted to member 1: offsets [(0, -2), (1, -2), (1, -1)] do not cover the four CFA parities: a shot slipped by a whole photosite
+pixel shift     : frame 5 demoted to member 1: offsets [(0, 0), (1, 0), (2, 1)] do not cover the four CFA parities: a shot slipped by a whole photosite
+pixel shift     : frame 6 demoted to member 1: offsets [(0, -1), (0, -2), (0, -1)] do not cover the four CFA parities: a shot slipped by a whole photosite
+pixel shift     : frame 7 demoted to member 1: offsets [(0, 0), (1, 0), (1, 0)] do not cover the four CFA parities: a shot slipped by a whole photosite
+pixel shift     : frame 8 demoted to member 1: witness tiles disagree locally by 0.53 px at p99 (limit 0.51): motion, a focus slip or a wrong member
+pixel shift     : frame 9 demoted to member 1: offsets [(0, -1), (1, 0), (1, 0)] do not cover the four CFA parities: a shot slipped by a whole photosite
+pixel shift     : REMOSAIC (STREHL_PIXEL_SHIFT) -- 21 focal planes: 21 four-shot groups assembled from measured channels at the gather, 0 single-shot, 0 incomplete (first durable member as an ordinary frame). Each group's offsets are measured; a group that fails is folded as its member 1 and reported.

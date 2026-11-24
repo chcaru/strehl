@@ -89,6 +89,8 @@ enum Kernel {
     ExpandAddV,
     ClampHull,
     Combine,
+    PatchPlanes,
+    PatchVariance,
 }
 
 /// Windows one frame may crop ([`GpuFold::add_staged_keeping_luma_cropped`]),
@@ -547,6 +549,13 @@ pub struct GpuFold {
     min_members: usize,
     /// The full-resolution channel planes (`fold.wgsl`'s `rgbw`).
     rgbw: wgpu::Buffer,
+    /// Highlight patches ([`Patches`], `fold.wgsl`'s `patches`): one region
+    /// of `patch_words` words per frame slot.
+    patch: wgpu::Buffer,
+    patch_words: u64,
+    /// Each frame slot's staged patches, valid with the slot's frame (the
+    /// next stage into the slot replaces both).
+    slot_patches: [Option<StagedPatches>; 2],
     /// Mapped read-back buffers for level 0's luma, reused.
     luma_pool: std::sync::Arc<std::sync::Mutex<Vec<wgpu::Buffer>>>,
     /// The frame slot the next [`GpuFold::stage`] fills (0 or 1).
@@ -826,12 +835,12 @@ fn make_binds(
     device: &wgpu::Device,
     bgl: &wgpu::BindGroupLayout,
     params: &[wgpu::Buffer],
-    [work, acc, consts, raw, xf, red, acc_hi, rgb]: [&wgpu::Buffer; 8],
+    [work, acc, consts, raw, xf, red, acc_hi, rgb, patch]: [&wgpu::Buffer; 9],
 ) -> Vec<wgpu::BindGroup> {
     params
         .iter()
         .map(|pb| {
-            let storage = [work, acc, consts, raw, xf, red, acc_hi, rgb];
+            let storage = [work, acc, consts, raw, xf, red, acc_hi, rgb, patch];
             let mut entries = vec![wgpu::BindGroupEntry {
                 binding: 0,
                 resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding {
@@ -897,6 +906,32 @@ pub struct RawGroup<'a> {
     /// Each member's residual as `compensate_rows` applies it
     /// (`sign * r as f32`), or `None` to assemble at the integer offsets.
     pub residuals: Option<[[f32; 2]; 4]>,
+}
+
+/// A frame's highlight patches (plan X4, `highlight_fusion` in the engine),
+/// applied on the device in its preparation exactly as the CPU applies them:
+/// after the gather, before luma and variance.
+pub struct Patches<'a> {
+    /// Per replaced site: the fold plane (0-3 the CFA sites, 4-11 carried),
+    /// its index in the analysis plane, then the weight `w` and value `v`
+    /// as f32 bits; `plane = plane * (1 - w) + v * w`.
+    pub sites: &'a [[u32; 4]],
+    /// Per luma pixel whose greens were replaced: its index, the weights of
+    /// planes 1 and 2 as f32 bits, and 0. Its variance becomes the
+    /// engine's `fused_variance`.
+    pub luma: &'a [[u32; 4]],
+    /// Base units per companion unit.
+    pub ratio: f32,
+}
+
+/// Where a staged frame's patches lie in its slot's region of the patch
+/// buffer, in words.
+#[derive(Clone, Copy, Debug)]
+struct StagedPatches {
+    sites: u32,
+    luma_at: u32,
+    luma: u32,
+    ratio: f32,
 }
 
 /// The eight non-native `(dx, dy, channel)` samples of a quad that the carry
@@ -1263,11 +1298,20 @@ impl GpuFold {
             // Read back: the depth energies are written here.
             wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_SRC,
         );
+        let patch = small(
+            "fold-patch",
+            16,
+            wgpu::BufferUsages::STORAGE
+                | wgpu::BufferUsages::COPY_DST
+                | wgpu::BufferUsages::COPY_SRC,
+        );
         let bind = vec![make_binds(
             &device,
             &bgl,
             &params,
-            [&work, &acc[0], &consts, &raw, &xf, &red, &acc[1], &rgbw],
+            [
+                &work, &acc[0], &consts, &raw, &xf, &red, &acc[1], &rgbw, &patch,
+            ],
         )];
         let profile = profiling.then(|| Profile::new(&device, &queue));
         let mut fold = Self {
@@ -1288,6 +1332,9 @@ impl GpuFold {
             raw_members: 1,
             min_members: 1,
             rgbw,
+            patch,
+            patch_words: 0,
+            slot_patches: [None, None],
             luma_pool: Default::default(),
             next_slot: 0,
             upload: Vec::new(),
@@ -1409,10 +1456,46 @@ impl GpuFold {
                         &self.red,
                         &acc[1],
                         &self.rgbw,
+                        &self.patch,
                     ],
                 )
             })
             .collect();
+    }
+
+    /// Room for `words` patch words in each frame slot's region, keeping
+    /// the other slot's staged patches (copied into the new buffer).
+    fn ensure_patch_words(&mut self, words: u64, keep_slot: usize) {
+        if words <= self.patch_words {
+            return;
+        }
+        let cap = words.next_power_of_two().max(1 << 16);
+        let buffer = self.device.create_buffer(&wgpu::BufferDescriptor {
+            label: Some("fold-patch"),
+            size: 2 * cap * 4,
+            usage: wgpu::BufferUsages::STORAGE
+                | wgpu::BufferUsages::COPY_DST
+                | wgpu::BufferUsages::COPY_SRC,
+            mapped_at_creation: false,
+        });
+        if self.patch_words > 0 {
+            let mut encoder = self
+                .device
+                .create_command_encoder(&wgpu::CommandEncoderDescriptor {
+                    label: Some("fold-patch-grow"),
+                });
+            encoder.copy_buffer_to_buffer(
+                &self.patch,
+                keep_slot as u64 * self.patch_words * 4,
+                &buffer,
+                keep_slot as u64 * cap * 4,
+                self.patch_words * 4,
+            );
+            self.queue.submit([encoder.finish()]);
+        }
+        self.patch = buffer;
+        self.patch_words = cap;
+        self.rebind();
     }
 
     fn submit(&mut self, rec: Recorder) -> wgpu::SubmissionIndex {
@@ -1655,12 +1738,14 @@ impl GpuFold {
     }
 
     /// The fold's dispatches for planes already at `plane_lv[c][0]`; with
-    /// `noise`, the luma variance is computed here rather than uploaded.
+    /// `noise`, the luma variance is computed here rather than uploaded, and
+    /// then replaced at a frame's highlight-patched pixels (its
+    /// `patch_variance` parameters, without the dispatch size).
     fn record_fold(
         &self,
         rec: &mut Recorder,
         scalars: &[LevelScalars],
-        noise: Option<GreenNoise>,
+        noise: Option<(GreenNoise, Option<Params>)>,
         keep_luma: bool,
     ) {
         let l = &self.layout;
@@ -1690,7 +1775,7 @@ impl GpuFold {
                 n0,
             );
         }
-        if let Some(nz) = noise {
+        if let Some((nz, patch)) = noise {
             rec.push(
                 Kernel::Variance,
                 Params {
@@ -1700,6 +1785,9 @@ impl GpuFold {
                 },
                 n0,
             );
+            if let Some(p) = patch {
+                rec.push(Kernel::PatchVariance, p, p.a[0] as usize);
+            }
         }
         // Hull of the raw inputs.
         if self.hull {
@@ -1976,7 +2064,31 @@ impl GpuFold {
     /// the frames at once. The slot stays valid until the second `stage`
     /// after this one.
     pub fn stage(&mut self, frame: &RawFrame<'_>) -> Result<Staged, String> {
+        self.stage_with_patches(frame, None)
+    }
+
+    /// [`Self::stage`] with the frame's highlight patches, uploaded into the
+    /// slot's region of the patch buffer.
+    pub fn stage_with_patches(
+        &mut self,
+        frame: &RawFrame<'_>,
+        patches: Option<&Patches<'_>>,
+    ) -> Result<Staged, String> {
         let (gw, gh) = self.full.ok_or("GPU preparation layout")?;
+        let n0 = self.layout.sizes[0].pixels() as u32;
+        if let Some(p) = patches {
+            let planes = if frame.carried.is_some() {
+                PULLS
+            } else {
+                SITES.len()
+            } as u32;
+            if p.sites.iter().any(|s| s[0] >= planes || s[1] >= n0)
+                || p.luma.iter().any(|s| s[0] >= n0)
+                || !(p.ratio.is_finite() && p.ratio > 0.0)
+            {
+                return Err("GPU preparation: a highlight patch out of range".into());
+            }
+        }
         let (width, rows) = (2 * gw, 2 * gh);
         let members = if frame.group.is_some() { 4 } else { 1 };
         let padded = (frame.data.len() as u64).next_multiple_of(4);
@@ -2137,6 +2249,29 @@ impl GpuFold {
                 bytemuck::cast_slice(&xf),
             );
         }
+        self.slot_patches[slot] = match patches.filter(|p| !p.sites.is_empty()) {
+            None => None,
+            Some(p) => {
+                let words = 4 * (p.sites.len() + p.luma.len()) as u64;
+                self.ensure_patch_words(words, slot ^ 1);
+                let at = slot as u64 * self.patch_words * 4;
+                self.queue
+                    .write_buffer(&self.patch, at, bytemuck::cast_slice(p.sites));
+                if !p.luma.is_empty() {
+                    self.queue.write_buffer(
+                        &self.patch,
+                        at + 16 * p.sites.len() as u64,
+                        bytemuck::cast_slice(p.luma),
+                    );
+                }
+                Some(StagedPatches {
+                    sites: p.sites.len() as u32,
+                    luma_at: 4 * p.sites.len() as u32,
+                    luma: p.luma.len() as u32,
+                    ratio: p.ratio,
+                })
+            }
+        };
         Ok(Staged {
             slot,
             generation: self.raw_generation,
@@ -2777,6 +2912,31 @@ impl GpuFold {
         let all: Vec<usize> = (0..sites).collect();
         let mut rec = Recorder { calls: Vec::new() };
         self.record_gather(&mut rec, frame, base, frame.slot, &all, &dst, false);
+        // Plan X4: the highlight patches, before anything reads the planes.
+        let patch_base = (frame.slot as u64 * self.patch_words) as u32;
+        let var_patch = self.slot_patches[frame.slot].map(|p| {
+            let plane_stride = if sites > 1 { dst[1] - dst[0] } else { 0 };
+            debug_assert!(dst.windows(2).all(|w| w[1] - w[0] == plane_stride));
+            rec.push(
+                Kernel::PatchPlanes,
+                Params {
+                    a: [p.sites, patch_base, dst[0], plane_stride],
+                    ..Default::default()
+                },
+                p.sites as usize,
+            );
+            Params {
+                a: [p.luma, patch_base + p.luma_at, l.luma_lv[0], l.var_lv[0]],
+                f: [
+                    noise.gain[0],
+                    noise.read_dn[0],
+                    noise.gain[1],
+                    noise.read_dn[1],
+                ],
+                g: [p.ratio, 1.0 / p.ratio, 0.0, 0.0],
+                ..Default::default()
+            }
+        });
         if let Some((count, side, first, at, _)) = crops {
             let w = l.sizes[0].width as u32;
             for (c, &plane) in dst.iter().enumerate() {
@@ -2791,7 +2951,7 @@ impl GpuFold {
                 );
             }
         }
-        self.record_fold(&mut rec, &scalars, Some(noise), keep_luma);
+        self.record_fold(&mut rec, &scalars, Some((noise, var_patch)), keep_luma);
         for (region, unit) in l.null.iter().zip(null_units.unwrap_or(&[])) {
             let (Some(region), Some(unit)) = (region, unit) else {
                 continue;

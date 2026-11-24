@@ -1,0 +1,49 @@
+run             : D:/StrehlCaptures/stack-1795512217588-11344
+journal         : C:/w/shd-x4-out/final/follow/cache\follow\stack-1795512217588-11344-c92c32df656272a3.jsonl (0 planes already checked)
+alignment pairs : measured as planes arrive (edge journal)
+plane    1      : demote witness tiles disagree locally by 0.76 px at p99 (limit 0.51): motion, a focus slip or a wrong member (0.25 s), 0 alignment pairs
+plane    1      : highlight group demote (0.15 s)
+plane    2      : demote offsets [(0, -1), (1, -2), (1, 0)] do not cover the four CFA parities: a shot slipped by a whole photosite (0.20 s), 1 alignment pairs
+plane    2      : highlight group demote (0.11 s)
+plane    3      : demote witness tiles disagree locally by 1.18 px at p99 (limit 0.51): motion, a focus slip or a wrong member (0.26 s), 2 alignment pairs
+plane    3      : highlight group demote (0.20 s)
+plane    4      : demote offsets [(0, -1), (1, -1), (1, 1)] do not cover the four CFA parities: a shot slipped by a whole photosite (0.18 s), 2 alignment pairs
+plane    4      : highlight group demote (0.12 s)
+plane    5      : demote offsets [(0, -2), (1, -2), (1, -1)] do not cover the four CFA parities: a shot slipped by a whole photosite (0.16 s), 3 alignment pairs
+plane    5      : highlight group demote (0.18 s)
+plane    6      : demote offsets [(0, 0), (1, 0), (2, 1)] do not cover the four CFA parities: a shot slipped by a whole photosite (0.16 s), 3 alignment pairs
+plane    6      : highlight group demote (0.16 s)
+plane    7      : demote offsets [(0, -1), (0, -2), (0, -1)] do not cover the four CFA parities: a shot slipped by a whole photosite (0.20 s), 3 alignment pairs
+plane    7      : highlight group demote (0.18 s)
+plane    8      : demote offsets [(0, 0), (1, 0), (1, 0)] do not cover the four CFA parities: a shot slipped by a whole photosite (0.15 s), 3 alignment pairs
+plane    8      : highlight group demote (0.11 s)
+plane    9      : demote witness tiles disagree locally by 0.53 px at p99 (limit 0.51): motion, a focus slip or a wrong member (0.25 s), 4 alignment pairs
+plane    9      : highlight group demote (0.18 s)
+plane   10      : demote offsets [(0, -1), (1, 0), (1, 0)] do not cover the four CFA parities: a shot slipped by a whole photosite (0.20 s), 4 alignment pairs
+plane   10      : highlight group demote (0.11 s)
+plane   11      : demote offsets [(0, -2), (1, -1), (1, 0)] do not cover the four CFA parities: a shot slipped by a whole photosite (0.20 s), 4 alignment pairs
+plane   11      : highlight group demote (0.18 s)
+plane   12      : pass  (0.27 s), 4 alignment pairs
+plane   12      : highlight group demote (0.19 s)
+plane   13      : demote offsets [(0, -1), (1, -1), (0, -1)] do not cover the four CFA parities: a shot slipped by a whole photosite (0.17 s), 4 alignment pairs
+plane   13      : highlight group demote (0.18 s)
+plane   14      : pass  (0.24 s), 4 alignment pairs
+plane   14      : highlight group demote (0.19 s)
+plane   15      : demote offsets [(0, -1), (0, -2), (0, -2)] do not cover the four CFA parities: a shot slipped by a whole photosite (0.20 s), 4 alignment pairs
+plane   15      : highlight group demote (0.11 s)
+plane   16      : demote witness tiles disagree locally by 1.33 px at p99 (limit 0.51): motion, a focus slip or a wrong member (0.26 s), 4 alignment pairs
+plane   16      : highlight group demote (0.11 s)
+plane   17      : pass  (0.27 s), 5 alignment pairs
+plane   17      : highlight group demote (0.14 s)
+plane   18      : demote witness tiles disagree locally by 2.05 px at p99 (limit 0.51): motion, a focus slip or a wrong member (0.28 s), 5 alignment pairs
+plane   18      : highlight group demote (0.18 s)
+plane   19      : demote offsets [(0, 0), (1, 0), (1, 0)] do not cover the four CFA parities: a shot slipped by a whole photosite (0.21 s), 5 alignment pairs
+plane   19      : highlight group demote (0.11 s)
+plane   20      : pass  (0.27 s), 5 alignment pairs
+plane   20      : highlight group demote (0.11 s)
+plane   21      : demote witness pairs misregistered by 0.203 photosite after residual compensation (0.28 s), 5 alignment pairs
+plane   21      : highlight group demote (0.17 s)
+checked         : 21 planes, 4 four-shot groups pass, 17 need attention
+alignment pairs : 74 measured this session, window 128 planes
+retake          : {"op":"capture_positions","positions":[61740,61753,61766,61779,61792,61805,61818,61831,61844,61857,61870,61896,61922,61935,61961,61974,62000]}
+exit 0

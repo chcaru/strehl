@@ -37,6 +37,10 @@ const ACC_BANK: u32 = 0x40000000u;
 // their own binding, so the work arena stays below the binding cap with
 // twelve planes' pyramids.
 @group(0) @binding(8) var<storage, read_write> rgbw: array<f32>;
+// Highlight patches (plan X4): per frame slot, the replaced sites
+// (plane, index, w bits, v bits) then the patched luma pixels
+// (index, w1 bits, w2 bits, 0).
+@group(0) @binding(9) var<storage, read> patches: array<u32>;
 
 fn acc_ld(o: u32) -> f32 {
     if (o >= ACC_BANK) { return acc_hi[o - ACC_BANK]; }
@@ -1484,4 +1488,44 @@ fn combine(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups
         default: { v = a + b; }
     }
     acc_st(p.a.x + i, v);
+}
+
+// Highlight fusion (plan X4): replace sites of the gathered level-0 planes,
+// as the engine's `FramePatches::apply_planes`: plane = plane * (1 - w) + v * w.
+// a = (count, first word, plane 0's level-0 offset, plane stride).
+@compute @workgroup_size(256)
+fn patch_planes(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
+    let j = gid(id, nwg);
+    if (j >= p.a.x) { return; }
+    let o = p.a.y + 4u * j;
+    let at = p.a.z + patches[o] * p.a.w + patches[o + 1u];
+    let w = bitcast<f32>(patches[o + 2u]);
+    let v = bitcast<f32>(patches[o + 3u]);
+    let keep = 1.0 - w;
+    work[at] = work[at] * keep + v * w;
+}
+
+// The patched luma pixels' variance, as the engine's `fused_variance`.
+// a = (count, first word, luma, var), f = (gain G1, read G1, gain G2, read G2),
+// g = (ratio, 1 / ratio).
+@compute @workgroup_size(256)
+fn patch_variance(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
+    let j = gid(id, nwg);
+    if (j >= p.a.x) { return; }
+    let o = p.a.y + 4u * j;
+    let i = patches[o];
+    let w1 = bitcast<f32>(patches[o + 1u]);
+    let w2 = bitcast<f32>(patches[o + 2u]);
+    let s = max(work[p.a.z + i], 0.0);
+    let c = s * p.g.y;
+    let kk = p.g.x * p.g.x;
+    let base1 = p.f.x * s + p.f.y * p.f.y;
+    let comp1 = p.f.x * c + p.f.y * p.f.y;
+    let base2 = p.f.z * s + p.f.w * p.f.w;
+    let comp2 = p.f.z * c + p.f.w * p.f.w;
+    let keep1 = 1.0 - w1;
+    let keep2 = 1.0 - w2;
+    let v1 = keep1 * keep1 * base1 + w1 * w1 * (kk * comp1);
+    let v2 = keep2 * keep2 * base2 + w2 * w2 * (kk * comp2);
+    work[p.a.w + i] = 0.25 * (v1 + v2);
 }

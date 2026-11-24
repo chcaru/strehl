@@ -1,0 +1,14 @@
+mosaic (6336, 9504); base-only max 20834.3 DN (1.313 of the pin above black), fused max 122999.1 (7.75)
+bright photosites in the base-only render (>= 0.7 of the pin): 37885 (0.0629 %)
+outside   0 px of bright: 0.9994 of the mosaic; |diff| max 28138.230 DN, p99.99 2532.4978, p99 46.21139; exact 0.5882, <=0.5 DN 0.865371
+outside   8 px of bright: 0.9939 of the mosaic; |diff| max 3543.114 DN, p99.99 571.6472, p99 26.57494; exact 0.5914, <=0.5 DN 0.870039
+outside  32 px of bright: 0.9624 of the mosaic; |diff| max 848.963 DN, p99.99 108.2969, p99 9.82577; exact 0.6027, <=0.5 DN 0.889389
+outside  64 px of bright: 0.9215 of the mosaic; |diff| max 848.963 DN, p99.99 33.7173, p99 5.50391; exact 0.6170, <=0.5 DN 0.912431
+outside 128 px of bright: 0.8816 of the mosaic; |diff| max 16.935 DN, p99.99 10.4407, p99 3.55176; exact 0.6326, <=0.5 DN 0.933518
+outside 256 px of bright: 0.8377 of the mosaic; |diff| max 9.244 DN, p99.99 8.9792, p99 2.11029; exact 0.6547, <=0.5 DN 0.957129
+outside 512 px of bright: 0.7582 of the mosaic; |diff| max 6.482 DN, p99.99 4.9272, p99 0.49579; exact 0.7095, <=0.5 DN 0.990096
+outside 1024 px of bright: 0.6043 of the mosaic; |diff| max 0.146 DN, p99.99 0.0959, p99 0.00360; exact 0.8580, <=0.5 DN 1.000000
+R: base-only photosites at >= 0.98 of the pin: 271; fused above 1.02 of the pin there: 82 (30.3 %); fused median 0.99, max 3.54 of the pin
+G1: base-only photosites at >= 0.98 of the pin: 5350; fused above 1.02 of the pin there: 2239 (41.9 %); fused median 1.00, max 7.25 of the pin
+G2: base-only photosites at >= 0.98 of the pin: 5306; fused above 1.02 of the pin there: 2223 (41.9 %); fused median 1.01, max 7.75 of the pin
+B: base-only photosites at >= 0.98 of the pin: 570; fused above 1.02 of the pin there: 386 (67.7 %); fused median 1.21, max 5.99 of the pin

@@ -1,0 +1,23 @@
+plane comp  ratio  corr_EV  handover(med,spread,n)   shift_px      patched  w=1  pinned unrepl comp_pin  base_m1 comp_m1  steps_s
+    1    1  REFUSED: its shift against the base group is unmeasurable (structure 0.38, offset (0, 0), remainder [-0.41, -0.50] px, flux ratio 0.995)
+    2    1  REFUSED: its shift against the base group is unmeasurable (structure 0.38, offset (0, 0), remainder [-0.41, -0.50] px, flux ratio 0.995)
+    3    3  7.969  -0.006  0.9832 0.0429   3272  -0.17,-0.06    462583  307168 148391     0     0  True  yes  0.00 0.13 0.03 0.02 0.04 0.32
+    4    3  8.135  +0.024  0.9808 0.0458   4583  -0.17,-0.06    561428  379648 181863     0     0  True  yes  0.00 0.00 0.02 0.01 0.03 0.22
+    5    5  REFUSED: its exposure ratio was refused: textured patches disagree after the ratio (worst residual 0.207 of the texture's power): focus, motion or placement
+    6    5  8.115  +0.021  0.9849 0.0400   5031  -0.46,+0.07    415355  275347 135171     0     0  True  yes  0.00 0.00 0.02 0.01 0.03 0.21
+    7    7  7.813  -0.034  0.9838 0.0390   3878  -0.05,-0.23    457597  305334 149804     0     0  True  yes  0.00 0.09 0.02 0.01 0.03 0.20
+    8    7  REFUSED: its exposure ratio was refused: held-out patches disagree with one ratio (median 0.29 %, p95 2.24 %, max 5.12 %)
+    9    9  8.120  +0.021  1.0050 0.0263   4975  +0.10,+0.05    514051  349243 170454     0    31  True  yes  0.00 0.08 0.02 0.01 0.03 0.20
+   10    9  8.121  +0.022  0.9899 0.0283   5066  +0.10,+0.05    597103  405953 198222     0    31  True  yes  0.00 0.00 0.02 0.01 0.04 0.20
+   11   11  8.080  +0.014  0.9936 0.0200   4913  +0.62,+1.42    549159  375185 180291     0    32  True  yes  0.00 0.10 0.02 0.01 0.03 0.20
+   12   11  REFUSED: its exposure ratio was refused: textured patches disagree after the ratio (worst residual 0.161 of the texture's power): focus, motion or placement
+   13   13  8.007  +0.001  0.9905 0.0226   4955  -0.18,+1.27    509795  338169 161571     0    29  True  yes  0.00 0.09 0.02 0.01 0.03 0.20
+   14   13  8.006  +0.001  0.9873 0.0296   5031  -0.18,+1.27    472044  303071 145390     0    29  True  yes  0.00 0.00 0.02 0.01 0.03 0.19
+   15   15  REFUSED: its shift against the base group is unmeasurable (structure 0.79, offset (0, -2), remainder [-0.39, 0.54] px, flux ratio 0.994)
+   16   15  REFUSED: its shift against the base group is unmeasurable (structure 0.79, offset (0, -2), remainder [-0.39, 0.54] px, flux ratio 0.994)
+   17   17  REFUSED: its exposure ratio was refused: textured patches disagree after the ratio (worst residual 0.205 of the texture's power): focus, motion or placement
+   18   17  REFUSED: its exposure ratio was refused: textured patches disagree after the ratio (worst residual 0.118 of the texture's power): focus, motion or placement
+   19   19  8.050  +0.009  0.9960 0.0162   6298  -0.15,-1.44    551667  370116 182116     0    14  True  yes  0.00 0.08 0.02 0.02 0.03 0.20
+   20   19  7.952  -0.009  0.9851 0.0328   5680  -0.15,-1.44    578508  396767 193519     0    14  True  yes  0.00 0.00 0.02 0.01 0.03 0.19
+   21   21  8.027  +0.005  0.9952 0.0148   5937  -0.23,-0.90    566982  383034 186653     0     6  True  yes  0.00 0.05 0.04 0.03 0.03 0.19
+fused 12 of 21; hand-over medians 0.9808..1.0050 (median 0.9899); pinned-not-fully-replaced total 0; fusion seconds total 4.2

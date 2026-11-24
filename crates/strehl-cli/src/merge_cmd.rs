@@ -6959,6 +6959,46 @@ impl BandWorker {
             None => (None, None),
         };
         let black = levels.black;
+        // Plan X4: the highlight patches, planned on the CPU from the
+        // unwarped group and applied on the device before luma and variance.
+        let fusion = match (t, warps) {
+            (Some(t), Some(map))
+                if crate::highlight_fusion::companion_of(&frame.path).is_some() =>
+            {
+                let r = self.domain.rect;
+                crate::highlight_fusion::plan(crate::highlight_fusion::Inputs {
+                    frame: &frame,
+                    group: measured.as_ref(),
+                    t,
+                    placement: &|q| placement_of(map, q),
+                    full: self.domain.full,
+                    rect: [r.x, r.y, r.width, r.height],
+                    bands: None,
+                    carry: carried.is_some(),
+                })?
+            }
+            _ => None,
+        };
+        let packed = fusion.as_ref().map(|p| {
+            (
+                p.sites
+                    .iter()
+                    .map(|s| [s.plane, s.index, s.w.to_bits(), s.v.to_bits()])
+                    .collect::<Vec<[u32; 4]>>(),
+                p.luma
+                    .iter()
+                    .map(|s| [s.index, s.w1.to_bits(), s.w2.to_bits(), 0])
+                    .collect::<Vec<[u32; 4]>>(),
+                p.ratio,
+            )
+        });
+        let gpu_patches = packed
+            .as_ref()
+            .map(|(sites, luma, ratio)| strehl_gpu::Patches {
+                sites,
+                luma,
+                ratio: *ratio,
+            });
         let gpu = self
             .gpu
             .as_mut()
@@ -6980,16 +7020,19 @@ impl BandWorker {
                 .map(|(r, sign)| r.map(|v| [sign * v[0] as f32, sign * v[1] as f32])),
         });
         let staged = fold_trace::time(fold_trace::Step::Stage, || {
-            gpu.stage(&strehl_gpu::RawFrame {
-                data: &frame.data,
-                stride: frame.stride,
-                active: [frame.active.x, frame.active.y],
-                black,
-                gain: align_cmd::wb_gains(&frame.wb_coeffs),
-                pulls,
-                carried,
-                group,
-            })
+            gpu.stage_with_patches(
+                &strehl_gpu::RawFrame {
+                    data: &frame.data,
+                    stride: frame.stride,
+                    active: [frame.active.x, frame.active.y],
+                    black,
+                    gain: align_cmd::wb_gains(&frame.wb_coeffs),
+                    pulls,
+                    carried,
+                    group,
+                },
+                gpu_patches.as_ref(),
+            )
         })
         .map_err(|e| anyhow::anyhow!(e))?;
         // The device holds its own copy now.
@@ -7720,6 +7763,10 @@ fn prepare_frame_into(
     #[cfg(feature = "native-pyramid-profile")]
     let variance_phase = native_pyramid_profile::start(native_pyramid_profile::VARIANCE);
     luma_variance(luma, noise, var);
+    // Plan X4: replaced greens carry the companion's noise times the ratio.
+    if let Some(p) = warp.fusion.as_ref() {
+        p.apply_variance(luma, var, noise);
+    }
     #[cfg(feature = "native-pyramid-profile")]
     drop(variance_phase);
 
@@ -8213,6 +8260,16 @@ fn load_frame(
     )
 }
 
+/// Frame `q`'s placement as its own gather uses it (`STREHL_REFINE_FRAMES`
+/// applied), or `None` when the solve refused it: for a highlight companion
+/// taken at another plane (`highlight_fusion`).
+fn placement_of(map: &WarpMap, q: usize) -> Option<strehl_core::align::Similarity> {
+    match map.warp(q).ok()? {
+        FrameWarp::Placed(t) => Some(frame_refine::adjust(q, *t)),
+        FrameWarp::Refused(_) => None,
+    }
+}
+
 #[allow(clippy::too_many_arguments)]
 fn load_frame_impl(
     source: &impl PyramidFrameSource,
@@ -8290,6 +8347,7 @@ fn load_frame_impl_observed(
             .decode(index)
             .with_context(|| format!("frame {index}"))?;
         scratch.measured = source.take_measured(index);
+        scratch.fusion = None;
         // After a row-range decode, the rows that hold samples: the gather
         // refuses to read any other.
         scratch.valid_rows = source.take_valid_rows(index);
@@ -8402,6 +8460,23 @@ fn load_frame_impl_observed(
                     let t = &frame_refine::adjust(index, *t);
                     if let Some(progress) = progress {
                         progress.merge_step(index, "gather", None, "started");
+                    }
+                    // Plan X4: a base frame with a highlight companion gets
+                    // its replaced sites now, from the unwarped group (or its
+                    // member 1 alone, when the group was demoted).
+                    if crate::highlight_fusion::companion_of(&frame.path).is_some() {
+                        let r = domain.rect;
+                        scratch.fusion =
+                            crate::highlight_fusion::plan(crate::highlight_fusion::Inputs {
+                                frame: &frame,
+                                group: scratch.measured.as_ref(),
+                                t: *t,
+                                placement: &|q| placement_of(map, q),
+                                full: domain.full,
+                                rect: [r.x, r.y, r.width, r.height],
+                                bands: scratch.bands.as_deref(),
+                                carry,
+                            })?;
                     }
                     #[cfg(feature = "native-pyramid-profile")]
                     let gather_phase =
@@ -8536,6 +8611,11 @@ fn load_frame_impl_observed(
         }
         if carry {
             colour_carry::copy_carried(scratch, domain, planes)?;
+        }
+        // Plan X4: the highlight patches, as the planes are lifted to f32
+        // and before the luma is formed from them.
+        if let Some(p) = scratch.fusion.as_ref() {
+            p.apply_planes(planes);
         }
     }
     // A consumer of a few columns (`WarpScratch::columns`: the optical
@@ -9419,6 +9499,8 @@ fn run_pyramid_attempt(opts: &MergeOptions) -> Result<()> {
     let exposure = Exposure::resolve(opts.srgb, opts.exposure, opts.auto_exposure)?;
 
     let t_start = Instant::now();
+    // Plan X4: this render's highlight account (empty without companions).
+    let _highlights = crate::highlight_fusion::Render::begin();
     // `STREHL_PIXEL_SHIFT=remosaic`: one frame per focal plane (member 1 of
     // each recorded four-shot group), its measured channels assembled at the
     // gather. Off (the default) stacks every RAW as an ordinary frame.
@@ -9574,6 +9656,9 @@ fn run_pyramid_attempt(opts: &MergeOptions) -> Result<()> {
         sensor_provenance,
     );
     if let Some(line) = stack_groups.as_ref().and_then(|g| g.journal_line()) {
+        eprintln!("{line}");
+    }
+    if let Some(line) = crate::highlight_fusion::summary() {
         eprintln!("{line}");
     }
     if rendered.is_ok()
@@ -12842,8 +12927,16 @@ fn write_merged_observed_with_reconstruction(
     // anchors are linear in the data (measured: a commanded 64x span
     // delivered 1.0000000, bit-identical across 98,898,048 samples).
     // See `Develop::exposure_gain` and docs/research/BUILD-DEFECT.md S14.
+    // Plan X4: a fused stack's ceiling is where its highlight groups pin.
+    let headroom = crate::highlight_fusion::ceiling_factor();
     let dev = space
-        .develop(matrix.map(|r| r.with_saturation(levels, gains, applied.gain())))
+        .develop(matrix.map(|r| {
+            let r = r.with_saturation(levels, gains, applied.gain());
+            match headroom {
+                Some(f) => r.with_fused_headroom(f),
+                None => r,
+            }
+        }))
         .with_exposure_gain(applied.gain());
 
     if demosaic {
@@ -13150,7 +13243,13 @@ fn write_merged_observed_with_reconstruction(
         // was asked for -- `exp2(0)` is exactly 1.0 and `x * 1.0` is `x`
         // bit-for-bit -- so the byte-frozen linear renders cannot move.
         let dev = space
-            .develop(matrix.map(|r| r.with_saturation(levels, gains, eg)))
+            .develop(matrix.map(|r| {
+                let r = r.with_saturation(levels, gains, eg);
+                match headroom {
+                    Some(f) => r.with_fused_headroom(f),
+                    None => r,
+                }
+            }))
             .with_exposure_gain(eg);
         if let Some(progress) = progress {
             progress.render_step("develop", "finished");

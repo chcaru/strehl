@@ -2011,7 +2011,7 @@ fn fullres_from_raw(raw: &str) -> bool {
 /// out here rather than derived from `CfaPlane` so that the gain lookup and the
 /// mosaic build cannot drift apart from each other.
 #[inline]
-fn rggb_channel_index(x: usize, y: usize) -> usize {
+pub(crate) fn rggb_channel_index(x: usize, y: usize) -> usize {
     match (y % 2, x % 2) {
         (0, 0) => 0,
         (1, 1) => 2,
@@ -2771,6 +2771,10 @@ pub struct WarpScratch {
     /// (`strehl_raw::decode_rows`); a band that would read another row is
     /// an error, never a wrong value. `None`: every row.
     pub(crate) valid_rows: Option<std::sync::Arc<Vec<bool>>>,
+    /// Plan X4: the frame's highlight patches, planned by the consumer before
+    /// its gather and applied to the planes it extracts and to their luma
+    /// variance (`highlight_fusion`). `None` for a frame without a companion.
+    pub(crate) fusion: Option<crate::highlight_fusion::FramePatches>,
 }
 
 /// Plane rows per band of the banded gather, for [`WarpScratch::bands`].
@@ -2833,6 +2837,10 @@ pub(crate) struct MeasuredGroup {
     /// residual and the sign to apply it with (`1` compensates, `-1` is the
     /// placebo); `None` assembles at the integer offsets only.
     pub residuals: Option<([[f64; 2]; 4], f32)>,
+    /// Give the members back in [`WarpScratch::measured`] after the gather
+    /// instead of recycling their buffers (a companion gathered for more
+    /// than one base frame).
+    pub keep: bool,
 }
 
 /// Sample buffers of pixel-shift members the gather has finished with, for
@@ -2883,6 +2891,7 @@ impl WarpScratch {
             bands: None,
             columns: None,
             valid_rows: None,
+            fusion: None,
         }
     }
 }
@@ -3122,6 +3131,60 @@ pub fn warp_frame_in_place_fullres(
     scratch: &mut WarpScratch,
 ) -> Result<f64> {
     warp_frame_in_place_fullres_outputs::<false>(frame, t, geom, resampler, scratch)
+}
+
+/// Plan X4: gather a highlight companion group through placement `t` with the
+/// default banded route, over only the bands `bands` marks and, in each, the
+/// plane columns `columns` lists ([`WarpScratch::bands`] and `columns`), with
+/// the carried channels when `carry`. Nothing is written back: `take`
+/// receives each native site's quad-grid destination, coverage and inverse
+/// white-balance gain (black-subtracted DN is `dst * inv`), and the carried
+/// channels are left in `scratch.carried`, quantised as a native site's. The
+/// group comes back, its members kept for the next base frame that uses it.
+/// Without a group (a demoted one), member 1 is demosaiced as any frame.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn gather_companion(
+    frame: &mut strehl_raw::Frame,
+    group: Option<MeasuredGroup>,
+    t: Similarity,
+    geom: PlaneGeometry,
+    scratch: &mut WarpScratch,
+    bands: Vec<bool>,
+    columns: Vec<Vec<(usize, usize)>>,
+    carry: bool,
+    mut take: impl FnMut((usize, usize), &[f32], &[bool], f32),
+) -> Result<Option<MeasuredGroup>> {
+    let grouped = group.is_some();
+    scratch.measured = group.map(|mut g| {
+        g.keep = true;
+        g
+    });
+    scratch.bands = Some(bands);
+    scratch.columns = Some(columns);
+    scratch.carry_rgb = carry;
+    scratch.carried_fresh = false;
+    scratch.flat = None;
+    scratch.valid_rows = None;
+    let gathered = warp_frame_fullres_with_sink::<false, _>(
+        frame,
+        t,
+        geom,
+        Resampler::CatmullRom,
+        scratch,
+        |_, site, dst, cover, inv, _, _| {
+            take(site, dst, cover, inv);
+            Ok(0)
+        },
+    );
+    let back = scratch.measured.take();
+    scratch.bands = None;
+    scratch.columns = None;
+    gathered?;
+    anyhow::ensure!(
+        back.is_some() == grouped,
+        "the companion gather did not return its group"
+    );
+    Ok(back)
 }
 
 /// Execution choice for independent destination rows; arithmetic is identical.
@@ -4347,9 +4410,13 @@ where
             });
         });
     // Every band has read the members: their buffers serve the next group's
-    // decodes.
+    // decodes (or go back to a caller that keeps them, `MeasuredGroup::keep`).
     if let Some(m) = measured {
-        recycle_members(m.members);
+        if m.keep {
+            scratch.measured = Some(m);
+        } else {
+            recycle_members(m.members);
+        }
     }
     anyhow::ensure!(
         !unreadable.load(std::sync::atomic::Ordering::Relaxed),

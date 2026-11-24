@@ -200,4 +200,6 @@ pub const ENTRY_POINTS: &[&str] = &[
     "expand_add_v",
     "clamp_hull",
     "combine",
+    "patch_planes",
+    "patch_variance",
 ];

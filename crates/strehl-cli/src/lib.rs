@@ -65,6 +65,8 @@ mod session_reproducibility;
 pub mod session_sampling;
 #[path = "follow-cmd.rs"]
 mod follow_cmd;
+#[path = "highlight-fusion.rs"]
+mod highlight_fusion;
 #[path = "pixel-shift-cmd.rs"]
 pub mod pixel_shift_cmd;
 #[path = "sony-focus-cmd.rs"]

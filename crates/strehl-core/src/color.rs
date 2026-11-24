@@ -302,6 +302,23 @@ impl Render {
         }
     }
 
+    /// The same render over data whose pinned samples were replaced by a
+    /// shorter exposure scaled by `factor` (plan X4, highlight fusion): the
+    /// ceiling is where the shorter exposure pins, `factor` times the
+    /// container's, so only a sample pinned in both is neutralised. Where
+    /// usable white sits under it ([`Self::top`]) is the same fraction. A
+    /// factor that is not finite and above 1 changes nothing.
+    #[must_use]
+    pub fn with_fused_headroom(self, factor: f32) -> Self {
+        if !(factor.is_finite() && factor > 1.0) {
+            return self;
+        }
+        Self {
+            ceiling: self.ceiling.map(|c| c * factor),
+            ..self
+        }
+    }
+
     /// Camera RGB to linear sRGB. Every row sums to 1.
     pub fn matrix(&self) -> &[[f32; 3]; 3] {
         &self.to_srgb
