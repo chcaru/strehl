@@ -825,4 +825,3 @@ fn a_subjects_last_outline_is_read_from_its_capture() {
     std::fs::write(dir.path().join("manifest.json"), br#"{"plan":{}}"#).unwrap();
     assert_eq!(last_outline(dir.path()), None);
 }
-
