@@ -615,4 +615,56 @@ mod tests {
         assert!((k - 0.998).abs() < 0.01, "{k}");
         assert!((sensor_px_per_live_px(9504.0, 1024.0, 0) - 9.28).abs() < 0.01);
     }
+
+    /// Plan Q7's gate on the rig's own frames: `STREHL_RIG_STILL` names a
+    /// folder of magnified live-view JPEGs `still-<seconds>.jpg` and its
+    /// `still.json` (`ratio`). Prints what the check would say.
+    #[test]
+    #[ignore = "needs the rig's frames (STREHL_RIG_STILL)"]
+    fn stillness_on_the_rigs_frames() {
+        let Some(folder) = std::env::var_os("STREHL_RIG_STILL").map(std::path::PathBuf::from)
+        else {
+            return;
+        };
+        let ratio: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(folder.join("still.json")).unwrap()).unwrap();
+        let ratio = ratio["ratio"].as_u64().unwrap() as u32;
+        let mut files: Vec<_> = std::fs::read_dir(&folder)
+            .unwrap()
+            .filter_map(|e| e.ok().map(|e| e.path()))
+            .filter(|p| p.extension().is_some_and(|e| e == "jpg"))
+            .collect();
+        files.sort();
+        let mut crops = Vec::new();
+        let mut width = 0;
+        for f in &files {
+            let t: f64 = f
+                .file_stem()
+                .unwrap()
+                .to_string_lossy()
+                .trim_start_matches("still-")
+                .parse()
+                .unwrap();
+            let img = image::open(f).unwrap().to_rgba8();
+            width = img.width() as usize;
+            crops.push(crop(img.width() as usize, img.height() as usize, img.as_raw(), t).unwrap());
+        }
+        let (mut t, mut shifts) = (Vec::new(), Vec::new());
+        for c in &crops {
+            if let Some(shift) = register(&crops[0], c) {
+                t.push(c.seconds);
+                shifts.push(shift);
+            }
+        }
+        let k = sensor_px_per_live_px(9504.0, width as f64, ratio);
+        let found = describe(&t, &shifts, k).unwrap();
+        println!(
+            "{} frames, {} registered, {:.3} sensor px a live px",
+            crops.len(),
+            t.len(),
+            k
+        );
+        println!("{found:?}");
+        println!("{}", sentence(&found));
+    }
 }

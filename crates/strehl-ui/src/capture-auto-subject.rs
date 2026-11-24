@@ -390,4 +390,58 @@ mod tests {
         frames.observe(&snapshot("scanning", 0, 51, frame(0.0, 4)));
         assert_eq!(frames.len(), 1);
     }
+
+    /// Plan S2/S3's live Auto on the rig's own sweep: `STREHL_RIG_SWEEP`
+    /// names a folder of `live-<focus>.jpg`. The frames are halved as
+    /// `SurveyFrames` halves them. Prints the outline's summary.
+    #[test]
+    #[ignore = "needs the rig's frames (STREHL_RIG_SWEEP)"]
+    fn auto_on_the_rigs_sweep() {
+        let Some(folder) = std::env::var_os("STREHL_RIG_SWEEP").map(std::path::PathBuf::from)
+        else {
+            return;
+        };
+        let mut files: Vec<_> = std::fs::read_dir(&folder)
+            .unwrap()
+            .filter_map(|e| e.ok().map(|e| e.path()))
+            .filter(|p| p.extension().is_some_and(|e| e == "jpg"))
+            .collect();
+        files.sort();
+        let mut frames = SurveyFrames::default();
+        for (i, f) in files.iter().enumerate() {
+            let focus: u16 = f
+                .file_stem()
+                .unwrap()
+                .to_string_lossy()
+                .trim_start_matches("live-")
+                .parse()
+                .unwrap();
+            let img = image::open(f).unwrap().to_rgb8();
+            let image =
+                ColorImage::from_rgb([img.width() as usize, img.height() as usize], img.as_raw());
+            frames.observe(&snapshot("scanning", focus, i as u64 + 1, image));
+        }
+        let started = std::time::Instant::now();
+        let mut auto = AutoSubject::default();
+        auto.start(&frames, active_px(Some("ILCE-7CR"))).unwrap();
+        while auto.running() {
+            std::thread::sleep(std::time::Duration::from_millis(20));
+            auto.poll();
+        }
+        println!(
+            "{} frames in {:.2} s",
+            frames.len(),
+            started.elapsed().as_secs_f64()
+        );
+        println!("{:?}", auto.line());
+        println!("depth {:?}", auto.depth_range());
+        if let Some(subject) = auto.take_unsent() {
+            println!(
+                "rings {} points {:?} provenance {}",
+                subject.rings.len(),
+                subject.rings.iter().map(Vec::len).collect::<Vec<_>>(),
+                subject.provenance
+            );
+        }
+    }
 }

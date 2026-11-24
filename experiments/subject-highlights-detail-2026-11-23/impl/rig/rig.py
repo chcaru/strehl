@@ -11,6 +11,9 @@ Every command goes through the Pi's own API with the bench helper (`outputs/shel
   python rig.py capture <out> <start> <end> <step> <base s> <highlight s> <every>
                                           a capture with highlight groups (plan X7); the
                                           owner's exposure and plan restored afterwards
+  python rig.py still <out> <position> <seconds>   magnified live view at the camera's
+                                          largest ratio, every frame saved with its time
+                                          (the Q7 stillness check's input); magnifier put back
   python rig.py off                       light and camera off, "manage power" on
 
 Whatever happens, `finish()` leaves the light and camera off and "manage power" on.
@@ -202,6 +205,35 @@ def capture(out, start, end, step, base_s, high_s, every):
         set_exposure(iso, owner)
 
 
+def still(out, position, seconds_):
+    out = pathlib.Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    s = idle()
+    before = s.get('magnifier_current') or 0
+    ratio = max(s.get('magnifier_ratios') or [0])
+    focus(position)
+    try:
+        cmd('magnify', ratio=ratio, x=320, y=240)
+        wait(lambda a: not a['busy'] and a.get('magnifier_current') == ratio, timeout=30)
+        time.sleep(1.0)
+        t0 = time.time()
+        last, n = None, 0
+        while time.time() - t0 < seconds_:
+            st = state()
+            g = st['preview'].get('generation')
+            if g is not None and g != last and st['preview'].get('fresh'):
+                r = client.get(URL + '/api/preview', timeout=7)
+                r.raise_for_status()
+                (out / ('still-%08.3f.jpg' % (time.time() - t0))).write_bytes(r.content)
+                last, n = g, n + 1
+            time.sleep(0.03)
+        log('still', n, 'frames over', seconds_, 's at ratio', ratio, '->', out)
+    finally:
+        cmd('magnify', ratio=before, x=320, y=240)
+        wait(lambda a: not a['busy'], timeout=30)
+    return ratio
+
+
 def settings():
     s = idle()
     e = s.get('exposure') or {}
@@ -241,6 +273,12 @@ if __name__ == '__main__':
             camera_on()
             a = sys.argv
             capture(a[2], int(a[3]), int(a[4]), int(a[5]), float(a[6]), float(a[7]), int(a[8]))
+        elif what == 'still':
+            camera_on()
+            light(True)
+            time.sleep(3)
+            r = still(sys.argv[2], int(sys.argv[3]), float(sys.argv[4]))
+            (pathlib.Path(sys.argv[2]) / 'still.json').write_text(json.dumps({'ratio': r}))
         elif what == 'off':
             pass
     finally:
