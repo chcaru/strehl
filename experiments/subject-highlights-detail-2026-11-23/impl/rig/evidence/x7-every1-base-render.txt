@@ -1,0 +1,6 @@
+highlights      : 21 highlight groups recorded, NOT fused (STREHL_HIGHLIGHT_FUSION=off): the stack is the base exposure alone
+highlights      : 21 highlight groups recorded, NOT fused (STREHL_HIGHLIGHT_FUSION=off): the stack is the base exposure alone
+optical restore : ON by default for pixel-shift stacks with colour carry (to be confirmed on a second subject; STREHL_OPTICAL_RESTORE=off disables it)
+optical restore : NOT APPLIED -- on by default, but optical restoration: 0 usable in-focus tiles (7 planned, 0 missing a reference frame, 7 near clipping); at least 8 are needed to measure the system; writing the unrestored image
+tone            : black 0.00028, white 0.76615 (linear), contrast 0.55
+wrote           : C:/strehl-scratch/x-rig/render/base.tiff (9504 x 6336, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, colour carried through the merge, no demosaic)

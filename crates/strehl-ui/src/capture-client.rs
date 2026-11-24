@@ -1353,6 +1353,27 @@ mod tests {
     /// run is never "complete", and test shots are in neither list.
     #[test]
     fn stopped_captures_are_listed_and_test_shots_are_not() {
+        stopped_captures_are_listed_and_test_shots_are_not_body();
+    }
+
+    /// Plan Q6's gate on a real capture stopped by hand
+    /// (`STREHL_RIG_STOPPED` = its folder): it passes the stopped-capture
+    /// check with its planes, so the review offers to stack them.
+    #[test]
+    #[ignore = "needs a rig capture (STREHL_RIG_STOPPED)"]
+    fn a_rig_capture_stopped_by_hand_is_offered() {
+        let Some(folder) = std::env::var_os("STREHL_RIG_STOPPED").map(PathBuf::from) else {
+            return;
+        };
+        let run = verify_stopped(&folder).unwrap();
+        println!(
+            "{} · {} planes, {} RAWs, {} unverified",
+            run.outcome, run.planes, run.frames, run.unverified
+        );
+        assert!(run.planes.min(run.frames / run.shots_per_plane.max(1)) >= 2);
+    }
+
+    fn stopped_captures_are_listed_and_test_shots_are_not_body() {
         let dir = tempfile::tempdir().unwrap();
         let config = dir.path().join("receiver.json");
         let complete = run_folder(dir.path(), "stack-1", "complete", 3, 3, "plan");

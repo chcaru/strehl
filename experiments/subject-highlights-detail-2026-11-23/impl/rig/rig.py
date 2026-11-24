@@ -14,6 +14,12 @@ Every command goes through the Pi's own API with the bench helper (`outputs/shel
   python rig.py still <out> <position> <seconds>   magnified live view at the camera's
                                           largest ratio, every frame saved with its time
                                           (the Q7 stillness check's input); magnifier put back
+  python rig.py survey <out> <lo> <hi> <short s>   plan X1's Calibrate survey as the desktop
+                                          takes it: one RAW a plane, a dense cluster of 25 at
+                                          8 units and 12 spread positions at the owner's
+                                          shutter and the short one; four-shot put back
+  python rig.py stopped <out> <start> <step> <planes> <stop after>   a plan capture stopped by
+                                          hand after some planes (plan Q6's gate)
   python rig.py off                       light and camera off, "manage power" on
 
 Whatever happens, `finish()` leaves the light and camera off and "manage power" on.
@@ -234,6 +240,76 @@ def still(out, position, seconds_):
     return ratio
 
 
+def two_shutter_survey(lo, hi, base, short):
+    """`capture-tools.rs` `two_shutter_survey`, ascending."""
+    mid, span = (lo + hi) // 2, 8 * 24
+    first = max(lo, min(mid - span // 2, max(hi - span, lo)))
+    taken = [(p, 0, base) for p in range(first, first + span + 1, 8) if p <= max(hi, first)]
+    for i in range(12):
+        q = round(lo + (hi - lo) * i / 11)
+        taken += [(q, 1, base), (q, 2, short)]
+    taken.sort(key=lambda t: (t[0], t[1]))
+    return [t[0] for t in taken], [t[2] for t in taken]
+
+
+def survey(out, lo, hi, short_s):
+    s = idle()
+    e = s['exposure']
+    shots = s.get('shots_per_plane')
+    base = e['shutter']
+    short = nearest_shutter(e['shutter_options'], short_s)
+    positions, shutters = two_shutter_survey(lo, hi, base, short)
+    try:
+        if shots != 1:
+            cmd('pixel_shift', shots=1)
+            wait(lambda a: not a['busy'] and a.get('shots_per_plane') == 1, timeout=60)
+        s = idle()
+        seq = s['sequence_id'] + 1
+        t = time.time()
+        cmd('capture_positions', positions=positions, keep_power_on=True, shutters=shutters)
+        wait(lambda a: a['sequence_id'] == seq and a['phase'] == 'capturing', timeout=60)
+        s = wait(lambda a: a['sequence_id'] == seq and a['phase'] in ('complete', 'stopped', 'fault', 'disconnected')
+                 and not a['busy'] and not (a.get('storage') or {}).get('pending_frames'), timeout=1200)
+        row = {'phase': s['phase'], 'wall_seconds': round(time.time() - t, 1), 'folder': receipt_folder(s),
+               'positions': len(positions), 'base': base, 'short': short}
+        log('survey', json.dumps(row))
+        pathlib.Path(out).mkdir(parents=True, exist_ok=True)
+        (pathlib.Path(out) / 'survey.json').write_text(json.dumps(row, indent=1))
+        return row
+    finally:
+        if shots and shots != 1:
+            cmd('pixel_shift', shots=shots)
+            wait(lambda a: not a['busy'] and a.get('shots_per_plane') == shots, timeout=60)
+        set_exposure(e['iso'], base)
+
+
+def stopped(out, start, step, planes, after):
+    s = idle()
+    plan = s['plan']
+    try:
+        mark(start, True)
+        mark(start + step * (planes - 1), False)
+        cmd('settings', step=step, settle_ms=plan['settle_ms'], approach=plan['approach'],
+            capture_timeout_s=plan['capture_timeout_s'])
+        s = idle()
+        seq = s['sequence_id'] + 1
+        cmd('start')
+        wait(lambda a: a['sequence_id'] == seq and a['phase'] == 'capturing', timeout=60)
+        wait(lambda a: a['completed'] >= after, timeout=900)
+        cmd('stop', from_state=state())
+        s = wait(lambda a: a['sequence_id'] == seq and a['phase'] in ('stopped', 'complete', 'fault')
+                 and not a['busy'] and not (a.get('storage') or {}).get('pending_frames'), timeout=600)
+        row = {'phase': s['phase'], 'completed': s['completed'], 'planes': planes, 'folder': receipt_folder(s)}
+        log('stopped', json.dumps(row))
+        pathlib.Path(out).mkdir(parents=True, exist_ok=True)
+        (pathlib.Path(out) / 'stopped.json').write_text(json.dumps(row, indent=1))
+        return row
+    finally:
+        camera_on()
+        cmd('new_plan')
+        idle()
+
+
 def settings():
     s = idle()
     e = s.get('exposure') or {}
@@ -279,6 +355,14 @@ if __name__ == '__main__':
             time.sleep(3)
             r = still(sys.argv[2], int(sys.argv[3]), float(sys.argv[4]))
             (pathlib.Path(sys.argv[2]) / 'still.json').write_text(json.dumps({'ratio': r}))
+        elif what == 'survey':
+            camera_on()
+            a = sys.argv
+            survey(a[2], int(a[3]), int(a[4]), float(a[5]))
+        elif what == 'stopped':
+            camera_on()
+            a = sys.argv
+            stopped(a[2], int(a[3]), int(a[4]), int(a[5]), int(a[6]))
         elif what == 'off':
             pass
     finally:
