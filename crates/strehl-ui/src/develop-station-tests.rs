@@ -230,6 +230,7 @@ fn view<'a>(
     palette: &'a StudioPalette,
 ) -> DevelopView<'a> {
     DevelopView {
+        subject_outline: false,
         palette,
         recipe,
         scope: None,

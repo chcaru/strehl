@@ -200,6 +200,8 @@ pub struct StrehlApp {
     active_stack: Option<crate::workspace_history::NodeId>,
     /// Plan R: the re-shoot panel, while open.
     reshoot: Option<reshoot::Reshoot>,
+    /// Plan S4: the open capture and whether it has a subject outline.
+    develop_subject: Option<(PathBuf, bool)>,
     pending_stack: Option<crate::workspace_history::NodeId>,
     capture_parent: Option<crate::workspace_history::NodeId>,
     catalog: crate::workspace_history::Catalog,
@@ -357,6 +359,7 @@ impl StrehlApp {
             library: Default::default(),
             active_stack: None,
             reshoot: None,
+            develop_subject: None,
             pending_stack: None,
             capture_parent: None,
             catalog,

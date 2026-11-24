@@ -422,6 +422,8 @@ pub(crate) struct DevelopView<'a> {
     pub hdr_display: bool,
     /// What the display reports: state, monitor, reason, luminance.
     pub display: Vec<String>,
+    /// Plan S4: the capture has a subject outline to make a region of.
+    pub subject_outline: bool,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -463,6 +465,8 @@ pub(crate) enum DevelopIntent {
     },
     /// Planes (zero-based, inclusive) the depth brush takes from.
     SetRepairRange(usize, usize),
+    /// Plan S4: a region of the capture's subject outline.
+    SubjectRegion,
     StartRepair,
     AddHeal(Heal),
     SetBackdrop(Option<Backdrop>),
@@ -891,6 +895,13 @@ pub(crate) fn control_strip(
                 Some(canvas.region_drawing),
             ) {
                 intents.push(DevelopIntent::RegionDrawing(i));
+            }
+            if view.subject_outline
+                && style::link(ui, pal, "Subject", false)
+                    .on_hover_text("A region of the subject's outline from the capture: for its own adjustments, or the backdrop's opposite")
+                    .clicked()
+            {
+                intents.push(DevelopIntent::SubjectRegion);
             }
         }
         DevelopTool::Move => {

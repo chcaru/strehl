@@ -20,7 +20,7 @@ use crate::export_station::{
     self as exporting, BatchContext, BatchDone, BatchProgress, BatchText, ExportIntent,
     ExportPanel, ExportView, HistoryRow, HistoryStatus,
 };
-use std::{collections::HashMap, sync::Arc};
+use std::{collections::HashMap, path::Path, sync::Arc};
 use strehl_edit::{AdaptiveIntent, DevelopmentRecipe};
 
 /// The depth repair's own re-stack.
@@ -312,7 +312,17 @@ impl StrehlApp {
                 || "this render".into(),
                 |n| n.to_string_lossy().into_owned(),
             );
+        // Plan S4: whether the capture has an outline, read once a capture.
+        let capture = self.stack.as_ref().map(|s| s.directory.clone());
+        if self.develop_subject.as_ref().map(|c| &c.0) != capture.as_ref() {
+            self.develop_subject = capture.map(|c| {
+                let has = subject_polygon(&c).is_some();
+                (c, has)
+            });
+        }
+        let subject_outline = self.develop_subject.as_ref().is_some_and(|c| c.1);
         let view = DevelopView {
+            subject_outline,
             palette: &palette,
             recipe: &self.editor.recipe,
             scope: self.editor.selected.as_deref(),
@@ -476,6 +486,22 @@ impl StrehlApp {
     }
 
     fn handle_develop_intent(&mut self, intent: &DevelopIntent, time: f64) -> anyhow::Result<()> {
+        if *intent == DevelopIntent::SubjectRegion {
+            // Plan S4: the capture's outline (its outer rings; the
+            // photograph is the active area) as a polygon region.
+            let capture = self
+                .stack
+                .as_ref()
+                .map(|s| s.directory.clone())
+                .ok_or_else(|| anyhow::anyhow!("Open the stack this photograph came from"))?;
+            let shape = subject_polygon(&capture)
+                .ok_or_else(|| anyhow::anyhow!("This capture has no subject outline"))?;
+            let id = self.editor.add_region(shape)?;
+            if let Some(region) = self.editor.recipe.regions.iter_mut().find(|r| r.id == id) {
+                region.name = "Subject".into();
+            }
+            return Ok(());
+        }
         if self.editor.apply_develop(intent, time)? {
             return Ok(());
         }
@@ -1924,3 +1950,29 @@ impl StrehlApp {
 #[cfg(test)]
 #[path = "app-develop-tests.rs"]
 mod tests;
+
+/// The capture's subject outline as one polygon (plan S4): its largest
+/// ring, which is the outer outline (holes and small parts are left to the
+/// owner's brush).
+pub(super) fn subject_polygon(capture: &Path) -> Option<strehl_edit::RegionShape> {
+    let bytes = std::fs::read(capture.join("manifest.json")).ok()?;
+    let manifest: serde_json::Value = serde_json::from_slice(&bytes).ok()?;
+    let subject: strehl_capture::model::Subject =
+        serde_json::from_value(manifest["plan"]["subject"].clone()).ok()?;
+    let area = |r: &Vec<[f32; 2]>| {
+        let n = r.len();
+        (0..n)
+            .map(|i| r[i][0] * r[(i + 1) % n][1] - r[(i + 1) % n][0] * r[i][1])
+            .sum::<f32>()
+            .abs()
+    };
+    let ring = subject
+        .rings
+        .iter()
+        .filter(|r| r.len() >= 3)
+        .max_by(|a, b| area(a).total_cmp(&area(b)))?;
+    let shape = strehl_edit::RegionShape::Polygon {
+        points: ring.clone(),
+    };
+    shape.validate().ok().map(|()| shape)
+}

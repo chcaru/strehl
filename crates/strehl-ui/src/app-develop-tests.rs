@@ -318,3 +318,29 @@ fn an_export_batch_runs_as_one_job_and_reports_each_file() {
     assert_eq!(names, ["run-result-Print.tiff", "run-result-Web.jpg"]);
     assert_eq!(app.export_pane.station.error, None);
 }
+
+/// Plan S4: the capture's outline becomes one polygon region (its largest
+/// ring); a capture without one gives none.
+#[test]
+fn the_subjects_outline_is_a_region() {
+    let dir = tempfile::tempdir().unwrap();
+    assert!(subject_polygon(dir.path()).is_none());
+    let outline = strehl_capture::model::Subject {
+        rings: vec![
+            vec![[0.1, 0.1], [0.12, 0.1], [0.11, 0.12]],
+            vec![[0.3, 0.2], [0.7, 0.25], [0.6, 0.8], [0.35, 0.7]],
+        ],
+        ..Default::default()
+    };
+    let mut plan = serde_json::to_value(strehl_capture::model::Plan::default()).unwrap();
+    plan["subject"] = serde_json::to_value(&outline).unwrap();
+    std::fs::write(
+        dir.path().join("manifest.json"),
+        serde_json::to_vec(&serde_json::json!({"plan":plan})).unwrap(),
+    )
+    .unwrap();
+    match subject_polygon(dir.path()) {
+        Some(RegionShape::Polygon { points }) => assert_eq!(points, outline.rings[1]),
+        other => panic!("{other:?}"),
+    }
+}
