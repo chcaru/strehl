@@ -1347,7 +1347,8 @@ pub(super) fn restore(
     }
     eprintln!(
         "optical restore : ON ({}) -- target Gaussian sigma {sigma:.2} px, Wiener against the \
-         measured noise, gain cap {MAX_GAIN}, square-root domain{}",
+         measured noise, never below the system's response, gain cap {MAX_GAIN}, square-root \
+         domain{}",
         if defaulted() {
             "default for pixel-shift stacks".to_string()
         } else {

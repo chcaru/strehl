@@ -1,0 +1,12 @@
+stack-1795300522964-6430: 385 tiles of 256 px (brightest half of 770); bands [(0.1, 0.2), (0.2, 0.3), (0.3, 0.4), (0.4, 0.5)]
+  q1c    amplitude over unrestored: 1.017 / 1.004 / 0.898 / 0.880
+  q2     amplitude over unrestored: 1.018 / 1.011 / 0.996 / 0.998
+stack-1795371396674-6430: 385 tiles of 256 px (brightest half of 770); bands [(0.1, 0.2), (0.2, 0.3), (0.3, 0.4), (0.4, 0.5)]
+  q1c    amplitude over unrestored: 1.095 / 1.031 / 0.881 / 0.705
+  q2     amplitude over unrestored: 1.097 / 1.036 / 0.993 / 0.992
+stack-1795433406862-8651: 385 tiles of 256 px (brightest half of 770); bands [(0.1, 0.2), (0.2, 0.3), (0.3, 0.4), (0.4, 0.5)]
+  q1c    amplitude over unrestored: 1.089 / 0.988 / 0.777 / 0.513
+  q2     amplitude over unrestored: 1.093 / 1.015 / 0.996 / 0.992
+stack-1795460665629-8651: 385 tiles of 256 px (brightest half of 770); bands [(0.1, 0.2), (0.2, 0.3), (0.3, 0.4), (0.4, 0.5)]
+  q1c    amplitude over unrestored: 1.056 / 1.008 / 0.912 / 0.801
+  q2     amplitude over unrestored: 1.057 / 1.020 / 1.003 / 1.000
