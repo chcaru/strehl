@@ -250,6 +250,8 @@ pub(crate) struct Capabilities {
     pub new_plan: bool,
     /// `subject`: an outline kept in the plan and manifest (plan S1).
     pub subject: bool,
+    /// `highlight`, `shutters` per position and `queue_pass` (plan X3).
+    pub exposure_tiers: bool,
 }
 
 /// `retakes` (h-retake): the setting and the manual retakes in hand.

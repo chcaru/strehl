@@ -118,6 +118,8 @@ pub(crate) enum PlanIntent {
     OpenGuide(GuideTab),
     /// Clear the stages for a new capture.
     NewCapture,
+    /// Highlight groups (plan X3): none, or every `every` planes at `shutter`.
+    SetHighlight(Option<(u16, u64)>),
     /// Plan Q7: watch the magnified picture for sway, or stop watching.
     CheckStillness,
     StopStillness,
@@ -207,12 +209,29 @@ pub(crate) fn stack_seconds_at(
     shutter: u64,
 ) -> Option<f64> {
     let plane = strehl_capture::timing::initial_plane(shutter, settle_ms, s.host.shots())?;
+    // Highlight groups (plan X3): their own time at the planes that take one.
+    let highlight = s
+        .host
+        .plan
+        .as_ref()
+        .and_then(|p| p.highlight)
+        .and_then(|h| {
+            let group = strehl_capture::timing::highlight_group(h.shutter, u64::from(h.shots))?;
+            Some(group.mul_f64(highlight_planes(planes, &h) as f64))
+        })
+        .unwrap_or_default();
     Some(
         (plane.mul_f64(planes as f64)
+            + highlight
             + strehl_capture::timing::initial_setup(settle_ms)
             + std::time::Duration::from_secs(managed_warmup(s)))
         .as_secs_f64(),
     )
+}
+
+/// How many of `planes` planes take a highlight group.
+pub(crate) fn highlight_planes(planes: usize, h: &strehl_capture::model::Highlight) -> usize {
+    (1..=planes as u64).filter(|p| h.applies(*p)).count()
 }
 
 /// Expected bytes per RAW of a new capture with this camera, as the
@@ -994,6 +1013,12 @@ fn exposure_step(
         if let Some(line) = test_shot_sentence(&inputs.test_shot) {
             note(ui, &line, palette);
         }
+        // Plan X3: highlight groups, for the glints the base exposure pins.
+        if s.host.capabilities.exposure_tiers
+            && let Some(e) = exposure
+        {
+            highlight_row(ui, inputs, e, editable, palette, out);
+        }
         // Plan Q7: is the picture still enough for the exposure?
         let (stage, line) = &inputs.stillness;
         let checking = matches!(*stage, "magnifying" | "watching" | "measuring");
@@ -1052,6 +1077,103 @@ fn exposure_step(
             );
         }
     });
+}
+
+/// The shutter `stops` stops shorter than `shutter`, from the camera's list.
+pub(crate) fn shorter_shutter(options: &[u64], shutter: u64, stops: f64) -> Option<u64> {
+    let want = strehl_capture::timing::shutter_seconds(shutter)? / 2f64.powf(stops);
+    options
+        .iter()
+        .copied()
+        .filter_map(|c| strehl_capture::timing::shutter_seconds(c).map(|t| (c, t)))
+        .min_by(|a, b| (a.1 / want).ln().abs().total_cmp(&(b.1 / want).ln().abs()))
+        .map(|(c, _)| c)
+}
+
+/// The highlight groups' row (plan X3): off, every plane or every second,
+/// their shutter, and what they cost.
+fn highlight_row(
+    ui: &mut Ui,
+    inputs: &PlanInputs<'_>,
+    e: &crate::capture_client::host::Exposure,
+    editable: bool,
+    palette: &CapturePalette,
+    out: &mut Vec<PlanIntent>,
+) {
+    let s = inputs.s;
+    let current = s.host.plan.as_ref().and_then(|p| p.highlight);
+    ui.add_space(4.0);
+    ui.horizontal(|ui| {
+        ui.spacing_mut().item_spacing.x = 4.0;
+        style::text(ui, "Highlight groups", 12.5, palette.ink2);
+        ui.add_space(6.0);
+        let base = e.shutter.unwrap_or(0);
+        let default = current
+            .map(|h| h.shutter)
+            .or_else(|| shorter_shutter(&e.shutter_options, base, 4.0));
+        for (label, every) in [
+            ("Off", None),
+            ("Every plane", Some(1u16)),
+            ("Every 2nd", Some(2)),
+        ] {
+            let on = current.map(|h| h.every) == every;
+            if style::button(
+                ui,
+                label,
+                if on {
+                    ButtonKind::On
+                } else {
+                    ButtonKind::Quiet
+                },
+                22.0,
+                editable && (every.is_none() || default.is_some()),
+                palette,
+            )
+            .clicked()
+                && !on
+            {
+                out.push(PlanIntent::SetHighlight(every.zip(default)));
+            }
+        }
+        if let Some(h) = current {
+            ui.add_space(6.0);
+            if let Some(code) = picker(
+                ui,
+                "capture-highlight-shutter",
+                86.0,
+                &style::shutter_label(h.shutter),
+                &e.shutter_options,
+                style::shutter_label,
+                editable,
+                palette,
+            ) {
+                out.push(PlanIntent::SetHighlight(Some((h.every, code))));
+            }
+        }
+    });
+    if let Some(h) = current {
+        let planes = marked_planes(s, inputs.step);
+        let group = strehl_capture::timing::highlight_group(h.shutter, u64::from(h.shots));
+        let base = e.shutter.and_then(strehl_capture::timing::shutter_seconds);
+        let short = strehl_capture::timing::shutter_seconds(h.shutter);
+        let stops = base.zip(short).map(|(b, t)| (b / t).log2());
+        let mut parts = vec![format!(
+            "A {}-shot group at {} after the base group{}",
+            h.shots,
+            style::shutter_label(h.shutter),
+            stops
+                .map(|x| format!(" ({x:.1} stops shorter)"))
+                .unwrap_or_default()
+        )];
+        if let (Some(planes), Some(group)) = (planes, group) {
+            let n = highlight_planes(planes, &h);
+            parts.push(format!(
+                "{n} of {planes} planes, +{}",
+                style::minutes(group.as_secs_f64() * n as f64)
+            ));
+        }
+        note(ui, &(parts.join(" · ") + "."), palette);
+    }
 }
 
 /// The planes of the marked range at `step`, once both bounds are set.

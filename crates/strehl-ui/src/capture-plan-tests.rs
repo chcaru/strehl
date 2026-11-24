@@ -615,3 +615,42 @@ fn enter_in_a_field_is_not_start() {
     );
     assert_eq!(station_saw_enter, Some(false));
 }
+
+/// Plan X3: highlight groups' default shutter is about four stops shorter,
+/// from the camera's own list; the plan's time includes their groups at
+/// the planes that take one, and the row offers them only to a host that
+/// takes them.
+#[test]
+fn highlight_groups_are_offered_and_counted() {
+    // 1/8 s (65544) with 1/125 and 1/500 offered: four stops is 1/128.
+    let options = [65544u64, 65661, 66036];
+    assert_eq!(shorter_shutter(&options, 65544, 4.0), Some(65661));
+    let plain = snapshot(ready());
+    let base = stack_seconds(&plain, 96, 500).unwrap();
+    let mut state = ready();
+    state["plan"]["highlight"] =
+        json!({"shutter":65661,"every":2,"first_plane":1,"last_plane":4294967295u64,"shots":4});
+    let with = snapshot(state.clone());
+    let h = with.host.plan.as_ref().unwrap().highlight.unwrap();
+    assert_eq!(highlight_planes(96, &h), 48);
+    let group = strehl_capture::timing::highlight_group(65661, 4).unwrap();
+    let extra = stack_seconds(&with, 96, 500).unwrap() - base;
+    assert!((extra - 48.0 * group.as_secs_f64()).abs() < 1e-6, "{extra}");
+    // The row: only for a host with exposure tiers; a click asks for them.
+    let ctx = egui::Context::default();
+    crate::theme::install(&ctx);
+    let mut view = PlanView::default();
+    let (out, _) = frame(&ctx, &mut view, &inputs(&plain, &[]), 0.0, vec![]);
+    assert!(text_at(&out, "Every 2nd").is_none(), "an older host");
+    state["capabilities"] = json!({"exposure_tiers":true});
+    state["plan"].as_object_mut().unwrap().remove("highlight");
+    let tiers = snapshot(state);
+    let intents = click(&ctx, &mut view, &inputs(&tiers, &[]), "Every 2nd");
+    assert!(
+        intents.contains(&PlanIntent::SetHighlight(Some((2, 66036))))
+            || intents
+                .iter()
+                .any(|i| matches!(i, PlanIntent::SetHighlight(Some((2, _))))),
+        "{intents:?}"
+    );
+}

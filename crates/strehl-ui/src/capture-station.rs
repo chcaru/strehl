@@ -1339,6 +1339,16 @@ impl CaptureWorkspace {
         match intent {
             PlanIntent::SetSubject(_) | PlanIntent::SetStackName(_) => {}
             PlanIntent::NewCapture => self.new_capture(false),
+            PlanIntent::SetHighlight(choice) => {
+                let highlight = choice.map(|(every, shutter)| strehl_capture::model::Highlight {
+                    shutter,
+                    every,
+                    first_plane: 1,
+                    last_plane: u32::MAX,
+                    shots: s.host.shots() as u8,
+                });
+                self.command(s, Command::Highlight { highlight });
+            }
             PlanIntent::CheckStillness => match self.stillness.start(s) {
                 Ok((ratio, x, y)) => self.command(s, Command::Magnify { ratio, x, y }),
                 Err(e) => self.error = Some(format!("{e:#}")),

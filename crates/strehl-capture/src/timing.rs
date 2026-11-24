@@ -18,6 +18,18 @@ pub fn initial_cycle(shutter: u64, settle_ms: u32) -> Option<Duration> {
     ))
 }
 
+/// What a highlight group adds to its plane (plan X3): its exposures, the
+/// camera's own time around them (MEASURED: a short four-shot group 3.6 s
+/// beyond its exposures, a single shot about 1.1 s), and two shutter
+/// changes (MEASURED 0.23-0.46 s each).
+pub fn highlight_group(shutter: u64, shots: u64) -> Option<Duration> {
+    let exposure = shutter_seconds(shutter)?;
+    let overhead = if shots == 4 { 3.6 } else { 1.1 };
+    Some(Duration::from_secs_f64(
+        shots as f64 * exposure + overhead + 2.0 * 0.35,
+    ))
+}
+
 pub fn initial_setup(settle_ms: u32) -> Duration {
     Duration::from_millis(u64::from(settle_ms) + 1000)
 }

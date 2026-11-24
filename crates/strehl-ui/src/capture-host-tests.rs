@@ -75,6 +75,7 @@ fn the_simulators_state_reads_typed_through_a_whole_capture() {
             queue_retakes: true,
             new_plan: true,
             subject: true,
+            exposure_tiers: true,
         }
     );
     assert_eq!(host.error_correction, Some(false));
