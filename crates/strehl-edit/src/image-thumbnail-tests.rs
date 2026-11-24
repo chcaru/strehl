@@ -17,6 +17,7 @@ fn sparse_thumbnail_matches_native_linear_samples_and_preserves_metadata() {
             white: 1.1,
             contrast: 0.1,
             exposure_gain: 1.03,
+            shoulder: None,
         }),
         baked_recipe: None,
     };

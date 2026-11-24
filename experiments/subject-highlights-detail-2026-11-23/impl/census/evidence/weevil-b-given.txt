@@ -1,0 +1,15 @@
+survey          : C:/w/shd-census-out/fixtures/weevil-b
+shots           : 3 pairs at 1/4 / 1/60, 39 long positions, 24 for the step, 0 groups skipped
+noise model     : Profile
+levels          : black 512, white 15360
+ratio @  24972   : commanded 0.06250 (marked 0.06667), measured 0.06235 on 94000 cells (-0.2 %)
+ratio @  25182   : commanded 0.06250 (marked 0.06667), measured 0.06207 on 94283 cells (-0.7 %)
+ratio @  25462   : commanded 0.06250 (marked 0.06667), measured 0.05799 on 91490 cells (-7.2 %)
+body (long)     : R p50 0.0001 p99.9 0.0007 | G p50 0.0001 p99.9 0.0008 | B p50 0.0001 p99.9 0.0007; 4055616 sites, 0 set aside
+census (x long FS): R p99.9 0.010 p99.99 0.018 max 0.003 | G 0.011 0.019 0.003 | B 0.011 0.018 0.003; 0 highlight sites, 0 pinned in the short frames
+unconfirmed     : 5233 short sites above the body that the long frame does not show (fixed pattern, hot pixels)
+census @  24972  : max R 0.003 G 0.003 B 0.003, 0 highlight sites; pinned 0 in the long frame, 0 predicted from the short
+census @  25182  : max R 0.002 G 0.002 B 0.003, 0 highlight sites; pinned 0 in the long frame, 0 predicted from the short
+census @  25462  : max R 0.002 G 0.003 B 0.003, 0 highlight sites; pinned 0 in the long frame, 0 predicted from the short
+time            : 2.2 s
+summary         : Subject; no part of it comes into focus. The step was not measurable (0 of 344 tiles peaked inside the 24 positions; at least 30 are needed). At 1/4 s the body's diffuse top (green, 99.9th percentile) sits at 0.00 of full scale. The short frames measured 0.0621 of the long (0.0625 commanded). No highlights above the body. One exposure at 30 (code 19660810) puts the body's top at 0.8 of full scale, with about 0 pinned subject sites a plane. Suggested: one exposure (accept).

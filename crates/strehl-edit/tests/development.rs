@@ -26,6 +26,7 @@ fn master_roundtrip_keeps_negative_and_above_white_samples() {
         white: 1.6,
         contrast: 0.55,
         exposure_gain: 2.0,
+        shoulder: None,
     });
     let path = temp.path().join("master.tiff");
     save_linear_tiff(&path, &original).unwrap();

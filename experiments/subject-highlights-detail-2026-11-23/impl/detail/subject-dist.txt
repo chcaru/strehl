@@ -1,0 +1,24 @@
+== stack-1795300522964-6430 (safe master; subject from strehl subject)
+subject share 0.439
+p50     bright 0.0163 lum 0.0135 | frame lum 0.0001
+p75     bright 0.0319 lum 0.0273 | frame lum 0.0074
+p90     bright 0.0452 lum 0.0389 | frame lum 0.0284
+p95     bright 0.0615 lum 0.0529 | frame lum 0.0370
+p98     bright 0.1082 lum 0.0935 | frame lum 0.0554
+p99     bright 0.2389 lum 0.2104 | frame lum 0.0842
+p99.5   bright 0.6143 lum 0.5514 | frame lum 0.1749
+p99.9   bright 1.0689 lum 1.0689 | frame lum 1.0689
+p99.99  bright 1.1859 lum 1.1749 | frame lum 1.1000
+saturation of the brightest 1 %: median 0.303; of the middle 20 %: median 0.672
+== stack-1795460665629-8651 (safe master; subject from strehl subject)
+subject share 0.360
+p50     bright 0.0216 lum 0.0141 | frame lum 0.0001
+p75     bright 0.0644 lum 0.0454 | frame lum 0.0039
+p90     bright 0.1086 lum 0.0840 | frame lum 0.0406
+p95     bright 0.1372 lum 0.1086 | frame lum 0.0711
+p98     bright 0.1771 lum 0.1394 | frame lum 0.1050
+p99     bright 0.2175 lum 0.1652 | frame lum 0.1283
+p99.5   bright 0.2842 lum 0.1978 | frame lum 0.1525
+p99.9   bright 0.5953 lum 0.3545 | frame lum 0.2391
+p99.99  bright 1.1059 lum 0.7889 | frame lum 0.5835
+saturation of the brightest 1 %: median 0.908; of the middle 20 %: median 0.555

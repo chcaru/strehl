@@ -150,6 +150,7 @@ fn sdr_only_path_rejects_nonfinite_baseline_without_reading_unrequested_pixels()
         white: 1.0,
         contrast: f32::NAN,
         exposure_gain: 1.0,
+        shoulder: None,
     });
     assert!(
         image

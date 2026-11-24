@@ -140,6 +140,7 @@ fn make_dev(meta: &Development) -> Result<(image_out::Develop, Levels, [f32; 3])
         black: tone[0],
         white: tone[1],
         contrast: tone[2],
+        shoulder: None,
     });
     dev.exposure_gain = 1.0;
     Ok((dev, levels, wb))

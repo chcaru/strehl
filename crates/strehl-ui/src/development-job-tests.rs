@@ -21,6 +21,7 @@ fn fixture() -> (Arc<LinearImage>, DevelopmentRecipe) {
             white: 0.9,
             exposure_gain: 0.8,
             contrast: 0.15,
+            shoulder: None,
         }),
         baked_recipe: None,
     });
@@ -149,6 +150,7 @@ fn baseline_alternating_job_benchmark() {
             white: 0.9,
             exposure_gain: 0.8,
             contrast: 0.15,
+            shoulder: None,
         }),
         baked_recipe: None,
     });

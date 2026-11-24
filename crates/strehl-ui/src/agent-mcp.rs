@@ -478,6 +478,7 @@ fn settings_schema() -> Value {
         fields.insert(name.into(), json!({"type":"boolean"}));
     }
     fields.insert("resampler".into(), json!({"enum":["nearest","bilinear","catmull-rom","clamped-catmull","lanczos2","lanczos3"]}));
+    fields.insert("detail".into(), json!({"enum":["natural","safe","crisp"]}));
     let mut schema = object(Value::Object(fields), &[]);
     schema["minProperties"] = json!(1);
     schema

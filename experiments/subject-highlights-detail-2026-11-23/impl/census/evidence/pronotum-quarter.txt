@@ -1,0 +1,11 @@
+survey          : C:/w/shd-census-out/fixtures/pronotum-quarter
+shots           : 1 pairs at 1/4 / 1/60, 1 long positions, 1 for the step, 0 groups skipped
+noise model     : Profile
+levels          : black 512, white 15360
+ratio @  62000   : commanded 0.06250 (marked 0.06667), measured 0.06118 on 31310 cells (-2.1 %)
+body (long)     : R p50 0.0022 p99.9 0.0710 | G p50 0.0083 p99.9 0.1917 | B p50 0.0038 p99.9 0.1014; 646822 sites, 5530 set aside
+census (x long FS): R p99.9 0.134 p99.99 0.294 max 0.703 | G 0.315 0.624 1.099 | B 0.185 0.383 0.637; 220 highlight sites, 0 pinned in the short frames
+unconfirmed     : 57 short sites above the body that the long frame does not show (fixed pattern, hot pixels)
+census @  62000  : max R 0.703 G 1.099 B 0.637, 220 highlight sites; pinned 3 in the long frame, 4 predicted from the short
+time            : 0.4 s
+summary         : Subject found (1.1 % of the frame), sharp from focus 62000 to 62000. The step was not measured: 1 positions at the current shutter, at least 5 are needed. At 1/4 s the body's diffuse top (green, 99.9th percentile) sits at 0.19 of full scale. The short frames measured 0.0612 of the long (0.0625 commanded). Highlights: the brightest subject site reads 1.1 times the 1/4 s full scale; with a stop of margin (a sparse survey sees glints off their focus) plan for 2.2. Choices: a highlight pass at 1 (code 655370) with a short group at 1/10 (code 65546); protect highlights with one exposure at 1/10 (code 65546); or accept specks at 1 (code 655370), about 657 pinned subject sites a plane. Suggested: the highlight pass.

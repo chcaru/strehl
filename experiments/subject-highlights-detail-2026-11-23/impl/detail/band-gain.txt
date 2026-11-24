@@ -1,0 +1,20 @@
+stack-1795460665629-8651: 385 tiles of 256 px (brightest half of 770); bands [(0.1, 0.2), (0.2, 0.3), (0.3, 0.4), (0.4, 0.5)]
+  base   amplitude over unrestored: 1.057 / 1.020 / 1.003 / 1.000
+  natural amplitude over unrestored: 1.069 / 1.028 / 1.007 / 1.003
+  safe   amplitude over unrestored: 1.152 / 1.232 / 1.272 / 1.290
+  crisp  amplitude over unrestored: 1.209 / 1.389 / 1.584 / 1.836
+stack-1795300522964-6430: 385 tiles of 256 px (brightest half of 770); bands [(0.1, 0.2), (0.2, 0.3), (0.3, 0.4), (0.4, 0.5)]
+  base   amplitude over unrestored: 1.016 / 1.007 / 0.996 / 0.998
+  natural amplitude over unrestored: 1.027 / 1.013 / 0.997 / 0.998
+  safe   amplitude over unrestored: 1.068 / 1.146 / 1.195 / 1.183
+  crisp  amplitude over unrestored: 1.091 / 1.249 / 1.471 / 1.577
+stack-1795371396674-6430: 385 tiles of 256 px (brightest half of 770); bands [(0.1, 0.2), (0.2, 0.3), (0.3, 0.4), (0.4, 0.5)]
+  base   amplitude over unrestored: 1.100 / 1.034 / 0.993 / 0.994
+  natural amplitude over unrestored: 1.100 / 1.034 / 0.993 / 0.994
+  safe   amplitude over unrestored: 1.182 / 1.253 / 1.286 / 1.310
+  crisp  amplitude over unrestored: 1.220 / 1.391 / 1.593 / 1.878
+stack-1795433406862-8651: 385 tiles of 256 px (brightest half of 770); bands [(0.1, 0.2), (0.2, 0.3), (0.3, 0.4), (0.4, 0.5)]
+  base   amplitude over unrestored: 1.092 / 1.014 / 0.995 / 0.991
+  natural amplitude over unrestored: 1.095 / 1.015 / 0.996 / 0.991
+  safe   amplitude over unrestored: 1.206 / 1.320 / 1.341 / 1.204
+  crisp  amplitude over unrestored: 1.252 / 1.472 / 1.661 / 1.723

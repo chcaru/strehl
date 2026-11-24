@@ -1,0 +1,36 @@
+{
+ "source_manifest": "D:\\StrehlCaptures\\stack-1795466878560-8651",
+ "shuffle": null,
+ "shots": [
+  {
+   "run": "D:\\StrehlCaptures\\stack-1795467101186-8651",
+   "shutter": 851978,
+   "position": 24972
+  },
+  {
+   "run": "D:\\StrehlCaptures\\stack-1795466878560-8651",
+   "shutter": 65540,
+   "position": 24972
+  },
+  {
+   "run": "D:\\StrehlCaptures\\stack-1795467115184-8651",
+   "shutter": 851978,
+   "position": 25182
+  },
+  {
+   "run": "D:\\StrehlCaptures\\stack-1795466949363-8651",
+   "shutter": 65540,
+   "position": 25182
+  },
+  {
+   "run": "D:\\StrehlCaptures\\stack-1795467129181-8651",
+   "shutter": 851978,
+   "position": 25462
+  },
+  {
+   "run": "D:\\StrehlCaptures\\stack-1795467019483-8651",
+   "shutter": 65540,
+   "position": 25462
+  }
+ ]
+}

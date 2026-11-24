@@ -40,6 +40,7 @@ pub(super) fn fixture() -> tempfile::TempDir {
             white: 1.,
             contrast: 0.55,
             exposure_gain: 1.,
+            shoulder: None,
         }),
         baked_recipe: None,
     };

@@ -590,6 +590,7 @@ fn invalid_geometry_metadata_and_sampled_nonfinite_values_fail() {
         white: 1.0,
         contrast: 0.5,
         exposure_gain: 1.0,
+        shoulder: None,
     });
     assert!(analyze_adaptive(&image, &DevelopmentRecipe::default()).is_err());
     let mut image = varied();

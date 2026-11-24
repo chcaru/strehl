@@ -1,0 +1,282 @@
+====================================================================================================
+stack-1795460665629-8651
+-- base: exit 0, engine 7a7736a85c3f, flags -, env {}
+   highlight guard covers 1.81% of the frame
+   STREHL_UI_PROGRESS event=align-result source=solved reference=99 placed=199 refused=0 total=199 frames=199
+   STREHL_UI_PROGRESS event=align-result source=cache reference=99 placed=199 refused=0 total=199 frames=199
+   group journal   : 0 measurements reused, 25 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795460665629-8651-a868285719ebdd95.jsonl)
+   group journal   : 0 measurements reused, 174 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795460665629-8651-a868285719ebdd95.jsonl)
+   tone            : black -0.00007, white 0.24882 (linear), contrast 0.55
+   target sigma 0.70 px
+-- off: exit 0, engine 7a7736a85c3f, flags -, env {'STREHL_OPTICAL_RESTORE': 'off'}
+   STREHL_UI_PROGRESS event=align-result source=cache reference=99 placed=199 refused=0 total=199 frames=199
+   group journal   : 25 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795460665629-8651-a868285719ebdd95.jsonl)
+   group journal   : 174 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795460665629-8651-a868285719ebdd95.jsonl)
+   tone            : black -0.00007, white 0.24278 (linear), contrast 0.55
+-- newoff: exit 0, engine 52d812913e09, flags -, env {'STREHL_OPTICAL_RESTORE': 'off'}
+   STREHL_UI_PROGRESS event=align-result source=cache reference=99 placed=199 refused=0 total=199 frames=199
+   group journal   : 25 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795460665629-8651-a868285719ebdd95.jsonl)
+   group journal   : 174 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795460665629-8651-a868285719ebdd95.jsonl)
+   tone            : black -0.00007, white 0.24278 (linear), contrast 0.55
+-- natural: exit 0, engine 52d812913e09, flags --detail=natural, env {}
+   detail          : NATURAL: the shipped target 0.70 px, no noise budget
+   R: noise power in 0.30-0.50 cycles/px x1.00 designed, x0.96 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.12/x1.08/x0.98/x0.98
+   G: noise power in 0.30-0.50 cycles/px x1.00 designed, x0.96 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.07/x1.00/x0.98/x0.98
+   B: noise power in 0.30-0.50 cycles/px x1.00 designed, x0.96 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.04/x0.98/x0.98/x0.98
+   highlight guard covers 0.77% of the frame (around the 0.0030% of sites with a merged sample at or above 0.95 of the raw pin, 15871 DN over black)
+   STREHL_UI_PROGRESS event=align-result source=cache reference=99 placed=199 refused=0 total=199 frames=199
+   group journal   : 25 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795460665629-8651-a868285719ebdd95.jsonl)
+   group journal   : 174 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795460665629-8651-a868285719ebdd95.jsonl)
+   tone            : black -0.00007, white 0.25136 (linear), contrast 0.55
+   target sigma 0.70 px
+-- safe: exit 0, engine 52d812913e09, flags -, env {}
+   detail          : SAFE (budget: restored noise power in 0.30-0.50 cycles/px at most 1.70 x the unrestored, green, on the half-stacks' noise): target 0.55 px chosen of 0.70-0.35 in 0.01 px steps, designed rise x1.64
+   R: noise power in 0.30-0.50 cycles/px x2.15 designed, x2.07 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.20/x1.33/x1.43/x1.45
+   G: noise power in 0.30-0.50 cycles/px x1.64 designed, x1.58 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.14/x1.22/x1.26/x1.26
+   B: noise power in 0.30-0.50 cycles/px x1.11 designed, x1.07 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.12/x1.14/x1.09/x0.99
+   highlight guard covers 0.77% of the frame (around the 0.0030% of sites with a merged sample at or above 0.95 of the raw pin, 15871 DN over black)
+   STREHL_UI_PROGRESS event=align-result source=cache reference=99 placed=199 refused=0 total=199 frames=199
+   group journal   : 25 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795460665629-8651-a868285719ebdd95.jsonl)
+   group journal   : 174 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795460665629-8651-a868285719ebdd95.jsonl)
+   tone            : black -0.00009, white 0.25662 (linear), contrast 0.55
+   target sigma 0.55 px
+-- safe2: exit 0, engine 52d812913e09, flags -, env {'STREHL_DETAIL': 'safe'}
+   detail          : SAFE (budget: restored noise power in 0.30-0.50 cycles/px at most 1.70 x the unrestored, green, on the half-stacks' noise): target 0.55 px chosen of 0.70-0.35 in 0.01 px steps, designed rise x1.64
+   R: noise power in 0.30-0.50 cycles/px x2.15 designed, x2.07 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.20/x1.33/x1.43/x1.45
+   G: noise power in 0.30-0.50 cycles/px x1.64 designed, x1.58 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.14/x1.22/x1.26/x1.26
+   B: noise power in 0.30-0.50 cycles/px x1.11 designed, x1.07 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.12/x1.14/x1.09/x0.99
+   highlight guard covers 0.77% of the frame (around the 0.0030% of sites with a merged sample at or above 0.95 of the raw pin, 15871 DN over black)
+   STREHL_UI_PROGRESS event=align-result source=cache reference=99 placed=199 refused=0 total=199 frames=199
+   group journal   : 25 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795460665629-8651-a868285719ebdd95.jsonl)
+   group journal   : 174 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795460665629-8651-a868285719ebdd95.jsonl)
+   tone            : black -0.00009, white 0.25662 (linear), contrast 0.55
+   target sigma 0.55 px
+-- crisp: exit 0, engine 52d812913e09, flags --detail=crisp, env {}
+   detail          : CRISP (budget: restored noise power in 0.30-0.50 cycles/px at most 3.30 x the unrestored, green, on the half-stacks' noise): target 0.44 px chosen of 0.70-0.35 in 0.01 px steps, designed rise x3.28
+   R: noise power in 0.30-0.50 cycles/px x4.34 designed, x4.15 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.25/x1.51/x1.83/x2.19
+   G: noise power in 0.30-0.50 cycles/px x3.28 designed, x3.16 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.20/x1.39/x1.62/x1.91
+   B: noise power in 0.30-0.50 cycles/px x2.09 designed, x2.01 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.16/x1.29/x1.40/x1.44
+   highlight guard covers 0.77% of the frame (around the 0.0030% of sites with a merged sample at or above 0.95 of the raw pin, 15871 DN over black)
+   STREHL_UI_PROGRESS event=align-result source=cache reference=99 placed=199 refused=0 total=199 frames=199
+   group journal   : 25 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795460665629-8651-a868285719ebdd95.jsonl)
+   group journal   : 174 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795460665629-8651-a868285719ebdd95.jsonl)
+   tone            : black -0.00018, white 0.26281 (linear), contrast 0.55
+   target sigma 0.44 px
+-- subj: exit 0, engine 52d812913e09, flags --subject=C:/w/shd-detail-out/subjects/stack-1795460665629-8651.json, env {}
+   detail          : SAFE (budget: restored noise power in 0.30-0.50 cycles/px at most 1.70 x the unrestored, green, on the half-stacks' noise): target 0.55 px chosen of 0.70-0.35 in 0.01 px steps, designed rise x1.64
+   R: noise power in 0.30-0.50 cycles/px x2.15 designed, x2.07 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.20/x1.33/x1.43/x1.45
+   G: noise power in 0.30-0.50 cycles/px x1.64 designed, x1.58 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.14/x1.22/x1.26/x1.26
+   B: noise power in 0.30-0.50 cycles/px x1.11 designed, x1.07 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.12/x1.14/x1.09/x0.99
+   highlight guard covers 0.77% of the frame (around the 0.0030% of sites with a merged sample at or above 0.95 of the raw pin, 15871 DN over black)
+   STREHL_UI_PROGRESS event=align-result source=cache reference=99 placed=199 refused=0 total=199 frames=199
+   group journal   : 25 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795460665629-8651-a868285719ebdd95.jsonl)
+   group journal   : 174 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795460665629-8651-a868285719ebdd95.jsonl)
+   tone subject    : 5 ring(s) from given (C:/w/shd-detail-out/subjects/stack-1795460665629-8651.json); white will be placed on the subject's diffuse level
+   tone subject    : subject 36.0 % of the frame (5412857 quads, from given (C:/w/shd-detail-out/subjects/stack-1795460665629-8651.json)); 0.994 % of it set aside as highlights (0.097 % pinned: a colour at 0.95 of saturation or within 4 quads of one; the rest brighter than 2 x the local diffuse level, the 75th percentile of 16-quad blocks, 3 x 3 around); diffuse top (p99.9 of the brightest colour) 0.28363 -> 0.85; white 0.25662 -> 0.33370 (-0.38 stops); subject median luminance 0.01440, placed 0.056 -> 0.043; shoulder from 0.8
+   tone            : black -0.00009, white 0.33370 (linear), contrast 0.55, highlight shoulder from 0.80
+   target sigma 0.55 px
+-- subjoff: exit 0, engine 52d812913e09, flags --subject=off, env {}
+   detail          : SAFE (budget: restored noise power in 0.30-0.50 cycles/px at most 1.70 x the unrestored, green, on the half-stacks' noise): target 0.55 px chosen of 0.70-0.35 in 0.01 px steps, designed rise x1.64
+   R: noise power in 0.30-0.50 cycles/px x2.15 designed, x2.07 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.20/x1.33/x1.43/x1.45
+   G: noise power in 0.30-0.50 cycles/px x1.64 designed, x1.58 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.14/x1.22/x1.26/x1.26
+   B: noise power in 0.30-0.50 cycles/px x1.11 designed, x1.07 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.12/x1.14/x1.09/x0.99
+   highlight guard covers 0.77% of the frame (around the 0.0030% of sites with a merged sample at or above 0.95 of the raw pin, 15871 DN over black)
+   STREHL_UI_PROGRESS event=align-result source=cache reference=99 placed=199 refused=0 total=199 frames=199
+   group journal   : 25 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795460665629-8651-a868285719ebdd95.jsonl)
+   group journal   : 174 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795460665629-8651-a868285719ebdd95.jsonl)
+   tone subject    : off (STREHL_SUBJECT=off / --subject off); white from the frame's 99.9th percentile
+   tone            : black -0.00009, white 0.25662 (linear), contrast 0.55
+   target sigma 0.55 px
+BYTES off      vs newoff   (unrestored: base binary vs this one): photograph and master IDENTICAL
+BYTES safe     vs safe2    (default vs STREHL_DETAIL=safe (a re-render)): photograph and master IDENTICAL
+BYTES safe     vs subjoff  (default vs --subject off): photograph and master IDENTICAL
+PIXELS safe vs subj master: IDENTICAL (the description records the tone)
+====================================================================================================
+stack-1795300522964-6430
+-- base: exit 0, engine 7a7736a85c3f, flags -, env {}
+   highlight guard covers 1.54% of the frame
+   STREHL_UI_PROGRESS event=align-result source=solved reference=105 placed=211 refused=0 total=211 frames=211
+   STREHL_UI_PROGRESS event=align-result source=cache reference=105 placed=211 refused=0 total=211 frames=211
+   group journal   : 0 measurements reused, 27 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795300522964-6430-1eb8ddd0f498f1a0.jsonl)
+   group journal   : 0 measurements reused, 184 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795300522964-6430-1eb8ddd0f498f1a0.jsonl)
+   tone            : black -0.00018, white 1.18768 (linear), contrast 0.55
+   target sigma 0.70 px
+-- off: exit 0, engine 7a7736a85c3f, flags -, env {'STREHL_OPTICAL_RESTORE': 'off'}
+   STREHL_UI_PROGRESS event=align-result source=cache reference=105 placed=211 refused=0 total=211 frames=211
+   group journal   : 27 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795300522964-6430-1eb8ddd0f498f1a0.jsonl)
+   group journal   : 184 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795300522964-6430-1eb8ddd0f498f1a0.jsonl)
+   tone            : black -0.00019, white 1.18769 (linear), contrast 0.55
+-- newoff: exit 0, engine 52d812913e09, flags -, env {'STREHL_OPTICAL_RESTORE': 'off'}
+   STREHL_UI_PROGRESS event=align-result source=cache reference=105 placed=211 refused=0 total=211 frames=211
+   group journal   : 27 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795300522964-6430-1eb8ddd0f498f1a0.jsonl)
+   group journal   : 184 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795300522964-6430-1eb8ddd0f498f1a0.jsonl)
+   tone            : black -0.00019, white 1.18769 (linear), contrast 0.55
+-- natural: exit 0, engine 52d812913e09, flags --detail=natural, env {}
+   detail          : NATURAL: the shipped target 0.70 px, no noise budget
+   R: noise power in 0.30-0.50 cycles/px x1.00 designed, x0.98 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.13/x1.07/x0.99/x0.99
+   G: noise power in 0.30-0.50 cycles/px x1.00 designed, x0.97 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.07/x1.00/x0.98/x0.98
+   B: noise power in 0.30-0.50 cycles/px x1.00 designed, x0.96 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.02/x0.98/x0.98/x0.98
+   highlight guard covers 1.23% of the frame (around the 0.1394% of sites with a merged sample at or above 0.95 of the raw pin, 15871 DN over black)
+   STREHL_UI_PROGRESS event=align-result source=cache reference=105 placed=211 refused=0 total=211 frames=211
+   group journal   : 27 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795300522964-6430-1eb8ddd0f498f1a0.jsonl)
+   group journal   : 184 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795300522964-6430-1eb8ddd0f498f1a0.jsonl)
+   tone            : black -0.00018, white 1.18768 (linear), contrast 0.55
+   target sigma 0.70 px
+-- safe: exit 0, engine 52d812913e09, flags -, env {}
+   detail          : SAFE (budget: restored noise power in 0.30-0.50 cycles/px at most 1.70 x the unrestored, green, on the half-stacks' noise): target 0.53 px chosen of 0.70-0.35 in 0.01 px steps, designed rise x1.64
+   R: noise power in 0.30-0.50 cycles/px x1.99 designed, x1.96 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.24/x1.37/x1.38/x1.43
+   G: noise power in 0.30-0.50 cycles/px x1.64 designed, x1.61 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.17/x1.25/x1.24/x1.33
+   B: noise power in 0.30-0.50 cycles/px x1.03 designed, x0.99 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.11/x1.11/x1.01/x0.98
+   highlight guard covers 1.23% of the frame (around the 0.1394% of sites with a merged sample at or above 0.95 of the raw pin, 15871 DN over black)
+   STREHL_UI_PROGRESS event=align-result source=cache reference=105 placed=211 refused=0 total=211 frames=211
+   group journal   : 27 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795300522964-6430-1eb8ddd0f498f1a0.jsonl)
+   group journal   : 184 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795300522964-6430-1eb8ddd0f498f1a0.jsonl)
+   tone            : black -0.00024, white 1.18769 (linear), contrast 0.55
+   target sigma 0.53 px
+-- crisp: exit 0, engine 52d812913e09, flags --detail=crisp, env {}
+   detail          : CRISP (budget: restored noise power in 0.30-0.50 cycles/px at most 3.30 x the unrestored, green, on the half-stacks' noise): target 0.41 px chosen of 0.70-0.35 in 0.01 px steps, designed rise x3.24
+   R: noise power in 0.30-0.50 cycles/px x3.98 designed, x3.85 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.29/x1.55/x1.78/x2.18
+   G: noise power in 0.30-0.50 cycles/px x3.24 designed, x3.16 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.23/x1.43/x1.61/x2.05
+   B: noise power in 0.30-0.50 cycles/px x1.75 designed, x1.69 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.17/x1.27/x1.30/x1.31
+   highlight guard covers 1.23% of the frame (around the 0.1394% of sites with a merged sample at or above 0.95 of the raw pin, 15871 DN over black)
+   STREHL_UI_PROGRESS event=align-result source=cache reference=105 placed=211 refused=0 total=211 frames=211
+   group journal   : 27 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795300522964-6430-1eb8ddd0f498f1a0.jsonl)
+   group journal   : 184 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795300522964-6430-1eb8ddd0f498f1a0.jsonl)
+   tone            : black -0.00040, white 1.18771 (linear), contrast 0.55
+   target sigma 0.41 px
+-- subj: exit 0, engine 52d812913e09, flags --subject=C:/w/shd-detail-out/subjects/stack-1795300522964-6430.json, env {}
+   detail          : SAFE (budget: restored noise power in 0.30-0.50 cycles/px at most 1.70 x the unrestored, green, on the half-stacks' noise): target 0.53 px chosen of 0.70-0.35 in 0.01 px steps, designed rise x1.64
+   R: noise power in 0.30-0.50 cycles/px x1.99 designed, x1.96 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.24/x1.37/x1.38/x1.43
+   G: noise power in 0.30-0.50 cycles/px x1.64 designed, x1.61 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.17/x1.25/x1.24/x1.33
+   B: noise power in 0.30-0.50 cycles/px x1.03 designed, x0.99 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.11/x1.11/x1.01/x0.98
+   highlight guard covers 1.23% of the frame (around the 0.1394% of sites with a merged sample at or above 0.95 of the raw pin, 15871 DN over black)
+   STREHL_UI_PROGRESS event=align-result source=cache reference=105 placed=211 refused=0 total=211 frames=211
+   group journal   : 27 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795300522964-6430-1eb8ddd0f498f1a0.jsonl)
+   group journal   : 184 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795300522964-6430-1eb8ddd0f498f1a0.jsonl)
+   tone subject    : 2 ring(s) from given (C:/w/shd-detail-out/subjects/stack-1795300522964-6430.json); white will be placed on the subject's diffuse level
+   tone subject    : subject 43.8 % of the frame (6591068 quads, from given (C:/w/shd-detail-out/subjects/stack-1795300522964-6430.json)); 1.580 % of it set aside as highlights (0.937 % pinned: a colour at 0.95 of saturation or within 4 quads of one; the rest brighter than 2 x the local diffuse level, the 75th percentile of 16-quad blocks, 3 x 3 around); diffuse top (p99.9 of the brightest colour) 0.37311 -> 0.85; white 1.18769 -> 0.43899 (+1.44 stops); subject median luminance 0.01385, placed 0.012 -> 0.032; shoulder from 0.8
+   tone            : black -0.00024, white 0.43899 (linear), contrast 0.55, highlight shoulder from 0.80
+   target sigma 0.53 px
+-- subjoff: exit 0, engine 52d812913e09, flags --subject=off, env {}
+   detail          : SAFE (budget: restored noise power in 0.30-0.50 cycles/px at most 1.70 x the unrestored, green, on the half-stacks' noise): target 0.53 px chosen of 0.70-0.35 in 0.01 px steps, designed rise x1.64
+   R: noise power in 0.30-0.50 cycles/px x1.99 designed, x1.96 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.24/x1.37/x1.38/x1.43
+   G: noise power in 0.30-0.50 cycles/px x1.64 designed, x1.61 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.17/x1.25/x1.24/x1.33
+   B: noise power in 0.30-0.50 cycles/px x1.03 designed, x0.99 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.11/x1.11/x1.01/x0.98
+   highlight guard covers 1.23% of the frame (around the 0.1394% of sites with a merged sample at or above 0.95 of the raw pin, 15871 DN over black)
+   STREHL_UI_PROGRESS event=align-result source=cache reference=105 placed=211 refused=0 total=211 frames=211
+   group journal   : 27 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795300522964-6430-1eb8ddd0f498f1a0.jsonl)
+   group journal   : 184 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795300522964-6430-1eb8ddd0f498f1a0.jsonl)
+   tone subject    : off (STREHL_SUBJECT=off / --subject off); white from the frame's 99.9th percentile
+   tone            : black -0.00024, white 1.18769 (linear), contrast 0.55
+   target sigma 0.53 px
+BYTES off      vs newoff   (unrestored: base binary vs this one): photograph and master IDENTICAL
+BYTES safe     vs subjoff  (default vs --subject off): photograph and master IDENTICAL
+PIXELS safe vs subj master: IDENTICAL (the description records the tone)
+====================================================================================================
+stack-1795371396674-6430
+-- base: exit 0, engine 7a7736a85c3f, flags -, env {}
+   highlight guard covers 0.11% of the frame
+   STREHL_UI_PROGRESS event=align-result source=solved reference=81 placed=162 refused=0 total=162 frames=162
+   STREHL_UI_PROGRESS event=align-result source=cache reference=81 placed=162 refused=0 total=162 frames=162
+   group journal   : 0 measurements reused, 21 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795371396674-6430-eef10729265b207e.jsonl)
+   group journal   : 0 measurements reused, 141 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795371396674-6430-eef10729265b207e.jsonl)
+   tone            : black 0.00004, white 0.61836 (linear), contrast 0.55
+   target sigma 0.70 px
+-- off: exit 0, engine 7a7736a85c3f, flags -, env {'STREHL_OPTICAL_RESTORE': 'off'}
+   STREHL_UI_PROGRESS event=align-result source=cache reference=81 placed=162 refused=0 total=162 frames=162
+   group journal   : 21 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795371396674-6430-eef10729265b207e.jsonl)
+   group journal   : 141 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795371396674-6430-eef10729265b207e.jsonl)
+   tone            : black 0.00004, white 0.60594 (linear), contrast 0.55
+-- newoff: exit 0, engine 52d812913e09, flags -, env {'STREHL_OPTICAL_RESTORE': 'off'}
+   STREHL_UI_PROGRESS event=align-result source=cache reference=81 placed=162 refused=0 total=162 frames=162
+   group journal   : 21 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795371396674-6430-eef10729265b207e.jsonl)
+   group journal   : 141 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795371396674-6430-eef10729265b207e.jsonl)
+   tone            : black 0.00004, white 0.60594 (linear), contrast 0.55
+-- natural: exit 0, engine 52d812913e09, flags --detail=natural, env {}
+   detail          : NATURAL: the shipped target 0.70 px, no noise budget
+   R: noise power in 0.30-0.50 cycles/px x1.01 designed, x0.97 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.13/x1.09/x0.99/x0.98
+   G: noise power in 0.30-0.50 cycles/px x1.00 designed, x0.96 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.09/x1.02/x0.98/x0.98
+   B: noise power in 0.30-0.50 cycles/px x1.00 designed, x0.96 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.04/x0.98/x0.98/x0.98
+   highlight guard covers 0.01% of the frame (around the 0.0000% of sites with a merged sample at or above 0.95 of the raw pin, 15871 DN over black)
+   STREHL_UI_PROGRESS event=align-result source=cache reference=81 placed=162 refused=0 total=162 frames=162
+   group journal   : 21 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795371396674-6430-eef10729265b207e.jsonl)
+   group journal   : 141 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795371396674-6430-eef10729265b207e.jsonl)
+   tone            : black 0.00004, white 0.61886 (linear), contrast 0.55
+   target sigma 0.70 px
+-- safe: exit 0, engine 52d812913e09, flags -, env {}
+   detail          : SAFE (budget: restored noise power in 0.30-0.50 cycles/px at most 1.70 x the unrestored, green, on the half-stacks' noise): target 0.56 px chosen of 0.70-0.35 in 0.01 px steps, designed rise x1.68
+   R: noise power in 0.30-0.50 cycles/px x2.44 designed, x2.34 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.20/x1.33/x1.44/x1.61
+   G: noise power in 0.30-0.50 cycles/px x1.68 designed, x1.62 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.17/x1.24/x1.27/x1.28
+   B: noise power in 0.30-0.50 cycles/px x1.09 designed, x1.05 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.11/x1.13/x1.06/x0.98
+   highlight guard covers 0.01% of the frame (around the 0.0000% of sites with a merged sample at or above 0.95 of the raw pin, 15871 DN over black)
+   STREHL_UI_PROGRESS event=align-result source=cache reference=81 placed=162 refused=0 total=162 frames=162
+   group journal   : 21 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795371396674-6430-eef10729265b207e.jsonl)
+   group journal   : 141 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795371396674-6430-eef10729265b207e.jsonl)
+   tone            : black -0.00004, white 0.62730 (linear), contrast 0.55
+   target sigma 0.56 px
+-- crisp: exit 0, engine 52d812913e09, flags --detail=crisp, env {}
+   detail          : CRISP (budget: restored noise power in 0.30-0.50 cycles/px at most 3.30 x the unrestored, green, on the half-stacks' noise): target 0.46 px chosen of 0.70-0.35 in 0.01 px steps, designed rise x3.20
+   R: noise power in 0.30-0.50 cycles/px x4.73 designed, x4.48 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.25/x1.49/x1.82/x2.36
+   G: noise power in 0.30-0.50 cycles/px x3.20 designed, x3.02 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.20/x1.38/x1.59/x1.88
+   B: noise power in 0.30-0.50 cycles/px x1.95 designed, x1.88 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.16/x1.27/x1.35/x1.39
+   highlight guard covers 0.01% of the frame (around the 0.0000% of sites with a merged sample at or above 0.95 of the raw pin, 15871 DN over black)
+   STREHL_UI_PROGRESS event=align-result source=cache reference=81 placed=162 refused=0 total=162 frames=162
+   group journal   : 21 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795371396674-6430-eef10729265b207e.jsonl)
+   group journal   : 141 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795371396674-6430-eef10729265b207e.jsonl)
+   tone            : black -0.00019, white 0.63020 (linear), contrast 0.55
+   target sigma 0.46 px
+BYTES off      vs newoff   (unrestored: base binary vs this one): photograph and master IDENTICAL
+====================================================================================================
+stack-1795433406862-8651
+-- base: exit 0, engine 7a7736a85c3f, flags -, env {}
+   highlight guard covers 0.31% of the frame
+   STREHL_UI_PROGRESS event=align-result source=solved reference=68 placed=136 refused=0 total=136 frames=136
+   STREHL_UI_PROGRESS event=align-result source=cache reference=68 placed=136 refused=0 total=136 frames=136
+   group journal   : 0 measurements reused, 17 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795433406862-8651-c95b1a66b545f33f.jsonl)
+   group journal   : 0 measurements reused, 119 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795433406862-8651-c95b1a66b545f33f.jsonl)
+   tone            : black -0.00005, white 0.57842 (linear), contrast 0.55
+   target sigma 0.70 px
+-- off: exit 0, engine 7a7736a85c3f, flags -, env {'STREHL_OPTICAL_RESTORE': 'off'}
+   STREHL_UI_PROGRESS event=align-result source=cache reference=68 placed=136 refused=0 total=136 frames=136
+   group journal   : 17 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795433406862-8651-c95b1a66b545f33f.jsonl)
+   group journal   : 119 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795433406862-8651-c95b1a66b545f33f.jsonl)
+   tone            : black -0.00005, white 0.57271 (linear), contrast 0.55
+-- newoff: exit 0, engine 52d812913e09, flags -, env {'STREHL_OPTICAL_RESTORE': 'off'}
+   STREHL_UI_PROGRESS event=align-result source=cache reference=68 placed=136 refused=0 total=136 frames=136
+   group journal   : 17 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795433406862-8651-c95b1a66b545f33f.jsonl)
+   group journal   : 119 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795433406862-8651-c95b1a66b545f33f.jsonl)
+   tone            : black -0.00005, white 0.57271 (linear), contrast 0.55
+-- natural: exit 0, engine 52d812913e09, flags --detail=natural, env {}
+   detail          : NATURAL: the shipped target 0.70 px, no noise budget
+   R: noise power in 0.30-0.50 cycles/px x1.00 designed, x0.96 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.13/x1.02/x0.98/x0.98
+   G: noise power in 0.30-0.50 cycles/px x1.00 designed, x0.97 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.08/x1.00/x0.98/x0.98
+   B: noise power in 0.30-0.50 cycles/px x1.00 designed, x0.96 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.04/x0.98/x0.98/x0.98
+   highlight guard covers 0.11% of the frame (around the 0.0062% of sites with a merged sample at or above 0.95 of the raw pin, 15871 DN over black)
+   STREHL_UI_PROGRESS event=align-result source=cache reference=68 placed=136 refused=0 total=136 frames=136
+   group journal   : 17 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795433406862-8651-c95b1a66b545f33f.jsonl)
+   group journal   : 119 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795433406862-8651-c95b1a66b545f33f.jsonl)
+   tone            : black -0.00005, white 0.57842 (linear), contrast 0.55
+   target sigma 0.70 px
+-- safe: exit 0, engine 52d812913e09, flags -, env {}
+   detail          : SAFE (budget: restored noise power in 0.30-0.50 cycles/px at most 1.70 x the unrestored, green, on the half-stacks' noise): target 0.47 px chosen of 0.70-0.35 in 0.01 px steps, designed rise x1.65
+   R: noise power in 0.30-0.50 cycles/px x1.59 designed, x1.54 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.25/x1.36/x1.34/x1.11
+   G: noise power in 0.30-0.50 cycles/px x1.65 designed, x1.60 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.19/x1.30/x1.32/x1.19
+   B: noise power in 0.30-0.50 cycles/px x1.02 designed, x0.98 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.14/x1.13/x1.00/x0.98
+   highlight guard covers 0.11% of the frame (around the 0.0062% of sites with a merged sample at or above 0.95 of the raw pin, 15871 DN over black)
+   STREHL_UI_PROGRESS event=align-result source=cache reference=68 placed=136 refused=0 total=136 frames=136
+   group journal   : 17 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795433406862-8651-c95b1a66b545f33f.jsonl)
+   group journal   : 119 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795433406862-8651-c95b1a66b545f33f.jsonl)
+   tone            : black -0.00012, white 0.58333 (linear), contrast 0.55
+   target sigma 0.47 px
+-- crisp: exit 0, engine 52d812913e09, flags --detail=crisp, env {}
+   detail          : CRISP (budget: restored noise power in 0.30-0.50 cycles/px at most 3.30 x the unrestored, green, on the half-stacks' noise): target 0.35 px chosen of 0.70-0.35 in 0.01 px steps, designed rise x2.93
+   R: noise power in 0.30-0.50 cycles/px x2.66 designed, x2.57 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.29/x1.52/x1.67/x1.55
+   G: noise power in 0.30-0.50 cycles/px x2.93 designed, x2.83 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.24/x1.46/x1.65/x1.73
+   B: noise power in 0.30-0.50 cycles/px x1.27 designed, x1.23 delivered; signal amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px x1.19/x1.27/x1.20/x1.00
+   highlight guard covers 0.11% of the frame (around the 0.0062% of sites with a merged sample at or above 0.95 of the raw pin, 15871 DN over black)
+   STREHL_UI_PROGRESS event=align-result source=cache reference=68 placed=136 refused=0 total=136 frames=136
+   group journal   : 17 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795433406862-8651-c95b1a66b545f33f.jsonl)
+   group journal   : 119 measurements reused, 0 measured and kept (STREHL_GROUP_JOURNAL; C:\w\shd-detail-out\r\cache\groups\stack-1795433406862-8651-c95b1a66b545f33f.jsonl)
+   tone            : black -0.00021, white 0.58722 (linear), contrast 0.55
+   target sigma 0.35 px
+BYTES off      vs newoff   (unrestored: base binary vs this one): photograph and master IDENTICAL

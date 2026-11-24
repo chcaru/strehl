@@ -62,6 +62,7 @@ fn make_dev(
         black: tone[0],
         white: tone[1],
         contrast: tone[2],
+        shoulder: None,
     });
     dev.exposure_gain = exposure;
     Ok(dev)

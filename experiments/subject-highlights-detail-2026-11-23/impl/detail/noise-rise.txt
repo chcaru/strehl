@@ -1,0 +1,68 @@
+stack-1795460665629-8651: 278 noise tiles of 256 px (unrestored master, green: 0.10-0.20 power per frequency <= 5 x the 0.30-0.50 power, <= 5 % of samples at or below zero, max < 0.5)
+  base: (no detail line)
+    green flat-tile noise rise 0.30-0.50: median 0.963 (quartiles 0.963-0.964)
+    luma  flat-tile noise rise 0.30-0.50: median 0.963 (quartiles 0.963-0.964)
+    target sigma 0.70 px
+  natural: NATURAL: the shipped target 0.70 px, no noise budget
+    green flat-tile noise rise 0.30-0.50: median 0.963 (quartiles 0.963-0.964); log: designed 1.00, delivered 0.96; median / delivered 1.004
+    luma  flat-tile noise rise 0.30-0.50: median 0.963 (quartiles 0.963-0.964)
+    target sigma 0.70 px
+  safe: SAFE (budget: restored noise power in 0.30-0.50 cycles/px at most 1.70 x the unrestored, green, on the half-stacks' noise): target 0.55 px chosen of 0.70-0.35 i
+    green flat-tile noise rise 0.30-0.50: median 1.598 (quartiles 1.594-1.602); log: designed 1.64, delivered 1.58; budget 1.70: median / budget 0.940 (IS within 10 %); median / delivered 1.011
+    luma  flat-tile noise rise 0.30-0.50: median 1.599 (quartiles 1.596-1.604)
+    target sigma 0.55 px
+  crisp: CRISP (budget: restored noise power in 0.30-0.50 cycles/px at most 3.30 x the unrestored, green, on the half-stacks' noise): target 0.44 px chosen of 0.70-0.35 
+    green flat-tile noise rise 0.30-0.50: median 3.371 (quartiles 3.341-3.401); log: designed 3.28, delivered 3.16; budget 3.30: median / budget 1.021 (IS within 10 %); median / delivered 1.067
+    luma  flat-tile noise rise 0.30-0.50: median 3.395 (quartiles 3.368-3.423)
+    target sigma 0.44 px
+stack-1795300522964-6430: 3 noise tiles of 256 px (unrestored master, green: 0.10-0.20 power per frequency <= 5 x the 0.30-0.50 power, <= 5 % of samples at or below zero, max < 0.5)
+  base: (no detail line)
+    green flat-tile noise rise 0.30-0.50: median 0.979 (quartiles 0.978-0.981)
+    luma  flat-tile noise rise 0.30-0.50: median 0.980 (quartiles 0.979-0.981)
+    target sigma 0.70 px
+  natural: NATURAL: the shipped target 0.70 px, no noise budget
+    green flat-tile noise rise 0.30-0.50: median 0.979 (quartiles 0.978-0.981); log: designed 1.00, delivered 0.97; median / delivered 1.010
+    luma  flat-tile noise rise 0.30-0.50: median 0.980 (quartiles 0.979-0.981)
+    target sigma 0.70 px
+  safe: SAFE (budget: restored noise power in 0.30-0.50 cycles/px at most 1.70 x the unrestored, green, on the half-stacks' noise): target 0.53 px chosen of 0.70-0.35 i
+    green flat-tile noise rise 0.30-0.50: median 1.652 (quartiles 1.641-1.655); log: designed 1.64, delivered 1.61; budget 1.70: median / budget 0.972 (IS within 10 %); median / delivered 1.026
+    luma  flat-tile noise rise 0.30-0.50: median 1.653 (quartiles 1.644-1.656)
+    target sigma 0.53 px
+  crisp: CRISP (budget: restored noise power in 0.30-0.50 cycles/px at most 3.30 x the unrestored, green, on the half-stacks' noise): target 0.41 px chosen of 0.70-0.35 
+    green flat-tile noise rise 0.30-0.50: median 2.968 (quartiles 2.949-3.001); log: designed 3.24, delivered 3.16; budget 3.30: median / budget 0.899 (NOT within 10 %); median / delivered 0.939
+    luma  flat-tile noise rise 0.30-0.50: median 2.977 (quartiles 2.961-3.012)
+    target sigma 0.41 px
+stack-1795371396674-6430: 230 noise tiles of 256 px (unrestored master, green: 0.10-0.20 power per frequency <= 5 x the 0.30-0.50 power, <= 5 % of samples at or below zero, max < 0.5)
+  base: (no detail line)
+    green flat-tile noise rise 0.30-0.50: median 0.964 (quartiles 0.963-0.964)
+    luma  flat-tile noise rise 0.30-0.50: median 0.964 (quartiles 0.964-0.964)
+    target sigma 0.70 px
+  natural: NATURAL: the shipped target 0.70 px, no noise budget
+    green flat-tile noise rise 0.30-0.50: median 0.964 (quartiles 0.963-0.964); log: designed 1.00, delivered 0.96; median / delivered 1.004
+    luma  flat-tile noise rise 0.30-0.50: median 0.964 (quartiles 0.964-0.964)
+    target sigma 0.70 px
+  safe: SAFE (budget: restored noise power in 0.30-0.50 cycles/px at most 1.70 x the unrestored, green, on the half-stacks' noise): target 0.56 px chosen of 0.70-0.35 i
+    green flat-tile noise rise 0.30-0.50: median 1.622 (quartiles 1.618-1.625); log: designed 1.68, delivered 1.62; budget 1.70: median / budget 0.954 (IS within 10 %); median / delivered 1.001
+    luma  flat-tile noise rise 0.30-0.50: median 1.627 (quartiles 1.624-1.631)
+    target sigma 0.56 px
+  crisp: CRISP (budget: restored noise power in 0.30-0.50 cycles/px at most 3.30 x the unrestored, green, on the half-stacks' noise): target 0.46 px chosen of 0.70-0.35 
+    green flat-tile noise rise 0.30-0.50: median 3.021 (quartiles 3.003-3.047); log: designed 3.20, delivered 3.02; budget 3.30: median / budget 0.915 (IS within 10 %); median / delivered 1.000
+    luma  flat-tile noise rise 0.30-0.50: median 3.039 (quartiles 3.021-3.063)
+    target sigma 0.46 px
+stack-1795433406862-8651: 273 noise tiles of 256 px (unrestored master, green: 0.10-0.20 power per frequency <= 5 x the 0.30-0.50 power, <= 5 % of samples at or below zero, max < 0.5)
+  base: (no detail line)
+    green flat-tile noise rise 0.30-0.50: median 0.969 (quartiles 0.968-0.969)
+    luma  flat-tile noise rise 0.30-0.50: median 0.968 (quartiles 0.968-0.969)
+    target sigma 0.70 px
+  natural: NATURAL: the shipped target 0.70 px, no noise budget
+    green flat-tile noise rise 0.30-0.50: median 0.969 (quartiles 0.968-0.969); log: designed 1.00, delivered 0.97; median / delivered 0.998
+    luma  flat-tile noise rise 0.30-0.50: median 0.968 (quartiles 0.968-0.969)
+    target sigma 0.70 px
+  safe: SAFE (budget: restored noise power in 0.30-0.50 cycles/px at most 1.70 x the unrestored, green, on the half-stacks' noise): target 0.47 px chosen of 0.70-0.35 i
+    green flat-tile noise rise 0.30-0.50: median 1.583 (quartiles 1.576-1.592); log: designed 1.65, delivered 1.60; budget 1.70: median / budget 0.931 (IS within 10 %); median / delivered 0.989
+    luma  flat-tile noise rise 0.30-0.50: median 1.569 (quartiles 1.563-1.578)
+    target sigma 0.47 px
+  crisp: CRISP (budget: restored noise power in 0.30-0.50 cycles/px at most 3.30 x the unrestored, green, on the half-stacks' noise): target 0.35 px chosen of 0.70-0.35 
+    green flat-tile noise rise 0.30-0.50: median 2.870 (quartiles 2.851-2.886); log: designed 2.93, delivered 2.83; budget 3.30: median / budget 0.870 (NOT within 10 %); median / delivered 1.014
+    luma  flat-tile noise rise 0.30-0.50: median 2.854 (quartiles 2.834-2.869)
+    target sigma 0.35 px

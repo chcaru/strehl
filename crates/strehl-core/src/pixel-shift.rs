@@ -292,10 +292,18 @@ pub struct Reference {
 
 impl Reference {
     pub fn new(reference: &MemberView<'_>, search: isize) -> Self {
-        let bal = balance(reference);
         let (w, h) = (reference.active[2] as isize, reference.active[3] as isize);
-        // Central half of the frame; integrals extend by the search and block.
-        let roi = [w / 4, h / 4, w / 2, h / 2];
+        // Central half of the frame.
+        Self::new_in(reference, search, [w / 4, h / 4, w / 2, h / 2])
+    }
+
+    /// [`Self::new`] registering on `roi` (active coordinates `[x, y,
+    /// width, height]`) instead of the central half: the plane checker's
+    /// subject arm registers on the subject's bounding region. The
+    /// integrals extend by the search and block; reads outside the buffer
+    /// count as zero, so keep `roi` that far inside the active area.
+    pub fn new_in(reference: &MemberView<'_>, search: isize, roi: [isize; 4]) -> Self {
+        let bal = balance(reference);
         let pad = search + 2;
         let (x0, y0) = (roi[0] - pad, roi[1] - pad);
         let (iw, ih) = (

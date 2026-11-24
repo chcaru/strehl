@@ -1,0 +1,28 @@
+{
+ "rings": [
+  [
+   [
+    0.03,
+    0.03
+   ],
+   [
+    0.18,
+    0.03
+   ],
+   [
+    0.18,
+    0.18
+   ],
+   [
+    0.03,
+    0.18
+   ]
+  ]
+ ],
+ "reference_focus": 25175.0,
+ "ppm_per_unit": -11.9526364542623,
+ "provenance": {
+  "kind": "box",
+  "note": "backdrop corner, shd-census no-highlight control"
+ }
+}

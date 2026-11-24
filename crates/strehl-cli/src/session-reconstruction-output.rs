@@ -147,6 +147,7 @@ pub(crate) fn write_reconstructed_camera_image(
                 white: tone.white,
                 contrast: tone.contrast,
                 exposure_gain: image.develop.exposure_gain,
+                shoulder: tone.shoulder,
             }),
             baked_recipe: baked_recipe.cloned(),
         };

@@ -196,6 +196,11 @@ enum Command {
     /// the evidence threshold used (plan S2).
     Subject(subject_cmd::SubjectArgs),
 
+    /// Read a Calibrate survey (single shots at two shutters plus a dense
+    /// cluster): subject, depth, step, the body's level per colour, a
+    /// highlight census and the exposure advice's numbers (plan X1/X2).
+    Survey(survey_cmd::SurveyArgs),
+
     /// Store a finished capture in the calibrated format: every sample kept
     /// to within half a step of the noise, the camera's full-size JPEG
     /// dropped. Not lossless; nothing is written without --apply.
@@ -600,6 +605,34 @@ enum Command {
         /// percentile at 0.322559 and 0.322549, the same 1/100-stop answer).
         #[arg(long)]
         auto_exposure: bool,
+        /// How crisp the optical restoration makes the finest detail (plan
+        /// D2): `natural`, `safe` (the default) or `crisp`, or a noise budget
+        /// in 1.0-6.0.
+        ///
+        /// The restoration lifts signal and noise together; it cannot change
+        /// a band's signal-to-noise. This sets how far the finest bands'
+        /// noise power (0.30-0.50 cycles/px, green, measured on the stack's
+        /// own half-stacks) may rise against the unrestored: `safe` 1.7x,
+        /// `crisp` 3.3x. The sharpest Gaussian target from 0.70 down to
+        /// 0.35 px inside that budget is taken, so a stack with more
+        /// signal-to-noise gets a crisper target for the same grain. On the
+        /// A7CR weevil (MEASURED, results note Q8) 1.7x is about 0.50 px and
+        /// 1.3x fine amplitude, 3.3x about 0.40 px and 1.6-1.8x. `natural`
+        /// is the earlier fixed 0.70 px target. The log reports the chosen
+        /// target, its noise cost and its amplitude gain by band.
+        #[arg(long, value_name = "natural|safe|crisp|B")]
+        detail: Option<String>,
+        /// The subject's outline for the tone (plan S4/X6): a JSON file with
+        /// `rings` normalised to the sensor's active area (`strehl subject
+        /// --json` output, or a capture manifest with `plan.subject`), or
+        /// `off`. Without it the capture's own `manifest.json` subject is
+        /// used when it records one. With a subject, white is placed on the
+        /// subject's diffuse level (the 99.9th percentile of its brightest
+        /// colour with highlights set aside, at 0.85) and a shoulder rolls
+        /// glints off instead of letting them set white; without one the
+        /// tone is the frame's, byte for byte as before.
+        #[arg(long, value_name = "JSON|off")]
+        subject: Option<String>,
         /// The one knob: how much averaging, in units of the focus noise.
         ///
         /// A frame is averaged in where its regularised focus response is within
@@ -1058,6 +1091,12 @@ pub mod focus_step_cmd;
 // Plan S2 (2026-11-23): the subject, found automatically.
 #[path = "subject-cmd.rs"]
 pub mod subject_cmd;
+// Plan S4 (2026-11-24): what the subject drives (focus step, plane check).
+#[path = "subject-use.rs"]
+pub mod subject_use;
+// Plan X1 (2026-11-24): one Calibrate survey feeds every calibration.
+#[path = "survey-cmd.rs"]
+pub mod survey_cmd;
 
 pub fn default_cache_root() -> PathBuf {
     align_cmd::default_cache_root()
@@ -1132,6 +1171,7 @@ where
         Command::PixelShift(args) => pixel_shift_cmd::run(&args),
         Command::FocusStep(args) => focus_step_cmd::run(&args),
         Command::Subject(args) => subject_cmd::run(&args),
+        Command::Survey(args) => survey_cmd::run(&args),
         Command::Compact(args) => compact_cmd::run(&args),
         Command::Follow(args) => follow_cmd::run(&args),
         Command::Focus { action } => match action {
@@ -1194,6 +1234,8 @@ where
             region_only_photo,
             exposure,
             auto_exposure,
+            detail,
+            subject,
             gates,
             flat_roi,
             detail_roi,
@@ -1237,6 +1279,22 @@ where
             // refinement instead of measuring its own.
             if let Some(log) = reuse_ca_from.as_deref() {
                 unsafe { std::env::set_var(merge_cmd::REUSE_CA_ENV, log) };
+            }
+            // Same mechanism: the restoration reads its Detail budget, and the
+            // write its subject, where they are used. Checked here so a bad
+            // spelling is one error before any work.
+            if let Some(v) = detail.as_deref() {
+                merge_cmd::Detail::parse(v).context("--detail")?;
+                unsafe { std::env::set_var(merge_cmd::DETAIL_ENV, v) };
+            }
+            if let Some(v) = subject.as_deref() {
+                if v != "off" {
+                    anyhow::ensure!(
+                        std::path::Path::new(v).is_file(),
+                        "--subject {v:?} is not a file (or off)"
+                    );
+                }
+                unsafe { std::env::set_var(image_out::tone_subject::ENV, v) };
             }
 
             // Resolved here, alongside `resampler` and `photometric`, so that

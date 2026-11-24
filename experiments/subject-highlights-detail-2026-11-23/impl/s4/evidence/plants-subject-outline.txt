@@ -1,0 +1,14 @@
+D:/StrehlCaptures/stack-1795476520452-8651 plane 74 as taken: local 0.224 px | pass
+D:/StrehlCaptures/stack-1795476520452-8651 plane 74 backdrop: no place to plant
+D:/StrehlCaptures/stack-1795476520452-8651 plane 74 patch on the subject at (5056, 2560) px: frame local NaN px | offsets [(0, -1), (1, 0), (1, 0)] do not cover the four CFA parities: a shot slipped by a whole photosite | subject local NaN px over 0/0 tiles, backdrop NaN px | retake true backdrop only false
+D:/StrehlCaptures/stack-1795476520452-8651 plane 100 as taken: local 0.198 px | pass
+D:/StrehlCaptures/stack-1795476520452-8651 plane 100 backdrop: no place to plant
+D:/StrehlCaptures/stack-1795476520452-8651 plane 100 patch on the subject at (5504, 2368) px: frame local 2.302 px | witness tiles disagree locally by 2.30 px at p99 (limit 0.51): motion, a focus slip or a wrong member | subject local 2.302 px over 603/4503 tiles, backdrop NaN px | retake true backdrop only false
+D:/StrehlCaptures/stack-1795478933629-8651 plane 10 as taken: local 0.213 px | pass
+D:/StrehlCaptures/stack-1795478933629-8651 plane 10 backdrop: no place to plant
+D:/StrehlCaptures/stack-1795478933629-8651 plane 10 patch on the subject at (5632, 2432) px: frame local NaN px | offsets [(0, -1), (1, 0), (1, 0)] do not cover the four CFA parities: a shot slipped by a whole photosite | subject local NaN px over 0/0 tiles, backdrop NaN px | retake true backdrop only false
+D:/StrehlCaptures/stack-1795478933629-8651 plane 18 as taken: local 0.210 px | pass
+D:/StrehlCaptures/stack-1795478933629-8651 plane 18 patch on the backdrop at (2816, 5888) px: frame local 0.210 px | pass | subject local 0.205 px over 1493/2214 tiles, backdrop 0.257 px | retake false backdrop only false
+  (the stack does not demote it: nothing to weigh)
+D:/StrehlCaptures/stack-1795478933629-8651 plane 18 patch on the subject at (5376, 2432) px: frame local 1.956 px | witness tiles disagree locally by 1.96 px at p99 (limit 0.51): motion, a focus slip or a wrong member | subject local 1.964 px over 1493/2214 tiles, backdrop 0.374 px | retake true backdrop only false
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 336 filtered out; finished in 4.71s

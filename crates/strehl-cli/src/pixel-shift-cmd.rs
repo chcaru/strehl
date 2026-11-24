@@ -30,6 +30,31 @@ pub struct PixelShiftArgs {
     /// each plane the stack uses.
     #[arg(long)]
     pub all_groups: bool,
+    /// The subject (a manifest with `plan.subject`, or `strehl subject
+    /// --out`): a demoted group is retaken only when the subject's own check
+    /// fails (plan S4). Default: the capture manifest's subject, if any.
+    #[arg(long)]
+    pub subject: Option<PathBuf>,
+}
+
+/// The subject note of a group's report line (empty without a subject).
+fn subject_note(gate: &Value) -> String {
+    let s = &gate["subject"];
+    if s.is_null() {
+        return String::new();
+    }
+    format!(
+        " | subject: local p99 {:.3} px over {} tiles, {}",
+        s["local_px"].as_f64().unwrap_or(f64::NAN),
+        s["tiles_measured"],
+        if gate["backdrop_only"] == true {
+            "backdrop only, no retake"
+        } else if gate["retake"] == true {
+            "retake"
+        } else {
+            "no retake"
+        }
+    )
 }
 
 /// One bound RAW member as the journal records it.
@@ -280,6 +305,15 @@ pub fn run(args: &PixelShiftArgs) -> Result<()> {
         four.iter().filter(|g| g.complete).count()
     );
     ensure!(!four.is_empty(), "no four-shot groups recorded in this run");
+    let subject = crate::subject_use::resolve(&args.dir, args.subject.as_deref())?;
+    let mut region = None;
+    if let Some(s) = &subject {
+        println!(
+            "subject         : {} ({} ring(s)); a demoted group is retaken only when the subject's tiles fail",
+            s.origin.as_str(),
+            s.rings.len()
+        );
+    }
     let residual = ResidualMode::from_env()?;
     // Pass 1: geometry, gains and photon-transfer bins under the injected model.
     let mut reports = Vec::new();
@@ -310,19 +344,38 @@ pub fn run(args: &PixelShiftArgs) -> Result<()> {
         // The stack's own measurement and gate, under the injected model.
         let (gm, w) = measure_with_witness([&frames[0], &frames[1], &frames[2], &frames[3]], noise);
         let gate = judge(&gm, residual);
-        let gate_json = json!({"reason":gate,"retake":retake_helps(&gm, residual),
+        let mut gate_json = json!({"reason":gate,"retake":retake_helps(&gm, residual),
             "local_px":gm.witness.as_ref().map(|s| s.local_px),"local_tolerance_px":LOCAL_TOLERANCE_PX,
             "residual_mode":format!("{residual:?}")});
+        if let Some(s) = &subject {
+            let r = region
+                .get_or_insert_with(|| s.region([frames[0].active.width, frames[0].active.height]));
+            let sub = crate::subject_use::check_subject(
+                [&frames[0], &frames[1], &frames[2], &frames[3]],
+                noise,
+                r,
+                s.scale_at(g.target.map(|t| t as f64)),
+                &gm,
+                w.as_ref(),
+                residual,
+            );
+            let weighted = crate::subject_use::weigh(gate.is_some(), &sub);
+            gate_json["retake_without_subject"] = gate_json["retake"].clone();
+            gate_json["retake"] = json!(weighted.retake);
+            gate_json["backdrop_only"] = json!(weighted.backdrop_only);
+            gate_json["subject"] = crate::subject_use::check_json(&sub, &gm);
+        }
         let c = gm.check.clone();
         let Some(w) = w.filter(|_| c.parities) else {
             println!(
-                "plane {:>4}      : offsets {:?} structure {:.3} {:.3} {:.3} | demote: offsets do not cover the four CFA parities | gate: {}",
+                "plane {:>4}      : offsets {:?} structure {:.3} {:.3} {:.3} | demote: offsets do not cover the four CFA parities | gate: {}{}",
                 g.plane,
                 &c.offsets[1..],
                 c.precision[1],
                 c.precision[2],
                 c.precision[3],
-                gate.as_deref().unwrap_or("pass")
+                gate.as_deref().unwrap_or("pass"),
+                subject_note(&gate_json)
             );
             reports.push(json!({"plane":g.plane,"group_id":g.group_id,
                 "verdict":"demote: offsets do not cover the four CFA parities","gate":gate_json,
@@ -382,7 +435,7 @@ pub fn run(args: &PixelShiftArgs) -> Result<()> {
             "pass"
         };
         println!(
-            "plane {:>4}      : offsets {:?} witness shift max {:.3} px gains {:.4} {:.4} {:.4} | z2 mean {:.2} tiles p50 {:.2} p99 {:.2} | {} | local p99 {:.3} px | gate: {}",
+            "plane {:>4}      : offsets {:?} witness shift max {:.3} px gains {:.4} {:.4} {:.4} | z2 mean {:.2} tiles p50 {:.2} p99 {:.2} | {} | local p99 {:.3} px | gate: {}{}",
             g.plane,
             &c.offsets[1..],
             max_residual,
@@ -394,7 +447,8 @@ pub fn run(args: &PixelShiftArgs) -> Result<()> {
             tiles["p99"].as_f64().unwrap_or(f64::NAN),
             verdict,
             gate["local_px"].as_f64().unwrap_or(f64::NAN),
-            gate["reason"].as_str().unwrap_or("pass")
+            gate["reason"].as_str().unwrap_or("pass"),
+            subject_note(&gate)
         );
         reports.push(json!({"plane":g.plane,"group_id":g.group_id,"verdict":verdict,"gate":gate,
             "tile_local_px":quantiles(&local),"tile_local_map":local,
@@ -403,9 +457,12 @@ pub fn run(args: &PixelShiftArgs) -> Result<()> {
             "tile":w.tile,"tile_grid":w.tiles,"tile_map":w.tile_z2}));
     }
     if let Some(path) = &args.json {
-        let doc = json!({"run":args.dir,"injected_noise":provenance,
+        let mut doc = json!({"run":args.dir,"injected_noise":provenance,
             "witness_ptc":fit.map(|(g,r)| json!({"gain_dn_per_e":g,"read_noise_dn":r})),
             "ptc_bins":ptc,"groups":reports});
+        if let Some(s) = &subject {
+            doc["subject"] = json!(s.origin.as_str());
+        }
         std::fs::write(path, serde_json::to_string_pretty(&doc)? + "\n")?;
         println!("report          : {}", path.display());
     }
@@ -1081,7 +1138,7 @@ fn local_reason(local: f64) -> String {
 }
 
 /// [`judge`]'s reason, and whether a retake could help ([`retake_helps`]).
-fn demotion(m: &GroupMeasurement, residual: ResidualMode) -> Option<(String, bool)> {
+pub(crate) fn demotion(m: &GroupMeasurement, residual: ResidualMode) -> Option<(String, bool)> {
     let c = &m.check;
     // No tile with enough structure to judge reads NaN, and there is
     // nothing there to disagree: the whole-group gate still judges.

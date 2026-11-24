@@ -109,6 +109,10 @@ pub(crate) use session_alpha_output::apply_mosaic_coverage;
 #[path = "session-reconstruction-output.rs"]
 pub(crate) mod session_reconstruction_output;
 
+/// White from the subject's diffuse level (plan S4/X6).
+#[path = "tone-subject.rs"]
+pub(crate) mod tone_subject;
+
 #[cfg(all(test, feature = "native-direct-planes", feature = "native-correction-variance", feature = "native-gpu-gather"))]
 pub(crate) mod highlight_rendering {
     include!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../experiments/highlight-rendering/image-out-bridge.rs"));
@@ -976,6 +980,11 @@ pub struct Tone {
     pub white: f32,
     /// Strength of the display-space S-curve, in `[0, 1]`.
     pub contrast: f32,
+    /// The knee of a highlight shoulder in placed linear units
+    /// ([`strehl_edit::highlight_shoulder`]), or `None` for the hard
+    /// ceiling every render had before. Set only when white was placed on the
+    /// subject's diffuse level ([`tone_subject`], plan S4/X6).
+    pub shoulder: Option<f32>,
 }
 
 /// Where the black point is taken from, as a percentile of linear luminance.
@@ -1069,6 +1078,7 @@ impl Tone {
                 black: 0.0,
                 white: 1.0,
                 contrast: TONE_CONTRAST,
+                shoulder: None,
             };
         }
         lum.sort_unstable_by(f32::total_cmp);
@@ -1088,14 +1098,19 @@ impl Tone {
             black,
             white,
             contrast: TONE_CONTRAST,
+            shoulder: None,
         }
     }
 
     /// One line for the "wrote" report, so a render can be reproduced and so
     /// the numbers are visible rather than hidden inside the binary.
     pub fn report(&self) -> String {
+        let shoulder = match self.shoulder {
+            Some(knee) => format!(", highlight shoulder from {knee:.2}"),
+            None => String::new(),
+        };
         format!(
-            "tone            : black {:.5}, white {:.5} (linear), contrast {:.2}",
+            "tone            : black {:.5}, white {:.5} (linear), contrast {:.2}{shoulder}",
             self.black, self.white, self.contrast
         )
     }
@@ -1280,7 +1295,14 @@ pub(crate) fn develop_pixel(lin: [f32; 3], dev: &Develop) -> [u16; 3] {
             // where nothing divides it out again. It is `1.0` -- and therefore
             // bit-exact -- on every render that did not ask for an exposure.
             let g = t.gain(luma709(v)) * dev.exposure_gain;
-            [v[0] * g, v[1] * g, v[2] * g]
+            let placed = [v[0] * g, v[1] * g, v[2] * g];
+            // White on the subject's diffuse level: glints above it roll
+            // off rather than clip (the desktop's SDR view calls the same
+            // function after its development).
+            match t.shoulder {
+                Some(knee) => strehl_edit::highlight_shoulder(placed, knee),
+                None => placed,
+            }
         }
         None => v,
     };
@@ -1353,6 +1375,24 @@ fn tone_from_mosaic(m: &Mosaic, dev: &Develop) -> Tone {
         y += 2 * TONE_STRIDE;
     }
     Tone::from_luminance(&mut lum)
+}
+
+/// One RGGB quad of a `width`-wide mosaic (`d` starts at its top-left site)
+/// as [`tone_from_mosaic`] reads it, developed through the matrix, and
+/// whether a colour of it is at the sensor's pin ([`tone_subject`]).
+#[inline]
+fn developed_quad(d: &[f32], width: usize, dev: &Develop) -> ([f32; 3], bool) {
+    developed_triple([d[0], 0.5 * (d[1] + d[width]), d[width + 1]], dev)
+}
+
+/// A camera triple developed through the matrix, and whether it is pinned.
+#[inline]
+fn developed_triple(v: [f32; 3], dev: &Develop) -> ([f32; 3], bool) {
+    let pinned = tone_subject::near_pin(v, dev.matrix.as_ref());
+    match &dev.matrix {
+        Some(r) => (r.develop(v), pinned),
+        None => (v, pinned),
+    }
 }
 
 /// Measure the tone rendering from an already-materialised linear RGB image.
@@ -1523,7 +1563,10 @@ pub(crate) fn write_demosaiced_with_master_coverage(
     }
     let dev = &resolve_tone(dev, || match coverage {
         Some(mask)=>session_alpha_output::tone_from_supported_mosaic(&m,dev,mask),
-        None=>tone_from_mosaic(&m,dev),
+        None=>tone_subject::place(tone_from_mosaic(&m,dev), width / 2, height / 2, |qx, qy| {
+            let i = 2 * qy * width + 2 * qx;
+            developed_quad(&m.data[i..], width, dev)
+        }),
     });
     if let Some(master) = linear_master {
         let matrix = dev.matrix.context("scene-linear master requires a camera color matrix")?;
@@ -1548,7 +1591,7 @@ pub(crate) fn write_demosaiced_with_master_coverage(
             origin: strehl_edit::ImageOrigin::SceneLinear,
             baseline: dev.tone.map(|tone| strehl_edit::DisplayBaseline {
                 black: tone.black, white: tone.white, contrast: tone.contrast,
-                exposure_gain: dev.exposure_gain,
+                exposure_gain: dev.exposure_gain, shoulder: tone.shoulder,
             }),
             baked_recipe: baked_recipe.cloned(),
         };
@@ -1618,7 +1661,22 @@ pub(crate) fn write_rgb_full(
             }
             y += 2 * TONE_STRIDE;
         }
-        Tone::from_luminance(&mut lum)
+        tone_subject::place(
+            Tone::from_luminance(&mut lum),
+            width / 2,
+            height / 2,
+            |qx, qy| {
+                let i = 2 * qy * width + 2 * qx;
+                developed_triple(
+                    [
+                        px[i][0],
+                        0.5 * (px[i + 1][1] + px[i + width][1]),
+                        px[i + width + 1][2],
+                    ],
+                    dev,
+                )
+            },
+        )
     });
     if let Some(master) = linear_master {
         let matrix = dev
@@ -1638,6 +1696,7 @@ pub(crate) fn write_rgb_full(
                 white: tone.white,
                 contrast: tone.contrast,
                 exposure_gain: dev.exposure_gain,
+                shoulder: tone.shoulder,
             }),
             baked_recipe: baked_recipe.cloned(),
         };
@@ -2420,6 +2479,7 @@ mod tests {
             black: 0.0047,
             white: 0.7116,
             contrast: TONE_CONTRAST,
+            shoulder: None,
         };
         let real_dev = Develop {
             matrix: None,
@@ -2511,6 +2571,7 @@ mod tests {
             black: 0.0047,
             white: 0.7116,
             contrast: 0.0,
+            shoulder: None,
         };
         let dev = Develop {
             matrix: None,
@@ -3049,6 +3110,7 @@ mod tests {
             black: 0.008_30,
             white: 1.004_73,
             contrast: TONE_CONTRAST,
+            shoulder: None,
         };
         let with_tone = |matrix, srgb| Develop {
             matrix,

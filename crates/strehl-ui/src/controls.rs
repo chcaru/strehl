@@ -1,5 +1,5 @@
 use crate::{
-    jobs::{MachineResources, RenderSettings, Resampler},
+    jobs::{Detail, MachineResources, RenderSettings, Resampler},
     theme::{ACCENT, INK, LINE, MUTED},
 };
 use eframe::egui::{self, RichText};
@@ -101,6 +101,7 @@ impl Controls {
                 ui.checkbox(&mut self.settings.correct_lateral_ca,"Correct colour fringing").on_hover_text("Use the engine's supported optical profile; unknown profiles follow its normal guard.");
                 ui.add_enabled(self.settings.correct_lateral_ca, egui::Checkbox::new(&mut self.settings.refine_lateral_ca,"Refine fringing per stack"))
                     .on_hover_text("Measure the red and blue fringing the profile leaves on a quick preview of every 8th frame, then render with the correction fitted to this stack. About 18% more time; skipped for half-size TIFFs.");
+                self.detail_row(ui);
                 note(ui,"As-shot WB / sRGB tone");
             });
             section(ui,"03","Geometry", |ui| {
@@ -139,6 +140,26 @@ impl Controls {
                 ui.label(RichText::new("Engine manages memory and task routing.").size(9.5).color(MUTED)).on_hover_text("The desktop runs the engine with its GPU fold on automatic: the merge folds on the graphics card when one is available and on the CPU otherwise. The graphics card also draws this workspace. Thread limits do not change the image settings or canonical merge reduction order; actual active threads depend on the current stage and bracket.");
             });
         });
+    }
+
+    /// The restoration's Detail (plan D2): a ruled three-way choice, the
+    /// chosen strength's meaning in words beneath it.
+    fn detail_row(&mut self, ui: &mut egui::Ui) {
+        use crate::develop_station::style;
+        ui.horizontal(|ui| {
+            ui.label("Detail").on_hover_text(
+                "How crisp the optical restoration of four-shot stacks makes the finest detail. A filter cannot separate detail from grain: the engine measures this stack's own signal-to-noise and takes the sharpest restoration whose finest grain stays inside the limit. Re-render to compare; alignment is reused.",
+            );
+            ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                let pal = style::StudioPalette::of(ui.ctx());
+                let names = Detail::ALL.map(Detail::label);
+                let selected = Detail::ALL.iter().position(|d| *d == self.settings.detail);
+                if let Some(i) = style::seg(ui, &pal, &names, selected) {
+                    self.settings.detail = Detail::ALL[i];
+                }
+            });
+        });
+        note(ui, self.settings.detail.description());
     }
 
     fn show_session_controls(&mut self, ui: &mut egui::Ui, enabled: bool) {

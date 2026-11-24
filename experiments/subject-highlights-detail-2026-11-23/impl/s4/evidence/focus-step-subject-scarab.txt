@@ -1,0 +1,7 @@
+run             : D:/StrehlCaptures/stack-1795300522964-6430
+planes          : 211 measured, spaced 7.0 focus units
+tiles           : 5483 of the 6982 touching the subject (given) peak inside the run, of 14652 in the frame
+sharp width     : 36.7 focus units (10th-90th percentile 22.2-51.1)
+suggested step  : 5 (width / 7); the edge is width / 3.6 = 10
+whole frame     : 5514 tiles peak inside the run; sharp width 36.7 (10th-90th percentile 22.1-51.1), suggested step 5
+summary         : On the subject: Detail stays sharp over about 37 focus units; this run's step of 7 suits it (suggested 5).

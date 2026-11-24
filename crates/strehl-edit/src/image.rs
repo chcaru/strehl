@@ -45,6 +45,31 @@ pub struct DisplayBaseline {
     pub white: f32,
     pub contrast: f32,
     pub exposure_gain: f32,
+    /// The knee of the highlight shoulder ([`highlight_shoulder`]) on the
+    /// SDR view, in placed units; `None` (and absent from the master's
+    /// description) for no shoulder. Set when the white point was placed on
+    /// the subject's diffuse level (plan S4/X6), so glints above it roll off
+    /// instead of clipping.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub shoulder: Option<f32>,
+}
+
+/// The highlight shoulder of a placed linear triple: below the knee `k` the
+/// identity; above it the brightest channel `m` goes to
+/// `k + (1 - k)(1 - exp(-(m - k) / (1 - k)))` (slope one at the knee, never
+/// reaching one) and the other channels are scaled with it, so the colour's
+/// chromaticity is kept and no channel exceeds one. The engine's photograph
+/// and the desktop's SDR view call this one function.
+#[inline]
+pub fn highlight_shoulder(v: [f32; 3], knee: f32) -> [f32; 3] {
+    let m = v[0].max(v[1]).max(v[2]);
+    if m <= knee {
+        return v;
+    }
+    let room = 1.0 - knee;
+    let rolled = knee + room * (1.0 - (-(m - knee) / room).exp());
+    let scale = rolled / m;
+    v.map(|x| x * scale)
 }
 
 impl DisplayBaseline {
@@ -55,7 +80,10 @@ impl DisplayBaseline {
                 .all(|v| v.is_finite())
                 && self.white > self.black
                 && (0.0..=1.0).contains(&self.contrast)
-                && self.exposure_gain > 0.0,
+                && self.exposure_gain > 0.0
+                && self
+                    .shoulder
+                    .is_none_or(|k| k.is_finite() && (0.5..1.0).contains(&k)),
             "invalid display baseline"
         );
         Ok(())
@@ -370,6 +398,12 @@ impl LinearImage {
     ) -> [f32; 3] {
         let base = self.baseline.map_or(raw, |b| b.place(raw));
         let rgb = recipe.pixel(base, uv);
+        // The SDR view's highlight shoulder, as the engine's photograph has
+        // it; the HDR rendering keeps the headroom.
+        let rgb = match self.baseline.and_then(|b| b.shoulder) {
+            Some(knee) => highlight_shoulder(rgb, knee),
+            None => rgb,
+        };
         let rgb = if self.baseline.is_some() {
             gamut_map(rgb)
         } else {
@@ -614,6 +648,7 @@ mod tests {
                 white: 1.0,
                 contrast: 0.55,
                 exposure_gain: 1.0,
+                shoulder: None,
             }),
             baked_recipe: None,
         };
@@ -630,5 +665,63 @@ mod tests {
             "HDR contrast folded highlight order"
         );
         assert!(hdr[7] > 1.0, "HDR was clipped to SDR white");
+    }
+
+    /// A baseline with a shoulder (white on the subject, plan S4/X6): the SDR
+    /// view rolls a glint off below white exactly as `highlight_shoulder`
+    /// does after the placement, tones below the knee are untouched, the HDR
+    /// rendering keeps its headroom, and the master's description carries
+    /// the knee only when there is one.
+    #[test]
+    fn a_shoulder_rolls_off_the_sdr_view_only() {
+        let base = DisplayBaseline {
+            black: 0.0,
+            white: 0.5,
+            contrast: 0.55,
+            exposure_gain: 1.0,
+            shoulder: None,
+        };
+        let with = DisplayBaseline {
+            shoulder: Some(0.8),
+            ..base
+        };
+        let image = |b: DisplayBaseline| LinearImage {
+            width: 3,
+            height: 1,
+            pixels: [0.2f32, 0.6, 4.0]
+                .into_iter()
+                .flat_map(|x| [x, 0.8 * x, 0.5 * x])
+                .collect(),
+            origin: ImageOrigin::SceneLinear,
+            baseline: Some(b),
+            baked_recipe: None,
+        };
+        let (plain, rolled) = (image(base), image(with));
+        let recipe = DevelopmentRecipe::default();
+        assert_eq!(
+            plain.display_pixel(0, &recipe),
+            rolled.display_pixel(0, &recipe)
+        );
+        let placed = with.place([4.0, 3.2, 2.0]);
+        let expected = highlight_shoulder(placed, 0.8).map(|v| {
+            let x = srgb_encode(v);
+            x + (x * x * (3.0 - 2.0 * x) - x) * 0.55
+        });
+        let got = rolled.display_pixel(2, &recipe);
+        assert!(
+            got.iter().zip(expected).all(|(a, b)| (a - b).abs() < 1e-6),
+            "{got:?}"
+        );
+        // Just over white: clipped without the shoulder, below white with it.
+        assert!(plain.display_pixel(1, &recipe)[0] >= 1.0);
+        assert!(rolled.display_pixel(1, &recipe)[0] < 0.999);
+        assert_eq!(
+            rolled.developed_pixel(2, &recipe),
+            plain.developed_pixel(2, &recipe)
+        );
+        assert!(!serde_json::to_string(&base).unwrap().contains("shoulder"));
+        let back: DisplayBaseline =
+            serde_json::from_str(&serde_json::to_string(&with).unwrap()).unwrap();
+        assert_eq!(back, with);
     }
 }

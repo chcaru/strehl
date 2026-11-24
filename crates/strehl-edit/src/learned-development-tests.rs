@@ -28,6 +28,7 @@ fn image(origin: ImageOrigin, baseline: bool) -> Arc<LinearImage> {
             white: 0.73,
             contrast: 0.37,
             exposure_gain: 0.83,
+            shoulder: None,
         }),
         baked_recipe: None,
     })

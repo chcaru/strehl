@@ -121,6 +121,7 @@ fn load(plan: &RegionOnly, size: [usize; 2]) -> Result<Original> {
             black: baseline.black,
             white: baseline.white,
             contrast: baseline.contrast,
+            shoulder: baseline.shoulder,
         },
         exposure_gain: baseline.exposure_gain,
     })

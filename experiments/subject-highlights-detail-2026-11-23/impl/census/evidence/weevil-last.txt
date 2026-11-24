@@ -1,0 +1,15 @@
+survey          : C:/w/shd-census-out/fixtures/weevil-last
+shots           : 3 pairs at 1/4 / 1/60, 27 long positions, 24 for the step, 0 groups skipped
+noise model     : Profile
+levels          : black 512, white 15360
+ratio @  24972   : commanded 0.06250 (marked 0.06667), measured 0.06623 on 83490 cells (+6.0 %)
+ratio @  25182   : commanded 0.06250 (marked 0.06667), measured 0.06538 on 85654 cells (+4.6 %)
+ratio @  25462   : commanded 0.06250 (marked 0.06667), measured 0.06165 on 81009 cells (-1.4 %)
+body (long)     : R p50 0.0089 p99.9 0.0651 | G p50 0.0249 p99.9 0.1697 | B p50 0.0106 p99.9 0.0673; 63101732 sites, 75100 set aside
+census (x long FS): R p99.9 0.070 p99.99 0.128 max 1.303 | G 0.189 0.385 5.432 | B 0.078 0.177 1.863; 4843 highlight sites, 0 pinned in the short frames
+unconfirmed     : 0 short sites above the body that the long frame does not show (fixed pattern, hot pixels)
+census @  24972  : max R 0.675 G 2.250 B 0.714, 1139 highlight sites; pinned 71 in the long frame, 70 predicted from the short
+census @  25182  : max R 1.303 G 5.432 B 1.863, 1153 highlight sites; pinned 81 in the long frame, 80 predicted from the short
+census @  25462  : max R 1.302 G 3.754 B 1.612, 2551 highlight sites; pinned 132 in the long frame, 140 predicted from the short
+time            : 2.3 s
+summary         : Subject found (35.1 % of the frame), sharp from focus 24972 to 25462. The step was not measurable (6 of 5146 tiles peaked inside the 24 positions; at least 30 are needed). At 1/4 s the body's diffuse top (green, 99.9th percentile) sits at 0.17 of full scale. The short frames measured 0.0654 of the long (0.0625 commanded). Highlights: the brightest subject site reads 5.4 times the 1/4 s full scale; with a stop of margin (a sparse survey sees glints off their focus) plan for 10.9. Choices: a highlight pass at 1.3 (code 851978) with a short group at 1/50 (code 65586); protect highlights with one exposure at 1/50 (code 65586); or accept specks at 1.3 (code 851978), about 8726 pinned subject sites a plane. Suggested: the highlight pass.

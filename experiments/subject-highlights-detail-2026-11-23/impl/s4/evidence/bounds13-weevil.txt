@@ -1,0 +1,14 @@
+run             : D:/StrehlCaptures/stack-1795460665629-8651
+planes          : 13 of 199 recorded (1,17,34,50,67,83,100,116,133,149,166,182,199)
+grid            : 1188 x 792 cells of 8 px over 9504 x 6336 active px
+noise model     : Profile
+registration    : -13.0 ppm per focus unit (scale 0.9910, correlation 0.9846)
+quiet cells     : mode 1.02 x the injected noise floor, lower spread 0.175 (log); backdrop 67.6 % of the frame
+threshold       : Relative, 2.91 x the noise floor; 204372 in-focus cells, 199958 seed cells, 381 specks; 1 part(s) kept, 0 dropped
+outline         : 5 ring(s), points 229,52,32,40,52
+depth           : planes 17 to 182 (focus Some(24594.0) to Some(25749.0))
+bounds          : start 24571, end 25772 (sharp width 44, given): 172 of 199 planes, 27 saved, 87 % of the range
+bounds (core)   : start 24690, end 25660: 139 planes, 60 saved, 70 % of the range
+area            : 36.06 % of the frame
+time            : decode + cells 0.20 s, evidence 0.25 s, selection 0.026 s
+summary         : Subject: 36.1 % of the frame in 1 part(s), 4 hole(s) left out; sharp from plane 17 to 182; threshold 2.91 x the noise floor, set against the frame's quiet cells (mode 1.02 x, spread 0.175).

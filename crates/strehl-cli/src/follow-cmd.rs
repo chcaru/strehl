@@ -40,6 +40,11 @@ pub struct FollowArgs {
     /// STREHL_PIXEL_SHIFT=remosaic). Extra `stack` arguments follow `--`.
     #[arg(long)]
     pub out: Option<PathBuf>,
+    /// The subject (a manifest with `plan.subject`, or `strehl subject
+    /// --out`): a demoted group asks for a retake only when the subject's own
+    /// check fails (plan S4). Default: the run manifest's subject, if any.
+    #[arg(long)]
+    pub subject: Option<PathBuf>,
     /// Arguments passed to the closing `stack` after the folder and --out.
     #[arg(last = true)]
     pub stack_args: Vec<String>,
@@ -111,11 +116,18 @@ fn forced_retakes() -> Result<Vec<u64>> {
     }
 }
 
+/// The run's subject and its region, built at the first decoded group.
+type SubjectState = (
+    crate::subject_use::LoadedSubject,
+    Option<strehl_core::subject::SubjectRegion>,
+);
+
 fn check_plane(
     g: &crate::pixel_shift_cmd::RecordedGroup,
     noise: &mut Option<strehl_core::noise::NoiseModel>,
     journal: Option<&crate::pixel_shift_cmd::GroupJournal>,
     ladder: Option<&mut crate::align_cmd::LiveLadder>,
+    subject: Option<&mut SubjectState>,
 ) -> Value {
     let started = Instant::now();
     let frames: Result<Vec<strehl_raw::Frame>> = g
@@ -173,7 +185,7 @@ fn check_plane(
         out["offsets"] = json!(c.offsets);
         out["structure"] = json!(c.precision);
         out["gains"] = json!(c.gains);
-        match (w, &m.witness) {
+        match (&w, &m.witness) {
             (Some(w), _) => {
                 out["witness_pair_shift_px"] = json!(w.pair_shift);
                 out["witness_mean_z2_injected"] = json!(w.mean_z2);
@@ -186,6 +198,33 @@ fn check_plane(
         // Only a fault of the exposures is worth a retake; a plane with too
         // little structure would be demoted again.
         out["retake"] = json!(crate::pixel_shift_cmd::retake_helps(&m, residual));
+        // With a subject, a demoted group is retaken only when the
+        // subject's own check fails (plan S4); the verdict stays the
+        // stack's, which decides what the render assembles.
+        if let Some((s, region)) = subject {
+            out["subject"] = json!(s.origin.as_str());
+            if let Some(reason) = &reason {
+                let r = region.get_or_insert_with(|| {
+                    s.region([frames[0].active.width, frames[0].active.height])
+                });
+                let sub = crate::subject_use::check_subject(
+                    [&frames[0], &frames[1], &frames[2], &frames[3]],
+                    noise,
+                    r,
+                    s.scale_at(g.target.map(|t| t as f64)),
+                    &m,
+                    w.as_ref(),
+                    residual,
+                );
+                let weighted = crate::subject_use::weigh(true, &sub);
+                out["retake"] = json!(weighted.retake);
+                out["backdrop_only"] = json!(weighted.backdrop_only);
+                out["subject_check"] = crate::subject_use::check_json(&sub, &m);
+                if weighted.backdrop_only {
+                    out["reason"] = json!(format!("{reason}; backdrop only, no retake"));
+                }
+            }
+        }
     } else {
         out["verdict"] = json!("decoded");
         out["retake"] = json!(false);
@@ -269,6 +308,26 @@ pub fn run(args: &FollowArgs) -> Result<()> {
             "left to the render"
         }
     );
+    // The subject: given, or the run manifest's, read once the manifest
+    // exists.
+    let mut subject: Option<SubjectState> = None;
+    let mut subject_read = false;
+    let mut read_subject = |subject: &mut Option<SubjectState>| -> Result<()> {
+        if subject_read || (args.subject.is_none() && !args.dir.join("manifest.json").is_file()) {
+            return Ok(());
+        }
+        subject_read = true;
+        *subject =
+            crate::subject_use::resolve(&args.dir, args.subject.as_deref())?.map(|s| (s, None));
+        if let Some((s, _)) = subject {
+            println!(
+                "subject         : {} ({} ring(s)); a demoted group asks for a retake only when the subject's tiles fail",
+                s.origin.as_str(),
+                s.rings.len()
+            );
+        }
+        Ok(())
+    };
     let forced = forced_retakes()?;
     // A forced plane's first group only, also across a resumed session.
     let mut forced_done: std::collections::HashSet<u64> =
@@ -282,6 +341,7 @@ pub fn run(args: &FollowArgs) -> Result<()> {
     loop {
         // Every group is checked, a retake included; the plane's last
         // complete group is the one the stack uses.
+        read_subject(&mut subject)?;
         let all = crate::pixel_shift_cmd::all_groups(&args.dir)?;
         recorded = all.len();
         planes = crate::pixel_shift_cmd::plane_groups(all.clone());
@@ -292,7 +352,13 @@ pub fn run(args: &FollowArgs) -> Result<()> {
             .filter(|g| g.complete && !done.contains_key(&g.key()))
             .collect();
         for g in fresh {
-            let mut v = check_plane(g, &mut noise, groups_journal.as_ref(), ladder.as_mut());
+            let mut v = check_plane(
+                g,
+                &mut noise,
+                groups_journal.as_ref(),
+                ladder.as_mut(),
+                subject.as_mut(),
+            );
             if forced.contains(&g.plane) && forced_done.insert(g.plane) {
                 v["verdict"] = json!("demote");
                 v["reason"] = json!("forced retake (STREHL_FOLLOW_RETAKE_PLANES)");

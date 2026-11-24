@@ -54,8 +54,8 @@ pub use export::{
 };
 pub use export_preview::{ExportPreview, render_export_preview};
 pub use image::{
-    DisplayBaseline, ImageOrigin, LinearImage, load_tiff, load_tiff_thumbnail, save_linear_tiff,
-    save_sdr_tiff,
+    DisplayBaseline, ImageOrigin, LinearImage, highlight_shoulder, load_tiff, load_tiff_thumbnail,
+    save_linear_tiff, save_sdr_tiff,
 };
 pub use metadata::{CREATOR_TOOL, ExportDateTime, ExportMetadata};
 pub use neighbourhood::Neighbourhood;

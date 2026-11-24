@@ -1,0 +1,61 @@
+== Without a subject: base against new ==
+focus-step-scarab.json           bytes identical: True
+focus-step-tile1.json            bytes identical: True
+focus-step-tile4.json            bytes identical: True
+focus-step-weevil.json           bytes identical: True
+pixel-shift-tile1.json           bytes identical: True
+pixel-shift-tile4.json           bytes identical: True
+subject-scarab.json              bytes identical: False; equal without `bounds`: True; keys added: ['bounds']
+subject-scarab.stdout.json       bytes identical: False; equal without `bounds`: True; keys added: ['bounds']
+subject-weevil.json              bytes identical: False; equal without `bounds`: True; keys added: ['bounds']
+subject-weevil.stdout.json       bytes identical: False; equal without `bounds`: True; keys added: ['bounds']
+follow journal (seconds removed): 95 groups base, 95 new, equal: True
+group journal (render's measurements): 95 records base, 95 new, equal as sets: True
+
+== Focus step: whole frame against the subject ==
+weevil  subject=given tiles touching 6234 of 14652; whole frame: 4812 measured, width 44.1 (p10 33.8), step 6; subject: 4811 measured, width 44.1 (p10 33.8, p90 58.1), step 6; base whole-frame width 44.1 step 6 (same as new whole frame: True)
+scarab  subject=given tiles touching 6982 of 14652; whole frame: 5514 measured, width 36.7 (p10 22.1), step 5; subject: 5483 measured, width 36.7 (p10 22.2, p90 51.1), step 5; base whole-frame width 36.7 step 5 (same as new whole frame: True)
+tile4   subject=given tiles touching 4435 of 14652; whole frame: 3275 measured, width 97.7 (p10 64.2), step 13; subject: 3210 measured, width 97.3 (p10 64.1, p90 131.6), step 13; base whole-frame width 97.7 step 13 (same as new whole frame: True)
+tile1   subject=given tiles touching 2198 of 14652; whole frame: 505 measured, width 89.6 (p10 48.8), step 12; subject: 505 measured, width 89.6 (p10 48.8, p90 117.5), step 12; base whole-frame width 89.6 step 12 (same as new whole frame: True)
+
+== Plane checker: retake with and without the subject ==
+tile1: 95 groups, stack verdicts and reasons unchanged from base: True; demoted 40; retakes without subject 40, with subject 40; backdrop only 0
+  offsets                                   40 demoted, retake 40 -> 40
+  no retake changed
+  passing groups whose subject tiles alone exceed the limit (reported, no retake): []
+  registration on the subject's box (reported, no vote): offsets differ from the stack's in 7 groups
+    plane   5: stack [[0, -1], [1, 0], [1, 0]], subject box [[0, 0], [1, 0], [1, 0]] (covers parities: False)
+    plane   9: stack [[0, -1], [1, 0], [1, 0]], subject box [[0, -1], [1, -1], [1, 0]] (covers parities: True)
+    plane  11: stack [[0, -1], [1, -1], [1, -1]], subject box [[0, 0], [1, -1], [1, -1]] (covers parities: False)
+    plane  19: stack [[0, -1], [1, -1], [1, 1]], subject box [[0, -1], [1, 0], [1, 1]] (covers parities: True)
+    plane   4: stack [[0, -1], [1, -1], [1, 0]], subject box [[0, -1], [1, 0], [1, 0]] (covers parities: False)
+    plane   8: stack [[0, -1], [1, -1], [1, 0]], subject box [[0, -1], [1, -1], [1, -1]] (covers parities: False)
+    plane  12: stack [[0, -1], [1, 0], [1, 1]], subject box [[0, -1], [1, 0], [2, 1]] (covers parities: False)
+tile4: 190 groups, stack verdicts and reasons unchanged from base: True; demoted 34; retakes without subject 34, with subject 34; backdrop only 0
+  offsets                                   27 demoted, retake 27 -> 27
+  witness pairs misregistered                1 demoted, retake 1 -> 1
+  witness tiles disagree locally             6 demoted, retake 6 -> 6
+  no retake changed
+  passing groups whose subject tiles alone exceed the limit (reported, no retake): []
+  local fault, plane  18: frame 0.553 px, subject 0.555 px over 698/4357 tiles, backdrop 0.316 px; retake True
+  local fault, plane  17: frame 0.518 px, subject 0.517 px over 678/4357 tiles, backdrop 0.362 px; retake True
+  local fault, plane  24: frame 0.572 px, subject 0.572 px over 716/4392 tiles, backdrop 0.175 px; retake True
+  local fault, plane  37: frame 0.626 px, subject 0.626 px over 761/4410 tiles, backdrop 0.260 px; retake True
+  local fault, plane  61: frame 0.583 px, subject 0.583 px over 868/4450 tiles, backdrop 0.255 px; retake True
+  local fault, plane 147: frame 0.757 px, subject 0.757 px over 365/4565 tiles, backdrop 0.388 px; retake True
+  registration on the subject's box (reported, no vote): offsets differ from the stack's in 3 groups
+    plane  69: stack [[0, -1], [1, -1], [1, 0]], subject box [[0, -1], [1, 0], [1, 0]] (covers parities: False)
+    plane 137: stack [[0, -1], [1, -1], [1, 0]], subject box [[0, -1], [1, 0], [1, 0]] (covers parities: False)
+    plane 142: stack [[0, -1], [1, 0], [1, 1]], subject box [[0, 0], [1, 0], [1, 1]] (covers parities: False)
+
+== follow with a subject (tile1) ==
+95 groups, subject arm run on 40 demoted groups; changes against base:
+  none
+
+== Bounds ==
+weevil bounds13: planes used 13; depth planes 17-182 (core 34-166) of 199; width 44.1 (given); start 24571 end 25772 (run 24482-25866); 172 planes, 27 saved, 87 % of the range; core: 139 planes, 60 saved, 70 %; reaches start/end False/False
+weevil boundsall: planes used 199; depth planes 5-164 (core 36-162) of 199; width 44.1 (given); start 24487 end 25646 (run 24482-25866); 166 planes, 33 saved, 84 % of the range; core: 133 planes, 66 saved, 67 %; reaches start/end False/False
+scarab bounds13: planes used 13; depth planes 1-193 (core 18-193) of 211; width 36.7 (given); start 30987 end 32369 (run 31006-32471); 195 planes, 16 saved, 94 % of the range; core: 180 planes, 31 saved, 86 %; reaches start/end True/False
+scarab boundsall: planes used 211; depth planes 3-185 (core 25-180) of 211; width 36.7 (given); start 31001 end 32313 (run 31006-32471); 187 planes, 24 saved, 90 % of the range; core: 160 planes, 51 saved, 77 %; reaches start/end False/False
+tile1: depth 1-24; reaches start/end True/True; 0 saved
+tile4: depth 1-153; reaches start/end True/True; 0 saved

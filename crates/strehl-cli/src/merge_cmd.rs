@@ -93,6 +93,8 @@ pub(crate) mod gatefloor;
 pub(crate) mod halo;
 #[path = "merge_cmd/optical-restore.rs"]
 mod optical_restore;
+/// `stack --detail` (plan D2).
+pub(crate) use optical_restore::{DETAIL_ENV, Detail};
 #[path = "merge_cmd/region-only.rs"]
 mod region_only;
 #[path = "merge_cmd/region-repair.rs"]
@@ -10089,6 +10091,9 @@ fn run_pyramid_prepared_with_sensor(
     let _carry = colour_carry::activate_if_requested(opts, temporal_active)?;
     let _restore = optical_restore::activate_if_requested(opts, temporal_active)?;
     optical_restore::set_capture(&opts.dir, paths.first().map(|p| p.as_path()));
+    // Plan S4/X6: the capture's subject (or `--subject`) places the write's
+    // white on its diffuse level; none, and the tone is the frame rule's.
+    let _tone_subject = image_out::tone_subject::activate(&opts.dir)?;
     ensure!(
         !(temporal_active && (colour_carry::active() || optical_restore::active())),
         "{} and {} cannot combine with temporal energy",
@@ -12592,6 +12597,20 @@ fn write_merged_observed_with_reconstruction(
     // coordinates.
     let geom = merged.geometry();
     if let Merged::Bands { domain, .. } = &merged
+        && image_out::tone_subject::active()
+    {
+        // The subject is outlined on the whole active area.
+        image_out::tone_subject::set_crop(
+            (domain.full.width, domain.full.height),
+            (
+                domain.rect.x,
+                domain.rect.y,
+                domain.rect.width,
+                domain.rect.height,
+            ),
+        );
+    }
+    if let Merged::Bands { domain, .. } = &merged
         && domain.is_cropped()
     {
         eprintln!(
@@ -12996,6 +13015,7 @@ fn write_merged_observed_with_reconstruction(
                         gains,
                         exposure: eg,
                         range,
+                        pin: f32::from(strehl_core::clip::CONTAINER_MAX_DN) - black,
                     },
                 );
                 // Defaulted, a stack the restoration cannot measure is

@@ -1,0 +1,16 @@
+{
+ "source_manifest": "D:\\StrehlCaptures\\stack-1795512037314-11344",
+ "shuffle": null,
+ "shots": [
+  {
+   "run": "D:\\StrehlCaptures\\stack-1795512037314-11344",
+   "shutter": 655370,
+   "position": 62000
+  },
+  {
+   "run": "D:\\StrehlCaptures\\stack-1795512118539-11344",
+   "shutter": 65551,
+   "position": 62000
+  }
+ ]
+}

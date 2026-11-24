@@ -34,7 +34,11 @@
 //!   the blend transfer, the filter, applied in the square-root domain
 //!   (`sqrt(v + 25 DN)`, as the prototype's arm `f5`: a highlight fifty times
 //!   its surround cannot drive its surround below zero), and kept off within
-//!   about ten photosites of a near-clipped sample.
+//!   about ten photosites of a sample at the raw pin (plan D3).
+//! * The target's strength (plan D2): the sharpest Gaussian target, 0.70 to
+//!   0.35 px, whose restored noise power in 0.30-0.50 cycles/px stays within
+//!   the Detail budget (`stack --detail`, [`DETAIL_ENV`]) times the
+//!   unrestored, on green's measured noise.
 //!
 //! # Limits
 //!
@@ -51,12 +55,74 @@ use strehl_core::optical_restore as core;
 mod cutoffs;
 
 pub(super) const ENV: &str = "STREHL_OPTICAL_RESTORE";
-/// Target Gaussian sigma, output px (experiment control; default
-/// [`SIGMA_T`]).
+/// Target Gaussian sigma, output px (experiment control): when set, this
+/// target is used as given and the Detail budget ([`DETAIL_ENV`]) is not
+/// consulted.
 pub(super) const SIGMA_ENV: &str = "STREHL_OPTICAL_RESTORE_SIGMA";
-/// The prototype's arm `f5`: lifted detail without visible grain on the
-/// scarab; 0.60 added grain.
-const SIGMA_T: f64 = 0.70;
+/// Plan D2's strength, published by `stack --detail`: `natural`, `safe`
+/// (the default), `crisp`, or a noise budget `B` in 1.0-6.0.
+pub(crate) const DETAIL_ENV: &str = "STREHL_DETAIL";
+
+/// The owner's Detail control (plan D2): how far the restoration may lift
+/// the finest bands' noise for crispness.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub(crate) enum Detail {
+    /// The shipped target, 0.70 px, never below the system (plan Q2): no
+    /// budget.
+    Natural,
+    /// The sharpest target whose restored noise power in 0.30-0.50
+    /// cycles/px is at most `B` times the unrestored.
+    Budget { name: &'static str, budget: f64 },
+}
+
+/// Detail anchors, measured on the weevil (results note Q8, noise power at
+/// 0.3-0.4 / 0.4-0.5 cycles/px against the unrestored half-stack): 0.50 px
+/// cost 1.74 / 1.63, 0.40 px 2.67 / 3.27.
+pub(crate) const SAFE_BUDGET: f64 = 1.7;
+pub(crate) const CRISP_BUDGET: f64 = 3.3;
+
+impl Detail {
+    pub(crate) fn parse(v: &str) -> Result<Self> {
+        Ok(match v.trim() {
+            "natural" => Self::Natural,
+            "" | "safe" => Self::Budget {
+                name: "safe",
+                budget: SAFE_BUDGET,
+            },
+            "crisp" => Self::Budget {
+                name: "crisp",
+                budget: CRISP_BUDGET,
+            },
+            other => {
+                let b: f64 = other.parse().map_err(|_| {
+                    anyhow::anyhow!(
+                        "Detail {other:?} is not natural, safe, crisp or a budget number"
+                    )
+                })?;
+                ensure!(
+                    b.is_finite() && (1.0..=6.0).contains(&b),
+                    "a Detail budget lies in 1.0-6.0 (times the unrestored noise power), not {b}"
+                );
+                Self::Budget {
+                    name: "given",
+                    budget: b,
+                }
+            }
+        })
+    }
+
+    fn from_env() -> Result<Self> {
+        match std::env::var(DETAIL_ENV) {
+            Err(std::env::VarError::NotPresent) => Self::parse("safe"),
+            Err(e) => Err(e).context(DETAIL_ENV),
+            Ok(v) => Self::parse(&v).with_context(|| format!("{DETAIL_ENV}={v:?}")),
+        }
+    }
+}
+
+/// The prototype's arm `f5` and the Natural target: lifted detail without
+/// visible grain on the scarab; 0.60 added grain.
+const SIGMA_T: f64 = core::SIGMA_WIDEST;
 /// The diffraction cutoffs R, G, B in cycles/px, when this stack cannot
 /// measure them (a single-shot stack): measured on a four-shot run of the
 /// same lens, aperture and magnification.
@@ -80,8 +146,17 @@ pub(super) const CHROMA_ENV: &str = "STREHL_CHROMA_FILTER";
 const MAX_GAIN: f64 = 8.0;
 /// Added before the square root, DN.
 const ROOT_OFFSET_DN: f32 = 25.0;
-/// Samples above this fraction of the black-to-white range count as clipped.
+/// Samples above this fraction of the black-to-white range count as clipped
+/// for the spectrum tiles (the measurement's choice of tiles; unchanged by
+/// plan D3).
 const CLIP_FRACTION: f32 = 0.80;
+/// Plan D3: the highlight guard keeps restoration off around merged samples
+/// at or above this fraction of the raw pin (`Norm::pin`). Inside a pinned
+/// plateau the merge reproduces the pin; the dilation covers its edges.
+/// Before D3 the guard used [`CLIP_FRACTION`] of the white level (0.75 of
+/// the pin on the A7CR), which also held back unpinned, real highlights and
+/// the scales around them.
+const PIN_FRACTION: f32 = 0.95;
 /// Spectrum tile in plane px, and the margin each crop keeps for Malvar.
 const TP: usize = core::TILE / 2;
 const MARGIN: usize = 4;
@@ -207,9 +282,11 @@ pub(super) fn chroma_measured() -> Result<bool> {
     }
 }
 
-fn sigma_t() -> Result<f64> {
+/// The target given by [`SIGMA_ENV`], if any (then the Detail budget is not
+/// consulted).
+fn sigma_t() -> Result<Option<f64>> {
     match std::env::var(SIGMA_ENV) {
-        Err(std::env::VarError::NotPresent) => Ok(SIGMA_T),
+        Err(std::env::VarError::NotPresent) => Ok(None),
         Err(e) => Err(e).context(SIGMA_ENV),
         Ok(v) => {
             let s: f64 = v
@@ -220,7 +297,7 @@ fn sigma_t() -> Result<f64> {
                 s.is_finite() && (0.3..=3.0).contains(&s),
                 "{SIGMA_ENV} must lie in 0.3-3.0 px"
             );
-            Ok(s)
+            Ok(Some(s))
         }
     }
 }
@@ -375,6 +452,7 @@ pub(super) fn activate_if_requested(
                 return Ok(None);
             }
             sigma_t()?;
+            Detail::from_env()?;
             cutoff_override()?;
             DEFAULTED.store(true, std::sync::atomic::Ordering::Relaxed);
             *state() = Some(State::default());
@@ -387,6 +465,7 @@ pub(super) fn activate_if_requested(
         None => return Ok(None),
     }
     sigma_t()?;
+    Detail::from_env()?;
     cutoff_override()?;
     ensure!(opts.demosaic, "{ENV}=on needs --demosaic");
     ensure!(
@@ -833,6 +912,10 @@ pub(super) struct Norm {
     pub gains: [f32; 3],
     pub exposure: f32,
     pub range: f32,
+    /// The raw container maximum, black-subtracted DN: where a sample is
+    /// pinned (16383 - black on the A7CR; not the white level, which bounds
+    /// the noise model's calibrated range).
+    pub pin: f32,
 }
 
 impl Norm {
@@ -1014,7 +1097,8 @@ pub(super) fn restore(
         }
         last = Instant::now();
     };
-    let sigma = sigma_t()?;
+    let given_sigma = sigma_t()?;
+    let detail = Detail::from_env()?;
     let gather =
         gather_in_model()?.then(|| core::gather_table(strehl_core::align::Resampler::CatmullRom));
     let chroma = chroma_measured()? && merged.len() == colour_carry::PLANES;
@@ -1184,9 +1268,8 @@ pub(super) fn restore(
         &cutoffs::store_path(),
     )?;
     let mut models = Vec::with_capacity(3);
-    // Each channel's model, gain grid and kernel: independent, so designed
-    // side by side, then reported in channel order.
-    let designs: Vec<Result<(Vec<f64>, core::ChannelModel, core::Kernel)>> = (0..3)
+    // Each channel's model: independent, so fitted side by side.
+    let fitted_models: Vec<Result<(Vec<f64>, core::ChannelModel)>> = (0..3)
         .into_par_iter()
         .map(|c| {
             let (so, sr) = &spectra[c];
@@ -1203,16 +1286,58 @@ pub(super) fn restore(
             .with_context(|| {
                 format!("optical restoration: channel {c}'s signal spectrum could not be modelled")
             })?;
+            Ok((m, model))
+        })
+        .collect();
+    let fitted_models: Vec<(Vec<f64>, core::ChannelModel)> =
+        fitted_models.into_iter().collect::<Result<_>>()?;
+    // Plan D2: one target for the three channels, chosen on green against
+    // the Detail budget. Green, because the write's chroma smoothing hands
+    // red and blue green's finest bands, so green's is the noise the
+    // picture's fine grain carries.
+    let (sigma, strength) = match (given_sigma, detail) {
+        (Some(s), _) => (s, None),
+        (None, Detail::Natural) => (SIGMA_T, None),
+        (None, Detail::Budget { budget, .. }) => {
+            let s = core::choose_sigma(&fitted_models[1].1, 128, budget, MAX_GAIN);
+            (s.sigma, Some(s))
+        }
+    };
+    // Each channel's gain grid and kernel, side by side.
+    let designs: Vec<(Vec<f64>, core::ChannelModel, core::Kernel)> = fitted_models
+        .into_par_iter()
+        .map(|(m, model)| {
             let g = core::gain_grid(&model, 128, sigma, MAX_GAIN);
             // Judged where the filter does its work: below the taper.
             let k = core::kernel(&g, 128, MAX_RADIUS, TOLERANCE, (0.25, 0.40));
-            Ok((m, model, k))
+            (m, model, k)
         })
         .collect();
+    // The strength's account, per channel: designed and delivered noise
+    // rise in the budget band, and the signal's amplitude gain by band.
+    let mut strength_lines = Vec::new();
+    for (c, (_, model, k)) in designs.iter().enumerate() {
+        let designed = core::gain_grid(model, 128, sigma, MAX_GAIN);
+        let delivered = core::kernel_response(k, 128);
+        strength_lines.push(format!(
+            "{}: noise power in {:.2}-{:.2} cycles/px x{:.2} designed, x{:.2} delivered; signal \
+             amplitude at 0.1-0.2/0.2-0.3/0.3-0.4/0.4-0.5 cycles/px {}",
+            ["R", "G", "B"][c],
+            core::NOISE_BAND.0,
+            core::NOISE_BAND.1,
+            core::noise_rise(model, &designed, 128, core::NOISE_BAND),
+            core::noise_rise(model, &delivered, 128, core::NOISE_BAND),
+            [(0.1, 0.2), (0.2, 0.3), (0.3, 0.4), (0.4, 0.5)]
+                .iter()
+                .map(|&b| format!("x{:.2}", core::signal_gain(model, &delivered, 128, b)))
+                .collect::<Vec<_>>()
+                .join("/")
+        ));
+    }
     for (c, design) in designs.into_iter().enumerate() {
         let fc = cutoffs[c];
         let (fitted, fit_rms, cube) = fits[c];
-        let (m, model, k) = design?;
+        let (m, model, k) = design;
         let mtf = |f: f64| core::system_mtf(&model, f, 0.0);
         let gain = |f: f64| core::gain_at(&model, f, 0.0, sigma, MAX_GAIN);
         lines.push(format!(
@@ -1255,11 +1380,14 @@ pub(super) fn restore(
     }
     phase("fits and kernel design");
     // Highlight guard: keep the unrestored value within about ten photosites
-    // of a near-clipped sample, with a smooth hand-over (quad grid).
+    // of a sample at the raw pin, with a smooth hand-over (quad grid). Plan
+    // D3: pinned, not merely bright (`PIN_FRACTION`).
+    let pinned = PIN_FRACTION * norm.pin;
     let hotq: Vec<f32> = (0..gw * gh)
         .into_par_iter()
-        .map(|i| f32::from(u8::from(merged.iter().any(|p| p[i] > clip))))
+        .map(|i| f32::from(u8::from(merged.iter().any(|p| p[i] >= pinned))))
         .collect();
+    let pinned_share = hotq.iter().filter(|v| **v > 0.0).count() as f64 / hotq.len() as f64;
     let near = max_filter(&hotq, gw, gh, 5);
     let soft = axial_colour::blur(&near, gw, gh, 2.0);
     let keep: Vec<f32> = soft.iter().map(|v| 1.0 - v.clamp(0.0, 1.0)).collect();
@@ -1345,6 +1473,33 @@ pub(super) fn restore(
             parts.join(", ")
         ));
     }
+    let detail_line = match (given_sigma, detail, strength) {
+        (Some(_), _, _) => format!(
+            "target GIVEN by {SIGMA_ENV}; the Detail budget ({DETAIL_ENV}) is not consulted"
+        ),
+        (None, Detail::Natural, _) => {
+            format!("NATURAL: the shipped target {SIGMA_T:.2} px, no noise budget")
+        }
+        (None, Detail::Budget { name, budget }, Some(s)) => format!(
+            "{} (budget: restored noise power in {:.2}-{:.2} cycles/px at most {budget:.2} x the \
+             unrestored, green, on the half-stacks' noise): target {:.2} px chosen of {:.2}-{:.2} \
+             in {:.2} px steps, designed rise x{:.2}{}",
+            name.to_uppercase(),
+            core::NOISE_BAND.0,
+            core::NOISE_BAND.1,
+            s.sigma,
+            core::SIGMA_WIDEST,
+            core::SIGMA_SHARPEST,
+            core::SIGMA_STEP,
+            s.rise,
+            if s.within {
+                ""
+            } else {
+                " -- even the widest target exceeds the budget, so it is used"
+            }
+        ),
+        (None, Detail::Budget { .. }, None) => unreachable!("a budget always chooses"),
+    };
     eprintln!(
         "optical restore : ON ({}) -- target Gaussian sigma {sigma:.2} px, Wiener against the \
          measured noise, never below the system's response, gain cap {MAX_GAIN}, square-root \
@@ -1373,13 +1528,20 @@ pub(super) fn restore(
     for l in &lines {
         eprintln!("                  {l}");
     }
+    eprintln!("detail          : {detail_line}");
+    for l in &strength_lines {
+        eprintln!("                  {l}");
+    }
     eprintln!(
         "                  cutoffs R/G/B {:.3}/{:.3}/{:.3}: {source}; highlight guard covers {:.2}% of \
-         the frame; {:.1} s",
+         the frame (around the {:.4}% of sites with a merged sample at or above {PIN_FRACTION} of \
+         the raw pin, {:.0} DN over black); {:.1} s",
         cutoffs[0],
         cutoffs[1],
         cutoffs[2],
         100.0 * guarded,
+        100.0 * pinned_share,
+        norm.pin,
         started.elapsed().as_secs_f64()
     );
     if let Some(line) = &chroma_line {
@@ -1571,6 +1733,37 @@ mod tests {
         ));
         let _ = std::fs::remove_dir_all(&dir);
         dir.join(cutoffs::STORE_FILE)
+    }
+
+    /// `--detail`'s spellings: the three names, a budget number in range,
+    /// and refusals for anything else.
+    #[test]
+    fn detail_names_and_budgets_parse() {
+        assert_eq!(Detail::parse("natural").unwrap(), Detail::Natural);
+        assert_eq!(
+            Detail::parse("safe").unwrap(),
+            Detail::Budget {
+                name: "safe",
+                budget: SAFE_BUDGET
+            }
+        );
+        assert_eq!(
+            Detail::parse("crisp").unwrap(),
+            Detail::Budget {
+                name: "crisp",
+                budget: CRISP_BUDGET
+            }
+        );
+        assert_eq!(
+            Detail::parse("2.5").unwrap(),
+            Detail::Budget {
+                name: "given",
+                budget: 2.5
+            }
+        );
+        for bad in ["sharp", "0.9", "7", "NaN"] {
+            assert!(Detail::parse(bad).is_err(), "{bad}");
+        }
     }
 
     /// The joint fit over planted spectra: three channels with no roll-off.

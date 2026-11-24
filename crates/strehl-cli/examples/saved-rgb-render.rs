@@ -87,6 +87,7 @@ fn main() -> Result<()> {
         black: tone[0],
         white: tone[1],
         contrast: tone[2],
+        shoulder: None,
     });
     dev.exposure_gain = 1.0;
     let baseline = develop(&read_rgb(Path::new(text("baseline_rgb")?), w * h)?, &dev);

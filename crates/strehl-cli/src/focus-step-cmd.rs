@@ -16,6 +16,15 @@
 //! taken as safe (it lost nothing) and width / 3.6 as the edge. This is one
 //! subject's evidence; the report says so.
 //!
+//! With a subject (`--subject`, or the run manifest's `plan.subject`; plan
+//! S4) the width, its percentiles and the step are over the tiles that touch
+//! the subject, each judged in the geometry of the plane where it is
+//! sharpest; the whole frame's figures are reported beside them. MEASURED
+//! (2026-11-24, `experiments/subject-highlights-detail-2026-11-23/impl/s4`):
+//! on the weevil and scarab stacks the two agree, because tiles of a plain
+//! backdrop never peak inside a run; the subject matters where the backdrop
+//! has texture of its own.
+//!
 //! Read-only over the capture. The measure compares a tile with itself
 //! across focus; it says nothing about image quality.
 
@@ -38,6 +47,11 @@ pub struct FocusStepArgs {
     /// Use at most this many planes, evenly spread (0: all).
     #[arg(long, default_value_t = 0)]
     pub max_planes: usize,
+    /// Measure only the tiles of the subject (a manifest with
+    /// `plan.subject`, or `strehl subject --out`), with a margin of half a
+    /// tile (plan S4). Default: the run manifest's subject, if any.
+    #[arg(long)]
+    pub subject: Option<PathBuf>,
 }
 
 /// Tile edge in green-site-plane samples (64 sensor pixels).
@@ -69,6 +83,42 @@ pub struct FocusStep {
     pub oversampling: Option<f64>,
     /// Plain-language reading of the result.
     pub summary: String,
+    /// With a subject (plan S4), the fields above are over the tiles that
+    /// touch it: where it came from (`"manifest"` or `"given"`; absent,
+    /// which reads as null, without one), how many tiles touch it, and the
+    /// whole frame's figures beside them.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub subject: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub subject_tiles: Option<usize>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub whole_frame: Option<Widths>,
+}
+
+/// One population's sharp widths: see [`FocusStep`]'s fields of the same
+/// names.
+#[derive(Clone, Debug, Serialize)]
+pub struct Widths {
+    pub tiles_measured: usize,
+    pub width: Option<f64>,
+    pub width_p10: Option<f64>,
+    pub width_p90: Option<f64>,
+    pub suggested_step: Option<u32>,
+}
+
+impl Widths {
+    /// From sorted widths.
+    fn of(sorted: &[f64]) -> Self {
+        let enough = sorted.len() >= MIN_TILES;
+        let width = enough.then(|| percentile(sorted, 0.5));
+        Self {
+            tiles_measured: sorted.len(),
+            width,
+            width_p10: enough.then(|| percentile(sorted, 0.1)),
+            width_p90: enough.then(|| percentile(sorted, 0.9)),
+            suggested_step: width.map(|w| (w / SAFE).floor().max(1.0) as u32),
+        }
+    }
 }
 
 /// Fine-detail energy per tile of one decoded exposure.
@@ -151,6 +201,17 @@ fn half_width(positions: &[f64], curve: &[f64]) -> Option<(usize, f64)> {
 /// Measures a run. Planes are ordered by focus position; repeated positions
 /// (retakes, bursts) are measured once.
 pub fn measure(dir: &Path, max_planes: usize) -> Result<FocusStep> {
+    measure_with(dir, max_planes, None)
+}
+
+/// [`measure`], over the tiles that touch `subject` when given: a tile is the
+/// subject's when it touches the outline (grown by half a tile) as mapped to
+/// the plane where the tile is sharpest.
+pub fn measure_with(
+    dir: &Path,
+    max_planes: usize,
+    subject: Option<&crate::subject_use::LoadedSubject>,
+) -> Result<FocusStep> {
     let mut planes: Vec<(f64, PathBuf)> = Vec::new();
     for g in recorded_groups(dir)? {
         let (Some(target), Some(first)) = (g.target, g.files.iter().find(|f| f.durable)) else {
@@ -177,12 +238,13 @@ pub fn measure(dir: &Path, max_planes: usize) -> Result<FocusStep> {
     let pool = rayon::ThreadPoolBuilder::new()
         .num_threads(8.min(rayon::current_num_threads()))
         .build()?;
-    let energies: Vec<(usize, Vec<f64>)> = pool.install(|| {
+    let energies: Vec<(usize, Vec<f64>, [usize; 2])> = pool.install(|| {
         planes
             .par_iter()
-            .map(|(_, path)| -> Result<(usize, Vec<f64>)> {
+            .map(|(_, path)| -> Result<(usize, Vec<f64>, [usize; 2])> {
                 let frame = strehl_raw::decode(path).with_context(|| path.display().to_string())?;
-                Ok(tile_energy(&frame))
+                let (tw, e) = tile_energy(&frame);
+                Ok((tw, e, [frame.active.width, frame.active.height]))
             })
             .collect::<Result<_>>()
     })?;
@@ -195,15 +257,58 @@ pub fn measure(dir: &Path, max_planes: usize) -> Result<FocusStep> {
     let mut gaps: Vec<f64> = positions.windows(2).map(|w| w[1] - w[0]).collect();
     gaps.sort_by(f64::total_cmp);
     let spacing = gaps[gaps.len() / 2];
-    let mut widths: Vec<f64> = (0..tiles)
+    // Per tile: the plane of its peak and its width, where measured.
+    let peaks: Vec<Option<(usize, f64)>> = (0..tiles)
         .into_par_iter()
-        .filter_map(|t| {
+        .map(|t| {
             let curve: Vec<f64> = energies.iter().map(|e| e.1[t]).collect();
-            half_width(&positions, &curve).map(|(_, w)| w)
+            half_width(&positions, &curve)
         })
         .collect();
+    let mut widths: Vec<f64> = peaks.iter().flatten().map(|(_, w)| *w).collect();
     widths.sort_by(f64::total_cmp);
+    // With a subject, the tiles that touch it; the whole frame's figures
+    // are kept beside them.
+    let (tw, active) = (energies[0].0.max(1), energies[0].2);
+    let tile_px = 2.0 * TILE as f64;
+    let rect = |t: usize| {
+        let (x, y) = ((t % tw) as f64, (t / tw) as f64);
+        [
+            x * tile_px,
+            y * tile_px,
+            (x + 1.0) * tile_px,
+            (y + 1.0) * tile_px,
+        ]
+    };
+    let chosen = subject.map(|s| {
+        let region = s.region(active);
+        let touching = (0..tiles).filter(|&t| region.touches(rect(t), 1.0)).count();
+        let mut w: Vec<f64> = peaks
+            .iter()
+            .enumerate()
+            .filter_map(|(t, p)| {
+                let (at, w) = (*p)?;
+                region
+                    .touches(rect(t), s.scale_at(Some(positions[at])))
+                    .then_some(w)
+            })
+            .collect();
+        w.sort_by(f64::total_cmp);
+        (s.origin.as_str().to_string(), touching, w)
+    });
+    let whole = chosen.as_ref().map(|_| Widths::of(&widths));
+    let (subject_name, subject_tiles) = match &chosen {
+        Some((name, touching, _)) => (Some(name.clone()), Some(*touching)),
+        None => (None, None),
+    };
+    if let Some((_, _, w)) = chosen {
+        widths = w;
+    }
     let measured = widths.len();
+    let of = match subject_tiles {
+        Some(n) => format!("{n} subject tiles"),
+        None => format!("{tiles} tiles"),
+    };
     let mut result = FocusStep {
         planes: planes.len(),
         spacing,
@@ -215,10 +320,18 @@ pub fn measure(dir: &Path, max_planes: usize) -> Result<FocusStep> {
         suggested_step: None,
         oversampling: None,
         summary: String::new(),
+        subject: subject_name,
+        subject_tiles,
+        whole_frame: whole,
+    };
+    let on = if result.subject.is_some() {
+        "On the subject: "
+    } else {
+        ""
     };
     if measured < MIN_TILES {
         result.summary = format!(
-            "Not measurable: {measured} of {tiles} tiles come into and out of focus inside this run (at least {MIN_TILES} are needed). Survey a range that holds sharp detail with room on both sides."
+            "{on}Not measurable: {measured} of {of} come into and out of focus inside this run (at least {MIN_TILES} are needed). Survey a range that holds sharp detail with room on both sides."
         );
         return Ok(result);
     }
@@ -232,38 +345,55 @@ pub fn measure(dir: &Path, max_planes: usize) -> Result<FocusStep> {
     result.oversampling = Some(oversampling);
     result.summary = if width < 2.0 * spacing {
         format!(
-            "Detail stays sharp over about {width:.0} focus units, under two of this run's steps of {spacing:.0}: the planes are too far apart to measure it well, and fine detail between them may be lost. A step of {step:.0} is suggested."
+            "{on}Detail stays sharp over about {width:.0} focus units, under two of this run's steps of {spacing:.0}: the planes are too far apart to measure it well, and fine detail between them may be lost. A step of {step:.0} is suggested."
         )
     } else if oversampling >= 1.4 {
         format!(
-            "Detail stays sharp over about {width:.0} focus units. A step of {step:.0} would have been enough here, {oversampling:.1} times this run's {spacing:.0}: about {:.0} % of the planes, the time and the disk. (Width / {SAFE}; measured on one subject so far.)",
+            "{on}Detail stays sharp over about {width:.0} focus units. A step of {step:.0} would have been enough here, {oversampling:.1} times this run's {spacing:.0}: about {:.0} % of the planes, the time and the disk. (Width / {SAFE}; measured on one subject so far.)",
             100.0 / oversampling
         )
     } else {
         format!(
-            "Detail stays sharp over about {width:.0} focus units; this run's step of {spacing:.0} suits it (suggested {step:.0})."
+            "{on}Detail stays sharp over about {width:.0} focus units; this run's step of {spacing:.0} suits it (suggested {step:.0})."
         )
     };
     Ok(result)
 }
 
 pub fn run(args: &FocusStepArgs) -> Result<()> {
-    let r = measure(&args.dir, args.max_planes)?;
+    let subject = crate::subject_use::resolve(&args.dir, args.subject.as_deref())?;
+    let r = measure_with(&args.dir, args.max_planes, subject.as_ref())?;
     println!("run             : {}", args.dir.display());
     println!(
         "planes          : {} measured, spaced {:.1} focus units",
         r.planes, r.spacing
     );
-    println!(
-        "tiles           : {} of {} peak inside the run",
-        r.tiles_measured, r.tiles
-    );
+    match (&r.subject, r.subject_tiles) {
+        (Some(from), Some(n)) => println!(
+            "tiles           : {} of the {n} touching the subject ({from}) peak inside the run, of {} in the frame",
+            r.tiles_measured, r.tiles
+        ),
+        _ => println!(
+            "tiles           : {} of {} peak inside the run",
+            r.tiles_measured, r.tiles
+        ),
+    }
     if let (Some(w), Some(lo), Some(hi)) = (r.width, r.width_p10, r.width_p90) {
         println!("sharp width     : {w:.1} focus units (10th-90th percentile {lo:.1}-{hi:.1})");
         println!(
             "suggested step  : {} (width / {SAFE}); the edge is width / {EDGE} = {:.0}",
             r.suggested_step.unwrap_or(0),
             (w / EDGE).floor()
+        );
+    }
+    if let Some(f) = &r.whole_frame {
+        println!(
+            "whole frame     : {} tiles peak inside the run; sharp width {} (10th-90th percentile {}-{}), suggested step {}",
+            f.tiles_measured,
+            f.width.map_or("-".into(), |w| format!("{w:.1}")),
+            f.width_p10.map_or("-".into(), |w| format!("{w:.1}")),
+            f.width_p90.map_or("-".into(), |w| format!("{w:.1}")),
+            f.suggested_step.map_or("-".into(), |s| s.to_string())
         );
     }
     println!("summary         : {}", r.summary);

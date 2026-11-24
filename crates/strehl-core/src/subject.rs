@@ -8,6 +8,8 @@
 //! - [`live_view_subject`] does the same on live-view JPEG frames for a loose
 //!   first outline.
 //! - [`outline`]: rings normalised to the active area and their raster.
+//! - [`region`]: the outline as a region the calibrations and checks read
+//!   (plan S4): tiles touching it, its bounding box, in any plane's geometry.
 //!
 //! Ported from the prototype `experiments/subject-highlights-detail-2026-11-23/
 //! subject-mask.py` and `live-mask.py`; deviations are listed in
@@ -21,6 +23,8 @@ pub mod live;
 mod morph;
 #[path = "subject-outline.rs"]
 pub mod outline;
+#[path = "subject-region.rs"]
+pub mod region;
 #[path = "subject-select.rs"]
 pub mod select;
 #[path = "subject-trace.rs"]
@@ -32,6 +36,7 @@ pub use evidence::{
 };
 pub use live::{LiveFrame, live_frame_cells, live_view_evidence, live_view_subject};
 pub use outline::{MAX_RING_POINTS, Ring, Source, ThresholdKind, rasterize, ring_area};
+pub use region::{REGION_CELL_PX, SubjectRegion, plane_scale};
 pub use select::{Depth, Params, Quiet, Selection, Stats, quiet, select};
 
 /// Layout of RAW evidence over an active area of `width` x `height` sensor

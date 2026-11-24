@@ -1,0 +1,44 @@
+== stack-1795300522964-6430 local rules (safe master)
+subject p99.9 all: 1.0689
+block  16 pct 75 ratio 2.0 nb 1: set aside 0.579 %, diffuse top 1.0689
+block  32 pct 75 ratio 2.0 nb 1: set aside 0.847 %, diffuse top 1.0689
+block  64 pct 75 ratio 2.0 nb 1: set aside 1.284 %, diffuse top 1.0689
+block  64 pct 50 ratio 2.0 nb 1: set aside 3.586 %, diffuse top 0.9210
+block  64 pct 50 ratio 2.0 nb 2: set aside 2.353 %, diffuse top 1.0594
+block  32 pct 50 ratio 2.0 nb 1: set aside 2.510 %, diffuse top 1.0689
+block 128 pct 50 ratio 2.0 nb 1: set aside 5.100 %, diffuse top 0.0938
+block  64 pct 50 ratio 3.0 nb 1: set aside 1.734 %, diffuse top 1.0689
+desaturated above 2 x p90 (sat < 0.31): set aside 0.721 %, top 0.5952
+desaturated above 4 x p90 (sat < 0.31): set aside 0.573 %, top 0.5948
+== stack-1795300522964-6430 pinned plus local (safe master; pinned value 1.0689)
+pinned at 0.95 of the pin, dilated  0 quads: pinned share 0.277 %, set aside 0.843 %, diffuse top 0.8081
+pinned at 0.95 of the pin, dilated  4 quads: pinned share 0.799 %, set aside 1.329 %, diffuse top 0.3836
+pinned at 0.95 of the pin, dilated 16 quads: pinned share 2.840 %, set aside 3.350 %, diffuse top 0.2013
+pinned at 0.80 of the pin, dilated  0 quads: pinned share 0.365 %, set aside 0.921 %, diffuse top 0.6475
+pinned at 0.80 of the pin, dilated  4 quads: pinned share 1.031 %, set aside 1.537 %, diffuse top 0.3029
+pinned at 0.80 of the pin, dilated 16 quads: pinned share 3.659 %, set aside 4.144 %, diffuse top 0.1611
+pinned at 0.60 of the pin, dilated  0 quads: pinned share 0.482 %, set aside 1.023 %, diffuse top 0.4900
+pinned at 0.60 of the pin, dilated  4 quads: pinned share 1.319 %, set aside 1.803 %, diffuse top 0.2329
+pinned at 0.60 of the pin, dilated 16 quads: pinned share 4.575 %, set aside 5.040 %, diffuse top 0.1423
+== stack-1795460665629-8651 local rules (safe master)
+subject p99.9 all: 0.5677
+block  16 pct 75 ratio 2.0 nb 1: set aside 0.845 %, diffuse top 0.2784
+block  32 pct 75 ratio 2.0 nb 1: set aside 0.920 %, diffuse top 0.2634
+block  64 pct 75 ratio 2.0 nb 1: set aside 0.957 %, diffuse top 0.2547
+block  64 pct 50 ratio 2.0 nb 1: set aside 3.381 %, diffuse top 0.2248
+block  64 pct 50 ratio 2.0 nb 2: set aside 2.075 %, diffuse top 0.2294
+block  32 pct 50 ratio 2.0 nb 1: set aside 2.898 %, diffuse top 0.2371
+block 128 pct 50 ratio 2.0 nb 1: set aside 5.305 %, diffuse top 0.2168
+block  64 pct 50 ratio 3.0 nb 1: set aside 1.152 %, diffuse top 0.2746
+desaturated above 2 x p90 (sat < 0.33): set aside 0.023 %, top 0.5564
+desaturated above 4 x p90 (sat < 0.33): set aside 0.005 %, top 0.5564
+== stack-1795460665629-8651 pinned plus local (safe master; pinned value 1.0689)
+pinned at 0.95 of the pin, dilated  0 quads: pinned share 0.011 %, set aside 0.845 %, diffuse top 0.2784
+pinned at 0.95 of the pin, dilated  4 quads: pinned share 0.250 %, set aside 1.023 %, diffuse top 0.2748
+pinned at 0.95 of the pin, dilated 16 quads: pinned share 2.697 %, set aside 3.427 %, diffuse top 0.2684
+pinned at 0.80 of the pin, dilated  0 quads: pinned share 0.028 %, set aside 0.845 %, diffuse top 0.2784
+pinned at 0.80 of the pin, dilated  4 quads: pinned share 0.596 %, set aside 1.287 %, diffuse top 0.2703
+pinned at 0.80 of the pin, dilated 16 quads: pinned share 5.989 %, set aside 6.608 %, diffuse top 0.2610
+pinned at 0.60 of the pin, dilated  0 quads: pinned share 0.074 %, set aside 0.845 %, diffuse top 0.2784
+pinned at 0.60 of the pin, dilated  4 quads: pinned share 1.355 %, set aside 1.929 %, diffuse top 0.2623
+pinned at 0.60 of the pin, dilated 16 quads: pinned share 11.909 %, set aside 12.380 %, diffuse top 0.2472

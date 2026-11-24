@@ -327,6 +327,34 @@ REGISTRY: dict[str, Declared] = {
         ),
         note="Default for pixel-shift stacks (owner decision 2026-11-16; second subject pending). Explicitly on, it refuses a stack whose diffraction cutoff it cannot measure.",
     ),
+    "STREHL_DETAIL": Declared(
+        kind="control",
+        default="safe (noise budget 1.7 x the unrestored in 0.30-0.50 cycles/px)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "merge_cmd/optical-restore.rs Detail::from_env(): unset or `safe` "
+            "-> budget 1.7, `crisp` -> 3.3, a number in 1.0-6.0 -> that budget, "
+            "`natural` -> the fixed 0.70 px target with no budget; restore() "
+            "takes core::choose_sigma on green unless "
+            "STREHL_OPTICAL_RESTORE_SIGMA gives the target. Published by "
+            "`stack --detail`; read only when the optical restoration runs."
+        ),
+        note="Plan D2 (2026-11-24): the owner's Detail control, safe by default (owner decision).",
+    ),
+    "STREHL_SUBJECT": Declared(
+        kind="control",
+        default="unset (the capture manifest's plan.subject, if any)",
+        verified="code",
+        backend="pyramid",
+        evidence=(
+            "image_out/tone-subject.rs activate(): unset -> manifest.json "
+            "plan.subject; a JSON file -> its rings; `off` -> none. With no "
+            "subject, place() returns the frame tone unchanged and the write "
+            "is byte-identical. Published by `stack --subject`."
+        ),
+        note="Plan S4/X6 (2026-11-24): white from the subject's diffuse level with a highlight shoulder.",
+    ),
     "STREHL_GROUP_JOURNAL": Declared(
         kind="control",
         default="on (pixel-shift group measurements are kept in cache_root()/groups/)",
@@ -643,10 +671,10 @@ REGISTRY: dict[str, Declared] = {
     ),
     "STREHL_OPTICAL_RESTORE_SIGMA": Declared(
         kind="control",
-        default="0.70 (the prototype's arm f5)",
+        default="unset (the target is chosen by the Detail budget, STREHL_DETAIL)",
         verified="code",
         backend="pyramid",
-        evidence="merge_cmd/optical-restore.rs sigma_t(): unset -> 0.70 px; read only under STREHL_OPTICAL_RESTORE=on.",
+        evidence="merge_cmd/optical-restore.rs sigma_t(): unset -> None and the Detail budget chooses; a value in 0.3-3.0 px is used as given; read only when the optical restoration runs.",
         note="Experiment knob for the target sharpness.",
     ),
     "STREHL_OPTICAL_RESTORE_CUTOFF": Declared(

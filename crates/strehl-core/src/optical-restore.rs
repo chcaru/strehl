@@ -744,6 +744,123 @@ pub fn gain_grid(m: &ChannelModel, n: usize, sigma_t: f64, max_gain: f64) -> Vec
         .collect()
 }
 
+/// Plan D2: the band, cycles/px, whose noise power the restoration's
+/// strength is budgeted on.
+pub const NOISE_BAND: (f64, f64) = (0.30, 0.50);
+/// Plan D2's candidate targets, px: the shipped 0.70 down to 0.35 in steps
+/// of [`SIGMA_STEP`], each floored at the system ([`design_response`]).
+pub const SIGMA_WIDEST: f64 = 0.70;
+pub const SIGMA_SHARPEST: f64 = 0.35;
+pub const SIGMA_STEP: f64 = 0.01;
+
+/// `sum r^2 w / sum w` over the 2-D frequencies of an `n x n` grid
+/// (`fftfreq` order) whose radius lies in `[band.0, band.1)`: the power a
+/// response `r` passes of a spectrum `w(fx, fy)` there, over what passes
+/// unfiltered.
+pub fn band_power_ratio(
+    response: &[f64],
+    n: usize,
+    weight: impl Fn(f64, f64) -> f64,
+    band: (f64, f64),
+) -> f64 {
+    assert_eq!(response.len(), n * n);
+    let (mut num, mut den) = (0.0f64, 0.0f64);
+    for (i, r) in response.iter().enumerate() {
+        let (fx, fy) = (freq(i % n, n), freq(i / n, n));
+        let f = (fx * fx + fy * fy).sqrt();
+        if f >= band.0 && f < band.1 {
+            let w = weight(fx, fy).max(0.0);
+            num += r * r * w;
+            den += w;
+        }
+    }
+    if den > 0.0 { num / den } else { 1.0 }
+}
+
+/// The noise cost of a response (designed [`gain_grid`] or delivered
+/// [`kernel_response`]) in `band`: restored over unrestored noise power,
+/// under the channel's measured noise spectrum.
+pub fn noise_rise(m: &ChannelModel, response: &[f64], n: usize, band: (f64, f64)) -> f64 {
+    band_power_ratio(
+        response,
+        n,
+        |fx, fy| radial_at(&m.noise, (fx * fx + fy * fy).sqrt()),
+        band,
+    )
+}
+
+/// The amplitude a response gives the channel's modelled signal in `band`
+/// (`exp(log_a) f^-alpha H^2`), over the unrestored: the square root of the
+/// power ratio.
+pub fn signal_gain(m: &ChannelModel, response: &[f64], n: usize, band: (f64, f64)) -> f64 {
+    band_power_ratio(
+        response,
+        n,
+        |fx, fy| {
+            let f = (fx * fx + fy * fy).sqrt().max(1e-3);
+            m.log_a.exp() * f.powf(-m.alpha) * system_mtf(m, fx, fy).powi(2)
+        },
+        band,
+    )
+    .sqrt()
+}
+
+/// The strength plan D2 chose.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct Strength {
+    /// The target Gaussian, px.
+    pub sigma: f64,
+    /// Its designed noise rise in [`NOISE_BAND`].
+    pub rise: f64,
+    /// Whether that rise is inside the budget. When even the widest
+    /// candidate's is not, the widest is taken.
+    pub within: bool,
+}
+
+/// The candidate targets, widest first: exactly [`SIGMA_WIDEST`] first.
+pub fn sigma_candidates() -> Vec<f64> {
+    let count = ((SIGMA_WIDEST - SIGMA_SHARPEST) / SIGMA_STEP).round() as usize;
+    (0..=count)
+        .map(|k| SIGMA_WIDEST - k as f64 * SIGMA_STEP)
+        .collect()
+}
+
+/// Plan D2: the sharpest candidate target whose designed noise rise in
+/// [`NOISE_BAND`] (the gain grid on an `n x n` grid, under `m`'s noise) is at
+/// most `budget` times the unrestored; the widest candidate when none is.
+///
+/// A linear filter cannot change a band's signal-to-noise; what it can do is
+/// lift signal and noise together. The budget bounds how far the noise is
+/// lifted where it dominates the picture's grain (the finest bands), which
+/// puts the lift there at about `sqrt(budget)` in amplitude. The stack's own
+/// signal-to-noise decides which target that is: where signal is weak the
+/// Wiener factor already holds the gain back, so a target costs less and a
+/// narrower one fits; where it is strong the target goes through nearly
+/// whole and a wider one is the sharpest inside the budget.
+pub fn choose_sigma(m: &ChannelModel, n: usize, budget: f64, max_gain: f64) -> Strength {
+    let rises: Vec<(f64, f64)> = sigma_candidates()
+        .into_par_iter()
+        .map(|sigma| {
+            (
+                sigma,
+                noise_rise(m, &gain_grid(m, n, sigma, max_gain), n, NOISE_BAND),
+            )
+        })
+        .collect();
+    match rises.iter().rev().find(|(_, rise)| *rise <= budget) {
+        Some(&(sigma, rise)) => Strength {
+            sigma,
+            rise,
+            within: true,
+        },
+        None => Strength {
+            sigma: rises[0].0,
+            rise: rises[0].1,
+            within: false,
+        },
+    }
+}
+
 /// A square spatial kernel of radius `r`, row-major `(2r + 1)^2`.
 #[derive(Clone, Debug)]
 pub struct Kernel {
@@ -867,6 +984,27 @@ pub fn kernel(
         }
     }
     chosen.expect("max_radius >= 4")
+}
+
+/// The frequency response of `k`'s taps on an `n x n` grid (`fftfreq`
+/// order): what the kernel delivers, against the design it approximates.
+pub fn kernel_response(k: &Kernel, n: usize) -> Vec<f64> {
+    let r = k.radius;
+    assert!(2 * r < n);
+    let ri = r as isize;
+    let mut resp = vec![C::default(); n * n];
+    for (i, t) in k.taps.iter().enumerate() {
+        let (dx, dy) = (
+            (i % (2 * r + 1)) as isize - ri,
+            (i / (2 * r + 1)) as isize - ri,
+        );
+        resp[(dy.rem_euclid(n as isize) as usize) * n + dx.rem_euclid(n as isize) as usize] = C {
+            re: f64::from(*t),
+            im: 0.0,
+        };
+    }
+    fft2(&Fft1::new(n), &mut resp);
+    resp.iter().map(|v| v.re).collect()
 }
 
 /// `src` (`w x h`) convolved with `k`, mirror-reflected at the borders.
@@ -1242,6 +1380,93 @@ mod tests {
         // target and the system, exactly.
         assert_eq!(design_response(0.7, 0.4, 0.3, 0.9), 0.3);
         assert!((design_response(0.7, 0.2, 0.3, 1.0) - target(0.7, 0.2)).abs() < 1e-15);
+    }
+
+    /// Plan D2: the noise rise grows as the target narrows; a budget picks
+    /// the sharpest candidate inside it, the widest when none fits, and the
+    /// sharpest of all when the budget is loose.
+    #[test]
+    fn the_budget_picks_the_sharpest_target_inside_it() {
+        let mut m = model(1e-6);
+        m.cutoff = 0.66;
+        let rises: Vec<f64> = sigma_candidates()
+            .iter()
+            .map(|&s| noise_rise(&m, &gain_grid(&m, 128, s, 8.0), 128, NOISE_BAND))
+            .collect();
+        assert_eq!(sigma_candidates()[0], SIGMA_WIDEST);
+        assert!(rises.windows(2).all(|w| w[1] >= w[0] - 1e-12), "{rises:?}");
+        assert!(rises[0] >= 1.0 - 1e-12, "never below the system");
+        let budget = 0.5 * (rises[0] + rises[rises.len() - 1]);
+        let s = choose_sigma(&m, 128, budget, 8.0);
+        assert!(s.within && s.rise <= budget);
+        let k = sigma_candidates()
+            .iter()
+            .position(|&c| c == s.sigma)
+            .unwrap();
+        assert!(k + 1 == rises.len() || rises[k + 1] > budget);
+        let none = choose_sigma(&m, 128, 0.5, 8.0);
+        assert!(!none.within && none.sigma == SIGMA_WIDEST);
+        let loose = choose_sigma(&m, 128, 1e9, 8.0);
+        assert!((loose.sigma - SIGMA_SHARPEST).abs() < 1e-12);
+        // More noise: the Wiener factor holds the gain back, so the same
+        // target costs less, and never more.
+        let noisy = ChannelModel {
+            noise: vec![1e-2; centres().len()],
+            ..m.clone()
+        };
+        let rise = |m: &ChannelModel| noise_rise(m, &gain_grid(m, 128, 0.45, 8.0), 128, NOISE_BAND);
+        assert!(rise(&noisy) <= rise(&m) + 1e-12);
+    }
+
+    /// The noise rise read off the kernel's response is what white noise
+    /// through the kernel shows: two independent noise images filtered, their
+    /// noise spectrum in the band over the unfiltered one's.
+    #[test]
+    fn the_kernel_noise_rise_is_what_noise_through_it_shows() {
+        let mut m = model(1e-6);
+        m.cutoff = 0.62;
+        let n = 128;
+        let k = kernel(&gain_grid(&m, n, 0.45, 8.0), n, 32, 0.02, (0.25, 0.40));
+        let want = noise_rise(&m, &kernel_response(&k, n), n, NOISE_BAND);
+        assert!(want > 1.3, "{want}");
+        let t = TILE;
+        let mut seed = 0x9E37_79B9_7F4A_7C15u64;
+        let mut u = move || {
+            seed ^= seed << 13;
+            seed ^= seed >> 7;
+            seed ^= seed << 17;
+            ((seed >> 11) as f64 / (1u64 << 53) as f64) as f32 - 0.5
+        };
+        let (mut before, mut after) = (SpectrumSum::new(), SpectrumSum::new());
+        let side = t + 2 * k.radius + 2;
+        for _ in 0..24 {
+            let a: Vec<f32> = (0..side * side).map(|_| u()).collect();
+            let b: Vec<f32> = (0..side * side).map(|_| u()).collect();
+            let core_of = |v: &[f32]| -> Vec<f32> {
+                let o = k.radius + 1;
+                (o..o + t)
+                    .flat_map(|y| v[y * side + o..y * side + o + t].to_vec())
+                    .collect()
+            };
+            before.add_pair(&core_of(&a), &core_of(&b));
+            after.add_pair(
+                &core_of(&convolve(&a, side, side, &k)),
+                &core_of(&convolve(&b, side, side, &k)),
+            );
+        }
+        let (sb, sa) = (before.radial(), after.radial());
+        let (mut num, mut den) = (0.0, 0.0);
+        for (i, f) in centres().into_iter().enumerate() {
+            if f >= NOISE_BAND.0 && f < NOISE_BAND.1 {
+                num += sa.noise[i] * sa.count[i];
+                den += sb.noise[i] * sb.count[i];
+            }
+        }
+        let got = num / den;
+        assert!(
+            (got / want - 1.0).abs() < 0.05,
+            "measured {got}, predicted {want}"
+        );
     }
 
     /// The truncated kernel reproduces the design within its stated error,

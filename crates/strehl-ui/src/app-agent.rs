@@ -1059,6 +1059,12 @@ impl StrehlApp {
                         .find(|r| r.cli_name() == value.as_str().unwrap())
                         .ok_or_else(|| anyhow::anyhow!("Unsupported resampler"))?
                 }
+                "detail" => {
+                    settings.detail = jobs::Detail::ALL
+                        .into_iter()
+                        .find(|d| d.cli_name() == value.as_str().unwrap())
+                        .ok_or_else(|| anyhow::anyhow!("Unsupported detail"))?
+                }
                 _ => anyhow::bail!("Unknown setting"),
             }
         }

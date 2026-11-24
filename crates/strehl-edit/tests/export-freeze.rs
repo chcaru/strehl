@@ -149,6 +149,7 @@ fn placed() -> LinearImage {
             white: 1.4,
             contrast: 0.55,
             exposure_gain: 1.3,
+            shoulder: None,
         }),
         ..scene()
     }

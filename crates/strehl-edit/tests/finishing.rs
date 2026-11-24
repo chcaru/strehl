@@ -397,6 +397,7 @@ fn white_balance_pick_neutralizes_the_sampled_patch_through_the_recipe() {
         white: 1.2,
         contrast: 0.55,
         exposure_gain: 1.1,
+        shoulder: None,
     };
     for placement in [None, Some(baseline)] {
         let image = cast_image([0.12, 0.16, 0.21], placement);

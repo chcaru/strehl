@@ -245,6 +245,7 @@ fn publication_fixture(directory: &Path) -> (RenderRequest, serde_json::Value) {
                 white: 1.0,
                 contrast: 0.0,
                 exposure_gain: 1.0,
+                shoulder: None,
             }),
             baked_recipe: None,
         },

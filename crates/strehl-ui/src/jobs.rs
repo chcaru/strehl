@@ -366,6 +366,58 @@ pub struct RenderSettings {
     /// An optional second pass writes a centrality rank, not a quality score.
     /// Off for new stacks: it decodes and warps every frame again on the CPU.
     pub confidence_map: bool,
+    /// How crisp the optical restoration makes the finest detail
+    /// (`--detail`, plan D2). Only four-shot stacks are restored.
+    pub detail: Detail,
+}
+
+/// The Detail control (plan D2): how far the restoration may raise the
+/// finest bands' noise for crispness. The engine measures each stack's own
+/// signal-to-noise and takes the sharpest target inside the budget.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Detail {
+    /// The earlier fixed target: lifts nothing the lens already delivers.
+    Natural,
+    /// Fine noise at most 1.7 times the unrestored (owner's default).
+    #[default]
+    Safe,
+    /// Fine noise at most 3.3 times the unrestored.
+    Crisp,
+}
+
+impl Detail {
+    pub const ALL: [Self; 3] = [Self::Natural, Self::Safe, Self::Crisp];
+
+    pub fn label(self) -> &'static str {
+        match self {
+            Self::Natural => "Natural",
+            Self::Safe => "Safe",
+            Self::Crisp => "Crisp",
+        }
+    }
+
+    pub fn cli_name(self) -> &'static str {
+        match self {
+            Self::Natural => "natural",
+            Self::Safe => "safe",
+            Self::Crisp => "crisp",
+        }
+    }
+
+    pub fn description(self) -> &'static str {
+        match self {
+            Self::Natural => {
+                "Restore to the lens's own response and no further; the finest grain stays as captured."
+            }
+            Self::Safe => {
+                "Sharpen the finest detail while its grain rises at most 1.7 times (fine detail about 1.3 times on the weevil)."
+            }
+            Self::Crisp => {
+                "Sharper again; the finest grain may rise 3.3 times (fine detail about 1.6 to 1.8 times on the weevil)."
+            }
+        }
+    }
 }
 
 impl Default for RenderSettings {
@@ -384,6 +436,7 @@ impl Default for RenderSettings {
             frame_limit: None,
             auto_exposure: false,
             confidence_map: false,
+            detail: Detail::Safe,
         }
     }
 }
@@ -885,6 +938,10 @@ pub(crate) fn render_command(
     }
     if request.settings.crop_to_coverage {
         command.arg("--cover=crop");
+    }
+    // Only the departure from the engine's default (safe), like `--fix-ca`.
+    if request.settings.detail != Detail::Safe {
+        command.arg(format!("--detail={}", request.settings.detail.cli_name()));
     }
     configure_render_environment(&mut command, request, std::env::vars_os());
     // A capture that records four-shot groups is stacked as its focal planes,
@@ -1731,6 +1788,7 @@ pub(crate) mod tests {
                 white: 1.0,
                 contrast: 0.0,
                 exposure_gain: 1.0,
+                shoulder: None,
             }),
             baked_recipe: None,
         };
@@ -2026,6 +2084,7 @@ pub(crate) mod tests {
             correct_lateral_ca: false,
             crop_to_coverage: true,
             confidence_map: true,
+            detail: Detail::Crisp,
             ..RenderSettings::default()
         };
         let explicit = render_command(&request, &request.source, partial).unwrap();
@@ -2045,6 +2104,7 @@ pub(crate) mod tests {
             "--refine-ca=off",
             "--cover=crop",
             "--confidence-map",
+            "--detail=crisp",
         ] {
             assert!(
                 arguments.iter().any(|value| value == argument),
@@ -2126,9 +2186,12 @@ pub(crate) mod tests {
         assert!(!settings.auto_exposure && !settings.confidence_map);
         assert_eq!(settings.pyramid_bands, Some(8));
         assert_eq!(settings.resampler, Resampler::Lanczos3);
+        // A recipe saved before the Detail control renders at the default.
+        assert_eq!(settings.detail, Detail::Safe);
         settings.frame_limit = Some(17);
         settings.auto_exposure = true;
         settings.confidence_map = true;
+        settings.detail = Detail::Natural;
         let round_trip: RenderSettings =
             serde_json::from_str(&serde_json::to_string(&settings).unwrap()).unwrap();
         assert_eq!(round_trip, settings);

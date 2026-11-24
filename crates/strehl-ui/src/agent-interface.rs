@@ -747,6 +747,15 @@ pub(crate) fn validate_settings(patch: &SettingsPatch) -> Result<(), String> {
                 )?;
                 None
             }
+            "detail" => {
+                ensure(
+                    value
+                        .as_str()
+                        .is_some_and(|s| ["natural", "safe", "crisp"].contains(&s)),
+                    "detail must be natural, safe or crisp",
+                )?;
+                None
+            }
             _ => return Err(format!("Unknown setting: {name}")),
         };
         if let Some((min, max, integer, nullable)) = range {

@@ -65,6 +65,113 @@ pub struct SubjectArgs {
     /// other; the grid is the JSON's `grid`.
     #[arg(long, hide = true)]
     pub dump_evidence: Option<PathBuf>,
+    /// The sharp width (focus units) the suggested bounds add half of on
+    /// each side. Default: the `width` of the run's `focus-step.json`, if
+    /// one exists, else 0.
+    #[arg(long)]
+    pub width: Option<f64>,
+}
+
+/// Suggested start and end focus for capturing the same subject again
+/// (plan S4): the subject's first and last sharp focus plus half a sharp
+/// width on each side, in the run's direction, rounded outward to whole
+/// focus units. Offered, not applied (owner's decision 1).
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct BoundsJson {
+    pub start: f64,
+    pub end: f64,
+    /// The sharp width used, focus units, and where it came from:
+    /// `"given"` (`--width`), `"focus-step"` (the run's `focus-step.json`)
+    /// or `"none"` (0).
+    pub sharp_width: f64,
+    pub width_from: String,
+    /// The run as captured: its first and last recorded focus, its planes.
+    pub run_start: f64,
+    pub run_end: f64,
+    pub run_planes: usize,
+    /// Recorded planes inside the suggestion, those outside it, and the
+    /// suggestion's span over the run's.
+    pub planes: usize,
+    pub planes_saved: usize,
+    pub fraction: f64,
+    /// The subject is sharpest at the run's first or last plane: it may
+    /// extend beyond what was captured, so that side is a lower bound.
+    pub reaches_run_start: bool,
+    pub reaches_run_end: bool,
+    /// The same from the planes holding the central 99 % of the in-focus
+    /// subject cells (`depth.core_*`): robust to the extremes the
+    /// three-plane mean puts one survey plane wide.
+    pub core: Option<BoundsCore>,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct BoundsCore {
+    pub start: f64,
+    pub end: f64,
+    pub planes: usize,
+    pub planes_saved: usize,
+    pub fraction: f64,
+}
+
+/// The run's planes (ordinal, recorded focus) in ordinal order, the depth,
+/// and a sharp width: [`BoundsJson`], or `None` without recorded positions.
+pub fn bounds(
+    depth: &DepthJson,
+    run: &[(u64, Option<f64>)],
+    width: f64,
+    width_from: &str,
+) -> Option<BoundsJson> {
+    let focus_of = |o: u64| run.iter().find(|p| p.0 == o).and_then(|p| p.1);
+    let (first, last) = (run.first()?, run.last()?);
+    let (run_start, run_end) = (first.1?, last.1?);
+    let dir = if run_end < run_start { -1.0 } else { 1.0 };
+    let half = 0.5 * width.max(0.0);
+    let positions: Vec<f64> = run.iter().filter_map(|p| p.1).collect();
+    let span = (run_end - run_start).abs().max(f64::MIN_POSITIVE);
+    // Start and end, rounded outward in the run's direction; planes inside.
+    let around = |a: f64, b: f64| {
+        let (s, e) = (a - dir * half, b + dir * half);
+        let (s, e) = if dir > 0.0 {
+            (s.floor(), e.ceil())
+        } else {
+            (s.ceil(), e.floor())
+        };
+        let (lo, hi) = (s.min(e), s.max(e));
+        let planes = positions.iter().filter(|p| (lo..=hi).contains(*p)).count();
+        (s, e, planes, (e - s).abs() / span)
+    };
+    let (start, end, planes, fraction) = around(depth.first_focus?, depth.last_focus?);
+    let core = match (
+        focus_of(depth.core_first_plane),
+        focus_of(depth.core_last_plane),
+    ) {
+        (Some(a), Some(b)) => {
+            let (start, end, planes, fraction) = around(a, b);
+            Some(BoundsCore {
+                start,
+                end,
+                planes,
+                planes_saved: positions.len() - planes,
+                fraction,
+            })
+        }
+        _ => None,
+    };
+    Some(BoundsJson {
+        start,
+        end,
+        sharp_width: width.max(0.0),
+        width_from: width_from.into(),
+        run_start,
+        run_end,
+        run_planes: positions.len(),
+        planes,
+        planes_saved: positions.len() - planes,
+        fraction,
+        reaches_run_start: depth.first_plane == first.0,
+        reaches_run_end: depth.last_plane == last.0,
+        core,
+    })
 }
 
 /// A run's planes in ordinal order: ordinal, recorded focus position,
@@ -209,6 +316,10 @@ pub struct SubjectJson {
     /// The raster grid the rings fill: columns, rows.
     pub grid: [usize; 2],
     pub summary: String,
+    /// Suggested bounds for the same subject (plan S4); absent when there is
+    /// no depth or the planes have no recorded focus.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bounds: Option<BoundsJson>,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -282,6 +393,7 @@ impl SubjectJson {
             active_px: e.layout.active_px,
             grid: [e.cols, e.rows],
             summary: sel.summary.clone(),
+            bounds: None,
         }
     }
 }
@@ -432,12 +544,55 @@ pub fn run(args: &SubjectArgs) -> Result<()> {
         sel.rings.len(),
         points.join(",")
     ));
-    let json = SubjectJson::new(&e, &sel, Some(provenance));
+    let mut json = SubjectJson::new(&e, &sel, Some(provenance));
     if let Some(d) = &json.depth {
         line(format!(
             "depth           : planes {} to {} (focus {:?} to {:?})",
             d.first_plane, d.last_plane, d.first_focus, d.last_focus
         ));
+        let (width, from) = match args.width {
+            Some(w) => (w, "given"),
+            None => std::fs::read_to_string(args.dir.join("focus-step.json"))
+                .ok()
+                .and_then(|t| serde_json::from_str::<serde_json::Value>(&t).ok())
+                .and_then(|v| v["width"].as_f64())
+                .map_or((0.0, "none"), |w| (w, "focus-step")),
+        };
+        let run: Vec<(u64, Option<f64>)> = all.iter().map(|(o, (pos, _))| (*o, *pos)).collect();
+        json.bounds = bounds(d, &run, width, from);
+        if let Some(b) = &json.bounds {
+            line(format!(
+                "bounds          : start {:.0}, end {:.0} (sharp width {:.0}, {}): {} of {} planes, {} saved, {:.0} % of the range{}{}",
+                b.start,
+                b.end,
+                b.sharp_width,
+                b.width_from,
+                b.planes,
+                b.run_planes,
+                b.planes_saved,
+                100.0 * b.fraction,
+                if b.reaches_run_start {
+                    "; sharpest at the first plane"
+                } else {
+                    ""
+                },
+                if b.reaches_run_end {
+                    "; sharpest at the last plane"
+                } else {
+                    ""
+                }
+            ));
+            if let Some(c) = &b.core {
+                line(format!(
+                    "bounds (core)   : start {:.0}, end {:.0}: {} planes, {} saved, {:.0} % of the range",
+                    c.start,
+                    c.end,
+                    c.planes,
+                    c.planes_saved,
+                    100.0 * c.fraction
+                ));
+            }
+        }
     }
     line(format!(
         "area            : {:.2} % of the frame",
@@ -493,6 +648,44 @@ mod tests {
         assert_eq!(some.iter().map(|p| p.0).collect::<Vec<_>>(), vec![3, 5]);
         assert!(choose(&all, Some(&[500]), None, 13).is_err());
         assert_eq!(choose(&all[..5], None, None, 13).unwrap().len(), 5);
+    }
+
+    /// Bounds: half a sharp width each side in the run's direction, rounded
+    /// outward, with the planes kept and saved; either direction of focus.
+    #[test]
+    fn bounds_from_depth() {
+        let depth =
+            |first: u64, last: u64, core: (u64, u64), focus: &dyn Fn(u64) -> f64| DepthJson {
+                first_plane: first,
+                last_plane: last,
+                first_focus: Some(focus(first)),
+                last_focus: Some(focus(last)),
+                core_first_plane: core.0,
+                core_last_plane: core.1,
+            };
+        // 100 planes from 1000, step 10, rising.
+        let up = |o: u64| 1000.0 + 10.0 * (o as f64 - 1.0);
+        let run: Vec<(u64, Option<f64>)> = (1..=100).map(|o| (o, Some(up(o)))).collect();
+        let b = bounds(&depth(21, 70, (25, 66), &up), &run, 25.0, "given").unwrap();
+        // Focus 1200 - 12.5 and 1690 + 12.5, outward: 1187 and 1703.
+        assert_eq!((b.start, b.end), (1187.0, 1703.0));
+        assert_eq!((b.planes, b.planes_saved, b.run_planes), (52, 48, 100));
+        assert!((b.fraction - 516.0 / 990.0).abs() < 1e-12);
+        assert!(!b.reaches_run_start && !b.reaches_run_end);
+        let core = b.core.unwrap();
+        assert_eq!((core.start, core.end, core.planes), (1227.0, 1663.0, 44));
+        // Falling focus (as the close tile: 62800 down by 13).
+        let down = |o: u64| 62800.0 - 13.0 * (o as f64 - 1.0);
+        let run: Vec<(u64, Option<f64>)> = (1..=153).map(|o| (o, Some(down(o)))).collect();
+        let b = bounds(&depth(1, 120, (5, 110), &down), &run, 0.0, "none").unwrap();
+        assert_eq!((b.start, b.end), (62800.0, down(120)));
+        assert_eq!((b.planes, b.planes_saved), (120, 33));
+        assert!(b.reaches_run_start && !b.reaches_run_end);
+        let b = bounds(&depth(1, 120, (5, 110), &down), &run, 13.0, "given").unwrap();
+        assert_eq!((b.start, b.end), (62807.0, down(120) - 7.0));
+        // No recorded focus: no bounds.
+        let blind: Vec<(u64, Option<f64>)> = (1..=10).map(|o| (o, None)).collect();
+        assert!(bounds(&depth(2, 8, (2, 8), &up), &blind, 10.0, "given").is_none());
     }
 
     /// The JSON carries the agreed top-level keys, and parses back.
