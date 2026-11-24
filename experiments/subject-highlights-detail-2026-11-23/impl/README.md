@@ -1,11 +1,11 @@
 # Subject, highlights and detail: implementation log
 
-**Status:** stages Q (Q1 to Q7), S1 to S3 and the owner's bug list are built on
-`studio2/subject-impl` (2026-11-23). Not pushed, not installed, Pi not deployed. Nothing
-in this round was run on the rig. **Plan:**
+**Status:** the whole plan except tiled capture (deferred) is built and on `main`:
+stages Q, S, X, R and D and the owner's bug list (2026-11-23 and 24). The Pi runs X3
+(deployed 2026-11-24); the rig gates below were run on the weevil's pronotum. **Plan:**
 [subject, highlights and detail](../../../docs/proposals/2026-11-subject-highlights-and-detail-plan.md).
-**Ledger rows:** `shd-bugs`, `shd-q-restore`, `shd-q-planecheck`, `shd-q-capture` and
-`shd-s` (all 2026-11-23) in [the milestone ledger](../../../docs/agents/milestone-ledger.md).
+**Ledger rows:** `shd-*` (2026-11-23 and 24) in
+[the milestone ledger](../../../docs/agents/milestone-ledger.md).
 
 Labels: MEASURED, VERIFIED, DERIVED, ARGUED, UNVERIFIED, as in `AGENTS.md`.
 
@@ -50,17 +50,35 @@ The owner's existing default template is whatever was last typed into the field;
   re-selecting from the kept evidence. Not built: the add/subtract brush and the depth
   limit (the engine keeps no per-plane evidence for it yet).
 
-## Before the owner uses it
+## The rest of the plan (2026-11-24)
 
-1. Deploy the Pi host (it carries `new_plan`, `subject`, `starting` and Q3; older hosts
-   are sent none of them) and install the desktop.
-2. Rig gates still open: Q3 (a second test shot in about 10 s with "manage power" on),
-   Q6 (stop a five-plane capture after three, stack it), Q7 (about 0.5 px on the rig as
-   it stands, under 0.1 px when still), the live Auto outline on real survey frames,
-   and Q5's retake count on the swaying rig.
+| Stage | Built | Evidence |
+| --- | --- | --- |
+| X3 | The Pi takes highlight groups (`Plan.highlight`: shutter, every, range, shots) after the base group at the same plane number and focus, per-position shutters, and `queue_pass`; journal `tier` and `exposure` ([format](tiers.md)). The plan's Exposure step offers them and counts their time | Rig: two 21-plane captures, every highlight group at its base group's plane and focus, 42 and 22 shutter changes; 19.0 s a plane with a group, 11.3 s without (MEASURED, [rig](rig/)) |
+| X4 | Highlight groups fused at the gather: identity by tier, measured ratio, replacement near the pin, sparse patches on CPU and GPU, noise scaled, writer ceiling raised ([results](fusion/results.md)) | Bytes identical without tiers; no pinned site left where the companion is not pinned; hand-over 0.975-1.005 on the rig; 17 of 21 planes fused, 4 refused for sway (VERIFIED, MEASURED) |
+| X1 | One Calibrate survey at two shutters, read by `strehl survey` ([results](census/results.md)); its outline becomes the subject | Rig: 49 RAWs in 179 s; ratio 0.2500 measured against 0.2500; glints to 2.5x the 1/4 s full scale ([evidence](rig/evidence/survey-pronotum.json)) |
+| X2 | The survey's three choices in the Exposure step, the suggested one first | The pronotum: a highlight pass at 2 s with 1/25 s groups |
+| X5 | Highlight groups kept apart in the follower; pinned planes offered a highlight pass (two stops shorter where a group still pinned) | Unit-tested; the checker's `pinned` and `tier` from X4 |
+| X6 | White from the subject's diffuse level with a shoulder (engine, [results](detail/results.md)); the master keeps fused values above 1 | Scarab 1.44 stops brighter; bytes identical without a subject. Not built: a RAW-referred clipping view in Develop |
+| S4 | Metering, bounds offer, focus-step, plane checker and Develop region from the subject ([results](s4/results.md)) | Weevil bounds save 33 planes (core 66); a fault on the backdrop asks for no retake |
+| R1-R4 | "Re-shoot…" in the Stack station's pinned region popover: rig continuity, highlight, shadow or retake pass into the same capture, stack again | Unit-tested. Not built: a probe group, infill planes, RAW evidence kinds in evidence.strehl |
+| D2, D3 | "Detail" (Natural, Safe, Crisp; Safe by default) from each stack's noise; the guard follows real pinning ([results](detail/results.md)) | Safe: noise rise 0.93-0.97 of B on four stacks; weevil fine amplitude 1.27-1.29; unrestored share 1.81 % to 0.77 % |
 
-## Next stages
+Rig gates of the first round, run 2026-11-24 on the pronotum: Q3 (test shots after the
+first in 8-11 s with "manage power" on), Q6 (a capture stopped after four of five planes
+passes the stopped-capture check and stacks), Q7 (0.45 px rms along the vertical at
+2.6 Hz, "up to 1/43 s"), the live Auto outline on a real 31-frame sweep (MEASURED).
 
-S4 (the subject drives metering, bounds, step, checks and shares), X1 and X2 (one
-Calibrate pass and the three-way exposure advice), then X3, X4 and X6 with a Pi deploy
-and a rig session for X7 (plan section 8).
+## Open
+
+- The owner's look at native crops: base, fused, fused with "Tame glints"; the Detail
+  strengths.
+- On a swaying rig some highlight groups are refused (4 of 21); stillness first.
+- Optical restoration is skipped where every measured tile is near clipping (the 2 s
+  pronotum capture): with fusion the guard could read the fused data.
+- The A7CR white level: the engine reports 15360, the data reach 16383 (census note).
+- Remote exposure changes are undone at the camera's shutdown by design (the Pi restores
+  each connection's settings); the camera body now reads 1/15 s, not 1 s.
+- Not built: the add/subtract brush and depth limit (S3), a RAW-referred clipping view
+  (X6), a probe group and infill (R), pausing highlight groups when no base group pins
+  (X5).

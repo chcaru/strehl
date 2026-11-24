@@ -1,8 +1,7 @@
 # Subject, highlights and detail: a plan
 
-**Status:** Proposal (2026-11-23). Stages Q (Q1 to Q7) and S1 to S3 are built on
-`studio2/subject-impl`, not yet rig-tested
-([implementation log](../../experiments/subject-highlights-detail-2026-11-23/impl/README.md)).
+**Status:** Built on `main` (2026-11-23 and 24), stages Q, S, X, R and D, with the gaps
+listed in the [implementation log](../../experiments/subject-highlights-detail-2026-11-23/impl/README.md).
 The owner's decisions of 2026-11-23 are recorded in section 9; tiled capture (section 12)
 is deferred.
 **Date:** 2026-11-23.
