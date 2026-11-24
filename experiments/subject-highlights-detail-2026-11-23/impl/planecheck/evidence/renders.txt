@@ -1,0 +1,31 @@
+== base-one-s
+pixel shift     : frame 16 demoted to member 1: witness tiles disagree locally (p99/median z^2 3.32): motion, a focus slip or a wrong member
+pixel shift     : frame 6 demoted to member 1: witness tiles disagree locally (p99/median z^2 4.57): motion, a focus slip or a wrong member
+pixel shift     : frame 14 demoted to member 1: witness tiles disagree locally (p99/median z^2 6.76): motion, a focus slip or a wrong member
+pixel shift     : frame 18 demoted to member 1: offsets [(0, -1), (1, -1), (1, 1)] do not cover the four CFA parities
+pixel shift     : frame 21 demoted to member 1: offsets [(0, -1), (1, -1), (1, -1)] do not cover the four CFA parities
+pixel shift     : frame 22 demoted to member 1: offsets [(0, -1), (1, -1), (0, -1)] do not cover the four CFA parities
+pixel shift     : frame 23 demoted to member 1: offsets [(0, -1), (2, -1), (2, 0)] do not cover the four CFA parities
+pixel shift     : frame 20 demoted to member 1: witness tiles disagree locally (p99/median z^2 8.82): motion, a focus slip or a wrong member
+exit 0 seconds 31
+== new-one-s
+pixel shift     : frame 18 demoted to member 1: offsets [(0, -1), (1, -1), (1, 1)] do not cover the four CFA parities: a shot slipped by a whole photosite
+pixel shift     : frame 21 demoted to member 1: offsets [(0, -1), (1, -1), (1, -1)] do not cover the four CFA parities: a shot slipped by a whole photosite
+pixel shift     : frame 23 demoted to member 1: offsets [(0, -1), (2, -1), (2, 0)] do not cover the four CFA parities: a shot slipped by a whole photosite
+pixel shift     : frame 22 demoted to member 1: offsets [(0, -1), (1, -1), (0, -1)] do not cover the four CFA parities: a shot slipped by a whole photosite
+exit 0 seconds 13
+== base-weevil
+pixel shift     : frame 195 demoted to member 1: witness pairs misregistered by 0.385 photosite after residual compensation
+exit 0 seconds 60
+== new-weevil
+pixel shift     : frame 195 demoted to member 1: witness pairs misregistered by 0.385 photosite after residual compensation
+exit 0 seconds 52
+== weevil, base against new
+shape (6336, 9504, 3) (6336, 9504, 3), dtype uint16 uint16
+pixels: identical (numpy.array_equal)
+tag Software differs at char 22: ...'strehl 0.1.0-alpha.6 (unknown)'... vs ...'strehl 0.1.0-alpha.6 (ea97fcedbe65-dirty)'...
+== stopped 1 s capture, base against new
+shape (6336, 9504, 3) (6336, 9504, 3), dtype uint16 uint16
+pixels: differ at 99.8986 % of pixels; largest difference 65535 of 65535
+tag ImageDescription differs at char 318: ...'ated in raw DN before any gain. Tone rendering: black 0.000045, white 0.390838 (linear, luminance percentiles 0.1/99.9 with white mapped to '... vs ...'ated in raw DN before any gain. Tone rendering: black 0.000064, white 0.390764 (linear, luminance percentiles 0.1/99.9 with white mapped to '...
+tag Software differs at char 22: ...'strehl 0.1.0-alpha.6 (unknown)'... vs ...'strehl 0.1.0-alpha.6 (ea97fcedbe65-dirty)'...
