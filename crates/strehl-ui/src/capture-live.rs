@@ -43,6 +43,14 @@ pub(crate) enum LiveIntent {
     SetRoi(Roi),
     /// A new subject outline (plan S3), or none.
     SetSubject(Option<Subject>),
+    /// Find the subject automatically (plan S2), or again with other
+    /// Sensitivity, Grow and Buffer.
+    AutoSubject,
+    AutoParams {
+        sensitivity: f32,
+        grow: f32,
+        buffer_px: f32,
+    },
     /// The camera magnifier at `ratio` (0 off) centred at `x`, `y` of 639 x 479.
     Magnify { ratio: u32, x: u16, y: u16 },
 }
@@ -417,6 +425,10 @@ pub(crate) struct LiveView {
     outline_edit: OutlineEdit,
     /// An outline sent to the host, shown until the host reports it.
     outline_sent: Option<Vec<Vec<Pos2>>>,
+    /// The automatic selection, as the station has it.
+    pub auto: AutoView,
+    /// The sliders while dragged.
+    auto_draft: Option<[f32; 3]>,
     drag: Option<BoxDrag>,
     /// A box sent to the host, shown until the host reports it (or for
     /// three seconds), so a resized box does not jump back meanwhile.
@@ -446,6 +458,8 @@ impl Default for LiveView {
             outline: false,
             outline_edit: OutlineEdit::None,
             outline_sent: None,
+            auto: AutoView::default(),
+            auto_draft: None,
             drag: None,
             sent: None,
             preview: None,
@@ -673,6 +687,7 @@ impl LiveView {
             self.outline_sent = None;
         }
         if self.outline {
+            self.auto_panel(ui, photo, palette, &mut out);
             self.outline_ui(
                 ui,
                 &p,
@@ -854,6 +869,16 @@ impl LiveView {
                         self.threshold = t.round() as u8;
                     }
                 });
+                if self.outline && style::button(ui, "Auto", if self.auto.running { ButtonKind::On } else { ButtonKind::Quiet }, 22.0, self.auto.frames >= 5 && !self.auto.running, palette)
+                    .on_hover_text(if self.auto.frames >= 5 {
+                        format!("Find the subject in the {} live frames of the last survey", self.auto.frames)
+                    } else {
+                        "Survey first: Auto reads the live frames the survey shows as it sweeps focus".into()
+                    })
+                    .clicked()
+                {
+                    out.push(LiveIntent::AutoSubject);
+                }
                 for (label, flag) in [("Clipping", 0), ("Grid", 1), ("Subject box", 2), ("Outline", 3)] {
                     let on = match flag {
                         0 => self.clipping,
@@ -1451,6 +1476,108 @@ fn subject_box(
 #[cfg(test)]
 #[path = "capture-live-tests.rs"]
 mod tests;
+
+/// The automatic selection as the live view shows it.
+#[derive(Clone, Debug, Default, PartialEq)]
+pub(crate) struct AutoView {
+    /// Live frames kept from the last survey.
+    pub frames: usize,
+    pub running: bool,
+    /// What was found, or why nothing was.
+    pub line: Option<String>,
+    /// Sensitivity, Grow and Buffer of the selection shown.
+    pub params: Option<[f32; 3]>,
+}
+
+impl LiveView {
+    /// The automatic selection's panel at the top right of the picture:
+    /// its summary and the three sliders, which select again from the kept
+    /// evidence when let go.
+    fn auto_panel(
+        &mut self,
+        ui: &mut Ui,
+        photo: Rect,
+        palette: &CapturePalette,
+        out: &mut Vec<LiveIntent>,
+    ) {
+        let Some(line) = self.auto.line.clone() else {
+            return;
+        };
+        let height = if self.auto.params.is_some() {
+            132.0
+        } else {
+            52.0
+        };
+        let rect = Rect::from_min_size(
+            egui::pos2(photo.right() - 290.0, photo.top() + 10.0),
+            egui::vec2(280.0, height),
+        );
+        glass(ui.painter(), rect, palette);
+        ui.scope_builder(
+            egui::UiBuilder::new().max_rect(rect.shrink2(egui::vec2(10.0, 8.0))),
+            |ui| {
+                ui.spacing_mut().item_spacing.y = 3.0;
+                style::caps(ui, "Auto outline", palette);
+                ui.add(
+                    egui::Label::new(egui::RichText::new(line).size(11.0).color(palette.ink2))
+                        .truncate(),
+                );
+                let Some(shown) = self.auto.params else {
+                    return;
+                };
+                let mut values = self.auto_draft.unwrap_or(shown);
+                let mut released = false;
+                for (i, (label, range, hint)) in [
+                    (
+                        "Sensitivity",
+                        1.0..=10.0,
+                        "Higher keeps only the surest detail",
+                    ),
+                    (
+                        "Grow",
+                        0.0..=6.0,
+                        "How far weaker detail joins what is sure",
+                    ),
+                    (
+                        "Buffer px",
+                        0.0..=96.0,
+                        "Margin around the outline, in sensor pixels",
+                    ),
+                ]
+                .into_iter()
+                .enumerate()
+                {
+                    ui.horizontal(|ui| {
+                        ui.spacing_mut().slider_width = 150.0;
+                        ui.add_sized(
+                            egui::vec2(74.0, 16.0),
+                            egui::Label::new(
+                                egui::RichText::new(label).size(11.0).color(palette.ink2),
+                            ),
+                        );
+                        let r = ui
+                            .add_enabled(
+                                !self.auto.running,
+                                egui::Slider::new(&mut values[i], range).show_value(true),
+                            )
+                            .on_hover_text(hint);
+                        if r.changed() {
+                            self.auto_draft = Some(values);
+                        }
+                        released |= r.drag_stopped() || (r.changed() && !r.dragged());
+                    });
+                }
+                if released && let Some([sensitivity, grow, buffer_px]) = self.auto_draft.take() {
+                    out.push(LiveIntent::AutoParams {
+                        sensitivity,
+                        grow,
+                        buffer_px,
+                    });
+                }
+            },
+        );
+    }
+}
 
 /// How near (points) a vertex is still taken by a press.
 const VERTEX_REACH: f32 = 7.0;

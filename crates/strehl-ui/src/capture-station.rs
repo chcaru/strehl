@@ -902,6 +902,15 @@ impl CaptureWorkspace {
         let palette = palette.on_canvas();
         match self.station_mode() {
             StationMode::Plan => {
+                self.station.live.auto = super::live::AutoView {
+                    frames: self.survey_frames.len(),
+                    running: self.auto_subject.running(),
+                    line: self.auto_subject.line(),
+                    params: self
+                        .auto_subject
+                        .params()
+                        .map(|p| [p.sensitivity, p.grow, p.buffer_px]),
+                };
                 let intents = self.station.live.show(ui, s, &palette);
                 for intent in intents {
                     self.apply_live(s, intent);
@@ -1450,12 +1459,26 @@ impl CaptureWorkspace {
                 self.command(s, Command::Subject { subject })
             }
             LiveIntent::SetSubject(subject) => {
-                let roi = subject.map_or_else(
-                    strehl_capture::model::Roi::subject,
-                    |outline| outline.bounding_box(),
-                );
+                let roi = subject.map_or_else(strehl_capture::model::Roi::subject, |outline| {
+                    outline.bounding_box()
+                });
                 self.command(s, Command::Roi { roi });
             }
+            LiveIntent::AutoSubject => {
+                let active = super::auto_subject::active_px(s.host.camera_model.as_deref());
+                if let Err(e) = self.auto_subject.start(&self.survey_frames, active) {
+                    self.error = Some(format!("{e:#}"));
+                }
+            }
+            LiveIntent::AutoParams {
+                sensitivity,
+                grow,
+                buffer_px,
+            } => self.auto_subject.reselect(strehl_core::subject::Params {
+                sensitivity,
+                grow,
+                buffer_px,
+            }),
             LiveIntent::Magnify { ratio, x, y } => {
                 self.command(s, Command::Magnify { ratio, x, y })
             }

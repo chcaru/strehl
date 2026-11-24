@@ -22,6 +22,8 @@ use strehl_capture::{
     model::Plan,
     session::{Command, CommandRequest, PositionsKind},
 };
+#[path = "capture-auto-subject.rs"]
+pub(crate) mod auto_subject;
 #[path = "capture-fixture.rs"]
 pub(crate) mod fixture;
 #[path = "capture-flight.rs"]
@@ -139,6 +141,10 @@ pub(crate) struct CaptureWorkspace {
     /// Plan S1: an outline to give the host once it can take one (the
     /// subject's last outline, for a new stack of it).
     pending_subject: Option<strehl_capture::model::Subject>,
+    /// Plan S2/S3: the bounds survey's live frames and the automatic
+    /// selection made from them.
+    survey_frames: auto_subject::SurveyFrames,
+    auto_subject: auto_subject::AutoSubject,
 }
 impl CaptureWorkspace {
     pub fn new(path: Option<PathBuf>) -> Self {
@@ -191,6 +197,8 @@ impl CaptureWorkspace {
             station: station::Station::default(),
             stillness: Default::default(),
             pending_subject: None,
+            survey_frames: Default::default(),
+            auto_subject: Default::default(),
         }
     }
     fn calibrating(&self) -> bool {
@@ -229,6 +237,12 @@ impl CaptureWorkspace {
         if let Some((ratio, x, y)) = self.stillness.poll(&s, now) {
             // The magnifier as it was before the check.
             self.command(&s, Command::Magnify { ratio, x, y });
+        }
+        // Plan S2/S3: the survey's frames, and a selection found from them.
+        self.survey_frames.observe(&s);
+        self.auto_subject.poll();
+        if let Some(subject) = self.auto_subject.take_unsent() {
+            self.apply_live(&s, live::LiveIntent::SetSubject(Some(subject)));
         }
         // The subject's last outline, once the camera is ready for it.
         if self.pending_subject.is_some()
