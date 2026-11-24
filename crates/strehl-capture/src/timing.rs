@@ -18,13 +18,16 @@ pub fn initial_cycle(shutter: u64, settle_ms: u32) -> Option<Duration> {
     ))
 }
 
-/// What a highlight group adds to its plane (plan X3): its exposures, the
-/// camera's own time around them (MEASURED: a short four-shot group 3.6 s
-/// beyond its exposures, a single shot about 1.1 s), and two shutter
-/// changes (MEASURED 0.23-0.46 s each).
+/// What a highlight group adds to its plane (plan X3): its exposures and
+/// the time around them: the camera's own (a short four-shot group 3.6 s,
+/// a single shot about 1.1 s), the lens no longer moving on during the
+/// base group's last RAW fetch, and two shutter changes. MEASURED on the
+/// rig 2026-11-24 (`stack-1795512705325-11344`, 2 s base, 1/4 s groups):
+/// 19.0 s a plane with a group against 11.3 s without, 7.7 s for 1 s of
+/// exposure, so 6.0 s around a four-shot group with the changes below.
 pub fn highlight_group(shutter: u64, shots: u64) -> Option<Duration> {
     let exposure = shutter_seconds(shutter)?;
-    let overhead = if shots == 4 { 3.6 } else { 1.1 };
+    let overhead = if shots == 4 { 6.0 } else { 3.5 };
     Some(Duration::from_secs_f64(
         shots as f64 * exposure + overhead + 2.0 * 0.35,
     ))
