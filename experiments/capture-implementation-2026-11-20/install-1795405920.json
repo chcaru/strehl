@@ -1,0 +1,10 @@
+{
+  "sha256": {
+    "strehl-capture-headless": "b5afa69f7c0e8da0b5bb41f9b3cb70d27998540b0e6f20b5900bc1fbc24718ac",
+    "strehl-sony-ptp": "1c4d1adaf7a9d33a1035fc3fe01f028e420e38cae5ca61d900eeafd0a891ed76"
+  },
+  "backup": "/root/strehl-before-round4-1795405920",
+  "mount": [
+    "/run/strehl-raw"
+  ]
+}
