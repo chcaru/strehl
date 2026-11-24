@@ -1135,6 +1135,19 @@ impl StrehlApp {
                 .unwrap_or_else(|| "Not reported for this render".into()),
             mark: None,
         });
+        if let Some(restore) = &p.optical_restore {
+            checks.push(StackCheck {
+                title: "Optical restoration",
+                fact: restore.fact(),
+                // Whether the stack measured its own cutoff is a fact: a
+                // stand-in fit or no restoration is marked for a look.
+                mark: Some(match restore {
+                    crate::pipeline::OpticalRestore::Measured { .. }
+                    | crate::pipeline::OpticalRestore::Given { .. } => w::Mark::Fine,
+                    _ => w::Mark::Look,
+                }),
+            });
+        }
         let brackets = self.stack_station.rail.brackets();
         let ends: Vec<String> = brackets
             .iter()

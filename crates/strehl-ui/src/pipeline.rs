@@ -188,6 +188,85 @@ pub enum CoveragePlan {
     Uncovered,
 }
 
+/// The engine's optical restoration of the finished stack, as it reported
+/// it (`STREHL_UI_PROGRESS event=optical-restore`).
+#[derive(Clone, Debug, PartialEq)]
+pub(crate) enum OpticalRestore {
+    /// Restored with the cutoff fitted on this stack (green, cycles/px).
+    Measured { cutoff: f32 },
+    /// Restored with another capture's stored fit, because this stack's own
+    /// fit failed.
+    Stored {
+        cutoff: f32,
+        from: String,
+        from_focus: f32,
+        focus: f32,
+    },
+    /// Restored with a cutoff given by the operator's environment.
+    Given { cutoff: f32 },
+    /// Not restored, with the engine's reason (one token).
+    Off { reason: String },
+}
+
+impl OpticalRestore {
+    fn parse<'a>(field: &impl Fn(&str) -> Option<&'a str>) -> Option<Self> {
+        let number = |name: &str| {
+            field(name)
+                .and_then(|v| v.parse::<f32>().ok())
+                .filter(|v| v.is_finite())
+        };
+        match field("state")? {
+            "measured" => Some(Self::Measured {
+                cutoff: number("cutoff")?,
+            }),
+            "given" => Some(Self::Given {
+                cutoff: number("cutoff")?,
+            }),
+            "stored" => Some(Self::Stored {
+                cutoff: number("cutoff")?,
+                from: field("from")?.chars().take(80).collect(),
+                from_focus: number("from_focus")?,
+                focus: number("focus")?,
+            }),
+            "off" => Some(Self::Off {
+                reason: field("reason")
+                    .unwrap_or("unstated")
+                    .replace('-', " ")
+                    .chars()
+                    .take(160)
+                    .collect(),
+            }),
+            _ => None,
+        }
+    }
+
+    /// The Stack station's check line.
+    pub(crate) fn fact(&self) -> String {
+        match self {
+            Self::Measured { cutoff } => {
+                format!(
+                    "Restored \u{b7} lens cutoff measured on this stack ({cutoff:.3} cycles/px)"
+                )
+            }
+            Self::Stored {
+                cutoff,
+                from,
+                from_focus,
+                focus,
+            } => format!(
+                "Restored with a stored lens cutoff ({cutoff:.3} cycles/px from {from}, focus \
+                 {from_focus:.0}; this stack {focus:.0}): this stack could not measure its own"
+            ),
+            Self::Given { cutoff } => {
+                format!(
+                    "Restored \u{b7} lens cutoff given by the environment ({cutoff:.3} cycles/px)"
+                )
+            }
+            Self::Off { reason } => format!("Not restored: {reason}"),
+        }
+    }
+}
+
 #[derive(Debug, Default)]
 pub struct PipelineProgress {
     pub(crate) view: Option<ViewProgress>,
@@ -302,6 +381,8 @@ pub struct PipelineProgress {
     pub coverage_plan: Option<CoveragePlan>,
     pub frame_observations: BTreeMap<usize, FrameObservation>,
     pub tone: Option<String>,
+    /// What the optical restoration did (`event=optical-restore`).
+    pub(crate) optical_restore: Option<OpticalRestore>,
     pub events: VecDeque<PipelineEvent>,
     pending: String,
     discarding_line: bool,
@@ -755,6 +836,12 @@ impl PipelineProgress {
                 } else {
                     self.live_file = named;
                 }
+            }
+            return;
+        }
+        if field("event") == Some("optical-restore") {
+            if let Some(report) = OpticalRestore::parse(&field) {
+                self.optical_restore = Some(report);
             }
             return;
         }
@@ -1318,6 +1405,45 @@ memory plan     : 4 canonical chunks, 1 reusable frame worker, 1 retained + 1 sc
 folded          : 259 / 259 frames in 344.6 s (1.33 s per frame, 4 execution threads)\n\
 tone            : black 0.01568, white 0.51089 (linear), contrast 0.55\n\
 wrote           : result.partial.tiff (7032 x 4688, 16-bit RGB)\n";
+
+    /// The restoration's report, as the engine writes it, becomes the Stack
+    /// station's check; a malformed one is ignored.
+    #[test]
+    fn the_optical_restoration_report_names_a_stored_fit() {
+        let mut progress = PipelineProgress::default();
+        progress.ingest(
+            "STREHL_UI_PROGRESS event=optical-restore state=stored cutoff=0.776 \
+             from=stack-1795433406862-8651 from_focus=31239 focus=25175 fitted=0.900\n",
+        );
+        let report = progress.optical_restore.clone().unwrap();
+        assert_eq!(
+            report,
+            OpticalRestore::Stored {
+                cutoff: 0.776,
+                from: "stack-1795433406862-8651".into(),
+                from_focus: 31239.0,
+                focus: 25175.0
+            }
+        );
+        assert!(report.fact().contains("stack-1795433406862-8651"));
+        progress.ingest("STREHL_UI_PROGRESS event=optical-restore state=measured cutoff=0.740\n");
+        assert_eq!(
+            progress.optical_restore,
+            Some(OpticalRestore::Measured { cutoff: 0.740 })
+        );
+        progress.ingest(
+            "STREHL_UI_PROGRESS event=optical-restore state=off reason=its-depth-measurement-failed\n",
+        );
+        assert_eq!(
+            progress.optical_restore.as_ref().unwrap().fact(),
+            "Not restored: its depth measurement failed"
+        );
+        progress.ingest("STREHL_UI_PROGRESS event=optical-restore state=stored cutoff=0.7\n");
+        assert!(
+            matches!(progress.optical_restore, Some(OpticalRestore::Off { .. })),
+            "an incomplete report is ignored"
+        );
+    }
 
     #[test]
     fn the_fringe_preview_reports_its_own_progress_and_never_rewinds() {

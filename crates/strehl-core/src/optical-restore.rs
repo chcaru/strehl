@@ -31,7 +31,8 @@
 //!   blend of neighbouring planes cost against the in-focus image, from the
 //!   bins where the reference is reliable, made non-increasing.
 //!
-//! The filter ([`gain_grid`]) is `G = (T / H) S / (S + N)` with
+//! The filter ([`gain_grid`]) is `G = max(T S / (S + N), H) / H`
+//! ([`design_response`]: never below what the system delivers) with
 //! `H = MTF_diff(f / fc) sinc(fx) sinc(fy) M(f)`, `S` the fitted signal model,
 //! `T` a Gaussian of `sigma_t` px (a positive PSF: no ringing of its own),
 //! capped at `max_gain`, tapered to zero at the cutoff. It is applied as a
@@ -266,6 +267,35 @@ impl SpectrumSum {
             *n += v;
         }
         self.tiles += 1;
+    }
+
+    /// One pair's [`Self::pair_terms`] binned radially on its own (an
+    /// experiment record per tile; the mean over tiles of these is
+    /// [`Self::radial`] of their sum).
+    pub fn radial_terms(&self, terms: &PairTerms) -> Spectrum {
+        let mut s = vec![0.0; BINS];
+        let mut n = vec![0.0; BINS];
+        let mut c = vec![0.0; BINS];
+        for i in 0..TILE * TILE {
+            let b = self.bin[i];
+            if b < BINS {
+                s[b] += terms.signal[i];
+                n[b] += terms.noise[i];
+                c[b] += 1.0;
+            }
+        }
+        for b in 0..BINS {
+            if c[b] > 0.0 {
+                s[b] /= c[b];
+                n[b] /= c[b];
+            }
+        }
+        Spectrum {
+            signal: s,
+            noise: n,
+            count: c,
+            tiles: 1,
+        }
     }
 
     pub fn radial(&self) -> Spectrum {
@@ -666,7 +696,27 @@ pub fn target(sigma_t: f64, f: f64) -> f64 {
 /// cap to zero in one step, and no compact kernel can follow that.
 pub const TAPER_FROM: f64 = 0.85;
 
-/// The filter's gain at `(fx, fy)`.
+/// The restored response the filter is designed to deliver at radius `f`,
+/// where the system delivers `h` and the Wiener factor `S / (S + N)` is
+/// `wiener`: the Gaussian target of `sigma_t` px held back by the noise, and
+/// never less than the system already delivers (plan Q2). The one place the
+/// target is chosen; a strength set from the stack's signal-to-noise (plan
+/// D2) chooses `sigma_t` here.
+///
+/// Why the floor is on the held-back target and not on the target alone:
+/// with the target floored at `h`, the Wiener factor still lowers the band
+/// (to `h S / (S + N)`). MEASURED on the A7CR scarab's log (green, 0.4
+/// cycles/px): system 0.27, target 0.21, restored 0.19, so `S / (S + N)` is
+/// 0.90 there and a floored target alone would deliver 0.24, below the
+/// system. With the floor here the filter's gain is at least one below its
+/// taper: it lifts where the target asks for more than the lens gives and
+/// leaves a band alone where it does not.
+pub fn design_response(sigma_t: f64, f: f64, h: f64, wiener: f64) -> f64 {
+    (target(sigma_t, f) * wiener).max(h)
+}
+
+/// The filter's gain at `(fx, fy)`: [`design_response`] over the system's,
+/// capped at `max_gain`, tapered to zero at the cutoff.
 pub fn gain_at(m: &ChannelModel, fx: f64, fy: f64, sigma_t: f64, max_gain: f64) -> f64 {
     let f = (fx * fx + fy * fy).sqrt();
     if f == 0.0 {
@@ -684,7 +734,7 @@ pub fn gain_at(m: &ChannelModel, fx: f64, fy: f64, sigma_t: f64, max_gain: f64) 
         let u = (f - TAPER_FROM * m.cutoff) / ((1.0 - TAPER_FROM) * m.cutoff);
         0.5 * (1.0 + (std::f64::consts::PI * u).cos())
     };
-    (target(sigma_t, f) / h * s / (s + n)).min(max_gain) * taper
+    (design_response(sigma_t, f, h, s / (s + n)) / h).min(max_gain) * taper
 }
 
 /// The filter sampled on an `n x n` frequency grid (`fftfreq` order).
@@ -1144,7 +1194,8 @@ mod tests {
     }
 
     /// With negligible noise the restored transfer `G H` is the target below
-    /// the gain cap; with heavy noise the filter backs off.
+    /// the gain cap; with heavy noise the filter backs off to leaving the
+    /// band as it is.
     #[test]
     fn the_filter_reaches_the_target_where_signal_dominates() {
         let m = model(1e-12);
@@ -1153,8 +1204,44 @@ mod tests {
             assert!((got - target(0.7, f)).abs() < 1e-6, "{f}: {got}");
         }
         let noisy = model(1e3);
-        assert!(gain_at(&noisy, 0.3, 0.0, 0.7, 50.0) < 0.1);
+        assert!((gain_at(&noisy, 0.3, 0.0, 0.7, 50.0) - 1.0).abs() < 1e-12);
         assert_eq!(gain_at(&m, 0.65, 0.0, 0.7, 50.0), 0.0, "past the cutoff");
+    }
+
+    /// Plan Q2: where the lens delivers more than the target asks (a high
+    /// cutoff, a wide target), and at any noise, the restored response is
+    /// never below the system's below the taper; where the target asks for
+    /// more and noise is negligible, it is the target.
+    #[test]
+    fn the_restored_response_never_drops_below_the_system() {
+        for noise in [1e-12, 1e-4, 1e-2, 1e3] {
+            for (cutoff, sigma) in [(0.78, 0.70), (0.78, 1.0), (0.60, 0.70), (0.90, 0.5)] {
+                let mut m = model(noise);
+                m.cutoff = cutoff;
+                let mut f = 0.01;
+                while f < TAPER_FROM * cutoff {
+                    for (fx, fy) in [(f, 0.0), (f * 0.6, f * 0.8)] {
+                        let h = system_mtf(&m, fx, fy);
+                        let restored = gain_at(&m, fx, fy, sigma, 8.0) * h;
+                        assert!(
+                            restored >= h * (1.0 - 1e-12),
+                            "noise {noise}, cutoff {cutoff}, sigma {sigma}, f {f}: {restored} < {h}"
+                        );
+                    }
+                    f += 0.01;
+                }
+            }
+        }
+        // The lens better than the target: the band is left alone.
+        let mut sharp = model(1e-12);
+        sharp.cutoff = 0.78;
+        let h = system_mtf(&sharp, 0.4, 0.0);
+        assert!(target(0.7, 0.4) < h);
+        assert!((gain_at(&sharp, 0.4, 0.0, 0.7, 8.0) - 1.0).abs() < 1e-12);
+        // Planted spectra: the design response is the larger of the held-back
+        // target and the system, exactly.
+        assert_eq!(design_response(0.7, 0.4, 0.3, 0.9), 0.3);
+        assert!((design_response(0.7, 0.2, 0.3, 1.0) - target(0.7, 0.2)).abs() < 1e-15);
     }
 
     /// The truncated kernel reproduces the design within its stated error,

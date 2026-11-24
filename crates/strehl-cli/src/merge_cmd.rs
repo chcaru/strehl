@@ -10088,6 +10088,7 @@ fn run_pyramid_prepared_with_sensor(
     );
     let _carry = colour_carry::activate_if_requested(opts, temporal_active)?;
     let _restore = optical_restore::activate_if_requested(opts, temporal_active)?;
+    optical_restore::set_capture(&opts.dir, paths.first().map(|p| p.as_path()));
     ensure!(
         !(temporal_active && (colour_carry::active() || optical_restore::active())),
         "{} and {} cannot combine with temporal energy",
@@ -13005,10 +13006,13 @@ fn write_merged_observed_with_reconstruction(
                         restored_ok = true;
                         chroma_filtered = chroma;
                     }
-                    Err(e) if optical_restore::defaulted() => eprintln!(
-                        "optical restore : NOT APPLIED -- on by default, but {e:#}; writing the \
-                         unrestored image"
-                    ),
+                    Err(e) if optical_restore::defaulted() => {
+                        eprintln!(
+                            "optical restore : NOT APPLIED -- on by default, but {e:#}; writing the \
+                             unrestored image"
+                        );
+                        crate::ui_progress::optical_restore("state=off", Some(&format!("{e:#}")));
+                    }
                     Err(e) => return Err(e),
                 }
             }

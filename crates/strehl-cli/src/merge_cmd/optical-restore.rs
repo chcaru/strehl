@@ -47,6 +47,9 @@ use super::*;
 use std::sync::Mutex;
 use strehl_core::optical_restore as core;
 
+#[path = "optical-cutoffs.rs"]
+mod cutoffs;
+
 pub(super) const ENV: &str = "STREHL_OPTICAL_RESTORE";
 /// Target Gaussian sigma, output px (experiment control; default
 /// [`SIGMA_T`]).
@@ -155,6 +158,7 @@ pub(super) fn abandon(why: &str) {
     eprintln!(
         "optical restore : off for this render -- on by default for pixel-shift stacks, but {why}"
     );
+    crate::ui_progress::optical_restore("state=off", Some(why));
 }
 
 fn cutoff_override() -> Result<Option<[f64; 3]>> {
@@ -241,6 +245,71 @@ struct State {
     halves: Option<[Vec<Vec<f32>>; 2]>,
     /// Crops captured during the fold ([`capture`]), by frame and tile core.
     captured: Captured,
+    /// The capture's gear and focus, for the stored cutoff fits
+    /// ([`set_capture`]).
+    source: Option<Source>,
+}
+
+/// What a stored cutoff fit is keyed on, read when the render starts.
+#[derive(Clone, Debug, Default)]
+struct Source {
+    /// The capture folder's name.
+    name: String,
+    camera: Option<String>,
+    lens_type3: Option<u16>,
+    lens_model: Option<String>,
+    f_number: Option<f32>,
+    /// Median planned focus position (`manifest.json`).
+    focus: Option<f64>,
+}
+
+impl Source {
+    /// The gear key under system model `model`, or what is missing.
+    fn gear(&self, model: &str) -> std::result::Result<cutoffs::Gear, String> {
+        let mut missing = Vec::new();
+        if self.camera.is_none() {
+            missing.push("the camera model");
+        }
+        if self.lens_type3.is_none() {
+            missing.push("the lens (LensType3)");
+        }
+        if self.f_number.is_none() {
+            missing.push("the f-number");
+        }
+        if !missing.is_empty() {
+            return Err(format!(
+                "the first frame does not report {}",
+                missing.join(", ")
+            ));
+        }
+        Ok(cutoffs::Gear {
+            camera: self.camera.clone().unwrap_or_default(),
+            lens_type3: self.lens_type3.unwrap_or_default(),
+            lens_model: self.lens_model.clone(),
+            f_number: self.f_number.unwrap_or_default(),
+            model: model.into(),
+        })
+    }
+}
+
+/// Record the capture this render restores (its folder `dir` and first
+/// frame), for storing a measured cutoff and finding a stored one. Nothing
+/// unless restoration is on.
+pub(super) fn set_capture(dir: &Path, first: Option<&Path>) {
+    let mut guard = state();
+    let Some(st) = guard.as_mut() else { return };
+    let id = first.map(strehl_raw::identity_cached).unwrap_or_default();
+    st.source = Some(Source {
+        name: dir
+            .file_name()
+            .map(|n| n.to_string_lossy().into_owned())
+            .unwrap_or_default(),
+        camera: id.model,
+        lens_type3: id.lens_type3,
+        lens_model: id.lens_model,
+        f_number: id.f_number,
+        focus: cutoffs::manifest_focus(dir),
+    });
 }
 
 /// One crop per plane, by (frame, tile core).
@@ -302,6 +371,7 @@ pub(super) fn activate_if_requested(
                     "optical restore : off for this render -- on by default for pixel-shift stacks, \
                      but {why} ({ENV}=on makes that an error)"
                 );
+                crate::ui_progress::optical_restore("state=off", Some(why));
                 return Ok(None);
             }
             sigma_t()?;
@@ -864,6 +934,61 @@ fn max_filter(v: &[f32], w: usize, h: usize, r: usize) -> Vec<f32> {
     out
 }
 
+/// The experiment record of each tile (`STREHL_OPTICAL_RESTORE_DUMP`): its
+/// place, reference frames, whether the clipping test kept it out, the
+/// brightest sample of the merged planes and of each reference crop over the
+/// black-to-white range (per plane), and its own radial spectra per channel
+/// (halves and reference, signal and noise). Nothing here reaches the image.
+fn tile_records(
+    tiles: &[(UsableTile<'_>, bool)],
+    ha: &[Vec<f32>],
+    hb: &[Vec<f32>],
+    merged: &[Vec<f32>],
+    gw: usize,
+    norm: Norm,
+) -> Vec<serde_json::Value> {
+    let binner = core::SpectrumSum::new();
+    let peak = |planes: &[Vec<f32>]| -> Vec<f32> {
+        planes
+            .iter()
+            .map(|p| p.iter().copied().fold(f32::MIN, f32::max) / norm.range)
+            .collect()
+    };
+    let over = |planes: &[Vec<f32>], f: f32| -> usize {
+        planes
+            .iter()
+            .map(|p| p.iter().filter(|v| **v > f * norm.range).count())
+            .sum()
+    };
+    tiles
+        .par_iter()
+        .map(|((t, r0, r1), is_hot)| {
+            let a = tile_rgb(&crop(ha, gw, t.x0, t.y0), norm);
+            let b = tile_rgb(&crop(hb, gw, t.x0, t.y0), norm);
+            let ra = tile_rgb(r0, norm);
+            let rb = tile_rgb(r1, norm);
+            let channels: Vec<serde_json::Value> = (0..3)
+                .map(|c| {
+                    let own = binner.radial_terms(&binner.pair_terms(&a[c], &b[c]));
+                    let reference = binner.radial_terms(&binner.pair_terms(&ra[c], &rb[c]));
+                    serde_json::json!({
+                        "out_signal": own.signal, "out_noise": own.noise,
+                        "ref_signal": reference.signal, "ref_noise": reference.noise,
+                    })
+                })
+                .collect();
+            let m = crop(merged, gw, t.x0, t.y0);
+            serde_json::json!({
+                "x0": t.x0, "y0": t.y0, "frames": t.frames, "hot": is_hot,
+                "merged_peak": peak(&m), "ref_peak": [peak(r0), peak(r1)],
+                "ref_over_half": over(r0, 0.5) + over(r1, 0.5),
+                "ref_over_clip": over(r0, CLIP_FRACTION) + over(r1, CLIP_FRACTION),
+                "channels": channels,
+            })
+        })
+        .collect()
+}
+
 /// Restore `rgb` (interleaved linear camera RGB, `mw x mh`, normalised by
 /// `norm`) in place. `merged` is the full stack's planes (black-subtracted
 /// DN) on the `mw / 2 x mh / 2` quad grid, for the clipping guard. Returns
@@ -924,18 +1049,31 @@ pub(super) fn restore(
     // the same order as adding tile by tile.
     let (mut no_ref, mut hot) = (0usize, 0usize);
     let mut usable: Vec<UsableTile<'_>> = Vec::new();
+    // Experiment record (`STREHL_OPTICAL_RESTORE_DUMP`): every tile with its
+    // reference frames, near clipping or not, measured on its own.
+    let dumping = std::env::var_os(DUMP_ENV).is_some();
+    let mut per_tile: Vec<(UsableTile<'_>, bool)> = Vec::new();
     for t in &st.tiles {
         let [Some(r0), Some(r1)] = &t.reference else {
             no_ref += 1;
             continue;
         };
-        if clipped(merged, t.x0, t.y0) {
+        let is_hot = clipped(merged, t.x0, t.y0);
+        if dumping {
+            per_tile.push(((t, r0, r1), is_hot));
+        }
+        if is_hot {
             hot += 1;
             continue;
         }
         usable.push((t, r0, r1));
     }
     let used = usable.len();
+    let tile_dump: Vec<serde_json::Value> = if dumping {
+        tile_records(&per_tile, &ha, &hb, merged, gw, norm)
+    } else {
+        Vec::new()
+    };
     const BATCH: usize = 32;
     for batch in usable.chunks(BATCH) {
         let terms: Vec<_> = batch
@@ -1023,43 +1161,28 @@ pub(super) fn restore(
         std::fs::write(
             &path,
             serde_json::to_string(&serde_json::json!({
-                "centres": centres, "tiles": used, "channels": dump,
+                "centres": centres, "tiles": used, "channels": dump, "tile_records": tile_dump,
             }))?,
         )?;
     }
     let (joint, joint_rms) =
         core::fit_cutoff_joint(&centres, [&ref_signal[0], &ref_signal[1], &ref_signal[2]]);
-    let measured: [f64; 3] =
-        std::array::from_fn(|c| joint * core::WAVELENGTH_UM[1] / core::WAVELENGTH_UM[c]);
-    let (cutoffs, source) = match cutoff_override()? {
-        Some(given) => (
-            given,
-            format!(
-                "GIVEN by {CUTOFF_ENV}, not measured on this stack (its own joint fit: green {joint:.3})"
-            ),
-        ),
-        None => {
-            ensure!(
-                joint < JOINT_CEILING,
-                "optical restoration: the diffraction cutoff is not measurable on this stack (the one-aperture fit \
-                 of the reference frames ran to its ceiling: green {joint:.3} cycles/px; per channel \
-                 {:.3}/{:.3}/{:.3}). A single-shot frame cannot sample the lens's roll-off above its 0.5 \
-                 cycles/px Nyquist, and its demosaic structure reads as signal there. Measure the cutoff \
-                 on a four-shot run of the same setup (STREHL_CARRY_RGB=on) and pass it as \
-                 {CUTOFF_ENV}=r,g,b",
-                fits[0].0,
-                fits[1].0,
-                fits[2].0
-            );
-            (
-                measured,
-                format!(
-                    "one aperture fitted to all three reference channels (relative residual \
-                     {joint_rms:.4}; diffraction ratios from nominal wavelengths 600/535/465 nm)"
-                ),
-            )
-        }
-    };
+    let Choice {
+        cutoffs,
+        source,
+        event,
+    } = choose_cutoffs(
+        Fitted {
+            green: joint,
+            residual: joint_rms,
+            per_channel: [fits[0].0, fits[1].0, fits[2].0],
+            tiles: used,
+        },
+        cutoff_override()?,
+        st.source.as_ref(),
+        cutoffs::model_name(gather.is_some()),
+        &cutoffs::store_path(),
+    )?;
     let mut models = Vec::with_capacity(3);
     // Each channel's model, gain grid and kernel: independent, so designed
     // side by side, then reported in channel order.
@@ -1126,7 +1249,7 @@ pub(super) fn restore(
         std::fs::write(
             &path,
             serde_json::to_string(&serde_json::json!({
-                "centres": centres, "tiles": used, "channels": dump,
+                "centres": centres, "tiles": used, "channels": dump, "tile_records": tile_dump,
             }))?,
         )?;
     }
@@ -1224,7 +1347,8 @@ pub(super) fn restore(
     }
     eprintln!(
         "optical restore : ON ({}) -- target Gaussian sigma {sigma:.2} px, Wiener against the \
-         measured noise, gain cap {MAX_GAIN}, square-root domain{}",
+         measured noise, never below the system's response, gain cap {MAX_GAIN}, square-root \
+         domain{}",
         if defaulted() {
             "default for pixel-shift stacks".to_string()
         } else {
@@ -1261,5 +1385,300 @@ pub(super) fn restore(
     if let Some(line) = &chroma_line {
         eprintln!("{line}");
     }
+    crate::ui_progress::optical_restore(&event, None);
     Ok(chroma_line.is_some())
+}
+
+/// This stack's one-aperture fit, as [`choose_cutoffs`] weighs it.
+struct Fitted {
+    green: f64,
+    residual: f64,
+    /// Each channel's own fit ([`core::fit_cutoff`]), for the log.
+    per_channel: [f64; 3],
+    tiles: usize,
+}
+
+/// The cutoffs a render restores with, the log's account of them and the
+/// desktop's report (`event=optical-restore`).
+struct Choice {
+    cutoffs: [f64; 3],
+    source: String,
+    event: String,
+}
+
+/// The cutoffs R, G, B to restore with: given by [`CUTOFF_ENV`]; else this
+/// stack's joint fit below [`JOINT_CEILING`], which is kept in the store at
+/// `store`; else the nearest stored fit for the same gear
+/// ([`cutoffs::nearest`]); else an error saying why none could stand in.
+fn choose_cutoffs(
+    fitted: Fitted,
+    given: Option<[f64; 3]>,
+    source: Option<&Source>,
+    model: &str,
+    store: &Path,
+) -> Result<Choice> {
+    let Fitted {
+        green: joint,
+        residual: joint_rms,
+        per_channel,
+        tiles,
+    } = fitted;
+    let from_green = |g: f64| -> [f64; 3] {
+        std::array::from_fn(|c| g * core::WAVELENGTH_UM[1] / core::WAVELENGTH_UM[c])
+    };
+    if let Some(given) = given {
+        return Ok(Choice {
+            cutoffs: given,
+            source: format!(
+                "GIVEN by {CUTOFF_ENV}, not measured on this stack (its own joint fit: green {joint:.3})"
+            ),
+            event: format!("state=given cutoff={:.3}", given[1]),
+        });
+    }
+    if joint < JOINT_CEILING {
+        let stored = store_fit(source, model, joint, joint_rms, tiles, store);
+        return Ok(Choice {
+            cutoffs: from_green(joint),
+            source: format!(
+                "one aperture fitted to all three reference channels (relative residual \
+                 {joint_rms:.4}; diffraction ratios from nominal wavelengths 600/535/465 nm); {stored}"
+            ),
+            event: format!("state=measured cutoff={joint:.3}"),
+        });
+    }
+    let unmeasurable = format!(
+        "the diffraction cutoff is not measurable on this stack (the one-aperture fit of the \
+         reference frames ran to its ceiling: green {joint:.3} cycles/px; per channel \
+         {:.3}/{:.3}/{:.3})",
+        per_channel[0], per_channel[1], per_channel[2]
+    );
+    match stand_in(source, model, store) {
+        Ok((fit, focus)) => Ok(Choice {
+            cutoffs: from_green(fit.green),
+            source: format!(
+                "STORED fit of {} (focus {:.0}, this stack {focus:.0}; {} tiles, relative \
+                 residual {:.4}; {}), because {unmeasurable}",
+                fit.capture, fit.focus, fit.tiles, fit.residual, fit.origin
+            ),
+            event: format!(
+                "state=stored cutoff={:.3} from={} from_focus={:.0} focus={focus:.0} fitted={joint:.3}",
+                fit.green, fit.capture, fit.focus
+            ),
+        }),
+        Err(why) => anyhow::bail!(
+            "optical restoration: {unmeasurable}, and no stored fit can stand in: {why}. A \
+             single-shot frame cannot sample the lens's roll-off above its 0.5 cycles/px \
+             Nyquist, and its demosaic structure reads as signal there. Measure the cutoff on \
+             a four-shot run of the same setup (STREHL_CARRY_RGB=on) and pass it as \
+             {CUTOFF_ENV}=r,g,b"
+        ),
+    }
+}
+
+/// Keep a measured joint fit in the store ([`cutoffs`]), and say so for the
+/// log. A fit that cannot be keyed or written is not kept; the render goes on.
+fn store_fit(
+    source: Option<&Source>,
+    model: &str,
+    green: f64,
+    residual: f64,
+    tiles: usize,
+    path: &Path,
+) -> String {
+    let Some(source) = source else {
+        return "not stored (no capture recorded)".into();
+    };
+    let gear = match source.gear(model) {
+        Ok(g) => g,
+        Err(why) => return format!("not stored ({why})"),
+    };
+    let Some(focus) = source.focus else {
+        return "not stored (the capture manifest records no focus positions)".into();
+    };
+    let fit = cutoffs::Fit {
+        gear,
+        focus,
+        green,
+        residual,
+        tiles,
+        capture: source.name.clone(),
+        origin: "measured".into(),
+        build: crate::VERSION.into(),
+        recorded_unix_ms: std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map_or(0, |d| d.as_millis() as u64),
+    };
+    match cutoffs::record(path, fit) {
+        Ok(()) => format!(
+            "stored for stacks that cannot measure it ({})",
+            path.display()
+        ),
+        Err(e) => format!("NOT stored: {e:#}"),
+    }
+}
+
+/// The stored fit to stand in for this stack's cutoff, with this stack's
+/// focus position, or why there is none.
+fn stand_in(
+    source: Option<&Source>,
+    model: &str,
+    path: &Path,
+) -> std::result::Result<(cutoffs::Fit, f64), String> {
+    let source = source.ok_or("no capture recorded for this render")?;
+    let gear = source.gear(model)?;
+    let focus = source
+        .focus
+        .ok_or("the capture manifest records no focus positions")?;
+    let stored = cutoffs::load(path).unwrap_or_else(|e| {
+        eprintln!("optical restore : the stored cutoff fits are unreadable ({e:#}); using the built-in ones only");
+        Vec::new()
+    });
+    let all = cutoffs::candidates(stored);
+    cutoffs::nearest(&all, &gear, focus, &source.name)
+        .map(|f| (f.clone(), focus))
+        .ok_or_else(|| {
+            format!(
+                "none of {} stored fits is for {} / lens {} / f/{:.1} ({}) within {:.0} focus units of {focus:.0}",
+                all.len(),
+                gear.camera,
+                gear.lens_type3,
+                gear.f_number,
+                gear.model,
+                cutoffs::MAX_FOCUS_DISTANCE
+            )
+        })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn weevil() -> Source {
+        Source {
+            name: "stack-weevil".into(),
+            camera: Some("ILCE-7CR".into()),
+            lens_type3: Some(33094),
+            lens_model: None,
+            f_number: Some(5.6),
+            focus: Some(25_175.0),
+        }
+    }
+
+    fn store(name: &str) -> PathBuf {
+        let dir = std::env::temp_dir().join(format!(
+            "strehl-optical-choice-{name}-{}",
+            std::process::id()
+        ));
+        let _ = std::fs::remove_dir_all(&dir);
+        dir.join(cutoffs::STORE_FILE)
+    }
+
+    /// The joint fit over planted spectra: three channels with no roll-off.
+    fn fitted_on(signals: [Vec<f64>; 3]) -> Fitted {
+        let c = core::centres();
+        let (green, residual) = core::fit_cutoff_joint(&c, [&signals[0], &signals[1], &signals[2]]);
+        Fitted {
+            green,
+            residual,
+            per_channel: [green; 3],
+            tiles: 50,
+        }
+    }
+
+    /// A spectrum with no roll-off runs the fit to its ceiling; the nearest
+    /// stored fit for the same gear stands in, and the log and the desktop's
+    /// report both name it.
+    #[test]
+    fn a_spectrum_without_roll_off_takes_the_nearest_stored_fit() {
+        let c = core::centres();
+        let flat: Vec<f64> = c.iter().map(|f| f.powf(-2.0)).collect();
+        let fitted = fitted_on([flat.clone(), flat.clone(), flat]);
+        assert!(fitted.green >= JOINT_CEILING, "{}", fitted.green);
+        let path = store("fallback");
+        let choice = choose_cutoffs(fitted, None, Some(&weevil()), "diffraction", &path).unwrap();
+        assert!(
+            (choice.cutoffs[1] - 0.776).abs() < 1e-12,
+            "{:?}",
+            choice.cutoffs
+        );
+        assert!(
+            (choice.cutoffs[0] - 0.776 * 535.0 / 600.0).abs() < 1e-12,
+            "the channels keep one aperture"
+        );
+        assert!(
+            choice
+                .source
+                .starts_with("STORED fit of stack-1795433406862-8651")
+        );
+        assert!(choice.source.contains("ran to its ceiling"));
+        assert_eq!(
+            choice.event,
+            "state=stored cutoff=0.776 from=stack-1795433406862-8651 from_focus=31239 \
+             focus=25175 fitted=0.900"
+        );
+        // Nothing was stored for a fit that failed.
+        assert!(cutoffs::load(&path).unwrap().is_empty());
+    }
+
+    /// A measured fit is used and stored; a later stack nearer to it in
+    /// focus takes it over the seeds. Unknown gear has no stand-in, and the
+    /// error says so.
+    #[test]
+    fn a_measured_fit_is_stored_and_stands_in_later() {
+        let c = core::centres();
+        let planted: [Vec<f64>; 3] = std::array::from_fn(|ch| {
+            let fc = 0.70 * core::WAVELENGTH_UM[1] / core::WAVELENGTH_UM[ch];
+            c.iter()
+                .map(|f| f.powf(-1.5) * (core::mtf_diffraction(f / fc) * core::sinc(*f)).powi(2))
+                .collect()
+        });
+        let path = store("measured");
+        let mut first = weevil();
+        first.name = "stack-measured".into();
+        first.focus = Some(24_000.0);
+        let choice =
+            choose_cutoffs(fitted_on(planted), None, Some(&first), "diffraction", &path).unwrap();
+        assert!(
+            (choice.cutoffs[1] - 0.70).abs() < 0.0081,
+            "{:?}",
+            choice.cutoffs
+        );
+        assert!(choice.event.starts_with("state=measured cutoff="));
+        assert!(
+            choice
+                .source
+                .contains("stored for stacks that cannot measure it")
+        );
+        let stored = cutoffs::load(&path).unwrap();
+        assert_eq!(stored.len(), 1);
+        assert_eq!(stored[0].capture, "stack-measured");
+        let flat: Vec<f64> = c.iter().map(|f| f.powf(-2.0)).collect();
+        let later = choose_cutoffs(
+            fitted_on([flat.clone(), flat.clone(), flat.clone()]),
+            None,
+            Some(&weevil()),
+            "diffraction",
+            &path,
+        )
+        .unwrap();
+        assert!(
+            later.source.starts_with("STORED fit of stack-measured"),
+            "{}",
+            later.source
+        );
+        let mut other = weevil();
+        other.lens_type3 = Some(1);
+        let err = choose_cutoffs(
+            fitted_on([flat.clone(), flat.clone(), flat]),
+            None,
+            Some(&other),
+            "diffraction",
+            &path,
+        )
+        .err()
+        .unwrap()
+        .to_string();
+        assert!(err.contains("no stored fit can stand in"), "{err}");
+        let _ = std::fs::remove_dir_all(path.parent().unwrap());
+    }
 }
