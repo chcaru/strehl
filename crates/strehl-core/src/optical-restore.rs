@@ -268,6 +268,35 @@ impl SpectrumSum {
         self.tiles += 1;
     }
 
+    /// One pair's [`Self::pair_terms`] binned radially on its own (an
+    /// experiment record per tile; the mean over tiles of these is
+    /// [`Self::radial`] of their sum).
+    pub fn radial_terms(&self, terms: &PairTerms) -> Spectrum {
+        let mut s = vec![0.0; BINS];
+        let mut n = vec![0.0; BINS];
+        let mut c = vec![0.0; BINS];
+        for i in 0..TILE * TILE {
+            let b = self.bin[i];
+            if b < BINS {
+                s[b] += terms.signal[i];
+                n[b] += terms.noise[i];
+                c[b] += 1.0;
+            }
+        }
+        for b in 0..BINS {
+            if c[b] > 0.0 {
+                s[b] /= c[b];
+                n[b] /= c[b];
+            }
+        }
+        Spectrum {
+            signal: s,
+            noise: n,
+            count: c,
+            tiles: 1,
+        }
+    }
+
     pub fn radial(&self) -> Spectrum {
         let mut s = vec![0.0; BINS];
         let mut n = vec![0.0; BINS];

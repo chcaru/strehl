@@ -90,6 +90,28 @@ pub(crate) fn fringe_preview(state: &str, completed: usize, total: usize) {
     }
 }
 
+/// What the optical restoration did with this render
+/// (`merge_cmd/optical-restore.rs`), for the Stack station's checks:
+/// `state=measured|stored|given|off`, the green cutoff used, and for `stored`
+/// the capture whose fit stood in and both focus positions. `fields` are
+/// `key=value` tokens without the event name; `reason`, free text, is
+/// appended as one token.
+pub(crate) fn optical_restore(fields: &str, reason: Option<&str>) {
+    if enabled_value(std::env::var(ENV).ok().as_deref()) {
+        eprintln!("{}", optical_restore_line(fields, reason));
+    }
+}
+
+fn optical_restore_line(fields: &str, reason: Option<&str>) -> String {
+    match reason {
+        Some(r) => format!(
+            "STREHL_UI_PROGRESS event=optical-restore {fields} reason={}",
+            reason_token(r)
+        ),
+        None => format!("STREHL_UI_PROGRESS event=optical-restore {fields}"),
+    }
+}
+
 impl Progress {
     pub(crate) fn new(total: usize) -> Self {
         static ENABLED: OnceLock<bool> = OnceLock::new();
