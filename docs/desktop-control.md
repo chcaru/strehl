@@ -252,10 +252,14 @@ an `index` from `capture.completed` rechecks and opens a completed receiver run.
 or `false`. Folder selection remains in the native UI. Closing a headless control
 workspace does not stop the Pi or the background receiver.
 
-`calibrate_step` (with the start and end marked and the camera idle) takes 25
-single RAWs across the middle of the marked range, measures with `strehl
-focus-step` how far detail stays sharp, deletes the survey, and puts the camera's
-pixel-shift mode back; `capture.tools.calibration` reports its `stage`
+`calibrate_step` (with the start and end marked and the camera idle) takes
+single RAWs across the marked range and measures how far detail stays sharp: on a
+host with `exposure_tiers`, a survey at two shutters read by `strehl survey`
+(also the subject, its depth and the exposure advice), else 25 RAWs at one
+shutter read by `strehl focus-step`. It deletes the survey and puts the camera's
+pixel-shift mode back, also when it fails or is stopped (it then waits for the
+host and reports the failure once four-shot is set again); the host leaves the
+camera at the shutter it found. `capture.tools.calibration` reports its `stage`
 (`switching`, `capturing`, `measuring`, `restoring`, `done`, `failed`) and, when
 done, the `result` with `width` (focus units) and `suggested_step`. Applying the
 step is a separate `settings` capture command. `measure_focus_step` with an
@@ -325,6 +329,7 @@ More of the shell and the stations can be drawn without input:
 | `--overlay palette` / `preferences` | the command palette, or Preferences |
 | `--plane-hold N` | the Stack station holding plane N (from 1) beside the photograph |
 | `--capture-fixture plan` / `flight` / `glance` | Capture from a fabricated state (a synthetic subject); no camera host is reached |
+| `--capture-fixture plan+survey` | The plan with a two-shutter survey's choices, highlight groups' row, an outline and the automatic selection's panel (pass it to the executable; the helper lists the three base fixtures) |
 
 The helper's `screenshot` forwards all of them; `--route` alone is enough to
 name what to render (no `--source` or `--open-run` needed for `library`,
