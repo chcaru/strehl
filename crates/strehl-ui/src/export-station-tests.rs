@@ -283,5 +283,78 @@ fn the_inspector_shows_the_batch_button_and_ticks_presets() {
     );
 }
 
+/// The preview of a resizing preset is the file's own pixels: the strip says
+/// so, and names the photograph's size (owner, 2026-11-23: the Export
+/// preview "still doesn't show the full resolution").
+#[test]
+fn the_strip_says_when_the_view_shows_a_smaller_files_pixels() {
+    let ctx = egui::Context::default();
+    let lib = library();
+    let palette = StudioPalette::GRAPHITE;
+    let folder = std::env::temp_dir();
+    let strip = |selected: usize| {
+        let mut panel = ExportPanel {
+            selected: Some(lib.presets[selected].id.clone()),
+            ..Default::default()
+        };
+        let output = ctx.run(
+            egui::RawInput {
+                screen_rect: Some(Rect::from_min_size(
+                    egui::Pos2::ZERO,
+                    egui::vec2(1600.0, 40.0),
+                )),
+                ..Default::default()
+            },
+            |ctx| {
+                egui::CentralPanel::default().show(ctx, |ui| {
+                    ui.horizontal(|ui| {
+                        let view = ExportView {
+                            palette: &palette,
+                            library: &lib,
+                            name: &lib.template,
+                            fields: fields(),
+                            destination: Some(&folder),
+                            size: [9504, 6336],
+                            has_scale_bar: false,
+                            calibrated: false,
+                            hdr_photo: true,
+                            history: &[],
+                            batch: None,
+                            blocker: None,
+                            feedback: None,
+                            note: None,
+                            view_bundle: None,
+                            words: Words::default(),
+                        };
+                        control_strip(ui, &mut panel, &view);
+                    });
+                });
+            },
+        );
+        output
+            .shapes
+            .iter()
+            .filter_map(|s| match &s.shape {
+                egui::Shape::Text(t) => Some(t.galley.text().to_owned()),
+                _ => None,
+            })
+            .collect::<Vec<_>>()
+    };
+    let note = "view shows this file's pixels · photograph 9504 × 6336";
+    // Web writes 2560 px: the view shows those.
+    let web = strip(0);
+    assert!(web.iter().any(|t| t.starts_with("2560 × ")), "{web:?}");
+    assert!(web.iter().any(|t| t == note), "{web:?}");
+    // HDR and Print write the photograph's own pixels: no note.
+    for full in [1, 2] {
+        let texts = strip(full);
+        assert!(
+            texts.iter().any(|t| t.starts_with("9504 × 6336")),
+            "{texts:?}"
+        );
+        assert!(!texts.iter().any(|t| t == note), "{texts:?}");
+    }
+}
+
 #[path = "export-station-actions-tests.rs"]
 mod actions;

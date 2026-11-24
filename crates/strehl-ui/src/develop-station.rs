@@ -1838,6 +1838,9 @@ pub(crate) struct CanvasView<'a> {
     pub um_per_px: Option<f64>,
     /// The split view's "before" overview, when it is ready.
     pub before: Option<(&'a egui::TextureHandle, [[f32; 2]; 2])>,
+    /// The split view's "before" at full resolution: its own overview and
+    /// detail tiles, as the photograph's "after" has.
+    pub before_paint: Option<crate::photo_viewport::PhotoPaint>,
     /// Pure black and pure white of the development, when Clipping is on.
     pub clipping: Option<&'a egui::TextureHandle>,
 }
@@ -2150,27 +2153,30 @@ impl DevelopCanvas {
         }
         let x = x_of(self.split);
         let mut shapes = Vec::with_capacity(8);
-        if let Some((texture, uv)) = view.before {
-            let left = Rect::from_min_max(visible.min, egui::pos2(x, visible.bottom()));
-            if left.is_positive() {
-                // The before overview covers the whole photograph; map the
-                // visible left part into its UV rectangle.
-                let u = |sx: f32| {
-                    uv[0][0] + (sx - image.left()) / image.width() * (uv[1][0] - uv[0][0])
-                };
-                let v = |sy: f32| {
-                    uv[0][1] + (sy - image.top()) / image.height() * (uv[1][1] - uv[0][1])
-                };
-                shapes.push(egui::Shape::image(
-                    texture.id(),
-                    left,
-                    Rect::from_min_max(
-                        egui::pos2(u(left.left()), v(left.top())),
-                        egui::pos2(u(left.right()), v(left.bottom())),
-                    ),
-                    Color32::WHITE,
-                ));
-            }
+        let left = Rect::from_min_max(visible.min, egui::pos2(x, visible.bottom()));
+        if let Some(paint) = view.before_paint.as_ref().filter(|_| left.is_positive()) {
+            // The visible left part, in photograph UV.
+            let uv = |p: Pos2| Pos2::ZERO + (p - image.min) / image.size();
+            let aperture = Rect::from_min_max(uv(left.min), uv(left.max));
+            shapes.extend(paint.paint_shapes(painter, left, aperture));
+        } else if let Some((texture, uv)) = view.before
+            && left.is_positive()
+        {
+            // The before overview covers the whole photograph; map the
+            // visible left part into its UV rectangle.
+            let u =
+                |sx: f32| uv[0][0] + (sx - image.left()) / image.width() * (uv[1][0] - uv[0][0]);
+            let v =
+                |sy: f32| uv[0][1] + (sy - image.top()) / image.height() * (uv[1][1] - uv[0][1]);
+            shapes.push(egui::Shape::image(
+                texture.id(),
+                left,
+                Rect::from_min_max(
+                    egui::pos2(u(left.left()), v(left.top())),
+                    egui::pos2(u(left.right()), v(left.bottom())),
+                ),
+                Color32::WHITE,
+            ));
         }
         let ink = if active {
             view.palette.accent

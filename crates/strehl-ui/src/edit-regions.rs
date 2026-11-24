@@ -153,6 +153,7 @@ impl EditorState {
             image_size: [loaded.image.width, loaded.image.height],
             um_per_px: self.um_per_px,
             before,
+            before_paint: self.before_paint(),
             clipping: self
                 .clip_overlay
                 .as_ref()

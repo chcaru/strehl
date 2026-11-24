@@ -44,13 +44,26 @@ pub(crate) struct ClipOverlay {
     pub texture: TextureHandle,
 }
 
-/// The split view's "before": one SDR overview per photograph, developed
-/// and uploaded on a worker. It does not depend on edits, so it is never
-/// redeveloped while a slider moves.
+/// The split view's "before": one overview per photograph and display
+/// state, developed and uploaded on a worker, with its own detail tiles
+/// (`EditorState::before_view`). It does not depend on edits, so it is
+/// never redeveloped while a slider moves.
 pub(crate) struct BeforeOverview {
     pub image: Arc<LinearImage>,
     pub texture: TextureHandle,
     pub uv: [[f32; 2]; 2],
+    /// The default recipe on this photograph: one job, so its tiles stay
+    /// valid across edits.
+    job: DevelopmentJob,
+    hdr: bool,
+}
+
+/// What the "before" worker returns; published on the UI thread.
+pub(crate) struct BeforeDevelopment {
+    image: Arc<LinearImage>,
+    job: DevelopmentJob,
+    hdr: bool,
+    prepared: crate::photo_viewport::PreparedPhoto,
 }
 
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
@@ -120,7 +133,10 @@ pub(crate) struct EditorState {
     /// Histogram of the painted development.
     pub(crate) histogram: Option<Arc<crate::develop_station::Histogram>>,
     pub(crate) before_overview: Option<BeforeOverview>,
-    before_task: Option<Task<BeforeOverview>>,
+    before_task: Option<Task<BeforeDevelopment>>,
+    /// The split view's "before" detail: a second viewport, wanted only
+    /// while Split is shown and only for the part left of the line.
+    pub(crate) before_view: crate::photo_viewport::ViewportRefinement,
     pub(crate) clip_overlay: Option<ClipOverlay>,
     clip_task: Option<Task<ClipOverlay>>,
     /// The subject's scale calibration, set by the app for the overlay.
@@ -193,12 +209,20 @@ impl EditorState {
         max_side: u32,
     ) {
         if let Some(loaded) = &self.loaded {
-            self.viewport.demand(
-                [loaded.image.width, loaded.image.height],
-                mapping,
-                ctx.pixels_per_point(),
-                max_side,
-            );
+            let size = [loaded.image.width, loaded.image.height];
+            self.viewport
+                .demand(size, mapping, ctx.pixels_per_point(), max_side);
+            // Split: the "before" detail left of the line (none otherwise).
+            let (full, clip) = mapping;
+            let left = self
+                .develop
+                .split_x(full, clip)
+                .map_or(egui::Rect::NOTHING, |x| {
+                    let visible = full.intersect(clip);
+                    egui::Rect::from_min_max(visible.min, egui::pos2(x, visible.bottom()))
+                });
+            self.before_view
+                .demand(size, (full, left), ctx.pixels_per_point(), max_side);
         }
     }
     pub fn import_preset(&mut self, path: PathBuf) -> anyhow::Result<()> {
@@ -850,43 +874,95 @@ impl EditorState {
     }
 }
 
+/// The "before" development's identity: one job per photograph.
+fn before_identity(job: &DevelopmentJob, hdr: bool) -> crate::photo_viewport::Identity {
+    crate::photo_viewport::Identity {
+        snapshot: Some(job.token()),
+        revision: 0,
+        before: true,
+        hdr,
+    }
+}
+
 impl EditorState {
-    /// Develop the split view's "before" once per photograph, off the UI
-    /// thread, uploading its texture in the worker.
+    /// Develop the split view's "before" once per photograph and display
+    /// state, off the UI thread, uploading its texture in the worker; then
+    /// its detail tiles through `before_view`, like the photograph's.
     fn poll_before_overview(&mut self, ctx: &egui::Context, max_texture_side: u32) {
+        let hdr = self
+            .loaded
+            .as_ref()
+            .is_some_and(|p| self.viewport.hdr_active(p.image.origin));
         if let Some(result) = self
             .before_task
             .as_ref()
             .and_then(|task| task.receiver.try_recv().ok())
         {
             self.before_task = None;
-            if let Ok(overview) = result
+            if let Ok(developed) = result
+                && developed.hdr == hdr
                 && self
                     .loaded
                     .as_ref()
-                    .is_some_and(|loaded| Arc::ptr_eq(&loaded.image, &overview.image))
+                    .is_some_and(|loaded| Arc::ptr_eq(&loaded.image, &developed.image))
             {
-                self.before_overview = Some(overview);
+                let uv = developed.prepared.uv;
+                let texture = self.before_view.publish_overview(
+                    ctx,
+                    before_identity(&developed.job, developed.hdr),
+                    developed.prepared,
+                );
+                self.before_overview = Some(BeforeOverview {
+                    image: developed.image,
+                    texture,
+                    uv,
+                    job: developed.job,
+                    hdr: developed.hdr,
+                });
             }
         }
         let wanted = self.develop.compare == crate::develop_station::Compare::Split;
         let Some(loaded) = self.loaded.as_ref().filter(|_| wanted) else {
+            // Its tiles are only for the split view: free them meanwhile.
+            if self.before_view.paint().is_some() {
+                self.before_view.reset();
+                self.before_overview = None;
+            }
             return;
         };
+        if self.before_view.presenter.is_none() {
+            self.before_view.presenter = self.viewport.presenter.clone();
+        }
         let current = self
             .before_overview
             .as_ref()
-            .is_some_and(|b| Arc::ptr_eq(&b.image, &loaded.image));
-        if current || self.before_task.is_some() {
+            .filter(|b| Arc::ptr_eq(&b.image, &loaded.image) && b.hdr == hdr);
+        if let Some(before) = current {
+            let job = before.job.clone();
+            let id = before_identity(&job, hdr);
+            self.before_view.poll_job(ctx, Some(job), id);
             return;
         }
+        if self.before_task.is_some() {
+            return;
+        }
+        // A display change keeps the job (and its identity apart from HDR),
+        // so the shown tiles are carried until the new state's arrive.
+        let job = self
+            .before_overview
+            .as_ref()
+            .filter(|b| Arc::ptr_eq(&b.image, &loaded.image))
+            .map(|b| b.job.clone())
+            .unwrap_or_else(|| {
+                DevelopmentJob::new(
+                    loaded.image.clone(),
+                    loaded.preview.clone(),
+                    DevelopmentRecipe::default(),
+                )
+                .with_coverage(loaded.coverage.clone())
+            });
         let image = loaded.image.clone();
-        let job = DevelopmentJob::new(
-            loaded.image.clone(),
-            loaded.preview.clone(),
-            DevelopmentRecipe::default(),
-        )
-        .with_coverage(loaded.coverage.clone());
+        let presenter = self.viewport.presenter.clone();
         let ctx = ctx.clone();
         self.before_task = Some(spawn_task("strehl-develop-before", move |cancelled| {
             let overview = job.image(true);
@@ -903,21 +979,27 @@ impl EditorState {
                     stride,
                 },
                 &cancelled,
-                None,
-                false,
+                presenter.as_ref(),
+                hdr,
                 true,
             )?;
-            let picture = prepared
-                .sdr
-                .ok_or_else(|| anyhow::anyhow!("The before overview produced no picture"))?;
-            let texture = ctx.load_texture("develop-before", picture, egui::TextureOptions::LINEAR);
             ctx.request_repaint();
-            Ok(BeforeOverview {
+            Ok(BeforeDevelopment {
                 image,
-                texture,
-                uv: prepared.uv,
+                job,
+                hdr,
+                prepared,
             })
         }));
+    }
+
+    /// The split view's "before" at full resolution, while Split is shown.
+    pub(crate) fn before_paint(&self) -> Option<crate::photo_viewport::PhotoPaint> {
+        let loaded = self.loaded.as_ref()?;
+        self.before_overview
+            .as_ref()
+            .filter(|b| Arc::ptr_eq(&b.image, &loaded.image))?;
+        self.before_view.paint()
     }
 
     /// Mark the development's clipping on a worker, once per edit, never

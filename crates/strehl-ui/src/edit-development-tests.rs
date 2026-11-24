@@ -230,3 +230,100 @@ fn accepted_export_uses_frozen_recipe_after_edit_and_reload_and_cancel_refuses_p
     );
     assert!(!cancelled.exists());
 }
+
+/// Split view: the "before" half develops its own native tiles for the part
+/// left of the line, as the "after" does, instead of magnifying a 1600 px
+/// overview; they are freed when Split is left.
+#[test]
+fn split_before_half_shows_native_tiles_left_of_the_line() {
+    let image = Arc::new(LinearImage {
+        width: 2400,
+        height: 1600,
+        pixels: (0..2400u32 * 1600)
+            .flat_map(|i| {
+                let v = 0.05 + ((i * 37) % 23) as f32 / 30.0;
+                [v, 0.3, 0.9 - 0.5 * v]
+            })
+            .collect(),
+        origin: strehl_edit::ImageOrigin::SceneLinear,
+        baseline: None,
+        baked_recipe: None,
+    });
+    let mut state = EditorState {
+        path: Some("split.tiff".into()),
+        loaded: Some(LoadedPhoto {
+            coverage: None,
+            preview: Arc::new(image.preview(400)),
+            image,
+            recipe: Default::default(),
+            source: "split.tiff".into(),
+            warnings: vec![],
+        }),
+        ..Default::default()
+    };
+    state.develop.compare = crate::develop_station::Compare::Split;
+    state.develop.split = 0.5;
+    let ctx = egui::Context::default();
+    // 100 %: a 1000 x 600 canvas over the photograph's middle.
+    let canvas = egui::Rect::from_min_size(egui::Pos2::ZERO, egui::vec2(1000.0, 600.0));
+    let full = egui::Rect::from_min_size(egui::pos2(-700.0, -500.0), egui::vec2(2400.0, 1600.0));
+    let until = Instant::now() + Duration::from_secs(60);
+    let settled = |state: &EditorState| {
+        state.before_overview.is_some()
+            && state.before_view.settled()
+            && state.before_view.stats()["published"]["stride"] == 1
+    };
+    while !settled(&state) {
+        assert!(Instant::now() < until, "{}", state.before_view.stats());
+        let _ = ctx.run(Default::default(), |ctx| {
+            state.poll(ctx, 4096);
+            state.request_view(ctx, (full, canvas), 4096);
+        });
+        std::thread::sleep(Duration::from_millis(2));
+    }
+    let stats = state.before_view.stats();
+    // Only the left half of the view: x from 700 to 1200 source pixels.
+    let uv = &stats["requested"]["uv"];
+    assert!(
+        (uv[0][0].as_f64().unwrap() - 700.0 / 2400.0).abs() < 1e-3,
+        "{stats}"
+    );
+    assert!(
+        (uv[1][0].as_f64().unwrap() - 1200.0 / 2400.0).abs() < 2e-3,
+        "{stats}"
+    );
+    assert_eq!(stats["hdr_pixels"], false, "no presenter: SDR");
+    // The paint holds those native tiles, and the split view gets them.
+    let paint = state.before_paint().expect("before paint");
+    let _ = ctx.run(Default::default(), |ctx| {
+        let painter = ctx.layer_painter(egui::LayerId::background());
+        let left = egui::Rect::from_min_max(canvas.min, egui::pos2(500.0, 600.0));
+        let aperture = egui::Rect::from_min_max(
+            egui::pos2(700.0 / 2400.0, 500.0 / 1600.0),
+            egui::pos2(1200.0 / 2400.0, 1100.0 / 1600.0),
+        );
+        let shapes = paint.paint_shapes(&painter, left, aperture);
+        assert!(shapes.iter().any(|s| matches!(s, egui::Shape::Mesh(_))));
+        // Taken back out of the layer: nothing painted twice.
+        assert!(ctx.graphics(|g| g.get(painter.layer_id()).is_none_or(|l| {
+            l.all_entries()
+                .all(|c| matches!(c.shape, egui::Shape::Noop))
+        })));
+    });
+    assert!(
+        state.before_view.stats()["tiles_cached"].as_u64().unwrap() >= 1,
+        "{}",
+        state.before_view.stats()
+    );
+    // The main view's own detail is unaffected: "after" asks for the whole view.
+    let after = state.viewport.stats();
+    assert!((after["requested"]["uv"][1][0].as_f64().unwrap() - 1700.0 / 2400.0).abs() < 2e-3);
+    // Leaving Split frees the "before" tiles.
+    state.develop.compare = crate::develop_station::Compare::After;
+    let _ = ctx.run(Default::default(), |ctx| {
+        state.poll(ctx, 4096);
+        state.request_view(ctx, (full, canvas), 4096);
+    });
+    assert_eq!(state.before_view.stats()["tiles_cached"], 0);
+    assert!(state.before_paint().is_none());
+}

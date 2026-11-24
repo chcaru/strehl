@@ -343,6 +343,33 @@ impl PhotoPaint {
         }
     }
 
+    /// [`Self::paint`], returned as shapes for a slot reserved earlier in
+    /// `painter`'s layer (the split view's "before", beneath the tools). The
+    /// shapes are taken back out of the layer; they stay within
+    /// `destination`, so the slot's clip is enough.
+    pub(crate) fn paint_shapes(
+        &self,
+        painter: &egui::Painter,
+        destination: Rect,
+        aperture: Rect,
+    ) -> Vec<egui::Shape> {
+        let layer = painter.layer_id();
+        let ctx = painter.ctx();
+        let start = ctx.graphics(|g| g.get(layer).map_or(0, |list| list.next_idx().0));
+        self.paint(&painter.with_clip_rect(destination), destination, aperture);
+        ctx.graphics_mut(|g| {
+            let list = g.entry(layer);
+            let end = list.next_idx().0;
+            let mut shapes = Vec::with_capacity(end.saturating_sub(start));
+            for i in start..end {
+                list.mutate_shape(egui::layers::ShapeIdx(i), |clipped| {
+                    shapes.push(std::mem::replace(&mut clipped.shape, egui::Shape::Noop));
+                });
+            }
+            shapes
+        })
+    }
+
     fn paint_development(&self, painter: &egui::Painter, destination: Rect, aperture: Rect) {
         let now = Instant::now();
         let opacity = |tile: &TilePaint| {
@@ -711,6 +738,10 @@ pub(super) struct ViewportRefinement {
     since: Option<Instant>,
     worker: Option<Worker>,
     tiles: HashMap<TileKey, Tile>,
+    /// The other display state's tiles over the view, painted beneath this
+    /// state's until they cover it (see `carry`). Not in the cache budget:
+    /// at most the view's tiles, for one tile generation.
+    carried: Vec<TilePaint>,
     /// Posted to the worker and not yet returned, for `posted`'s identity.
     outstanding: HashSet<TileKey>,
     posted: Option<(Identity, Vec<TileKey>)>,
@@ -772,6 +803,7 @@ impl ViewportRefinement {
     fn clear_tiles(&mut self) {
         self.epoch += 1;
         self.tiles.clear();
+        self.carried.clear();
         self.staged.clear();
         self.failed.clear();
         self.wanting = None;
@@ -784,9 +816,11 @@ impl ViewportRefinement {
         image: PreparedPhoto,
     ) -> TextureHandle {
         let publication = Instant::now();
+        let carried = self.carry(id);
         self.cancel();
         // Tiles of another recipe generation can never be shown again.
         self.clear_tiles();
+        self.carried = carried;
         let texture = ctx.load_texture(
             "developed-overview",
             image.sdr.expect("Overview includes its SDR fallback"),
@@ -811,6 +845,50 @@ impl ViewportRefinement {
     }
     pub fn paint(&self) -> Option<PhotoPaint> {
         self.paint.clone()
+    }
+    /// A new identity that differs only in HDR is the same development for
+    /// the other display state (Windows HDR switched, the window moved to
+    /// another display, Develop's HDR/SDR switch). The tiles shown over the
+    /// view stay painted beneath the new state's tiles until those cover it,
+    /// so the view never falls back to the overview while they develop.
+    fn carry(&self, id: Identity) -> Vec<TilePaint> {
+        let (Some(old), Some(paint), Some(demand)) = (self.identity, &self.paint, self.desired)
+        else {
+            return Vec::new();
+        };
+        if old.hdr == id.hdr
+            || (Identity { hdr: id.hdr, ..old }) != id
+            || !self
+                .presenter
+                .as_ref()
+                .is_some_and(PhotoPresenter::fits_float_to_sdr)
+        {
+            return Vec::new();
+        }
+        paint
+            .tiles
+            .iter()
+            .filter(|t| t.layer.is_some() && t.core.intersects(demand.aperture))
+            .cloned()
+            .collect()
+    }
+    /// Carried tiles go once this state's own detail covers the view.
+    fn drop_carried(&mut self, now: Instant) {
+        if self.carried.is_empty() {
+            return;
+        }
+        let covered = self.desired.is_none_or(|demand| {
+            self.overview_enough(&demand)
+                || demand.keys(demand.visible).all(|k| {
+                    self.tiles
+                        .get(&k)
+                        .is_some_and(|t| now.saturating_duration_since(t.published) >= REVEAL)
+                })
+        });
+        if covered {
+            self.carried.clear();
+            self.dirty = true;
+        }
     }
     fn record_publication(&mut self, start: Instant) {
         self.last_publication_ms = start.elapsed().as_secs_f64() * 1000.0;
@@ -1020,6 +1098,9 @@ impl ViewportRefinement {
             self.post(ctx, job, current, wanted);
         }
         self.evict();
+        if ready {
+            self.drop_carried(now);
+        }
         self.refresh_paint(now);
         if let Some(remaining) = waiting {
             request_paced_repaint(
@@ -1234,22 +1315,26 @@ impl ViewportRefinement {
             return;
         }
         // The wanted level, coarser levels while it arrives, and one finer
-        // level just zoomed out of: never minified by more than 2x.
+        // level just zoomed out of: never minified by more than 2x. Tiles
+        // carried from the other display state come first, so this state's
+        // tiles of the same level are painted (and fade in) over them; the
+        // sort is stable.
         let stride = self.desired.map_or(1, |d| d.stride);
-        let mut tiles = self
-            .tiles
-            .iter()
-            .filter(|(k, _)| k.stride * 2 >= stride && k.stride <= stride * 8)
-            .map(|(k, t)| TilePaint {
-                stride: k.stride,
-                core: t.core,
-                uv: t.uv,
-                size: t.size,
-                texture: t.texture.clone(),
-                layer: t.layer.clone(),
-                published: t.published,
-            })
-            .collect::<Vec<_>>();
+        let mut tiles = self.carried.clone();
+        tiles.extend(
+            self.tiles
+                .iter()
+                .filter(|(k, _)| k.stride * 2 >= stride && k.stride <= stride * 8)
+                .map(|(k, t)| TilePaint {
+                    stride: k.stride,
+                    core: t.core,
+                    uv: t.uv,
+                    size: t.size,
+                    texture: t.texture.clone(),
+                    layer: t.layer.clone(),
+                    published: t.published,
+                }),
+        );
         tiles.sort_by_key(|t| std::cmp::Reverse(t.stride));
         paint.tiles = Arc::new(tiles);
     }
@@ -1305,7 +1390,7 @@ impl ViewportRefinement {
             })),
             "published": published,
             "jobs":self.jobs,"cancelled":self.cancellations,"cache_reuses":self.reuses,
-            "tiles_cached":self.tiles.len(),"cache_bytes":self.cached_bytes(),
+            "tiles_cached":self.tiles.len(),"tiles_carried":self.carried.len(),"cache_bytes":self.cached_bytes(),
             "peak_cache_bytes":self.peak_bytes,"evictions":self.evictions,
             "failed_tiles":self.failed.len(),
             "source_samples":self.source_samples,"refined_pixels":self.rendered_pixels,
@@ -1332,3 +1417,7 @@ mod tests;
 #[cfg(test)]
 #[path = "photo-viewport-bench.rs"]
 mod bench;
+
+#[cfg(test)]
+#[path = "photo-viewport-hdr-tests.rs"]
+mod hdr_tests;

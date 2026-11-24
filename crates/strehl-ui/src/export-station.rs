@@ -1157,6 +1157,24 @@ pub(crate) fn control_strip(
             12.5,
             pal.ink_2,
         );
+        // A resizing preset is previewed as the file it writes: zooming in
+        // shows that file's pixels, not the photograph's. Say so.
+        let resized =
+            matches!(&preset.output, PresetOutput::Image(i) if !i.settings.hdr) && w < view.size[0];
+        if resized {
+            let [pw, ph] = view.size;
+            style::text(
+                ui,
+                &format!("view shows this file's pixels · photograph {pw} × {ph}"),
+                12.5,
+                pal.ink_3,
+            )
+            .on_hover_text(
+                "This preset writes a smaller file, and the view shows exactly its pixels, so \
+                 zooming in cannot show more detail than the file holds. Choose a full-size \
+                 preset, or Develop, to inspect the photograph's own pixels.",
+            );
+        }
     }
     intents
 }

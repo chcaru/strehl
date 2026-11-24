@@ -167,6 +167,61 @@ fn sdr_white(device: &str) -> Option<f32> {
 mod tests {
     use super::*;
 
+    /// Read-only: the real capability reply for every attached display,
+    /// asked repeatedly as the presenter asks (every 750 ms, here faster).
+    /// A reply that flips while nothing changes would clear the viewer's
+    /// tiles each time (a new HDR identity). Run explicitly on a desktop.
+    #[test]
+    #[ignore = "queries the attached displays: run explicitly"]
+    fn display_capability_replies_are_stable_while_nothing_changes() {
+        let monitors = unsafe {
+            let factory: IDXGIFactory1 = CreateDXGIFactory1().unwrap();
+            let mut found = Vec::new();
+            for a in 0..32 {
+                let Ok(adapter) = factory.EnumAdapters1(a) else {
+                    break;
+                };
+                for o in 0..32 {
+                    let Ok(output) = adapter.EnumOutputs(o) else {
+                        break;
+                    };
+                    found.push(output.GetDesc().unwrap().Monitor.0 as usize);
+                }
+            }
+            found
+        };
+        assert!(!monitors.is_empty(), "no display outputs");
+        let rounds = std::env::var("STREHL_DISPLAY_ROUNDS")
+            .ok()
+            .and_then(|v| v.parse().ok())
+            .unwrap_or(200usize);
+        for monitor in monitors {
+            let first = detect_monitor(monitor);
+            let mut changes = 0;
+            let mut slowest = std::time::Duration::ZERO;
+            for _ in 0..rounds {
+                let began = std::time::Instant::now();
+                let next = detect_monitor(monitor);
+                slowest = slowest.max(began.elapsed());
+                if next.active != first.active || next.reason != first.reason {
+                    changes += 1;
+                    eprintln!("  changed: {next:?}");
+                }
+                std::thread::sleep(std::time::Duration::from_millis(20));
+            }
+            eprintln!(
+                "{} active={} peak={} white={} reason={:?}: {changes} of {rounds} replies differed; slowest {:.1} ms",
+                first.monitor,
+                first.active,
+                first.peak_nits,
+                first.sdr_white_nits,
+                first.reason,
+                slowest.as_secs_f64() * 1000.0
+            );
+            assert_eq!(changes, 0, "capability replies flickered");
+        }
+    }
+
     #[test]
     fn missing_window_never_borrows_the_primary_monitors_hdr_state() {
         assert_eq!(window_monitor(0), 0);

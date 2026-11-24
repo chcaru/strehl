@@ -288,6 +288,21 @@ impl Bench {
                     egui::Rect::from_min_max(uv(visible.min), uv(visible.max)),
                 );
             }
+            // Split: the "before" left of the line, as the canvas paints it.
+            if let (Some(before), Some(x)) =
+                (editor.before_paint(), editor.develop.split_x(full, visible))
+            {
+                let left = egui::Rect::from_min_max(visible.min, egui::pos2(x, visible.max.y));
+                if left.is_positive() {
+                    let clipped = painter.with_clip_rect(visible);
+                    let shapes = before.paint_shapes(
+                        &clipped,
+                        left,
+                        egui::Rect::from_min_max(uv(left.min), uv(left.max)),
+                    );
+                    clipped.add(egui::Shape::Vec(shapes));
+                }
+            }
         });
         std::thread::sleep(Duration::from_millis(2));
         result
@@ -614,6 +629,43 @@ fn run_interactions(
         "release_to_sharp_ms": after_drag,
     });
     eprintln!("slider drag at 100 %: {}", report["slider_drag_100"]);
+    // Split at 100 %: the "before" half's own tiles, then the line dragged
+    // from 0.1 to 0.9 of the view over 120 frames.
+    bench.view = (1.0, centre);
+    bench.editor.develop.compare = crate::develop_station::Compare::Split;
+    bench.editor.develop.split = 0.1;
+    let began = Instant::now();
+    while !(bench.editor.before_overview.is_some() && bench.editor.before_view.settled()) {
+        bench.step(false);
+        assert!(began.elapsed() < Duration::from_secs(120), "split before");
+    }
+    let before_sharp = began.elapsed().as_secs_f64() * 1000.0;
+    let mut split_cpu = Vec::new();
+    let mut soft = 0;
+    for i in 0..120 {
+        bench.editor.develop.split = 0.1 + 0.8 * i as f32 / 119.0;
+        split_cpu.push(bench.step(false).0);
+        if !bench.editor.before_view.settled() {
+            soft += 1;
+        }
+    }
+    let began = Instant::now();
+    while !bench.editor.before_view.settled() {
+        bench.step(false);
+        assert!(
+            began.elapsed() < Duration::from_secs(120),
+            "split after drag"
+        );
+    }
+    report["split_100"] = serde_json::json!({
+        "before_half_to_sharp_ms": before_sharp,
+        "drag_ui_ms": summary(&split_cpu),
+        "drag_frames_not_sharp": soft,
+        "after_drag_to_sharp_ms": began.elapsed().as_secs_f64() * 1000.0,
+        "before_view": bench.editor.before_view.stats(),
+    });
+    eprintln!("split at 100 %: {}", report["split_100"]);
+    bench.editor.develop.compare = crate::develop_station::Compare::After;
 }
 
 /// A 14064 x 9376 render folder for the benchmark (the four-shot size, no

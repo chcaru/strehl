@@ -64,6 +64,11 @@ impl PhotoLayer {
     pub fn texture_id(&self) -> Option<egui::TextureId> {
         self.0.registered.as_ref().map(|r| r.id)
     }
+    /// Display-referred bytes (an SDR development), not scene-linear floats.
+    #[cfg(test)]
+    pub fn is_sdr(&self) -> bool {
+        self.0.sdr
+    }
 }
 struct Layer {
     _texture: wgpu::Texture,
@@ -234,6 +239,13 @@ impl PhotoPresenter {
 
     pub fn status(&self) -> DisplayStatus {
         self.0.status.read().unwrap().clone()
+    }
+
+    /// Tests: the display state a window's poll would publish (HDR switched
+    /// on or off, the window moved to another display).
+    #[cfg(test)]
+    pub(crate) fn set_status(&self, status: DisplayStatus) {
+        *self.0.status.write().unwrap() = status;
     }
 
     pub fn poll(&mut self) -> bool {
@@ -565,6 +577,12 @@ impl PhotoPresenter {
     /// keeps magnified texels square in the float shader; SDR layers carry
     /// their magnification filter from upload. Returns false, painting
     /// nothing, when the original SDR drawing path should paint instead.
+    ///
+    /// Float layers are never dropped while this target can show them: when
+    /// the display is not presenting HDR (Windows HDR switched off, the window
+    /// on an SDR display) or the photograph is shown as SDR, they are fitted
+    /// to SDR white, so detail developed for one display state stays on
+    /// screen until the other state's detail arrives.
     pub fn paint_regions(
         &self,
         painter: &egui::Painter,
@@ -579,9 +597,10 @@ impl PhotoPresenter {
         if !destination.is_positive() || !aperture.is_positive() {
             return false;
         }
+        let status = self.status();
         if hdr {
-            let status = self.status();
-            if !status.active || base.0.origin != ImageOrigin::SceneLinear {
+            let fit = !status.active;
+            if base.0.origin != ImageOrigin::SceneLinear || (fit && !self.fits_float_to_sdr()) {
                 return false;
             }
             for (layer, clip, alpha, nearest) in layers {
@@ -590,7 +609,7 @@ impl PhotoPresenter {
                     destination,
                     aperture,
                     layer,
-                    (*clip, *nearest),
+                    (*clip, *nearest, fit),
                     alpha.clamp(0.0, 1.0),
                     &status,
                 );
@@ -599,18 +618,38 @@ impl PhotoPresenter {
             if !base.0.sdr {
                 return false;
             }
-            for (layer, clip, alpha, nearest) in layers.iter().filter(|(l, ..)| l.0.sdr) {
-                self.paint_sdr_clipped(
-                    painter,
-                    destination,
-                    aperture,
-                    layer,
-                    (*clip, *nearest),
-                    alpha.clamp(0.0, 1.0),
-                );
+            for (layer, clip, alpha, nearest) in layers {
+                let alpha = alpha.clamp(0.0, 1.0);
+                if layer.0.sdr {
+                    self.paint_sdr_clipped(
+                        painter,
+                        destination,
+                        aperture,
+                        layer,
+                        (*clip, *nearest),
+                        alpha,
+                    );
+                } else if self.fits_float_to_sdr() {
+                    self.paint_layer_clipped(
+                        painter,
+                        destination,
+                        aperture,
+                        layer,
+                        (*clip, *nearest, true),
+                        alpha,
+                        &status,
+                    );
+                }
             }
         }
         true
+    }
+
+    /// Whether the photo shader can show a float layer as SDR on this target:
+    /// it writes linear light, which a float (scRGB) or sRGB target encodes.
+    pub fn fits_float_to_sdr(&self) -> bool {
+        let format = self.0.render.target_format;
+        format == wgpu::TextureFormat::Rgba16Float || format.is_srgb()
     }
 
     #[cfg(test)]
@@ -650,7 +689,7 @@ impl PhotoPresenter {
                 destination,
                 aperture,
                 layer,
-                (clip, nearest),
+                (clip, nearest, false),
                 alpha,
                 &self.status(),
             );
@@ -683,7 +722,7 @@ impl PhotoPresenter {
         destination: Rect,
         aperture: Rect,
         layer: &PhotoLayer,
-        (clip, nearest): (Rect, bool),
+        (clip, nearest, fit): (Rect, bool, bool),
         alpha: f32,
         status: &DisplayStatus,
     ) {
@@ -712,12 +751,12 @@ impl PhotoPresenter {
         let float_surface = self.0.render.target_format == wgpu::TextureFormat::Rgba16Float;
         // Mode 0: scene-linear HDR. 1: gamma SDR target. 2: gamma SDR image
         // decoded into an extended-linear target. 3: sRGB attachment encoding.
+        let white = if cfg!(windows) && status.active {
+            status.sdr_white_nits / 80.0
+        } else {
+            1.0
+        };
         let (scale, limit, mode) = if layer.0.sdr {
-            let white = if cfg!(windows) && status.active {
-                status.sdr_white_nits / 80.0
-            } else {
-                1.0
-            };
             (
                 if float_surface { white } else { 1.0 },
                 1.0,
@@ -729,6 +768,11 @@ impl PhotoPresenter {
                     1.0
                 },
             )
+        } else if fit {
+            // Shown as SDR: the photograph's reference white at SDR white,
+            // brighter light clipped there with its hue kept.
+            let white = if float_surface { white } else { 1.0 };
+            (white, white, 0.0)
         } else {
             (
                 layer.0.reference_white_nits / unit,

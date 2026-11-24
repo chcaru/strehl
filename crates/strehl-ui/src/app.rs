@@ -2806,7 +2806,7 @@ impl StrehlApp {
             && (station != studio_route::Station::Develop
                 || self.editor.develop.compare != crate::develop_station::Compare::Split
                 || self.editor.loaded.is_none()
-                || self.editor.before_overview.is_some())
+                || (self.editor.before_overview.is_some() && self.editor.before_view.settled()))
 
             && (!self.bracket_browser.active() || self.bracket_browser.settled(now))
             && (!self.process_view
