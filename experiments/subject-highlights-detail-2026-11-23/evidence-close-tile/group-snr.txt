@@ -1,0 +1,71 @@
+== closest focus, 1 s plane 18 against 1/4 s plane 74, clipping matched
+sites without two green samples: 1 s 0.000, 1/4 s 0.000 (0 means the members cover the four positions)
+clip matched: exposure ratio 4.06; the shorter exposure is clamped at the pin of the longer one
+30 tiles (sharpest in 1 s); level DN above black: 1 s 1011, 1/4 s 242 (ratio 4.04); green-to-green shift px: 1 s 0.02, 1/4 s 0.11
+band cycles/px | signal power 1 s over 1/4 s | noise power ratio | signal/noise power: 1 s, 1/4 s (ratio)
+0.03-0.06      | 1.01 | 0.30 | 62712.1, 19785.8 (3.17)
+0.06-0.10      | 0.99 | 0.31 | 8950.7, 2774.8 (3.23)
+0.10-0.15      | 0.91 | 0.33 | 1793.3, 613.5 (2.92)
+0.15-0.20      | 0.82 | 0.34 | 450.4, 168.5 (2.67)
+0.20-0.25      | 0.77 | 0.32 | 142.2, 65.1 (2.18)
+0.25-0.30      | 0.72 | 0.31 | 56.1, 24.4 (2.30)
+0.30-0.35      | 0.68 | 0.29 | 21.0, 10.2 (2.07)
+0.35-0.40      | 0.65 | 0.27 | 7.6, 3.4 (2.23)
+0.40-0.50      | 0.71 | 0.26 | 1.7, 0.8 (2.03)
+
+== closest focus, the same pair without matching the clipping
+sites without two green samples: 1 s 0.000, 1/4 s 0.000 (0 means the members cover the four positions)
+30 tiles (sharpest in 1 s); level DN above black: 1 s 1011, 1/4 s 243 (ratio 4.01); green-to-green shift px: 1 s 0.02, 1/4 s 0.11
+band cycles/px | signal power 1 s over 1/4 s | noise power ratio | signal/noise power: 1 s, 1/4 s (ratio)
+0.03-0.06      | 0.99 | 0.29 | 62712.1, 18722.7 (3.35)
+0.06-0.10      | 0.89 | 0.30 | 8950.7, 3071.9 (2.91)
+0.10-0.15      | 0.81 | 0.32 | 1793.3, 698.2 (2.57)
+0.15-0.20      | 0.75 | 0.33 | 450.4, 214.1 (2.10)
+0.20-0.25      | 0.65 | 0.32 | 142.2, 75.4 (1.89)
+0.25-0.30      | 0.62 | 0.31 | 56.1, 26.8 (2.09)
+0.30-0.35      | 0.59 | 0.28 | 21.0, 10.2 (2.05)
+0.35-0.40      | 0.57 | 0.27 | 7.6, 3.5 (2.18)
+0.40-0.50      | 0.79 | 0.26 | 1.7, 0.4 (3.71)
+
+== control: two 1/4 s groups one step apart (planes 75 and 74)
+sites without two green samples: 1/4 s a 0.000, 1/4 s b 0.000 (0 means the members cover the four positions)
+30 tiles (sharpest in 1/4 s a); level DN above black: 1/4 s a 248, 1/4 s b 248 (ratio 1.00); green-to-green shift px: 1/4 s a 0.12, 1/4 s b 0.11
+band cycles/px | signal power 1/4 s a over 1/4 s b | noise power ratio | signal/noise power: 1/4 s a, 1/4 s b (ratio)
+0.03-0.06      | 1.03 | 0.88 | 23595.0, 19325.2 (1.22)
+0.06-0.10      | 1.03 | 0.94 | 3137.2, 3144.8 (1.00)
+0.10-0.15      | 1.01 | 0.91 | 670.1, 701.4 (0.96)
+0.15-0.20      | 1.04 | 0.97 | 215.5, 214.1 (1.01)
+0.20-0.25      | 1.08 | 0.95 | 79.5, 75.4 (1.05)
+0.25-0.30      | 1.21 | 0.96 | 35.2, 26.8 (1.31)
+0.30-0.35      | 1.36 | 0.90 | 14.2, 10.2 (1.39)
+0.35-0.40      | 1.44 | 0.81 | 6.1, 3.5 (1.77)
+0.40-0.50      | 1.66 | 0.73 | 1.2, 0.4 (2.74)
+
+== life size, 1.3 s against 1/4 s at 25182, clipping matched
+sites without two green samples: 1.3 s 0.000, 1/4 s 0.000 (0 means the members cover the four positions)
+clip matched: exposure ratio 5.25; the shorter exposure is clamped at the pin of the longer one
+30 tiles (sharpest in 1.3 s); level DN above black: 1.3 s 1642, 1/4 s 310 (ratio 5.34); green-to-green shift px: 1.3 s 0.23, 1/4 s 0.05
+band cycles/px | signal power 1.3 s over 1/4 s | noise power ratio | signal/noise power: 1.3 s, 1/4 s (ratio)
+0.03-0.06      | 1.00 | 0.43 | 31482.7, 13341.8 (2.36)
+0.06-0.10      | 1.00 | 0.31 | 9684.5, 2921.1 (3.32)
+0.10-0.15      | 0.99 | 0.27 | 2201.2, 546.6 (4.03)
+0.15-0.20      | 0.99 | 0.26 | 573.4, 149.9 (3.82)
+0.20-0.25      | 0.99 | 0.25 | 181.3, 47.3 (3.83)
+0.25-0.30      | 0.97 | 0.25 | 68.3, 19.4 (3.51)
+0.30-0.35      | 0.95 | 0.27 | 27.5, 8.2 (3.33)
+0.35-0.40      | 0.91 | 0.31 | 12.5, 3.8 (3.31)
+0.40-0.50      | 0.84 | 0.34 | 4.0, 1.5 (2.66)
+
+== life size control: two 1/4 s revisits
+sites without two green samples: 1/4 s a 0.000, 1/4 s b 0.000 (0 means the members cover the four positions)
+30 tiles (sharpest in 1/4 s a); level DN above black: 1/4 s a 469, 1/4 s b 469 (ratio 1.00); green-to-green shift px: 1/4 s a 0.03, 1/4 s b 0.06
+band cycles/px | signal power 1/4 s a over 1/4 s b | noise power ratio | signal/noise power: 1/4 s a, 1/4 s b (ratio)
+0.03-0.06      | 1.00 | 1.06 | 16853.6, 19900.3 (0.85)
+0.06-0.10      | 1.00 | 1.03 | 4361.2, 4243.1 (1.03)
+0.10-0.15      | 1.01 | 0.99 | 1126.5, 985.0 (1.14)
+0.15-0.20      | 1.01 | 1.04 | 281.7, 279.5 (1.01)
+0.20-0.25      | 1.01 | 1.07 | 102.7, 105.2 (0.98)
+0.25-0.30      | 1.02 | 1.10 | 40.9, 39.4 (1.04)
+0.30-0.35      | 1.04 | 1.10 | 15.3, 16.0 (0.96)
+0.35-0.40      | 1.04 | 1.13 | 7.0, 7.6 (0.92)
+0.40-0.50      | 1.02 | 1.14 | 2.3, 2.8 (0.82)

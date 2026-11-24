@@ -1,0 +1,65 @@
+40 tiles of 256 px where plane index 100 is the sharpest (within 3 planes) over 37-77 % of the tile; elsewhere in a tile the plane is out of focus, which favours the stack
+tiles used 40; shift between revisit pairs: median 0.14 px, max 0.78 px
+
+one plane (a four-shot group, same engine, restoration off), signal and noise by band:
+   0.05-0.10: signal/noise power 4791.60 (tiles p25 1769.03, p75 7184.28)
+   0.10-0.20: signal/noise power 856.32 (tiles p25 223.47, p75 1497.64)
+   0.20-0.30: signal/noise power 122.84 (tiles p25 34.27, p75 214.88)
+   0.30-0.40: signal/noise power 22.55 (tiles p25 6.51, p75 37.24)
+   0.40-0.50: signal/noise power 5.04 (tiles p25 1.44, p75 7.59)
+
+half-stack (every second plane) against plane (median over tiles; noise is that of ONE of the two views compared)
+band (cycles/px) | signal power ratio | amplitude ratio | noise power ratio | signal/noise: plane -> half-stack (every second plane)
+0.05-0.10        | 1.102 (p25 1.012, p75 1.304) | 1.050 | 1.783 | 4791.60 -> 2393.61
+0.10-0.20        | 1.168 (p25 0.910, p75 1.466) | 1.081 | 1.884 | 856.32 -> 439.85
+0.20-0.30        | 1.131 (p25 0.894, p75 1.801) | 1.064 | 1.280 | 122.84 -> 94.73
+0.30-0.40        | 1.231 (p25 1.019, p75 2.160) | 1.109 | 0.999 | 22.55 -> 29.73
+0.40-0.50        | 1.589 (p25 0.785, p75 2.741) | 1.261 | 0.810 | 5.04 -> 8.45
+
+restore-0.70 against plane (median over tiles; noise is that of ONE of the two views compared)
+band (cycles/px) | signal power ratio | amplitude ratio | noise power ratio | signal/noise: plane -> restore-0.70
+0.05-0.10        | 1.172 (p25 1.083, p75 1.399) | 1.082 | 1.926 | 4791.60 -> 2145.28
+0.10-0.20        | 1.260 (p25 0.975, p75 1.619) | 1.122 | 1.918 | 856.32 -> 442.83
+0.20-0.30        | 1.088 (p25 0.865, p75 1.717) | 1.043 | 1.131 | 122.84 -> 96.52
+0.30-0.40        | 0.980 (p25 0.701, p75 1.505) | 0.990 | 0.599 | 22.55 -> 30.21
+0.40-0.50        | 0.873 (p25 0.374, p75 1.107) | 0.934 | 0.251 | 5.04 -> 9.86
+
+restore-0.70 against stack (median over tiles; noise is that of ONE of the two views compared)
+band (cycles/px) | signal power ratio | amplitude ratio | noise power ratio | signal/noise: stack -> restore-0.70
+0.05-0.10        | 1.072 (p25 1.055, p75 1.077) | 1.036 | 1.129 | 2393.61 -> 2145.28
+0.10-0.20        | 1.100 (p25 1.065, p75 1.116) | 1.049 | 1.085 | 439.85 -> 442.83
+0.20-0.30        | 0.949 (p25 0.937, p75 0.962) | 0.974 | 0.897 | 94.73 -> 96.52
+0.30-0.40        | 0.690 (p25 0.643, p75 0.764) | 0.830 | 0.585 | 29.73 -> 30.21
+0.40-0.50        | 0.433 (p25 0.351, p75 0.568) | 0.658 | 0.303 | 8.45 -> 9.86
+
+restore-0.50 against plane (median over tiles; noise is that of ONE of the two views compared)
+band (cycles/px) | signal power ratio | amplitude ratio | noise power ratio | signal/noise: plane -> restore-0.50
+0.05-0.10        | 1.246 (p25 1.148, p75 1.502) | 1.116 | 2.179 | 4791.60 -> 2066.17
+0.10-0.20        | 1.494 (p25 1.162, p75 1.929) | 1.222 | 2.518 | 856.32 -> 393.58
+0.20-0.30        | 1.805 (p25 1.357, p75 2.912) | 1.344 | 1.955 | 122.84 -> 95.78
+0.30-0.40        | 1.997 (p25 1.669, p75 3.665) | 1.413 | 1.505 | 22.55 -> 30.56
+0.40-0.50        | 2.673 (p25 1.458, p75 4.378) | 1.635 | 1.253 | 5.04 -> 9.41
+
+restore-0.50 against stack (median over tiles; noise is that of ONE of the two views compared)
+band (cycles/px) | signal power ratio | amplitude ratio | noise power ratio | signal/noise: stack -> restore-0.50
+0.05-0.10        | 1.140 (p25 1.109, p75 1.148) | 1.068 | 1.187 | 2393.61 -> 2066.17
+0.10-0.20        | 1.340 (p25 1.235, p75 1.357) | 1.157 | 1.372 | 439.85 -> 393.58
+0.20-0.30        | 1.604 (p25 1.439, p75 1.639) | 1.266 | 1.592 | 94.73 -> 95.78
+0.30-0.40        | 1.768 (p25 1.572, p75 1.824) | 1.330 | 1.737 | 29.73 -> 30.56
+0.40-0.50        | 1.731 (p25 1.530, p75 1.825) | 1.316 | 1.631 | 8.45 -> 9.41
+
+restore-0.40 against plane (median over tiles; noise is that of ONE of the two views compared)
+band (cycles/px) | signal power ratio | amplitude ratio | noise power ratio | signal/noise: plane -> restore-0.40
+0.05-0.10        | 1.260 (p25 1.160, p75 1.524) | 1.123 | 2.240 | 4791.60 -> 2012.34
+0.10-0.20        | 1.600 (p25 1.239, p75 2.095) | 1.265 | 2.616 | 856.32 -> 366.76
+0.20-0.30        | 2.232 (p25 1.654, p75 3.593) | 1.494 | 2.205 | 122.84 -> 93.53
+0.30-0.40        | 2.899 (p25 2.208, p75 5.178) | 1.703 | 2.232 | 22.55 -> 29.05
+0.40-0.50        | 4.366 (p25 2.621, p75 8.040) | 2.090 | 2.101 | 5.04 -> 8.50
+
+restore-0.40 against stack (median over tiles; noise is that of ONE of the two views compared)
+band (cycles/px) | signal power ratio | amplitude ratio | noise power ratio | signal/noise: stack -> restore-0.40
+0.05-0.10        | 1.152 (p25 1.121, p75 1.164) | 1.073 | 1.219 | 2393.61 -> 2012.34
+0.10-0.20        | 1.423 (p25 1.302, p75 1.451) | 1.193 | 1.486 | 439.85 -> 366.76
+0.20-0.30        | 1.949 (p25 1.708, p75 2.007) | 1.396 | 1.977 | 94.73 -> 93.53
+0.30-0.40        | 2.620 (p25 2.177, p75 2.671) | 1.619 | 2.667 | 29.73 -> 29.05
+0.40-0.50        | 3.307 (p25 2.572, p75 3.368) | 1.818 | 3.268 | 8.45 -> 8.50

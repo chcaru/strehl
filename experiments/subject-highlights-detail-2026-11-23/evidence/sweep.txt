@@ -1,0 +1,47 @@
+sweep: 26 groups, centre 25182, 24 tiles (the sharpest in the 0.3-0.4 cycles/px band at the centre)
+
+band (cycles/px) | focus-curve width at half height, units (median over tiles; p10-p90) | kept 3.5 units from best focus | kept 7 units away | best-focus spread over tiles (units)
+0.05-0.10        | wider than the sweep | 0.986 (worst tile 0.970) | 0.962 | 10.0
+0.10-0.20        | wider than the sweep | 0.975 (worst tile 0.953) | 0.959 | 8.9
+0.20-0.30        | wider than the sweep | 0.932 (worst tile 0.906) | 0.912 | 10.4
+0.30-0.40        | wider than the sweep | 0.881 (worst tile 0.689) | 0.870 | 11.2
+0.40-0.50        | 33.3 (33.3-33.3) on 1 tiles | 0.836 (worst tile 0.743) | 0.829 | 13.0
+
+shift of each sweep group against the centre group (median over 8 tiles, px):
+   25158: +0.260, -0.272 (tile spread 0.597)
+   25160: +0.255, -0.216 (tile spread 0.598)
+   25162: +0.224, -0.498 (tile spread 0.496)
+   25164: +0.161, -0.150 (tile spread 0.443)
+   25166: +0.167, -0.242 (tile spread 0.432)
+   25168: +0.112, -0.206 (tile spread 0.362)
+   25170: +0.064, -0.095 (tile spread 0.278)
+   25172: +0.091, -0.056 (tile spread 0.278)
+   25174: +0.034, -0.180 (tile spread 0.209)
+   25176: +0.033, -0.089 (tile spread 0.116)
+   25178: +0.017, +0.068 (tile spread 0.057)
+   25180: +0.047, -0.073 (tile spread 0.047)
+   25182: +0.000, +0.000 (tile spread 0.000)
+   25184: -0.017, +0.126 (tile spread 0.067)
+   25186: -0.103, +0.131 (tile spread 0.061)
+   25188: +0.019, +0.320 (tile spread 0.159)
+   25190: -0.072, +0.330 (tile spread 0.230)
+   25192: -0.072, +0.416 (tile spread 0.233)
+   25194: -0.205, +0.589 (tile spread 0.292)
+   25196: -0.317, +0.650 (tile spread 0.369)
+   25198: -0.121, +0.812 (tile spread 0.355)
+   25200: -0.147, +0.762 (tile spread 0.426)
+   25202: -0.194, +0.877 (tile spread 0.505)
+   25204: -0.251, +0.912 (tile spread 0.514)
+   25206: -0.349, +0.969 (tile spread 0.577)
+
+revisits of position 25182:
+   (fine-band power of the same tiles in the sweep at -2 / +2 units: 0.966 / 1.044 of the centre)
+   sweep centre again            130.0 s after the reference: shift +0.187, +0.660 px (tile spread 0.038); 0.3-0.4 band power 0.986 of the reference (tile spread 0.075)
+   revisit 0                    -180.8 s after the reference: shift -0.214, -0.258 px (tile spread 0.033); 0.3-0.4 band power 1.054 of the reference (tile spread 0.066)
+   revisit 1                    -170.0 s after the reference: shift -0.282, -0.280 px (tile spread 0.039); 0.3-0.4 band power 1.021 of the reference (tile spread 0.065)
+   revisit 2                    -160.0 s after the reference: shift -0.368, -0.250 px (tile spread 0.040); 0.3-0.4 band power 0.991 of the reference (tile spread 0.071)
+   revisit 3                    -150.1 s after the reference: shift -0.415, -0.389 px (tile spread 0.043); 0.3-0.4 band power 1.006 of the reference (tile spread 0.085)
+   revisit 4                    -140.0 s after the reference: shift -0.372, -0.746 px (tile spread 0.035); 0.3-0.4 band power 0.989 of the reference (tile spread 0.093)
+   revisit 5                    -130.0 s after the reference: shift -0.376, -0.183 px (tile spread 0.035); 0.3-0.4 band power 0.986 of the reference (tile spread 0.057)
+   ladder owner shutter, first  -186.5 s after the reference: shift -1.202, -2.707 px (tile spread 0.114); 0.3-0.4 band power 1.232 of the reference (tile spread 0.211)
+   ladder owner shutter, last   -200.7 s after the reference: shift -0.520, -0.383 px (tile spread 0.045); 0.3-0.4 band power 1.094 of the reference (tile spread 0.129)

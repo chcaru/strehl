@@ -1,0 +1,14 @@
+1 s, stopped capture (last group of each plane): 20 groups with a measured offset; verdicts without compensation: {'demote: offsets do not cover the four CFA parities': 4, 'demote: witness pairs misregistered beyond tolerance': 10, 'pass': 9, 'demote: witness tiles disagree locally': 1}
+   largest offset between two of the four shots, px: median 0.179, 75th percentile 0.213, 90th 0.370, largest 0.602; at or above 0.2 px: 8
+   offset 0.00-0.15 px:   8 groups, tile ratio (p99 / median z^2) median 1.52, largest 3.27
+   offset 0.15-0.25 px:   9 groups, tile ratio (p99 / median z^2) median 1.88, largest 2.42
+   offset 0.25-0.40 px:   1 groups, tile ratio (p99 / median z^2) median 4.49, largest 4.49
+   offset 0.40-1.00 px:   2 groups, tile ratio (p99 / median z^2) median 7.66, largest 8.67
+   fit: tile ratio - 1 = 22.6 x offset^2, so the 2.5 threshold is reached at 0.26 px
+1/4 s close tile: 149 groups with a measured offset; verdicts without compensation: {'demote: offsets do not cover the four CFA parities': 4, 'demote: witness pairs misregistered beyond tolerance': 112, 'pass': 37}
+   largest offset between two of the four shots, px: median 0.281, 75th percentile 0.371, 90th 0.467, largest 0.861; at or above 0.2 px: 109
+   offset 0.00-0.15 px:  25 groups, tile ratio (p99 / median z^2) median 1.28, largest 1.30
+   offset 0.15-0.25 px:  36 groups, tile ratio (p99 / median z^2) median 1.31, largest 1.51
+   offset 0.25-0.40 px:  60 groups, tile ratio (p99 / median z^2) median 1.52, largest 2.31
+   offset 0.40-1.00 px:  28 groups, tile ratio (p99 / median z^2) median 1.92, largest 3.59
+   fit: tile ratio - 1 = 4.3 x offset^2, so the 2.5 threshold is reached at 0.59 px

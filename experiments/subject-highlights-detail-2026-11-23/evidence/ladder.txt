@@ -1,0 +1,108 @@
+
+=== position 24972 (7 groups)
+ 1.30000 s                        | camera 8.11 s, intent to finished 9.04 s | member spread 0.0028 | sites with a pinned sample in the subject: R 465 G 14592 B 727, any 14697 (0.0677 % of the subject)
+ 0.25000 s owner shutter, first   | camera 4.28 s, intent to finished 5.09 s | member spread 0.0119 | sites with a pinned sample in the subject: R 0 G 142 B 0, any 142 (0.0007 % of the subject)
+ 0.25000 s owner shutter, last    | camera 4.27 s, intent to finished 5.05 s | member spread 0.0024 | sites with a pinned sample in the subject: R 0 G 121 B 0, any 121 (0.0006 % of the subject)
+ 0.06667 s                        | camera 3.81 s, intent to finished 4.53 s | member spread 0.0081 | sites with a pinned sample in the subject: R 0 G 0 B 0, any 0 (0.0000 % of the subject)
+ 0.01667 s                        | camera 3.74 s, intent to finished 4.35 s | member spread 0.0098 | sites with a pinned sample in the subject: R 0 G 0 B 0, any 0 (0.0000 % of the subject)
+ 0.00400 s                        | camera 3.67 s, intent to finished 4.29 s | member spread 0.0208 | sites with a pinned sample in the subject: R 0 G 0 B 0, any 0 (0.0000 % of the subject)
+ 0.00100 s                        | camera 3.61 s, intent to finished 4.27 s | member spread 0.0105 | sites with a pinned sample in the subject: R 0 G 0 B 0, any 0 (0.0000 % of the subject)
+exposure ratios against the owner shutter (median of green block means, blocks at 2-60 % of full scale in both):
+    1.30000 s                      nominal 5.2000 measured 5.0356 (-3.2 %) on 178030 blocks
+    0.25000 s owner shutter, last  nominal 1.0000 measured 0.9447 (-5.5 %) on 177371 blocks
+    0.06667 s                      nominal 0.2667 measured 0.2376 (-10.9 %) on 21649 blocks
+    0.01667 s                      nominal 0.0667 measured 0.0625 (-6.2 %) on 142001 blocks
+    0.00400 s                      nominal 0.0160 measured 0.0150 (-6.3 %) on 1312 blocks
+    0.00100 s                      nominal 0.0040 measured 0.0049 (+23.6 %) on 1 blocks
+   drift first -> last owner group, tile 1: +1, +3 px (whole-pixel peak)
+   drift first -> last owner group, tile 2: +1, +3 px (whole-pixel peak)
+   drift first -> last owner group, tile 3: +0, +0 px (whole-pixel peak)
+   drift first -> last owner group, tile 4: +0, +0 px (whole-pixel peak)
+   drift first -> last owner group, tile 5: +1, +3 px (whole-pixel peak)
+   drift first -> last owner group, tile 6: +0, +0 px (whole-pixel peak)
+   drift first -> last owner group, tile 7: +0, +0 px (whole-pixel peak)
+radiance of the subject in units of the owner shutter's full scale (9x9 window peaks; unknown = pinned even at the shortest shutter: 0 sites)
+   above   0.192 x:    107455 sites (0.49531 % of the subject)
+   above   0.500 x:     12592 sites (0.05804 % of the subject)
+   above   1.000 x:      2245 sites (0.01035 % of the subject)
+   above   2.000 x:       287 sites (0.00132 % of the subject)
+   above   4.000 x:         0 sites (0.00000 % of the subject)
+   above   8.000 x:         0 sites (0.00000 % of the subject)
+   above  16.000 x:         0 sites (0.00000 % of the subject)
+   above  32.000 x:         0 sites (0.00000 % of the subject)
+   above  64.000 x:         0 sites (0.00000 % of the subject)
+   above 128.000 x:         0 sites (0.00000 % of the subject)
+   above 250.000 x:         0 sites (0.00000 % of the subject)
+   28 separate regions exceed the owner full scale; peak median 1.3 x, p90 2.1 x, max 2.5 x; region size (9x9-dilated) median 72, p90 104, max 181 sites
+
+=== position 25182 (7 groups)
+ 1.30000 s                        | camera 8.14 s, intent to finished 9.13 s | member spread 0.0028 | sites with a pinned sample in the subject: R 287 G 11880 B 988, any 11999 (0.0553 % of the subject)
+ 0.25000 s owner shutter, last    | camera 4.20 s, intent to finished 5.07 s | member spread 0.0017 | sites with a pinned sample in the subject: R 4 G 144 B 12, any 151 (0.0007 % of the subject)
+ 0.25000 s owner shutter, first   | camera 4.24 s, intent to finished 5.05 s | member spread 0.0028 | sites with a pinned sample in the subject: R 2 G 156 B 16, any 161 (0.0007 % of the subject)
+ 0.06667 s                        | camera 3.81 s, intent to finished 4.54 s | member spread 0.0358 | sites with a pinned sample in the subject: R 0 G 2 B 0, any 2 (0.0000 % of the subject)
+ 0.01667 s                        | camera 3.60 s, intent to finished 4.47 s | member spread 0.0121 | sites with a pinned sample in the subject: R 0 G 0 B 0, any 0 (0.0000 % of the subject)
+ 0.00400 s                        | camera 3.65 s, intent to finished 4.28 s | member spread 0.0219 | sites with a pinned sample in the subject: R 0 G 0 B 0, any 0 (0.0000 % of the subject)
+ 0.00100 s                        | camera 3.63 s, intent to finished 4.16 s | member spread 0.0534 | sites with a pinned sample in the subject: R 0 G 0 B 0, any 0 (0.0000 % of the subject)
+exposure ratios against the owner shutter (median of green block means, blocks at 2-60 % of full scale in both):
+    1.30000 s                      nominal 5.2000 measured 5.0734 (-2.4 %) on 175045 blocks
+    0.25000 s owner shutter, last  nominal 1.0000 measured 0.9493 (-5.1 %) on 175410 blocks
+    0.06667 s                      nominal 0.2667 measured 0.2519 (-5.5 %) on 26980 blocks
+    0.01667 s                      nominal 0.0667 measured 0.0626 (-6.1 %) on 137450 blocks
+    0.00400 s                      nominal 0.0160 measured 0.0149 (-6.8 %) on 1684 blocks
+    0.00100 s                      nominal 0.0040 measured 0.0085 (+111.9 %) on 1 blocks
+   drift first -> last owner group, tile 1: +1, +2 px (whole-pixel peak)
+   drift first -> last owner group, tile 2: +1, +2 px (whole-pixel peak)
+   drift first -> last owner group, tile 3: +1, +2 px (whole-pixel peak)
+   drift first -> last owner group, tile 4: +0, +0 px (whole-pixel peak)
+   drift first -> last owner group, tile 5: +1, +2 px (whole-pixel peak)
+   drift first -> last owner group, tile 6: +1, +2 px (whole-pixel peak)
+   drift first -> last owner group, tile 7: +0, +0 px (whole-pixel peak)
+radiance of the subject in units of the owner shutter's full scale (9x9 window peaks; unknown = pinned even at the shortest shutter: 0 sites)
+   above   0.192 x:    104351 sites (0.48101 % of the subject)
+   above   0.500 x:     15171 sites (0.06993 % of the subject)
+   above   1.000 x:      3282 sites (0.01513 % of the subject)
+   above   2.000 x:       521 sites (0.00240 % of the subject)
+   above   4.000 x:        81 sites (0.00037 % of the subject)
+   above   8.000 x:         0 sites (0.00000 % of the subject)
+   above  16.000 x:         0 sites (0.00000 % of the subject)
+   above  32.000 x:         0 sites (0.00000 % of the subject)
+   above  64.000 x:         0 sites (0.00000 % of the subject)
+   above 128.000 x:         0 sites (0.00000 % of the subject)
+   above 250.000 x:         0 sites (0.00000 % of the subject)
+   39 separate regions exceed the owner full scale; peak median 1.4 x, p90 2.2 x, max 5.2 x; region size (9x9-dilated) median 81, p90 105, max 119 sites
+
+=== position 25462 (7 groups)
+ 1.30000 s                        | camera 8.16 s, intent to finished 9.16 s | member spread 0.0618 | sites with a pinned sample in the subject: R 1045 G 20371 B 2257, any 20560 (0.0948 % of the subject)
+ 0.25000 s owner shutter, last    | camera 4.23 s, intent to finished 5.12 s | member spread 0.0014 | sites with a pinned sample in the subject: R 15 G 224 B 13, any 239 (0.0011 % of the subject)
+ 0.25000 s owner shutter, first   | camera 4.25 s, intent to finished 5.23 s | member spread 0.0128 | sites with a pinned sample in the subject: R 21 G 258 B 18, any 279 (0.0013 % of the subject)
+ 0.06667 s                        | camera 3.78 s, intent to finished 4.50 s | member spread 0.0155 | sites with a pinned sample in the subject: R 0 G 0 B 0, any 0 (0.0000 % of the subject)
+ 0.01667 s                        | camera 3.62 s, intent to finished 4.33 s | member spread 0.0060 | sites with a pinned sample in the subject: R 0 G 0 B 0, any 0 (0.0000 % of the subject)
+ 0.00400 s                        | camera 3.64 s, intent to finished 4.16 s | member spread 0.0171 | sites with a pinned sample in the subject: R 0 G 0 B 0, any 0 (0.0000 % of the subject)
+ 0.00100 s                        | camera 3.62 s, intent to finished 4.15 s | member spread 0.0753 | sites with a pinned sample in the subject: R 0 G 0 B 0, any 0 (0.0000 % of the subject)
+exposure ratios against the owner shutter (median of green block means, blocks at 2-60 % of full scale in both):
+    1.30000 s                      nominal 5.2000 measured 4.7913 (-7.9 %) on 178128 blocks
+    0.25000 s owner shutter, last  nominal 1.0000 measured 0.9435 (-5.7 %) on 176551 blocks
+    0.06667 s                      nominal 0.2667 measured 0.2481 (-6.9 %) on 25740 blocks
+    0.01667 s                      nominal 0.0667 measured 0.0582 (-12.7 %) on 124518 blocks
+    0.00400 s                      nominal 0.0160 measured 0.0147 (-7.8 %) on 2187 blocks
+    0.00100 s                      nominal 0.0040 measured 0.0046 (+15.8 %) on 4 blocks
+   drift first -> last owner group, tile 1: +0, +0 px (whole-pixel peak)
+   drift first -> last owner group, tile 2: +0, +0 px (whole-pixel peak)
+   drift first -> last owner group, tile 3: +1, +2 px (whole-pixel peak)
+   drift first -> last owner group, tile 4: +0, +2 px (whole-pixel peak)
+   drift first -> last owner group, tile 5: +0, +2 px (whole-pixel peak)
+   drift first -> last owner group, tile 6: +1, +2 px (whole-pixel peak)
+   drift first -> last owner group, tile 7: +1, +2 px (whole-pixel peak)
+radiance of the subject in units of the owner shutter's full scale (9x9 window peaks; unknown = pinned even at the shortest shutter: 0 sites)
+   above   0.192 x:    194312 sites (0.89568 % of the subject)
+   above   0.500 x:     22991 sites (0.10598 % of the subject)
+   above   1.000 x:      4742 sites (0.02186 % of the subject)
+   above   2.000 x:      1164 sites (0.00537 % of the subject)
+   above   4.000 x:         0 sites (0.00000 % of the subject)
+   above   8.000 x:         0 sites (0.00000 % of the subject)
+   above  16.000 x:         0 sites (0.00000 % of the subject)
+   above  32.000 x:         0 sites (0.00000 % of the subject)
+   above  64.000 x:         0 sites (0.00000 % of the subject)
+   above 128.000 x:         0 sites (0.00000 % of the subject)
+   above 250.000 x:         0 sites (0.00000 % of the subject)
+   47 separate regions exceed the owner full scale; peak median 1.4 x, p90 2.8 x, max 3.7 x; region size (9x9-dilated) median 97, p90 137, max 170 sites

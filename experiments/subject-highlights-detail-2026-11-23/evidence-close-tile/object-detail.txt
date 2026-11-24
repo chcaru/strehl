@@ -1,0 +1,19 @@
+close: 27 tiles; scale spacing 42.7 px; signal falls to one half-stack's noise at 0.500 cycles/px = 21.4 cycles per scale spacing
+   signal/noise power at 0.1 / 0.2 / 0.3 / 0.4 cycles/px: 197.6 / 40.4 / 14.7 / 2.5
+wide: 5 tiles; scale spacing 15.1 px; signal falls to one half-stack's noise at 0.500 cycles/px = 7.5 cycles per scale spacing
+   signal/noise power at 0.1 / 0.2 / 0.3 / 0.4 cycles/px: 970.2 / 187.7 / 74.4 / 22.8
+magnification ratio from the scale spacing: 2.83
+detail limit in the subject's units, close over wide: 2.83
+signal/noise power at the same detail size on the subject (cycles per scale spacing):
+    1: close 5215.1 | wide 4094.5
+    2: close 836.6 | wide 437.5
+    3: close 333.4 | wide 187.7
+    4: close 197.6 | wide 90.3
+    5: close 122.3 | wide 50.9
+    6: close 71.3 | wide 22.8
+    7: close 53.1 | wide 9.8
+    8: close 43.1 | wide beyond its pixels
+   10: close 26.0 | wide beyond its pixels
+   12: close 15.7 | wide beyond its pixels
+   16: close 3.7 | wide beyond its pixels
+   20: close 2.8 | wide beyond its pixels

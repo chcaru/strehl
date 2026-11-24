@@ -1,0 +1,6 @@
+close tile, 1/4 s (27 tiles): detail varying along y over detail varying along x, signal power by band:
+   0.05-0.10: 0.76  0.10-0.20: 0.51  0.20-0.30: 0.39  0.30-0.40: 0.32
+life size, 1/4 s (5 tiles): detail varying along y over detail varying along x, signal power by band:
+   0.05-0.10: 0.65  0.10-0.20: 0.74  0.20-0.30: 0.75  0.30-0.40: 0.86
+close tile, 1 s (24 planes) (27 tiles): detail varying along y over detail varying along x, signal power by band:
+   0.05-0.10: 0.76  0.10-0.20: 0.34  0.20-0.30: 0.12  0.30-0.40: 0.03
