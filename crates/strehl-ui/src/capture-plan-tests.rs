@@ -56,6 +56,7 @@ fn inputs<'a>(s: &'a Snapshot, blockers: &'a [Blocker]) -> PlanInputs<'a> {
             stage: "idle",
             ..Default::default()
         },
+        stillness: ("idle", None),
         switches: Switches {
             check: true,
             retake: Some(false),
@@ -225,7 +226,7 @@ fn frame(
     });
     let mut intents = Vec::new();
     let raw = RawInput {
-        screen_rect: Some(Rect::from_min_size(Pos2::ZERO, egui::vec2(348.0, 982.0))),
+        screen_rect: Some(Rect::from_min_size(Pos2::ZERO, egui::vec2(348.0, 1040.0))),
         time: Some(time),
         events,
         ..Default::default()

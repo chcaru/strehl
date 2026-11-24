@@ -1088,6 +1088,7 @@ impl CaptureWorkspace {
                         taken,
                         error,
                     },
+                    stillness: (self.stillness.stage(), self.stillness.line(Instant::now())),
                     switches: Switches {
                         check: self.follow_enabled,
                         retake: s.host.error_correction,
@@ -1328,6 +1329,15 @@ impl CaptureWorkspace {
         match intent {
             PlanIntent::SetSubject(_) | PlanIntent::SetStackName(_) => {}
             PlanIntent::NewCapture => self.new_capture(false),
+            PlanIntent::CheckStillness => match self.stillness.start(s) {
+                Ok((ratio, x, y)) => self.command(s, Command::Magnify { ratio, x, y }),
+                Err(e) => self.error = Some(format!("{e:#}")),
+            },
+            PlanIntent::StopStillness => {
+                if let Some((ratio, x, y)) = self.stillness.stop() {
+                    self.command(s, Command::Magnify { ratio, x, y });
+                }
+            }
             PlanIntent::OpenRig => self.station.rig_requested = true,
             PlanIntent::Connect => self.connect_camera(s, Command::Connect {}),
             PlanIntent::Exposure { iso, shutter } => {

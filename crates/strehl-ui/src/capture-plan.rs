@@ -76,6 +76,8 @@ pub(crate) struct PlanInputs<'a> {
     pub settle_ms: u32,
     pub calibration: CalibrationView,
     pub test_shot: TestShotView,
+    /// Plan Q7: the stillness check's stage and line.
+    pub stillness: (&'static str, Option<String>),
     pub switches: Switches,
     /// The desktop can run the engine (calibration needs it).
     pub engine: bool,
@@ -116,6 +118,9 @@ pub(crate) enum PlanIntent {
     OpenGuide(GuideTab),
     /// Clear the stages for a new capture.
     NewCapture,
+    /// Plan Q7: watch the magnified picture for sway, or stop watching.
+    CheckStillness,
+    StopStillness,
     SetFourShot(bool),
     SetCheck(bool),
     SetRetake(bool),
@@ -989,6 +994,43 @@ fn exposure_step(
         if let Some(line) = test_shot_sentence(&inputs.test_shot) {
             note(ui, &line, palette);
         }
+        // Plan Q7: is the picture still enough for the exposure?
+        let (stage, line) = &inputs.stillness;
+        let checking = matches!(*stage, "magnifying" | "watching" | "measuring");
+        ui.horizontal_wrapped(|ui| {
+            ui.spacing_mut().item_spacing = egui::vec2(10.0, 2.0);
+            if let Some(line) = line {
+                let colour = if *stage == "done" && !line.starts_with("Still") {
+                    palette.warn
+                } else {
+                    palette.ink2
+                };
+                ui.add(
+                    egui::Label::new(egui::RichText::new(line).size(12.0).color(colour)).wrap(),
+                );
+            }
+            if checking {
+                if *stage != "measuring" && style::link(ui, "Stop", true, palette).clicked() {
+                    out.push(PlanIntent::StopStillness);
+                }
+            } else if style::link(
+                ui,
+                if line.is_some() {
+                    "Check stillness again"
+                } else {
+                    "Check stillness (20 s)"
+                },
+                editable && s.host.preview.available,
+                palette,
+            )
+            .on_hover_text(
+                "Watches the magnified live view for 20 s and says how far the picture sways, along which axis, and the longest exposure that keeps the blur under a quarter pixel",
+            )
+            .clicked()
+            {
+                out.push(PlanIntent::CheckStillness);
+            }
+        });
         if let Some(e) = exposure {
             let m = guide::metered(&inputs.test_shot);
             let advice = guide::advise(e, m.as_ref());

@@ -50,6 +50,8 @@ pub(crate) mod rig_settings;
 mod schedule_ui;
 #[path = "capture-station.rs"]
 pub(crate) mod station;
+#[path = "capture-stillness.rs"]
+pub(crate) mod stillness;
 #[path = "capture-style.rs"]
 pub(crate) mod style;
 #[path = "capture-subject.rs"]
@@ -132,6 +134,8 @@ pub(crate) struct CaptureWorkspace {
     selected_stopped: usize,
     /// The Studio 2 station's views (`capture-station.rs`).
     station: station::Station,
+    /// Plan Q7: the stillness check before Start.
+    stillness: stillness::StillnessCheck,
 }
 impl CaptureWorkspace {
     pub fn new(path: Option<PathBuf>) -> Self {
@@ -182,6 +186,7 @@ impl CaptureWorkspace {
             notice_read: 0,
             selected_stopped: 0,
             station: station::Station::default(),
+            stillness: Default::default(),
         }
     }
     fn calibrating(&self) -> bool {
@@ -217,6 +222,13 @@ impl CaptureWorkspace {
         if let Some(run) = self.test_shot.poll(&s, now) {
             connection.mark_test_run(run);
         }
+        if let Some((ratio, x, y)) = self.stillness.poll(&s, now) {
+            // The magnifier as it was before the check.
+            self.command(&s, Command::Magnify { ratio, x, y });
+        }
+        let Some(connection) = &self.connection else {
+            return;
+        };
         // A survey or test shot the desktop stopped waiting for is kept out
         // of the lists once its folder is known (it is not deleted).
         if self.unfollowed_sequence.is_some() && self.unfollowed_sequence == s.host.sequence_id {
