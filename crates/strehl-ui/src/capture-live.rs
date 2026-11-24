@@ -51,6 +51,9 @@ pub(crate) enum LiveIntent {
         grow: f32,
         buffer_px: f32,
     },
+    /// Remove the outline and put the automatic selection away (owner,
+    /// 2026-11-24: "there is no way to clear a polygon").
+    ClearOutline,
     /// The camera magnifier at `ratio` (0 off) centred at `x`, `y` of 639 x 479.
     Magnify { ratio: u32, x: u16, y: u16 },
 }
@@ -422,6 +425,10 @@ pub(crate) struct LiveView {
     pub subject_box: bool,
     /// The subject is drawn as an outline (plan S3) instead of a box.
     pub outline: bool,
+    /// The subject box or outline was chosen by hand; until then an outline
+    /// the host holds is shown as one (owner, 2026-11-24: the outline and
+    /// Auto were hard to find).
+    outline_chosen: bool,
     outline_edit: OutlineEdit,
     /// An outline sent to the host, shown until the host reports it.
     outline_sent: Option<Vec<Vec<Pos2>>>,
@@ -429,6 +436,9 @@ pub(crate) struct LiveView {
     pub auto: AutoView,
     /// The sliders while dragged.
     auto_draft: Option<[f32; 3]>,
+    /// The tool bar's width as last drawn: its box fits its buttons, and the
+    /// estimate panel moves above it when both do not fit side by side.
+    bar_width: f32,
     drag: Option<BoxDrag>,
     /// A box sent to the host, shown until the host reports it (or for
     /// three seconds), so a resized box does not jump back meanwhile.
@@ -456,10 +466,12 @@ impl Default for LiveView {
             grid: false,
             subject_box: true,
             outline: false,
+            outline_chosen: false,
             outline_edit: OutlineEdit::None,
             outline_sent: None,
             auto: AutoView::default(),
             auto_draft: None,
+            bar_width: 520.0,
             drag: None,
             sent: None,
             preview: None,
@@ -686,6 +698,10 @@ impl LiveView {
         {
             self.outline_sent = None;
         }
+        if host_subject.is_some() && !self.outline_chosen {
+            self.outline = true;
+            self.subject_box = true;
+        }
         if self.outline {
             self.auto_panel(ui, photo, palette, &mut out);
             self.outline_ui(
@@ -839,12 +855,21 @@ impl LiveView {
         palette: &CapturePalette,
         out: &mut Vec<LiveIntent>,
     ) {
+        // The box is drawn behind the buttons once they are laid out, as wide
+        // as they are (owner, 2026-11-24: "Magnifier" hung over its end).
         let at = photo.left_bottom() + egui::vec2(10.0, -10.0);
-        let rect = Rect::from_min_size(egui::pos2(at.x, at.y - 34.0), egui::vec2(520.0, 34.0));
-        glass(ui.painter(), rect, palette);
-        ui.scope_builder(
+        let room = Rect::from_min_size(
+            egui::pos2(at.x, at.y - 34.0),
+            egui::vec2((photo.width() - 20.0).max(120.0), 34.0),
+        );
+        let outline_rings_now = self.outline_sent.clone().unwrap_or_else(|| {
+            outline_rings(s.host.plan.as_ref().and_then(|p| p.subject.as_ref()))
+        });
+        let editable = s.fresh() && s.host.editable && !s.pending;
+        let backdrop = ui.painter().add(egui::Shape::Noop);
+        let used = ui.scope_builder(
             egui::UiBuilder::new()
-                .max_rect(rect.shrink2(egui::vec2(8.0, 5.0)))
+                .max_rect(room.shrink2(egui::vec2(8.0, 5.0)))
                 .layout(egui::Layout::left_to_right(egui::Align::Center)),
             |ui| {
                 ui.spacing_mut().item_spacing.x = 4.0;
@@ -869,15 +894,35 @@ impl LiveView {
                         self.threshold = t.round() as u8;
                     }
                 });
-                if self.outline && style::button(ui, "Auto", if self.auto.running { ButtonKind::On } else { ButtonKind::Quiet }, 22.0, self.auto.frames >= 5 && !self.auto.running, palette)
+                if style::button(ui, "Auto", if self.auto.running { ButtonKind::On } else { ButtonKind::Quiet }, 22.0, self.auto.frames >= 5 && !self.auto.running, palette)
                     .on_hover_text(if self.auto.frames >= 5 {
                         format!("Find the subject in the {} live frames of the last survey", self.auto.frames)
                     } else {
-                        "Survey first: Auto reads the live frames the survey shows as it sweeps focus".into()
+                        "Survey first (Survey again on the depth rail): Auto reads the live frames it shows as it sweeps focus. Calibrate step also outlines the subject, from its RAWs".into()
                     })
                     .clicked()
                 {
+                    self.outline = true;
+                    self.subject_box = true;
+                    self.outline_chosen = true;
                     out.push(LiveIntent::AutoSubject);
+                }
+                if self.outline
+                    && style::button(
+                        ui,
+                        "Clear",
+                        ButtonKind::Quiet,
+                        22.0,
+                        editable && !self.auto.running && !outline_rings_now.is_empty(),
+                        palette,
+                    )
+                    .on_hover_text("Remove the outline (and the automatic selection)")
+                    .clicked()
+                {
+                    self.outline_sent = Some(Vec::new());
+                    self.outline_edit = OutlineEdit::None;
+                    self.auto_draft = None;
+                    out.push(LiveIntent::ClearOutline);
                 }
                 for (label, flag) in [("Clipping", 0), ("Grid", 1), ("Subject box", 2), ("Outline", 3)] {
                     let on = match flag {
@@ -887,6 +932,9 @@ impl LiveView {
                         _ => self.subject_box && self.outline,
                     };
                     if style::button(ui, label, if on { ButtonKind::On } else { ButtonKind::Quiet }, 22.0, true, palette).clicked() {
+                        if flag >= 2 {
+                            self.outline_chosen = true;
+                        }
                         match flag {
                             0 => self.clipping = !on,
                             1 => self.grid = !on,
@@ -910,7 +958,6 @@ impl LiveView {
                     } else {
                         format!("Magnifier {}×", trim(current as f32 / 10.0))
                     };
-                    let editable = s.fresh() && s.host.editable && !s.pending;
                     if style::button(ui, &label, if current == 0 { ButtonKind::Quiet } else { ButtonKind::On }, 22.0, editable, palette)
                         .on_hover_text("The camera's magnifier, centred on the subject box; click for the next ratio")
                         .clicked()
@@ -924,7 +971,12 @@ impl LiveView {
                     }
                 }
             },
-        );
+        )
+        .response
+        .rect;
+        let rect = Rect::from_min_max(room.min, egui::pos2(used.right() + 8.0, room.bottom()));
+        ui.painter().set(backdrop, glass_shape(rect, palette));
+        self.bar_width = rect.width();
     }
 
     /// The estimate panel at the bottom right (`.expo`): the histograms
@@ -939,7 +991,7 @@ impl LiveView {
         palette: &CapturePalette,
     ) {
         // Above the tool bar when the picture is too narrow for both.
-        let lift = if photo.width() < 520.0 + PANEL.x + 30.0 {
+        let lift = if photo.width() < self.bar_width + PANEL.x + 30.0 {
             34.0 + 8.0
         } else {
             0.0
@@ -1411,8 +1463,15 @@ fn trim(v: f32) -> String {
 
 /// A floating panel (`.glass`).
 fn glass(p: &egui::Painter, rect: Rect, palette: &CapturePalette) {
-    p.rect_filled(rect.expand(1.0), 0.0, palette.line2);
-    p.rect_filled(rect, 0.0, palette.panel);
+    p.add(glass_shape(rect, palette));
+}
+
+/// [`glass`] as one shape, for a box drawn behind what was laid out in it.
+fn glass_shape(rect: Rect, palette: &CapturePalette) -> egui::Shape {
+    egui::Shape::Vec(vec![
+        egui::Shape::rect_filled(rect.expand(1.0), 0.0, palette.line2),
+        egui::Shape::rect_filled(rect, 0.0, palette.panel),
+    ])
 }
 
 /// The subject box: a faint frame, white corner marks, its caption and,
@@ -1508,9 +1567,10 @@ impl LiveView {
         } else {
             52.0
         };
+        const WIDTH: f32 = 300.0;
         let rect = Rect::from_min_size(
-            egui::pos2(photo.right() - 290.0, photo.top() + 10.0),
-            egui::vec2(280.0, height),
+            egui::pos2(photo.right() - WIDTH - 10.0, photo.top() + 10.0),
+            egui::vec2(WIDTH, height),
         );
         glass(ui.painter(), rect, palette);
         ui.scope_builder(
@@ -1548,9 +1608,17 @@ impl LiveView {
                 .enumerate()
                 {
                     ui.horizontal(|ui| {
-                        ui.spacing_mut().slider_width = 150.0;
+                        // Label, slider and its value inside the panel
+                        // (owner, 2026-11-24: the value boxes hung over
+                        // its right edge).
+                        const LABEL: f32 = 74.0;
+                        const VALUE: f32 = 44.0;
+                        let gaps = 2.0 * ui.spacing().item_spacing.x;
+                        ui.spacing_mut().slider_width =
+                            (ui.available_width() - LABEL - VALUE - gaps).max(40.0);
+                        ui.spacing_mut().interact_size.x = VALUE;
                         ui.add_sized(
-                            egui::vec2(74.0, 16.0),
+                            egui::vec2(LABEL, 16.0),
                             egui::Label::new(
                                 egui::RichText::new(label).size(11.0).color(palette.ink2),
                             ),

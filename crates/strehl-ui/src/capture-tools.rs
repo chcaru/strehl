@@ -44,6 +44,22 @@ pub(crate) struct EngineJob {
     started: Instant,
 }
 
+/// What reads a calibration's capture: plan X1's two-shutter survey is
+/// read by `strehl survey` (subject, depth, step, levels, census), a
+/// single-shutter one by `focus-step`.
+pub fn measure_args(survey: bool, run: &Path) -> Vec<OsString> {
+    let command = if survey { "survey" } else { "focus-step" };
+    vec![command.into(), run.as_os_str().to_owned()]
+}
+
+/// The engine's command line for a job: its arguments, then `--json <file>`
+/// for the result (every tool command takes it so).
+pub fn engine_args(mut args: Vec<OsString>, json: &Path) -> Vec<OsString> {
+    args.push("--json".into());
+    args.push(json.as_os_str().to_owned());
+    args
+}
+
 impl EngineJob {
     pub fn start(engine: &Path, args: Vec<OsString>) -> Result<Self> {
         let stamp = format!(
@@ -57,7 +73,7 @@ impl EngineJob {
         let json = std::env::temp_dir().join(format!("strehl-capture-tool-{stamp}.json"));
         let errors = std::env::temp_dir().join(format!("strehl-capture-tool-{stamp}.err"));
         let mut command = crate::engine::command(engine)?;
-        command.args(&args).arg("--json").arg(&json);
+        command.args(engine_args(args, &json));
         crate::jobs::remove_experimental_overrides(&mut command, std::env::vars_os());
         command.env("STREHL_CACHE_DIR", strehl_cli::default_cache_root());
         command.env_remove("RAYON_NUM_THREADS");
@@ -326,9 +342,15 @@ pub(crate) enum Calibration {
         /// the calibration fails with it once the engine is reaped.
         ended: Option<String>,
     },
-    /// Back to four RAWs a plane, then done.
+    /// Back to four RAWs a plane, then done; or, for a calibration that
+    /// failed after switching to one RAW (`result` is `{"error": why}`),
+    /// failed once four-shot is set again (owner, 2026-11-24: "Calibrate
+    /// step does not restore earlier settings").
     Restoring {
         result: Value,
+        /// Whether `pixel_shift` 4 was sent; a failed calibration sends it
+        /// once the host is idle (a stopped survey finishes first).
+        sent: bool,
         deadline: Instant,
     },
     Done(Value),
@@ -411,6 +433,10 @@ impl Calibration {
                     ended: ended.or_else(|| Some(why.into())),
                 }
             }
+            Self::Restoring { result, .. } if result["error"].is_string() => Self::Failed(format!(
+                "{}. Four-shot was not confirmed: set it again before the next stack",
+                result["error"].as_str().unwrap_or_default()
+            )),
             Self::Restoring { mut result, .. } => {
                 let summary = result["summary"].as_str().unwrap_or("").to_owned();
                 result["summary"] = json!(format!(
@@ -518,6 +544,32 @@ mod tests {
     use super::*;
     use crate::capture_client::Snapshot;
 
+    /// Every command line the Capture screen gives the engine parses
+    /// (owner, 2026-11-24: Calibrate step stopped with "For more
+    /// information, try '--help'": `survey` was given `--json` twice).
+    #[test]
+    fn the_capture_screens_engine_commands_parse() {
+        let run = Path::new(r"D:\StrehlCaptures\stack-1-2");
+        let json = Path::new(r"C:\Temp\strehl-capture-tool-1.json");
+        let folder = run.as_os_str().to_owned();
+        for args in [
+            measure_args(true, run),
+            measure_args(false, run),
+            vec!["focus-step".into(), folder.clone()],
+            vec!["compact".into(), folder.clone()],
+            vec!["compact".into(), folder, "--apply".into()],
+        ] {
+            let line = engine_args(args, json);
+            assert_eq!(strehl_cli::command_line_error(&line), None, "{line:?}");
+        }
+        // The check itself fails on the line that broke Calibrate.
+        let broken = engine_args(
+            vec!["survey".into(), "--json".into(), run.as_os_str().to_owned()],
+            json,
+        );
+        assert!(strehl_cli::command_line_error(&broken).is_some());
+    }
+
     /// A stand-in engine that runs until killed (Windows `cmd`): the
     /// arguments the job appends are commented out by `rem`.
     #[cfg(windows)]
@@ -619,8 +671,22 @@ mod tests {
         assert_eq!(c.survey_sequence(), Some(7));
         c.stop("Calibration stopped");
         assert!(matches!(&c, Calibration::Failed(e) if e.contains("not checked")));
+        // A failed calibration restoring four-shot stays failed when it
+        // gives up, and says four-shot was not confirmed.
+        let mut c = Calibration::Restoring {
+            result: json!({"error":"Calibration stopped"}),
+            sent: false,
+            deadline: now,
+        };
+        c.expire(now);
+        assert!(
+            matches!(&c, Calibration::Failed(e) if e.starts_with("Calibration stopped") && e.contains("not confirmed")),
+            "{}",
+            c.stage()
+        );
         let mut c = Calibration::Restoring {
             result: json!({"summary":"Sharp over 80 units.","suggested_step":20}),
+            sent: true,
             deadline: now,
         };
         c.expire(now);

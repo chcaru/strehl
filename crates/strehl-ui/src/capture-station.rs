@@ -107,6 +107,9 @@ pub(crate) struct Station {
     /// A fixture's subject choice, made once the catalog's subjects arrive
     /// (`plan+existing`, `plan+taken`; offscreen pictures only).
     fixture_subject: Option<&'static str>,
+    /// A fixture's automatic selection (`plan+survey`), shown instead of
+    /// the station's own.
+    fixture_auto: Option<super::live::AutoView>,
     /// The plane view's data (one deck a run, kept for its review) and
     /// state, and the window's presenter its textures are uploaded with.
     planes: Option<PlaneDeck>,
@@ -535,7 +538,14 @@ impl CaptureWorkspace {
         // to be retaken by hand and a run of one-shot planes.
         let retakes = which != Fixture::Plan && open.starts_with("retakes");
         let open = if open == "retakes-done" { "done" } else { open };
-        let mut snapshot = fixture::snapshot(which);
+        // `plan+survey`: per-position shutters, an outline with the
+        // automatic selection's panel, and a two-shutter survey's result.
+        let survey = which == Fixture::Plan && open == "survey";
+        let mut snapshot = if survey {
+            fixture::survey_snapshot()
+        } else {
+            fixture::snapshot(which)
+        };
         if let Some((_, groups)) = &long {
             fixture::lengthen(&mut snapshot, *groups);
         }
@@ -562,6 +572,18 @@ impl CaptureWorkspace {
         self.calibration = Calibration::Done(serde_json::json!({"width":50.0,"suggested_step":7,
             "summary":"Detail stays sharp over about 50 focus units."}));
         self.station.calibrated_at = Some(fixture::earlier(14));
+        if survey {
+            self.calibration = Calibration::Done(fixture::survey_result());
+            self.station.live.outline = true;
+            self.station.fixture_auto = Some(super::live::AutoView {
+                frames: 31,
+                running: false,
+                line: Some(
+                    "Found in 31 frames: 28.7 % of the frame, sharp 37,100 to 37,764".into(),
+                ),
+                params: Some([4.0, 2.0, 24.0]),
+            });
+        }
         self.test_shot_exposure = Some((100, 65544));
         self.open_fixture_panel(open);
         // The subject's states (owner feedback, 2026-11-22): unnamed, its
@@ -827,11 +849,16 @@ impl CaptureWorkspace {
         if let Some(plan) = s.host.plan.clone() {
             self.sync_plan(plan, s.host.plan_revision.unwrap_or(0));
         }
+        // A run a tool of this desktop started (a test shot, a calibration's
+        // survey, a sequence it stopped following) is not a stack: it takes
+        // no names and gets no proof or plane deck (owner, 2026-11-24: the
+        // subject name was cleared after Calibrate step).
+        let tool = self.not_a_stack(s);
         // The proof follows the capture being written (not a test shot).
         if let Some(run) = s
             .in_progress
             .as_ref()
-            .filter(|r| !r.test && s.host.phase.capturing())
+            .filter(|r| !r.test && !tool && s.host.phase.capturing())
             && self
                 .station
                 .proof
@@ -850,7 +877,7 @@ impl CaptureWorkspace {
         if let Some(run) = s
             .in_progress
             .as_ref()
-            .filter(|r| !r.test && s.host.phase.capturing())
+            .filter(|r| !r.test && !tool && s.host.phase.capturing())
             && self
                 .station
                 .planes
@@ -867,7 +894,7 @@ impl CaptureWorkspace {
         if let Some(run) = s
             .in_progress
             .as_ref()
-            .filter(|r| !r.test && s.host.phase.capturing())
+            .filter(|r| !r.test && !tool && s.host.phase.capturing())
             && !self
                 .station
                 .named_runs
@@ -1016,15 +1043,19 @@ impl CaptureWorkspace {
         let palette = palette.on_canvas();
         match self.station_mode() {
             StationMode::Plan => {
-                self.station.live.auto = super::live::AutoView {
-                    frames: self.survey_frames.len(),
-                    running: self.auto_subject.running(),
-                    line: self.auto_subject.line(),
-                    params: self
-                        .auto_subject
-                        .params()
-                        .map(|p| [p.sensitivity, p.grow, p.buffer_px]),
-                };
+                self.station.live.auto =
+                    self.station
+                        .fixture_auto
+                        .clone()
+                        .unwrap_or_else(|| super::live::AutoView {
+                            frames: self.survey_frames.len(),
+                            running: self.auto_subject.running(),
+                            line: self.auto_subject.line(),
+                            params: self
+                                .auto_subject
+                                .params()
+                                .map(|p| [p.sensitivity, p.grow, p.buffer_px]),
+                        });
                 let intents = self.station.live.show(ui, s, &palette);
                 for intent in intents {
                     self.apply_live(s, intent);
@@ -1625,6 +1656,13 @@ impl CaptureWorkspace {
                     outline.bounding_box()
                 });
                 self.command(s, Command::Roi { roi });
+            }
+            LiveIntent::ClearOutline => {
+                // The automatic selection goes too, with its panel; a new
+                // Auto finds it again from the kept survey frames.
+                self.auto_subject = Default::default();
+                self.station.fixture_auto = None;
+                self.apply_live(s, LiveIntent::SetSubject(None));
             }
             LiveIntent::AutoSubject => {
                 let active = super::auto_subject::active_px(s.host.camera_model.as_deref());

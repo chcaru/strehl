@@ -49,16 +49,17 @@ use crate::subject_cmd::{SubjectJson, run_evidence};
 pub struct SurveyArgs {
     /// Survey folder: a positions run of single shots at two shutters.
     pub dir: PathBuf,
+    /// Write the survey JSON to this file, as the other capture tools take
+    /// it (`--json <file>`; `--out` is the same).
+    #[arg(long, visible_alias = "out")]
+    pub json: Option<PathBuf>,
     /// Print the survey JSON on stdout (the report goes to stderr).
     #[arg(long)]
-    pub json: bool,
+    pub print_json: bool,
     /// Use this subject instead of finding one: a `strehl subject` JSON, or
     /// a manifest whose `plan.subject` holds one.
     #[arg(long)]
     pub subject: Option<PathBuf>,
-    /// Also write the survey JSON here.
-    #[arg(long)]
-    pub out: Option<PathBuf>,
     /// Long frames the subject is found from, spread over the positions.
     #[arg(long, default_value_t = 13)]
     pub count: usize,
@@ -1611,7 +1612,7 @@ fn code_text(code: Option<u64>, s: f64) -> String {
 }
 
 pub fn run(args: &SurveyArgs) -> Result<()> {
-    if let Some(out) = &args.out {
+    if let Some(out) = &args.json {
         refuse_inside(&args.dir, out)?;
     }
     let t0 = Instant::now();
@@ -2018,13 +2019,13 @@ pub fn run(args: &SurveyArgs) -> Result<()> {
     ));
     line(format!("summary         : {}", out.summary));
     let text = serde_json::to_string_pretty(&out)?;
-    if args.json {
+    if args.print_json {
         eprint!("{report}");
         println!("{text}");
     } else {
         print!("{report}");
     }
-    if let Some(path) = &args.out {
+    if let Some(path) = &args.json {
         std::fs::write(path, &text).with_context(|| format!("write {}", path.display()))?;
     }
     Ok(())

@@ -9,10 +9,10 @@ independent result), DERIVED, ARGUED, UNVERIFIED.
 
 ## What was built
 
-`strehl survey <folder> [--json] [--subject <json>] [--out <json>] [--count 13]
+`strehl survey <folder> [--json <file>] [--print-json] [--subject <json>] [--count 13]
 [--no-register] [--decodes 4]` in `crates/strehl-cli/src/survey-cmd.rs` (tests in
-`survey-cmd-tests.rs`; `lib.rs` only registers it). Read-only over the capture; `--out`
-is refused inside it.
+`survey-cmd-tests.rs`; `lib.rs` only registers it). Read-only over the capture; `--json`
+(or `--out`) is refused inside it.
 
 1. **Shots.** Member 1 of every recorded group with a durable file, a focus target and a
    timed shutter. The shutter and ISO come from the `capture_buffered` event's `exposure`

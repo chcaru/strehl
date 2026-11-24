@@ -91,9 +91,36 @@ fn plan_state() -> Value {
         "schedule":{"job":null,"error":null},"pending_control":0,"completed":0,"total":0})
 }
 
+/// `plan+survey`: a host that takes a shutter per position and holds a
+/// subject outline (plans X1, S1), for the rows and tools they bring.
+pub(crate) fn survey_snapshot() -> Snapshot {
+    let mut state = plan_state();
+    state["capabilities"]["exposure_tiers"] = json!(true);
+    state["capabilities"]["subject"] = json!(true);
+    state["plan"]["subject"] = json!({"rings":[[[0.18,0.22],[0.62,0.14],[0.83,0.4],[0.74,0.78],
+        [0.34,0.86],[0.12,0.6]]],"reference_focus":37500,"rate_ppm":null,
+        "provenance":{"kind":"auto"}});
+    snapshot_from(Fixture::Plan, state)
+}
+
+/// What Calibrate step reports from a two-shutter survey (`strehl survey`
+/// on the pronotum, 2026-11-24, the fields the desktop reads).
+pub(crate) fn survey_result() -> Value {
+    json!({"width":72.3,"suggested_step":10,
+        "summary":"Subject found (28.7 % of the frame), sharp from focus 37,100 to 37,764. Suggested: the highlight pass.",
+        "survey":{"advice":{"suggested":"highlight_pass",
+            "highlight_pass":{"base_code":1310730,"short_code":65561},
+            "protect":{"code":65561},
+            "accept":{"code":1310730,"pinned_sites_per_plane":9341.7}},
+            "census":{"top":2.55}}})
+}
+
 /// The host's state, the receiver and the pictures for `fixture`.
 pub(crate) fn snapshot(fixture: Fixture) -> Snapshot {
-    let mut state = plan_state();
+    snapshot_from(fixture, plan_state())
+}
+
+fn snapshot_from(fixture: Fixture, mut state: Value) -> Snapshot {
     if fixture != Fixture::Plan {
         let captured = flight_groups() * 4;
         for (key, value) in [

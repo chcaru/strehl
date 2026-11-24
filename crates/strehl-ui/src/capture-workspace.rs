@@ -138,6 +138,9 @@ pub(crate) struct CaptureWorkspace {
     station: station::Station,
     /// Plan Q7: the stillness check before Start.
     stillness: stillness::StillnessCheck,
+    /// The camera took four RAWs a plane when the calibration began: a
+    /// calibration that fails sets it again (see `poll_tools`).
+    restore_four_after_calibration: bool,
     /// Plan S1: an outline to give the host once it can take one (the
     /// subject's last outline, for a new stack of it).
     pending_subject: Option<strehl_capture::model::Subject>,
@@ -199,6 +202,7 @@ impl CaptureWorkspace {
             selected_stopped: 0,
             station: station::Station::default(),
             stillness: Default::default(),
+            restore_four_after_calibration: false,
             pending_subject: None,
             pending_highlight: None,
             survey_frames: Default::default(),
@@ -207,6 +211,17 @@ impl CaptureWorkspace {
     }
     fn calibrating(&self) -> bool {
         self.calibration.running()
+    }
+    /// A run the desktop knows is not a stack: a test shot (by its
+    /// manifest, or one this desktop took), a survey, or a sequence it
+    /// stopped waiting for.
+    pub(super) fn not_a_stack(&self, s: &Snapshot) -> bool {
+        s.in_progress.as_ref().is_some_and(|r| r.test)
+            || self.test_shot.running()
+            || self.calibrating()
+            || (self.unfollowed_sequence.is_some()
+                && self.unfollowed_sequence == s.host.sequence_id
+                && s.host.phase.capturing())
     }
     /// The light warmup a capture waits through when the host manages power.
     fn warmup(s: &Snapshot) -> Duration {
@@ -314,6 +329,12 @@ impl CaptureWorkspace {
                 "The camera switched off during the calibration: turn it on and calibrate again"
                     .into(),
             ),
+            C::Restoring { result, .. } if gone && result["error"].is_string() => {
+                C::Failed(format!(
+                    "{}. The camera switched off before four-shot could be set again: set it when the camera is back",
+                    result["error"].as_str().unwrap_or_default()
+                ))
+            }
             C::Restoring { mut result, .. } if gone => {
                 let summary = result["summary"].as_str().unwrap_or("").to_owned();
                 result["summary"] = json!(format!(
@@ -373,16 +394,9 @@ impl CaptureWorkspace {
             } if host.sequence_id == Some(sequence) && !host.busy => match host.phase {
                 HostPhase::Complete => {
                     let run = host.last_receipt_run();
-                    // Plan X1: the two-shutter survey is read by `strehl
-                    // survey` (subject, depth, step, levels, census).
-                    let mut args: Vec<std::ffi::OsString> = if survey {
-                        vec!["survey".into(), "--json".into()]
-                    } else {
-                        vec!["focus-step".into()]
-                    };
                     match (run, &self.engine) {
                         (Some(run), Some(engine)) => {
-                            args.push(run.clone().into_os_string());
+                            let args = tools::measure_args(survey, &run);
                             match tools::EngineJob::start(engine, args) {
                                 Ok(job) => C::Measuring {
                                     restore_four,
@@ -478,6 +492,7 @@ impl CaptureWorkspace {
                                     match r {
                                         Ok(()) => C::Restoring {
                                             result: v,
+                                            sent: true,
                                             deadline: now + tools::SWITCH_TIMEOUT,
                                         },
                                         Err(e) => C::Failed(format!("{e:#}")),
@@ -489,9 +504,60 @@ impl CaptureWorkspace {
                     }
                 }
             },
-            C::Restoring { result, .. } if idle && shots == Some(4) => C::Done(result),
+            C::Restoring { result, .. } if idle && shots == Some(4) => {
+                match result["error"].as_str() {
+                    Some(why) => C::Failed(format!("{why}. Four-shot is set again")),
+                    None => C::Done(result),
+                }
+            }
+            C::Restoring {
+                result,
+                sent: false,
+                deadline,
+            } if idle => {
+                match s
+                    .request(Command::PixelShift { shots: 4 })
+                    .and_then(|r| self.submit(r))
+                {
+                    Ok(()) => C::Restoring {
+                        result,
+                        sent: true,
+                        deadline: deadline.max(now + tools::SWITCH_TIMEOUT),
+                    },
+                    Err(e) => C::Failed(format!(
+                        "{}. Four-shot could not be set again ({e:#}): set it before the next stack",
+                        result["error"].as_str().unwrap_or_default()
+                    )),
+                }
+            }
             other => other,
         };
+        // A calibration that switched the camera to one RAW a plane and then
+        // failed or was stopped sets four-shot again before it reports
+        // (owner, 2026-11-24). A survey still finishing on the host is waited
+        // for; a camera that went away cannot be set.
+        if self.restore_four_after_calibration {
+            match &mut self.calibration {
+                C::Failed(why) if host.connected => {
+                    self.restore_four_after_calibration = false;
+                    self.calibration = C::Restoring {
+                        result: json!({"error": why.clone()}),
+                        sent: false,
+                        deadline: now + tools::SURVEY_TIMEOUT + tools::SWITCH_TIMEOUT,
+                    };
+                }
+                C::Failed(why) => {
+                    self.restore_four_after_calibration = false;
+                    why.push_str(
+                        ". The camera is off, so four-shot was not set again: set it before the next stack",
+                    );
+                }
+                C::Done(_) | C::Restoring { .. } | C::Idle => {
+                    self.restore_four_after_calibration = false;
+                }
+                _ => {}
+            }
+        }
         station::note_calibration(&mut self.station, stage_before, &self.calibration);
         // Plan X1/S2: the survey's precise outline (RAW frames) becomes the
         // subject when the plan has none.
@@ -543,6 +609,7 @@ impl CaptureWorkspace {
         if restore_four {
             self.command(s, Command::PixelShift { shots: 1 });
         }
+        self.restore_four_after_calibration = restore_four;
         self.calibration = tools::Calibration::Switching {
             restore_four,
             positions,
@@ -664,15 +731,7 @@ impl CaptureWorkspace {
         self.shown = false;
         connection.set_cadence(Cadence::choose(open, s.host.phase.active()));
         let capturing = s.host.phase.capturing();
-        // A run the desktop knows is not a stack: a test shot (by its
-        // manifest, or one this desktop took), a survey, or a sequence it
-        // stopped waiting for.
-        let not_a_stack = s.in_progress.as_ref().is_some_and(|r| r.test)
-            || self.test_shot.running()
-            || self.calibrating()
-            || (self.unfollowed_sequence.is_some()
-                && self.unfollowed_sequence == s.host.sequence_id
-                && capturing);
+        let not_a_stack = self.not_a_stack(&s);
         let current = s.in_progress.as_ref().filter(|_| !not_a_stack);
         // Retakes after the capture ended (h-retake) go into its run: its
         // checker, finished with the capture, checks them too.

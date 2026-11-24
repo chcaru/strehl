@@ -135,6 +135,15 @@ struct Cli {
     command: Command,
 }
 
+/// Clap's message when `strehl <args>` does not parse, else `None`: lets
+/// the desktop test the command lines it builds for the engine (owner,
+/// 2026-11-24: Calibrate step stopped with "For more information, try
+/// '--help'" when `survey` was given `--json` twice).
+pub fn command_line_error(args: &[std::ffi::OsString]) -> Option<String> {
+    let argv = std::iter::once(std::ffi::OsString::from("strehl")).chain(args.iter().cloned());
+    Cli::try_parse_from(argv).err().map(|e| e.to_string())
+}
+
 /// What `strehl focus` can do.
 ///
 /// A subcommand rather than a bare `--list` flag because listing and selecting

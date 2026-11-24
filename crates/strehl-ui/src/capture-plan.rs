@@ -1212,38 +1212,59 @@ fn advice_rows(
     rows.sort_by_key(|r| r.0 != suggested);
     ui.add_space(4.0);
     style::text(ui, "From the calibration", 12.5, palette.ink2);
+    // A ruled list: each choice's button in a column of its own, what it
+    // does wrapped beside it (owner, 2026-11-24: the rows were ragged).
+    const CHOICE: f32 = 124.0;
     for (key, name, text, shutter, highlight) in rows {
-        ui.horizontal_wrapped(|ui| {
+        let current = e.shutter == shutter
+            && inputs
+                .s
+                .host
+                .plan
+                .as_ref()
+                .and_then(|p| p.highlight)
+                .map(|h| h.shutter)
+                == highlight;
+        ui.add_space(4.0);
+        ui.with_layout(egui::Layout::left_to_right(egui::Align::Min), |ui| {
             ui.spacing_mut().item_spacing.x = 8.0;
-            let current = e.shutter == shutter
-                && inputs
-                    .s
-                    .host
-                    .plan
-                    .as_ref()
-                    .and_then(|p| p.highlight)
-                    .map(|h| h.shutter)
-                    == highlight;
-            let r = style::button(
-                ui,
-                if current { "In use" } else { name },
-                if key == suggested {
-                    ButtonKind::Plain
-                } else {
-                    ButtonKind::Quiet
-                },
-                22.0,
-                editable && shutter.is_some() && !current,
-                palette,
-            );
+            let r = ui
+                .allocate_ui_with_layout(
+                    egui::vec2(CHOICE, 22.0),
+                    egui::Layout::left_to_right(egui::Align::Min),
+                    |ui| {
+                        ui.set_min_width(CHOICE);
+                        style::button(
+                            ui,
+                            name,
+                            if current {
+                                ButtonKind::On
+                            } else if key == suggested {
+                                ButtonKind::Plain
+                            } else {
+                                ButtonKind::Quiet
+                            },
+                            22.0,
+                            editable && shutter.is_some() && !current,
+                            palette,
+                        )
+                    },
+                )
+                .inner;
             if r.clicked()
                 && let Some(shutter) = shutter
             {
                 out.push(PlanIntent::UseAdvice { shutter, highlight });
             }
-            let mut job = style::job(&text, 12.0, palette.ink2, 0.0);
-            job.wrap.max_width = ui.available_width();
-            ui.label(job);
+            let text = match (current, key == suggested) {
+                (true, _) => format!("In use. {text}"),
+                (false, true) => format!("Suggested. {text}"),
+                _ => text,
+            };
+            ui.vertical(|ui| {
+                ui.set_max_width(ui.available_width());
+                ui.add(egui::Label::new(style::job(&text, 12.0, palette.ink2, 0.0)).wrap());
+            });
         });
     }
 }
@@ -1261,14 +1282,36 @@ fn highlight_row(
     let s = inputs.s;
     let current = s.host.plan.as_ref().and_then(|p| p.highlight);
     ui.add_space(4.0);
+    let base = e.shutter.unwrap_or(0);
+    let default = current
+        .map(|h| h.shutter)
+        .or_else(|| shorter_shutter(&e.shutter_options, base, 4.0));
+    // The label with the groups' shutter at its right, then the density on
+    // a row of its own that wraps: the row fits the column at any width
+    // (owner, 2026-11-24: rows ran past the pane and widened the boxes
+    // below them).
     ui.horizontal(|ui| {
-        ui.spacing_mut().item_spacing.x = 4.0;
         style::text(ui, "Highlight groups", 12.5, palette.ink2);
-        ui.add_space(6.0);
-        let base = e.shutter.unwrap_or(0);
-        let default = current
-            .map(|h| h.shutter)
-            .or_else(|| shorter_shutter(&e.shutter_options, base, 4.0));
+        if let Some(h) = current {
+            ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                if let Some(code) = picker(
+                    ui,
+                    "capture-highlight-shutter",
+                    86.0,
+                    &style::shutter_label(h.shutter),
+                    &e.shutter_options,
+                    style::shutter_label,
+                    editable,
+                    palette,
+                ) {
+                    out.push(PlanIntent::SetHighlight(Some((h.every, code))));
+                }
+            });
+        }
+    });
+    ui.add_space(4.0);
+    ui.horizontal_wrapped(|ui| {
+        ui.spacing_mut().item_spacing = egui::vec2(4.0, 4.0);
         for (label, every) in [
             ("Off", None),
             ("Every plane", Some(1u16)),
@@ -1291,21 +1334,6 @@ fn highlight_row(
                 && !on
             {
                 out.push(PlanIntent::SetHighlight(every.zip(default)));
-            }
-        }
-        if let Some(h) = current {
-            ui.add_space(6.0);
-            if let Some(code) = picker(
-                ui,
-                "capture-highlight-shutter",
-                86.0,
-                &style::shutter_label(h.shutter),
-                &e.shutter_options,
-                style::shutter_label,
-                editable,
-                palette,
-            ) {
-                out.push(PlanIntent::SetHighlight(Some((h.every, code))));
             }
         }
     });

@@ -467,4 +467,11 @@ fn a_pass_and_a_positions_runs_shutters_are_journalled() {
         .map(|b| b["exposure"]["shutter"].as_u64().unwrap())
         .collect();
     assert_eq!(shutters, [base, short]);
+    // ... and leaves the camera at the shutter it found (owner, 2026-11-24:
+    // the exposure was changed after Calibrate step).
+    assert_eq!(
+        property(&camera.status().unwrap(), "ShutterSpeed"),
+        Some(base),
+        "the camera is back at the run's own shutter"
+    );
 }

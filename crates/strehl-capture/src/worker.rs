@@ -1525,6 +1525,17 @@ fn capture(
         }
         Ok(true)
     })();
+    // A run with its own shutters (a two-shutter survey, plan X1) leaves the
+    // camera at the shutter it found, finished or not (owner, 2026-11-24:
+    // the exposure was changed after Calibrate step).
+    if shutters.is_some()
+        && let Some(back) = property(&initial_exposure, "ShutterSpeed")
+        && let Err(e) = set_shutter(c, s, &mut log, 0, back)
+    {
+        update(s, |v| {
+            v.message = format!("Set the shutter back by hand: {e:#}")
+        });
+    }
     // Retakes asked for once the run could no longer take them (it was
     // stopped, or ended as they arrived): said in the journal, and the
     // queue is empty for the desktop to offer them again.

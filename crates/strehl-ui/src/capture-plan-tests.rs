@@ -476,6 +476,84 @@ fn nothing_runs_past_the_inspector() {
     }
 }
 
+/// Nothing in the plan's column runs past its margin (16 px inside the
+/// inspector), in the states the survey brings: its three exposure
+/// choices, highlight groups, the subject's bounds and a stillness result,
+/// with the rig settings shut and open. One row wider than the column
+/// widens every full-width box after it (owner, 2026-11-24: "not all
+/// (most) the containers ... get clipped outside the pane to the right").
+#[test]
+fn nothing_runs_past_the_plan_column() {
+    let ctx = egui::Context::default();
+    crate::theme::install(&ctx);
+    let mut state = ready();
+    state["suggestion"] = json!({"start":37000,"end":37764,"supported_tiles":20,"clipped":false});
+    state["capabilities"] = json!({"test_shot":true,"exposure_check":true,"max_retakes":true,
+        "queue_retakes":true,"new_plan":true,"subject":true,"exposure_tiers":true});
+    state["exposure"]["shutter_options"] = json!([
+        65561, 65556, 65551, 65546, 65544, 65540, 65538, 655370, 1310730
+    ]);
+    state["plan"]["subject"] = json!({"rings":[[[0.2,0.2],[0.8,0.2],[0.8,0.8],[0.2,0.8]]],
+        "reference_focus":37500,"rate_ppm":null,"provenance":{"kind":"auto"}});
+    state["plan"]["highlight"] = json!({"shutter":65561,"every":2,"first_plane":1,
+        "last_plane":96,"shots":4});
+    let s = snapshot(state);
+    let mut input = inputs(&s, &[]);
+    input.test_shot = tested(0.97);
+    input.calibration = CalibrationView {
+        stage: "done",
+        gives_up_in: None,
+        result: crate::capture_workspace::fixture::survey_result(),
+        finished: None,
+    };
+    input.subject_depth = Some((37150, 37700));
+    input.stillness = (
+        "done",
+        Some("Still: the picture moved 0.45 px rms (2.6 Hz) over 20 s; exposures up to 1/43 s keep it under 0.1 px".into()),
+    );
+    for width in [300.0, 348.0, 440.0] {
+        for rig_open in [false, true] {
+            let mut view = PlanView {
+                rig_open,
+                custom_step: "12".into(),
+                ..Default::default()
+            };
+            frame_at(&ctx, &mut view, &input, width, vec![]);
+            let (out, _) = frame_at(&ctx, &mut view, &input, width, vec![]);
+            let edge = width - 16.0 + 0.5;
+            let mut seen = 0;
+            let mut past = Vec::new();
+            for shape in &out.shapes {
+                let (what, r) = match &shape.shape {
+                    egui::Shape::Text(t) if !t.galley.text().is_empty() => {
+                        (t.galley.text().to_owned(), t.visual_bounding_rect())
+                    }
+                    // Boxes drawn in the column (fields, buttons, rows), not
+                    // the panel's own fill and rules, which start at its edge.
+                    egui::Shape::Rect(r) if r.rect.left() > 8.0 && r.rect.width() > 4.0 => {
+                        ("a box".to_owned(), r.rect)
+                    }
+                    _ => continue,
+                };
+                seen += 1;
+                if r.right() > edge {
+                    past.push(format!("{what} to {:.1} at y {:.0}", r.right(), r.top()));
+                }
+            }
+            assert!(
+                past.is_empty(),
+                "at {width} (rig {rig_open}), past the column's edge {edge}:
+{}",
+                past.join(
+                    "
+"
+                )
+            );
+            assert!(seen > 80, "the plan drew its column ({seen})");
+        }
+    }
+}
+
 /// The rig's settings open from its step; the summary names them.
 #[test]
 fn the_rig_settings_open_from_the_rig_step() {
