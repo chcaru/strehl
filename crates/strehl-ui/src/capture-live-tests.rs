@@ -514,3 +514,85 @@ fn the_preview_fits_its_canvas() {
     assert!((r.height() - 773.0).abs() < 0.5, "the mockup's 1160 x 773");
     assert!((r.width() - 1159.5).abs() < 1.0);
 }
+
+/// A click: press and release at one place, apart in time from the last.
+fn click_at(
+    ctx: &egui::Context,
+    view: &mut LiveView,
+    s: &Snapshot,
+    time: &mut f64,
+    at: Pos2,
+    secondary: bool,
+) -> Vec<LiveIntent> {
+    let press = |pressed| egui::Event::PointerButton {
+        pos: at,
+        button: if secondary {
+            egui::PointerButton::Secondary
+        } else {
+            egui::PointerButton::Primary
+        },
+        pressed,
+        modifiers: Default::default(),
+    };
+    let mut all = Vec::new();
+    // Far enough apart that two clicks are never a double click.
+    *time += 1.0;
+    for events in [
+        vec![egui::Event::PointerMoved(at), press(true)],
+        vec![press(false)],
+    ] {
+        *time += 0.05;
+        all.extend(frame(ctx, view, s, *time, events).1);
+    }
+    all
+}
+
+/// Plan S3: in outline mode, points placed and the first clicked again
+/// send that ring as the subject; once the host holds it, a right-click on
+/// a point removes it (a triangle stays a valid outline), and clicking an
+/// edge adds one.
+#[test]
+fn an_outline_is_placed_point_by_point_and_edited() {
+    let ctx = egui::Context::default();
+    let mut view = LiveView {
+        outline: true,
+        ..LiveView::default()
+    };
+    let mut s = snapshot(1);
+    let mut time = 0.0;
+    frame(&ctx, &mut view, &s, time, vec![]);
+    let at = |x: f32, y: f32| photo().lerp_inside(egui::vec2(x, y));
+    let corners = [(0.3, 0.2), (0.7, 0.25), (0.65, 0.8), (0.35, 0.7)];
+    for (x, y) in corners {
+        assert!(click_at(&ctx, &mut view, &s, &mut time, at(x, y), false).is_empty());
+    }
+    let sent = click_at(&ctx, &mut view, &s, &mut time, at(0.3, 0.2), false);
+    let subject = match sent.as_slice() {
+        [LiveIntent::SetSubject(Some(subject))] => subject.clone(),
+        other => panic!("{other:?}"),
+    };
+    assert_eq!(subject.rings.len(), 1);
+    assert_eq!(subject.rings[0].len(), 4);
+    for ([x, y], (ex, ey)) in subject.rings[0].iter().zip(corners) {
+        assert!((x - ex).abs() < 0.01 && (y - ey).abs() < 0.01, "{x},{y}");
+    }
+    assert_eq!(subject.provenance["kind"], "manual");
+    // The host reports it.
+    let mut state = s.state.clone();
+    let mut plan = serde_json::to_value(strehl_capture::model::Plan::default()).unwrap();
+    plan["subject"] = serde_json::to_value(&subject).unwrap();
+    state["plan"] = plan;
+    s.set_state(state);
+    frame(&ctx, &mut view, &s, time + 2.0, vec![]);
+    let removed = click_at(&ctx, &mut view, &s, &mut time, at(0.35, 0.7), true);
+    match removed.as_slice() {
+        [LiveIntent::SetSubject(Some(next))] => assert_eq!(next.rings[0].len(), 3),
+        other => panic!("{other:?}"),
+    }
+    // Mid-edge of the first side: a point is added there.
+    let added = click_at(&ctx, &mut view, &s, &mut time, at(0.5, 0.225), false);
+    match added.as_slice() {
+        [LiveIntent::SetSubject(Some(next))] => assert_eq!(next.rings[0].len(), 4),
+        other => panic!("{other:?}"),
+    }
+}

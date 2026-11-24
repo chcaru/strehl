@@ -30,17 +30,19 @@ use eframe::egui::{
     TextureHandle, TextureOptions, Ui, Vec2,
     epaint::{TessellationOptions, Tessellator},
 };
-use strehl_capture::model::Roi;
+use strehl_capture::model::{Roi, Subject};
 
 use super::style::{self, ButtonKind, CapturePalette, Mark};
 use crate::capture_aids::{PREVIEW_BLACK_CODE, PREVIEW_CLIP_CODE, PreviewLevels};
 use crate::capture_client::Snapshot;
 
 /// What the user asked of the live view.
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub(crate) enum LiveIntent {
     /// A new subject box, normalised to the preview.
     SetRoi(Roi),
+    /// A new subject outline (plan S3), or none.
+    SetSubject(Option<Subject>),
     /// The camera magnifier at `ratio` (0 off) centred at `x`, `y` of 639 x 479.
     Magnify { ratio: u32, x: u16, y: u16 },
 }
@@ -206,6 +208,17 @@ pub(crate) fn moved(from: Rect, delta: Vec2) -> Rect {
     let x = (from.left() + delta.x).min(1.0 - from.width()).max(0.0);
     let y = (from.top() + delta.y).min(1.0 - from.height()).max(0.0);
     Rect::from_min_size(egui::pos2(x, y), from.size())
+}
+
+/// Two outlines agree to a ten-thousandth of the frame.
+fn same_rings(a: &[Vec<Pos2>], b: &[Vec<Pos2>]) -> bool {
+    a.len() == b.len()
+        && a.iter().zip(b).all(|(x, y)| {
+            x.len() == y.len()
+                && x.iter()
+                    .zip(y)
+                    .all(|(p, q)| (p.x - q.x).abs() < 1e-4 && (p.y - q.y).abs() < 1e-4)
+        })
 }
 
 fn roi_rect(roi: Roi) -> Rect {
@@ -399,6 +412,11 @@ pub(crate) struct LiveView {
     pub clipping: bool,
     pub grid: bool,
     pub subject_box: bool,
+    /// The subject is drawn as an outline (plan S3) instead of a box.
+    pub outline: bool,
+    outline_edit: OutlineEdit,
+    /// An outline sent to the host, shown until the host reports it.
+    outline_sent: Option<Vec<Vec<Pos2>>>,
     drag: Option<BoxDrag>,
     /// A box sent to the host, shown until the host reports it (or for
     /// three seconds), so a resized box does not jump back meanwhile.
@@ -425,6 +443,9 @@ impl Default for LiveView {
             clipping: true,
             grid: false,
             subject_box: true,
+            outline: false,
+            outline_edit: OutlineEdit::None,
+            outline_sent: None,
             drag: None,
             sent: None,
             preview: None,
@@ -643,7 +664,29 @@ impl LiveView {
         let mut roi = roi;
         let box_uv = roi_rect(roi);
         let mut box_screen = Rect::from_min_max(to_screen(box_uv.min), to_screen(box_uv.max));
-        let can_edit = self.subject_box && editable;
+        let host_subject = host.plan.as_ref().and_then(|plan| plan.subject.as_ref());
+        if self
+            .outline_sent
+            .as_ref()
+            .is_some_and(|sent| same_rings(sent, &outline_rings(host_subject)))
+        {
+            self.outline_sent = None;
+        }
+        if self.outline {
+            self.outline_ui(
+                ui,
+                &p,
+                &response,
+                host_subject,
+                host.position,
+                self.subject_box && editable,
+                &to_uv,
+                &to_screen,
+                palette,
+                &mut out,
+            );
+        }
+        let can_edit = self.subject_box && editable && !self.outline;
         if can_edit {
             if response.drag_started()
                 && let Some(press) = ui.input(|i| i.pointer.press_origin())
@@ -713,7 +756,7 @@ impl LiveView {
                 ui.ctx().set_cursor_icon(cursor);
             }
         }
-        if self.subject_box {
+        if self.subject_box && !self.outline {
             let (shown, active) = match dragged.filter(|_| self.drag.is_some()) {
                 Some(r) => (
                     Rect::from_min_max(to_screen(r.min), to_screen(r.max)),
@@ -811,17 +854,26 @@ impl LiveView {
                         self.threshold = t.round() as u8;
                     }
                 });
-                for (label, flag) in [("Clipping", 0), ("Grid", 1), ("Subject box", 2)] {
+                for (label, flag) in [("Clipping", 0), ("Grid", 1), ("Subject box", 2), ("Outline", 3)] {
                     let on = match flag {
                         0 => self.clipping,
                         1 => self.grid,
-                        _ => self.subject_box,
+                        2 => self.subject_box && !self.outline,
+                        _ => self.subject_box && self.outline,
                     };
                     if style::button(ui, label, if on { ButtonKind::On } else { ButtonKind::Quiet }, 22.0, true, palette).clicked() {
                         match flag {
                             0 => self.clipping = !on,
                             1 => self.grid = !on,
-                            _ => self.subject_box = !on,
+                            2 => {
+                                self.subject_box = !on;
+                                self.outline = false;
+                            }
+                            _ => {
+                                self.subject_box = true;
+                                self.outline = !on;
+                                self.outline_edit = OutlineEdit::None;
+                            }
                         }
                     }
                 }
@@ -1399,3 +1451,263 @@ fn subject_box(
 #[cfg(test)]
 #[path = "capture-live-tests.rs"]
 mod tests;
+
+/// How near (points) a vertex is still taken by a press.
+const VERTEX_REACH: f32 = 7.0;
+
+/// The outline being drawn or dragged (plan S3).
+#[derive(Clone, Debug, Default, PartialEq)]
+pub(crate) enum OutlineEdit {
+    #[default]
+    None,
+    /// Points placed so far, in preview fractions.
+    Placing(Vec<Pos2>),
+    /// A vertex of the outline's ring `ring` dragged.
+    Dragging { ring: usize, index: usize },
+}
+
+/// The outline's rings in preview fractions (the active area: live view
+/// shows the whole of it, MEASURED 100.0 % by 99.8 %).
+pub(crate) fn outline_rings(subject: Option<&Subject>) -> Vec<Vec<Pos2>> {
+    subject.map_or_else(Vec::new, |s| {
+        s.rings
+            .iter()
+            .map(|ring| ring.iter().map(|[x, y]| egui::pos2(*x, *y)).collect())
+            .collect()
+    })
+}
+
+/// A manual outline from rings in preview fractions.
+pub(crate) fn manual_subject(rings: &[Vec<Pos2>], focus: Option<u16>) -> Option<Subject> {
+    let rings: Vec<Vec<[f32; 2]>> = rings
+        .iter()
+        .filter(|r| r.len() >= 3)
+        .map(|r| {
+            r.iter()
+                .take(Subject::MAX_POINTS)
+                .map(|p| [p.x.clamp(0.0, 1.0), p.y.clamp(0.0, 1.0)])
+                .collect()
+        })
+        .collect();
+    let subject = Subject {
+        rings,
+        reference_focus: focus,
+        rate_ppm: None,
+        provenance: serde_json::json!({"kind":"manual"}),
+    };
+    subject.validate().ok().map(|()| subject)
+}
+
+/// The nearest vertex within reach of `at` (screen points).
+fn vertex_at(
+    rings: &[Vec<Pos2>],
+    at: Pos2,
+    to_screen: &dyn Fn(Pos2) -> Pos2,
+) -> Option<(usize, usize)> {
+    let mut best: Option<(f32, usize, usize)> = None;
+    for (r, ring) in rings.iter().enumerate() {
+        for (i, p) in ring.iter().enumerate() {
+            let d = to_screen(*p).distance(at);
+            if d <= VERTEX_REACH && best.is_none_or(|b| d < b.0) {
+                best = Some((d, r, i));
+            }
+        }
+    }
+    best.map(|(_, r, i)| (r, i))
+}
+
+/// The edge of a ring within reach of `at`, and where on it (the index the
+/// new point takes).
+fn edge_at(
+    rings: &[Vec<Pos2>],
+    at: Pos2,
+    to_screen: &dyn Fn(Pos2) -> Pos2,
+) -> Option<(usize, usize)> {
+    for (r, ring) in rings.iter().enumerate() {
+        for i in 0..ring.len() {
+            let (a, b) = (to_screen(ring[i]), to_screen(ring[(i + 1) % ring.len()]));
+            let ab = b - a;
+            let t = ((at - a).dot(ab) / ab.length_sq().max(1e-6)).clamp(0.0, 1.0);
+            if (a + ab * t).distance(at) <= EDGE_REACH + 1.0 {
+                return Some((r, i + 1));
+            }
+        }
+    }
+    None
+}
+
+impl LiveView {
+    /// The outline mode (plan S3): click to place points, click the first
+    /// point (or double-click) to close the ring; on a drawn outline, drag a
+    /// point to move it, click an edge to add one, right-click a point to
+    /// remove it; Esc drops what is being placed.
+    #[allow(clippy::too_many_arguments)]
+    fn outline_ui(
+        &mut self,
+        ui: &Ui,
+        p: &egui::Painter,
+        response: &egui::Response,
+        host_subject: Option<&Subject>,
+        focus: Option<u16>,
+        can_edit: bool,
+        to_uv: &dyn Fn(Pos2) -> Pos2,
+        to_screen: &dyn Fn(Pos2) -> Pos2,
+        palette: &CapturePalette,
+        out: &mut Vec<LiveIntent>,
+    ) {
+        let mut rings = self
+            .outline_sent
+            .clone()
+            .unwrap_or_else(|| outline_rings(host_subject));
+        if can_edit {
+            if ui.input(|i| i.key_pressed(egui::Key::Escape)) {
+                self.outline_edit = OutlineEdit::None;
+            }
+            let pointer = response.interact_pointer_pos();
+            match self.outline_edit.clone() {
+                OutlineEdit::Placing(mut points) => {
+                    if response.double_clicked()
+                        || (response.clicked()
+                            && points.len() >= 3
+                            && pointer.is_some_and(|at| {
+                                to_screen(points[0]).distance(at) <= VERTEX_REACH
+                            }))
+                    {
+                        if response.double_clicked() {
+                            // The double click's first click placed a point.
+                            points.pop();
+                        }
+                        let mut next = rings.clone();
+                        next.push(points);
+                        if let Some(subject) = manual_subject(&next, focus) {
+                            out.push(LiveIntent::SetSubject(Some(subject)));
+                            self.outline_sent = Some(next);
+                        }
+                        self.outline_edit = OutlineEdit::None;
+                    } else if response.clicked()
+                        && let Some(at) = pointer
+                        && points.len() < Subject::MAX_POINTS
+                    {
+                        points.push(to_uv(at));
+                        self.outline_edit = OutlineEdit::Placing(points);
+                    }
+                }
+                OutlineEdit::Dragging { ring, index } => {
+                    if let Some(at) = pointer
+                        && let Some(point) = rings.get_mut(ring).and_then(|r| r.get_mut(index))
+                    {
+                        *point = to_uv(at);
+                        self.outline_sent = Some(rings.clone());
+                    }
+                    if response.drag_stopped() {
+                        self.outline_edit = OutlineEdit::None;
+                        if let Some(subject) = manual_subject(&rings, focus) {
+                            out.push(LiveIntent::SetSubject(Some(subject)));
+                        }
+                    }
+                }
+                OutlineEdit::None => {
+                    let press = ui.input(|i| i.pointer.press_origin());
+                    if response.drag_started()
+                        && let Some((ring, index)) =
+                            press.and_then(|at| vertex_at(&rings, at, to_screen))
+                    {
+                        self.outline_edit = OutlineEdit::Dragging { ring, index };
+                    } else if response.secondary_clicked()
+                        && let Some((ring, index)) =
+                            pointer.and_then(|at| vertex_at(&rings, at, to_screen))
+                    {
+                        rings[ring].remove(index);
+                        rings.retain(|r| r.len() >= 3);
+                        let subject = manual_subject(&rings, focus);
+                        out.push(LiveIntent::SetSubject(subject));
+                        self.outline_sent = Some(rings.clone());
+                    } else if response.clicked()
+                        && let Some(at) = pointer
+                    {
+                        if let Some((ring, index)) = edge_at(&rings, at, to_screen)
+                            .filter(|(r, _)| rings[*r].len() < Subject::MAX_POINTS)
+                        {
+                            rings[ring].insert(index, to_uv(at));
+                            if let Some(subject) = manual_subject(&rings, focus) {
+                                out.push(LiveIntent::SetSubject(Some(subject)));
+                                self.outline_sent = Some(rings.clone());
+                            }
+                        } else {
+                            // A new ring starts here (a second part, or a
+                            // hole inside the first: even-odd).
+                            self.outline_edit = OutlineEdit::Placing(vec![to_uv(at)]);
+                        }
+                    }
+                }
+            }
+            let cursor = match &self.outline_edit {
+                OutlineEdit::Dragging { .. } => Some(CursorIcon::Grabbing),
+                _ => response.hover_pos().map(|at| {
+                    if vertex_at(&rings, at, to_screen).is_some() {
+                        CursorIcon::Grab
+                    } else {
+                        CursorIcon::Crosshair
+                    }
+                }),
+            };
+            if let Some(cursor) = cursor
+                && response.hovered()
+            {
+                ui.ctx().set_cursor_icon(cursor);
+            }
+        }
+        // The outline: its rings in the accent, their points as small squares.
+        let line = Stroke::new(1.5_f32, palette.accent);
+        for ring in &rings {
+            let points: Vec<Pos2> = ring.iter().map(|q| to_screen(*q)).collect();
+            if points.len() >= 2 {
+                p.add(egui::Shape::closed_line(points.clone(), line));
+            }
+            if can_edit {
+                for q in &points {
+                    p.rect_filled(
+                        Rect::from_center_size(*q, Vec2::splat(5.0)),
+                        0.0,
+                        palette.accent,
+                    );
+                }
+            }
+        }
+        if let OutlineEdit::Placing(points) = &self.outline_edit {
+            let mut shown: Vec<Pos2> = points.iter().map(|q| to_screen(*q)).collect();
+            if let Some(hover) = response.hover_pos() {
+                shown.push(hover);
+            }
+            if shown.len() >= 2 {
+                p.add(egui::Shape::line(
+                    shown.clone(),
+                    Stroke::new(1.0_f32, palette.accent),
+                ));
+            }
+            for q in &shown {
+                p.rect_stroke(
+                    Rect::from_center_size(*q, Vec2::splat(6.0)),
+                    0.0,
+                    Stroke::new(1.0_f32, palette.accent),
+                    StrokeKind::Middle,
+                );
+            }
+        }
+        let caption = match (&self.outline_edit, rings.is_empty()) {
+            (OutlineEdit::Placing(points), _) => format!(
+                "Outline · {} points · click the first point or double-click to close · Esc drops it",
+                points.len()
+            ),
+            (_, true) => "Outline · click around the subject to draw it".into(),
+            (_, false) => format!(
+                "Outline · {} part{} · drag a point, click an edge to add one, right-click to remove",
+                rings.len(),
+                if rings.len() == 1 { "" } else { "s" }
+            ),
+        };
+        let galley = p.layout_job(style::job(&caption, 11.0, palette.ink2, 0.0));
+        let at = to_screen(egui::pos2(0.0, 0.0)) + egui::vec2(12.0, 44.0);
+        p.galley(at, galley, palette.ink2);
+    }
+}

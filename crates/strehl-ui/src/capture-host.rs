@@ -248,6 +248,8 @@ pub(crate) struct Capabilities {
     pub queue_retakes: bool,
     /// `new_plan`: clear the marks, the subject box and the survey.
     pub new_plan: bool,
+    /// `subject`: an outline kept in the plan and manifest (plan S1).
+    pub subject: bool,
 }
 
 /// `retakes` (h-retake): the setting and the manual retakes in hand.

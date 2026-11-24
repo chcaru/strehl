@@ -212,6 +212,8 @@ impl Session {
             "queue_retakes": true,
             // `new_plan`: clear the marks, subject box and survey.
             "new_plan": true,
+            // `subject` (plan S1): an outline kept in the plan and manifest.
+            "subject": true,
         });
         // Retakes (h-retake): the setting, the planes asked for during the
         // capture and not yet taken, and the retakes after it while they run.
@@ -493,6 +495,7 @@ impl Session {
                 c.start_set = false;
                 c.end_set = false;
                 c.roi = Roi::subject();
+                c.plan.subject = None;
                 self.worker.clear_survey();
             }
             command => {
@@ -580,6 +583,16 @@ impl Session {
                     Command::Roi { roi } => {
                         ensure!(roi.valid(), "Select a valid subject rectangle");
                         c.roi = roi;
+                    }
+                    Command::Subject { subject } => {
+                        match &subject {
+                            Some(outline) => {
+                                outline.validate()?;
+                                c.roi = outline.bounding_box();
+                            }
+                            None => c.roi = Roi::subject(),
+                        }
+                        c.plan.subject = subject;
                     }
                     Command::Start {} => {
                         ensure!(c.start_set && c.end_set, "Mark both focus bounds first");
@@ -817,6 +830,12 @@ pub enum Command {
     Stop {},
     Survey {},
     ApplyBounds {},
+    /// The subject's outline (plan S1), or `None` to clear it. The subject
+    /// box becomes its bounding rectangle. Send only to a controller whose
+    /// state has `capabilities.subject`.
+    Subject {
+        subject: Option<crate::model::Subject>,
+    },
     /// Start the next capture from nothing: clear the bounds' marks, the
     /// subject box and the survey (the plan's step, settle and approach are
     /// the rig's and stay). Send only to a controller whose state has
@@ -987,6 +1006,79 @@ mod tests {
         .unwrap();
         assert_eq!(manifest["capture_kind"], "test");
         assert_eq!(manifest["focus_positions"], json!([60600]));
+        assert!(manifest["plan"].get("subject").is_none(), "none given");
+    }
+    /// Plan S1: an outline is checked, becomes the subject box's bounding
+    /// rectangle, is reported in the plan, and is written into the next
+    /// capture's manifest; `None` clears it and `new_plan` forgets it.
+    #[test]
+    fn a_subject_outline_reaches_the_manifest() {
+        let temp = tempfile::tempdir().unwrap();
+        let session = Session::new(
+            Arc::new(Worker::new(PathBuf::new(), true)),
+            Arc::new(Mutex::new(Controls::new(temp.path().into()))),
+            true,
+        );
+        assert_eq!(session.state()["capabilities"]["subject"], true);
+        session
+            .dispatch(request(&session, "subject-connect", Command::Connect {}))
+            .unwrap();
+        until(&session, |s| s.phase == Phase::Ready && !s.command_pending);
+        let bad = crate::model::Subject {
+            rings: vec![vec![[0.1, 0.1], [0.2, 0.1]]],
+            ..Default::default()
+        };
+        assert!(
+            session
+                .dispatch(request(
+                    &session,
+                    "subject-bad",
+                    Command::Subject { subject: Some(bad) }
+                ))
+                .is_err()
+        );
+        let outline = crate::model::Subject {
+            rings: vec![vec![[0.30, 0.20], [0.70, 0.25], [0.60, 0.80], [0.35, 0.70]]],
+            reference_focus: Some(60600),
+            rate_ppm: Some(-13.0),
+            provenance: json!({"kind":"manual"}),
+        };
+        session
+            .dispatch(request(
+                &session,
+                "subject-set",
+                Command::Subject {
+                    subject: Some(outline.clone()),
+                },
+            ))
+            .unwrap();
+        let state = session.state();
+        assert_eq!(state["plan"]["subject"]["reference_focus"], 60600);
+        let roi = &state["roi"];
+        assert!((roi["x"].as_f64().unwrap() - 0.30).abs() < 1e-6);
+        assert!((roi["height"].as_f64().unwrap() - 0.60).abs() < 1e-6);
+        let one = Command::CapturePositions {
+            positions: vec![60600],
+            keep_power_on: true,
+            kind: PositionsKind::Positions,
+        };
+        session
+            .dispatch(request(&session, "subject-capture", one))
+            .unwrap();
+        let done = until(&session, |s| {
+            s.phase == Phase::Complete && !s.command_pending
+        });
+        let manifest: Value = serde_json::from_slice(
+            &std::fs::read(done.journal.unwrap().join("manifest.json")).unwrap(),
+        )
+        .unwrap();
+        let written: crate::model::Subject =
+            serde_json::from_value(manifest["plan"]["subject"].clone()).unwrap();
+        assert_eq!(written, outline);
+        session
+            .dispatch(request(&session, "subject-renew", Command::NewPlan {}))
+            .unwrap();
+        assert!(session.state()["plan"].get("subject").is_none());
     }
     #[test]
     fn absolute_focus_and_mode_selection_refresh_estimates_and_reject_stale_requests() {

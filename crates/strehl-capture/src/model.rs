@@ -10,6 +10,84 @@ pub struct Plan {
     pub settle_ms: u32,
     pub approach: u16,
     pub capture_timeout_s: u32,
+    /// The subject's outline (plan S1), written into each capture's
+    /// manifest with the plan. Omitted when none was given, so older
+    /// desktops and manifests read as before.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub subject: Option<Subject>,
+}
+
+/// The subject: outer rings and holes (even-odd), normalised to the
+/// sensor's active area (live view shows that same area), at most
+/// [`Subject::MAX_POINTS`] points a ring (`strehl_edit`'s polygon limit),
+/// with where it was drawn and how it was made.
+#[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq)]
+pub struct Subject {
+    pub rings: Vec<Vec<[f32; 2]>>,
+    /// The focus position the outline was drawn or found at.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reference_focus: Option<u16>,
+    /// Magnification change per focus unit, in parts per million, to map
+    /// the outline to other planes (the weevil reads about -13).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub rate_ppm: Option<f32>,
+    /// "manual", "box" or "auto", with the automatic settings and strokes.
+    #[serde(default)]
+    pub provenance: serde_json::Value,
+}
+
+impl Subject {
+    pub const MAX_RINGS: usize = 64;
+    pub const MAX_POINTS: usize = 256;
+
+    pub fn validate(&self) -> Result<()> {
+        ensure!(
+            (1..=Self::MAX_RINGS).contains(&self.rings.len()),
+            "A subject has 1 to {} rings",
+            Self::MAX_RINGS
+        );
+        for ring in &self.rings {
+            ensure!(
+                (3..=Self::MAX_POINTS).contains(&ring.len()),
+                "A subject's ring has 3 to {} points",
+                Self::MAX_POINTS
+            );
+            ensure!(
+                ring.iter()
+                    .flatten()
+                    .all(|v| v.is_finite() && (-0.001..=1.001).contains(v)),
+                "A subject's points lie within the frame"
+            );
+        }
+        if let Some(rate) = self.rate_ppm {
+            ensure!(
+                rate.is_finite() && rate.abs() <= 10_000.0,
+                "Invalid magnification rate"
+            );
+        }
+        Ok(())
+    }
+
+    /// The rectangle around every ring, at least 5 % a side: the subject
+    /// box older clients and the camera's magnifier use.
+    pub fn bounding_box(&self) -> Roi {
+        let (mut x0, mut y0, mut x1, mut y1) = (1.0f32, 1.0f32, 0.0f32, 0.0f32);
+        for [x, y] in self.rings.iter().flatten() {
+            x0 = x0.min(*x);
+            y0 = y0.min(*y);
+            x1 = x1.max(*x);
+            y1 = y1.max(*y);
+        }
+        let (x0, y0) = (x0.clamp(0.0, 0.95), y0.clamp(0.0, 0.95));
+        let width = (x1.clamp(0.0, 1.0) - x0).max(0.05).min(1.0 - x0);
+        let height = (y1.clamp(0.0, 1.0) - y0).max(0.05).min(1.0 - y0);
+        Roi {
+            x: x0,
+            y: y0,
+            width,
+            height,
+        }
+    }
 }
 
 impl Default for Plan {
@@ -21,12 +99,16 @@ impl Default for Plan {
             settle_ms: 500,
             approach: 128,
             capture_timeout_s: 120,
+            subject: None,
         }
     }
 }
 
 impl Plan {
     pub fn validate(&self) -> Result<()> {
+        if let Some(subject) = &self.subject {
+            subject.validate()?;
+        }
         ensure!(
             self.step > 0,
             "Step must be at least one camera command unit"

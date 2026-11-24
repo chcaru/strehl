@@ -1444,6 +1444,17 @@ impl CaptureWorkspace {
     pub(super) fn apply_live(&mut self, s: &Snapshot, intent: LiveIntent) {
         match intent {
             LiveIntent::SetRoi(roi) => self.command(s, Command::Roi { roi }),
+            // Plan S1/S3: the outline, or its box on an older host.
+            LiveIntent::SetSubject(subject) if s.host.capabilities.subject => {
+                self.command(s, Command::Subject { subject })
+            }
+            LiveIntent::SetSubject(subject) => {
+                let roi = subject.map_or_else(
+                    strehl_capture::model::Roi::subject,
+                    |outline| outline.bounding_box(),
+                );
+                self.command(s, Command::Roi { roi });
+            }
             LiveIntent::Magnify { ratio, x, y } => {
                 self.command(s, Command::Magnify { ratio, x, y })
             }
