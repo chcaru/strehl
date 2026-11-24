@@ -151,6 +151,9 @@ pub enum Action {
     /// that it has ended (h-retake: manual retakes after a capture).
     Followup {
         planes: Vec<u64>,
+        /// A pass of another exposure (plan X3/R3: `queue_pass`) instead of
+        /// retakes: every plane asked for is taken at this tier and shutter.
+        pass: Option<Pass>,
     },
     PixelShift {
         shots: usize,
@@ -185,6 +188,9 @@ pub enum Action {
         /// "test", so the PC neither follows nor lists it as a stack, and
         /// error correction does not hold it for a check nobody makes.
         test: bool,
+        /// A shutter per explicit position (plan X1's two-shutter survey);
+        /// `None`: the camera's own throughout.
+        shutters: Option<Vec<u64>>,
     },
     Exposure {
         iso: u64,
@@ -631,7 +637,7 @@ fn run(
                                 v.max_retakes = max_retakes.min(MAX_RETAKES_LIMIT);
                             });
                         }
-                        Action::Followup { planes } => {
+                        Action::Followup { planes, pass } => {
                             if camera.is_none() {
                                 // Managed power switched the camera off after
                                 // the capture: wake it, keeping the run's
@@ -669,7 +675,8 @@ fn run(
                                     options,
                                     warmup: power.as_ref().map_or(0, |rig| rig.warmup_seconds()),
                                     test: false,
-                                    followup: Some(planes),
+                                    shutters: None,
+                                    followup: Some((planes, pass)),
                                 },
                             )?;
                         }
@@ -873,6 +880,7 @@ fn run(
                             positions,
                             keep_power_on,
                             test,
+                            shutters,
                         } => {
                             ensure!(
                                 s.lock().unwrap().phase.can_edit(),
@@ -899,6 +907,7 @@ fn run(
                                     options,
                                     warmup: power.as_ref().map_or(0, |rig| rig.warmup_seconds()),
                                     test,
+                                    shutters,
                                     followup: None,
                                 },
                             )?;
@@ -962,6 +971,7 @@ fn run(
                                     options: recipe.power,
                                     warmup: recipe.warmup_seconds,
                                     test: false,
+                                    shutters: None,
                                     followup: None,
                                 },
                             )?;
@@ -1097,9 +1107,11 @@ struct StackRun {
     options: StackPower,
     warmup: u32,
     test: bool,
+    shutters: Option<Vec<u64>>,
     /// Manual retakes of the last capture's planes (`plan`, `root` and
-    /// `positions` unused: the run's own manifest says them).
-    followup: Option<Vec<u64>>,
+    /// `positions` unused: the run's own manifest says them), or a pass of
+    /// another exposure over them.
+    followup: Option<(Vec<u64>, Option<Pass>)>,
 }
 fn run_stack(
     camera: &mut Option<Box<dyn Camera>>,
@@ -1124,14 +1136,21 @@ fn run_stack(
         !run.test || run.positions.is_some(),
         "A test shot is one focus position"
     );
+    if let (Some(positions), Some(shutters)) = (&run.positions, &run.shutters) {
+        ensure!(
+            positions.len() == shutters.len(),
+            "One shutter for each focus position"
+        );
+    }
     let explicit = run.positions.map(|positions| Explicit {
         positions,
         test: run.test,
+        shutters: run.shutters,
     });
     let c = camera.as_mut().context("Connect a camera first")?.as_mut();
     update(s, |v| v.starting = None);
     match run.followup {
-        Some(planes) => followup(c, s, control, planes, lamp)?,
+        Some((planes, pass)) => followup(c, s, control, planes, pass, lamp)?,
         None => capture(c, s, control, run.plan, run.root, explicit, lamp)?,
     }
     // Both writes follow the final durable journal receipt. Attempt the other
@@ -1167,6 +1186,99 @@ struct Explicit {
     positions: Vec<u16>,
     /// A test shot (H2): one position, journalled as `capture_kind` "test".
     test: bool,
+    /// A shutter per position (plan X1), else the camera's own.
+    shutters: Option<Vec<u64>>,
+}
+
+/// The exposure a group is taken at (plan X3): `base` at the run's own
+/// shutter, or a named tier at a commanded one. Recorded with the group in
+/// the journal (`tier`, `exposure`; see `impl/tiers.md`).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Tier {
+    pub name: &'static str,
+    /// `None`: the run's first shutter.
+    pub shutter: Option<u64>,
+}
+
+impl Tier {
+    pub const BASE: Self = Self {
+        name: "base",
+        shutter: None,
+    };
+    /// "base", "highlight" or "shadow".
+    pub fn named(name: &str, shutter: u64) -> Result<Self> {
+        let name = match name {
+            "base" => "base",
+            "highlight" => "highlight",
+            "shadow" => "shadow",
+            _ => anyhow::bail!("A pass is base, highlight or shadow"),
+        };
+        Ok(Self {
+            name,
+            shutter: Some(shutter),
+        })
+    }
+}
+
+/// A pass over planes of an ended capture at another exposure (`queue_pass`).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Pass {
+    pub tier: Tier,
+}
+
+/// Sets the camera's shutter (ISO as it is), journalled; nothing when it is
+/// already there.
+fn set_shutter(
+    c: &mut dyn Camera,
+    s: &Shared,
+    log: &mut Journal,
+    ordinal: usize,
+    shutter: u64,
+) -> Result<()> {
+    let status = refresh(c, s)?;
+    if property(&status, "ShutterSpeed") == Some(shutter) {
+        return Ok(());
+    }
+    let iso = property(&status, "IsoSensitivity").context("The camera reports no ISO")?;
+    log.record(
+        "exposure_intent",
+        json!({"ordinal":ordinal,"iso":iso,"shutter":shutter}),
+    )?;
+    c.set_exposure(iso, shutter)?;
+    let after = refresh(c, s)?;
+    ensure!(
+        property(&after, "ShutterSpeed") == Some(shutter),
+        "The camera did not take the commanded shutter; sequence stopped"
+    );
+    log.record(
+        "exposure_complete",
+        json!({"ordinal":ordinal,"iso":iso,"shutter":shutter}),
+    )?;
+    Ok(())
+}
+
+/// The highlight group of the plane just taken (plan X3): the shutter set,
+/// the same plane number taken again, the shutter set back. The lens stays
+/// where it is throughout. `false` when the run was stopped.
+fn highlight_group(
+    c: &mut dyn Camera,
+    ctx: &Run,
+    log: &mut Journal,
+    ordinal: usize,
+    target: u16,
+    base: &Value,
+    highlight: &crate::model::Highlight,
+) -> Result<bool> {
+    let back = property(ctx.initial, "ShutterSpeed").context("The run has no shutter")?;
+    set_shutter(c, ctx.s, log, ordinal, highlight.shutter)?;
+    c.retake_plane(plane_of(base));
+    let tier = Tier {
+        name: "highlight",
+        shutter: Some(highlight.shutter),
+    };
+    let taken = take_group(c, ctx, log, ordinal, target, None, tier)?;
+    set_shutter(c, ctx.s, log, ordinal, back)?;
+    Ok(taken.is_some())
 }
 fn capture(
     c: &mut dyn Camera,
@@ -1190,6 +1302,8 @@ fn capture(
     } else {
         "plan"
     };
+    let shutters = explicit.as_ref().and_then(|e| e.shutters.clone());
+    let positions_run = explicit.is_some();
     let positions = match explicit {
         Some(e) => {
             validate_positions(&plan, &e.positions)?;
@@ -1205,6 +1319,15 @@ fn capture(
         matches!(shots, 1 | 4),
         "Unsupported number of RAWs per plane"
     );
+    // Highlight groups (plan X3) are taken at the run's shot count.
+    let highlight = plan.highlight.filter(|_| !positions_run);
+    if let Some(h) = &highlight {
+        ensure!(
+            u64::from(h.shots) == shots,
+            "Highlight groups take {} RAWs, the capture {shots}: set them alike",
+            h.shots
+        );
+    }
     let frames = positions.len() * shots as usize;
     ensure!(
         host || property(&status, "MediaSLOT1_RemainingNumber").is_some_and(|n| n >= frames as u64),
@@ -1320,7 +1443,7 @@ fn capture(
             };
             for (o, reason) in due {
                 let next = Some((target, plan.settle_ms));
-                if !retake(c, &ctx, &mut log, &mut r, o, &reason, next)? {
+                if !retake(c, &ctx, &mut log, &mut r, o, &reason, next, Tier::BASE)? {
                     return Ok(false);
                 }
             }
@@ -1345,11 +1468,31 @@ fn capture(
             }
             // The lens goes on to the next plane as soon as this group's last
             // exposure is in the camera (MEASURED 2026-11-20: 7.3 s a
-            // four-shot plane to 5.65).
-            let next = targets.get(ordinal + 1).map(|&n| (n, plan.settle_ms));
-            let Some(response) = take_group(c, &ctx, &mut log, ordinal, target, next)? else {
+            // four-shot plane to 5.65), unless a highlight group follows here.
+            let here = highlight.filter(|h| h.applies(ordinal as u64 + 1));
+            let next = targets
+                .get(ordinal + 1)
+                .map(|&n| (n, plan.settle_ms))
+                .filter(|_| here.is_none());
+            // A positions run's own shutter for this position (plan X1).
+            let tier = match shutters.as_ref().and_then(|v| v.get(ordinal)) {
+                Some(&shutter) => {
+                    set_shutter(c, s, &mut log, ordinal, shutter)?;
+                    Tier {
+                        name: "base",
+                        shutter: Some(shutter),
+                    }
+                }
+                None => Tier::BASE,
+            };
+            let Some(response) = take_group(c, &ctx, &mut log, ordinal, target, next, tier)? else {
                 return Ok(false);
             };
+            if let Some(h) = &here
+                && !highlight_group(c, &ctx, &mut log, ordinal, target, &response, h)?
+            {
+                return Ok(false);
+            }
             completed += 1;
             update(s, |v| {
                 v.completed = completed;
@@ -1375,7 +1518,7 @@ fn capture(
                 return Ok(false);
             };
             for (o, reason) in due {
-                if !retake(c, &ctx, &mut log, &mut r, o, &reason, None)? {
+                if !retake(c, &ctx, &mut log, &mut r, o, &reason, None, Tier::BASE)? {
                     return Ok(false);
                 }
             }
@@ -1623,6 +1766,7 @@ fn take_group(
     ordinal: usize,
     target: u16,
     next: Option<(u16, u32)>,
+    tier: Tier,
 ) -> Result<Option<Value>> {
     let s = ctx.s;
     let before = refresh(c, s)?;
@@ -1631,20 +1775,28 @@ fn take_group(
         before["pixel_shift_shots"].as_u64().unwrap_or(1) == ctx.shots,
         "Capture mode changed during the stack; no next shutter was sent"
     );
+    // The exposure the tier commands (plan X3): the run's own, or its
+    // shutter for a highlight group or a positions run's own shutter.
     for key in [
         "ExposureProgramMode",
         "IsoSensitivity",
         "ShutterSpeed",
         "FNumber",
     ] {
+        let expected = match (key, tier.shutter) {
+            ("ShutterSpeed", Some(shutter)) => Some(shutter),
+            _ => property(ctx.initial, key),
+        };
         ensure!(
-            property(&before, key) == property(ctx.initial, key),
+            property(&before, key) == expected,
             "{key} changed during the run; sequence stopped before the next shutter"
         );
     }
+    let exposure = json!({"iso":property(&before, "IsoSensitivity"),"shutter":property(&before, "ShutterSpeed")});
     log.record(
         "capture_intent",
-        json!({"ordinal":ordinal,"target":target,"pixel_shift_shots":ctx.shots,"camera_status":before}),
+        json!({"ordinal":ordinal,"target":target,"pixel_shift_shots":ctx.shots,"camera_status":before,
+            "tier":tier.name,"exposure":exposure}),
     )?;
     c.sync_journal(&log.directory)?;
     while !c.prepare_capture()? {
@@ -1665,13 +1817,19 @@ fn take_group(
     );
     validate_capture(&response)?;
     s.lock().unwrap().exposure_uncertain = false;
+    let mut response = response;
+    if let Some(files) = response["files"].as_array_mut() {
+        for file in files {
+            file["tier"] = json!(tier.name);
+        }
+    }
     log.record(
         if response["destination"] == "host-pc-queue" {
             "capture_buffered"
         } else {
             "capture_complete"
         },
-        json!({"ordinal":ordinal,"target":target,"response":response}),
+        json!({"ordinal":ordinal,"target":target,"response":response,"tier":tier.name,"exposure":exposure}),
     )?;
     c.sync_journal(&log.directory)?;
     // Preview failure does not repeat or invalidate a completed exposure.
@@ -1843,6 +2001,7 @@ fn manual_due(
 /// Visits a plane again for a retake: below it by the approach move, so it
 /// is reached from the capture side as before, then a group recorded under
 /// the plane's own number. Its check is owed like any other group's.
+#[allow(clippy::too_many_arguments)]
 fn retake(
     c: &mut dyn Camera,
     ctx: &Run,
@@ -1851,6 +2010,7 @@ fn retake(
     o: Owed,
     reason: &str,
     next: Option<(u16, u32)>,
+    tier: Tier,
 ) -> Result<bool> {
     let n = o.retakes + 1;
     let mut intent =
@@ -1888,11 +2048,14 @@ fn retake(
         return Ok(false);
     }
     c.retake_plane(o.plane);
-    let Some(response) = take_group(c, ctx, log, o.ordinal, o.target, next)? else {
+    let Some(response) = take_group(c, ctx, log, o.ordinal, o.target, next, tier)? else {
         return Ok(false);
     };
-    r.planes.entry(o.ordinal).or_default().plane = o.plane;
-    r.taken(o.ordinal, o.target, &response, n, o.manual)?;
+    // A pass of another tier is not checked as a retake (plan X3).
+    if tier == Tier::BASE {
+        r.planes.entry(o.ordinal).or_default().plane = o.plane;
+        r.taken(o.ordinal, o.target, &response, n, o.manual)?;
+    }
     Ok(true)
 }
 
@@ -2037,6 +2200,7 @@ fn followup(
     s: &Shared,
     control: &AtomicU8,
     planes: Vec<u64>,
+    pass: Option<Pass>,
     managed: Option<(&RigPower, u32)>,
 ) -> Result<()> {
     let directory = s
@@ -2112,7 +2276,12 @@ fn followup(
             if planes.len() == 1 { "" } else { "s" }
         );
     });
-    log.record("followup_started", json!({"planes":planes,"manual":true}))?;
+    let mut started = json!({"planes":planes,"manual":true});
+    if let Some(p) = pass {
+        started["tier"] = json!(p.tier.name);
+        started["shutter"] = json!(p.tier.shutter);
+    }
+    log.record("followup_started", started)?;
     c.sync_journal(&directory)?;
     let mut light_requested = false;
     let (mut taken, mut skipped) = (0usize, 0usize);
@@ -2165,8 +2334,10 @@ fn followup(
             let ordinal = (plane - 1) as usize;
             let (tries, group) = record.tries[&plane].clone();
             // Its newest try passed (a retake during the capture): a later
-            // try would replace it in the stack.
-            if !group.is_empty()
+            // try would replace it in the stack. A pass of another tier
+            // replaces nothing: it is always taken.
+            if pass.is_none()
+                && !group.is_empty()
                 && let Ok(Some(v)) = c.verdict(&group)
                 && check_passed(&v)
             {
@@ -2191,14 +2362,24 @@ fn followup(
                 since: Instant::now(),
                 manual: true,
             };
+            // A pass sets its shutter before each group (a retake in between
+            // may have needed the base one) and puts it back at the end.
+            if let Some(shutter) = pass.and_then(|p| p.tier.shutter) {
+                set_shutter(c, s, &mut log, ordinal, shutter)?;
+            }
             if !retake(
                 c,
                 &ctx,
                 &mut log,
                 &mut r,
                 o,
-                "asked for by the user after the capture",
+                if pass.is_some() {
+                    "a pass of another exposure, asked for after the capture"
+                } else {
+                    "asked for by the user after the capture"
+                },
                 None,
+                pass.map_or(Tier::BASE, |p| p.tier),
             )? {
                 return Ok(false);
             }
@@ -2211,6 +2392,15 @@ fn followup(
         }
         Ok(true)
     })();
+    // A pass leaves the camera at the capture's own shutter.
+    if pass.is_some()
+        && let Some(back) = property(&record.initial, "ShutterSpeed")
+        && let Err(e) = set_shutter(c, s, &mut log, 0, back)
+    {
+        update(s, |v| {
+            v.message = format!("Set the shutter back by hand: {e:#}")
+        });
+    }
     let dropped = std::mem::take(&mut s.lock().unwrap().retake_queue);
     if !dropped.is_empty() {
         log.record(
@@ -2713,7 +2903,11 @@ mod tests {
             &AtomicU8::new(RUN),
             plan,
             temp.path().into(),
-            positions.map(|positions| Explicit { positions, test }),
+            positions.map(|positions| Explicit {
+                positions,
+                test,
+                shutters: None,
+            }),
             None,
         )
         .unwrap();
@@ -2784,6 +2978,7 @@ mod tests {
             Some(Explicit {
                 positions: vec![60000, 60001],
                 test: true,
+                shutters: None,
             }),
             None,
         )
@@ -2955,6 +3150,7 @@ mod tests {
                 positions: Some(vec![60605; 3]),
                 keep_power_on: false,
                 test: false,
+                shutters: None,
             },
         )
         .unwrap();
@@ -3178,6 +3374,7 @@ mod tests {
                 positions: None,
                 keep_power_on: false,
                 test: false,
+                shutters: None,
             },
         )
         .unwrap();
@@ -3224,6 +3421,7 @@ mod tests {
                 positions: None,
                 keep_power_on: false,
                 test: false,
+                shutters: None,
             },
         )
         .unwrap();
@@ -3293,6 +3491,7 @@ mod tests {
                     positions: None,
                     keep_power_on: false,
                     test: false,
+                    shutters: None,
                 },
             )
             .unwrap();
@@ -3310,6 +3509,7 @@ mod tests {
                         positions: None,
                         keep_power_on: false,
                         test: false,
+                        shutters: None,
                     }
                 )
                 .is_err()
@@ -3351,6 +3551,7 @@ mod tests {
                     positions: None,
                     keep_power_on: false,
                     test: false,
+                    shutters: None,
                 },
             )
             .unwrap();

@@ -325,6 +325,7 @@ impl CaptureWorkspace {
                         // survey, before a second survey or four-shot is set again.
                         keep_power_on: true,
                         kind: PositionsKind::Positions,
+                        shutters: None,
                     })
                     .and_then(|r| self.submit(r))
                 {
@@ -1561,6 +1562,7 @@ impl CaptureWorkspace {
             // Managed power would switch the rig off after one exposure.
             keep_power_on: true,
             kind,
+            shutters: None,
         })?;
         let sequence = s.host.sequence_id.unwrap_or(0) + 1;
         self.submit(request)?;

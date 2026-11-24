@@ -251,6 +251,7 @@ fn a_test_shot_names_its_kind_only_to_a_host_that_accepts_it() {
                 positions,
                 keep_power_on,
                 kind,
+                shutters: None,
             } => {
                 assert_eq!(positions, [30000]);
                 assert!(keep_power_on);

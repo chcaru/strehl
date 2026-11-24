@@ -214,6 +214,9 @@ impl Session {
             "new_plan": true,
             // `subject` (plan S1): an outline kept in the plan and manifest.
             "subject": true,
+            // Plan X3: `highlight` groups, `shutters` per position and
+            // `queue_pass` (impl/tiers.md).
+            "exposure_tiers": true,
         });
         // Retakes (h-retake): the setting, the planes asked for during the
         // capture and not yet taken, and the retakes after it while they run.
@@ -292,6 +295,48 @@ impl Session {
             c.revision += 1;
             return Ok(());
         }
+        if let Command::QueuePass {
+            planes,
+            tier,
+            shutter,
+        } = &request.command
+        {
+            // A pass of another exposure over planes of the capture that has
+            // ended (plan X3, R3), into the same run, as retakes after it are.
+            ensure!(
+                request.sequence_id == s.sequence_id && s.capture_run,
+                "That capture is no longer the camera's latest"
+            );
+            ensure!(
+                !s.command_pending && !s.phase.active(),
+                "A pass is taken once the capture has ended"
+            );
+            ensure!(
+                (1..=4096).contains(&planes.len()),
+                "Choose 1-4096 planes for the pass"
+            );
+            let total = s.total as u64;
+            ensure!(
+                planes.iter().all(|p| (1..=total).contains(p)),
+                "Choose planes 1-{total}"
+            );
+            ensure!(
+                allowed(&s.status, "ShutterSpeed", *shutter)
+                    || s.status["properties"]["ShutterSpeed"].is_null(),
+                "The camera does not offer that shutter"
+            );
+            let tier = crate::worker::Tier::named(tier, *shutter)?;
+            self.worker.request_resume();
+            self.worker.send(
+                s.revision,
+                Action::Followup {
+                    planes: planes.clone(),
+                    pass: Some(crate::worker::Pass { tier }),
+                },
+            )?;
+            c.revision += 1;
+            return Ok(());
+        }
         if let Command::QueueRetakes { planes } = &request.command {
             // Like Pause and Stop, bound to the capture it names rather than
             // to the latest revision: the state changes with every plane.
@@ -328,6 +373,7 @@ impl Session {
                 s.revision,
                 Action::Followup {
                     planes: planes.clone(),
+                    pass: None,
                 },
             )?;
             c.revision += 1;
@@ -496,6 +542,7 @@ impl Session {
                 c.end_set = false;
                 c.roi = Roi::subject();
                 c.plan.subject = None;
+                c.plan.highlight = None;
                 self.worker.clear_survey();
             }
             command => {
@@ -584,6 +631,16 @@ impl Session {
                         ensure!(roi.valid(), "Select a valid subject rectangle");
                         c.roi = roi;
                     }
+                    Command::Highlight { highlight } => {
+                        if let Some(h) = &highlight {
+                            h.validate()?;
+                            ensure!(
+                                allowed(&s.status, "ShutterSpeed", h.shutter),
+                                "The camera does not offer that shutter"
+                            );
+                        }
+                        c.plan.highlight = highlight;
+                    }
                     Command::Subject { subject } => {
                         match &subject {
                             Some(outline) => {
@@ -604,17 +661,31 @@ impl Session {
                             positions: None,
                             keep_power_on: false,
                             test: false,
+                            shutters: None,
                         });
                     }
                     Command::CapturePositions {
                         positions,
                         keep_power_on,
                         kind,
+                        shutters,
                     } => {
                         ensure!(
                             kind != PositionsKind::Test || positions.len() == 1,
                             "A test shot is one focus position"
                         );
+                        if let Some(shutters) = &shutters {
+                            ensure!(
+                                shutters.len() == positions.len(),
+                                "One shutter for each focus position"
+                            );
+                            for &shutter in shutters {
+                                ensure!(
+                                    allowed(&s.status, "ShutterSpeed", shutter),
+                                    "The camera does not offer that shutter"
+                                );
+                            }
+                        }
                         // Bursts (one position repeated) and retakes of chosen
                         // planes, with the plan's settle/approach and direction.
                         let mut plan = c.plan.clone();
@@ -630,6 +701,7 @@ impl Session {
                             positions: Some(positions),
                             keep_power_on,
                             test: kind == PositionsKind::Test,
+                            shutters,
                         });
                     }
                     Command::Exposure { iso, shutter } => {
@@ -819,6 +891,25 @@ pub enum Command {
         /// a controller whose state has `capabilities.test_shot`.
         #[serde(default, skip_serializing_if = "PositionsKind::is_positions")]
         kind: PositionsKind,
+        /// A shutter (the camera's property value) per position, for the
+        /// Calibrate survey's two exposures (plan X1). Send only to a
+        /// controller whose state has `capabilities.exposure_tiers`.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        shutters: Option<Vec<u64>>,
+    },
+    /// Highlight groups in the plan (plan X3), or `None` for none. Send only
+    /// to a controller whose state has `capabilities.exposure_tiers`.
+    Highlight {
+        highlight: Option<crate::model::Highlight>,
+    },
+    /// Take these planes of the capture `sequence_id` names again at another
+    /// exposure, into the same run, once it has ended (plan X3, R3). Send
+    /// only to a controller whose state has `capabilities.exposure_tiers`.
+    QueuePass {
+        planes: Vec<u64>,
+        /// "highlight", "shadow" or "base".
+        tier: String,
+        shutter: u64,
     },
     /// Manual ISO and shutter as the camera's property values.
     Exposure {
@@ -848,6 +939,13 @@ pub enum Command {
     },
 }
 
+/// Whether the camera offers `value` for property `name` (its `allowed` list).
+fn allowed(status: &Value, name: &str, value: u64) -> bool {
+    status["properties"][name]["allowed"]
+        .as_array()
+        .is_some_and(|a| a.contains(&json!(value)))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -866,6 +964,7 @@ mod tests {
             positions: vec![1],
             keep_power_on: false,
             kind: PositionsKind::Positions,
+            shutters: None,
         };
         assert_eq!(
             serde_json::to_value(&plain).unwrap(),
@@ -875,6 +974,7 @@ mod tests {
             positions: vec![1],
             keep_power_on: true,
             kind: PositionsKind::Positions,
+            shutters: None,
         };
         assert_eq!(serde_json::to_value(&kept).unwrap()["keep_power_on"], true);
     }
@@ -897,6 +997,7 @@ mod tests {
             positions: vec![5],
             keep_power_on: false,
             kind: PositionsKind::Positions,
+            shutters: None,
         };
         assert_eq!(
             serde_json::to_value(&burst).unwrap(),
@@ -906,6 +1007,7 @@ mod tests {
             positions: vec![5],
             keep_power_on: true,
             kind: PositionsKind::Test,
+            shutters: None,
         };
         assert_eq!(
             serde_json::to_value(&test).unwrap(),
@@ -982,6 +1084,7 @@ mod tests {
             positions: vec![60600, 60601],
             keep_power_on: true,
             kind: PositionsKind::Test,
+            shutters: None,
         };
         assert!(
             session
@@ -992,6 +1095,7 @@ mod tests {
             positions: vec![60600],
             keep_power_on: true,
             kind: PositionsKind::Test,
+            shutters: None,
         };
         session
             .dispatch(request(&session, "test-shot-1", one))
@@ -1007,6 +1111,128 @@ mod tests {
         assert_eq!(manifest["capture_kind"], "test");
         assert_eq!(manifest["focus_positions"], json!([60600]));
         assert!(manifest["plan"].get("subject").is_none(), "none given");
+    }
+    /// Plan X3: highlight groups at every second plane are taken after the
+    /// base group at the same plane number and focus, at their own shutter,
+    /// journalled with `tier` and `exposure`; the camera ends at the base
+    /// shutter; the manifest carries the plan.
+    #[test]
+    fn highlight_groups_and_passes_are_taken_at_their_own_shutter() {
+        let temp = tempfile::tempdir().unwrap();
+        let session = Session::new(
+            Arc::new(Worker::new(PathBuf::new(), true)),
+            Arc::new(Mutex::new(Controls::new(temp.path().into()))),
+            true,
+        );
+        assert_eq!(session.state()["capabilities"]["exposure_tiers"], true);
+        session
+            .dispatch(request(&session, "tiers-connect", Command::Connect {}))
+            .unwrap();
+        until(&session, |s| s.phase == Phase::Ready && !s.command_pending);
+        let state = session.state();
+        let base = state["exposure"]["shutter"]
+            .as_u64()
+            .or_else(|| state["status"]["properties"]["ShutterSpeed"]["value"].as_u64())
+            .unwrap_or(65546);
+        let short = [393226u64, 65546, 65541]
+            .into_iter()
+            .find(|v| *v != base)
+            .unwrap();
+        for (id, command) in [
+            ("tiers-focus-a", Command::Focus { target: 60500 }),
+            ("tiers-mark-a", Command::Mark { start: true }),
+            ("tiers-focus-b", Command::Focus { target: 60503 }),
+            ("tiers-mark-b", Command::Mark { start: false }),
+        ] {
+            session.dispatch(request(&session, id, command)).unwrap();
+            until(&session, |s| !s.command_pending);
+        }
+        let highlight = crate::model::Highlight {
+            shutter: short,
+            every: 2,
+            first_plane: 1,
+            last_plane: 4,
+            shots: 1,
+        };
+        session
+            .dispatch(request(
+                &session,
+                "tiers-plan",
+                Command::Highlight {
+                    highlight: Some(highlight),
+                },
+            ))
+            .unwrap();
+        session
+            .dispatch(request(&session, "tiers-start", Command::Start {}))
+            .unwrap();
+        let done = until(&session, |s| {
+            s.phase == Phase::Complete && !s.command_pending
+        });
+        let run = done.journal.unwrap();
+        let manifest: Value =
+            serde_json::from_slice(&std::fs::read(run.join("manifest.json")).unwrap()).unwrap();
+        assert_eq!(manifest["plan"]["highlight"]["every"], 2);
+        let events: Vec<Value> = std::fs::read_to_string(run.join("events.jsonl"))
+            .unwrap()
+            .lines()
+            .map(|l| serde_json::from_str(l).unwrap())
+            .collect();
+        let groups: Vec<(String, u64, u64, u64)> = events
+            .iter()
+            .filter(|e| {
+                matches!(
+                    e["event"].as_str(),
+                    Some("capture_buffered" | "capture_complete")
+                )
+            })
+            .map(|e| {
+                let d = &e["data"];
+                (
+                    d["tier"].as_str().unwrap().to_owned(),
+                    d["target"].as_u64().unwrap(),
+                    d["exposure"]["shutter"].as_u64().unwrap(),
+                    d["response"]["files"][0]["plane"].as_u64().unwrap_or(0),
+                )
+            })
+            .collect();
+        let tiers: Vec<&str> = groups.iter().map(|g| g.0.as_str()).collect();
+        assert_eq!(
+            tiers,
+            ["base", "highlight", "base", "base", "highlight", "base"],
+            "{groups:?}"
+        );
+        // Each highlight group: its base group's focus and plane number,
+        // at the highlight shutter; base groups at the base shutter.
+        for pair in [(0, 1), (3, 4)] {
+            let (b, h) = (&groups[pair.0], &groups[pair.1]);
+            assert_eq!(b.1, h.1, "same focus");
+            assert_eq!(b.3, h.3, "same plane number");
+            assert_eq!(h.2, short);
+            assert_eq!(b.2, base);
+        }
+        assert!(events.iter().any(|e| e["event"] == "exposure_complete"));
+        assert_eq!(
+            session.state()["status"]["properties"]["ShutterSpeed"]["value"]
+                .as_u64()
+                .unwrap_or(base),
+            base,
+            "the camera ends at the base shutter"
+        );
+        // A pass of an unknown tier is refused before anything is sent.
+        assert!(
+            session
+                .dispatch(request(
+                    &session,
+                    "tiers-pass-bad",
+                    Command::QueuePass {
+                        planes: vec![2],
+                        tier: "sideways".into(),
+                        shutter: short,
+                    }
+                ))
+                .is_err()
+        );
     }
     /// Plan S1: an outline is checked, becomes the subject box's bounding
     /// rectangle, is reported in the plan, and is written into the next
@@ -1061,6 +1287,7 @@ mod tests {
             positions: vec![60600],
             keep_power_on: true,
             kind: PositionsKind::Positions,
+            shutters: None,
         };
         session
             .dispatch(request(&session, "subject-capture", one))

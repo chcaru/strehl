@@ -15,6 +15,51 @@ pub struct Plan {
     /// desktops and manifests read as before.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub subject: Option<Subject>,
+    /// Highlight groups (plan X3): a shorter group after the base group at
+    /// chosen planes, for the highlights the base exposure pins. Omitted
+    /// when off.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub highlight: Option<Highlight>,
+}
+
+/// Where and how highlight groups are taken (plan X3; the format in
+/// `experiments/subject-highlights-detail-2026-11-23/impl/tiers.md`).
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
+pub struct Highlight {
+    /// The camera's ShutterSpeed property value for the highlight groups.
+    pub shutter: u64,
+    /// A highlight group at every plane (1) or every second (2), and so on,
+    /// counted from `first_plane`.
+    pub every: u16,
+    /// Plane numbers (as files carry them, 1-based) the groups span.
+    pub first_plane: u32,
+    pub last_plane: u32,
+    /// RAWs a highlight group: 4 (the owner's decision) or 1.
+    pub shots: u8,
+}
+
+impl Highlight {
+    pub fn validate(&self) -> Result<()> {
+        ensure!(
+            (1..=16).contains(&self.every),
+            "Highlight groups come every 1 to 16 planes"
+        );
+        ensure!(
+            self.first_plane >= 1 && self.last_plane >= self.first_plane,
+            "Highlight groups need a first and last plane"
+        );
+        ensure!(
+            matches!(self.shots, 1 | 4),
+            "A highlight group is one or four RAWs"
+        );
+        ensure!(self.shutter != 0, "Choose the highlight groups' shutter");
+        Ok(())
+    }
+    /// Whether plane `plane` (1-based) takes a highlight group.
+    pub fn applies(&self, plane: u64) -> bool {
+        let (first, last) = (u64::from(self.first_plane), u64::from(self.last_plane));
+        (first..=last).contains(&plane) && (plane - first).is_multiple_of(u64::from(self.every))
+    }
 }
 
 /// The subject: outer rings and holes (even-odd), normalised to the
@@ -100,6 +145,7 @@ impl Default for Plan {
             approach: 128,
             capture_timeout_s: 120,
             subject: None,
+            highlight: None,
         }
     }
 }
@@ -108,6 +154,9 @@ impl Plan {
     pub fn validate(&self) -> Result<()> {
         if let Some(subject) = &self.subject {
             subject.validate()?;
+        }
+        if let Some(highlight) = &self.highlight {
+            highlight.validate()?;
         }
         ensure!(
             self.step > 0,

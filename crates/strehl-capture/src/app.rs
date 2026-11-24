@@ -530,6 +530,7 @@ impl App {
                         positions: None,
                         keep_power_on: false,
                         test: false,
+                        shutters: None,
                     },
                 );
             }

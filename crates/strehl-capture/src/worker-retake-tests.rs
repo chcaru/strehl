@@ -44,7 +44,7 @@ impl Bench {
     }
     fn followup(&self, camera: &mut PcSim, planes: Vec<u64>) -> Result<()> {
         self.control.store(RUN, Ordering::SeqCst);
-        followup(camera, &self.shared, &self.control, planes, None)
+        followup(camera, &self.shared, &self.control, planes, None, None)
     }
     fn run(&self) -> PathBuf {
         self.shared.lock().unwrap().journal.clone().unwrap()
@@ -364,7 +364,15 @@ fn a_card_capture_takes_no_manual_retakes() {
     let s = bench.snapshot();
     assert_eq!(s.phase, Phase::Complete);
     assert!(!s.retakes_accepted);
-    let e = followup(&mut demo, &bench.shared, &bench.control, vec![1], None).unwrap_err();
+    let e = followup(
+        &mut demo,
+        &bench.shared,
+        &bench.control,
+        vec![1],
+        None,
+        None,
+    )
+    .unwrap_err();
     assert!(e.to_string().contains("on the card"), "{e:#}");
 }
 
@@ -390,4 +398,73 @@ fn a_retake_asked_during_the_retakes_after_joins_them() {
         skipped,
         [json!({"plane":9,"reason":"not taken by the capture"})]
     );
+}
+
+/// Plan X3: a pass of the highlight tier after the capture takes every plane
+/// asked for (a passed plane too: a pass replaces nothing) at its shutter,
+/// journalled with its tier and exposure, without error correction's check,
+/// and leaves the camera at the capture's shutter. A positions run takes
+/// each position at its own shutter.
+#[test]
+fn a_pass_and_a_positions_runs_shutters_are_journalled() {
+    let bench = Bench::new(3, 2);
+    let mut camera = PcSim::new(vec![]);
+    bench.capture(&mut camera);
+    let base = property(&camera.status().unwrap(), "ShutterSpeed").unwrap();
+    let short = [393226u64, 65546, 65541]
+        .into_iter()
+        .find(|v| *v != base)
+        .unwrap();
+    bench.control.store(RUN, Ordering::SeqCst);
+    let pass = Pass {
+        tier: Tier::named("highlight", short).unwrap(),
+    };
+    followup(
+        &mut camera,
+        &bench.shared,
+        &bench.control,
+        vec![1, 3],
+        Some(pass),
+        None,
+    )
+    .unwrap();
+    assert_eq!(camera.tries(1), 2, "a passed plane is still taken");
+    assert_eq!(camera.tries(3), 2);
+    let started = bench.named("followup_started");
+    assert_eq!(started[0]["tier"], "highlight");
+    let tail: Vec<Value> = bench.named("capture_buffered")[3..].to_vec();
+    assert_eq!(tail.len(), 2);
+    for b in &tail {
+        assert_eq!(b["tier"], "highlight");
+        assert_eq!(b["exposure"]["shutter"], short);
+        assert_eq!(b["response"]["files"][0]["tier"], "highlight");
+    }
+    assert_eq!(
+        property(&camera.status().unwrap(), "ShutterSpeed"),
+        Some(base),
+        "the camera is back at the capture's shutter"
+    );
+    // A positions run: one position at two shutters.
+    let survey = Bench::new(1, 0);
+    let mut camera = PcSim::new(vec![]);
+    capture(
+        &mut camera,
+        &survey.shared,
+        &survey.control,
+        survey.plan.clone(),
+        survey.temp.path().into(),
+        Some(Explicit {
+            positions: vec![60000, 60000],
+            test: false,
+            shutters: Some(vec![base, short]),
+        }),
+        None,
+    )
+    .unwrap();
+    let shutters: Vec<u64> = survey
+        .named("capture_buffered")
+        .iter()
+        .map(|b| b["exposure"]["shutter"].as_u64().unwrap())
+        .collect();
+    assert_eq!(shutters, [base, short]);
 }
