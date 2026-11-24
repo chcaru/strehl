@@ -1,7 +1,10 @@
 # Subject, highlights and detail: a plan
 
-**Status:** Proposal (2026-11-23). Nothing here is built. The owner's decisions of
-2026-11-23 are recorded in section 9; tiled capture (section 12) is deferred.
+**Status:** Proposal (2026-11-23). Stages Q (Q1 to Q7) and S1 to S3 are built on
+`studio2/subject-impl`, not yet rig-tested
+([implementation log](../../experiments/subject-highlights-detail-2026-11-23/impl/README.md)).
+The owner's decisions of 2026-11-23 are recorded in section 9; tiled capture (section 12)
+is deferred.
 **Date:** 2026-11-23.
 **Owner's questions:** make the Capture subject a polygon, select it automatically with
 manual correction, and let it drive the calibrations. The exposure advice over-exposes
