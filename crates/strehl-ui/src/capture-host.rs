@@ -221,6 +221,18 @@ pub(crate) struct Schedule {
     pub error: Option<String>,
 }
 
+/// `starting`: what a capture does before its first exposure (the light's
+/// warm-up, the approach move). Absent from older hosts and once begun.
+#[derive(Clone, Debug, Default, Deserialize, PartialEq)]
+#[serde(default)]
+pub(crate) struct Starting {
+    /// `"light"` or `"approach"`.
+    pub stage: Option<String>,
+    pub elapsed: Option<f64>,
+    /// How long the stage takes, when known.
+    pub seconds: Option<f64>,
+}
+
 /// `capabilities`: what the host accepts beyond the original protocol.
 /// Absent (older hosts) means none.
 #[derive(Clone, Copy, Debug, Default, Deserialize, PartialEq, Eq)]
@@ -234,6 +246,8 @@ pub(crate) struct Capabilities {
     pub max_retakes: bool,
     /// `queue_retakes`; `retakes.queued` and `retakes.followup` (h-retake).
     pub queue_retakes: bool,
+    /// `new_plan`: clear the marks, the subject box and the survey.
+    pub new_plan: bool,
 }
 
 /// `retakes` (h-retake): the setting and the manual retakes in hand.
@@ -325,6 +339,8 @@ pub(crate) struct HostState {
     /// `None` from a host without error correction.
     pub error_correction: Option<bool>,
     pub capabilities: Capabilities,
+    #[serde(deserialize_with = "lenient")]
+    pub starting: Option<Starting>,
     /// Absent from an older host (h-retake).
     #[serde(deserialize_with = "lenient")]
     pub retakes: Option<Retakes>,
@@ -378,6 +394,7 @@ pub(crate) const KNOWN_KEYS: &[&str] = &[
     "error_correction",
     "capabilities",
     "retakes",
+    "starting",
 ];
 
 impl HostState {

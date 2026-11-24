@@ -160,9 +160,12 @@ fn name_templates_expand_into_safe_file_stems() {
         .unwrap(),
         "2026-11-21 昆虫"
     );
-    for bad in ["", "plain", "{nope}", "{subject", "subject}", "a\tb{view}"] {
+    for bad in ["", "  ", "{nope}", "{subject", "subject}", "a\tb{view}"] {
         assert!(expand_name(bad, &fields).is_err(), "{bad:?}");
     }
+    // A photograph's own name may be plain text; the default template may not.
+    assert_eq!(expand_name("plain", &fields).unwrap(), "plain");
+    assert!(Library::default().set_template("plain").is_err());
     assert_eq!(sanitize_stem("  ..hidden. "), "hidden");
     assert_eq!(sanitize_stem("con"), "con_");
     assert_eq!(sanitize_stem("COM3.final"), "COM3.final_");
@@ -251,4 +254,38 @@ fn persistence_is_atomic_and_detects_external_changes() {
     drop(held);
     save(&path, &library, Some(b"{not json")).unwrap();
     std::fs::remove_dir_all(dir).unwrap();
+}
+
+/// A name typed for one photograph is that photograph's (owner feedback,
+/// 2026-11-23): the next photograph starts from the template, the first
+/// keeps its name, and setting it back to the template (or clearing it)
+/// forgets it. The library round-trips the names and an older file without
+/// them still reads.
+#[test]
+fn a_photographs_name_is_its_own() {
+    let mut library = Library::default();
+    library
+        .set_name("C:/a/result.tiff", Some(" Glitter weevil final "))
+        .unwrap();
+    assert_eq!(library.name_for("C:/a/result.tiff"), "Glitter weevil final");
+    assert_eq!(library.name_for("C:/b/result.tiff"), DEFAULT_TEMPLATE);
+    assert!(
+        library
+            .set_name("C:/a/result.tiff", Some("{nope}"))
+            .is_err()
+    );
+    assert!(library.set_name("", Some("x")).is_err());
+    let json = serde_json::to_string(&library).unwrap();
+    let back: Library = serde_json::from_str(&json).unwrap();
+    assert_eq!(back, library);
+    back.validate().unwrap();
+    library
+        .set_name("C:/a/result.tiff", Some(DEFAULT_TEMPLATE))
+        .unwrap();
+    assert!(library.names.is_empty());
+    library.set_name("C:/a/result.tiff", Some("x")).unwrap();
+    library.set_name("C:/a/result.tiff", None).unwrap();
+    assert!(library.names.is_empty());
+    let older = serde_json::to_string(&Library::default()).unwrap();
+    assert!(!older.contains("names"));
 }

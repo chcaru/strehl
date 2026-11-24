@@ -47,6 +47,9 @@ pub struct RigPower {
     // State requests only read the cache, never wait for a plug.
     operation: Mutex<()>,
     readings: Mutex<[Option<(Instant, Value)>; 2]>,
+    /// When this controller switched the light on; `None` when it is off or
+    /// was found on (how long it has been warm is then unknown).
+    light_since: Mutex<Option<Instant>>,
 }
 impl RigPower {
     pub fn new(config: PowerConfig, lan: Lan) -> Result<Arc<Self>> {
@@ -88,6 +91,7 @@ impl RigPower {
                 .build()?,
             operation: Mutex::new(()),
             readings: Mutex::new([None, None]),
+            light_since: Mutex::new(None),
         });
         let weak = Arc::downgrade(&rig);
         thread::Builder::new()
@@ -102,6 +106,16 @@ impl RigPower {
                 }
             })?;
         Ok(rig)
+    }
+    /// How long the light has been on since this controller switched it
+    /// on (plan Q3): `None` when it is off, was switched on elsewhere, or
+    /// its last reading says off.
+    pub fn light_on_for(&self) -> Option<Duration> {
+        let since = (*self.light_since.lock().unwrap())?;
+        let off = self.readings.lock().unwrap()[Outlet::Light as usize]
+            .as_ref()
+            .is_some_and(|(_, reading)| reading["on"] == false);
+        (!off).then(|| since.elapsed())
     }
     pub fn warmup_seconds(&self) -> u32 {
         self.warmup.load(Ordering::Relaxed)
@@ -207,7 +221,7 @@ impl RigPower {
                 );
             }
             if before["on"] == on {
-                return Ok(before);
+                return Ok((before, false));
             }
             // A lost write response may already have switched the outlet. Read back without replay.
             let sent = self.rpc(ip, "Switch.Set", json!({"id":0,"on":on}));
@@ -216,8 +230,17 @@ impl RigPower {
                 sent?;
                 bail!("{device:?} outlet did not confirm the requested state");
             }
-            Ok(after)
+            Ok((after, true))
         })();
+        if device == Outlet::Light {
+            let mut since = self.light_since.lock().unwrap();
+            match &result {
+                Ok((_, true)) if on => *since = Some(Instant::now()),
+                Ok(_) if !on => *since = None,
+                _ => {}
+            }
+        }
+        let result = result.map(|(reading, _)| reading);
         self.publish(device, &result);
         result
     }
@@ -302,10 +325,17 @@ mod tests {
                 .unwrap(),
             operation: Mutex::new(()),
             readings: Mutex::new([None, None]),
+            light_since: Mutex::new(None),
         };
         assert_eq!(rig.set(Outlet::Camera, true).unwrap()["on"], true);
         assert_eq!(rig.set(Outlet::Camera, true).unwrap()["on"], true);
+        // Q3: the camera's outlet starts no light timer.
+        assert!(rig.light_on_for().is_none());
         assert!(rig.set(Outlet::Light, false).is_err());
+        // A refused switch leaves the light's timer as it was.
+        assert!(rig.light_on_for().is_none());
+        *rig.light_since.lock().unwrap() = Some(Instant::now() - Duration::from_secs(90));
+        assert!(rig.light_on_for().unwrap() >= Duration::from_secs(90));
         assert_eq!(writes.load(Ordering::SeqCst), 1);
         drop(rig);
         let _ = stop.send(());

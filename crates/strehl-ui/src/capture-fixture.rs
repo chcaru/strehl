@@ -85,7 +85,7 @@ fn plan_state() -> Value {
         "preview":{"available":true,"fresh":true,"generation":7,"age_seconds":0.2,"width":960,"height":640},
         "samples":samples,"magnifier_ratios":[0,59,117],"magnifier_current":59,
         "suggestion":{"start":37100,"end":37764,"supported_tiles":20,"clipped":false,"explanation":"Sharp detail from 37,100 to 37,764"},
-        "capabilities":{"test_shot":true,"exposure_check":true,"max_retakes":true,"queue_retakes":true},
+        "capabilities":{"test_shot":true,"exposure_check":true,"max_retakes":true,"queue_retakes":true,"new_plan":true},
         "retakes":{"max":2,"limit":5,"accepted":false,"queued":[],"run":null,"followup":null},
         "error_correction":false,
         "schedule":{"job":null,"error":null},"pending_control":0,"completed":0,"total":0})

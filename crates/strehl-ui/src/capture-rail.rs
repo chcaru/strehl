@@ -871,7 +871,13 @@ impl FocusRail {
                     ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                         ui.spacing_mut().item_spacing.x = 16.0;
                         if inputs.flight.is_none() {
-                            if style::link(ui, "Survey again", inputs.editable, palette).clicked() {
+                            // "Again" only once there is a survey to repeat.
+                            let survey = if inputs.survey.is_some() {
+                                "Survey again"
+                            } else {
+                                "Survey"
+                            };
+                            if style::link(ui, survey, inputs.editable, palette).clicked() {
                                 intents.push(RailIntent::SurveyAgain);
                             }
                             if style::link(

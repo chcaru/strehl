@@ -513,7 +513,7 @@ fn click(ctx: &egui::Context, input: &FlightInputs<'_>, label: &str) -> Vec<Flig
 }
 
 /// Stop asks first; the confirmation stops; Glance opens glance. Once the
-/// capture ended, the foot is Back to planning.
+/// capture ended, the foot offers New capture and Back to the plan.
 #[test]
 fn stop_asks_first_and_glance_opens() {
     let ctx = egui::Context::default();
@@ -529,8 +529,12 @@ fn stop_asks_first_and_glance_opens() {
     input.confirm_stop = false;
     input.ended = true;
     assert_eq!(
-        click(&ctx, &input, "Back to planning"),
+        click(&ctx, &input, "Back to the plan"),
         [FlightIntent::Done]
+    );
+    assert_eq!(
+        click(&ctx, &input, "New capture"),
+        [FlightIntent::NewCapture]
     );
 }
 
@@ -935,4 +939,37 @@ fn the_review_says_what_happened_and_why() {
             .any(|t| t.contains("expects a retake to fail the same way"))
     );
     assert!(all.iter().any(|t| t == "Finished"));
+}
+
+/// The start of a capture says what it is doing (owner feedback,
+/// 2026-11-23: it "just sits there"): the light's warm-up with its seconds
+/// and a share of the bar, the approach move, and from an older host its
+/// message until the first RAW. Once planes are taken it is gone.
+#[test]
+fn the_start_says_warm_up_and_approach() {
+    let mut state = capturing();
+    state["completed"] = json!(0);
+    state["storage"]["captured_frames"] = json!(0);
+    state["starting"] = json!({"stage":"light","elapsed":12.4,"seconds":60.0});
+    let h = headline(&snapshot(state.clone()), None);
+    let (text, fraction) = h.starting.unwrap();
+    assert_eq!(text, "Warming the light: 12 of 60 s");
+    assert!((fraction.unwrap() - 12.4 / 60.0).abs() < 1e-4);
+    state["starting"] = json!({"stage":"light","elapsed":0.1,"seconds":0.0});
+    assert_eq!(
+        headline(&snapshot(state.clone()), None).starting.unwrap().0,
+        "The light is warm"
+    );
+    state["starting"] = json!({"stage":"approach","elapsed":2.2});
+    let (text, fraction) = headline(&snapshot(state.clone()), None).starting.unwrap();
+    assert!(text.starts_with("Moving to the start"), "{text}");
+    assert!(fraction.is_none());
+    // An older host: its message, until the first RAW.
+    state.as_object_mut().unwrap().remove("starting");
+    state["message"] = json!("Studio light on · warming for 60 s");
+    assert_eq!(
+        headline(&snapshot(state.clone()), None).starting.unwrap().0,
+        "Studio light on · warming for 60 s"
+    );
+    assert!(headline(&snapshot(capturing()), None).starting.is_none());
 }

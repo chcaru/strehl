@@ -434,6 +434,10 @@ impl StrehlApp {
             .map(|node| node.name.clone())
             .unwrap_or_default();
         self.capture_parent = subject.or(collection);
+        // A new stack starts from a clean plan, not the last capture's
+        // review and stages (owner feedback, 2026-11-23). "Shoot again"
+        // keeps the step calibration: the same subject, framed the same.
+        self.capture.new_capture(from_stack.is_some());
         match subject {
             Some(id) => self.capture.set_plan_subject(id, &subject_name),
             // A new subject: the plan asks for its name.

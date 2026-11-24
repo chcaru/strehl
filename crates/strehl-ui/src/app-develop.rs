@@ -1188,6 +1188,13 @@ impl StrehlApp {
             .and_then(|p| p.file_stem())
             .map_or_else(|| "photograph".into(), |s| s.to_string_lossy().into_owned());
         let date = date_text();
+        let photo_key = self
+            .editor
+            .path
+            .as_ref()
+            .map(|p| p.to_string_lossy().into_owned())
+            .unwrap_or_default();
+        let name = library.name_for(&photo_key).to_owned();
         let history = self.export_history_rows();
         let destination = library.destination(&subject_key).map(Path::to_path_buf);
         let note = self.repair_export_note();
@@ -1218,6 +1225,7 @@ impl StrehlApp {
         let view = ExportView {
             palette: &palette,
             library: &library,
+            name: &name,
             fields: NameFields {
                 subject: &subject_name,
                 view: &view_name,
@@ -1595,6 +1603,16 @@ impl StrehlApp {
                     library.set_template(template)?;
                     changed = true;
                 }
+                ExportIntent::SetName(name) => {
+                    let photo = self
+                        .editor
+                        .path
+                        .as_ref()
+                        .map(|p| p.to_string_lossy().into_owned())
+                        .unwrap_or_default();
+                    library.set_name(&photo, name.as_deref())?;
+                    changed = true;
+                }
                 _ => {}
             }
         }
@@ -1763,8 +1781,16 @@ impl StrehlApp {
             .map_or_else(|| "photograph".into(), |s| s.to_string_lossy().into_owned());
         let date = date_text();
         let text = self.export_batch_text();
+        // "Export again" names by its own one-preset template; a batch by
+        // the photograph's own name, else the template.
+        let name = if again.is_some() {
+            library.template.clone()
+        } else {
+            library.name_for(&guard_path.to_string_lossy()).to_owned()
+        };
         let planned = exporting::plan_batch(
             &library,
+            &name,
             &NameFields {
                 subject: &subject,
                 view: &view,

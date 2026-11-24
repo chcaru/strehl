@@ -37,6 +37,7 @@ fn view<'a>(
     ExportView {
         palette,
         library: lib,
+        name: &lib.template,
         fields: fields(),
         destination,
         size: [7032, 4688],
@@ -340,6 +341,7 @@ fn the_encoder_effort_reaches_the_encoder() {
     lib.add("Thorough", sdr(speed_of(6))).unwrap();
     let files = plan_batch(
         &lib,
+        &lib.template,
         &fields(),
         dir.path(),
         &master,

@@ -278,3 +278,38 @@ fn a_test_shot_names_its_kind_only_to_a_host_that_accepts_it() {
         assert!(!ws.test_shot.running());
     }
 }
+
+/// "New capture" (owner feedback, 2026-11-23): the review of the last
+/// capture ends and its stages clear: names, test shot, step calibration;
+/// a host that offers `new_plan` is asked to forget its marks, box and
+/// survey, and an older host is sent nothing. "Shoot again" keeps the
+/// calibration.
+#[test]
+fn a_new_capture_clears_the_stages_of_the_last_one() {
+    for (supported, keep) in [(true, false), (false, false), (true, true)] {
+        let (_dir, mut ws) = workspace();
+        let mut state = ready();
+        state["end_set"] = json!(true);
+        if supported {
+            state["capabilities"] = json!({"new_plan":true});
+        }
+        let (connection, inbox) = Connection::detached(snapshot(state));
+        ws.connection = Some(connection);
+        ws.station.review = true;
+        ws.station.plan.stack_name = "Dorsal".into();
+        ws.test_shot = test_shot::TestShot::Failed("old".into());
+        ws.calibration = tools::Calibration::Done(json!({"width":47.0}));
+        ws.new_capture(keep);
+        assert!(!ws.station.review);
+        assert_eq!(ws.station_mode(), station::StationMode::Plan);
+        assert!(ws.station.plan.subject.is_empty() && ws.station.plan.stack_name.is_empty());
+        assert_eq!(ws.test_shot.stage(), "idle");
+        assert_eq!(ws.calibration.stage(), if keep { "done" } else { "idle" });
+        let sent = inbox.command().map(|r| r.command);
+        if supported {
+            assert!(matches!(sent, Some(Command::NewPlan {})), "{sent:?}");
+        } else {
+            assert!(sent.is_none(), "{sent:?}");
+        }
+    }
+}

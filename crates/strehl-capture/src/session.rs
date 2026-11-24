@@ -194,6 +194,10 @@ impl Session {
         };
         state["schedule"] = json!(schedule);
         state["error_correction"] = json!(s.error_correction);
+        // A capture's start (light warm-up, approach), while it runs.
+        if let Some(starting) = s.starting.as_ref().filter(|_| s.phase.active()) {
+            state["starting"] = starting.json();
+        }
         // What this controller accepts beyond the original protocol. A
         // desktop reads a flag before sending the field it names; an older
         // controller has no `capabilities`, which means none of them.
@@ -206,6 +210,8 @@ impl Session {
             "max_retakes": true,
             // `queue_retakes`, and `retakes.queued`/`retakes.followup` (h-retake).
             "queue_retakes": true,
+            // `new_plan`: clear the marks, subject box and survey.
+            "new_plan": true,
         });
         // Retakes (h-retake): the setting, the planes asked for during the
         // capture and not yet taken, and the retakes after it while they run.
@@ -476,6 +482,18 @@ impl Session {
                 action = Some(Action::Recover {
                     acknowledge_uncertain,
                 });
+            }
+            Command::NewPlan {} => {
+                // With the camera off too: "manage power" turns it off after
+                // every capture, and the next one is planned from here.
+                ensure!(
+                    !s.phase.active() && !s.command_pending,
+                    "Start a new plan between stacks"
+                );
+                c.start_set = false;
+                c.end_set = false;
+                c.roi = Roi::subject();
+                self.worker.clear_survey();
             }
             command => {
                 ensure!(
@@ -799,6 +817,11 @@ pub enum Command {
     Stop {},
     Survey {},
     ApplyBounds {},
+    /// Start the next capture from nothing: clear the bounds' marks, the
+    /// subject box and the survey (the plan's step, settle and approach are
+    /// the rig's and stay). Send only to a controller whose state has
+    /// `capabilities.new_plan`.
+    NewPlan {},
     Magnify {
         ratio: u32,
         x: u16,
@@ -1048,6 +1071,76 @@ mod tests {
         assert_eq!(
             session.state()["initial_seconds"],
             before["initial_seconds"]
+        );
+    }
+    /// `new_plan` clears the marks, the subject box and the survey, keeps the
+    /// rig's step and settle, works with the camera off, and is announced.
+    #[test]
+    fn new_plan_clears_marks_box_and_survey_and_keeps_the_rig_settings() {
+        let temp = tempfile::tempdir().unwrap();
+        let session = Session::new(
+            Arc::new(Worker::new(PathBuf::new(), true)),
+            Arc::new(Mutex::new(Controls::new(temp.path().into()))),
+            true,
+        );
+        assert_eq!(session.state()["capabilities"]["new_plan"], true);
+        session
+            .dispatch(request(&session, "newplan-connect", Command::Connect {}))
+            .unwrap();
+        until(&session, |s| s.phase == Phase::Ready && !s.command_pending);
+        for (id, command) in [
+            ("newplan-mark-a", Command::Mark { start: true }),
+            ("newplan-mark-b", Command::Mark { start: false }),
+            (
+                "newplan-roi",
+                Command::Roi {
+                    roi: Roi {
+                        x: 0.1,
+                        y: 0.2,
+                        width: 0.3,
+                        height: 0.4,
+                    },
+                },
+            ),
+            (
+                "newplan-settings",
+                Command::Settings {
+                    step: 9,
+                    settle_ms: 1500,
+                    approach: 120,
+                    capture_timeout_s: 30,
+                },
+            ),
+        ] {
+            session.dispatch(request(&session, id, command)).unwrap();
+        }
+        session
+            .worker
+            .set_suggestion(Some(crate::bounds::Suggestion {
+                start: 1,
+                end: 2,
+                supported_tiles: 3,
+                clipped: false,
+                explanation: String::new(),
+            }));
+        let before = session.state();
+        assert!(before["start_set"] == true && before["end_set"] == true);
+        assert!(!before["suggestion"].is_null());
+        session
+            .dispatch(request(&session, "newplan-clear", Command::NewPlan {}))
+            .unwrap();
+        let after = session.state();
+        assert_eq!(after["start_set"], false);
+        assert_eq!(after["end_set"], false);
+        assert!(after["suggestion"].is_null());
+        assert_eq!(after["samples"], json!([]));
+        assert_eq!(after["roi"], json!(Roi::subject()));
+        assert_eq!(after["plan"]["step"], 9);
+        assert_eq!(after["plan"]["settle_ms"], 1500);
+        // The request is a bare op, so it parses as sent.
+        assert_eq!(
+            serde_json::to_value(Command::NewPlan {}).unwrap(),
+            json!({"op":"new_plan"})
         );
     }
     /// h-retake: an older desktop's `error_correction` (no `max_retakes`)

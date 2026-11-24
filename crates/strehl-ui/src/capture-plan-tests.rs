@@ -90,12 +90,23 @@ fn the_step_table_reads_the_host_rules() {
     assert_eq!(seven.bytes, Some(65_000_000 * 384));
     assert!(rows[3].risk, "16: 3x overlap is past the detail limit");
     assert!(!rows[2].risk, "10: 5x is not");
-    // A calibrated step outside the candidates joins the table.
+    // A calibrated step outside the candidates joins the table, and so does
+    // the coarsest step that keeps the detail (40 / 5 = 8).
     let odd = step_rows(&s, 7, 500, &json!({"width":40.0,"suggested_step":6}));
     assert_eq!(
         odd.iter().map(|r| r.step).collect::<Vec<_>>(),
-        [5, 6, 7, 10, 16]
+        [5, 6, 7, 8, 10, 16]
     );
+    // The owner's case: the line said "Steps up to 9" with no row for 9.
+    let nine = step_rows(&s, 7, 500, &json!({"width":47.0,"suggested_step":6}));
+    let view = CalibrationView {
+        stage: "done",
+        result: json!({"width":47.0}),
+        ..Default::default()
+    };
+    assert!(guide::step_line(&nine, &view).starts_with("Steps up to 9 "));
+    let row = nine.iter().find(|r| r.step == 9).expect("a row for 9");
+    assert!(!row.risk, "47 / 9 is above the knee");
     // No bounds, no table.
     let mut unmarked = ready();
     unmarked["end_set"] = json!(false);

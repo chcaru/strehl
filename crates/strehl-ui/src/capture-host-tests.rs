@@ -56,7 +56,12 @@ fn keys(state: &Value) -> BTreeSet<String> {
 fn the_simulators_state_reads_typed_through_a_whole_capture() {
     let temp = tempfile::tempdir().unwrap();
     let session = demo_session(temp.path());
-    let known: BTreeSet<String> = KNOWN_KEYS.iter().map(|k| k.to_string()).collect();
+    // `starting` is sent only while a capture starts.
+    let known: BTreeSet<String> = KNOWN_KEYS
+        .iter()
+        .filter(|k| **k != "starting")
+        .map(|k| k.to_string())
+        .collect();
     let (state, host) = until(&session, |_| true);
     assert_eq!(keys(&state), known);
     assert_eq!(host.phase, HostPhase::Disconnected);
@@ -68,6 +73,7 @@ fn the_simulators_state_reads_typed_through_a_whole_capture() {
             exposure_check: true,
             max_retakes: true,
             queue_retakes: true,
+            new_plan: true,
         }
     );
     assert_eq!(host.error_correction, Some(false));
@@ -120,7 +126,10 @@ fn the_simulators_state_reads_typed_through_a_whole_capture() {
 
     send(&session, "start-typed", Command::Start {});
     let (state, host) = until(&session, |h| h.phase.capturing());
-    assert_eq!(keys(&state), known);
+    // The approach may be under way: `starting`, read typed when sent.
+    let mut sent = keys(&state);
+    assert_eq!(sent.remove("starting"), host.starting.is_some());
+    assert_eq!(sent, known);
     assert!(host.phase.active());
     assert_eq!(host.total, 4);
     assert!(host.timer.is_some());

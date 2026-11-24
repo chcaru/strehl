@@ -133,6 +133,12 @@ pub(crate) struct Library {
     /// Last destination per subject key.
     #[serde(default)]
     pub destinations: BTreeMap<String, PathBuf>,
+    /// A photograph's own file name, by the photograph's path, when it was
+    /// edited for that photograph (owner feedback, 2026-11-23: a name typed
+    /// for one export came back on the next photograph). It may be plain
+    /// text or use the template's tokens; `template` stays the default.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub names: BTreeMap<String, String>,
 }
 
 fn image(name: &str, id: u8, enabled: bool, settings: ExportSettings) -> ExportPreset {
@@ -204,6 +210,7 @@ impl Default for Library {
             presets: default_presets(),
             template: DEFAULT_TEMPLATE.into(),
             destinations: BTreeMap::new(),
+            names: BTreeMap::new(),
         }
     }
 }
@@ -237,6 +244,17 @@ impl Library {
             preset.output.validate()?;
         }
         validate_template(&self.template)?;
+        ensure!(
+            self.names.len() <= MAX_DESTINATIONS,
+            "Too many photograph names"
+        );
+        for (photo, name) in &self.names {
+            ensure!(
+                !photo.is_empty() && photo.len() <= 4096,
+                "A photograph's name needs its photograph"
+            );
+            validate_name(name)?;
+        }
         ensure!(
             self.destinations.len() <= MAX_DESTINATIONS,
             "Too many remembered destinations"
@@ -321,6 +339,37 @@ impl Library {
         Ok(())
     }
 
+    /// The name a photograph's files take: its own, else the template.
+    pub fn name_for(&self, photo: &str) -> &str {
+        self.names.get(photo).map_or(&self.template, String::as_str)
+    }
+
+    /// Set (or, with `None` or the template itself, clear) a photograph's
+    /// own file name. Plain text is allowed: the batch finds free names.
+    pub fn set_name(&mut self, photo: &str, name: Option<&str>) -> Result<()> {
+        ensure!(
+            !photo.is_empty() && photo.len() <= 4096,
+            "Open a photograph first"
+        );
+        match name.map(str::trim).filter(|n| *n != self.template) {
+            None => {
+                self.names.remove(photo);
+            }
+            Some(name) => {
+                validate_name(name)?;
+                if !self.names.contains_key(photo) && self.names.len() >= MAX_DESTINATIONS {
+                    // Full: the first by path goes (old photographs' names).
+                    let first = self.names.keys().next().cloned();
+                    if let Some(first) = first {
+                        self.names.remove(&first);
+                    }
+                }
+                self.names.insert(photo.to_owned(), name.to_owned());
+            }
+        }
+        Ok(())
+    }
+
     pub fn destination(&self, subject: &str) -> Option<&Path> {
         self.destinations.get(subject).map(PathBuf::as_path)
     }
@@ -388,6 +437,13 @@ pub(crate) struct NameFields<'a> {
 const TOKENS: [&str; 4] = ["subject", "view", "preset", "date"];
 
 fn validate_template(template: &str) -> Result<()> {
+    let tokens = validate_name(template)?;
+    ensure!(tokens > 0, "The name template needs at least one {{token}}");
+    Ok(())
+}
+
+/// A file name with or without tokens; returns how many it uses.
+fn validate_name(template: &str) -> Result<usize> {
     ensure!(
         !template.trim().is_empty() && template.len() <= MAX_TEMPLATE_BYTES,
         "The name template must be 1..{MAX_TEMPLATE_BYTES} bytes"
@@ -411,13 +467,12 @@ fn validate_template(template: &str) -> Result<()> {
         rest = &rest[open + close + 1..];
     }
     ensure!(!rest.contains('}'), "The name template has a stray }}");
-    ensure!(tokens > 0, "The name template needs at least one {{token}}");
-    Ok(())
+    Ok(tokens)
 }
 
 /// Expand a template into a safe file stem (no extension).
 pub(crate) fn expand_name(template: &str, fields: &NameFields<'_>) -> Result<String> {
-    validate_template(template)?;
+    validate_name(template)?;
     let mut out = String::new();
     let mut rest = template;
     while let Some(open) = rest.find('{') {

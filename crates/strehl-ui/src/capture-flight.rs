@@ -51,6 +51,50 @@ pub(crate) struct Headline {
     /// shown).
     pub left: Option<f64>,
     pub paused: bool,
+    /// Before the first exposure: what the capture is doing, and how far
+    /// through it is when that is known (owner feedback, 2026-11-23).
+    pub starting: Option<(String, Option<f32>)>,
+}
+
+/// What a capture is doing before its first exposure: the host's
+/// `starting` (light warm-up, approach), else, from an older host, its
+/// message while nothing has been taken yet.
+pub(crate) fn starting(s: &Snapshot) -> Option<(String, Option<f32>)> {
+    let host = &s.host;
+    if host.phase != HostPhase::Capturing {
+        return None;
+    }
+    if let Some(start) = &host.starting {
+        let elapsed = start.elapsed.unwrap_or(0.0).max(0.0);
+        return Some(match (start.stage.as_deref(), start.seconds) {
+            (Some("light"), Some(total)) if total >= 0.5 => (
+                format!(
+                    "Warming the light: {:.0} of {:.0} s",
+                    elapsed.min(total),
+                    total
+                ),
+                Some((elapsed / total).clamp(0.0, 1.0) as f32),
+            ),
+            (Some("light"), _) => ("The light is warm".into(), None),
+            (Some("approach"), _) => (
+                format!("Moving to the start: the approach ({elapsed:.0} s)"),
+                None,
+            ),
+            _ => ("Starting".into(), None),
+        });
+    }
+    let nothing_yet = host.completed == 0 && host.storage.captured_frames.unwrap_or(0) == 0;
+    nothing_yet.then(|| {
+        let message = host.message.as_deref().unwrap_or("").trim();
+        (
+            if message.is_empty() {
+                "Starting".into()
+            } else {
+                message.to_owned()
+            },
+            None,
+        )
+    })
 }
 
 /// The headline from the host's state and the checker's journal.
@@ -83,6 +127,7 @@ pub(crate) fn headline(s: &Snapshot, progress: Option<&Progress>) -> Headline {
         elapsed,
         left: timer.and_then(|t| t.remaining),
         paused: host.phase == HostPhase::Paused,
+        starting: starting(s),
     }
 }
 
@@ -1363,6 +1408,8 @@ pub(crate) enum FlightIntent {
     QueueRetakes(Vec<u64>),
     /// The capture has ended and the user is done with its review.
     Done,
+    /// Done with the review, and the next capture starts from nothing.
+    NewCapture,
 }
 
 /// The view's state across frames: where each feed row starts.
@@ -1600,11 +1647,17 @@ fn head_ui(
         egui::pos2(of_right + 34.0, base - 46.0),
         egui::pos2(left_right - left_w - 34.0, base + 14.0),
     );
+    // Before the first plane the bar shows the warm-up, in the quiet ink.
+    let start = h.starting.as_ref().filter(|_| !inputs.ended);
+    let (fill, fill_colour) = match start {
+        Some((_, Some(f))) => (*f, palette.ink3),
+        _ => (h.fraction, palette.ok),
+    };
     style::bar(
         p,
         Rect::from_min_size(grow.min, egui::vec2(grow.width(), 8.0)),
-        h.fraction,
-        palette.ok,
+        fill,
+        fill_colour,
         palette,
     );
     let row1 = grow.top() + 8.0 + 14.0;
@@ -1616,6 +1669,8 @@ fn head_ui(
         }
     } else if h.paused {
         (Mark::Warn, "Paused")
+    } else if let Some((text, _)) = start {
+        (Mark::Info, text.as_str())
     } else {
         (Mark::Ok, "On track")
     };
@@ -2212,15 +2267,33 @@ pub(crate) fn inspector(
         |ui| {
             ui.spacing_mut().item_spacing.x = 8.0;
             if inputs.ended {
+                // Two ways on (owner feedback, 2026-11-23): a clean plan for
+                // the next subject, or back to this one's plan as it stands.
+                let w = (ui.available_width() - 8.0) / 2.0;
                 if style::button_sized(
                     ui,
-                    "Back to planning",
-                    ButtonKind::Plain,
-                    egui::vec2(ui.available_width(), 28.0),
+                    "New capture",
+                    ButtonKind::Primary,
+                    egui::vec2(w, 28.0),
                     true,
                     palette,
                 )
-                .on_hover_text("The plan, the live view and the next stack")
+                .on_hover_text(
+                    "A clean plan: clears the subject, bounds, survey, test shot and step calibration. The rig's settings stay.",
+                )
+                .clicked()
+                {
+                    out.push(FlightIntent::NewCapture);
+                }
+                if style::button_sized(
+                    ui,
+                    "Back to the plan",
+                    ButtonKind::Plain,
+                    egui::vec2(w, 28.0),
+                    true,
+                    palette,
+                )
+                .on_hover_text("This capture's plan as it stands, to shoot it again or adjust it")
                 .clicked()
                 {
                     out.push(FlightIntent::Done);

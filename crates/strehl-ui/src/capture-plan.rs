@@ -114,6 +114,8 @@ pub(crate) enum PlanIntent {
     UseSurveyBounds,
     /// The comparison panel ("What changes") at a section.
     OpenGuide(GuideTab),
+    /// Clear the stages for a new capture.
+    NewCapture,
     SetFourShot(bool),
     SetCheck(bool),
     SetRetake(bool),
@@ -248,6 +250,11 @@ pub(crate) fn step_rows(
     let mut steps: Vec<u16> = CANDIDATE_STEPS.to_vec();
     if let Some(suggested) = calibration["suggested_step"].as_u64() {
         steps.push(suggested.clamp(1, 65535) as u16);
+    }
+    // The coarsest step that keeps the detail, which the line under the
+    // table names ("Steps up to 9 keep the detail"): it must be a row.
+    if let Some(w) = width {
+        steps.push((w / guide::KNEE).floor().clamp(1.0, 65535.0) as u16);
     }
     steps.push(step.max(1));
     steps.sort_unstable();
@@ -633,14 +640,38 @@ impl PlanView {
             );
             ui.add(egui::Label::new(job).wrap());
         });
-        if self.chosen.is_some()
-            && style::link(ui, "A new subject instead", true, palette).clicked()
-        {
-            self.subject.clear();
-            self.chosen = None;
-            self.focus_subject = true;
-            out.push(PlanIntent::SetSubject(String::new()));
-        }
+        // Anything a new capture would clear (owner feedback, 2026-11-23).
+        let host = &inputs.s.host;
+        let started = host.start_set
+            || host.end_set
+            || !host.samples.is_empty()
+            || inputs.test_shot.stage != "idle"
+            || inputs.calibration.stage != "idle"
+            || !self.subject.trim().is_empty()
+            || !self.stack_name.trim().is_empty();
+        let idle = !host.phase.active()
+            && !matches!(inputs.test_shot.stage, "capturing" | "reading")
+            && matches!(inputs.calibration.stage, "idle" | "done" | "failed");
+        ui.horizontal(|ui| {
+            ui.spacing_mut().item_spacing.x = 16.0;
+            if self.chosen.is_some()
+                && style::link(ui, "A new subject instead", true, palette).clicked()
+            {
+                self.subject.clear();
+                self.chosen = None;
+                self.focus_subject = true;
+                out.push(PlanIntent::SetSubject(String::new()));
+            }
+            if started
+                && style::link(ui, "New capture", idle, palette)
+                    .on_hover_text(
+                        "Start over: clears the subject, bounds, survey, test shot and step calibration. The rig's settings stay.",
+                    )
+                    .clicked()
+            {
+                out.push(PlanIntent::NewCapture);
+            }
+        });
     }
 }
 

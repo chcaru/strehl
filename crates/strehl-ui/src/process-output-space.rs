@@ -71,13 +71,27 @@ pub(crate) struct OutputGeometry {
 
 impl OutputGeometry {
     pub(crate) fn parse(value: &str) -> Option<Self> {
-        let pixels_per_quad = if value.ends_with(", Malvar-He-Cutler demosaic)") {
+        // A restored render says so last (`merge_cmd`'s writer); a four-shot
+        // render carries colour through the merge instead of demosaicing,
+        // with the same two output pixels per analysis cell. Before
+        // 2026-11-23 neither was read, so a four-shot or restored render had
+        // no geometry: its maps were not certified and a saved one could not
+        // be reopened.
+        let core = value
+            .strip_suffix(", optically restored)")
+            .map_or_else(|| value.to_owned(), |rest| format!("{rest})"));
+        let pixels_per_quad = if core.ends_with(", Malvar-He-Cutler demosaic)")
+            || core.ends_with(", colour carried through the merge, no demosaic)")
+        {
             2
-        } else if value.ends_with(", binned from one 2x2 quad per pixel)") {
+        } else if core.ends_with(", binned from one 2x2 quad per pixel)")
+            || core.ends_with(", binned from one 2x2 quad per pixel -- NOT demosaiced)")
+        {
             1
         } else {
             return None;
         };
+        let value = core.as_str();
         // A filename may contain parentheses, dimensions, or commas. Anchor
         // the final dimensions immediately before the writer's pixel format.
         let (prefix, _) = value.rsplit_once(", 16-bit RGB, ")?;
@@ -457,6 +471,22 @@ mod tests {
         progress.mark_complete();
         progress.bands = None;
         assert!(OutputSpace::from_progress(&progress, [262, 198]).is_none());
+    }
+
+    /// Four-shot and restored renders (the A7CR's default) are read: the
+    /// weevil render's own line, 2026-11-23.
+    #[test]
+    fn four_shot_and_restored_renders_report_their_geometry() {
+        let carried = "\\\\?\\C:\\r\\result.partial.tiff (9504 x 6336, 16-bit RGB, sRGB (BT.709 primaries, D65, sRGB transfer) -- for looking at, colour carried through the merge, no demosaic)";
+        let parsed = OutputGeometry::parse(carried).unwrap();
+        assert_eq!((parsed.size, parsed.pixels_per_quad), ([9504, 6336], 2));
+        let restored = carried.replace("no demosaic)", "no demosaic, optically restored)");
+        assert_eq!(OutputGeometry::parse(&restored), Some(parsed));
+        let demosaic = "r.tiff (262 x 198, 16-bit RGB, sRGB, Malvar-He-Cutler demosaic, optically restored)";
+        assert_eq!(OutputGeometry::parse(demosaic).unwrap().pixels_per_quad, 2);
+        let binned = "r.tiff (131 x 99, 16-bit RGB, sRGB, binned from one 2x2 quad per pixel -- NOT demosaiced)";
+        assert_eq!(OutputGeometry::parse(binned).unwrap().pixels_per_quad, 1);
+        assert!(OutputGeometry::parse("r.tiff (262 x 198, 16-bit RGB, sRGB, optically restored)").is_none());
     }
 
     #[test]

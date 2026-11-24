@@ -299,6 +299,49 @@ impl CaptureWorkspace {
         self.station.plan.chosen = None;
     }
 
+    /// A new capture from nothing (owner feedback, 2026-11-23: after a
+    /// capture there was no way back to a clean plan short of restarting).
+    /// Ends the review of the last capture and clears what belonged to it
+    /// and its subject: the test shot, the step calibration (unless
+    /// `keep_calibration`: "Shoot again" frames the same subject), the plan's
+    /// names, a typed step and an open comparison. A host that offers it
+    /// also forgets the bounds' marks, the subject box and the survey.
+    /// The rig's settings (exposure, step, settle, retakes, power) stay.
+    /// Nothing that is running is touched: a test shot or calibration in
+    /// progress, the capture's checker and stacking go on.
+    pub fn new_capture(&mut self, keep_calibration: bool) {
+        let s = self.station_snapshot();
+        if s.host.phase.capturing() {
+            return;
+        }
+        let station = &mut self.station;
+        station.review = false;
+        station.ended_at = None;
+        station.plane_view.follow();
+        station.planes = None;
+        station.proof = None;
+        station.mark_at = None;
+        station.asked.clear();
+        station.names_taken_by = None;
+        station.plan.subject.clear();
+        station.plan.chosen = None;
+        station.plan.stack_name.clear();
+        station.plan.custom_step.clear();
+        station.plan.guide = None;
+        if !self.test_shot.running() {
+            self.test_shot = super::test_shot::TestShot::Idle;
+            self.test_shot_exposure = None;
+        }
+        if !keep_calibration && !self.calibrating() {
+            self.calibration = super::tools::Calibration::Idle;
+            self.station.calibrated_at = None;
+        }
+        self.error = None;
+        if s.host.capabilities.new_plan && s.fresh() && !s.host.phase.active() {
+            self.command(&s, Command::NewPlan {});
+        }
+    }
+
     /// The existing subject chosen in the plan, if one is.
     pub fn plan_chosen(&self) -> Option<NodeId> {
         self.station.plan.chosen
@@ -616,7 +659,7 @@ impl CaptureWorkspace {
             },
             StationMode::Flight if self.station.review => StationHints {
                 keys: vec![],
-                note: "The capture has ended; Back to planning for the next stack".into(),
+                note: "The capture has ended; New capture for the next stack".into(),
             },
             StationMode::Flight => StationHints {
                 keys: vec![
@@ -1267,6 +1310,7 @@ impl CaptureWorkspace {
     pub(super) fn apply_plan(&mut self, s: &Snapshot, intent: PlanIntent) {
         match intent {
             PlanIntent::SetSubject(_) | PlanIntent::SetStackName(_) => {}
+            PlanIntent::NewCapture => self.new_capture(false),
             PlanIntent::OpenRig => self.station.rig_requested = true,
             PlanIntent::Connect => self.connect_camera(s, Command::Connect {}),
             PlanIntent::Exposure { iso, shutter } => {
@@ -1399,6 +1443,7 @@ impl CaptureWorkspace {
                 self.station.review = false;
                 self.station.plane_view.follow();
             }
+            FlightIntent::NewCapture => self.new_capture(false),
         }
     }
 

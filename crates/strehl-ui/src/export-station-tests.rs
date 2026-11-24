@@ -40,6 +40,7 @@ fn a_batch_plans_free_names_for_every_ticked_preset() {
     std::fs::write(dir.path().join("Blue weevil-Dorsal-Web.jpg"), b"existing").unwrap();
     let files = plan_batch(
         &lib,
+        &lib.template,
         &fields(),
         dir.path(),
         Path::new("master.tiff"),
@@ -81,6 +82,7 @@ fn a_batch_plans_free_names_for_every_ticked_preset() {
     assert!(
         plan_batch(
             &lib,
+            &lib.template,
             &fields(),
             dir.path(),
             Path::new("m"),
@@ -116,6 +118,7 @@ fn a_batch_writes_every_file_through_one_job_with_a_phase_per_file() {
     }
     let files = plan_batch(
         &lib,
+        &lib.template,
         &fields(),
         dir.path(),
         &master,
@@ -175,6 +178,7 @@ fn a_batch_writes_every_file_through_one_job_with_a_phase_per_file() {
     // Cancelled before it starts, it writes nothing.
     let fresh = plan_batch(
         &lib,
+        &lib.template,
         &fields(),
         dir.path(),
         &master,
@@ -214,6 +218,7 @@ fn the_inspector_shows_the_batch_button_and_ticks_presets() {
                         let view = ExportView {
                             palette: &palette,
                             library: &lib,
+                            name: &lib.template,
                             fields: fields(),
                             destination: Some(&folder),
                             size: [7032, 4688],

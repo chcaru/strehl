@@ -65,6 +65,23 @@ pub struct Snapshot {
     pub retake_queue: Vec<u64>,
     /// Manual retakes taken after the capture ended, while they run.
     pub followup: Option<Followup>,
+    /// What a capture does before its first exposure (owner feedback,
+    /// 2026-11-23: the start "just sits there").
+    pub starting: Option<Starting>,
+}
+/// A capture's start: the light warming, then the approach move.
+#[derive(Clone, Debug, PartialEq)]
+pub struct Starting {
+    /// `"light"` or `"approach"`.
+    pub stage: &'static str,
+    pub since: Instant,
+    /// How long the stage takes, when known (the warm-up left).
+    pub seconds: Option<f64>,
+}
+impl Starting {
+    pub fn json(&self) -> Value {
+        json!({"stage":self.stage,"elapsed":self.since.elapsed().as_secs_f64(),"seconds":self.seconds})
+    }
 }
 /// Manual retakes of an ended capture, taken into the same run (h-retake).
 #[derive(Clone, Debug, Default, PartialEq)]
@@ -109,6 +126,7 @@ impl Default for Snapshot {
             retakes_accepted: false,
             retake_queue: Vec::new(),
             followup: None,
+            starting: None,
         }
     }
 }
@@ -317,6 +335,16 @@ impl Worker {
         let _ = self
             .control
             .compare_exchange(RUN, PAUSE, Ordering::SeqCst, Ordering::SeqCst);
+    }
+    /// Forgets the focus survey and its suggested bounds (`new_plan`).
+    pub fn clear_survey(&self) {
+        let mut state = self.state.lock().unwrap();
+        state.samples.clear();
+        state.suggestion = None;
+    }
+    #[cfg(test)]
+    pub(crate) fn set_suggestion(&self, suggestion: Option<crate::bounds::Suggestion>) {
+        self.state.lock().unwrap().suggestion = suggestion;
     }
     pub fn request_resume(&self) {
         let _ = self
@@ -1101,6 +1129,7 @@ fn run_stack(
         test: run.test,
     });
     let c = camera.as_mut().context("Connect a camera first")?.as_mut();
+    update(s, |v| v.starting = None);
     match run.followup {
         Some(planes) => followup(c, s, control, planes, lamp)?,
         None => capture(c, s, control, run.plan, run.root, explicit, lamp)?,
@@ -1252,7 +1281,16 @@ fn capture(
             u16::try_from(i32::from(positions[0]) - plan.direction() * i32::from(plan.approach))
                 .context("Shorten Approach; the first position is too close to the lens limit")?;
         log.record("approach_intent", json!({"target":prestart}))?;
-        let response = c.focus(prestart, plan.settle_ms)?;
+        update(s, |v| {
+            v.starting = Some(Starting {
+                stage: "approach",
+                since: Instant::now(),
+                seconds: None,
+            })
+        });
+        let response = c.focus(prestart, plan.settle_ms);
+        update(s, |v| v.starting = None);
+        let response = response?;
         log.record("approach_complete", response)?;
         if let Some(timing) = &mut s.lock().unwrap().timing {
             timing.approached(Instant::now());
@@ -1867,12 +1905,25 @@ fn warm_light(
     rig: &RigPower,
     warmup: u32,
 ) -> Result<bool> {
+    // Plan Q3: a light this controller switched on long enough ago is warm
+    // already (a test shot after a test shot waited the whole warm-up).
+    let warm = rig.light_on_for().unwrap_or(Duration::ZERO);
+    let left = Duration::from_secs(u64::from(warmup)).saturating_sub(warm);
     update(s, |v| {
         v.power_error = None;
-        v.message = format!("Studio light on · warming for {warmup} s");
+        v.message = if left.is_zero() {
+            "Studio light on and warm".into()
+        } else {
+            format!("Studio light on · warming for {} s", left.as_secs().max(1))
+        };
+        v.starting = Some(Starting {
+            stage: "light",
+            since: Instant::now(),
+            seconds: Some(left.as_secs_f64()),
+        });
     });
     rig.set(Outlet::Light, true)?;
-    let until = Instant::now() + Duration::from_secs(u64::from(warmup));
+    let until = Instant::now() + left;
     while Instant::now() < until {
         if !checkpoint(c, s, control, Phase::Capturing)? {
             return Ok(false);
@@ -2069,8 +2120,10 @@ fn followup(
         if let Some((rig, warmup)) = managed {
             light_requested = true;
             if !warm_light(c, s, control, rig, warmup)? {
+                update(s, |v| v.starting = None);
                 return Ok(false);
             }
+            update(s, |v| v.starting = None);
         }
         let ctx = Run {
             s,

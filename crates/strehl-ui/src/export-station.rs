@@ -239,6 +239,8 @@ pub(crate) struct HistoryRow {
 pub(crate) struct ExportView<'a> {
     pub palette: &'a StudioPalette,
     pub library: &'a Library,
+    /// The open photograph's file name: its own, else the template.
+    pub name: &'a str,
     pub fields: NameFields<'a>,
     pub destination: Option<&'a Path>,
     /// Size of the developed photograph after its crop.
@@ -308,6 +310,8 @@ pub(crate) enum ExportIntent {
     Edit(String, PresetOutput),
     NewPreset,
     SetTemplate(String),
+    /// This photograph's own file name; `None` goes back to the template.
+    SetName(Option<String>),
     ChangeDestination,
     OpenFolder,
     ExportTicked,
@@ -596,7 +600,7 @@ fn presets_list(
             pal.ink_2,
         );
         let file = expand_name(
-            &view.library.template,
+            view.name,
             &NameFields {
                 preset: &preset.name,
                 ..view.fields.clone()
@@ -1000,20 +1004,67 @@ fn name_and_place(
 ) {
     let pal = view.palette;
     style::sect(ui, pal, "Name and place", None);
+    // The name is this photograph's (owner feedback, 2026-11-23: a name
+    // typed for one export came back on the next photograph). The template
+    // is the default every other photograph starts from.
     let draft = panel
         .template_draft
-        .get_or_insert_with(|| view.library.template.clone());
+        .get_or_insert_with(|| view.name.to_owned());
     let edit = ui.add(
         egui::TextEdit::singleline(draft)
+            .id_salt("export-name")
             .font(egui::FontId::monospace(12.0))
             .frame(false)
             .desired_width(f32::INFINITY),
     );
     if edit.lost_focus() {
-        if draft.trim() != view.library.template {
-            intents.push(ExportIntent::SetTemplate(draft.trim().to_owned()));
+        if draft.trim() != view.name {
+            intents.push(ExportIntent::SetName(Some(draft.trim().to_owned())));
         }
         panel.template_draft = None;
+    }
+    let own = view.name != view.library.template;
+    style::text(
+        ui,
+        &if own {
+            format!(
+                "This photograph's name. Others use {}.",
+                view.library.template
+            )
+        } else {
+            "The default name; editing it here names this photograph only. Tokens: {subject} {view} {preset} {date}.".into()
+        },
+        style::SMALL,
+        pal.ink_3,
+    );
+    if !own && view.library.template != crate::export_presets::DEFAULT_TEMPLATE {
+        // A default edited before names were per photograph.
+        if style::link(ui, pal, "Restore Strehl's default name", false)
+            .on_hover_text(crate::export_presets::DEFAULT_TEMPLATE)
+            .clicked()
+        {
+            intents.push(ExportIntent::SetTemplate(
+                crate::export_presets::DEFAULT_TEMPLATE.into(),
+            ));
+        }
+    }
+    if own {
+        ui.horizontal(|ui| {
+            ui.spacing_mut().item_spacing.x = 14.0;
+            if style::link(ui, pal, "Back to the default", false).clicked() {
+                intents.push(ExportIntent::SetName(None));
+            }
+            // Only a name with a token can name every photograph apart.
+            let tokens = view.name.contains('{');
+            if tokens
+                && style::link(ui, pal, "Make it the default", false)
+                    .on_hover_text("Every photograph without its own name takes this one")
+                    .clicked()
+            {
+                intents.push(ExportIntent::SetTemplate(view.name.to_owned()));
+                intents.push(ExportIntent::SetName(None));
+            }
+        });
     }
     ui.horizontal(|ui| {
         let place = view
@@ -1279,6 +1330,7 @@ pub(crate) struct BatchText {
 /// Plan every ticked preset into a file with a free name in `folder`.
 pub(crate) fn plan_batch(
     library: &Library,
+    name: &str,
     fields: &NameFields<'_>,
     folder: &Path,
     master: &Path,
@@ -1290,7 +1342,7 @@ pub(crate) fn plan_batch(
     let mut files: Vec<BatchFile> = Vec::new();
     for preset in library.ticked() {
         let stem = expand_name(
-            &library.template,
+            name,
             &NameFields {
                 preset: &preset.name,
                 ..fields.clone()
