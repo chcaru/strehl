@@ -47,6 +47,9 @@ pub(crate) struct RawLevels {
     /// Which of them is brightest at the 99.9th percentile (0 red, 1 green,
     /// 2 blue); the advice reads that one.
     pub brightest: usize,
+    /// Plan S4: the levels are the subject's (its outline's 8 px cells),
+    /// not the whole frame's.
+    pub in_subject: bool,
 }
 
 /// One colour's levels in a test RAW.
@@ -80,10 +83,22 @@ type Pooled = (u64, f64, f64, f64, f64);
 /// Levels of RGGB samples (red at the active area's origin) against `black`
 /// and `white`, pooled and per colour (full 16-bit histograms: exact
 /// percentiles, no sampling).
+#[cfg(test)]
 fn levels_of<'a>(
     rows: impl Iterator<Item = &'a [u16]>,
     black: f32,
     white: f32,
+) -> Result<(Pooled, [ColourLevels; 3])> {
+    levels_in(rows, black, white, None)
+}
+
+/// [`levels_of`] over the sites whose 8 px cell is set in `mask` (`cols`
+/// cells a row), or over every site.
+fn levels_in<'a>(
+    rows: impl Iterator<Item = &'a [u16]>,
+    black: f32,
+    white: f32,
+    mask: Option<(&[bool], usize)>,
 ) -> Result<(Pooled, [ColourLevels; 3])> {
     ensure!(
         white > black,
@@ -92,6 +107,11 @@ fn levels_of<'a>(
     let mut histograms = vec![vec![0u64; 65536]; 3];
     for (y, row) in rows.enumerate() {
         for (x, &v) in row.iter().enumerate() {
+            if let Some((cells, cols)) = mask
+                && !cells.get((y / 8) * cols + x / 8).copied().unwrap_or(false)
+            {
+                continue;
+            }
             let colour = match (y % 2, x % 2) {
                 (0, 0) => 0,
                 (1, 1) => 2,
@@ -153,13 +173,26 @@ fn brightest_of(colours: &[ColourLevels; 3]) -> usize {
 }
 
 /// Decodes `path` and reads its levels. Worker thread only: a full decode.
-pub(crate) fn read_levels(path: &Path) -> Result<RawLevels> {
+pub(crate) fn read_levels(
+    path: &Path,
+    subject: Option<&strehl_capture::model::Subject>,
+) -> Result<RawLevels> {
     let frame = strehl_raw::decode(path)
         .with_context(|| format!("Decoding {}", crate::display_path::display_path(path)))?;
-    let ((samples, _, shadow_level, median_level, _), colours) = levels_of(
+    // Plan S4: the subject's cells only, when it has an outline that holds
+    // enough of the frame to meter.
+    let (w, h) = (frame.active.width, frame.active.height);
+    let (cols, rows) = (w.div_ceil(8), h.div_ceil(8));
+    let cells = subject
+        .map(|s| {
+            strehl_core::subject::rasterize(&s.rings, cols, rows, [8.0 / w as f64, 8.0 / h as f64])
+        })
+        .filter(|cells| cells.iter().filter(|c| **c).count() >= 64);
+    let ((samples, _, shadow_level, median_level, _), colours) = levels_in(
         (0..frame.active.height).map(|y| frame.active_row(y)),
         frame.levels.black,
         frame.levels.white,
+        cells.as_deref().map(|c| (c, cols)),
     )?;
     let brightest = brightest_of(&colours);
     Ok(RawLevels {
@@ -175,6 +208,7 @@ pub(crate) fn read_levels(path: &Path) -> Result<RawLevels> {
         highlight_level: colours[brightest].highlight_level,
         colours,
         brightest,
+        in_subject: cells.is_some(),
     })
 }
 
@@ -202,8 +236,8 @@ pub(crate) fn first_raw(folder: &Path) -> Result<PathBuf> {
 }
 
 /// Reads the run's first RAW (worker thread).
-fn read_run(folder: &Path) -> Result<RawLevels> {
-    read_levels(&first_raw(folder)?)
+fn read_run(folder: &Path, subject: Option<&strehl_capture::model::Subject>) -> Result<RawLevels> {
+    read_levels(&first_raw(folder)?, subject)
 }
 
 /// The test shot's stages, advanced by the workspace once a frame.
@@ -289,10 +323,12 @@ impl TestShot {
                         Some(run) if host.storage.mode.as_deref() == Some("host-pc") => {
                             mark = Some(run.clone());
                             let worker = run.clone();
+                            // Plan S4: metered in the subject's outline.
+                            let subject = host.plan.as_ref().and_then(|p| p.subject.clone());
                             Self::Reading {
                                 folder: run,
                                 task: crate::jobs::spawn_task("strehl-test-shot", move |_| {
-                                    read_run(&worker)
+                                    read_run(&worker, subject.as_ref())
                                 }),
                             }
                         }
@@ -375,6 +411,30 @@ mod tests {
         assert_eq!(highlight, 1.0);
         assert!(levels_of([row.as_slice()].into_iter(), 100.0, 100.0).is_err());
         assert!(levels_of(std::iter::empty(), 0.0, 1.0).is_err());
+    }
+
+    /// Plan S4: with a subject, only its cells count: a bright backdrop
+    /// outside it does not set the exposure.
+    #[test]
+    fn levels_count_only_the_subjects_cells() {
+        // 64 x 64 sites: the left half pinned, the right half dim.
+        let rows: Vec<Vec<u16>> = (0..64)
+            .map(|_| (0..64).map(|x| if x < 32 { 16383 } else { 3000 }).collect())
+            .collect();
+        let cols = 8;
+        let right: Vec<bool> = (0..64).map(|i| i % cols >= 4).collect();
+        let ((_, frame_clipped, ..), _) =
+            levels_in(rows.iter().map(Vec::as_slice), 512.0, 15360.0, None).unwrap();
+        let ((_, subject_clipped, ..), colours) = levels_in(
+            rows.iter().map(Vec::as_slice),
+            512.0,
+            15360.0,
+            Some((&right, cols)),
+        )
+        .unwrap();
+        assert!(frame_clipped > 0.4);
+        assert_eq!(subject_clipped, 0.0);
+        assert!(colours[1].highlight_level < 0.2);
     }
 
     /// Plan Q4: a frame whose green pins while red and blue sit low reads

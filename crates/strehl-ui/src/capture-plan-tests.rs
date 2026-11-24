@@ -57,6 +57,7 @@ fn inputs<'a>(s: &'a Snapshot, blockers: &'a [Blocker]) -> PlanInputs<'a> {
             ..Default::default()
         },
         stillness: ("idle", None),
+        subject_depth: None,
         switches: Switches {
             check: true,
             retake: Some(false),
@@ -170,6 +171,7 @@ fn lines_say_what_the_rig_test_shot_and_calibration_found() {
             ..Default::default()
         }; 3],
         brightest: 1,
+        in_subject: false,
     };
     let line = test_shot_sentence(&TestShotView {
         stage: "done",
@@ -428,6 +430,7 @@ fn tested(highlight: f64) -> TestShotView {
                 ..Default::default()
             }; 3],
             brightest: 1,
+            in_subject: false,
         }),
         exposure: Some((100, 65544)),
         taken: None,
@@ -653,4 +656,32 @@ fn highlight_groups_are_offered_and_counted() {
                 .any(|i| matches!(i, PlanIntent::SetHighlight(Some((2, _))))),
         "{intents:?}"
     );
+}
+
+/// Plan S4: Auto's sharp range is offered as the bounds with half the
+/// calibrated width each side (50 units: 25), with the planes it saves
+/// against the marks; once marked, the offer has no action.
+#[test]
+fn the_subjects_depth_is_offered_as_bounds() {
+    let s = snapshot(ready());
+    let mut input = inputs(&s, &[]);
+    input.subject_depth = Some((37_300, 37_500));
+    assert_eq!(subject_bounds(&input), Some((37_275, 37_525)));
+    let line = subject_bounds_line(&input).unwrap();
+    assert!(
+        line.text.contains("fewer planes than the marks"),
+        "{}",
+        line.text
+    );
+    assert_eq!(
+        line.action.map(|a| a.1),
+        Some(PlanIntent::UseSubjectBounds(37_275, 37_525))
+    );
+    let mut marked = ready();
+    marked["plan"]["start"] = json!(37_275);
+    marked["plan"]["end"] = json!(37_525);
+    let s = snapshot(marked);
+    let mut input = inputs(&s, &[]);
+    input.subject_depth = Some((37_300, 37_500));
+    assert!(subject_bounds_line(&input).unwrap().action.is_none());
 }

@@ -30,6 +30,7 @@ fn levels(highlight: f64, clipped: f64, iso: f32) -> RawLevels {
             ..Default::default()
         }; 3],
         brightest: 1,
+        in_subject: false,
     }
 }
 

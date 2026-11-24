@@ -208,6 +208,27 @@ impl AutoSubject {
         }
     }
 
+    /// Plan S4: the focus range the subject is sharp over (its first and
+    /// last sharp frame's focus), ascending.
+    pub fn depth_range(&self) -> Option<(u16, u16)> {
+        let Self::Ready {
+            evidence,
+            selection,
+            ..
+        } = self
+        else {
+            return None;
+        };
+        let depth = selection.depth.as_ref()?;
+        let at = |i: usize| evidence.planes.get(i)?.position;
+        let (a, b) = (at(depth.first)?, at(depth.last)?);
+        let (lo, hi) = (a.min(b), a.max(b));
+        Some((
+            lo.round().clamp(0.0, 65535.0) as u16,
+            hi.round().clamp(0.0, 65535.0) as u16,
+        ))
+    }
+
     pub fn params(&self) -> Option<Params> {
         match self {
             Self::Ready { selection, .. } => Some(selection.params),

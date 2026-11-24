@@ -78,6 +78,9 @@ pub(crate) struct PlanInputs<'a> {
     pub test_shot: TestShotView,
     /// Plan Q7: the stillness check's stage and line.
     pub stillness: (&'static str, Option<String>),
+    /// Plan S4: the focus range the subject is sharp over (Auto's), offered
+    /// as the bounds.
+    pub subject_depth: Option<(u16, u16)>,
     pub switches: Switches,
     /// The desktop can run the engine (calibration needs it).
     pub engine: bool,
@@ -118,6 +121,8 @@ pub(crate) enum PlanIntent {
     OpenGuide(GuideTab),
     /// Clear the stages for a new capture.
     NewCapture,
+    /// Plan S4: mark Start and End at the subject's sharp range.
+    UseSubjectBounds(u16, u16),
     /// Highlight groups (plan X3): none, or every `every` planes at `shutter`.
     SetHighlight(Option<(u16, u64)>),
     /// Plan Q7: watch the magnified picture for sway, or stop watching.
@@ -371,8 +376,14 @@ pub(crate) fn test_shot_sentence(view: &TestShotView) -> Option<String> {
                     .to_string()
             })
             .unwrap_or_default();
-        // Per colour (plan Q4): the brightest colour is named.
+        // Per colour (plan Q4): the brightest colour is named; in the
+        // subject's outline when there is one (plan S4).
         let colour = super::test_shot::colour_name(levels.brightest);
+        let scope = if levels.in_subject {
+            " in the subject"
+        } else {
+            ""
+        };
         let clipped = if levels.clipped_share <= 0.0 {
             format!(
                 "nothing clipped, {colour} brightest at {:.0} %",
@@ -382,7 +393,7 @@ pub(crate) fn test_shot_sentence(view: &TestShotView) -> Option<String> {
             format!("{colour} {:.2} % clipped", 100.0 * levels.clipped_share)
         };
         return Some(format!(
-            "Test shot {when}read from the RAW: {clipped}, shadows at {:.1} % of full scale",
+            "Test shot {when}read from the RAW{scope}: {clipped}, shadows at {:.1} % of full scale",
             100.0 * levels.shadow_level
         ));
     }
@@ -1079,6 +1090,46 @@ fn exposure_step(
     });
 }
 
+/// The subject's sharp range as bounds (plan S4): half the calibrated sharp
+/// width each side, with the planes and minutes it saves against the marks.
+pub(crate) fn subject_bounds(inputs: &PlanInputs<'_>) -> Option<(u16, u16)> {
+    let (lo, hi) = inputs.subject_depth?;
+    let half = inputs.calibration.result["width"]
+        .as_f64()
+        .map_or(0, |w| (w / 2.0).round() as u16);
+    Some((lo.saturating_sub(half), hi.saturating_add(half)))
+}
+
+fn subject_bounds_line(inputs: &PlanInputs<'_>) -> Option<guide::Line> {
+    let s = inputs.s;
+    let (lo, hi) = subject_bounds(inputs)?;
+    let planes = plane_count(lo, hi, inputs.step.max(1));
+    let marked = marked_planes(s, inputs.step);
+    let (start, end) = s.host.plan_bounds();
+    let same = s.host.bounds_set() && start.min(end) == lo && start.max(end) == hi;
+    let saved = marked.filter(|m| *m > planes).map(|m| {
+        let seconds = stack_seconds(s, m, inputs.settle_ms)
+            .zip(stack_seconds(s, planes, inputs.settle_ms))
+            .map(|(a, b)| a - b)
+            .unwrap_or(0.0);
+        format!(
+            "; {} fewer planes than the marks, {} less",
+            m - planes,
+            style::minutes(seconds)
+        )
+    });
+    Some(guide::Line {
+        text: format!(
+            "The subject is sharp from {} to {}: {planes} planes at this step{}.",
+            style::focus_units(lo),
+            style::focus_units(hi),
+            saved.unwrap_or_default()
+        ),
+        tone: Tone::Note,
+        action: (!same).then_some(("Use the subject's", PlanIntent::UseSubjectBounds(lo, hi))),
+    })
+}
+
 /// The shutter `stops` stops shorter than `shutter`, from the camera's list.
 pub(crate) fn shorter_shutter(options: &[u64], shutter: u64, stops: f64) -> Option<u64> {
     let want = strehl_capture::timing::shutter_seconds(shutter)? / 2f64.powf(stops);
@@ -1327,6 +1378,12 @@ fn depth_step(
             }
         });
         if let Some(line) = guide::bounds_line(s, inputs.step, inputs.settle_ms) {
+            ui.add_space(2.0);
+            guidance(ui, Some(&line), None, editable, palette, out);
+        }
+        // Plan S4: bounds from the subject's own depth, offered, never applied
+        // (owner's decision): half a sharp width each side.
+        if let Some(line) = subject_bounds_line(inputs) {
             ui.add_space(2.0);
             guidance(ui, Some(&line), None, editable, palette, out);
         }

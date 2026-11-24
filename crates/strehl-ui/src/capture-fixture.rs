@@ -406,6 +406,7 @@ pub(crate) fn test_levels() -> RawLevels {
             ..Default::default()
         }; 3],
         brightest: 1,
+        in_subject: false,
     }
 }
 

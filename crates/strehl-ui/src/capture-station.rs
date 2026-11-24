@@ -73,6 +73,8 @@ pub(crate) struct Station {
     pub glance: bool,
     proof: Option<ProofState>,
     pub mark_at: Option<MarkAt>,
+    /// Bounds still to move to and mark after `mark_at` (plan S4).
+    pub mark_queue: Vec<(bool, u16)>,
     /// The flight rail's ticks and what they were built from.
     ticks: Option<(TicksKey, Arc<FlightTicks>)>,
     rig_requested: bool,
@@ -321,6 +323,7 @@ impl CaptureWorkspace {
         station.planes = None;
         station.proof = None;
         station.mark_at = None;
+        station.mark_queue.clear();
         station.asked.clear();
         station.names_taken_by = None;
         station.plan.subject.clear();
@@ -904,6 +907,7 @@ impl CaptureWorkspace {
             let host = &s.host;
             if at.since.elapsed() > MARK_AT_TIMEOUT || !s.fresh() {
                 self.station.mark_at = None;
+                self.station.mark_queue.clear();
                 self.error = Some("The bound was not reached; it was not marked".into());
             } else if host.position == Some(at.to)
                 && host.editable
@@ -913,6 +917,19 @@ impl CaptureWorkspace {
             {
                 self.station.mark_at = None;
                 self.command(s, Command::Mark { start: at.start });
+            }
+        } else if !s.pending
+            && s.host.editable
+            && let Some((start, to)) = self.station.mark_queue.pop()
+        {
+            // The next bound of a pair (plan S4's subject bounds).
+            self.station.mark_at = Some(MarkAt {
+                start,
+                to,
+                since: Instant::now(),
+            });
+            if s.host.position != Some(to) {
+                self.focus_pending = Some(to);
             }
         }
     }
@@ -1202,6 +1219,7 @@ impl CaptureWorkspace {
                         taken,
                         error,
                     },
+                    subject_depth: self.auto_subject.depth_range(),
                     stillness: (self.stillness.stage(), self.stillness.line(Instant::now())),
                     switches: Switches {
                         check: self.follow_enabled,
@@ -1443,6 +1461,20 @@ impl CaptureWorkspace {
         match intent {
             PlanIntent::SetSubject(_) | PlanIntent::SetStackName(_) => {}
             PlanIntent::NewCapture => self.new_capture(false),
+            PlanIntent::UseSubjectBounds(lo, hi) => {
+                // Start, then End: each moved to and marked in turn.
+                let (start, end) = s.host.plan_bounds();
+                let (first, second) = if start <= end { (lo, hi) } else { (hi, lo) };
+                self.station.mark_queue = vec![(false, second)];
+                self.station.mark_at = Some(MarkAt {
+                    start: true,
+                    to: first,
+                    since: Instant::now(),
+                });
+                if s.host.position != Some(first) {
+                    self.focus_pending = Some(first);
+                }
+            }
             PlanIntent::SetHighlight(choice) => {
                 let highlight = choice.map(|(every, shutter)| strehl_capture::model::Highlight {
                     shutter,
