@@ -343,6 +343,65 @@ impl CaptureWorkspace {
         }
     }
 
+    /// Plan X5: a highlight pass over the ended capture's planes whose
+    /// highlights pinned: at the plan's highlight shutter (two stops shorter
+    /// where its group still pinned), else four stops under the base.
+    fn highlight_pass(&mut self, s: &Snapshot) {
+        let Some(progress) = self.station_progress() else {
+            return;
+        };
+        let Some(e) = s.host.exposure.as_ref() else {
+            self.error = Some("The camera reports no exposure".into());
+            return;
+        };
+        let base = e.shutter.unwrap_or(0);
+        let planned = s
+            .host
+            .plan
+            .as_ref()
+            .and_then(|p| p.highlight)
+            .map(|h| h.shutter);
+        let (unheld, _) = progress.unheld_highlights();
+        let shorter = progress.highlights_still_pinned();
+        let mut sent = false;
+        for (planes, shutter) in [
+            (
+                unheld
+                    .into_iter()
+                    .filter(|p| !shorter.contains(p))
+                    .collect::<Vec<_>>(),
+                planned.or_else(|| super::plan::shorter_shutter(&e.shutter_options, base, 4.0)),
+            ),
+            (
+                shorter,
+                planned
+                    .and_then(|h| super::plan::shorter_shutter(&e.shutter_options, h, 2.0))
+                    .or_else(|| super::plan::shorter_shutter(&e.shutter_options, base, 6.0)),
+            ),
+        ] {
+            let Some(shutter) = shutter.filter(|_| !planes.is_empty()) else {
+                continue;
+            };
+            // One pass at a time: the second is asked for once the first ends.
+            if sent {
+                self.follow_note = Some(
+                    "A shorter pass is still due on planes whose highlight groups pinned; ask again once this pass ends."
+                        .into(),
+                );
+                break;
+            }
+            self.command(
+                s,
+                Command::QueuePass {
+                    planes,
+                    tier: "highlight".into(),
+                    shutter,
+                },
+            );
+            sent = true;
+        }
+    }
+
     /// The reviewed capture, when it was stopped (by hand or by a fault)
     /// and the host lists it with its planes (`verify_stopped`).
     fn stopped_under_review<'a>(
@@ -986,6 +1045,14 @@ impl CaptureWorkspace {
             retake_cost: clock.cost(progress.map_or(0, |p| p.retakes as u64)),
             plain_pace: clock.plain_pace(),
             ended: self.station.review && !s.host.phase.capturing(),
+            highlight_pass: progress
+                .filter(|_| {
+                    self.station.review
+                        && !s.host.phase.capturing()
+                        && s.host.capabilities.exposure_tiers
+                })
+                .map(|p| p.unheld_highlights().0.len() + p.highlights_still_pinned().len())
+                .filter(|n| *n > 0),
             stack_stopped: self
                 .stopped_under_review(s)
                 .map(|run| run.planes.min(run.frames / run.shots_per_plane.max(1)))
@@ -1516,6 +1583,7 @@ impl CaptureWorkspace {
                 self.station.plane_view.follow();
             }
             FlightIntent::NewCapture => self.new_capture(false),
+            FlightIntent::HighlightPass => self.highlight_pass(s),
             FlightIntent::StackStopped => {
                 // As a finished capture is: opened and stacked, or queued
                 // behind a stack being rendered (`capture_finished`).

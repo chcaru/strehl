@@ -350,6 +350,20 @@ pub(crate) fn health(s: &Snapshot, progress: Option<&Progress>, checking: bool) 
             if t.incomplete > 0 {
                 text.push_str(&format!(" · {} incomplete", t.incomplete));
             }
+            // Plan X5: the highlights the base exposure pins, and whether
+            // highlight groups hold them.
+            let (unheld, sites) = p.unheld_highlights();
+            if !unheld.is_empty() {
+                text.push_str(&format!(
+                    " · highlights: {sites} sites pinned on {}",
+                    count(unheld.len(), "plane", "planes")
+                ));
+            } else if !p.tiers.is_empty() {
+                text.push_str(&format!(
+                    " · {} held by highlight groups",
+                    count(p.tiers.len(), "plane", "planes")
+                ));
+            }
             HealthLine {
                 title: "Checks",
                 mark: if p.attention > t.asked {
@@ -1386,6 +1400,9 @@ pub(crate) struct FlightInputs<'a> {
     /// A capture stopped by hand with this many complete planes (at least
     /// two): it can be stacked as it stands (plan Q6).
     pub stack_stopped: Option<usize>,
+    /// Plan X5: planes whose highlights no group holds yet; a highlight
+    /// pass over them is offered once the capture has ended.
+    pub highlight_pass: Option<usize>,
     /// Retakes by hand and the stack's coverage (h-retake).
     pub retakes: RetakeInputs,
 }
@@ -1428,6 +1445,8 @@ pub(crate) enum FlightIntent {
     NewCapture,
     /// Stack a stopped capture's complete planes as they stand (plan Q6).
     StackStopped,
+    /// Take a highlight pass over the planes whose highlights pinned (X5).
+    HighlightPass,
 }
 
 /// The view's state across frames: where each feed row starts.
@@ -2287,7 +2306,9 @@ pub(crate) fn inspector(
             if inputs.ended {
                 // Two ways on (owner feedback, 2026-11-23): a clean plan for
                 // the next subject, or back to this one's plan as it stands.
-                let parts = if inputs.stack_stopped.is_some() { 3.0 } else { 2.0 };
+                let parts = 2.0
+                    + f32::from(u8::from(inputs.stack_stopped.is_some()))
+                    + f32::from(u8::from(inputs.highlight_pass.is_some()));
                 let w = (ui.available_width() - 8.0 * (parts - 1.0)) / parts;
                 if let Some(planes) = inputs.stack_stopped
                     && style::button_sized(
@@ -2304,6 +2325,22 @@ pub(crate) fn inspector(
                     .clicked()
                 {
                     out.push(FlightIntent::StackStopped);
+                }
+                if let Some(planes) = inputs.highlight_pass
+                    && style::button_sized(
+                        ui,
+                        &format!("Highlight pass · {planes}"),
+                        ButtonKind::Plain,
+                        egui::vec2(w, 28.0),
+                        true,
+                        palette,
+                    )
+                    .on_hover_text(
+                        "Take a short group at each plane whose highlights pinned, into this capture, while the subject is on the rig; the stack then fuses them",
+                    )
+                    .clicked()
+                {
+                    out.push(FlightIntent::HighlightPass);
                 }
                 if style::button_sized(
                     ui,

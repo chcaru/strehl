@@ -31,6 +31,7 @@ fn inputs<'a>(s: &'a Snapshot, p: &'a Progress, ended: bool) -> FlightInputs<'a>
         ended,
         ended_at: None,
         stack_stopped: None,
+        highlight_pass: None,
         retakes: RetakeInputs {
             in_hand: s.host.retakes_in_hand(),
             step: Some(7),

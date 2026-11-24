@@ -77,6 +77,43 @@ pub(crate) struct Progress {
     pub retakes: usize,
     /// Each plane's outcome so far, by how it got there.
     pub tally: Tally,
+    /// Plan X5: sites at the pin in each plane's latest base group (in the
+    /// subject when the capture has one; `pinned_scope` says), by plane.
+    pub pinned: BTreeMap<u64, u64>,
+    /// Plan X3/X5: each plane's latest highlight (or shadow) group line,
+    /// kept apart from its base group: never a retake, never the plane.
+    pub tiers: BTreeMap<u64, Value>,
+}
+
+impl Progress {
+    /// Planes whose base group pinned sites and no highlight group holds
+    /// them yet (one that pinned too counts as not holding them), and the
+    /// sites pinned there, ascending by plane.
+    pub fn unheld_highlights(&self) -> (Vec<u64>, u64) {
+        let mut planes = Vec::new();
+        let mut sites = 0;
+        for (&plane, &n) in &self.pinned {
+            let held = self
+                .tiers
+                .get(&plane)
+                .is_some_and(|v| v["pinned"].as_u64() == Some(0));
+            if n > 0 && !held {
+                planes.push(plane);
+                sites += n;
+            }
+        }
+        (planes, sites)
+    }
+    /// Planes whose highlight group still pinned: a shorter one is due.
+    pub fn highlights_still_pinned(&self) -> Vec<u64> {
+        self.tiers
+            .iter()
+            .filter(|(_, v)| {
+                v["tier"] == "highlight" && v["pinned"].as_u64().is_some_and(|n| n > 0)
+            })
+            .map(|(&p, _)| p)
+            .collect()
+    }
 }
 
 /// The most feed items [`Progress::feed`] keeps: every group of a
@@ -388,6 +425,15 @@ impl JournalReader {
             let Some(plane) = v["plane"].as_u64() else {
                 continue;
             };
+            // Plan X3: a highlight or shadow group is kept apart: it is not
+            // a retake and does not stand for the plane.
+            if v["tier"].as_str().is_some_and(|t| t != "base") {
+                p.tiers.insert(plane, v.clone());
+                continue;
+            }
+            if let Some(n) = v["pinned"].as_u64() {
+                p.pinned.insert(plane, n);
+            }
             // A line for a group already read (a resumed checker) is not a
             // new try.
             let mut new_try = true;
@@ -909,6 +955,31 @@ fn last_error(log: &Path) -> Option<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// Plan X3/X5: a highlight group's line is kept apart (never a retake,
+    /// never the plane); base lines' pinned counts make the offer: planes
+    /// pinned and not held, and planes whose highlight group pinned too.
+    #[test]
+    fn highlight_lines_stay_apart_and_pinned_planes_are_offered() {
+        let journal = [
+            r#"{"plane":1,"group_id":"g1","tier":"base","verdict":"pass","pinned":40}"#,
+            r#"{"plane":1,"group_id":"h1","tier":"highlight","verdict":"pass","pinned":0}"#,
+            r#"{"plane":2,"group_id":"g2","tier":"base","verdict":"pass","pinned":12}"#,
+            r#"{"plane":3,"group_id":"g3","verdict":"pass","pinned":0}"#,
+            r#"{"plane":4,"group_id":"g4","tier":"base","verdict":"pass","pinned":7}"#,
+            r#"{"plane":4,"group_id":"h4","tier":"highlight","verdict":"pass","pinned":3}"#,
+        ]
+        .join("\n");
+        let p = progress(&journal);
+        assert_eq!(p.retaken, 0, "a highlight group is not a retake");
+        assert_eq!(
+            p.planes[&1]["group_id"], "g1",
+            "the plane is its base group"
+        );
+        assert_eq!(p.tiers.len(), 2);
+        assert_eq!(p.unheld_highlights(), (vec![2, 4], 19));
+        assert_eq!(p.highlights_still_pinned(), [4]);
+    }
 
     #[test]
     fn progress_counts_planes_as_the_engine_resumes_them() {

@@ -495,6 +495,7 @@ fn inputs<'a>(s: &'a Snapshot, p: Option<&'a Progress>) -> FlightInputs<'a> {
         ended: false,
         ended_at: None,
         stack_stopped: None,
+        highlight_pass: None,
         retakes: RetakeInputs::default(),
     }
 }
