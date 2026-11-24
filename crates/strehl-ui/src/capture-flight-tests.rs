@@ -167,6 +167,34 @@ fn the_owners_run_is_told_try_by_try() {
     );
 }
 
+/// Plan Q5: a shot that slipped a whole pixel is retaken, under its own
+/// name; offsets that cannot be measured keep the old "pattern" row.
+#[test]
+fn a_slipped_shot_is_retaken_and_named() {
+    let line = json!({"plane":9,"group_id":"g9","verdict":"demote","reason":fixture::SLIP,
+        "retake":true,"members":4,"names":["frame-000033.ARW"]});
+    let p = follow::progress(&line.to_string());
+    let item = &p.feed[0];
+    assert_eq!(Failure::of(item), Some(Failure::Slip));
+    let running = FeedContext {
+        error_correction: true,
+        ended: false,
+        ..FeedContext::default()
+    };
+    let row = feed_row(item, None, running);
+    assert_eq!(row.title, "Shot slipped");
+    assert_eq!((row.status, row.mark), ("retaking", Mark::Warn));
+    assert!(
+        Failure::Slip
+            .policy()
+            .starts_with("Retaken, up to two times")
+    );
+    let kept = json!({"plane":9,"group_id":"g9","verdict":"demote","reason":fixture::PATTERN,
+        "retake":false,"members":4,"names":["frame-000033.ARW"]});
+    let p = follow::progress(&kept.to_string());
+    assert_eq!(Failure::of(&p.feed[0]), Some(Failure::Pattern));
+}
+
 /// While the capture runs, a failed try asking for a retake is "retaking"
 /// until its retake is checked; without error correction, or once the
 /// capture ended, it is not retaken and the stack uses its first shot.

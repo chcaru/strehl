@@ -404,7 +404,7 @@ fn the_deck_builds_what_the_view_asks() {
             .unwrap()
             .contains("witness tiles disagree")
     );
-    assert!(f.z2.iter().any(|z| *z > f.median * TILE_RATIO as f32));
+    assert!(f.local.iter().any(|z| *z >= LOCAL_LIMIT as f32));
     assert!(deck.overview().is_some());
     // A pattern failure is shown as its first shot, without witness tiles.
     let k = TryKey {
@@ -523,7 +523,7 @@ fn plane_build_cost() {
         let size = d.size;
         let kind = d.kind.clone();
         let reason = d.findings.as_ref().and_then(|f| f.reason.clone());
-        let ratio = d.findings.as_ref().map_or(f64::NAN, |f| f.ratio);
+        let local = d.findings.as_ref().map_or(f64::NAN, |f| f.local_px);
         let offsets: Option<Vec<[i64; 2]>> = d
             .findings
             .as_ref()
@@ -532,7 +532,7 @@ fn plane_build_cost() {
         let pyramid_ms = pyr.elapsed().as_secs_f64() * 1000.0;
         let bytes: usize = levels.iter().map(|l| l.rgb.len()).sum();
         println!(
-            "plane {:>4} try {}: preview {preview_ms:.1} ms {psize:?}, map {map_ms:.1} ms {grid:?} | decode {:.0} ms, check {:.0} ms, develop {develop_ms:.0} ms, pyramid {pyramid_ms:.0} ms | {kind:?} {size:?} gain {:.2} | {} MB | tile ratio {ratio:.2} {reason:?}",
+            "plane {:>4} try {}: preview {preview_ms:.1} ms {psize:?}, map {map_ms:.1} ms {grid:?} | decode {:.0} ms, check {:.0} ms, develop {develop_ms:.0} ms, pyramid {pyramid_ms:.0} ms | {kind:?} {size:?} gain {:.2} | {} MB | local p99 {local:.2} px {reason:?}",
             t.plane,
             t.attempt,
             d.decode_ms,

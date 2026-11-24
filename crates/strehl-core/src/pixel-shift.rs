@@ -28,8 +28,23 @@
 #![allow(clippy::neg_cmp_op_on_partial_ord)]
 use rayon::prelude::*;
 
-/// Per tile row: z^2 sums and counts per tile, PTC bins, witness-pair sums.
-type WitnessRow = (Vec<f64>, Vec<u64>, Vec<[f64; 3]>, [[[f64; 5]; 2]; 4]);
+/// Per tile row: z^2 sums and counts per tile, PTC bins, witness-pair sums,
+/// and each tile's witness-pair sums per class ([`LocalSums`]).
+type WitnessRow = (
+    Vec<f64>,
+    Vec<u64>,
+    Vec<[f64; 3]>,
+    [[[f64; 5]; 2]; 4],
+    Vec<[LocalSums; 2]>,
+);
+
+/// One tile's witness-pair sums for one class of sites, over the sites the
+/// pair regression uses (gradient at least five times its noise):
+/// `[gx^2, gx gy, gy^2, gx d, gy d, d^2, var(d), sites]`.
+type LocalSums = [f64; 8];
+
+/// Fewest regression sites a tile's class needs for [`Witness::tile_local_px`].
+pub const LOCAL_MIN_SITES: f64 = 64.0;
 
 /// One member's samples: the whole decoded buffer and its active window.
 #[derive(Clone, Copy)]
@@ -417,6 +432,21 @@ pub struct Witness {
     /// disagree at random; a translation as agreement; a rotation or a
     /// field-dependent effect as a pattern.
     pub pair_shift_quadrants: [[[f64; 2]; 2]; 4],
+    /// Per tile (row-major, as `tile_z2`): the disagreement left once each
+    /// witness pair's whole-group shift (`pair_shift`) is taken out, as the
+    /// displacement in photosites that would cause it, the larger of the two
+    /// classes; `NaN` where neither class has [`LOCAL_MIN_SITES`] regression
+    /// sites.
+    ///
+    /// For a class with sums `A` (gradient outer products), `b` (gradient
+    /// times difference), `D` (squared differences) and `V` (their injected
+    /// noise variance) over its regression sites, and whole-group shift `e`,
+    /// the leftover is `R = D - 2 e.b + e'Ae` and the value is
+    /// `sqrt(max(0, R - V) / (tr A / 2))`: a local translation `u` of
+    /// isotropic structure reads `|u|`. Unlike `tile_z2`, it does not grow
+    /// with exposure: signal, gradient energy and the leftover scale
+    /// together, and the noise is subtracted, not divided by.
+    pub tile_local_px: Vec<f32>,
 }
 
 /// Measure the green witness. `gains[k]` is member `k`'s exposure relative to
@@ -486,6 +516,7 @@ fn witness_impl<const PTC: bool>(
             let mut n = vec![0u64; tiles[0]];
             let mut ptc = vec![[0f64; 3]; BINS + 1];
             let mut pair = [[[0f64; 5]; 2]; 4];
+            let mut local = vec![[[0f64; 8]; 2]; tiles[0]];
             for y in ty * tile..((ty + 1) * tile).min(h) {
                 for x in 0..w {
                     let (x, y) = (x as isize, y as isize);
@@ -528,6 +559,15 @@ fn witness_impl<const PTC: bool>(
                             acc[2] += gy * gy;
                             acc[3] += gx * d;
                             acc[4] += gy * d;
+                            let l = &mut local[x as usize / tile][((x + y) & 1) as usize];
+                            l[0] += gx * gx;
+                            l[1] += gx * gy;
+                            l[2] += gy * gy;
+                            l[3] += gx * d;
+                            l[4] += gy * d;
+                            l[5] += d * d;
+                            l[6] += f64::from(var);
+                            l[7] += 1.0;
                         }
                         let grad = (p - q).abs().max((r - u).abs());
                         if PTC && grad * grad < 4.0 * vs && s > 0.0 {
@@ -539,7 +579,7 @@ fn witness_impl<const PTC: bool>(
                     }
                 }
             }
-            (z2, n, ptc, pair)
+            (z2, n, ptc, pair, local)
         })
         .collect();
     witness_finish(rows, offsets, tile, tiles)
@@ -577,7 +617,9 @@ fn witness_row_terms(
     let mut zt = vec![0f64; w];
     let mut zok = vec![false; w];
     let mut pt = vec![[0f64; 5]; w];
+    let mut pv = vec![[0f64; 2]; w];
     let mut pok = vec![false; w];
+    let mut local = vec![[[0f64; 8]; 2]; tiles_x];
     for y in ty * tile..((ty + 1) * tile).min(h) {
         let yi = y as isize;
         for px in 0..2usize {
@@ -656,6 +698,7 @@ fn witness_row_terms(
                         let (gx, gy) = (0.25 * (d1 + d2), 0.25 * (d1 - d2));
                         if gx * gx + gy * gy > 25.0 * f64::from(vs) {
                             pt[x] = [gx * gx, gx * gy, gy * gy, gx * d, gy * d];
+                            pv[x] = [d * d, f64::from(var)];
                             pok[x] = true;
                         }
                     }
@@ -679,10 +722,19 @@ fn witness_row_terms(
                 acc[2] += v[2];
                 acc[3] += v[3];
                 acc[4] += v[4];
+                let l = &mut local[x / tile][(x + y) & 1];
+                l[0] += v[0];
+                l[1] += v[1];
+                l[2] += v[2];
+                l[3] += v[3];
+                l[4] += v[4];
+                l[5] += pv[x][0];
+                l[6] += pv[x][1];
+                l[7] += 1.0;
             }
         }
     }
-    (z2, n, vec![[0f64; 3]; BINS + 1], pair)
+    (z2, n, vec![[0f64; 3]; BINS + 1], pair, local)
 }
 
 /// [`witness`]'s reduction of its tile rows, in row order.
@@ -701,7 +753,9 @@ fn witness_finish(
     let mut ptc = vec![[0f64; 3]; BINS + 1];
     let mut pair = [[[0f64; 5]; 2]; 4];
     let (mut total, mut count) = (0f64, 0u64);
-    for (z2, n, p, q) in rows {
+    let mut local: Vec<[LocalSums; 2]> = Vec::with_capacity(tiles[0] * tiles[1]);
+    for (z2, n, p, q, l) in rows {
+        local.extend(l);
         for (quadrant, v) in pair.iter_mut().zip(q) {
             for (acc, v) in quadrant.iter_mut().zip(v) {
                 for (t, x) in acc.iter_mut().zip(v) {
@@ -748,12 +802,38 @@ fn witness_finish(
         let sm = site_members(offsets, class as isize, 0);
         out.pair_members[class] = [sm[1], sm[2]];
     }
+    out.tile_local_px = local
+        .iter()
+        .map(|t| {
+            let px = |class: usize| local_displacement(&t[class], out.pair_shift[class]);
+            match (px(0), px(1)) {
+                (Some(a), Some(b)) => a.max(b) as f32,
+                (Some(a), None) | (None, Some(a)) => a as f32,
+                (None, None) => f32::NAN,
+            }
+        })
+        .collect();
     out.ptc = ptc
         .into_iter()
         .filter(|v| v[2] >= 64.0)
         .map(|v| (v[0] / v[2], v[1] / v[2] / 2.0, v[2] as u64))
         .collect();
     out
+}
+
+/// One tile class's leftover disagreement as a displacement in photosites
+/// (see [`Witness::tile_local_px`]), or `None` with too few regression sites
+/// or no whole-group shift to take out.
+fn local_displacement(s: &LocalSums, e: [f64; 2]) -> Option<f64> {
+    let structure = 0.5 * (s[0] + s[2]);
+    if !(s[7] >= LOCAL_MIN_SITES) || !(structure > 0.0) || !e.iter().all(|v| v.is_finite()) {
+        return None;
+    }
+    let leftover = s[5] - 2.0 * (e[0] * s[3] + e[1] * s[4])
+        + e[0] * e[0] * s[0]
+        + 2.0 * e[0] * e[1] * s[1]
+        + e[1] * e[1] * s[2];
+    Some(((leftover - s[6]).max(0.0) / structure).sqrt())
 }
 
 /// Weighted least-squares fit of `variance = read^2 + gain * signal` to
@@ -1073,6 +1153,11 @@ mod tests {
                     format!("{:?}", part.pair_shift_quadrants)
                 );
                 assert_eq!(full.pair_members, part.pair_members);
+                assert_eq!(
+                    bits(&full.tile_local_px),
+                    bits(&part.tile_local_px),
+                    "{shifts:?} {tile}"
+                );
                 assert_eq!((full.tile, full.tiles), (part.tile, part.tiles));
                 assert!(part.ptc.is_empty());
             }

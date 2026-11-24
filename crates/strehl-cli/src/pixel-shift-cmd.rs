@@ -26,6 +26,10 @@ pub struct PixelShiftArgs {
     /// Check at most this many groups.
     #[arg(long)]
     pub limit: Option<usize>,
+    /// Check every group taken, retakes included, not only the group of
+    /// each plane the stack uses.
+    #[arg(long)]
+    pub all_groups: bool,
 }
 
 /// One bound RAW member as the journal records it.
@@ -256,7 +260,11 @@ fn quantiles(v: &[f32]) -> Value {
 }
 
 pub fn run(args: &PixelShiftArgs) -> Result<()> {
-    let mut groups = recorded_groups(&args.dir)?;
+    let mut groups = if args.all_groups {
+        all_groups(&args.dir)?
+    } else {
+        recorded_groups(&args.dir)?
+    };
     if let Some(n) = args.limit {
         groups.truncate(n);
     }
@@ -272,6 +280,7 @@ pub fn run(args: &PixelShiftArgs) -> Result<()> {
         four.iter().filter(|g| g.complete).count()
     );
     ensure!(!four.is_empty(), "no four-shot groups recorded in this run");
+    let residual = ResidualMode::from_env()?;
     // Pass 1: geometry, gains and photon-transfer bins under the injected model.
     let mut reports = Vec::new();
     let mut ptc = Vec::new();
@@ -288,7 +297,6 @@ pub fn run(args: &PixelShiftArgs) -> Result<()> {
             .par_iter()
             .map(|f| strehl_raw::decode(&f.path).with_context(|| f.path.display().to_string()))
             .collect::<Result<_>>()?;
-        let m = views(&frames);
         let noise = model.get_or_insert_with(|| {
             strehl_core::profile::noise_model_for(
                 &frames[0].camera,
@@ -299,23 +307,28 @@ pub fn run(args: &PixelShiftArgs) -> Result<()> {
                 },
             )
         });
-        let c = check_group(&m);
-        if !c.parities {
+        // The stack's own measurement and gate, under the injected model.
+        let (gm, w) = measure_with_witness([&frames[0], &frames[1], &frames[2], &frames[3]], noise);
+        let gate = judge(&gm, residual);
+        let gate_json = json!({"reason":gate,"retake":retake_helps(&gm, residual),
+            "local_px":gm.witness.as_ref().map(|s| s.local_px),"local_tolerance_px":LOCAL_TOLERANCE_PX,
+            "residual_mode":format!("{residual:?}")});
+        let c = gm.check.clone();
+        let Some(w) = w.filter(|_| c.parities) else {
             println!(
-                "plane {:>4}      : offsets {:?} structure {:.3} {:.3} {:.3} | demote: offsets do not cover the four CFA parities",
+                "plane {:>4}      : offsets {:?} structure {:.3} {:.3} {:.3} | demote: offsets do not cover the four CFA parities | gate: {}",
                 g.plane,
                 &c.offsets[1..],
                 c.precision[1],
                 c.precision[2],
-                c.precision[3]
+                c.precision[3],
+                gate.as_deref().unwrap_or("pass")
             );
             reports.push(json!({"plane":g.plane,"group_id":g.group_id,
-                "verdict":"demote: offsets do not cover the four CFA parities",
+                "verdict":"demote: offsets do not cover the four CFA parities","gate":gate_json,
                 "offsets":c.offsets,"structure":&c.precision[1..],"residual_px":c.residual,"gains":c.gains}));
             continue;
-        }
-        let injected = |s: f32| noise.variance(strehl_core::CfaPlane::G1, s);
-        let w = pixel_shift::witness(&m, &c.offsets, &c.gains, injected, 64);
+        };
         // Pool photon transfer only from groups whose witness agrees with
         // itself everywhere (scale-free, so the uncalibrated model cancels);
         // a moved or mismatched member would inflate the fitted noise.
@@ -327,7 +340,7 @@ pub fn run(args: &PixelShiftArgs) -> Result<()> {
         {
             ptc.extend(w.ptc.iter().copied());
         }
-        checked.push((g, c, w.mean_z2));
+        checked.push((g, c, w.mean_z2, gate_json, w.tile_local_px));
     }
     let fit = pixel_shift::fit_photon_transfer(&ptc);
     let provenance = model.as_ref().map(|m| format!("{:?}", m.provenance));
@@ -339,7 +352,7 @@ pub fn run(args: &PixelShiftArgs) -> Result<()> {
         ))
     );
     // Pass 2: witness tile maps under the fitted model.
-    for (g, c, injected_z2) in checked {
+    for (g, c, injected_z2, gate, local) in checked {
         let frames: Vec<strehl_raw::Frame> = g
             .files
             .par_iter()
@@ -369,7 +382,7 @@ pub fn run(args: &PixelShiftArgs) -> Result<()> {
             "pass"
         };
         println!(
-            "plane {:>4}      : offsets {:?} witness shift max {:.3} px gains {:.4} {:.4} {:.4} | z2 mean {:.2} tiles p50 {:.2} p99 {:.2} | {}",
+            "plane {:>4}      : offsets {:?} witness shift max {:.3} px gains {:.4} {:.4} {:.4} | z2 mean {:.2} tiles p50 {:.2} p99 {:.2} | {} | local p99 {:.3} px | gate: {}",
             g.plane,
             &c.offsets[1..],
             max_residual,
@@ -379,9 +392,12 @@ pub fn run(args: &PixelShiftArgs) -> Result<()> {
             w.mean_z2,
             tiles["p50"].as_f64().unwrap_or(f64::NAN),
             tiles["p99"].as_f64().unwrap_or(f64::NAN),
-            verdict
+            verdict,
+            gate["local_px"].as_f64().unwrap_or(f64::NAN),
+            gate["reason"].as_str().unwrap_or("pass")
         );
-        reports.push(json!({"plane":g.plane,"group_id":g.group_id,"verdict":verdict,
+        reports.push(json!({"plane":g.plane,"group_id":g.group_id,"verdict":verdict,"gate":gate,
+            "tile_local_px":quantiles(&local),"tile_local_map":local,
             "offsets":c.offsets,"structure":&c.precision[1..],"residual_px":c.residual,"gains":c.gains,
             "witness_pair_shift_px":w.pair_shift,"witness_pair_shift_quadrants_px":w.pair_shift_quadrants,"witness_pairs":w.pair_members,"mean_z2_fitted":w.mean_z2,"mean_z2_injected":injected_z2,"tile_z2":tiles,
             "tile":w.tile,"tile_grid":w.tiles,"tile_map":w.tile_z2}));
@@ -453,9 +469,39 @@ impl ResidualMode {
     }
 }
 
-/// Largest witness tile p99/median `z^2`. Static groups measured 1.09-1.37;
-/// a member from a neighbouring focal plane measured 4.20.
+/// Largest witness tile p99/median `z^2` the check judged until 2026-11-23.
+/// Static groups measured 1.09-1.37; a member from a neighbouring focal
+/// plane measured 4.20. No longer judged: it measures how statistically
+/// clear a mismatch is, which grows with light (MEASURED on the close tile:
+/// the same offset failed at 0.26 px at 1 s and 0.59 px at 1/4 s).
+/// Reported only.
 pub const TILE_RATIO_TOLERANCE: f64 = 2.5;
+
+/// The lens's blur width on the A7CR rig, photosites: the full width at half
+/// maximum of the diffraction core, `1.03 / cutoff`, at the green cutoff the
+/// restoration fits (0.588 cycles/px on the close tile, 0.616 on the scarab;
+/// N_eff 11 to 13). Other blur only widens it.
+pub const BLUR_WIDTH_PX: f64 = 1.7;
+
+/// Fraction of [`BLUR_WIDTH_PX`] by which the shots may disagree in places
+/// once each pair's whole-group shift is taken out
+/// ([`WitnessSummary::local_px`]): 0.51 px.
+///
+/// MEASURED on the close tile (2026-11-23, every group of the 1/4 s and the
+/// stopped 1 s capture): groups with no fault read 0.20 px at p99 at small
+/// offsets at either exposure, rising to about 0.3 px at 0.4-0.7 px offsets
+/// and 0.5-0.6 px at 0.8-1.0 px (first-order removal of the pair's shift).
+/// Planted on real groups: a 768 px patch of one shot moved 1 px reads
+/// 1.01-1.19 px, moved 2 px 2.14-2.37 px; one shot from the next focal
+/// plane 1.10-1.68 px. ARGUED: whole-frame misregistration of 0.1-0.3 px
+/// cost nothing measurable on the scarab and 0.2-0.6 px cost 10 % of the
+/// fine detail (see [`RESIDUAL_ENV`]), so harm begins near a third of the
+/// blur width; the limit sits there, above the fault-free population and
+/// half of the smallest planted fault.
+pub const LOCAL_FRACTION: f64 = 0.3;
+
+/// [`LOCAL_FRACTION`] of the blur width, photosites.
+pub const LOCAL_TOLERANCE_PX: f64 = LOCAL_FRACTION * BLUR_WIDTH_PX;
 
 /// How a [`StackGroups`] stack treats its four-shot groups.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -558,6 +604,7 @@ fn measurement_json(m: &GroupMeasurement) -> Value {
             "pair_shift": w.pair_shift.map(|p| p.map(bits)),
             "pair_members": w.pair_members,
             "tile_ratio": bits(w.tile_ratio),
+            "local_px": bits(w.local_px),
         })),
         "margins": m.margins,
         "levels_agree": m.levels_agree,
@@ -607,6 +654,7 @@ fn measurement_from_json(v: &Value) -> Option<GroupMeasurement> {
                 pair_shift: shift.try_into().ok()?,
                 pair_members: members.try_into().ok()?,
                 tile_ratio: unbits(&w["tile_ratio"])?,
+                local_px: unbits(&w["local_px"])?,
             })
         }
     };
@@ -868,7 +916,13 @@ pub struct WitnessSummary {
     pub pair_shift: [[f64; 2]; 2],
     pub pair_members: [[usize; 2]; 2],
     /// Scale-free tile outlier ratio, p99 / median of the finite tile `z^2`.
+    /// Reported, no longer judged: it grows with exposure.
     pub tile_ratio: f64,
+    /// p99 over the measured tiles of [`pixel_shift::Witness::tile_local_px`]:
+    /// how far, in photosites, the shots disagree in places once each
+    /// witness pair's whole-group shift is taken out. `NaN` when no tile has
+    /// enough structure.
+    pub local_px: f64,
 }
 
 /// Everything the group checks compute from a group's four members: a pure
@@ -890,7 +944,7 @@ pub struct GroupMeasurement {
 /// `pixel_shift::register`, `pixel_shift::witness`, `pixel_shift::balance`
 /// or [`measure`] compute (the pinned-bits test says when): journaled
 /// measurements of another version are measured again.
-pub const GROUP_CHECK_VERSION: u32 = 1;
+pub const GROUP_CHECK_VERSION: u32 = 2;
 
 /// Run `f` on a rayon pool of one thread kept by the calling thread, so its
 /// parallel loops run in turn there rather than on the shared pool.
@@ -971,6 +1025,7 @@ fn measure_impl(
             pair_shift: w.pair_shift,
             pair_members: w.pair_members,
             tile_ratio: q(0.99) / q(0.5),
+            local_px: local_p99(&w.tile_local_px),
         }
     });
     let a = first.active;
@@ -992,6 +1047,16 @@ fn measure_impl(
     )
 }
 
+/// p99 of the finite tile values (`NaN` when there are none).
+fn local_p99(tiles: &[f32]) -> f64 {
+    let mut t: Vec<f32> = tiles.iter().copied().filter(|v| v.is_finite()).collect();
+    if t.is_empty() {
+        return f64::NAN;
+    }
+    t.sort_by(f32::total_cmp);
+    f64::from(t[((t.len() - 1) as f64 * 0.99) as usize])
+}
+
 /// The verdict on a measured group: `None` when it may be assembled, else
 /// the reason it is demoted. Cheap; `residual` decides whether the witness
 /// gate judges what residual compensation leaves.
@@ -1008,10 +1073,19 @@ pub fn retake_helps(m: &GroupMeasurement, residual: ResidualMode) -> bool {
     demotion(m, residual).is_some_and(|(_, retake)| retake)
 }
 
+/// The reason a group whose shots disagree in places is demoted.
+fn local_reason(local: f64) -> String {
+    format!(
+        "witness tiles disagree locally by {local:.2} px at p99 (limit {LOCAL_TOLERANCE_PX:.2}): motion, a focus slip or a wrong member"
+    )
+}
+
 /// [`judge`]'s reason, and whether a retake could help ([`retake_helps`]).
 fn demotion(m: &GroupMeasurement, residual: ResidualMode) -> Option<(String, bool)> {
     let c = &m.check;
-    let tile_ratio = m.witness.as_ref().map_or(f64::NAN, |w| w.tile_ratio);
+    // No tile with enough structure to judge reads NaN, and there is
+    // nothing there to disagree: the whole-group gate still judges.
+    let local = m.witness.as_ref().map_or(f64::NAN, |w| w.local_px).max(0.0);
     let misregistration = |residual: ResidualMode| {
         m.witness.as_ref().map_or(f64::INFINITY, |w| {
             w.pair_shift
@@ -1039,15 +1113,36 @@ fn demotion(m: &GroupMeasurement, residual: ResidualMode) -> Option<(String, boo
         .max()
         .unwrap_or(0);
     let margins = m.margins;
+    let measurable = c.precision[1..].iter().all(|r| *r > 0.8);
+    // A shot that slipped by a whole photosite lands on another shot's
+    // colour site (MEASURED on the close tile: 40 of 95 groups at 1 s, 27 of
+    // 190 at 1/4 s, from a sway of up to 1.8 px); another try can land
+    // right. A slip past the search window reads as no structure for that
+    // shot only, so it is enough that one shot registers on the scene and
+    // that the camera shifted at all.
+    let slipped =
+        c.precision[1..].iter().any(|r| *r > 0.8) && c.offsets[1..].iter().any(|o| *o != (0, 0));
     if !c.parities {
         Some((
             format!(
-                "offsets {:?} do not cover the four CFA parities",
-                &c.offsets[1..]
+                "offsets {:?} do not cover the four CFA parities{}",
+                &c.offsets[1..],
+                if slipped {
+                    ": a shot slipped by a whole photosite"
+                } else {
+                    ""
+                }
             ),
-            false,
+            slipped,
         ))
-    } else if c.precision[1..].iter().any(|r| !(*r > 0.8)) {
+    } else if !measurable && !(local < LOCAL_TOLERANCE_PX) {
+        // A shot that moved in one part of the frame also spoils its
+        // whole-frame fit, which then reads as too little structure; the
+        // tiles say it moved (MEASURED on the close tile: a 768 px patch of
+        // one shot moved 2 px). A plane without structure has no measured
+        // tile and reads NaN here, so it is not mistaken for this.
+        Some((local_reason(local), true))
+    } else if !measurable {
         Some((
             "offsets unmeasurable (too little scene structure)".into(),
             false,
@@ -1071,13 +1166,12 @@ fn demotion(m: &GroupMeasurement, residual: ResidualMode) -> Option<(String, boo
             ),
             !(misregistration(ResidualMode::Off) < PAIR_SHIFT_TOLERANCE_PX),
         ))
-    } else if !(tile_ratio < TILE_RATIO_TOLERANCE) {
-        Some((
-            format!(
-                "witness tiles disagree locally (p99/median z^2 {tile_ratio:.2}): motion, a focus slip or a wrong member"
-            ),
-            true,
-        ))
+    } else if !(local < LOCAL_TOLERANCE_PX) {
+        // Judged in photosites against the blur width, with each pair's
+        // whole-group shift taken out (the assembly lines the shots up to
+        // it), so the same disagreement gets the same verdict at any
+        // exposure.
+        Some((local_reason(local), true))
     } else if margins.iter().any(|m| *m < reach) {
         Some(("shifted photosites leave the sensor buffer".into(), false))
     } else if !m.levels_agree {
@@ -1585,6 +1679,7 @@ mod tests {
             v.extend(w.pair_shift.iter().flatten().map(|x| x.to_bits()));
             v.extend(w.pair_members.iter().flatten().map(|x| *x as u64));
             v.push(w.tile_ratio.to_bits());
+            v.push(w.local_px.to_bits());
         }
         v.extend(m.margins.map(|x| x as u64));
         v.push(u64::from(m.levels_agree));
@@ -1630,8 +1725,8 @@ mod tests {
         assert_eq!(
             (GROUP_CHECK_VERSION, digest.as_str()),
             (
-                1,
-                "f7813019a5bdbc8fcb6e38e809a3436a490e7f281c2bdc6e19afbdefa8af0255"
+                2,
+                "1842f805740b56fe8d6a714aee51ddfbd9efe5b032201b8d8646704923bcff47"
             ),
             "measure's output changed: bump GROUP_CHECK_VERSION and update this digest"
         );
@@ -1787,7 +1882,7 @@ mod tests {
         );
         assert!(!retake_helps(&flat, r));
         let mut moved = good.clone();
-        moved.witness.as_mut().unwrap().tile_ratio = TILE_RATIO_TOLERANCE * 2.0;
+        moved.witness.as_mut().unwrap().local_px = LOCAL_TOLERANCE_PX * 2.0;
         assert!(judge(&moved, r).unwrap().contains("witness tiles disagree"));
         assert!(retake_helps(&moved, r));
         let mut flicker = good.clone();
@@ -1814,6 +1909,10 @@ mod tests {
                 .contains("after residual compensation")
         );
         assert!(!retake_helps(&estimate, r));
+        // A tile map with nothing measurable judges nothing locally.
+        let mut quiet = good.clone();
+        quiet.witness.as_mut().unwrap().local_px = f64::NAN;
+        assert_eq!(judge(&quiet, r), None);
         // Misregistered in the exposures themselves: worth a retake.
         let mut shaken = good;
         let w = shaken.witness.as_mut().unwrap();
@@ -1822,5 +1921,341 @@ mod tests {
         shaken.check.residual[b] = shaken.check.residual[a];
         assert!(judge(&shaken, r).unwrap().contains("misregistered"));
         assert!(retake_helps(&shaken, r));
+    }
+
+    /// A group of a continuous scene: a smooth background and, inside a
+    /// central oval (the subject), detail from about 16 to 4 photosites a
+    /// cycle. Member `k` sees it shifted by `shifts[k]` photosites
+    /// (fractions allowed), at `exposure` times a base light of 1000 DN in
+    /// green, with noise drawn to the injected (fallback, 1 DN/e) model: at
+    /// `exposure` 1 about the close tile's 1/4 s signal-to-noise. `moved`:
+    /// one member's patch `[x, y, w, h]` (active coordinates) shifted by a
+    /// further `(dx, dy)`.
+    fn exposed_group(
+        shifts: [(f32, f32); 4],
+        exposure: f32,
+        moved: Option<(usize, [isize; 4], (f32, f32))>,
+    ) -> [strehl_raw::Frame; 4] {
+        let (aw, ah) = (512usize, 384usize);
+        let (ox, oy) = (8usize, 8usize);
+        let (stride, bh) = (aw + 2 * ox, ah + 2 * oy);
+        let noise = synthetic_noise();
+        let scene = |x: f32, y: f32| -> f32 {
+            let w =
+                |fx: f32, fy: f32, p: f32| (std::f32::consts::TAU * (fx * x + fy * y) + p).sin();
+            let r = ((x - 256.0) / 170.0).powi(2) + ((y - 192.0) / 130.0).powi(2);
+            let subject = (1.0 - (r - 1.0) * 4.0).clamp(0.0, 1.0);
+            1.2 + 0.35 * w(0.021, 0.013, 0.3) * w(-0.008, 0.019, 1.1)
+                + subject
+                    * (0.25 * w(0.061, 0.037, 2.0)
+                        + 0.20 * w(-0.043, 0.088, 0.7)
+                        + 0.15 * w(0.14, -0.09, 1.9)
+                        + 0.10 * w(0.05, 0.21, 0.4))
+        };
+        let mut seed = 0x9E37_79B9_7F4A_7C15u64 ^ u64::from(exposure.to_bits());
+        let mut uniform = move || {
+            seed ^= seed << 13;
+            seed ^= seed >> 7;
+            seed ^= seed << 17;
+            ((seed >> 11) as f64 + 0.5) / (1u64 << 53) as f64
+        };
+        std::array::from_fn(|k| {
+            let mut data = vec![0u16; stride * bh];
+            for by in 0..bh {
+                for bx in 0..stride {
+                    let (ax, ay) = (bx as isize - ox as isize, by as isize - oy as isize);
+                    let (mut sx, mut sy) = shifts[k];
+                    if let Some((m, [px, py, pw, ph], (dx, dy))) = moved
+                        && m == k
+                        && (px..px + pw).contains(&ax)
+                        && (py..py + ph).contains(&ay)
+                    {
+                        sx += dx;
+                        sy += dy;
+                    }
+                    let c = pixel_shift::cfa_colour(ax, ay);
+                    let s = exposure
+                        * 1000.0
+                        * [0.7, 1.0, 0.5][c]
+                        * scene(ax as f32 - sx, ay as f32 - sy);
+                    let sigma = noise.variance(strehl_core::CfaPlane::G1, s).sqrt();
+                    let gauss =
+                        (-2.0 * uniform().ln()).sqrt() * (std::f64::consts::TAU * uniform()).cos();
+                    let v = 512.0 + s + sigma * gauss as f32;
+                    data[by * stride + bx] = v.round().clamp(0.0, 16383.0) as u16;
+                }
+            }
+            strehl_raw::Frame {
+                data,
+                stride,
+                buffer_height: bh,
+                active: strehl_raw::Region {
+                    x: ox,
+                    y: oy,
+                    width: aw,
+                    height: ah,
+                },
+                levels: strehl_core::noise::Levels {
+                    black: 512.0,
+                    white: 15360.0,
+                },
+                iso: Some(100.0),
+                wb_coeffs: [2.0, 1.0, 1.5, f32::NAN],
+                xyz_to_cam_rgbe: [[0.0; 3]; 4],
+                color_matrices: Vec::new(),
+                camera: "synthetic".into(),
+                path: PathBuf::from(format!("exposed-{k}")),
+            }
+        })
+    }
+
+    fn measure_group(frames: &[strehl_raw::Frame; 4]) -> GroupMeasurement {
+        measure(
+            [&frames[0], &frames[1], &frames[2], &frames[3]],
+            &synthetic_noise(),
+        )
+    }
+
+    /// Plan Q5: the same offset between the shots gets the same verdict at
+    /// the close tile's 1/4 s light and at four times it. The rig's sway
+    /// moves whole shots by 0.2 to 0.5 px; the assembly lines them up to
+    /// their measured offsets, so the check judges what is left, in
+    /// photosites. The old tile ratio, on the same groups, grows with the
+    /// light (the fault this replaces).
+    #[test]
+    fn the_same_offset_gets_the_same_verdict_at_any_exposure() {
+        let r = ResidualMode::Compensate;
+        // Members 2 and 3 swayed 0.4 px along y, member 4 0.25 px along x.
+        let shifts = [(0.0, 0.0), (1.0, 0.4), (1.0, 1.4), (0.25, 1.0)];
+        let dim = measure_group(&exposed_group(shifts, 1.0, None));
+        let bright = measure_group(&exposed_group(shifts, 4.0, None));
+        let (wd, wb) = (
+            dim.witness.as_ref().unwrap(),
+            bright.witness.as_ref().unwrap(),
+        );
+        eprintln!(
+            "dim: local {:.3} px, ratio {:.2}, verdict {:?}; bright: local {:.3} px, ratio {:.2}, verdict {:?}",
+            wd.local_px,
+            wd.tile_ratio,
+            judge(&dim, r),
+            wb.local_px,
+            wb.tile_ratio,
+            judge(&bright, r)
+        );
+        assert_eq!(judge(&dim, r), None, "{dim:?}");
+        assert_eq!(judge(&bright, r), None, "{bright:?}");
+        assert!((wd.local_px - wb.local_px).abs() < 0.1, "{wd:?} {wb:?}");
+        // The statistic the check no longer judges grows with the light, and
+        // on these groups it would have passed the dim one and failed the
+        // bright one.
+        assert!(wb.tile_ratio > 1.5 * wd.tile_ratio, "{wd:?} {wb:?}");
+        assert!(
+            wd.tile_ratio < TILE_RATIO_TOLERANCE && wb.tile_ratio >= TILE_RATIO_TOLERANCE,
+            "{wd:?} {wb:?}"
+        );
+        // With no sway at all, the same verdict too.
+        let still = [(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0)];
+        for exposure in [1.0, 4.0] {
+            let m = measure_group(&exposed_group(still, exposure, None));
+            assert_eq!(judge(&m, r), None, "{m:?}");
+        }
+    }
+
+    /// Motion in one part of the frame still fails, at either exposure,
+    /// and asks for a retake: a 96 px patch of one shot moved 1 px.
+    #[test]
+    fn motion_in_one_part_of_the_frame_fails_at_any_exposure() {
+        let r = ResidualMode::Compensate;
+        let shifts = [(0.0, 0.0), (1.0, 0.3), (1.0, 1.3), (0.0, 1.3)];
+        for exposure in [1.0, 4.0] {
+            let m = measure_group(&exposed_group(
+                shifts,
+                exposure,
+                Some((2, [300, 150, 96, 96], (0.0, 1.0))),
+            ));
+            let reason = judge(&m, r).unwrap_or_default();
+            assert!(
+                reason.contains("witness tiles disagree locally"),
+                "{exposure}: {m:?}"
+            );
+            assert!(retake_helps(&m, r));
+        }
+    }
+
+    /// A shot that slipped by a whole photosite fails, and asks for a
+    /// retake: its offsets land on another shot's colour site.
+    #[test]
+    fn a_whole_photosite_slip_fails_and_asks_for_a_retake() {
+        let r = ResidualMode::Compensate;
+        for exposure in [1.0, 4.0] {
+            let slipped = [(0.0, 0.0), (1.0, 0.3), (1.0, 2.3), (0.0, 1.3)];
+            let m = measure_group(&exposed_group(slipped, exposure, None));
+            assert!(!m.check.parities, "{m:?}");
+            let reason = judge(&m, r).unwrap();
+            assert!(
+                reason.contains("do not cover the four CFA parities"),
+                "{reason}"
+            );
+            assert!(reason.contains("slipped by a whole photosite"), "{reason}");
+            assert!(retake_helps(&m, r));
+        }
+        // A slip past the search window: that shot reads no structure, the
+        // others do. Still a slip.
+        let frames = synthetic_group([(0, 0), (1, 0), (2, 1), (0, 1)], [1.0; 4]);
+        let mut m = measure(
+            [&frames[0], &frames[1], &frames[2], &frames[3]],
+            &synthetic_noise(),
+        );
+        assert!(!m.check.parities);
+        m.check.precision[2] = 0.0;
+        assert!(judge(&m, r).unwrap().contains("slipped"));
+        assert!(retake_helps(&m, r));
+        // A scene without structure, or a camera that did not shift, is not
+        // a slip: a retake would fail the same way.
+        let mut flat = m.clone();
+        flat.check.precision = [1.0, 0.3, 0.0, 0.2];
+        assert!(!judge(&flat, r).unwrap().contains("slipped"));
+        assert!(!retake_helps(&flat, r));
+        let mut still = m;
+        still.check.offsets = [(0, 0); 4];
+        assert!(!retake_helps(&still, r));
+    }
+
+    /// Plants on real groups (plan Q5's gate), read-only:
+    /// `STREHL_PLANECHECK_FIXTURES="<run dir>|<plane>;..."`. For each plane's
+    /// group as the stack uses it: as taken; one shot slipped a whole row; a
+    /// patch of one shot moved a whole row (motion in one part); one shot
+    /// from the next plane's group (a focus slip or a wrong member).
+    /// `cargo test --release -p strehl-cli planted_faults_on_real_groups -- --ignored --nocapture`
+    #[test]
+    #[ignore = "needs capture folders; set STREHL_PLANECHECK_FIXTURES"]
+    fn planted_faults_on_real_groups() {
+        let spec = std::env::var("STREHL_PLANECHECK_FIXTURES").expect("STREHL_PLANECHECK_FIXTURES");
+        let r = ResidualMode::Compensate;
+        let decode = |g: &RecordedGroup| -> Vec<strehl_raw::Frame> {
+            g.files
+                .iter()
+                .map(|f| strehl_raw::decode(&f.path).unwrap())
+                .collect()
+        };
+        let mut failures = Vec::new();
+        for item in spec.split(';').filter(|s| !s.trim().is_empty()) {
+            let (dir, plane) = item.rsplit_once('|').expect("<dir>|<plane>");
+            let plane: u64 = plane.trim().parse().unwrap();
+            let groups = recorded_groups(Path::new(dir.trim())).unwrap();
+            let at = |p: u64| groups.iter().find(|g| g.plane == p && g.complete).unwrap();
+            let mut frames = decode(at(plane));
+            let next = decode(at(plane + 1));
+            let first = &frames[0];
+            let noise = strehl_core::profile::noise_model_for(
+                &first.camera,
+                first.iso,
+                strehl_core::noise::Levels {
+                    black: first.levels.black,
+                    white: first.levels.white,
+                },
+            );
+            let judge_of = |f: [&strehl_raw::Frame; 4]| {
+                let (m, w) = measure_with_tiles(f, &noise);
+                (judge(&m, r), retake_helps(&m, r), m, w)
+            };
+            let (taken, _, m0, w0) = judge_of([&frames[0], &frames[1], &frames[2], &frames[3]]);
+            let local0 = m0.witness.as_ref().map_or(f64::NAN, |w| w.local_px);
+            // The patch: 768 px square about the median measured tile.
+            let w0 = w0.expect("a witness");
+            let (mut xs, mut ys) = (Vec::new(), Vec::new());
+            for (i, v) in w0.tile_local_px.iter().enumerate() {
+                if v.is_finite() {
+                    xs.push(i % w0.tiles[0]);
+                    ys.push(i / w0.tiles[0]);
+                }
+            }
+            xs.sort_unstable();
+            ys.sort_unstable();
+            let (cx, cy) = (xs[xs.len() / 2] * w0.tile, ys[ys.len() / 2] * w0.tile);
+            let report = |name: &str,
+                          (reason, retake, m, _): (
+                Option<String>,
+                bool,
+                GroupMeasurement,
+                Option<pixel_shift::Witness>,
+            )| {
+                eprintln!(
+                    "{dir} plane {plane} {name}: local {:.3} px, offsets {:?} structure {:.3?} | {} (retake {retake})",
+                    m.witness.as_ref().map_or(f64::NAN, |w| w.local_px),
+                    &m.check.offsets[1..],
+                    &m.check.precision[1..],
+                    reason.as_deref().unwrap_or("pass")
+                );
+                (reason, retake)
+            };
+            eprintln!(
+                "{dir} plane {plane} as taken: local {local0:.3} px | {}",
+                taken.as_deref().unwrap_or("pass")
+            );
+            // One shot slipped a whole row, up and down.
+            let s = frames[2].stride;
+            for (name, up) in [
+                ("shot 3 slipped one row up", true),
+                ("shot 3 slipped one row down", false),
+            ] {
+                let mut slipped = frames[2].clone();
+                if up {
+                    slipped.data.rotate_left(s);
+                } else {
+                    slipped.data.rotate_right(s);
+                }
+                let (reason, retake) = report(
+                    name,
+                    judge_of([&frames[0], &frames[1], &slipped, &frames[3]]),
+                );
+                if !reason
+                    .as_deref()
+                    .is_some_and(|r| r.contains("slipped by a whole photosite"))
+                    || !retake
+                {
+                    failures.push(format!("{dir} {plane}: {name}: not caught as a slip"));
+                }
+            }
+            // A patch of one shot moved in the scene: by two rows of the
+            // mosaic (2 px, each colour onto itself), or by the mean of
+            // zero and two rows (1 px, with a little blur).
+            let (ax, ay) = (frames[2].active.x + cx, frames[2].active.y + cy);
+            let half = 384usize;
+            for (name, mix) in [
+                ("a 768 px patch of shot 3 moved 2 px", 1.0f32),
+                ("a 768 px patch of shot 3 moved 1 px", 0.5),
+            ] {
+                let mut moved = frames[2].clone();
+                for y in ay.saturating_sub(half).max(2)..(ay + half).min(moved.buffer_height) {
+                    for x in ax.saturating_sub(half)..(ax + half).min(s) {
+                        let (here, above) = (
+                            f32::from(frames[2].data[y * s + x]),
+                            f32::from(frames[2].data[(y - 2) * s + x]),
+                        );
+                        moved.data[y * s + x] = (here + mix * (above - here)).round() as u16;
+                    }
+                }
+                let (reason, retake) =
+                    report(name, judge_of([&frames[0], &frames[1], &moved, &frames[3]]));
+                let caught = reason
+                    .as_deref()
+                    .is_some_and(|r| r.contains("disagree locally") || r.contains("slipped"));
+                if !caught || !retake {
+                    failures.push(format!("{dir} {plane}: {name}: not caught"));
+                }
+            }
+            // Shot 4 from the next plane.
+            let swapped = frames.pop().unwrap();
+            let (reason, _) = report(
+                "shot 4 from the next plane",
+                judge_of([&frames[0], &frames[1], &frames[2], &next[3]]),
+            );
+            if reason.is_none() {
+                failures.push(format!("{dir} {plane}: next plane's shot passed"));
+            }
+            drop(swapped);
+        }
+        assert!(failures.is_empty(), "{failures:#?}");
     }
 }

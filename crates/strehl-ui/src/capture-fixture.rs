@@ -144,10 +144,11 @@ pub(crate) fn snapshot(fixture: Fixture) -> Snapshot {
 
 /// The engine's reasons as `strehl follow` writes them (`pixel-shift-cmd.rs`
 /// `demotion`), for fabricated journals.
-pub(crate) const MOTION: &str =
-    "witness tiles disagree locally (p99/median z^2 3.26): motion, a focus slip or a wrong member";
+pub(crate) const MOTION: &str = "witness tiles disagree locally by 0.86 px at p99 (limit 0.51): motion, a focus slip or a wrong member";
 pub(crate) const PATTERN: &str =
     "offsets [(0, -1), (1, -1), (1, 1)] do not cover the four CFA parities";
+#[cfg(test)]
+pub(crate) const SLIP: &str = "offsets [(0, -1), (1, -2), (1, 0)] do not cover the four CFA parities: a shot slipped by a whole photosite";
 pub(crate) const RESIDUAL: &str =
     "witness pairs misregistered by 0.204 photosite after residual compensation";
 pub(crate) const MISREGISTERED: &str =
