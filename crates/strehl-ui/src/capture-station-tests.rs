@@ -370,6 +370,106 @@ fn an_ended_capture_is_reviewed_until_back_to_planning() {
     assert_eq!(ws.station_mode(), StationMode::Plan);
 }
 
+/// Owner feedback, 2026-11-24: "when done, Calibrate step does not restore
+/// earlier settings. '4-shot pixel shift' gets reset". A calibration that
+/// fails (or is stopped) after switching the camera to one RAW a plane
+/// sets four-shot again, and reports its failure once the camera has it.
+#[test]
+fn a_failed_calibration_sets_four_shot_again() {
+    let (_dir, mut ws, inbox, _s) = workspace(ready());
+    ws.restore_four_after_calibration = true;
+    ws.calibration = super::super::tools::Calibration::Failed("Calibration stopped".into());
+    ws.poll_tools();
+    assert_eq!(ws.calibration.stage(), "restoring");
+    ws.poll_tools();
+    let sent = inbox.command().map(|r| r.command);
+    assert!(
+        matches!(sent, Some(Command::PixelShift { shots: 4 })),
+        "{sent:?}"
+    );
+    assert!(inbox.command().is_none(), "sent once");
+    ws.poll_tools();
+    assert!(
+        inbox.command().is_none(),
+        "not sent again while it switches"
+    );
+    let mut four = ready();
+    four["shots_per_plane"] = json!(4);
+    ws.connection.as_ref().unwrap().replace(snapshot(four));
+    ws.poll_tools();
+    match &ws.calibration {
+        super::super::tools::Calibration::Failed(e) => assert!(
+            e.starts_with("Calibration stopped") && e.contains("Four-shot is set again"),
+            "{e}"
+        ),
+        other => panic!("{}", other.stage()),
+    }
+    // A camera that went away cannot be set: the failure says so at once.
+    let (_dir, mut ws, inbox, _s) = workspace(ready());
+    let mut off = ready();
+    off["connected"] = json!(false);
+    ws.connection.as_ref().unwrap().replace(snapshot(off));
+    ws.restore_four_after_calibration = true;
+    ws.calibration = super::super::tools::Calibration::Failed("Calibration stopped".into());
+    ws.poll_tools();
+    assert!(inbox.command().is_none());
+    assert!(
+        matches!(&ws.calibration, super::super::tools::Calibration::Failed(e) if e.contains("four-shot was not set again")),
+        "{}",
+        ws.calibration.stage()
+    );
+}
+
+/// Owner feedback, 2026-11-24: "the subject name keeps getting cleared
+/// while interacting with the tools (ex. Calibrate step)". The
+/// calibration's survey is a run on the host like a capture, but not a
+/// stack: it takes no names, and the plan keeps them once it ends.
+#[test]
+fn a_calibrations_survey_does_not_take_the_names() {
+    let (_dir, mut ws, _inbox, _s) = workspace(ready());
+    ws.station.plan.subject = "Glitter weevil".into();
+    ws.station.plan.stack_name = "Pronotum".into();
+    ws.calibration = super::super::tools::Calibration::Capturing {
+        restore_four: true,
+        sequence: 3,
+        round: 0,
+        spacing: 12,
+        survey: true,
+        deadline: Instant::now() + Duration::from_secs(600),
+    };
+    let run = PathBuf::from("D:/Captures/stack-1795500000000-2");
+    let mut capturing = ready();
+    capturing["phase"] = json!("capturing");
+    capturing["editable"] = json!(false);
+    capturing["sequence_id"] = json!(3);
+    let mut running = snapshot(capturing.clone());
+    // Its manifest says "positions", not "test", and may not be written yet.
+    running.in_progress = Some(crate::capture_client::InProgress {
+        folder: run.clone(),
+        idle: Duration::ZERO,
+        test: false,
+    });
+    ws.connection.as_ref().unwrap().replace(running.clone());
+    ws.poll_station(&running);
+    assert!(ws.run_names(&run).is_none(), "the survey took the names");
+    assert!(ws.station.proof.is_none(), "nor is it proofed as a stack");
+    // The survey ends; the calibration measures it. The names stay.
+    let mut complete = capturing;
+    complete["phase"] = json!("complete");
+    complete["editable"] = json!(true);
+    let ended = snapshot(complete);
+    ws.connection.as_ref().unwrap().replace(ended.clone());
+    ws.calibration = super::super::tools::Calibration::Failed("Calibration stopped".into());
+    ws.poll_station(&ended);
+    assert_eq!(
+        (
+            ws.station.plan.subject.as_str(),
+            ws.station.plan.stack_name.as_str()
+        ),
+        ("Glitter weevil", "Pronotum")
+    );
+}
+
 /// Owner feedback, 2026-11-22: a capture goes to a new subject unless one
 /// is chosen on purpose. Start waits for the new subject's name (or a
 /// choice); a test shot does not. The capture takes the names, keeps them
