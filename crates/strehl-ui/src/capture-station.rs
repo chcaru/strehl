@@ -337,6 +337,7 @@ impl CaptureWorkspace {
             self.station.calibrated_at = None;
         }
         self.error = None;
+        self.pending_subject = None;
         if s.host.capabilities.new_plan && s.fresh() && !s.host.phase.active() {
             self.command(&s, Command::NewPlan {});
         }

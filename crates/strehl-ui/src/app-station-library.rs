@@ -39,6 +39,19 @@ pub(super) struct CaptureTarget {
     pub subject_name: String,
 }
 
+/// The subject outline a capture was taken with (`manifest.json`'s
+/// `plan.subject`), if any (plan S1).
+fn last_outline(capture: &std::path::Path) -> Option<strehl_capture::model::Subject> {
+    let bytes = std::fs::read(capture.join("manifest.json")).ok()?;
+    if bytes.len() > 4 * 1024 * 1024 {
+        return None;
+    }
+    let manifest: serde_json::Value = serde_json::from_slice(&bytes).ok()?;
+    let subject: strehl_capture::model::Subject =
+        serde_json::from_value(manifest["plan"]["subject"].clone()).ok()?;
+    subject.validate().ok().map(|()| subject)
+}
+
 enum FolderPick {
     /// Folders to import into a collection or a subject.
     Import {
@@ -438,6 +451,16 @@ impl StrehlApp {
         // review and stages (owner feedback, 2026-11-23). "Shoot again"
         // keeps the step calibration: the same subject, framed the same.
         self.capture.new_capture(from_stack.is_some());
+        // Plan S1: the subject's last outline, from its newest capture.
+        let outline = subject.and_then(|id| {
+            self.catalog
+                .stacks_of(id)
+                .iter()
+                .rev()
+                .filter_map(|stack| self.catalog.node(*stack)?.stack.as_ref())
+                .find_map(|draft| last_outline(&draft.source))
+        });
+        self.capture.set_pending_subject(outline);
         match subject {
             Some(id) => self.capture.set_plan_subject(id, &subject_name),
             // A new subject: the plan asks for its name.

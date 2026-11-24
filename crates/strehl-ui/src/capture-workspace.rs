@@ -136,6 +136,9 @@ pub(crate) struct CaptureWorkspace {
     station: station::Station,
     /// Plan Q7: the stillness check before Start.
     stillness: stillness::StillnessCheck,
+    /// Plan S1: an outline to give the host once it can take one (the
+    /// subject's last outline, for a new stack of it).
+    pending_subject: Option<strehl_capture::model::Subject>,
 }
 impl CaptureWorkspace {
     pub fn new(path: Option<PathBuf>) -> Self {
@@ -187,6 +190,7 @@ impl CaptureWorkspace {
             selected_stopped: 0,
             station: station::Station::default(),
             stillness: Default::default(),
+            pending_subject: None,
         }
     }
     fn calibrating(&self) -> bool {
@@ -225,6 +229,17 @@ impl CaptureWorkspace {
         if let Some((ratio, x, y)) = self.stillness.poll(&s, now) {
             // The magnifier as it was before the check.
             self.command(&s, Command::Magnify { ratio, x, y });
+        }
+        // The subject's last outline, once the camera is ready for it.
+        if self.pending_subject.is_some()
+            && s.fresh()
+            && !s.pending
+            && s.host.editable
+            && s.host.capabilities.subject
+            && !s.host.phase.active()
+        {
+            let subject = self.pending_subject.take();
+            self.command(&s, Command::Subject { subject });
         }
         let Some(connection) = &self.connection else {
             return;
@@ -663,6 +678,11 @@ impl CaptureWorkspace {
     }
     /// A capture that finished, was checked while it ran, and is to be
     /// opened in Projects and stacked.
+    /// Start the next capture from this outline (plan S1: a new stack of a
+    /// subject starts from its last outline).
+    pub fn set_pending_subject(&mut self, subject: Option<strehl_capture::model::Subject>) {
+        self.pending_subject = subject;
+    }
     pub fn take_finished_capture(&mut self) -> Option<PathBuf> {
         self.finished_capture.take()
     }

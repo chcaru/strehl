@@ -795,3 +795,34 @@ fn stack_and_stack_next_go_through_the_queue() {
     let out = frame(&mut app, &ctx, 0.0, vec![]);
     assert_eq!(texts(&out).iter().filter(|(t, _)| t == "QUEUED").count(), 2);
 }
+
+/// Plan S1: a new stack of a subject starts from the outline its newest
+/// capture was taken with (`manifest.json`'s `plan.subject`); a manifest
+/// without one, or with an invalid one, gives none.
+#[test]
+fn a_subjects_last_outline_is_read_from_its_capture() {
+    let dir = tempfile::tempdir().unwrap();
+    let outline = strehl_capture::model::Subject {
+        rings: vec![vec![[0.3, 0.2], [0.7, 0.25], [0.6, 0.8]]],
+        reference_focus: Some(31_000),
+        rate_ppm: None,
+        provenance: serde_json::json!({"kind":"manual"}),
+    };
+    let mut plan = serde_json::to_value(strehl_capture::model::Plan::default()).unwrap();
+    plan["subject"] = serde_json::to_value(&outline).unwrap();
+    std::fs::write(
+        dir.path().join("manifest.json"),
+        serde_json::to_vec(&serde_json::json!({"plan":plan})).unwrap(),
+    )
+    .unwrap();
+    assert_eq!(last_outline(dir.path()), Some(outline));
+    std::fs::write(
+        dir.path().join("manifest.json"),
+        br#"{"plan":{"subject":{"rings":[[[0.1,0.1]]]}}}"#,
+    )
+    .unwrap();
+    assert_eq!(last_outline(dir.path()), None, "an invalid outline");
+    std::fs::write(dir.path().join("manifest.json"), br#"{"plan":{}}"#).unwrap();
+    assert_eq!(last_outline(dir.path()), None);
+}
+
