@@ -199,6 +199,7 @@ impl StrehlApp {
                 || self.stack_station.core.probe_mut().recounting()
                 || self.stack_station.launch_hold.is_some();
             self.process_space.set_station_busy(busy);
+            self.reshoot_window(ui.ctx());
         } else {
             self.process_space.set_instant_inspection(false);
             self.show_process(ui);
@@ -779,6 +780,12 @@ impl StrehlApp {
                 station.mode = Lens::Plane;
             }
             Some(CoreAction::Repair(_)) => self.go_station(Station::Develop),
+            // Plan R: the planes behind the region, from the leading ones.
+            Some(CoreAction::Reshoot(region)) => {
+                let first = core.leading.iter().copied().min().unwrap_or(0);
+                let last = core.leading.iter().copied().max().unwrap_or(first);
+                self.open_reshoot(region, first, last);
+            }
             Some(CoreAction::Note(_)) | None => {}
         }
     }

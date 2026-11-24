@@ -97,6 +97,8 @@ pub(crate) enum CoreAction {
     /// Open Develop with the depth brush on this region (aperture UV).
     Repair(Rect),
     Note(Rect),
+    /// Plan R: take a pass over the planes behind this region.
+    Reshoot(Rect),
 }
 
 /// The certified photograph and its evidence.
@@ -365,7 +367,8 @@ impl CoreSample {
         let caution_top = words_top + words.size().y + 14.0;
         let mut height = caution_top + caution.size().y + 12.0;
         if pinned {
-            height += 34.0;
+            // Two rows of two actions (plan R added "Re-shoot…").
+            height += 34.0 + 28.0;
         }
         let placement = popup_placement(
             input.viewport.shrink(8.0),
@@ -591,15 +594,26 @@ impl CoreSample {
         if pinned {
             let top = caution_top + caution.size().y + 10.0;
             let mut x = PAD;
-            for (index, label) in ["Show the plane", "Repair here\u{2026}", "Note"]
-                .into_iter()
-                .enumerate()
+            for (index, label) in [
+                "Show the plane",
+                "Repair here\u{2026}",
+                "Note",
+                "Re-shoot\u{2026}",
+            ]
+            .into_iter()
+            .enumerate()
             {
                 let galley =
                     painter.layout_no_wrap(label.into(), FontId::proportional(12.0), palette.ink);
-                let quiet = index == 2;
+                let quiet = index >= 2;
+                // Two a row: the plane and the repair, then the note and
+                // the re-shoot.
+                if index == 2 {
+                    x = PAD;
+                }
+                let row = if index >= 2 { top + 28.0 } else { top };
                 let button = Rect::from_min_size(
-                    egui::pos2(x, top),
+                    egui::pos2(x, row),
                     egui::vec2(galley.size().x + 16.0, 22.0),
                 );
                 x = button.right() + 8.0;
@@ -611,7 +625,7 @@ impl CoreSample {
                         egui::StrokeKind::Inside,
                     );
                 }
-                let disabled = index == 0 && leading.is_empty();
+                let disabled = (index == 0 || index == 3) && leading.is_empty();
                 painter.galley(
                     button.center() - galley.size() * 0.5,
                     galley,
@@ -626,7 +640,8 @@ impl CoreSample {
                     response.action = Some(match index {
                         0 => CoreAction::ShowPlane(leading[0]),
                         1 => CoreAction::Repair(region),
-                        _ => CoreAction::Note(region),
+                        2 => CoreAction::Note(region),
+                        _ => CoreAction::Reshoot(region),
                     });
                 }
             }

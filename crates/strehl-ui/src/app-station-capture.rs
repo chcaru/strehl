@@ -164,7 +164,7 @@ impl StrehlApp {
     /// Where a finished capture goes: the plan's subject (found by name, or
     /// created beside the selected one) and its stack name, or P4's default
     /// name for the folder.
-    fn capture_names(&mut self, folder: &std::path::Path) {
+    pub(super) fn capture_names(&mut self, folder: &std::path::Path) {
         let (subject, stack) = self.capture_destination(folder);
         self.session_ui.pending_name = Some(stack);
         if let Some(id) = subject {

@@ -50,6 +50,8 @@ mod output_destination;
 mod photo_history;
 #[path = "app-presets.rs"]
 mod presets;
+#[path = "app-reshoot.rs"]
+mod reshoot;
 #[path = "app-session.rs"]
 mod session;
 #[path = "app-session-import.rs"]
@@ -196,6 +198,8 @@ pub struct StrehlApp {
     /// The Library station and subject page, composed into the shell.
     library: station_library::LibraryState,
     active_stack: Option<crate::workspace_history::NodeId>,
+    /// Plan R: the re-shoot panel, while open.
+    reshoot: Option<reshoot::Reshoot>,
     pending_stack: Option<crate::workspace_history::NodeId>,
     capture_parent: Option<crate::workspace_history::NodeId>,
     catalog: crate::workspace_history::Catalog,
@@ -352,6 +356,7 @@ impl StrehlApp {
             project_explorer: Default::default(),
             library: Default::default(),
             active_stack: None,
+            reshoot: None,
             pending_stack: None,
             capture_parent: None,
             catalog,

@@ -402,6 +402,43 @@ impl CaptureWorkspace {
         }
     }
 
+    /// The camera host's state as this desktop has it.
+    pub(crate) fn snapshot_typed(&self) -> Snapshot {
+        self.station_snapshot()
+    }
+
+    /// Plan R3: a pass of another exposure over planes of the host's latest
+    /// capture, once it has ended.
+    pub(crate) fn queue_pass(
+        &mut self,
+        planes: Vec<u64>,
+        tier: &str,
+        shutter: u64,
+    ) -> anyhow::Result<()> {
+        let s = self.station_snapshot();
+        anyhow::ensure!(
+            s.host.capabilities.exposure_tiers,
+            "This camera host cannot take passes; update the Pi's Strehl"
+        );
+        let request = s.request(Command::QueuePass {
+            planes,
+            tier: tier.into(),
+            shutter,
+        })?;
+        self.submit(request)
+    }
+
+    /// Plan R3: retakes of the host's latest capture's planes after it.
+    pub(crate) fn queue_retakes_after(&mut self, planes: Vec<u64>) -> anyhow::Result<()> {
+        let s = self.station_snapshot();
+        anyhow::ensure!(
+            s.host.takes_manual_retakes(),
+            "This camera host cannot take retakes by hand; update the Pi's Strehl"
+        );
+        let request = s.request(Command::QueueRetakes { planes })?;
+        self.submit(request)
+    }
+
     /// The reviewed capture, when it was stopped (by hand or by a fault)
     /// and the host lists it with its planes (`verify_stopped`).
     fn stopped_under_review<'a>(
