@@ -314,3 +314,17 @@ fn a_new_capture_clears_the_stages_of_the_last_one() {
         }
     }
 }
+
+/// Plan X1/S2: the survey's outline JSON becomes the host's subject (its
+/// rings, reference focus and rate); an empty or broken one does not.
+#[test]
+fn the_surveys_outline_becomes_the_subject() {
+    let v = json!({"rings":[[[0.3,0.2],[0.7,0.25],[0.6,0.8]]],"reference_focus":61900.4,
+        "ppm_per_unit":-13.0,"provenance":{"kind":"auto","source":"raw"}});
+    let subject = survey_subject(&v).unwrap();
+    assert_eq!(subject.reference_focus, Some(61900));
+    assert_eq!(subject.rate_ppm, Some(-13.0));
+    assert_eq!(subject.provenance["source"], "raw survey");
+    assert!(survey_subject(&json!({"rings":[]})).is_none());
+    assert!(survey_subject(&Value::Null).is_none());
+}

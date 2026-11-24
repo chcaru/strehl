@@ -258,6 +258,39 @@ pub(crate) fn survey_positions(start: u16, end: u16, spacing: u16, n: usize) -> 
     positions
 }
 
+/// Positions spread over the range taken at two shutters (plan X1).
+pub(crate) const SPREAD_PLANES: usize = 12;
+
+/// Plan X1's survey: the dense cluster of [`survey_positions`] at the base
+/// shutter, and [`SPREAD_PLANES`] positions spread over the whole range,
+/// each at the base and at the short shutter; merged in the capture
+/// direction (the host takes them in order), each with its shutter.
+pub(crate) fn two_shutter_survey(
+    start: u16,
+    end: u16,
+    base: u64,
+    short: u64,
+) -> (Vec<u16>, Vec<u64>) {
+    let mut taken: Vec<(u16, u8, u64)> =
+        survey_positions(start, end, SURVEY_SPACING, SURVEY_PLANES)
+            .into_iter()
+            .map(|p| (p, 0, base))
+            .collect();
+    let (lo, hi) = (start.min(end), start.max(end));
+    for i in 0..SPREAD_PLANES {
+        let p = f64::from(lo) + f64::from(hi - lo) * i as f64 / (SPREAD_PLANES - 1) as f64;
+        let p = p.round() as u16;
+        taken.push((p, 1, base));
+        taken.push((p, 2, short));
+    }
+    taken.sort_by_key(|t| (t.0, t.1));
+    if start > end {
+        // The capture direction, the pair at a position still long then short.
+        taken.sort_by_key(|t| (std::cmp::Reverse(t.0), t.1));
+    }
+    taken.into_iter().map(|(p, _, s)| (p, s)).unzip()
+}
+
 /// The calibration's stages, advanced once a frame by the workspace. Every
 /// waiting stage holds the instant it gives up (`deadline`).
 pub(crate) enum Calibration {
@@ -266,6 +299,8 @@ pub(crate) enum Calibration {
     Switching {
         restore_four: bool,
         positions: Vec<u16>,
+        /// Plan X1: a shutter per position (the two-shutter survey).
+        shutters: Option<Vec<u64>>,
         round: u8,
         deadline: Instant,
     },
@@ -275,6 +310,8 @@ pub(crate) enum Calibration {
         sequence: u64,
         round: u8,
         spacing: u16,
+        /// Measured with `strehl survey` (plan X1), not `focus-step`.
+        survey: bool,
         deadline: Instant,
     },
     /// The survey is being measured.
@@ -563,6 +600,7 @@ mod tests {
             positions: vec![1000],
             round: 0,
             deadline: now + SWITCH_TIMEOUT,
+            shutters: None,
         };
         assert!(c.running());
         assert_eq!(c.gives_up_in(now), Some(SWITCH_TIMEOUT));
@@ -576,6 +614,7 @@ mod tests {
             round: 0,
             spacing: 8,
             deadline: now + SURVEY_TIMEOUT,
+            survey: false,
         };
         assert_eq!(c.survey_sequence(), Some(7));
         c.stop("Calibration stopped");

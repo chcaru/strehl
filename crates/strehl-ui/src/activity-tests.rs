@@ -245,6 +245,7 @@ fn calibration_stages_wait_with_their_deadlines_and_end_as_done_or_needs_you() {
         positions: vec![1, 2],
         round: 0,
         deadline: now + Duration::from_secs(45),
+        shutters: None,
     };
     let status = calibration_status(&switching, "c").unwrap();
     assert_eq!(status.lane, Lane::Camera);

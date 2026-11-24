@@ -121,6 +121,12 @@ pub(crate) enum PlanIntent {
     OpenGuide(GuideTab),
     /// Clear the stages for a new capture.
     NewCapture,
+    /// Plan X2: one of the calibration's three exposures: its base shutter
+    /// and, for the highlight pass, its short groups' shutter.
+    UseAdvice {
+        shutter: u64,
+        highlight: Option<u64>,
+    },
     /// Plan S4: mark Start and End at the subject's sharp range.
     UseSubjectBounds(u16, u16),
     /// Highlight groups (plan X3): none, or every `every` planes at `shutter`.
@@ -1024,6 +1030,11 @@ fn exposure_step(
         if let Some(line) = test_shot_sentence(&inputs.test_shot) {
             note(ui, &line, palette);
         }
+        // Plan X2: the calibration's three exposures, when it surveyed at two
+        // shutters.
+        if let Some(e) = exposure {
+            advice_rows(ui, inputs, e, editable, palette, out);
+        }
         // Plan X3: highlight groups, for the glints the base exposure pins.
         if s.host.capabilities.exposure_tiers
             && let Some(e) = exposure
@@ -1139,6 +1150,102 @@ pub(crate) fn shorter_shutter(options: &[u64], shutter: u64, stops: f64) -> Opti
         .filter_map(|c| strehl_capture::timing::shutter_seconds(c).map(|t| (c, t)))
         .min_by(|a, b| (a.1 / want).ln().abs().total_cmp(&(b.1 / want).ln().abs()))
         .map(|(c, _)| c)
+}
+
+/// Plan X2: the three choices from the calibration's survey (`strehl
+/// survey`'s `advice`), each with what it gives; the suggested one first.
+fn advice_rows(
+    ui: &mut Ui,
+    inputs: &PlanInputs<'_>,
+    e: &crate::capture_client::host::Exposure,
+    editable: bool,
+    palette: &CapturePalette,
+    out: &mut Vec<PlanIntent>,
+) {
+    let survey = &inputs.calibration.result["survey"];
+    let advice = &survey["advice"];
+    if !advice.is_object() {
+        return;
+    }
+    let label = |code: Option<u64>| code.map(style::shutter_label).unwrap_or_else(|| "—".into());
+    let suggested = advice["suggested"].as_str().unwrap_or("");
+    let census = survey["census"]["top"].as_f64();
+    let mut rows = vec![
+        (
+            "highlight_pass",
+            "Highlight pass",
+            format!(
+                "{} with groups at {}: the body exposed fully, the glints held{}",
+                label(advice["highlight_pass"]["base_code"].as_u64()),
+                label(advice["highlight_pass"]["short_code"].as_u64()),
+                census
+                    .map(|c| format!(" (they reach {c:.1}x the survey's full scale)"))
+                    .unwrap_or_default()
+            ),
+            advice["highlight_pass"]["base_code"].as_u64(),
+            advice["highlight_pass"]["short_code"].as_u64(),
+        ),
+        (
+            "protect",
+            "Protect highlights",
+            format!(
+                "{} for everything: no glint pins, the body gets less light",
+                label(advice["protect"]["code"].as_u64())
+            ),
+            advice["protect"]["code"].as_u64(),
+            None,
+        ),
+        (
+            "accept",
+            "Accept specks",
+            format!(
+                "{}: the body exposed fully, about {:.0} sites a plane pin",
+                label(advice["accept"]["code"].as_u64()),
+                advice["accept"]["pinned_sites_per_plane"]
+                    .as_f64()
+                    .unwrap_or(0.0)
+            ),
+            advice["accept"]["code"].as_u64(),
+            None,
+        ),
+    ];
+    rows.sort_by_key(|r| r.0 != suggested);
+    ui.add_space(4.0);
+    style::text(ui, "From the calibration", 12.5, palette.ink2);
+    for (key, name, text, shutter, highlight) in rows {
+        ui.horizontal_wrapped(|ui| {
+            ui.spacing_mut().item_spacing.x = 8.0;
+            let current = e.shutter == shutter
+                && inputs
+                    .s
+                    .host
+                    .plan
+                    .as_ref()
+                    .and_then(|p| p.highlight)
+                    .map(|h| h.shutter)
+                    == highlight;
+            let r = style::button(
+                ui,
+                if current { "In use" } else { name },
+                if key == suggested {
+                    ButtonKind::Plain
+                } else {
+                    ButtonKind::Quiet
+                },
+                22.0,
+                editable && shutter.is_some() && !current,
+                palette,
+            );
+            if r.clicked()
+                && let Some(shutter) = shutter
+            {
+                out.push(PlanIntent::UseAdvice { shutter, highlight });
+            }
+            let mut job = style::job(&text, 12.0, palette.ink2, 0.0);
+            job.wrap.max_width = ui.available_width();
+            ui.label(job);
+        });
+    }
 }
 
 /// The highlight groups' row (plan X3): off, every plane or every second,

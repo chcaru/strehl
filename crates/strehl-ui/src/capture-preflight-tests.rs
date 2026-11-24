@@ -200,6 +200,7 @@ fn the_desktops_own_work_blocks_start() {
         positions: vec![30000],
         round: 0,
         deadline: Instant::now() + Duration::from_secs(45),
+        shutters: None,
     };
     assert_eq!(checks(&s, &ui), [Check::Calibration]);
     let (_dir, mut ui) = workspace();

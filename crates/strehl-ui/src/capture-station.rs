@@ -341,6 +341,7 @@ impl CaptureWorkspace {
         }
         self.error = None;
         self.pending_subject = None;
+        self.pending_highlight = None;
         if s.host.capabilities.new_plan && s.fresh() && !s.host.phase.active() {
             self.command(&s, Command::NewPlan {});
         }
@@ -1461,6 +1462,21 @@ impl CaptureWorkspace {
         match intent {
             PlanIntent::SetSubject(_) | PlanIntent::SetStackName(_) => {}
             PlanIntent::NewCapture => self.new_capture(false),
+            PlanIntent::UseAdvice { shutter, highlight } => {
+                // The exposure now, its highlight plan once the camera has it.
+                let iso = s.host.exposure.as_ref().and_then(|e| e.iso).unwrap_or(100);
+                self.command(s, Command::Exposure { iso, shutter });
+                if s.host.capabilities.exposure_tiers {
+                    self.pending_highlight =
+                        Some(highlight.map(|short| strehl_capture::model::Highlight {
+                            shutter: short,
+                            every: 2,
+                            first_plane: 1,
+                            last_plane: u32::MAX,
+                            shots: s.host.shots() as u8,
+                        }));
+                }
+            }
             PlanIntent::UseSubjectBounds(lo, hi) => {
                 // Start, then End: each moved to and marked in turn.
                 let (start, end) = s.host.plan_bounds();

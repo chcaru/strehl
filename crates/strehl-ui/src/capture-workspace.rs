@@ -141,6 +141,9 @@ pub(crate) struct CaptureWorkspace {
     /// Plan S1: an outline to give the host once it can take one (the
     /// subject's last outline, for a new stack of it).
     pending_subject: Option<strehl_capture::model::Subject>,
+    /// Plan X2: a highlight plan to give the host once the exposure it goes
+    /// with has been set.
+    pending_highlight: Option<Option<strehl_capture::model::Highlight>>,
     /// Plan S2/S3: the bounds survey's live frames and the automatic
     /// selection made from them.
     survey_frames: auto_subject::SurveyFrames,
@@ -197,6 +200,7 @@ impl CaptureWorkspace {
             station: station::Station::default(),
             stillness: Default::default(),
             pending_subject: None,
+            pending_highlight: None,
             survey_frames: Default::default(),
             auto_subject: Default::default(),
         }
@@ -243,6 +247,17 @@ impl CaptureWorkspace {
         self.auto_subject.poll();
         if let Some(subject) = self.auto_subject.take_unsent() {
             self.apply_live(&s, live::LiveIntent::SetSubject(Some(subject)));
+        }
+        // Plan X2: the highlight plan of a chosen advice, after its exposure.
+        if self.pending_highlight.is_some()
+            && s.fresh()
+            && !s.pending
+            && s.host.editable
+            && s.host.capabilities.exposure_tiers
+            && !s.host.phase.active()
+        {
+            let highlight = self.pending_highlight.take().flatten();
+            self.command(&s, Command::Highlight { highlight });
         }
         // The subject's last outline, once the camera is ready for it.
         if self.pending_subject.is_some()
@@ -309,9 +324,11 @@ impl CaptureWorkspace {
             C::Switching {
                 restore_four,
                 positions,
+                shutters,
                 round,
                 ..
             } if idle && shots == Some(1) => {
+                let survey = shutters.is_some();
                 let sequence = host.sequence_id.unwrap_or(0) + 1;
                 let spacing = positions
                     .windows(2)
@@ -325,7 +342,7 @@ impl CaptureWorkspace {
                         // survey, before a second survey or four-shot is set again.
                         keep_power_on: true,
                         kind: PositionsKind::Positions,
-                        shutters: None,
+                        shutters,
                     })
                     .and_then(|r| self.submit(r))
                 {
@@ -334,7 +351,14 @@ impl CaptureWorkspace {
                         sequence,
                         round,
                         spacing,
-                        deadline: Self::survey_deadline(&s, now),
+                        survey,
+                        // Twice the RAWs of a step survey and its long ones.
+                        deadline: Self::survey_deadline(&s, now)
+                            + if survey {
+                                tools::SURVEY_TIMEOUT
+                            } else {
+                                Duration::ZERO
+                            },
                     },
                     Err(e) => C::Failed(format!("{e:#}")),
                 }
@@ -344,16 +368,22 @@ impl CaptureWorkspace {
                 sequence,
                 round,
                 spacing,
+                survey,
                 deadline,
             } if host.sequence_id == Some(sequence) && !host.busy => match host.phase {
                 HostPhase::Complete => {
                     let run = host.last_receipt_run();
+                    // Plan X1: the two-shutter survey is read by `strehl
+                    // survey` (subject, depth, step, levels, census).
+                    let mut args: Vec<std::ffi::OsString> = if survey {
+                        vec!["survey".into(), "--json".into()]
+                    } else {
+                        vec!["focus-step".into()]
+                    };
                     match (run, &self.engine) {
                         (Some(run), Some(engine)) => {
-                            match tools::EngineJob::start(
-                                engine,
-                                vec!["focus-step".into(), run.clone().into_os_string()],
-                            ) {
+                            args.push(run.clone().into_os_string());
+                            match tools::EngineJob::start(engine, args) {
                                 Ok(job) => C::Measuring {
                                     restore_four,
                                     run,
@@ -378,6 +408,7 @@ impl CaptureWorkspace {
                     sequence,
                     round,
                     spacing,
+                    survey,
                     deadline,
                 },
             },
@@ -410,6 +441,14 @@ impl CaptureWorkspace {
                         (Some(why), _) => C::Failed(why),
                         (None, Err(e)) => C::Failed(format!("{e:#}")),
                         (None, Ok(v)) => {
+                            // `strehl survey` (plan X1): its step reads as
+                            // `focus-step`'s, the whole survey kept beside it.
+                            let v = if v["step"].is_object() && v["census"].is_object() {
+                                json!({"width":v["step"]["width"],"suggested_step":v["step"]["suggested_step"],
+                                    "summary":v["summary"],"survey":v})
+                            } else {
+                                v
+                            };
                             let width = v["width"].as_f64();
                             let again = match width {
                                 None => Some(spacing.saturating_mul(4)),
@@ -428,6 +467,7 @@ impl CaptureWorkspace {
                                         spacing,
                                         tools::SURVEY_PLANES,
                                     ),
+                                    shutters: None,
                                     round: 1,
                                     deadline: now + tools::SWITCH_TIMEOUT,
                                 },
@@ -453,6 +493,15 @@ impl CaptureWorkspace {
             other => other,
         };
         station::note_calibration(&mut self.station, stage_before, &self.calibration);
+        // Plan X1/S2: the survey's precise outline (RAW frames) becomes the
+        // subject when the plan has none.
+        if stage_before != "done"
+            && let C::Done(v) = &self.calibration
+            && host.plan.as_ref().is_some_and(|p| p.subject.is_none())
+            && let Some(subject) = survey_subject(&v["survey"]["subject"])
+        {
+            self.pending_subject = Some(subject);
+        }
         // A survey left running when the calibration gave up is not followed.
         let survey = self.calibration.survey_sequence();
         self.calibration.expire(now);
@@ -468,14 +517,36 @@ impl CaptureWorkspace {
     fn start_calibration(&mut self, s: &Snapshot) {
         let restore_four = s.host.shots_per_plane == Some(4);
         let (start, end) = s.host.plan_bounds();
-        let positions =
-            tools::survey_positions(start, end, tools::SURVEY_SPACING, tools::SURVEY_PLANES);
+        // Plan X1: with a host that takes a shutter per position, one
+        // survey at two shutters feeds the step, the subject and the
+        // exposure advice; else the step survey alone.
+        let two = s
+            .host
+            .exposure
+            .as_ref()
+            .filter(|_| s.host.capabilities.exposure_tiers)
+            .and_then(|e| {
+                let base = e.shutter?;
+                let short = plan::shorter_shutter(&e.shutter_options, base, 4.0)?;
+                (short != base).then_some((base, short))
+            });
+        let (positions, shutters) = match two {
+            Some((base, short)) => {
+                let (p, s) = tools::two_shutter_survey(start, end, base, short);
+                (p, Some(s))
+            }
+            None => (
+                tools::survey_positions(start, end, tools::SURVEY_SPACING, tools::SURVEY_PLANES),
+                None,
+            ),
+        };
         if restore_four {
             self.command(s, Command::PixelShift { shots: 1 });
         }
         self.calibration = tools::Calibration::Switching {
             restore_four,
             positions,
+            shutters,
             round: 0,
             deadline: Instant::now() + tools::SWITCH_TIMEOUT,
         };
@@ -1613,6 +1684,21 @@ impl CaptureWorkspace {
             .ok_or_else(|| anyhow::anyhow!("Stopped capture unavailable"))?;
         c.handoff(run.folder.clone())
     }
+}
+
+/// The host's subject from `strehl survey`'s or `strehl subject`'s outline
+/// JSON (rings, reference focus, ppm a focus unit, provenance), when valid.
+pub(crate) fn survey_subject(v: &Value) -> Option<strehl_capture::model::Subject> {
+    let rings: Vec<Vec<[f32; 2]>> = serde_json::from_value(v["rings"].clone()).ok()?;
+    let subject = strehl_capture::model::Subject {
+        rings,
+        reference_focus: v["reference_focus"]
+            .as_f64()
+            .map(|f| f.round().clamp(0.0, 65535.0) as u16),
+        rate_ppm: v["ppm_per_unit"].as_f64().map(|r| r as f32),
+        provenance: json!({"kind":"auto","source":"raw survey","detail":v["provenance"].clone()}),
+    };
+    subject.validate().ok().map(|()| subject)
 }
 
 fn duration(seconds: Option<f64>) -> String {

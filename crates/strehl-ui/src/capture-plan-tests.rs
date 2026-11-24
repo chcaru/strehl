@@ -685,3 +685,66 @@ fn the_subjects_depth_is_offered_as_bounds() {
     input.subject_depth = Some((37_300, 37_500));
     assert!(subject_bounds_line(&input).unwrap().action.is_none());
 }
+
+/// Plan X1: the two-shutter survey takes the dense cluster at the base
+/// shutter and 12 positions over the whole range at the base then the short
+/// one, all in the capture direction (the host refuses another order).
+#[test]
+fn the_calibration_survey_takes_two_shutters_in_capture_order() {
+    use super::super::tools::{SPREAD_PLANES, SURVEY_PLANES, two_shutter_survey};
+    for (start, end) in [(37_100u16, 37_764u16), (37_764, 37_100)] {
+        let (positions, shutters) = two_shutter_survey(start, end, 65544, 65661);
+        assert_eq!(positions.len(), SURVEY_PLANES + 2 * SPREAD_PLANES);
+        assert_eq!(positions.len(), shutters.len());
+        let up = start < end;
+        assert!(
+            positions
+                .windows(2)
+                .all(|w| if up { w[0] <= w[1] } else { w[0] >= w[1] })
+        );
+        assert_eq!(
+            shutters.iter().filter(|s| **s == 65661).count(),
+            SPREAD_PLANES
+        );
+        // Each short shot follows its long one at the same position.
+        for (i, s) in shutters.iter().enumerate() {
+            if *s == 65661 {
+                assert_eq!(positions[i - 1], positions[i]);
+                assert_eq!(shutters[i - 1], 65544);
+            }
+        }
+        assert!(positions.contains(&37_100) && positions.contains(&37_764));
+    }
+}
+
+/// Plan X2: the calibration's advice is three rows, the suggested first;
+/// using the highlight pass asks for its base shutter and short groups.
+#[test]
+fn the_calibrations_advice_is_offered_three_ways() {
+    let s = snapshot(ready());
+    let mut input = inputs(&s, &[]);
+    input.calibration.result = json!({"width":50.0,"suggested_step":7,"survey":{
+        "census":{"top":4.2},
+        "advice":{"suggested":"highlight_pass",
+            "highlight_pass":{"base_code":65546,"short_code":65661},
+            "protect":{"code":65661},
+            "accept":{"code":65546,"pinned_sites_per_plane":4700.0}}}});
+    let ctx = egui::Context::default();
+    crate::theme::install(&ctx);
+    let mut view = PlanView::default();
+    let (out, _) = frame(&ctx, &mut view, &input, 0.0, vec![]);
+    assert!(text_at(&out, "From the calibration").is_some());
+    let intents = click(&ctx, &mut view, &input, "Highlight pass");
+    assert!(
+        intents.contains(&PlanIntent::UseAdvice {
+            shutter: 65546,
+            highlight: Some(65661)
+        }),
+        "{intents:?}"
+    );
+    let intents = click(&ctx, &mut view, &input, "Protect highlights");
+    assert!(intents.contains(&PlanIntent::UseAdvice {
+        shutter: 65661,
+        highlight: None
+    }));
+}
