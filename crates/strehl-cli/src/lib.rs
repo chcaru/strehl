@@ -191,6 +191,11 @@ enum Command {
     /// positions, and the focus step that supports it.
     FocusStep(focus_step_cmd::FocusStepArgs),
 
+    /// Find the capture's subject automatically from planes spread over the
+    /// run: an outline normalised to the active area, its depth range and
+    /// the evidence threshold used (plan S2).
+    Subject(subject_cmd::SubjectArgs),
+
     /// Store a finished capture in the calibrated format: every sample kept
     /// to within half a step of the noise, the camera's full-size JPEG
     /// dropped. Not lossless; nothing is written without --apply.
@@ -1050,6 +1055,9 @@ enum Command {
 pub mod compact_cmd;
 #[path = "focus-step-cmd.rs"]
 pub mod focus_step_cmd;
+// Plan S2 (2026-11-23): the subject, found automatically.
+#[path = "subject-cmd.rs"]
+pub mod subject_cmd;
 
 pub fn default_cache_root() -> PathBuf {
     align_cmd::default_cache_root()
@@ -1123,6 +1131,7 @@ where
         Command::Probe { dir, limit } => probe(&dir, limit),
         Command::PixelShift(args) => pixel_shift_cmd::run(&args),
         Command::FocusStep(args) => focus_step_cmd::run(&args),
+        Command::Subject(args) => subject_cmd::run(&args),
         Command::Compact(args) => compact_cmd::run(&args),
         Command::Follow(args) => follow_cmd::run(&args),
         Command::Focus { action } => match action {

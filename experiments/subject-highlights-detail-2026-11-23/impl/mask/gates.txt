@@ -1,0 +1,87 @@
+### strehl subject D:/StrehlCaptures/stack-1795460665629-8651 --out weevil-c13.json --mask-png weevil-c13.png
+run             : D:/StrehlCaptures/stack-1795460665629-8651
+planes          : 13 of 199 recorded (1,17,34,50,67,83,100,116,133,149,166,182,199)
+grid            : 1188 x 792 cells of 8 px over 9504 x 6336 active px
+noise model     : Profile
+registration    : -13.0 ppm per focus unit (scale 0.9910, correlation 0.9846)
+quiet cells     : mode 1.02 x the injected noise floor, lower spread 0.175 (log); backdrop 67.6 % of the frame
+threshold       : Relative, 2.91 x the noise floor; 204372 in-focus cells, 199958 seed cells, 381 specks; 1 part(s) kept, 0 dropped
+outline         : 5 ring(s), points 229,52,32,40,52
+depth           : planes 17 to 182 (focus Some(24594.0) to Some(25749.0))
+area            : 36.06 % of the frame
+time            : decode + cells 0.21 s, evidence 0.25 s, selection 0.029 s
+summary         : Subject: 36.1 % of the frame in 1 part(s), 4 hole(s) left out; sharp from plane 17 to 182; threshold 2.91 x the noise floor, set against the frame's quiet cells (mode 1.02 x, spread 0.175).
+exit 0
+product 0.3606 of the grid, prototype 0.3603; IoU 0.9920; product outline from the prototype outline: median 0.0, p95 1.0 cells
+only product 0.0016, only prototype 0.0013 of the grid
+### strehl subject D:/StrehlCaptures/stack-1795460665629-8651 --every 16 --out weevil-e16.json --mask-png weevil-e16.png
+run             : D:/StrehlCaptures/stack-1795460665629-8651
+planes          : 13 of 199 recorded (1,17,33,49,65,81,97,113,129,145,161,177,193)
+grid            : 1188 x 792 cells of 8 px over 9504 x 6336 active px
+noise model     : Profile
+registration    : -12.0 ppm per focus unit (scale 0.9920, correlation 0.9853)
+quiet cells     : mode 1.00 x the injected noise floor, lower spread 0.165 (log); backdrop 66.8 % of the frame
+threshold       : Relative, 2.68 x the noise floor; 221242 in-focus cells, 218621 seed cells, 306 specks; 1 part(s) kept, 0 dropped
+outline         : 5 ring(s), points 236,57,31,50,53
+depth           : planes 17 to 177 (focus Some(24594.0) to Some(25714.0))
+area            : 35.96 % of the frame
+time            : decode + cells 0.20 s, evidence 0.25 s, selection 0.028 s
+summary         : Subject: 36.0 % of the frame in 1 part(s), 4 hole(s) left out; sharp from plane 17 to 177; threshold 2.68 x the noise floor, set against the frame's quiet cells (mode 1.00 x, spread 0.165).
+exit 0
+product 0.3596 of the grid, prototype 0.3603; IoU 0.9915; product outline from the prototype outline: median 0.0, p95 1.0 cells
+only product 0.0012, only prototype 0.0019 of the grid
+level-map offset (active origin in visible px): x 32, y 20 (correlation 0.99998)
+product 0.3596 of the grid, prototype 0.3587; IoU 0.9920; product outline from the prototype outline: median 0.0, p95 1.0 cells
+only product 0.0019, only prototype 0.0010 of the grid
+### strehl subject D:/StrehlCaptures/stack-1795300522964-6430 --out scarab-c13.json --mask-png scarab-c13.png
+run             : D:/StrehlCaptures/stack-1795300522964-6430
+planes          : 13 of 211 recorded (1,18,36,53,71,88,106,123,141,158,176,193,211)
+grid            : 1188 x 792 cells of 8 px over 9504 x 6336 active px
+noise model     : Profile
+registration    : -15.0 ppm per focus unit (scale 0.9890, correlation 0.9007)
+quiet cells     : mode 1.03 x the injected noise floor, lower spread 0.180 (log); backdrop 67.3 % of the frame
+threshold       : Relative, 3.03 x the noise floor; 194695 in-focus cells, 183750 seed cells, 756 specks; 2 part(s) kept, 1 dropped
+outline         : 2 ring(s), points 221,75
+depth           : planes 1 to 193 (focus Some(31006.0) to Some(32350.0))
+area            : 43.79 % of the frame
+time            : decode + cells 0.21 s, evidence 0.26 s, selection 0.027 s
+summary         : Subject: 43.8 % of the frame in 2 part(s), 0 hole(s) left out; sharp from plane 1 to 193; threshold 3.03 x the noise floor, set against the frame's quiet cells (mode 1.03 x, spread 0.180).
+exit 0
+product 0.4379 of the grid, prototype 0.4393; IoU 0.9939; product outline from the prototype outline: median 1.0, p95 1.4 cells
+only product 0.0007, only prototype 0.0020 of the grid
+### strehl subject D:/StrehlCaptures/stack-1795300522964-6430 --every 17 --out scarab-e17.json --mask-png scarab-e17.png
+run             : D:/StrehlCaptures/stack-1795300522964-6430
+planes          : 13 of 211 recorded (1,18,35,52,69,86,103,120,137,154,171,188,205)
+grid            : 1188 x 792 cells of 8 px over 9504 x 6336 active px
+noise model     : Profile
+registration    : -15.5 ppm per focus unit (scale 0.9890, correlation 0.9004)
+quiet cells     : mode 1.04 x the injected noise floor, lower spread 0.187 (log); backdrop 67.7 % of the frame
+threshold       : Relative, 3.20 x the noise floor; 177066 in-focus cells, 166074 seed cells, 782 specks; 2 part(s) kept, 1 dropped
+outline         : 2 ring(s), points 221,76
+depth           : planes 1 to 205 (focus Some(31006.0) to Some(32434.0))
+area            : 43.70 % of the frame
+time            : decode + cells 0.20 s, evidence 0.24 s, selection 0.027 s
+summary         : Subject: 43.7 % of the frame in 2 part(s), 0 hole(s) left out; sharp from plane 1 to 205; threshold 3.20 x the noise floor, set against the frame's quiet cells (mode 1.04 x, spread 0.187).
+exit 0
+product 0.4370 of the grid, prototype 0.4393; IoU 0.9932; product outline from the prototype outline: median 1.0, p95 1.4 cells
+only product 0.0003, only prototype 0.0026 of the grid
+level-map offset (active origin in visible px): x 32, y 20 (correlation 0.99993)
+product 0.4370 of the grid, prototype 0.4192; IoU 0.9592; product outline from the prototype outline: median 1.4, p95 7.8 cells
+only product 0.0178, only prototype 0.0000 of the grid
+### strehl subject D:/StrehlCaptures/stack-1795460665629-8651 --planes 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21 --out weevil-oof.json --mask-png weevil-oof.png
+run             : D:/StrehlCaptures/stack-1795460665629-8651
+planes          : 21 of 199 recorded (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21)
+grid            : 1188 x 792 cells of 8 px over 9504 x 6336 active px
+noise model     : Profile
+registration    : -14.3 ppm per focus unit (scale 0.9990, correlation 0.9997)
+quiet cells     : mode 1.12 x the injected noise floor, lower spread 0.248 (log); backdrop 99.9 % of the frame
+threshold       : Relative, 4.98 x the noise floor; 119 in-focus cells, 0 seed cells, 14 specks; 0 part(s) kept, 0 dropped
+outline         : 0 ring(s), points 
+area            : 0.00 % of the frame
+time            : decode + cells 0.47 s, evidence 0.52 s, selection 0.026 s
+summary         : No subject: nothing comes into focus in these 21 planes (119 in-focus cells, all in specks under 189 cells). The subject is out of focus throughout, or outside the planes surveyed; threshold 4.98 x the noise floor, set against the frame's quiet cells (mode 1.12 x, spread 0.248).
+exit 0
+### capture folder unchanged: newest file mtime
+-rw-r--r-- 1 chris 197609   324950 2026-11-23 11:26:54.904258300 -0800 transfer-receipts.jsonl
+### capture folder unchanged: newest file mtime
+-rw-r--r-- 1 chris 197609      277 2026-11-21 15:04:03.594529500 -0800 result.json

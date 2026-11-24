@@ -1,0 +1,554 @@
+//! `strehl subject <run>`: the capture's subject, found automatically
+//! (plan S2, `docs/proposals/2026-11-subject-highlights-and-detail-plan.md`).
+//!
+//! Reads member 1 of each plane's recorded group (four-shot archives decode
+//! through the ordinary path), reduces each exposure to 8 px evidence cells
+//! with the camera profile's injected noise model, and selects the subject
+//! with `strehl_core::subject`. Read-only over the capture; outputs are
+//! refused inside the capture folder.
+//!
+//! The JSON written here ([`SubjectJson`]) is the contract with the capture
+//! host and the desktop, which mirror it rather than share a Rust type.
+
+use anyhow::{Context, Result, bail, ensure};
+use rayon::prelude::*;
+use serde::{Deserialize, Serialize};
+use std::path::{Path, PathBuf};
+use std::time::Instant;
+use strehl_core::CfaPlane;
+use strehl_core::noise::Provenance;
+use strehl_core::profile;
+use strehl_core::subject::{
+    CfaView, Evidence, FrameCells, Params, PlaneRef, Registration, Selection, Source,
+    ThresholdKind, assemble, quiet, raw_frame_cells, raw_layout, select,
+};
+
+use crate::pixel_shift_cmd::recorded_groups;
+
+#[derive(clap::Args, Debug)]
+pub struct SubjectArgs {
+    /// Capture run folder.
+    pub dir: PathBuf,
+    /// Use every N-th recorded plane, from the first.
+    #[arg(long, conflicts_with = "planes")]
+    pub every: Option<usize>,
+    /// Use these plane ordinals (comma separated).
+    #[arg(long, value_delimiter = ',', conflicts_with = "every")]
+    pub planes: Option<Vec<u64>>,
+    /// Without --every or --planes: this many planes, evenly spread over
+    /// the run (all of them when the run has fewer).
+    #[arg(long, default_value_t = 13)]
+    pub count: usize,
+    /// Threshold in lower-side spreads of the quiet population (x2).
+    #[arg(long, default_value_t = 3.0)]
+    pub sensitivity: f32,
+    /// Hysteresis growth, spreads (0: off).
+    #[arg(long, default_value_t = 3.0)]
+    pub grow: f32,
+    /// Margin around the subject, sensor pixels.
+    #[arg(long, default_value_t = 16.0)]
+    pub buffer: f32,
+    /// Do not register the planes by a magnification rate.
+    #[arg(long)]
+    pub no_register: bool,
+    /// Print the subject JSON on stdout (the report goes to stderr).
+    #[arg(long)]
+    pub json: bool,
+    /// Also write the subject JSON here.
+    #[arg(long)]
+    pub out: Option<PathBuf>,
+    /// Write the mask raster as a PNG, one pixel per 8 px cell (debug).
+    #[arg(long)]
+    pub mask_png: Option<PathBuf>,
+    /// Write the stored evidence (debug): little-endian f32 focus, f32
+    /// level and u16 sharpest-plane index per cell, row-major, one after the
+    /// other; the grid is the JSON's `grid`.
+    #[arg(long, hide = true)]
+    pub dump_evidence: Option<PathBuf>,
+}
+
+/// A run's planes in ordinal order: ordinal, recorded focus position,
+/// member-1 file.
+pub fn run_planes(dir: &Path) -> Result<Vec<(u64, Option<f64>, PathBuf)>> {
+    let mut planes: Vec<(u64, Option<f64>, PathBuf)> = recorded_groups(dir)?
+        .into_iter()
+        .filter_map(|g| {
+            let first = g.files.iter().find(|f| f.durable)?;
+            Some((g.plane, g.target.map(|t| t as f64), first.path.clone()))
+        })
+        .collect();
+    planes.sort_by_key(|p| p.0);
+    Ok(planes)
+}
+
+/// Which planes to use: `planes` by ordinal, every `every`-th, or `count`
+/// spread evenly (first and last included).
+pub fn choose<T: Clone>(
+    all: &[(u64, T)],
+    planes: Option<&[u64]>,
+    every: Option<usize>,
+    count: usize,
+) -> Result<Vec<(u64, T)>> {
+    if let Some(want) = planes {
+        // Focus order is ordinal order; a repeated ordinal counts once.
+        let mut want = want.to_vec();
+        want.sort_unstable();
+        want.dedup();
+        return want
+            .iter()
+            .map(|o| {
+                all.iter()
+                    .find(|p| p.0 == *o)
+                    .cloned()
+                    .with_context(|| format!("plane {o} is not recorded in this run"))
+            })
+            .collect();
+    }
+    if let Some(n) = every {
+        ensure!(n >= 1, "--every must be at least 1");
+        return Ok(all.iter().step_by(n).cloned().collect());
+    }
+    let n = all.len();
+    if count == 0 || n <= count {
+        return Ok(all.to_vec());
+    }
+    Ok((0..count)
+        .map(|k| all[k * (n - 1) / (count - 1).max(1)].clone())
+        .collect())
+}
+
+/// Evidence of a run from the chosen planes, and how long the decode took.
+pub fn run_evidence(
+    dir: &Path,
+    chosen: &[(u64, (Option<f64>, PathBuf))],
+    registration: Registration,
+) -> Result<(Evidence, Provenance, f64)> {
+    let t = Instant::now();
+    let cells: Vec<(FrameCells, Provenance, [usize; 2])> = chosen
+        .par_iter()
+        .map(
+            |(_, (_, path))| -> Result<(FrameCells, Provenance, [usize; 2])> {
+                let f = strehl_raw::decode(path).with_context(|| path.display().to_string())?;
+                let noise = profile::noise_model_for(&f.camera, f.iso, f.levels);
+                let view = CfaView {
+                    data: &f.data,
+                    stride: f.stride,
+                    x0: f.active.x,
+                    y0: f.active.y,
+                    width: f.active.width,
+                    height: f.active.height,
+                    black: f.levels.black,
+                    white: f.levels.white,
+                };
+                let variance = |s: f32| noise.variance(CfaPlane::G1, s);
+                Ok((
+                    raw_frame_cells(&view, &variance),
+                    noise.provenance,
+                    [f.active.width, f.active.height],
+                ))
+            },
+        )
+        .collect::<Result<_>>()?;
+    let secs = t.elapsed().as_secs_f64();
+    let size = cells[0].2;
+    ensure!(
+        cells.iter().all(|c| c.2 == size),
+        "{}: exposures of different sizes in one run",
+        dir.display()
+    );
+    let provenance = cells[0].1;
+    let frames: Vec<FrameCells> = cells.into_iter().map(|c| c.0).collect();
+    let planes: Vec<PlaneRef> = chosen
+        .iter()
+        .map(|(o, (pos, _))| PlaneRef {
+            ordinal: *o,
+            position: *pos,
+        })
+        .collect();
+    Ok((
+        assemble(frames, planes, raw_layout(size[0], size[1]), registration),
+        provenance,
+        secs,
+    ))
+}
+
+fn refuse_inside(dir: &Path, out: &Path) -> Result<()> {
+    let canon = |p: &Path| std::fs::canonicalize(p).unwrap_or_else(|_| p.to_path_buf());
+    let parent = out.parent().filter(|p| !p.as_os_str().is_empty());
+    let target = parent.map_or_else(|| canon(Path::new(".")), canon);
+    if target.starts_with(canon(dir)) {
+        bail!(
+            "{} is inside the capture folder; capture folders are read-only",
+            out.display()
+        );
+    }
+    Ok(())
+}
+
+/// The subject JSON: the contract with the capture host and the desktop.
+/// `rings`, `cell_px`, `provenance`, `depth`, `area_share` and
+/// `reference_focus` are the agreed keys; the rest are extras.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct SubjectJson {
+    /// Outer rings and holes, even-odd, each `[x, y]` normalised 0..1 to the
+    /// active area, at most 256 points a ring.
+    pub rings: Vec<Vec<[f32; 2]>>,
+    /// Sensor pixels per raster cell.
+    pub cell_px: f32,
+    pub provenance: ProvenanceJson,
+    /// `null` when nothing was found.
+    pub depth: Option<DepthJson>,
+    pub area_share: f32,
+    /// Focus position of the plane nearest the middle of the planes used:
+    /// the rings are in its geometry. `null` when not recorded.
+    pub reference_focus: Option<f64>,
+    pub reference_plane: u64,
+    /// Magnification change per focus unit, ppm; `null` when not registered.
+    pub ppm_per_unit: Option<f64>,
+    pub active_px: [u32; 2],
+    /// The raster grid the rings fill: columns, rows.
+    pub grid: [usize; 2],
+    pub summary: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct ProvenanceJson {
+    /// `"auto"`.
+    pub kind: String,
+    /// `"raw"` or `"live_view"`.
+    pub source: String,
+    pub sensitivity: f32,
+    pub grow: f32,
+    pub buffer_px: f32,
+    /// Plane ordinals the evidence came from.
+    pub planes: Vec<u64>,
+    /// `"relative"` or `"absolute"`.
+    pub threshold: String,
+    /// The injected noise model's provenance (`"profile"`, `"fallback"`,
+    /// ...); absent for live view.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub noise_model: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct DepthJson {
+    pub first_plane: u64,
+    pub last_plane: u64,
+    pub first_focus: Option<f64>,
+    pub last_focus: Option<f64>,
+    /// The planes holding the central 99 % of the in-focus subject cells
+    /// (the evidence's three-plane mean can put the extremes one survey
+    /// plane wide).
+    pub core_first_plane: u64,
+    pub core_last_plane: u64,
+}
+
+impl SubjectJson {
+    pub fn new(e: &Evidence, sel: &Selection, noise: Option<Provenance>) -> Self {
+        let reference = e.planes.get(e.reference);
+        Self {
+            rings: sel.rings.clone(),
+            cell_px: e.layout.cell_px,
+            provenance: ProvenanceJson {
+                kind: "auto".into(),
+                source: match e.layout.source {
+                    Source::Raw => "raw",
+                    Source::LiveView => "live_view",
+                }
+                .into(),
+                sensitivity: sel.params.sensitivity,
+                grow: sel.params.grow,
+                buffer_px: sel.params.buffer_px,
+                planes: e.planes.iter().map(|p| p.ordinal).collect(),
+                threshold: match sel.threshold {
+                    ThresholdKind::Relative => "relative",
+                    ThresholdKind::Absolute => "absolute",
+                }
+                .into(),
+                noise_model: noise.map(|p| format!("{p:?}").to_lowercase()),
+            },
+            depth: sel.depth.as_ref().map(|d| DepthJson {
+                first_plane: e.planes[d.first].ordinal,
+                last_plane: e.planes[d.last].ordinal,
+                first_focus: e.planes[d.first].position,
+                last_focus: e.planes[d.last].position,
+                core_first_plane: e.planes[d.core_first].ordinal,
+                core_last_plane: e.planes[d.core_last].ordinal,
+            }),
+            area_share: sel.area_share,
+            reference_focus: reference.and_then(|r| r.position),
+            reference_plane: reference.map_or(0, |r| r.ordinal),
+            ppm_per_unit: e.registration.map(|r| r.ppm_per_unit),
+            active_px: e.layout.active_px,
+            grid: [e.cols, e.rows],
+            summary: sel.summary.clone(),
+        }
+    }
+}
+
+/// An 8-bit grey PNG, uncompressed (stored deflate blocks): a debug raster
+/// needs no encoder dependency.
+pub fn write_grey_png(path: &Path, width: usize, height: usize, pixels: &[u8]) -> Result<()> {
+    ensure!(pixels.len() == width * height, "raster size");
+    let crc_table: Vec<u32> = (0..256u32)
+        .map(|n| {
+            (0..8).fold(n, |c, _| {
+                if c & 1 != 0 {
+                    0xedb8_8320 ^ (c >> 1)
+                } else {
+                    c >> 1
+                }
+            })
+        })
+        .collect();
+    let crc = |bytes: &[u8]| -> u32 {
+        !bytes.iter().fold(!0u32, |c, &b| {
+            crc_table[((c ^ u32::from(b)) & 0xff) as usize] ^ (c >> 8)
+        })
+    };
+    let mut raw = Vec::with_capacity((width + 1) * height);
+    for row in pixels.chunks(width.max(1)) {
+        raw.push(0u8);
+        raw.extend_from_slice(row);
+    }
+    let mut z = vec![0x78u8, 0x01];
+    let blocks: Vec<&[u8]> = raw.chunks(65_535).collect();
+    for (k, b) in blocks.iter().enumerate() {
+        z.push(u8::from(k + 1 == blocks.len()));
+        let len = b.len() as u16;
+        z.extend_from_slice(&len.to_le_bytes());
+        z.extend_from_slice(&(!len).to_le_bytes());
+        z.extend_from_slice(b);
+    }
+    let (mut a, mut b) = (1u32, 0u32);
+    for &v in &raw {
+        a = (a + u32::from(v)) % 65_521;
+        b = (b + a) % 65_521;
+    }
+    z.extend_from_slice(&((b << 16) | a).to_be_bytes());
+    let mut out = vec![0x89u8, b'P', b'N', b'G', 0x0d, 0x0a, 0x1a, 0x0a];
+    let mut chunk = |kind: &[u8; 4], data: &[u8]| {
+        out.extend_from_slice(&(data.len() as u32).to_be_bytes());
+        let mut body = kind.to_vec();
+        body.extend_from_slice(data);
+        out.extend_from_slice(&body);
+        out.extend_from_slice(&crc(&body).to_be_bytes());
+    };
+    let mut ihdr = Vec::new();
+    ihdr.extend_from_slice(&(width as u32).to_be_bytes());
+    ihdr.extend_from_slice(&(height as u32).to_be_bytes());
+    ihdr.extend_from_slice(&[8, 0, 0, 0, 0]);
+    chunk(b"IHDR", &ihdr);
+    chunk(b"IDAT", &z);
+    chunk(b"IEND", &[]);
+    std::fs::write(path, out).with_context(|| format!("write {}", path.display()))
+}
+
+pub fn run(args: &SubjectArgs) -> Result<()> {
+    for out in [&args.out, &args.mask_png, &args.dump_evidence]
+        .into_iter()
+        .flatten()
+    {
+        refuse_inside(&args.dir, out)?;
+    }
+    let all: Vec<(u64, (Option<f64>, PathBuf))> = run_planes(&args.dir)?
+        .into_iter()
+        .map(|(o, pos, path)| (o, (pos, path)))
+        .collect();
+    ensure!(
+        !all.is_empty(),
+        "{} has no recorded planes",
+        args.dir.display()
+    );
+    let chosen = choose(&all, args.planes.as_deref(), args.every, args.count)?;
+    ensure!(!chosen.is_empty(), "no planes chosen");
+    let registration = if args.no_register {
+        Registration::Off
+    } else {
+        Registration::Fit
+    };
+    let t = Instant::now();
+    let (e, provenance, decode_secs) = run_evidence(&args.dir, &chosen, registration)?;
+    let evidence_secs = t.elapsed().as_secs_f64();
+    let t = Instant::now();
+    let q = quiet(&e);
+    let params = Params {
+        sensitivity: args.sensitivity,
+        grow: args.grow,
+        buffer_px: args.buffer,
+    };
+    let sel = select(&e, &q, &params);
+    let select_secs = t.elapsed().as_secs_f64();
+
+    let mut report = String::new();
+    let mut line = |s: String| {
+        report.push_str(&s);
+        report.push('\n');
+    };
+    line(format!("run             : {}", args.dir.display()));
+    line(format!(
+        "planes          : {} of {} recorded ({})",
+        chosen.len(),
+        all.len(),
+        chosen
+            .iter()
+            .map(|c| c.0.to_string())
+            .collect::<Vec<_>>()
+            .join(",")
+    ));
+    line(format!(
+        "grid            : {} x {} cells of {} px over {} x {} active px",
+        e.cols, e.rows, e.layout.cell_px, e.layout.active_px[0], e.layout.active_px[1]
+    ));
+    line(format!("noise model     : {provenance:?}"));
+    if provenance != Provenance::Profile {
+        line("                  WARNING: no camera profile; the noise floor is a guess and the absolute fallback threshold means little".into());
+    }
+    match e.registration {
+        Some(f) => line(format!(
+            "registration    : {:.1} ppm per focus unit{}",
+            f.ppm_per_unit,
+            match (f.scale, f.correlation) {
+                (Some(s), Some(c)) => format!(" (scale {s:.4}, correlation {c:.4})"),
+                _ => String::new(),
+            }
+        )),
+        None => line("registration    : none".into()),
+    }
+    line(format!(
+        "quiet cells     : mode {:.2} x the injected noise floor, lower spread {:.3} (log); backdrop {:.1} % of the frame",
+        q.mode.exp(),
+        q.spread,
+        100.0 * q.backdrop_share
+    ));
+    let s = &sel.stats;
+    line(format!(
+        "threshold       : {:?}, {:.2} x the noise floor; {} in-focus cells, {} seed cells, {} specks; {} part(s) kept, {} dropped",
+        s.threshold, s.cut, s.in_focus_cells, s.seed_cells, s.specks, s.parts, s.dropped_parts
+    ));
+    let points: Vec<String> = sel.rings.iter().map(|r| r.len().to_string()).collect();
+    line(format!(
+        "outline         : {} ring(s), points {}",
+        sel.rings.len(),
+        points.join(",")
+    ));
+    let json = SubjectJson::new(&e, &sel, Some(provenance));
+    if let Some(d) = &json.depth {
+        line(format!(
+            "depth           : planes {} to {} (focus {:?} to {:?})",
+            d.first_plane, d.last_plane, d.first_focus, d.last_focus
+        ));
+    }
+    line(format!(
+        "area            : {:.2} % of the frame",
+        100.0 * sel.area_share
+    ));
+    line(format!(
+        "time            : decode + cells {decode_secs:.2} s, evidence {evidence_secs:.2} s, selection {select_secs:.3} s"
+    ));
+    line(format!("summary         : {}", sel.summary));
+
+    let text = serde_json::to_string_pretty(&json)?;
+    if args.json {
+        eprint!("{report}");
+        println!("{text}");
+    } else {
+        print!("{report}");
+    }
+    if let Some(path) = &args.out {
+        std::fs::write(path, &text).with_context(|| format!("write {}", path.display()))?;
+    }
+    if let Some(path) = &args.mask_png {
+        let px: Vec<u8> = sel.mask.iter().map(|&m| if m { 255 } else { 0 }).collect();
+        write_grey_png(path, e.cols, e.rows, &px)?;
+    }
+    if let Some(path) = &args.dump_evidence {
+        let mut bytes = Vec::with_capacity(e.focus.len() * 10);
+        e.focus
+            .iter()
+            .chain(&e.level)
+            .for_each(|v| bytes.extend_from_slice(&v.to_le_bytes()));
+        e.depth
+            .iter()
+            .for_each(|v| bytes.extend_from_slice(&v.to_le_bytes()));
+        std::fs::write(path, bytes).with_context(|| format!("write {}", path.display()))?;
+    }
+    Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn plane_choice() {
+        let all: Vec<(u64, ())> = (0..199).map(|o| (o, ())).collect();
+        let spread = choose(&all, None, None, 13).unwrap();
+        assert_eq!(spread.len(), 13);
+        assert_eq!((spread[0].0, spread[12].0), (0, 198));
+        let every = choose(&all, None, Some(16), 13).unwrap();
+        assert_eq!(every.len(), 13);
+        assert_eq!(every[12].0, 192);
+        let some = choose(&all, Some(&[5, 3, 5]), None, 13).unwrap();
+        assert_eq!(some.iter().map(|p| p.0).collect::<Vec<_>>(), vec![3, 5]);
+        assert!(choose(&all, Some(&[500]), None, 13).is_err());
+        assert_eq!(choose(&all[..5], None, None, 13).unwrap().len(), 5);
+    }
+
+    /// The JSON carries the agreed top-level keys, and parses back.
+    #[test]
+    fn json_contract() {
+        let (cols, rows) = (120usize, 80usize);
+        let frames: Vec<FrameCells> = (0..9)
+            .map(|k| {
+                let peak = (-((k as f32 - 4.0).powi(2)) / 2.0).exp();
+                let energy = (0..cols * rows)
+                    .map(|i| {
+                        let (x, y) = ((i % cols) as f32 - 60.0, (i / cols) as f32 - 40.0);
+                        let wobble = 1.0 + 0.05 * ((i * 7919 % 13) as f32 / 13.0 - 0.5);
+                        if x.hypot(y) < 20.0 {
+                            wobble + 30.0 * peak
+                        } else {
+                            wobble
+                        }
+                    })
+                    .collect();
+                FrameCells {
+                    cols,
+                    rows,
+                    energy,
+                    level: vec![0.01; cols * rows],
+                }
+            })
+            .collect();
+        let planes = (0..9)
+            .map(|k| PlaneRef {
+                ordinal: 1 + k,
+                position: Some(24_000.0 + 7.0 * k as f64),
+            })
+            .collect();
+        let e = assemble(frames, planes, raw_layout(960, 640), Registration::Off);
+        let sel = select(&e, &quiet(&e), &Params::default());
+        let json = SubjectJson::new(&e, &sel, Some(Provenance::Profile));
+        let v: serde_json::Value = serde_json::to_value(&json).unwrap();
+        for key in [
+            "rings",
+            "cell_px",
+            "provenance",
+            "depth",
+            "area_share",
+            "reference_focus",
+        ] {
+            assert!(v.get(key).is_some(), "{key}");
+        }
+        assert_eq!(v["provenance"]["kind"], "auto");
+        assert_eq!(v["provenance"]["threshold"], "relative");
+        assert_eq!(v["provenance"]["noise_model"], "profile");
+        assert_eq!(v["reference_focus"], 24_028.0);
+        assert_eq!(v["depth"]["first_focus"], 24_028.0);
+        let ring = v["rings"][0].as_array().unwrap();
+        assert!(ring.len() >= 3 && ring.len() <= 256);
+        let back: SubjectJson = serde_json::from_value(v).unwrap();
+        assert_eq!(back, json);
+    }
+}

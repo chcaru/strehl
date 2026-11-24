@@ -57,6 +57,7 @@ pub mod softgate;
 #[path = "spatial-noise-floor.rs"]
 pub mod spatial_noise_floor;
 pub mod stack;
+pub mod subject;
 pub mod through_focus;
 pub mod warpmap;
 
