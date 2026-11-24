@@ -28,7 +28,7 @@ use eframe::egui::{self, Align2, Color32, Rect, Sense, TextureOptions, Ui};
 use super::flight::Failure;
 use super::follow::{FeedItem, Progress, Verdict};
 use super::planes::{
-    DeckSnapshot, ImageKind, PAIR_SHIFT, PlaneDeck, PlaneImage, TILE, TILE_RATIO, TileKey, TryKey,
+    DeckSnapshot, ImageKind, LOCAL_LIMIT, PAIR_SHIFT, PlaneDeck, PlaneImage, TILE, TileKey, TryKey,
 };
 use super::style::{self, ButtonKind, CapturePalette, Mark};
 
@@ -580,7 +580,7 @@ pub(crate) fn panel(
             }
         }
         if view.checks
-            && let Some(f) = image.findings.as_ref().filter(|f| !f.z2.is_empty())
+            && let Some(f) = image.findings.as_ref().filter(|f| !f.local.is_empty())
         {
             if view
                 .checks_tex
@@ -588,7 +588,7 @@ pub(crate) fn panel(
                 .is_none_or(|(id, _)| *id != image.id)
             {
                 let [gw, gh] = f.grid;
-                let limit = f.median * TILE_RATIO as f32;
+                let limit = LOCAL_LIMIT as f32;
                 // Warning colour where the tiles failed the group; in a group
                 // that passed, its highest tiles in a quiet ink.
                 let failed = f
@@ -601,11 +601,11 @@ pub(crate) fn panel(
                     palette.canvas_ink[1]
                 };
                 let pixels: Vec<Color32> = f
-                    .z2
+                    .local
                     .iter()
                     .map(|z| {
                         if z.is_finite() && *z >= limit && limit > 0.0 {
-                            let strength = ((z / limit).log2() / 2.0).clamp(0.0, 1.0);
+                            let strength = (z / limit).log2().clamp(0.0, 1.0);
                             color.gamma_multiply(if failed { 0.35 + 0.4 * strength } else { 0.25 })
                         } else {
                             Color32::TRANSPARENT
@@ -1056,14 +1056,11 @@ fn facts_ui(
                 .iter()
                 .map(|v| v[0].hypot(v[1]))
                 .fold(0.0, f64::max);
-            let over =
-                f.z2.iter()
-                    .filter(|z| f.median > 0.0 && **z >= f.median * TILE_RATIO as f32)
-                    .count();
+            let over = f.local.iter().filter(|z| **z >= LOCAL_LIMIT as f32).count();
             format!(
-                "Witness tiles {:.2}× median at p99 (limit {:.1}){} · pair shift {:.2} px (limit {:.1})",
-                f.ratio,
-                TILE_RATIO,
+                "Shots differ in places by {:.2} px at p99 (limit {:.2}){} · pair shift {:.2} px (limit {:.1})",
+                f.local_px.max(0.0),
+                LOCAL_LIMIT,
                 if over > 0 {
                     format!(", {over} over")
                 } else {

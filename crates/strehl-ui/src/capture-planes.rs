@@ -515,8 +515,11 @@ pub(crate) struct Findings {
     pub grid: [usize; 2],
     pub z2: Vec<f32>,
     pub median: f32,
-    /// p99 / median of the tiles' z^2 (the checker's tile ratio).
-    pub ratio: f64,
+    /// Per tile, how far the shots disagree there once each pair's
+    /// whole-group shift is taken out, photosites (`NaN`: too little
+    /// detail), and its p99: what the checker judges.
+    pub local: Vec<f32>,
+    pub local_px: f64,
     /// Witness pair shift per quadrant (TL, TR, BL, BR), photosites, both
     /// pairs, less the residual compensation the checker applies to the
     /// whole group (`residual[b] - residual[a]`): what it judges, by
@@ -526,8 +529,8 @@ pub(crate) struct Findings {
     pub mean_z2: f64,
 }
 
-/// Tile ratio above which the checker demotes a group.
-pub(crate) const TILE_RATIO: f64 = strehl_cli::pixel_shift_cmd::TILE_RATIO_TOLERANCE;
+/// Local disagreement above which the checker demotes a group (photosites).
+pub(crate) const LOCAL_LIMIT: f64 = strehl_cli::pixel_shift_cmd::LOCAL_TOLERANCE_PX;
 /// Witness pair shift the checker tolerates (photosites).
 pub(crate) const PAIR_SHIFT: f64 = strehl_cli::pixel_shift_cmd::PAIR_SHIFT_TOLERANCE_PX;
 
@@ -925,7 +928,7 @@ fn findings(frames: &[strehl_raw::Frame]) -> Findings {
         parities: c.parities,
         reason: ps::judge(&m, residual),
         retake: ps::retake_helps(&m, residual),
-        ratio: m.witness.as_ref().map_or(f64::NAN, |w| w.tile_ratio),
+        local_px: m.witness.as_ref().map_or(f64::NAN, |w| w.local_px),
         ..Findings::default()
     };
     if let Some(w) = w {
@@ -940,6 +943,7 @@ fn findings(frames: &[strehl_raw::Frame]) -> Findings {
         out.tile = w.tile;
         out.grid = w.tiles;
         out.z2 = w.tile_z2;
+        out.local = w.tile_local_px;
         // The checker judges each pair's shift less the members' measured
         // residual displacement (its default `ResidualMode::Compensate`).
         let comp: [[f64; 2]; 2] = std::array::from_fn(|p| {
@@ -1304,6 +1308,27 @@ impl FixtureSource {
                     .unwrap_or(f32::NAN),
             )
         };
+        // The same picture in photosites: about 0.1 px of noise, and the
+        // moved patch well over the limit.
+        let local: Vec<f32> = z2
+            .iter()
+            .map(|z| {
+                if *z > 2.0 {
+                    LOCAL_LIMIT as f32 * (z / 2.0).sqrt()
+                } else {
+                    0.1 * z.sqrt()
+                }
+            })
+            .collect();
+        // The fixture's frame is a few tiles across, so a moved patch is
+        // one tile: its p99 is the largest.
+        let local_px = {
+            let mut s = local.clone();
+            s.sort_by(f32::total_cmp);
+            let at = if motion { 1.0 } else { 0.99 };
+            s.get(((s.len().max(1) - 1) as f64 * at) as usize)
+                .map_or(f64::NAN, |v| f64::from(*v))
+        };
         let misregistered = r.contains("misregistered");
         let shift = if misregistered { 0.21 } else { 0.04 };
         Findings {
@@ -1320,7 +1345,6 @@ impl FixtureSource {
             tile,
             grid: if parities { grid } else { [0, 0] },
             median: q(0.5) as f32,
-            ratio: q(0.99) / q(0.5),
             quadrants: [
                 [[shift, -0.02], [0.03, shift * 0.8]],
                 [[shift * 0.9, 0.01], [0.02, shift]],
@@ -1330,6 +1354,8 @@ impl FixtureSource {
             pair_shift: [[shift, -0.01], [0.01, shift * 0.85]],
             mean_z2: q(0.5),
             z2,
+            local,
+            local_px,
         }
     }
 }

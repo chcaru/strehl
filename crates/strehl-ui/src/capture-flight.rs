@@ -435,7 +435,11 @@ pub(crate) enum Failure {
     /// "witness pairs misregistered" only once this scene's measured
     /// sensor-shift residuals are applied.
     Correction,
-    /// "offsets ... do not cover the four CFA parities".
+    /// "offsets ... do not cover the four CFA parities", measured offsets:
+    /// a shot slipped by a whole photosite (retaken).
+    Slip,
+    /// "offsets ... do not cover the four CFA parities", offsets not
+    /// measurable.
     Pattern,
     /// "too little scene structure".
     Structure,
@@ -474,7 +478,11 @@ impl Failure {
                     Self::Correction
                 }
             } else if reason.contains("CFA parities") {
-                Self::Pattern
+                if item.retake {
+                    Self::Slip
+                } else {
+                    Self::Pattern
+                }
             } else if reason.contains("scene structure") {
                 Self::Structure
             } else if reason.contains("sensor buffer") {
@@ -494,6 +502,7 @@ impl Failure {
             Self::Motion => "Shots differ in places",
             Self::OutOfLine => "Shots out of line",
             Self::Correction => "Shift correction off",
+            Self::Slip => "Shot slipped",
             Self::Pattern => "Shift pattern off",
             Self::Structure => "Too little detail",
             Self::Edge => "Shifts leave the sensor",
@@ -510,6 +519,7 @@ impl Failure {
             Self::Motion => "Something moved, or focus slipped.",
             Self::OutOfLine => "The four shots do not line up.",
             Self::Correction => "The shots agree; the correction does not.",
+            Self::Slip => "A shot slipped a whole pixel, off the four colour sites.",
             Self::Pattern => "A shot landed off the four colour sites.",
             Self::Structure => "Too little detail to measure the shifts.",
             Self::Edge => "Shifted photosites fall off the sensor.",
@@ -558,6 +568,9 @@ impl Failure {
             }
             Self::Levels => {
                 "Retaken, up to two times: the light or exposure changed between the shots."
+            }
+            Self::Slip => {
+                "Retaken, up to two times: the picture moved a whole pixel between the shots, so another try can land right."
             }
             Self::Unreadable => "Retaken, up to two times: another try can be read.",
             Self::Forced => "Retaken: asked for by STREHL_FOLLOW_RETAKE_PLANES.",

@@ -1,0 +1,35 @@
+== 1 s, every group: 95 groups checked; new verdicts {'slip/pattern': 40, 'pass': 55}
+   groups with a witness: 55; offset median 0.333 px, 90th 0.571, largest 0.706
+   old tile rule fails 39; new local rule fails 0 (local tolerance 0.510 px)
+   offset 0.00-0.15 px:   8 groups | old ratio median 1.52, largest 3.27, fails 1 | local p99 median 0.208 px, largest 0.433, fails 0
+   offset 0.15-0.25 px:  11 groups | old ratio median 1.94, largest 2.99, fails 2 | local p99 median 0.207 px, largest 0.413, fails 0
+   offset 0.25-0.40 px:  18 groups | old ratio median 3.88, largest 5.13, fails 18 | local p99 median 0.250 px, largest 0.461, fails 0
+   offset 0.40-1.00 px:  18 groups | old ratio median 6.28, largest 11.36, fails 18 | local p99 median 0.299 px, largest 0.433, fails 0
+   fit: local p99 = 0.200 + 0.227 x offset (px); correlation 0.47
+   largest local p99: plane 17 ptp-10398-86 0.461 px (offset 0.35, ratio 4.08, pass); plane 23 ptp-10398-91 0.461 px (offset 0.36, ratio 4.49, pass); plane 17 ptp-10398-97 0.433 px (offset 0.14, ratio 3.27, pass); plane 17 ptp-10398-64 0.433 px (offset 0.62, ratio 10.53, pass); plane 14 ptp-10398-59 0.413 px (offset 0.23, ratio 2.94, pass); plane 5 ptp-10398-34 0.409 px (offset 0.63, ratio 10.62, pass)
+== 1/4 s, every group: 190 groups checked; new verdicts {'slip/pattern': 27, 'pass': 156, 'local': 6, 'misregistered': 1}
+   groups with a witness: 163; offset median 0.288 px, 90th 0.523, largest 0.959
+   old tile rule fails 14; new local rule fails 6 (local tolerance 0.510 px)
+   offset 0.00-0.15 px:  25 groups | old ratio median 1.28, largest 1.30, fails 0 | local p99 median 0.205 px, largest 0.285, fails 0
+   offset 0.15-0.25 px:  36 groups | old ratio median 1.31, largest 1.51, fails 0 | local p99 median 0.210 px, largest 0.757, fails 1
+   offset 0.25-0.40 px:  61 groups | old ratio median 1.53, largest 2.31, fails 0 | local p99 median 0.258 px, largest 0.361, fails 0
+   offset 0.40-1.00 px:  41 groups | old ratio median 2.17, largest 5.26, fails 14 | local p99 median 0.364 px, largest 0.626, fails 5
+   fit: local p99 = 0.144 + 0.413 x offset (px); correlation 0.80
+   largest local p99: plane 147 ptp-10285-209 0.757 px (offset 0.16, ratio 1.49, local); plane 37 ptp-10285-72 0.626 px (offset 0.96, ratio 5.26, local); plane 61 ptp-10285-102 0.583 px (offset 0.85, ratio 4.20, local); plane 24 ptp-10285-56 0.572 px (offset 0.95, ratio 4.47, local); plane 18 ptp-10285-44 0.553 px (offset 0.82, ratio 3.31, local); plane 17 ptp-10285-49 0.518 px (offset 0.86, ratio 3.59, local)
+== 1 s, groups the stack uses: 24 groups checked; new verdicts {'slip/pattern': 4, 'pass': 20}
+   groups with a witness: 20; offset median 0.179 px, 90th 0.370, largest 0.602
+   old tile rule fails 4; new local rule fails 0 (local tolerance 0.510 px)
+   offset 0.00-0.15 px:   8 groups | old ratio median 1.52, largest 3.27, fails 1 | local p99 median 0.208 px, largest 0.433, fails 0
+   offset 0.15-0.25 px:   9 groups | old ratio median 1.88, largest 2.42, fails 0 | local p99 median 0.205 px, largest 0.213, fails 0
+   offset 0.25-0.40 px:   1 groups | old ratio median 4.49, largest 4.49, fails 1 | local p99 median 0.405 px, largest 0.405, fails 0
+   offset 0.40-1.00 px:   2 groups | old ratio median 7.66, largest 8.67, fails 2 | local p99 median 0.280 px, largest 0.299, fails 0
+   fit: local p99 = 0.197 + 0.186 x offset (px); correlation 0.37
+   largest local p99: plane 17 ptp-10398-97 0.433 px (offset 0.14, ratio 3.27, pass); plane 7 ptp-10398-23 0.405 px (offset 0.36, ratio 4.49, pass); plane 21 ptp-10398-90 0.299 px (offset 0.60, ratio 8.67, pass); plane 20 ptp-10398-80 0.269 px (offset 0.12, ratio 1.92, pass); plane 15 ptp-10398-63 0.260 px (offset 0.49, ratio 6.66, pass); plane 3 ptp-10398-6 0.215 px (offset 0.11, ratio 1.45, pass)
+== weevil, groups the stack uses: 199 groups checked; new verdicts {'pass': 198, 'misregistered': 1}
+   groups with a witness: 199; offset median 0.103 px, 90th 0.190, largest 0.316
+   old tile rule fails 0; new local rule fails 0 (local tolerance 0.510 px)
+   offset 0.00-0.15 px: 154 groups | old ratio median 1.22, largest 1.47, fails 0 | local p99 median 0.199 px, largest 0.268, fails 0
+   offset 0.15-0.25 px:  41 groups | old ratio median 1.31, largest 2.00, fails 0 | local p99 median 0.218 px, largest 0.303, fails 0
+   offset 0.25-0.40 px:   4 groups | old ratio median 1.61, largest 2.06, fails 0 | local p99 median 0.326 px, largest 0.341, fails 0
+   fit: local p99 = 0.156 + 0.378 x offset (px); correlation 0.50
+   largest local p99: plane 83 ptp-9869-109 0.341 px (offset 0.27, ratio 2.06, pass); plane 76 ptp-9869-102 0.333 px (offset 0.31, ratio 1.60, pass); plane 75 ptp-9869-101 0.319 px (offset 0.32, ratio 1.56, pass); plane 60 ptp-9869-86 0.303 px (offset 0.23, ratio 1.68, pass); plane 45 ptp-9869-71 0.287 px (offset 0.26, ratio 1.62, pass); plane 64 ptp-9869-90 0.268 px (offset 0.14, ratio 1.25, pass)

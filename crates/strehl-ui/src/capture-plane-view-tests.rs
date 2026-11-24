@@ -307,7 +307,11 @@ fn the_panel_follows_the_newest_and_show_picks_a_try() {
         t.iter().any(|s| s.starts_with("Shots differ in places")),
         "{t:?}"
     );
-    assert!(t.iter().any(|s| s.starts_with("Witness tiles ")), "{t:?}");
+    assert!(
+        t.iter()
+            .any(|s| s.starts_with("Shots differ in places by ")),
+        "{t:?}"
+    );
     assert!(t.iter().any(|s| s.starts_with("Newest · ")), "{t:?}");
     // ← goes to plane 51 (its last try).
     run(

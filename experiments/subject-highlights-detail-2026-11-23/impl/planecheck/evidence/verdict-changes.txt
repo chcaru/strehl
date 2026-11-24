@@ -1,0 +1,57 @@
+== 1 s, groups the stack uses: 24 groups; 4 verdicts change; parity failures now asking a retake: 4
+   plane 7 ptp-10398-23: tiles (ratio 4.49) -> pass
+   plane 15 ptp-10398-63: tiles (ratio 6.66) -> pass
+   plane 17 ptp-10398-97: tiles (ratio 3.27) -> pass
+   plane 21 ptp-10398-90: tiles (ratio 8.67) -> pass
+== weevil, groups the stack uses: 199 groups; 0 verdicts change; parity failures now asking a retake: 0
+== 1 s, every group: 95 groups; 39 verdicts change; parity failures now asking a retake: 40
+   plane 1 ptp-10398-3: tiles (ratio 4.28) -> pass
+   plane 4 ptp-10398-9: tiles (ratio 3.81) -> pass
+   plane 4 ptp-10398-11: tiles (ratio 3.92) -> pass
+   plane 6 ptp-10398-12: tiles (ratio 3.09) -> pass
+   plane 6 ptp-10398-16: tiles (ratio 3.70) -> pass
+   plane 8 ptp-10398-19: tiles (ratio 4.07) -> pass
+   plane 7 ptp-10398-23: tiles (ratio 4.49) -> pass
+   plane 9 ptp-10398-24: tiles (ratio 2.78) -> pass
+   plane 9 ptp-10398-29: tiles (ratio 5.55) -> pass
+   plane 11 ptp-10398-32: tiles (ratio 2.88) -> pass
+   plane 5 ptp-10398-34: tiles (ratio 10.62) -> pass
+   plane 12 ptp-10398-37: tiles (ratio 6.53) -> pass
+   plane 8 ptp-10398-45: tiles (ratio 3.94) -> pass
+   plane 14 ptp-10398-48: tiles (ratio 4.39) -> pass
+   plane 14 ptp-10398-54: tiles (ratio 5.89) -> pass
+   plane 8 ptp-10398-55: tiles (ratio 5.01) -> pass
+   plane 11 ptp-10398-56: tiles (ratio 3.09) -> pass
+   plane 14 ptp-10398-59: tiles (ratio 2.94) -> pass
+   plane 12 ptp-10398-62: tiles (ratio 10.74) -> pass
+   plane 15 ptp-10398-63: tiles (ratio 6.66) -> pass
+   plane 17 ptp-10398-64: tiles (ratio 10.53) -> pass
+   plane 14 ptp-10398-65: tiles (ratio 5.13) -> pass
+   plane 8 ptp-10398-66: tiles (ratio 6.36) -> pass
+   plane 11 ptp-10398-67: tiles (ratio 5.33) -> pass
+   plane 12 ptp-10398-68: tiles (ratio 3.30) -> pass
+   plane 17 ptp-10398-71: tiles (ratio 2.77) -> pass
+   plane 14 ptp-10398-75: tiles (ratio 3.82) -> pass
+   plane 19 ptp-10398-76: tiles (ratio 3.62) -> pass
+   plane 17 ptp-10398-77: tiles (ratio 11.36) -> pass
+   plane 14 ptp-10398-79: tiles (ratio 6.21) -> pass
+   plane 19 ptp-10398-81: tiles (ratio 10.59) -> pass
+   plane 19 ptp-10398-85: tiles (ratio 2.99) -> pass
+   plane 17 ptp-10398-86: tiles (ratio 4.08) -> pass
+   plane 22 ptp-10398-87: tiles (ratio 5.98) -> pass
+   plane 19 ptp-10398-88: tiles (ratio 4.39) -> pass
+   plane 17 ptp-10398-89: tiles (ratio 5.24) -> pass
+   plane 21 ptp-10398-90: tiles (ratio 8.67) -> pass
+   plane 23 ptp-10398-91: tiles (ratio 4.49) -> pass
+   plane 17 ptp-10398-97: tiles (ratio 3.27) -> pass
+== 1/4 s, every group: 190 groups; 10 verdicts change; parity failures now asking a retake: 27
+   plane 19 ptp-10285-45: tiles (ratio 3.04) -> pass
+   plane 20 ptp-10285-47: tiles (ratio 2.76) -> pass
+   plane 21 ptp-10285-51: tiles (ratio 3.31) -> pass
+   plane 30 ptp-10285-63: tiles (ratio 2.94) -> pass
+   plane 34 ptp-10285-68: tiles (ratio 2.71) -> pass
+   plane 57 ptp-10285-96: tiles (ratio 3.43) -> pass
+   plane 67 ptp-10285-109: tiles (ratio 2.94) -> pass
+   plane 69 ptp-10285-112: tiles (ratio 2.64) -> pass
+   plane 99 ptp-10285-152: tiles (ratio 2.71) -> pass
+   plane 147 ptp-10285-209: pass -> witness tiles disagree locally by 0.76 px at p99 (limit 0.51) (local 0.76 px)
