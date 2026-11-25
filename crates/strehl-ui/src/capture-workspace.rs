@@ -351,11 +351,18 @@ impl CaptureWorkspace {
             } if idle && shots == Some(1) => {
                 let survey = shutters.is_some();
                 let sequence = host.sequence_id.unwrap_or(0) + 1;
-                let spacing = positions
-                    .windows(2)
-                    .map(|w| w[0].abs_diff(w[1]))
-                    .next()
-                    .unwrap_or(1);
+                // The dense cluster's step: the two-shutter survey takes
+                // pairs at one position (owner, 2026-11-24: their gap of 0
+                // made the second round a survey 1 unit apart).
+                let spacing = if survey {
+                    tools::SURVEY_SPACING
+                } else {
+                    positions
+                        .windows(2)
+                        .map(|w| w[0].abs_diff(w[1]))
+                        .find(|d| *d > 0)
+                        .unwrap_or(1)
+                };
                 match s
                     .request(Command::CapturePositions {
                         positions,
@@ -480,6 +487,7 @@ impl CaptureWorkspace {
                                         end,
                                         spacing,
                                         tools::SURVEY_PLANES,
+                                        host.lens_travel.range(),
                                     ),
                                     shutters: None,
                                     round: 1,
@@ -596,13 +604,20 @@ impl CaptureWorkspace {
                 let short = plan::shorter_shutter(&e.shutter_options, base, 4.0)?;
                 (short != base).then_some((base, short))
             });
+        let reach = s.host.lens_travel.range();
         let (positions, shutters) = match two {
             Some((base, short)) => {
-                let (p, s) = tools::two_shutter_survey(start, end, base, short);
+                let (p, s) = tools::two_shutter_survey(start, end, base, short, reach);
                 (p, Some(s))
             }
             None => (
-                tools::survey_positions(start, end, tools::SURVEY_SPACING, tools::SURVEY_PLANES),
+                tools::survey_positions(
+                    start,
+                    end,
+                    tools::SURVEY_SPACING,
+                    tools::SURVEY_PLANES,
+                    reach,
+                ),
                 None,
             ),
         };

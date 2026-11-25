@@ -70,6 +70,9 @@ pub(crate) struct RailInputs<'a> {
     pub editable: bool,
     /// The rail's keys are live (the station has the keyboard).
     pub keys: bool,
+    /// The lens's ends as the host found them (`None` where not met). The
+    /// travel past an end is shaded and a click or drag stays inside.
+    pub ends: (Option<u16>, Option<u16>),
 }
 
 /// What the user asked of the rail.
@@ -1184,17 +1187,22 @@ impl FocusRail {
             .map(|(g, _)| g)
         };
         let axis = Axis::new(chart, view);
+        let (near, far) = (
+            inputs.ends.0.unwrap_or(0),
+            inputs.ends.1.unwrap_or(u16::MAX),
+        );
+        let reach = |p: u16| p.clamp(near, far.max(near));
         if response.drag_started()
             && let Some(pos) = ui.input(|i| i.pointer.press_origin())
         {
             match grip_at(&axis, pos) {
-                Some(grip) => self.drag = Some((grip, axis.snap(pos.x))),
+                Some(grip) => self.drag = Some((grip, reach(axis.snap(pos.x)))),
                 None => self.zoom.pan = Some((view, pos.x)),
             }
         }
         if let Some(pos) = response.interact_pointer_pos() {
             if let Some((grip, _)) = self.drag {
-                self.drag = Some((grip, axis.snap(pos.x)));
+                self.drag = Some((grip, reach(axis.snap(pos.x))));
             }
             if let Some((from, x0)) = self.zoom.pan {
                 let moved = from.panned(-f64::from(pos.x - x0) * from.span / f64::from(axis.width));
@@ -1224,7 +1232,7 @@ impl FocusRail {
             && let Some(pos) = response.interact_pointer_pos()
             && grip_at(&axis, pos).is_none()
         {
-            intents.push(RailIntent::Focus(axis.snap(pos.x)));
+            intents.push(RailIntent::Focus(reach(axis.snap(pos.x))));
         }
         let pointer = response.interact_pointer_pos().or(response.hover_pos());
         if self.zoom.pan.is_some() {
@@ -1275,6 +1283,42 @@ impl FocusRail {
             .add(Shape::mesh(mesh.clone()));
         }
         let painter = ui.painter_at(chart);
+        // The lens's ends (2026-11-24: the rail offered travel past them).
+        for (end, outward) in [(inputs.ends.0, -1.0f32), (inputs.ends.1, 1.0)] {
+            let Some(end) = end else { continue };
+            let x = axis.xf(f64::from(end));
+            let (from, to) = if outward > 0.0 {
+                (x, axis.right() + 1.0)
+            } else {
+                (axis.left - 1.0, x)
+            };
+            let (from, to) = (from.max(axis.left - 1.0), to.min(axis.right() + 1.0));
+            if to > from {
+                painter.rect_filled(
+                    Rect::from_x_y_ranges(from..=to, chart.top()..=chart.bottom()),
+                    0.0,
+                    palette.ink.gamma_multiply(0.11),
+                );
+            }
+            if x >= axis.left - 0.5 && x <= axis.right() + 0.5 {
+                painter.line_segment(
+                    [egui::pos2(x, chart.top()), egui::pos2(x, chart.bottom())],
+                    Stroke::new(1.0_f32, palette.ink3),
+                );
+                // In the shaded travel past the end, clear of the handles'
+                // labels at the top and the scale at the bottom.
+                style::paint_job(
+                    &painter,
+                    egui::pos2(x + outward * 5.0, chart.center().y),
+                    if outward > 0.0 {
+                        Align2::LEFT_CENTER
+                    } else {
+                        Align2::RIGHT_CENTER
+                    },
+                    style::caps_job("lens end", 10.0, palette.ink2),
+                );
+            }
+        }
         let top_gap = chart.top() + 22.0;
         let label = |pos: Pos2, anchor: Align2, text: &str, color: Color32| {
             style::paint_job(&painter, pos, anchor, style::caps_job(text, 10.0, color));

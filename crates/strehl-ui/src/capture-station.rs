@@ -1211,6 +1211,7 @@ impl CaptureWorkspace {
             can_use_survey: host.suggestion.as_ref().is_some_and(|s| !s.clipped),
             editable: s.fresh() && host.editable && !s.pending && self.focus_flight.is_none(),
             keys: !self.station.glance && !self.schedule_ui.editing(),
+            ends: (host.lens_travel.near, host.lens_travel.far),
         };
         let intents = self.station.rail.show(ui, &inputs, &palette);
         for intent in intents {

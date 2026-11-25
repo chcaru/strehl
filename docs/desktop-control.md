@@ -256,7 +256,10 @@ workspace does not stop the Pi or the background receiver.
 single RAWs across the marked range and measures how far detail stays sharp: on a
 host with `exposure_tiers`, a survey at two shutters read by `strehl survey`
 (also the subject, its depth and the exposure advice), else 25 RAWs at one
-shutter read by `strehl focus-step`. It deletes the survey and puts the camera's
+shutter read by `strehl focus-step`. The dense cluster (25 positions 8 units
+apart) is centred on the marks and runs past them when the range is shorter,
+inside the lens's known ends; when nothing is measurable a second survey at four
+times the spacing follows. It deletes the survey and puts the camera's
 pixel-shift mode back, also when it fails or is stopped (it then waits for the
 host and reports the failure once four-shot is set again); the host leaves the
 camera at the shutter it found. `capture.tools.calibration` reports its `stage`

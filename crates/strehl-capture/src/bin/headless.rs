@@ -66,6 +66,8 @@ fn main() -> Result<()> {
         )
     };
     let worker = Arc::new(worker);
+    // The lens's ends as found, kept across restarts (2026-11-24).
+    worker.keep_lens_travel(config.transfer.state_directory.join("lens-travel.json"));
     let mut session = Session::new(
         worker.clone(),
         Arc::new(Mutex::new(Controls::new(config.journal_directory))),

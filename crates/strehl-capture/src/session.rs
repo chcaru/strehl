@@ -1,7 +1,7 @@
 //! Shared desktop/browser controls. The Worker remains the sole camera owner.
 use crate::{
     backend::property,
-    model::{Phase, Plan, Roi},
+    model::{LensTravel, Phase, Plan, Roi},
     power::Outlet,
     schedule::{self, Recipe, StackPower, Stage, Store},
     timing,
@@ -194,6 +194,8 @@ impl Session {
         };
         state["schedule"] = json!(schedule);
         state["error_correction"] = json!(s.error_correction);
+        // The lens's ends as found (`near`, `far`; null until met).
+        state["lens_travel"] = json!(s.lens_travel);
         // A capture's start (light warm-up, approach), while it runs.
         if let Some(starting) = s.starting.as_ref().filter(|_| s.phase.active()) {
             state["starting"] = starting.json();
@@ -217,6 +219,9 @@ impl Session {
             // Plan X3: `highlight` groups, `shutters` per position and
             // `queue_pass` (impl/tiers.md).
             "exposure_tiers": true,
+            // `lens_travel`; a move past an end stops there and the
+            // controller stays ready; captures past a known end are refused.
+            "lens_travel": true,
         });
         // Retakes (h-retake): the setting, the planes asked for during the
         // capture and not yet taken, and the retakes after it while they run.
@@ -560,11 +565,15 @@ impl Session {
                         let target = u16::try_from(i32::from(position) + delta)
                             .context("Focus move crosses the lens limit")?;
                         action = Some(Action::Move {
-                            target,
+                            target: s.lens_travel.keep_inside(position, target),
                             settle_ms: c.plan.settle_ms,
                         });
                     }
                     Command::Focus { target } => {
+                        let target = match s.position {
+                            Some(from) => s.lens_travel.keep_inside(from, target),
+                            None => target,
+                        };
                         action = Some(Action::Move {
                             target,
                             settle_ms: 100,
@@ -654,6 +663,7 @@ impl Session {
                     Command::Start {} => {
                         ensure!(c.start_set && c.end_set, "Mark both focus bounds first");
                         c.plan.validate()?;
+                        within_travel(&s.lens_travel, &c.plan, &c.plan.positions()?)?;
                         self.worker.request_resume();
                         action = Some(Action::Capture {
                             plan: c.plan.clone(),
@@ -694,6 +704,7 @@ impl Session {
                             plan.end = positions.last().copied().unwrap_or(0);
                         }
                         crate::worker::validate_positions(&plan, &positions)?;
+                        within_travel(&s.lens_travel, &plan, &positions)?;
                         self.worker.request_resume();
                         action = Some(Action::Capture {
                             plan,
@@ -937,6 +948,27 @@ pub enum Command {
         x: u16,
         y: u16,
     },
+}
+
+/// A capture's positions and its approach move inside the lens's known
+/// ends: a plane past one could never be reached, and the capture would
+/// stop there.
+fn within_travel(travel: &LensTravel, plan: &Plan, positions: &[u16]) -> Result<()> {
+    if let Some((p, side, end)) = travel.outside(positions.iter().copied()) {
+        anyhow::bail!(
+            "Focus {p} is past the lens's {side} end ({end}): move the mark inside the lens's travel"
+        );
+    }
+    if let Some(first) = positions.first()
+        && let Ok(from) =
+            u16::try_from(i32::from(*first) - plan.direction() * i32::from(plan.approach))
+        && let Some((_, side, end)) = travel.outside([from])
+    {
+        anyhow::bail!(
+            "The approach to {first} would start at {from}, past the lens's {side} end ({end}): shorten Approach or move the start mark"
+        );
+    }
+    Ok(())
 }
 
 /// Whether the camera offers `value` for property `name` (its `allowed` list).
@@ -1637,6 +1669,64 @@ mod tests {
             assert!(Instant::now() < end, "{:?}: {}", s.phase, s.message);
             std::thread::sleep(Duration::from_millis(10));
         }
+    }
+    /// Owner, 2026-11-24: the rail offered focus past the lens's end, and a
+    /// move there faulted the controller. The end is found and kept; a
+    /// click past it from inside stops at it, and a capture past it is
+    /// refused before anything moves.
+    #[test]
+    fn moves_and_captures_keep_to_the_lens_ends() {
+        let temp = tempfile::tempdir().unwrap();
+        let worker = Worker::with_factory(Box::new(|| {
+            Ok(Box::new(crate::backend::Demo {
+                delay_ms: 0,
+                travel: (1509, 63487),
+                ..crate::backend::Demo::default()
+            }))
+        }));
+        let session = Session::new(
+            Arc::new(worker),
+            Arc::new(Mutex::new(Controls::new(temp.path().into()))),
+            true,
+        );
+        session
+            .dispatch(request(&session, "connect-01", Command::Connect {}))
+            .unwrap();
+        until(&session, |s| s.phase == Phase::Ready && !s.command_pending);
+        assert_eq!(session.state()["capabilities"]["lens_travel"], true);
+        assert_eq!(session.state()["lens_travel"]["far"], Value::Null);
+        let go = |id: &str, command: Command| {
+            session.dispatch(request(&session, id, command)).unwrap();
+            until(&session, |s| s.phase == Phase::Ready && !s.command_pending)
+        };
+        go("focus-63400", Command::Focus { target: 63400 });
+        let s = go("jog-up-0128", Command::Jog { delta: 128 });
+        assert_eq!(s.position, Some(63487));
+        assert_eq!(session.state()["lens_travel"]["far"], 63487);
+        go("focus-61000", Command::Focus { target: 61000 });
+        let s = go("focus-65000", Command::Focus { target: 65000 });
+        assert_eq!(s.position, Some(63487));
+        assert_eq!(
+            s.message, "Focus settled",
+            "kept at the end, not sent past it"
+        );
+        go("focus-63400-b", Command::Focus { target: 63400 });
+        let s = go("jog-up-0128-b", Command::Jog { delta: 128 });
+        assert_eq!(s.position, Some(63487));
+        assert_eq!(s.message, "Focus settled", "a jog is kept at the end too");
+        let refused = session.dispatch(request(
+            &session,
+            "survey-past-end",
+            Command::CapturePositions {
+                positions: vec![63400, 63500],
+                keep_power_on: false,
+                kind: PositionsKind::Positions,
+                shutters: None,
+            },
+        ));
+        let why = format!("{:#}", refused.unwrap_err());
+        assert!(why.contains("past the lens's far end (63487)"), "{why}");
+        assert_eq!(session.worker.snapshot().phase, Phase::Ready);
     }
     #[test]
     fn two_controllers_cannot_replay_capture_or_overwrite_stale_marks() {

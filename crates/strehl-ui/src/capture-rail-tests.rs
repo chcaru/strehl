@@ -24,6 +24,7 @@ fn inputs<'a>(samples: &'a [SurveySample], flight: Option<&'a FlightTicks>) -> R
         can_use_survey: true,
         editable: true,
         keys: true,
+        ends: (None, None),
     }
 }
 
@@ -224,6 +225,42 @@ fn ticks_are_pooled_to_two_pixel_columns() {
     assert_eq!(p.first(), Some(&37_100));
     assert_eq!(p.last(), Some(&37_764));
     assert_eq!(p.len(), 96, "the host's own plan: 664 units at step 7");
+}
+
+/// Owner, 2026-11-24: the rail offered travel past the lens's end. With the
+/// end known, a click past it asks for the end itself, and one inside is
+/// unchanged.
+#[test]
+fn a_click_past_the_lens_end_asks_for_the_end() {
+    let ctx = egui::Context::default();
+    let s = samples();
+    let mut rail = FocusRail::default();
+    let input = RailInputs {
+        ends: (Some(37_200), Some(37_700)),
+        ..inputs(&s, None)
+    };
+    frame(&ctx, &mut rail, &input, 0.0, vec![]);
+    let chart = Rect::from_min_max(egui::pos2(0.0, HEAD), egui::pos2(1332.0, 135.0));
+    let axis = Axis::new(chart, RailView::of(domain(&input)));
+    let mut time = 0.1;
+    let mut click = |rail: &mut FocusRail, p: u16| {
+        let at = egui::pos2(axis.x(p), 90.0);
+        let mut all = Vec::new();
+        for events in [
+            vec![Event::PointerMoved(at), button(at, true)],
+            vec![button(at, false)],
+        ] {
+            all.extend(frame(&ctx, rail, &input, time, events).1);
+            time += 0.05;
+        }
+        all
+    };
+    assert_eq!(click(&mut rail, 37_740), [RailIntent::Focus(37_700)]);
+    assert_eq!(click(&mut rail, 37_140), [RailIntent::Focus(37_200)]);
+    assert!(matches!(
+        click(&mut rail, 37_400).as_slice(),
+        [RailIntent::Focus(p)] if p.abs_diff(37_400) <= 2
+    ));
 }
 
 /// Dragging the End handle asks to move the bound there on release; a click

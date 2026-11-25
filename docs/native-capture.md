@@ -230,6 +230,20 @@ a desktop sends a new field only after reading its flag:
   does not hold it, and the desktop does not follow it, list it as a stack or hand
   it to Projects; it reads the RAW's clipped share and shadow level instead. A
   burst or retake omits `kind`, so older controllers accept it as before.
+- `capabilities.lens_travel` (2026-11-24): `lens_travel {near, far}`, the ends
+  the lens stopped at when a manual move (jog, focus, a mark visited) was sent
+  past them; null where an end has not been met. The camera's focus property
+  admits 0 to 65535 whatever the lens; the owner's lens travels 1509 to 63487
+  (MEASURED, `experiments/capture-fixes-2026-11-24/focus-limits.md`). A move that
+  stops short now reports where the lens stopped after 1.5 s of a still readback
+  and leaves the controller ready (it used to wait 10 s and fault). The ends are
+  kept in `lens-travel.json` in the state directory; a jog or focus from inside
+  the travel stops at a known end, one from the end itself goes to the lens as
+  asked (another lens may travel further: landing beyond moves the end out), and
+  `start`/`capture_positions` with a position or approach past a known end are
+  refused. In a capture, a plane the lens does not reach is tried once more
+  through the approach move (`focus_retry`); a retake that cannot reach focus
+  keeps the plane's last group and the run goes on (`retake_abandoned`).
 
 The desktop lists stopped captures (`result.json` outcome `stopped` or
 `uncertain`, at least one RAW saved on this PC) beside the completed ones as

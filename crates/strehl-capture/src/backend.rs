@@ -12,6 +12,38 @@ use std::{
     time::{Duration, Instant},
 };
 
+/// A focus move the lens stopped short of, and stayed short of: the end of
+/// its travel, or a stall. Nothing was exposed.
+///
+/// MEASURED (2026-11-24, A7CR and the owner's lens; see
+/// `experiments/capture-fixes-2026-11-24/focus-limits.md`): the lens travels
+/// 1509 to 63487, the same after a power cycle. A target past either end
+/// leaves the lens at the end, the camera connected and the readback still;
+/// the move used to wait out its 10 s deadline and fault the controller.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct LensStopped {
+    /// Where the move began, where it was sent and where the lens stays.
+    pub from: u16,
+    pub target: u16,
+    pub at: u16,
+}
+impl LensStopped {
+    /// The move went towards higher focus numbers (the rail's Far side).
+    pub fn towards_far(&self) -> bool {
+        self.target > self.from
+    }
+}
+impl std::fmt::Display for LensStopped {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "The lens stopped at {} and went no further towards {}; no exposure",
+            self.at, self.target
+        )
+    }
+}
+impl std::error::Error for LensStopped {}
+
 pub struct Preview {
     pub frame: u64,
     pub rgb: RgbImage,
@@ -421,6 +453,15 @@ impl Camera for Native {
             &format!("focus\t{target}\t{settle_ms}"),
             15 + u64::from(settle_ms).div_ceil(1000),
         )?;
+        if value["stopped_short"] == true {
+            let read = |k: &str| value[k].as_u64().and_then(|v| u16::try_from(v).ok());
+            return Err(LensStopped {
+                from: read("before").unwrap_or(target),
+                target,
+                at: read("readback").context("A stopped focus move without its readback")?,
+            }
+            .into());
+        }
         ensure!(
             value["readback"].as_u64() == Some(u64::from(target)),
             "Focus did not read back the requested position; capture stopped"
@@ -533,6 +574,10 @@ pub struct Demo {
     pub fail_preview: bool,
     pub fail_focus_after: Option<u32>,
     pub focus_calls: u32,
+    /// The simulated lens's travel: a target outside stops at the end.
+    pub travel: (u16, u16),
+    /// Targets the simulated lens stalls a unit short of, once each.
+    pub stalls: Vec<u16>,
 }
 impl Default for Demo {
     fn default() -> Self {
@@ -548,6 +593,8 @@ impl Default for Demo {
             fail_preview: false,
             fail_focus_after: None,
             focus_calls: 0,
+            travel: (0, u16::MAX),
+            stalls: Vec::new(),
         }
     }
 }
@@ -605,7 +652,24 @@ impl Camera for Demo {
         self.focus_calls += 1;
         thread::sleep(Duration::from_millis(self.delay_ms.min(60)));
         let before = self.position;
-        self.position = target;
+        let mut at = target.clamp(self.travel.0, self.travel.1);
+        if let Some(i) = self.stalls.iter().position(|&t| t == target) {
+            self.stalls.remove(i);
+            at = if target > before {
+                target - 1
+            } else {
+                target + 1
+            };
+        }
+        self.position = at;
+        if at != target {
+            return Err(LensStopped {
+                from: before,
+                target,
+                at,
+            }
+            .into());
+        }
         Ok(json!({"requested":target,"before":before,"readback":target,"completion":"simulated"}))
     }
     fn capture(&mut self, _timeout_s: u32) -> Result<Value> {

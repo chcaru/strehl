@@ -22,6 +22,85 @@ pub struct Plan {
     pub highlight: Option<Highlight>,
 }
 
+/// The lens's travel as found: the ends it stopped at when sent past them,
+/// widened when it later lands beyond one (another lens, or a stall taken
+/// for an end). `None` where an end has not been met; the camera's own
+/// property admits 0 to 65535 whatever the lens (MEASURED 2026-11-24: the
+/// owner's lens travels 1509 to 63487).
+#[derive(Clone, Copy, Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
+pub struct LensTravel {
+    /// The lowest focus number the lens reaches (the rail's Near end).
+    pub near: Option<u16>,
+    /// The highest (the rail's Far end).
+    pub far: Option<u16>,
+}
+
+impl LensTravel {
+    /// A manual move stopped short at `at` going towards Far (or Near):
+    /// that end. True when it changed.
+    pub fn stopped(&mut self, towards_far: bool, at: u16) -> bool {
+        let end = if towards_far {
+            &mut self.far
+        } else {
+            &mut self.near
+        };
+        let changed = *end != Some(at);
+        *end = Some(at);
+        changed
+    }
+    /// The lens landed at `p`: an end it is beyond moves out to it. True
+    /// when it changed.
+    pub fn landed(&mut self, p: u16) -> bool {
+        let mut changed = false;
+        if self.far.is_some_and(|f| p > f) {
+            self.far = Some(p);
+            changed = true;
+        }
+        if self.near.is_some_and(|n| p < n) {
+            self.near = Some(p);
+            changed = true;
+        }
+        changed
+    }
+    /// A manual move's target from `from`: kept at an end it would cross
+    /// from inside the travel. From the end itself the move goes to the lens
+    /// as asked, so a lens that travels further (another one) is found.
+    pub fn keep_inside(&self, from: u16, target: u16) -> u16 {
+        match (self.near, self.far) {
+            (_, Some(far)) if from < far && target > far => far,
+            (Some(near), _) if from > near && target < near => near,
+            _ => target,
+        }
+    }
+    /// The first position past an end, if any, with that end's name.
+    pub fn outside(
+        &self,
+        positions: impl IntoIterator<Item = u16>,
+    ) -> Option<(u16, &'static str, u16)> {
+        positions
+            .into_iter()
+            .find_map(|p| match (self.near, self.far) {
+                (_, Some(far)) if p > far => Some((p, "far", far)),
+                (Some(near), _) if p < near => Some((p, "near", near)),
+                _ => None,
+            })
+    }
+    /// From a file the controller keeps (`lens-travel.json`); none when it
+    /// is missing or unreadable.
+    pub fn load(path: &std::path::Path) -> Self {
+        std::fs::read(path)
+            .ok()
+            .and_then(|b| serde_json::from_slice(&b).ok())
+            .unwrap_or_default()
+    }
+    pub fn save(&self, path: &std::path::Path) -> Result<()> {
+        let temp = path.with_extension("json.tmp");
+        std::fs::write(&temp, serde_json::to_vec_pretty(self)?)?;
+        std::fs::rename(&temp, path)?;
+        Ok(())
+    }
+}
+
 /// Where and how highlight groups are taken (plan X3; the format in
 /// `experiments/subject-highlights-detail-2026-11-23/impl/tiers.md`).
 #[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]

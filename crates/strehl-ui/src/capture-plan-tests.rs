@@ -771,7 +771,7 @@ fn the_subjects_depth_is_offered_as_bounds() {
 fn the_calibration_survey_takes_two_shutters_in_capture_order() {
     use super::super::tools::{SPREAD_PLANES, SURVEY_PLANES, two_shutter_survey};
     for (start, end) in [(37_100u16, 37_764u16), (37_764, 37_100)] {
-        let (positions, shutters) = two_shutter_survey(start, end, 65544, 65661);
+        let (positions, shutters) = two_shutter_survey(start, end, 65544, 65661, (0, u16::MAX));
         assert_eq!(positions.len(), SURVEY_PLANES + 2 * SPREAD_PLANES);
         assert_eq!(positions.len(), shutters.len());
         let up = start < end;

@@ -420,6 +420,49 @@ fn a_failed_calibration_sets_four_shot_again() {
     );
 }
 
+/// Owner, 2026-11-24: Calibrate step ended "Not measurable: 1 of 14652
+/// tiles". The two-shutter survey takes a long and a short shot at one
+/// position, and the gap of 0 between them was taken for the survey's
+/// spacing, so the wider second round was a survey 1 unit apart. Its
+/// spacing is the dense cluster's.
+#[test]
+fn the_two_shutter_surveys_spacing_is_its_clusters() {
+    use super::super::tools::{Calibration, SURVEY_SPACING, two_shutter_survey};
+    let mut state = ready();
+    state["capabilities"]["exposure_tiers"] = json!(true);
+    state["exposure"]["shutter_options"] = json!([65544, 65661]);
+    let (_dir, mut ws, inbox, _s) = workspace(state);
+    // A range wider than the cluster: the spread's first pair comes first.
+    let (positions, shutters) = two_shutter_survey(37100, 37764, 65544, 65661, (0, u16::MAX));
+    assert_eq!(
+        positions[0], positions[1],
+        "a pair at one position comes first"
+    );
+    ws.calibration = Calibration::Switching {
+        restore_four: false,
+        positions,
+        shutters: Some(shutters),
+        round: 0,
+        deadline: Instant::now() + Duration::from_secs(45),
+    };
+    ws.poll_tools();
+    let sent = inbox.command().map(|r| r.command);
+    assert!(
+        matches!(sent, Some(Command::CapturePositions { .. })),
+        "{sent:?}: {}",
+        ws.calibration.stage()
+    );
+    match &ws.calibration {
+        Calibration::Capturing {
+            spacing, survey, ..
+        } => {
+            assert!(*survey);
+            assert_eq!(*spacing, SURVEY_SPACING);
+        }
+        other => panic!("{}", other.stage()),
+    }
+}
+
 /// Owner feedback, 2026-11-24: "the subject name keeps getting cleared
 /// while interacting with the tools (ex. Calibrate step)". The
 /// calibration's survey is a run on the host like a capture, but not a

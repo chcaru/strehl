@@ -725,6 +725,9 @@ impl<L: Link> Camera<L> {
         )
     }
     fn focus(&mut self, target: u16, settle: u32) -> Result<Value> {
+        /// A readback unchanged this long, short of the target, is a lens
+        /// that has stopped: over twice the readback's measured lag.
+        const LENS_STOPPED: Duration = Duration::from_millis(1500);
         ensure!(
             self.configured && !self.uncertain && (100..=30000).contains(&settle),
             "Focus unavailable or invalid settling delay"
@@ -746,9 +749,10 @@ impl<L: Link> Camera<L> {
                 thread::sleep(settle_for - since);
             }
             let p = self.ptp.properties()?;
+            let actual = value(&p, 0xe043)?;
             ensure!(
-                value(&p, 0xe043)? == u64::from(target),
-                "Focus did not hold target {target}; no exposure"
+                actual == u64::from(target),
+                "Focus did not hold target {target} (the lens reads {actual}); no exposure"
             );
             return Ok(
                 json!({"ok":true,"before":before,"requested":target,"readback":target,"completion":"moved-during-previous-group","focus_result_event":1,"settle_ms":settle,"settle_from":"focus-result-event","settled_before_ms":since.as_millis().min(u128::from(settle)),"seconds":started.elapsed().as_secs_f64(),"pixel_shift_shots":self.shots}),
@@ -763,6 +767,14 @@ impl<L: Link> Camera<L> {
         let deadline = Instant::now() + Duration::from_secs(10) + settle_for;
         let mut stable = None;
         let mut result_at = None;
+        // The readback and when it last changed: a lens that stays short of
+        // the target is reported at once (`stopped_short`), not after the
+        // deadline. MEASURED (2026-11-24): past either end of its travel the
+        // lens stops at the end and the readback stays there; the readback
+        // lags the lens by up to 0.67 s, and a move across the whole travel
+        // takes about a second.
+        let mut last = before;
+        let mut changed_at = Instant::now();
         loop {
             for (code, result) in self.ptp.events()? {
                 if code == EVENT_FOCUS_RESULT && moved {
@@ -772,6 +784,10 @@ impl<L: Link> Camera<L> {
             }
             let p = self.ptp.properties()?;
             let actual = value(&p, 0xe043)?;
+            if actual != last {
+                last = actual;
+                changed_at = Instant::now();
+            }
             if actual == u64::from(target) {
                 let since = *stable.get_or_insert_with(Instant::now);
                 // MEASURED (2026-11-20): the lens arrives about 0.18 s after
@@ -789,10 +805,15 @@ impl<L: Link> Camera<L> {
                 }
             } else {
                 stable = None;
+                if moved && changed_at.elapsed() >= LENS_STOPPED {
+                    return Ok(
+                        json!({"ok":true,"before":before,"requested":target,"readback":actual,"completion":"stopped-short","stopped_short":true,"focus_result_event":result_at.map(|_|1),"settle_ms":settle,"seconds":started.elapsed().as_secs_f64(),"pixel_shift_shots":self.shots}),
+                    );
+                }
             }
             ensure!(
                 Instant::now() < deadline,
-                "Focus did not reach and hold target {target}; no exposure"
+                "Focus did not reach and hold target {target} (the lens reads {actual}); no exposure"
             );
             thread::sleep(Duration::from_millis(10));
         }

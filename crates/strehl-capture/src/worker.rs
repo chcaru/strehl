@@ -1,8 +1,8 @@
 use crate::{
-    backend::{Camera, Demo, Native, Preview, property},
+    backend::{Camera, Demo, LensStopped, Native, Preview, property},
     bounds::{self, Sample, Suggestion},
     journal::{self, Journal},
-    model::{Phase, Plan, Roi},
+    model::{LensTravel, Phase, Plan, Roi},
     power::{Outlet, RigPower},
     schedule::{Recipe, StackPower},
     timing::{self, RunTiming},
@@ -68,6 +68,11 @@ pub struct Snapshot {
     /// What a capture does before its first exposure (owner feedback,
     /// 2026-11-23: the start "just sits there").
     pub starting: Option<Starting>,
+    /// The lens's ends as found (owner, 2026-11-24: the rail offered focus
+    /// past the lens's end, and going there faulted the controller), and
+    /// the file they are kept in.
+    pub lens_travel: LensTravel,
+    pub lens_file: Option<PathBuf>,
 }
 /// A capture's start: the light warming, then the approach move.
 #[derive(Clone, Debug, PartialEq)]
@@ -127,6 +132,8 @@ impl Default for Snapshot {
             retake_queue: Vec::new(),
             followup: None,
             starting: None,
+            lens_travel: LensTravel::default(),
+            lens_file: None,
         }
     }
 }
@@ -341,6 +348,14 @@ impl Worker {
         let _ = self
             .control
             .compare_exchange(RUN, PAUSE, Ordering::SeqCst, Ordering::SeqCst);
+    }
+    /// Keeps the lens's ends in `path` (`lens-travel.json` in the
+    /// controller's state directory), reading the ends found before.
+    pub fn keep_lens_travel(&self, path: PathBuf) {
+        let travel = LensTravel::load(&path);
+        let mut v = self.state.lock().unwrap();
+        v.lens_travel = travel;
+        v.lens_file = Some(path);
     }
     /// Forgets the focus survey and its suggested bounds (`new_plan`).
     pub fn clear_survey(&self) {
@@ -828,12 +843,16 @@ fn run(
                             phase(&s, Phase::Moving, format!("Moving to {target}…"));
                             let c = camera.as_mut().context("Connect a camera first")?;
                             s.lock().unwrap().preview_at = None;
-                            c.focus(target, settle_ms)?;
+                            let end = manual_focus(c.as_mut(), &s, target, settle_ms)?;
                             refresh(c.as_mut(), &s)?;
                             if let Err(error) = preview(c.as_mut(), &s) {
                                 s.lock().unwrap().preview_error = Some(error.to_string());
                             }
-                            phase(&s, Phase::Ready, "Focus settled");
+                            phase(
+                                &s,
+                                Phase::Ready,
+                                end.unwrap_or_else(|| "Focus settled".into()),
+                            );
                         }
                         Action::Inspect {
                             target,
@@ -851,17 +870,22 @@ fn run(
                             );
                             let c = camera.as_mut().context("Connect a camera first")?;
                             s.lock().unwrap().preview_at = None;
-                            c.focus(approach_from, settle_ms)?;
-                            c.focus(target, settle_ms)?;
+                            let short = manual_focus(c.as_mut(), &s, approach_from, settle_ms)?;
+                            let end = manual_focus(c.as_mut(), &s, target, settle_ms)?;
                             refresh(c.as_mut(), &s)?;
                             if let Err(error) = preview(c.as_mut(), &s) {
                                 s.lock().unwrap().preview_error = Some(error.to_string());
                             }
-                            phase(
-                                &s,
-                                Phase::Ready,
-                                "Focus mark approached in the capture direction",
-                            );
+                            let message = match (short, end) {
+                                (_, Some(end)) => end,
+                                (Some(short), None) => format!(
+                                    "{short}; the mark was approached from there, short of the Approach distance"
+                                ),
+                                (None, None) => {
+                                    "Focus mark approached in the capture direction".into()
+                                }
+                            };
+                            phase(&s, Phase::Ready, message);
                         }
                         Action::Magnify { ratio, x, y } => {
                             ensure!(
@@ -1413,7 +1437,13 @@ fn capture(
         });
         let response = c.focus(prestart, plan.settle_ms);
         update(s, |v| v.starting = None);
-        let response = response?;
+        let response = response.map_err(|e| match e.downcast_ref::<LensStopped>() {
+            Some(stop) => anyhow::anyhow!(
+                "The approach to {prestart} stopped at {}, the lens's end: shorten Approach or move the start mark",
+                stop.at
+            ),
+            None => e,
+        })?;
         log.record("approach_complete", response)?;
         if let Some(timing) = &mut s.lock().unwrap().timing {
             timing.approached(Instant::now());
@@ -1454,7 +1484,7 @@ fn capture(
             } else {
                 plan.settle_ms
             };
-            let response = c.focus(target, settle)?;
+            let response = focus_plane(c, &plan, &mut log, ordinal, target, settle)?;
             log.record(
                 "focus_complete",
                 json!({"ordinal":ordinal,"response":response}),
@@ -1619,6 +1649,73 @@ fn capture(
 const AFTER_APPROACH_MS: u32 = 2000;
 fn after_approach(settle_ms: u32) -> u32 {
     settle_ms.max(AFTER_APPROACH_MS)
+}
+
+/// A capture's move to a plane, tried once more through the approach move
+/// when the lens did not arrive (nothing is exposed before it has).
+/// Owner, 2026-11-24: a stack stopped at "Focus did not reach and hold
+/// target 61892", a position the lens had reached three times in that run.
+fn focus_plane(
+    c: &mut dyn Camera,
+    plan: &Plan,
+    log: &mut Journal,
+    ordinal: usize,
+    target: u16,
+    settle_ms: u32,
+) -> Result<Value> {
+    let first = match c.focus(target, settle_ms) {
+        Ok(response) => return Ok(response),
+        Err(e) => e,
+    };
+    log.record(
+        "focus_retry",
+        json!({"ordinal":ordinal,"target":target,"error":format!("{first:#}")}),
+    )?;
+    let below = u16::try_from(i32::from(target) - plan.direction() * i32::from(plan.approach))
+        .context("Retry approach beyond the lens limit")?;
+    c.focus(below, plan.settle_ms)
+        .and_then(|_| c.focus(target, after_approach(plan.settle_ms)))
+        .with_context(|| format!("Focus failed twice at {target} ({first:#}); the second try"))
+}
+
+/// A manual move (a jog, a click on the rail, a mark visited): `None` when
+/// the lens arrived; when it stopped at an end of its travel, that end is
+/// kept and said, and the controller stays ready. Other failures are
+/// errors as before.
+fn manual_focus(
+    c: &mut dyn Camera,
+    s: &Shared,
+    target: u16,
+    settle_ms: u32,
+) -> Result<Option<String>> {
+    let (stop, landed) = match c.focus(target, settle_ms) {
+        Ok(_) => (None, target),
+        Err(e) => match e.downcast_ref::<LensStopped>() {
+            Some(stop) => (Some(*stop), stop.at),
+            None => return Err(e),
+        },
+    };
+    let travel = {
+        let mut v = s.lock().unwrap();
+        let changed = match stop {
+            Some(stop) => v.lens_travel.stopped(stop.towards_far(), stop.at),
+            None => v.lens_travel.landed(landed),
+        };
+        changed.then(|| (v.lens_travel, v.lens_file.clone()))
+    };
+    if let Some((travel, Some(path))) = travel
+        && let Err(e) = travel.save(&path)
+    {
+        eprintln!("Lens travel not kept: {e:#}");
+    }
+    Ok(stop.map(|stop| {
+        format!(
+            "The lens's {} end is {}: it goes no further (asked for {})",
+            if stop.towards_far() { "far" } else { "near" },
+            stop.at,
+            stop.target
+        )
+    }))
 }
 
 /// Error correction: retakes of one plane before keeping what it has, by
@@ -2049,8 +2146,37 @@ fn retake(
     let below =
         u16::try_from(i32::from(o.target) - ctx.plan.direction() * i32::from(ctx.plan.approach))
             .context("Retake approach beyond the lens limit")?;
-    let first = c.focus(below, ctx.plan.settle_ms)?;
-    let at = c.focus(o.target, after_approach(ctx.plan.settle_ms))?;
+    let reached = c.focus(below, ctx.plan.settle_ms).and_then(|first| {
+        let at = focus_plane(
+            c,
+            ctx.plan,
+            log,
+            o.ordinal,
+            o.target,
+            after_approach(ctx.plan.settle_ms),
+        )?;
+        Ok((first, at))
+    });
+    // Nothing was exposed: the plane keeps the group it has, and the run
+    // goes on (owner, 2026-11-24: a retake's focus failure ended the
+    // capture half way).
+    let (first, at) = match reached {
+        Ok(moves) => moves,
+        Err(e) => {
+            log.record(
+                "retake_abandoned",
+                json!({"ordinal":o.ordinal,"target":o.target,"group":o.group,"retake":n,"reason":format!("{e:#}")}),
+            )?;
+            update(ctx.s, |v| {
+                v.message = format!(
+                    "Plane {} of {} · the retake could not reach focus; its last group is kept",
+                    o.ordinal + 1,
+                    v.total
+                )
+            });
+            return Ok(true);
+        }
+    };
     log.record(
         "retake_focus",
         json!({"ordinal":o.ordinal,"target":o.target,"approach":first,"response":at}),
@@ -2738,6 +2864,9 @@ fn scan(
     Ok(())
 }
 
+#[cfg(test)]
+#[path = "worker-focus-tests.rs"]
+mod focus_tests;
 #[cfg(test)]
 #[path = "worker-retake-tests.rs"]
 mod retake_tests;

@@ -252,6 +252,26 @@ pub(crate) struct Capabilities {
     pub subject: bool,
     /// `highlight`, `shutters` per position and `queue_pass` (plan X3).
     pub exposure_tiers: bool,
+    /// `lens_travel`; a move past an end stops there (2026-11-24).
+    pub lens_travel: bool,
+}
+
+/// `lens_travel`: the ends the lens stopped at when sent past them; `None`
+/// where an end has not been met (the camera's property admits 0-65535
+/// whatever the lens).
+#[derive(Clone, Copy, Debug, Default, Deserialize, PartialEq, Eq)]
+#[serde(default)]
+pub(crate) struct LensTravel {
+    pub near: Option<u16>,
+    pub far: Option<u16>,
+}
+
+impl LensTravel {
+    /// The focus range a move can reach: the known ends, else the
+    /// property's whole range.
+    pub fn range(&self) -> (u16, u16) {
+        (self.near.unwrap_or(0), self.far.unwrap_or(u16::MAX))
+    }
 }
 
 /// `retakes` (h-retake): the setting and the manual retakes in hand.
@@ -348,6 +368,9 @@ pub(crate) struct HostState {
     /// Absent from an older host (h-retake).
     #[serde(deserialize_with = "lenient")]
     pub retakes: Option<Retakes>,
+    /// The lens's ends as found; absent from an older host.
+    #[serde(deserialize_with = "lenient")]
+    pub lens_travel: LensTravel,
 }
 
 /// The top-level keys [`HostState`] reads. A test holds this against the
@@ -399,6 +422,7 @@ pub(crate) const KNOWN_KEYS: &[&str] = &[
     "capabilities",
     "retakes",
     "starting",
+    "lens_travel",
 ];
 
 impl HostState {

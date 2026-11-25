@@ -76,8 +76,11 @@ fn the_simulators_state_reads_typed_through_a_whole_capture() {
             new_plan: true,
             subject: true,
             exposure_tiers: true,
+            lens_travel: true,
         }
     );
+    assert_eq!(host.lens_travel, LensTravel::default(), "no end met yet");
+    assert_eq!(host.lens_travel.range(), (0, u16::MAX));
     assert_eq!(host.error_correction, Some(false));
     assert!(host.demo);
     // h-retake: the setting and nothing in hand.

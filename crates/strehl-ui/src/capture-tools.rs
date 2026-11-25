@@ -254,17 +254,29 @@ impl Slot {
 }
 
 /// Survey positions for a step calibration: `n` positions `spacing` apart,
-/// centred on the middle of `[start, end]` and kept inside it, in the
-/// capture direction.
-pub(crate) fn survey_positions(start: u16, end: u16, spacing: u16, n: usize) -> Vec<u16> {
+/// centred on the middle of `[start, end]`, in the capture direction, and
+/// kept inside the lens's reach (`reach`, its ends as the host found them).
+///
+/// A range shorter than the survey is overrun on both sides: a point at
+/// either mark comes into and out of focus only beyond it, and a tile is
+/// measured only when it does both inside the survey. Owner, 2026-11-24: a
+/// range of 86 units, surveyed inside the marks, was "Not measurable".
+pub(crate) fn survey_positions(
+    start: u16,
+    end: u16,
+    spacing: u16,
+    n: usize,
+    reach: (u16, u16),
+) -> Vec<u16> {
     let (lo, hi) = (start.min(end) as i64, start.max(end) as i64);
+    let (near, far) = (i64::from(reach.0), i64::from(reach.1.max(reach.0)));
     let spacing = i64::from(spacing.max(1));
     let span = spacing * (n as i64 - 1);
     let mid = (lo + hi) / 2;
-    let first = (mid - span / 2).max(lo).min((hi - span).max(lo));
+    let first = (mid - span / 2).min(far - span).max(near);
     let mut positions: Vec<u16> = (0..n as i64)
         .map(|i| first + i * spacing)
-        .filter(|p| *p <= hi.max(first))
+        .filter(|p| *p <= far)
         .map(|p| p.clamp(0, 65535) as u16)
         .collect();
     positions.dedup();
@@ -286,9 +298,10 @@ pub(crate) fn two_shutter_survey(
     end: u16,
     base: u64,
     short: u64,
+    reach: (u16, u16),
 ) -> (Vec<u16>, Vec<u64>) {
     let mut taken: Vec<(u16, u8, u64)> =
-        survey_positions(start, end, SURVEY_SPACING, SURVEY_PLANES)
+        survey_positions(start, end, SURVEY_SPACING, SURVEY_PLANES, reach)
             .into_iter()
             .map(|p| (p, 0, base))
             .collect();
@@ -774,16 +787,25 @@ mod tests {
 
     #[test]
     fn survey_positions_centre_on_the_range_and_keep_its_direction() {
-        let p = survey_positions(1000, 3000, 8, 25);
+        let all = (0, u16::MAX);
+        let p = survey_positions(1000, 3000, 8, 25, all);
         assert_eq!(p.len(), 25);
         assert_eq!(p[0], 1904);
         assert!(p.windows(2).all(|w| w[1] == w[0] + 8));
-        let r = survey_positions(3000, 1000, 8, 25);
+        let r = survey_positions(3000, 1000, 8, 25, all);
         assert_eq!(r.first(), p.last());
         assert!(r.windows(2).all(|w| w[0] == w[1] + 8));
-        // A range shorter than the survey: kept inside it.
-        let short = survey_positions(1000, 1100, 8, 25);
-        assert!(short.iter().all(|&x| (1000..=1100).contains(&x)));
-        assert_eq!(short[0], 1000);
+        // A range shorter than the survey (the owner's 86 units, 2026-11-24):
+        // overrun equally on both sides, so its ends can come into and out
+        // of focus inside the survey.
+        let short = survey_positions(61850, 61936, 8, 25, all);
+        assert_eq!(short.len(), 25);
+        assert_eq!(short[0], 61797);
+        assert_eq!(*short.last().unwrap(), 61989);
+        // Inside the lens's ends where they are known.
+        let near_end = survey_positions(63400, 63480, 8, 25, (1509, 63487));
+        assert_eq!(near_end.len(), 25);
+        assert_eq!(*near_end.last().unwrap(), 63487);
+        assert!(near_end.iter().all(|&x| (1509..=63487).contains(&x)));
     }
 }
