@@ -1,0 +1,42 @@
+{
+  "phase": "disconnected",
+  "connected": false,
+  "position": null,
+  "plan": {
+    "approach": 128,
+    "capture_timeout_s": 120,
+    "end": 61936,
+    "highlight": {
+      "every": 2,
+      "first_plane": 1,
+      "last_plane": 4294967295,
+      "shots": 4,
+      "shutter": 65566
+    },
+    "settle_ms": 500,
+    "start": 61850,
+    "step": 7
+  },
+  "start_set": false,
+  "end_set": false,
+  "shots_per_plane": 1,
+  "power": {
+    "available": true,
+    "camera": {
+      "errors": null,
+      "on": false,
+      "watts": 0.0
+    },
+    "can_manage": false,
+    "can_start_camera": true,
+    "can_stop_camera": false,
+    "error": null,
+    "light": {
+      "errors": null,
+      "on": false,
+      "watts": 0.0
+    },
+    "manage_stack": true,
+    "warmup_seconds": 10
+  }
+}
