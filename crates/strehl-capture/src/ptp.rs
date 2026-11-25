@@ -334,6 +334,22 @@ fn value(p: &Properties, code: u16) -> Result<u64> {
     );
     property.value.as_u64().context("Non-numeric property")
 }
+/// Whether the camera took a setting: it reads back what was asked. The
+/// magnifier (0xd254: ratio << 32 | x << 16 | y) is taken once its ratio
+/// reads back; the camera keeps the centre where the magnified view stays
+/// inside the frame. MEASURED on the A7CR, 2026-11-25: at 9.3x it holds
+/// the centre within x 73..567, y 59..421 of 639 x 479 and moves a centre
+/// outside to the nearest edge (asked 478, 53, it reads 478, 59), with the
+/// magnifier off as well. A subject box at the frame's top or side edge
+/// asked for such a centre, and the exact comparison failed the stillness
+/// check with "Setting 0xd254 did not read back".
+fn took(code: u16, asked: u64, read: u64) -> bool {
+    if code == 0xd254 {
+        read >> 32 == asked >> 32
+    } else {
+        read == asked
+    }
+}
 fn valid_setting(p: &Property, n: u64, magnifier: bool) -> Result<()> {
     ensure!(
         p.writable && p.enabled == 1 && matches!(p.ty, 2 | 4 | 6 | 8),
@@ -592,12 +608,13 @@ impl<L: Link> Camera<L> {
         if code != 0xe042 {
             let end = Instant::now() + Duration::from_secs(3);
             loop {
-                if value(&self.ptp.properties()?, code)? == n {
+                let read = value(&self.ptp.properties()?, code)?;
+                if took(code, n, read) {
                     break;
                 }
                 ensure!(
                     Instant::now() < end,
-                    "Setting 0x{code:04x} did not read back"
+                    "Setting 0x{code:04x} did not read back: asked for {n:#x}, the camera reads {read:#x}"
                 );
                 thread::sleep(Duration::from_millis(40));
             }
@@ -1467,6 +1484,23 @@ mod tests {
         assert!(script(&mut g, 1, 104).is_err());
         let mut g = Group::new(4, 100, None);
         assert!(g.step(0.5, &[], 1, 0, 101).is_err());
+    }
+
+    #[test]
+    fn the_magnifier_is_taken_at_its_ratio_wherever_the_camera_keeps_the_centre() {
+        let at = |r: u64, x: u64, y: u64| (r << 32) | (x << 16) | y;
+        // The camera's readbacks on the rig, 2026-11-25.
+        assert!(took(0xd254, at(93, 320, 240), at(93, 320, 240)));
+        assert!(took(0xd254, at(93, 478, 53), at(93, 478, 59)));
+        assert!(took(0xd254, at(93, 40, 240), at(93, 73, 240)));
+        assert!(took(0xd254, at(0, 478, 53), at(0, 478, 59)));
+        // Not yet at the ratio asked: still waiting.
+        assert!(!took(0xd254, at(93, 320, 240), at(0, 320, 240)));
+        assert!(!took(0xd254, at(0, 320, 240), at(93, 320, 240)));
+        // Every other setting reads back exactly.
+        assert!(took(0xd23a, 4, 4));
+        assert!(!took(0xd23a, 4, 1));
+        assert!(!took(0xd21e, at(93, 478, 53), at(93, 478, 59)));
     }
 
     #[test]

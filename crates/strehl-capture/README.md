@@ -64,7 +64,10 @@ for measured A7CR sizes and the default-on destination option.
    overlays strong edges as an aid; noise and out-of-focus boundaries can also
    appear. This is not calibrated focus peaking. If the camera advertises a focus
    magnifier, its additional buttons request a camera-generated magnified view from the
-   camera, which provides more useful focus detail than enlarging a small JPEG.
+   camera, which provides more useful focus detail than enlarging a small JPEG. The
+   camera keeps the magnified view inside the frame: asked for a centre near an edge,
+   it centres the view as close to it as it can (see
+   `experiments/capture-fixes-2026-11-24/stillness-magnifier.md`).
 7. Use **Go to mark** to inspect each end after approaching it in the planned
    capture direction. This matters: the physical tests found approach dependence.
    Leave some subject-depth margin at both boundaries. An insufficient approach
