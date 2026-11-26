@@ -28,6 +28,8 @@ pub(super) enum Step {
     Identity,
     /// Within it: the group's other members (and their check).
     Group,
+    /// Within it: planning the plane's highlight fusion (plan X4).
+    Highlight,
     /// When tracing only: waiting for the device to run the chunk's queued
     /// fold work, so [`Step::Finish`] is the readback alone.
     DeviceDrain,
@@ -36,9 +38,11 @@ pub(super) enum Step {
     /// The desktop's per-plane admission maps: collecting the GPU fold's
     /// read-backs and writing their records (`emit_gpu_support`).
     Evidence,
+    /// The fold thread planning a plane's highlight fusion.
+    FoldHighlight,
 }
 
-const STEPS: usize = 14;
+const STEPS: usize = 16;
 const NAMES: [&str; STEPS] = [
     "fold thread waiting for decodes",
     "upload (stage)",
@@ -51,9 +55,11 @@ const NAMES: [&str; STEPS] = [
     "  of which member 1's decode",
     "  of which identity",
     "  of which members 2-4",
+    "  of which highlight planning",
     "device draining queued fold work",
     "totals read back",
     "admission maps (collect, write)",
+    "highlight planning (fold thread)",
 ];
 
 static ON: AtomicBool = AtomicBool::new(false);

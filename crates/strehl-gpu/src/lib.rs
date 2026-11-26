@@ -89,8 +89,11 @@ enum Kernel {
     ExpandAddV,
     ClampHull,
     Combine,
-    PatchPlanes,
-    PatchVariance,
+    HlBright,
+    HlDilateH,
+    HlDilateV,
+    HlBlend,
+    HlVariance,
 }
 
 /// Windows one frame may crop ([`GpuFold::add_staged_keeping_luma_cropped`]),
@@ -549,13 +552,19 @@ pub struct GpuFold {
     min_members: usize,
     /// The full-resolution channel planes (`fold.wgsl`'s `rgbw`).
     rgbw: wgpu::Buffer,
-    /// Highlight patches ([`Patches`], `fold.wgsl`'s `patches`): one region
-    /// of `patch_words` words per frame slot.
-    patch: wgpu::Buffer,
-    patch_words: u64,
-    /// Each frame slot's staged patches, valid with the slot's frame (the
-    /// next stage into the slot replaces both).
-    slot_patches: [Option<StagedPatches>; 2],
+    /// Highlight companions (`fold.wgsl`'s `comp`): two slots of four
+    /// members ([`GpuFold::stage_fused`]), each slot's companion key, the
+    /// slot the last stage used, and each slot's upload buffer.
+    comp: wgpu::Buffer,
+    comp_keys: [Option<u64>; 2],
+    comp_last: Option<usize>,
+    comp_upload: Vec<UploadSlot>,
+    /// Highlight fusion counts (`fold.wgsl`'s `stats`), eight words a tag.
+    stats: wgpu::Buffer,
+    /// The fusion's regions in `rgbw`, once a companion has been staged.
+    fusion_scratch: Option<FusionScratch>,
+    /// One storage binding's byte limit on this device.
+    binding: u64,
     /// Mapped read-back buffers for level 0's luma, reused.
     luma_pool: std::sync::Arc<std::sync::Mutex<Vec<wgpu::Buffer>>>,
     /// The frame slot the next [`GpuFold::stage`] fills (0 or 1).
@@ -811,9 +820,14 @@ const PULLS: usize = 12;
 /// `xf` index of the probe noise's level, sigma and f32-screen margin.
 const XF_NOISE: u64 = 2 * 8 * PULLS as u64;
 
-/// f64s in `xf`: two frame slots of twelve site pulls (8 each), then the
-/// probe noise's level, sigma and f32-screen margin.
-const XF_LEN: u64 = XF_NOISE + 3;
+/// The first highlight companion pull in `xf`, in pulls (8 f64 each): two
+/// frame slots' companion pulls follow the probe noise.
+const XF_COMP: usize = (XF_NOISE as usize + 3).div_ceil(8);
+
+/// f64s in `xf`: two frame slots of twelve site pulls (8 each), the probe
+/// noise's level, sigma and f32-screen margin, then two frame slots of
+/// twelve companion pulls.
+const XF_LEN: u64 = ((XF_COMP + 2 * PULLS) * 8) as u64;
 
 /// One accumulator arena's two banks (`fold.wgsl`'s `acc` and `acc_hi`): a
 /// second bank only when the totals exceed one binding, else a stand-in of
@@ -835,12 +849,12 @@ fn make_binds(
     device: &wgpu::Device,
     bgl: &wgpu::BindGroupLayout,
     params: &[wgpu::Buffer],
-    [work, acc, consts, raw, xf, red, acc_hi, rgb, patch]: [&wgpu::Buffer; 9],
+    [work, acc, consts, raw, xf, red, acc_hi, rgb, comp, stats]: [&wgpu::Buffer; 10],
 ) -> Vec<wgpu::BindGroup> {
     params
         .iter()
         .map(|pb| {
-            let storage = [work, acc, consts, raw, xf, red, acc_hi, rgb, patch];
+            let storage = [work, acc, consts, raw, xf, red, acc_hi, rgb, comp, stats];
             let mut entries = vec![wgpu::BindGroupEntry {
                 binding: 0,
                 resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding {
@@ -908,30 +922,226 @@ pub struct RawGroup<'a> {
     pub residuals: Option<[[f32; 2]; 4]>,
 }
 
-/// A frame's highlight patches (plan X4, `highlight_fusion` in the engine),
-/// applied on the device in its preparation exactly as the CPU applies them:
-/// after the gather, before luma and variance.
-pub struct Patches<'a> {
-    /// Per replaced site: the fold plane (0-3 the CFA sites, 4-11 carried),
-    /// its index in the analysis plane, then the weight `w` and value `v`
-    /// as f32 bits; `plane = plane * (1 - w) + v * w`.
-    pub sites: &'a [[u32; 4]],
-    /// Per luma pixel whose greens were replaced: its index, the weights of
-    /// planes 1 and 2 as f32 bits, and 0. Its variance becomes the
-    /// engine's `fused_variance`.
-    pub luma: &'a [[u32; 4]],
+/// A frame's highlight companion (plan X4, `highlight_fusion` in the
+/// engine) for [`GpuFold::stage_fused`]: uploaded beside the frame, then
+/// assembled and gathered on the device through its own pulls and blended
+/// into the frame's planes wherever the frame's group is bright, exactly as
+/// the engine's `Fusion` does on the CPU: after the gather, before luma and
+/// variance.
+pub struct Companion<'a> {
+    /// The companion group: its member 1 (the frame's geometry and black),
+    /// white balance, pulls (`pulls` and `carried`, through its own
+    /// placement) and members.
+    pub frame: RawFrame<'a>,
+    /// The companion's identity: a companion slot holding the same key is
+    /// not uploaded again.
+    pub key: u64,
+    /// The frame's active area in photosites, its brightness map's extent.
+    pub active_size: [usize; 2],
     /// Base units per companion unit.
     pub ratio: f32,
+    /// The ramp's full scale (the container's maximum code minus black).
+    pub full: f32,
+    /// The ramp's start and span, fractions of `full`.
+    pub ramp: [f32; 2],
+    /// The raw code at which a base sample counts as pinned, and the
+    /// black-subtracted companion sample counted as near its own pin.
+    pub pin: f32,
+    pub companion_pin: f32,
+    /// Photosites the brightness window adds about a pull's 4 x 4
+    /// footprint, and the pinned window's (at most `widen`).
+    pub widen: usize,
+    pub reach: usize,
+    /// Where the frame's counts go ([`GpuFold::fusion_counts`]), below
+    /// [`FUSION_TAGS`].
+    pub tag: u32,
 }
 
-/// Where a staged frame's patches lie in its slot's region of the patch
-/// buffer, in words.
+/// Count tags [`GpuFold::fusion_counts`] can hold between reads.
+pub const FUSION_TAGS: usize = 4096;
+
+/// The widest brightness window a companion may ask for, photosites.
+const FUSION_WIDEN_MAX: usize = 5;
+
+/// A sample index with this bit set reads the companion buffer (`fold.wgsl`'s
+/// `comp`).
+const COMP_BIT: u32 = 0x8000_0000;
+
+/// A staged frame's companion: where it lives and what the blend needs.
 #[derive(Clone, Copy, Debug)]
-struct StagedPatches {
-    sites: u32,
-    luma_at: u32,
-    luma: u32,
+struct StagedFusion {
+    comp_slot: usize,
+    group: Option<GroupParams>,
+    gain: [f32; 3],
+    /// The frame's members for its brightness, and their offsets (8 bits
+    /// each, as [`GroupParams::offsets`]).
+    members: u32,
+    offsets: u32,
+    rows: usize,
+    active_size: [usize; 2],
+    pad: usize,
+    widen: usize,
+    reach: usize,
     ratio: f32,
+    full: f32,
+    ramp: [f32; 2],
+    pin: f32,
+    companion_pin: f32,
+    tag: u32,
+}
+
+/// The fusion's regions past the channel planes in `rgbw`: the two window
+/// maxima (padded) and the green weights.
+#[derive(Clone, Copy, Debug)]
+struct FusionScratch {
+    wide: u32,
+    narrow: u32,
+    w1: u32,
+}
+
+/// A group's `assemble` parameters, checked.
+fn group_params(g: &RawGroup<'_>, len: usize) -> Result<GroupParams, String> {
+    if g.members.iter().any(|m| m.len() != len) {
+        return Err("GPU preparation: group members differ in size".into());
+    }
+    if g.offsets
+        .iter()
+        .any(|&(x, y)| !(-8..8).contains(&x) || !(-8..8).contains(&y))
+    {
+        return Err("GPU preparation: a member offset beyond 7 photosites".into());
+    }
+    let offsets = g
+        .offsets
+        .iter()
+        .enumerate()
+        .fold(0u32, |acc, (j, &(x, y))| {
+            acc | (((x + 8) as u32 | ((y + 8) as u32) << 4) << (8 * j))
+        });
+    let mut table = 0u32;
+    for class in 0..4usize {
+        let sm = strehl_core::pixel_shift::site_members(
+            &g.offsets,
+            (class & 1) as isize,
+            (class >> 1) as isize,
+        );
+        if sm.iter().any(|&k| k > 3) {
+            return Err("GPU preparation: group offsets do not cover the CFA parities".into());
+        }
+        let packed = sm[0] as u32 | (sm[1] as u32) << 2 | (sm[2] as u32) << 4 | (sm[3] as u32) << 6;
+        table |= packed << (8 * class);
+    }
+    Ok(GroupParams {
+        offsets,
+        table,
+        inv: g.inv,
+        residuals: g.residuals,
+    })
+}
+
+/// A frame slot's twelve site pulls as `xf` holds them: a.re, a.im, b.re,
+/// b.im, ox, oy, cx, cy each.
+fn pull_words(
+    pulls: &[SitePull; 4],
+    carried: Option<&[SitePull; 8]>,
+    cx: f64,
+    cy: f64,
+) -> Vec<f64> {
+    let native = SITES.iter().zip(pulls.iter());
+    let extra = CARRIED_SITES
+        .iter()
+        .map(|&(dx, dy, _)| (dx, dy))
+        .zip(carried.into_iter().flatten());
+    let mut xf = vec![0f64; 8 * PULLS];
+    for (i, ((dx, dy), t)) in native.map(|(&s, t)| (s, t)).chain(extra).enumerate() {
+        xf[8 * i..8 * i + 8].copy_from_slice(&[
+            t.a[0],
+            t.a[1],
+            t.b[0],
+            t.b[1],
+            dx as f64 * 0.5,
+            dy as f64 * 0.5,
+            cx,
+            cy,
+        ]);
+    }
+    xf
+}
+
+/// The channel (0 R, 1 G, 2 B) of fold plane `s`: a CFA site's, or a
+/// carried channel's.
+fn site_channel_of(s: usize) -> usize {
+    if s < SITES.len() {
+        let (dx, dy) = SITES[s];
+        site_channel(dx, dy)
+    } else {
+        CARRIED_SITES[s - SITES.len()].2
+    }
+}
+
+/// Fill `up` (one slot's persistently mapped upload buffer) with `sources`,
+/// `per` bytes each (each zero-padded), and copy it to `dst` at byte `at`:
+/// waits for the buffer's previous copy and its re-map first.
+fn upload_frames(
+    device: &wgpu::Device,
+    queue: &wgpu::Queue,
+    up: &mut UploadSlot,
+    per: usize,
+    sources: &[&[u8]],
+    dst: &wgpu::Buffer,
+    at: u64,
+) -> Result<(), String> {
+    if let Some(index) = up.copy.take() {
+        device
+            .poll(wgpu::PollType::Wait {
+                submission_index: Some(index),
+                timeout: None,
+            })
+            .map_err(|e| format!("GPU upload wait: {e:?}"))?;
+    }
+    if !up.mapped.load(std::sync::atomic::Ordering::Acquire) {
+        return Err("GPU upload buffer was not re-mapped".into());
+    }
+    // Mapped ranges start 8-byte aligned and span whole words: each
+    // member's region is a multiple of 8 bytes (`ensure_raw`), and so is
+    // every chunk within it.
+    const UPLOAD_CHUNK: usize = 1 << 22;
+    let jobs: Vec<(usize, usize, usize)> = (0..sources.len())
+        .flat_map(|j| {
+            (0..per.div_ceil(UPLOAD_CHUNK))
+                .map(move |i| (j, i * UPLOAD_CHUNK, ((i + 1) * UPLOAD_CHUNK).min(per)))
+        })
+        .collect();
+    let buffer = &up.buffer;
+    jobs.into_par_iter().for_each(|(j, at, end)| {
+        let bytes = sources[j];
+        let data = &bytes[at.min(bytes.len())..end.min(bytes.len())];
+        let mut view = buffer
+            .slice((j * per + at) as u64..(j * per + end) as u64)
+            .get_mapped_range_mut()
+            .expect("mapped upload buffer");
+        view.slice(..data.len()).copy_from_slice(data);
+        if data.len() < end - at {
+            view.slice(data.len()..)
+                .copy_from_slice(&vec![0u8; end - at - data.len()]);
+        }
+    });
+    let size = (sources.len() * per) as u64;
+    up.mapped.store(false, std::sync::atomic::Ordering::Release);
+    up.buffer.unmap();
+    let mut encoder = device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
+        label: Some("fold-upload"),
+    });
+    encoder.copy_buffer_to_buffer(&up.buffer, 0, dst, at, size);
+    let index = queue.submit([encoder.finish()]);
+    let mapped = up.mapped.clone();
+    up.buffer
+        .slice(..)
+        .map_async(wgpu::MapMode::Write, move |r| {
+            r.expect("re-map upload buffer");
+            mapped.store(true, std::sync::atomic::Ordering::Release);
+        });
+    up.copy = Some(index);
+    Ok(())
 }
 
 /// The eight non-native `(dx, dy, channel)` samples of a quad that the carry
@@ -991,6 +1201,8 @@ pub struct Staged {
     /// Twelve planes are gathered (four native, eight carried).
     carried: bool,
     group: Option<GroupParams>,
+    /// Its highlight companion, staged with it ([`GpuFold::stage_fused`]).
+    fusion: Option<StagedFusion>,
 }
 
 /// A probe submitted by [`GpuFold::probe_submit`], read by
@@ -1298,9 +1510,14 @@ impl GpuFold {
             // Read back: the depth energies are written here.
             wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_SRC,
         );
-        let patch = small(
-            "fold-patch",
+        let comp = small(
+            "fold-comp",
             16,
+            wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST,
+        );
+        let stats = small(
+            "fold-fusion-stats",
+            (FUSION_TAGS * 8 * 4) as u64,
             wgpu::BufferUsages::STORAGE
                 | wgpu::BufferUsages::COPY_DST
                 | wgpu::BufferUsages::COPY_SRC,
@@ -1310,7 +1527,7 @@ impl GpuFold {
             &bgl,
             &params,
             [
-                &work, &acc[0], &consts, &raw, &xf, &red, &acc[1], &rgbw, &patch,
+                &work, &acc[0], &consts, &raw, &xf, &red, &acc[1], &rgbw, &comp, &stats,
             ],
         )];
         let profile = profiling.then(|| Profile::new(&device, &queue));
@@ -1332,9 +1549,13 @@ impl GpuFold {
             raw_members: 1,
             min_members: 1,
             rgbw,
-            patch,
-            patch_words: 0,
-            slot_patches: [None, None],
+            comp,
+            comp_keys: [None, None],
+            comp_last: None,
+            comp_upload: Vec::new(),
+            stats,
+            fusion_scratch: None,
+            binding,
             luma_pool: Default::default(),
             next_slot: 0,
             upload: Vec::new(),
@@ -1456,46 +1677,98 @@ impl GpuFold {
                         &self.red,
                         &acc[1],
                         &self.rgbw,
-                        &self.patch,
+                        &self.comp,
+                        &self.stats,
                     ],
                 )
             })
             .collect();
     }
 
-    /// Room for `words` patch words in each frame slot's region, keeping
-    /// the other slot's staged patches (copied into the new buffer).
-    fn ensure_patch_words(&mut self, words: u64, keep_slot: usize) {
-        if words <= self.patch_words {
-            return;
+    /// The first sample of companion slot `slot` in the companion buffer:
+    /// two slots of four members of the frames' size.
+    fn comp_base(&self, slot: usize) -> u32 {
+        (slot as u64 * 4 * self.raw_samples) as u32
+    }
+
+    /// Room for two companion slots of four members of the current frame
+    /// size, with their upload buffers; the slots are emptied when it grows.
+    fn ensure_comp(&mut self) -> Result<(), String> {
+        let bytes = 2 * 4 * self.raw_samples * 2;
+        if self.comp.size() >= bytes && self.comp_upload.len() == 2 {
+            return Ok(());
         }
-        let cap = words.next_power_of_two().max(1 << 16);
-        let buffer = self.device.create_buffer(&wgpu::BufferDescriptor {
-            label: Some("fold-patch"),
-            size: 2 * cap * 4,
-            usage: wgpu::BufferUsages::STORAGE
-                | wgpu::BufferUsages::COPY_DST
-                | wgpu::BufferUsages::COPY_SRC,
+        if bytes > self.binding
+            || u64::from(self.comp_base(1)) + 4 * self.raw_samples >= u64::from(COMP_BIT)
+        {
+            return Err(format!(
+                "GPU highlight fusion: two companions need {bytes} bytes, above this device's {} byte binding limit",
+                self.binding
+            ));
+        }
+        self.comp = self.device.create_buffer(&wgpu::BufferDescriptor {
+            label: Some("fold-comp"),
+            size: bytes,
+            usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST,
             mapped_at_creation: false,
         });
-        if self.patch_words > 0 {
-            let mut encoder = self
-                .device
-                .create_command_encoder(&wgpu::CommandEncoderDescriptor {
-                    label: Some("fold-patch-grow"),
-                });
-            encoder.copy_buffer_to_buffer(
-                &self.patch,
-                keep_slot as u64 * self.patch_words * 4,
-                &buffer,
-                keep_slot as u64 * cap * 4,
-                self.patch_words * 4,
-            );
-            self.queue.submit([encoder.finish()]);
-        }
-        self.patch = buffer;
-        self.patch_words = cap;
+        self.comp_upload = (0..2)
+            .map(|_| UploadSlot {
+                buffer: self.device.create_buffer(&wgpu::BufferDescriptor {
+                    label: Some("fold-comp-upload"),
+                    size: self.raw_samples * 2 * 4,
+                    usage: wgpu::BufferUsages::MAP_WRITE | wgpu::BufferUsages::COPY_SRC,
+                    mapped_at_creation: true,
+                }),
+                copy: None,
+                mapped: std::sync::Arc::new(std::sync::atomic::AtomicBool::new(true)),
+            })
+            .collect();
+        self.comp_keys = [None, None];
+        self.comp_last = None;
         self.rebind();
+        Ok(())
+    }
+
+    /// The fusion's regions past the channel planes, for an active area of
+    /// `w x h` photosites: two padded window maxima and two green weight
+    /// planes. The row maxima use the channel planes' own room.
+    fn ensure_fusion_scratch(&mut self, [w, h]: [usize; 2]) -> Result<(), String> {
+        let pad = FUSION_WIDEN_MAX + 3;
+        let padded = ((w + 2 * pad) * (h + 2 * pad)) as u64;
+        let n0 = self.layout.sizes[0].pixels() as u64;
+        let rows = 2 * ((w + 2 * pad) * h) as u64;
+        if rows > self.layout.rgb_len {
+            return Err(
+                "GPU highlight fusion: the brightness rows exceed the channel planes".into(),
+            );
+        }
+        let wide = self.layout.rgb_len;
+        let floats = wide + 2 * padded + 2 * n0;
+        if floats * 4 > self.binding || floats >= u64::from(u32::MAX) {
+            return Err(format!(
+                "GPU highlight fusion needs {} bytes of full-resolution scratch, above this device's {} byte binding limit",
+                floats * 4,
+                self.binding
+            ));
+        }
+        let scratch = FusionScratch {
+            wide: wide as u32,
+            narrow: (wide + padded) as u32,
+            w1: (wide + 2 * padded) as u32,
+        };
+        if self.rgbw.size() < floats * 4 {
+            self.rgbw = self.device.create_buffer(&wgpu::BufferDescriptor {
+                label: Some("fold-rgb"),
+                size: floats * 4,
+                // Read back: the depth energies are written here.
+                usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_SRC,
+                mapped_at_creation: false,
+            });
+            self.rebind();
+        }
+        self.fusion_scratch = Some(scratch);
+        Ok(())
     }
 
     fn submit(&mut self, rec: Recorder) -> wgpu::SubmissionIndex {
@@ -1739,8 +2012,8 @@ impl GpuFold {
 
     /// The fold's dispatches for planes already at `plane_lv[c][0]`; with
     /// `noise`, the luma variance is computed here rather than uploaded, and
-    /// then replaced at a frame's highlight-patched pixels (its
-    /// `patch_variance` parameters, without the dispatch size).
+    /// then replaced at a frame's highlight-fused pixels (its `hl_variance`
+    /// parameters).
     fn record_fold(
         &self,
         rec: &mut Recorder,
@@ -1786,7 +2059,7 @@ impl GpuFold {
                 n0,
             );
             if let Some(p) = patch {
-                rec.push(Kernel::PatchVariance, p, p.a[0] as usize);
+                rec.push(Kernel::HlVariance, p, n0);
             }
         }
         // Hull of the raw inputs.
@@ -2064,31 +2337,19 @@ impl GpuFold {
     /// the frames at once. The slot stays valid until the second `stage`
     /// after this one.
     pub fn stage(&mut self, frame: &RawFrame<'_>) -> Result<Staged, String> {
-        self.stage_with_patches(frame, None)
+        self.stage_fused(frame, None)
     }
 
-    /// [`Self::stage`] with the frame's highlight patches, uploaded into the
-    /// slot's region of the patch buffer.
-    pub fn stage_with_patches(
+    /// [`Self::stage`] with the frame's highlight companion, uploaded into a
+    /// companion slot (unless a slot holds it already) with its pulls; the
+    /// fold then assembles and gathers it and blends it into the frame's
+    /// planes ([`Companion`]).
+    pub fn stage_fused(
         &mut self,
         frame: &RawFrame<'_>,
-        patches: Option<&Patches<'_>>,
+        companion: Option<&Companion<'_>>,
     ) -> Result<Staged, String> {
         let (gw, gh) = self.full.ok_or("GPU preparation layout")?;
-        let n0 = self.layout.sizes[0].pixels() as u32;
-        if let Some(p) = patches {
-            let planes = if frame.carried.is_some() {
-                PULLS
-            } else {
-                SITES.len()
-            } as u32;
-            if p.sites.iter().any(|s| s[0] >= planes || s[1] >= n0)
-                || p.luma.iter().any(|s| s[0] >= n0)
-                || !(p.ratio.is_finite() && p.ratio > 0.0)
-            {
-                return Err("GPU preparation: a highlight patch out of range".into());
-            }
-        }
         let (width, rows) = (2 * gw, 2 * gh);
         let members = if frame.group.is_some() { 4 } else { 1 };
         let padded = (frame.data.len() as u64).next_multiple_of(4);
@@ -2111,48 +2372,12 @@ impl GpuFold {
                             .into(),
                     );
                 }
-                if g.members.iter().any(|m| m.len() != frame.data.len()) {
-                    return Err("GPU preparation: group members differ in size".into());
-                }
-                if g.offsets
-                    .iter()
-                    .any(|&(x, y)| !(-8..8).contains(&x) || !(-8..8).contains(&y))
-                {
-                    return Err("GPU preparation: a member offset beyond 7 photosites".into());
-                }
-                let offsets = g
-                    .offsets
-                    .iter()
-                    .enumerate()
-                    .fold(0u32, |acc, (j, &(x, y))| {
-                        acc | (((x + 8) as u32 | ((y + 8) as u32) << 4) << (8 * j))
-                    });
-                let mut table = 0u32;
-                for class in 0..4usize {
-                    let sm = strehl_core::pixel_shift::site_members(
-                        &g.offsets,
-                        (class & 1) as isize,
-                        (class >> 1) as isize,
-                    );
-                    if sm.iter().any(|&k| k > 3) {
-                        return Err(
-                            "GPU preparation: group offsets do not cover the CFA parities".into(),
-                        );
-                    }
-                    let packed = sm[0] as u32
-                        | (sm[1] as u32) << 2
-                        | (sm[2] as u32) << 4
-                        | (sm[3] as u32) << 6;
-                    table |= packed << (8 * class);
-                }
-                Some(GroupParams {
-                    offsets,
-                    table,
-                    inv: g.inv,
-                    residuals: g.residuals,
-                })
+                Some(group_params(g, frame.data.len())?)
             }
         };
+        if let Some(c) = companion {
+            self.check_companion(frame, c)?;
+        }
         self.ensure_raw(frame.data.len(), members);
         let slot = self.next_slot;
         self.next_slot ^= 1;
@@ -2161,116 +2386,32 @@ impl GpuFold {
         // last copy out (two frames ago) and the re-map, fill it in parallel
         // chunks, then copy it to the device. No staging memory is allocated
         // per frame. Each member's tail is zero-padded to its slot length.
-        let up = &mut self.upload[slot];
-        if let Some(index) = up.copy.take() {
-            self.device
-                .poll(wgpu::PollType::Wait {
-                    submission_index: Some(index),
-                    timeout: None,
-                })
-                .map_err(|e| format!("GPU upload wait: {e:?}"))?;
-        }
-        if !up.mapped.load(std::sync::atomic::Ordering::Acquire) {
-            return Err("GPU upload buffer was not re-mapped".into());
-        }
         let sources: Vec<&[u8]> = std::iter::once(frame.data)
             .chain(frame.group.iter().flat_map(|g| g.members))
             .map(bytemuck::cast_slice)
             .collect();
-        // Mapped ranges start 8-byte aligned and span whole words: each
-        // member's region is a multiple of 8 bytes (`ensure_raw`), and so is
-        // every chunk within it.
-        const UPLOAD_CHUNK: usize = 1 << 22;
         let per = (self.raw_samples * 2) as usize;
-        let jobs: Vec<(usize, usize, usize)> = (0..sources.len())
-            .flat_map(|j| {
-                (0..per.div_ceil(UPLOAD_CHUNK))
-                    .map(move |i| (j, i * UPLOAD_CHUNK, ((i + 1) * UPLOAD_CHUNK).min(per)))
-            })
-            .collect();
-        let buffer = &up.buffer;
-        jobs.into_par_iter().for_each(|(j, at, end)| {
-            let bytes = sources[j];
-            let data = &bytes[at.min(bytes.len())..end.min(bytes.len())];
-            let mut view = buffer
-                .slice((j * per + at) as u64..(j * per + end) as u64)
-                .get_mapped_range_mut()
-                .expect("mapped upload buffer");
-            view.slice(..data.len()).copy_from_slice(data);
-            if data.len() < end - at {
-                view.slice(data.len()..)
-                    .copy_from_slice(&vec![0u8; end - at - data.len()]);
-            }
-        });
-        let size = (sources.len() * per) as u64;
-        up.mapped.store(false, std::sync::atomic::Ordering::Release);
-        up.buffer.unmap();
-        let mut encoder = self
-            .device
-            .create_command_encoder(&wgpu::CommandEncoderDescriptor {
-                label: Some("fold-upload"),
-            });
-        encoder.copy_buffer_to_buffer(&self.upload[slot].buffer, 0, &self.raw, base, size);
-        let index = self.queue.submit([encoder.finish()]);
-        let up = &mut self.upload[slot];
-        let mapped = up.mapped.clone();
-        up.buffer
-            .slice(..)
-            .map_async(wgpu::MapMode::Write, move |r| {
-                r.expect("re-map upload buffer");
-                mapped.store(true, std::sync::atomic::Ordering::Release);
-            });
-        up.copy = Some(index);
+        upload_frames(
+            &self.device,
+            &self.queue,
+            &mut self.upload[slot],
+            per,
+            &sources,
+            &self.raw,
+            base,
+        )?;
         let (cx, cy) = (gw as f64 * 0.5, gh as f64 * 0.5);
         if let Some(pulls) = frame.pulls {
-            let mut xf = [0f64; 8 * PULLS];
-            let native = SITES.iter().zip(pulls.iter());
-            let carried = CARRIED_SITES
-                .iter()
-                .map(|&(dx, dy, _)| (dx, dy))
-                .zip(frame.carried.iter().flatten());
-            let site_pulls: Vec<((usize, usize), &SitePull)> =
-                native.map(|(&s, t)| (s, t)).chain(carried).collect();
-            for (i, ((dx, dy), t)) in site_pulls.into_iter().enumerate() {
-                xf[8 * i..8 * i + 8].copy_from_slice(&[
-                    t.a[0],
-                    t.a[1],
-                    t.b[0],
-                    t.b[1],
-                    dx as f64 * 0.5,
-                    dy as f64 * 0.5,
-                    cx,
-                    cy,
-                ]);
-            }
+            let xf = pull_words(&pulls, frame.carried.as_ref(), cx, cy);
             self.queue.write_buffer(
                 &self.xf,
                 (slot * 8 * PULLS * 8) as u64,
                 bytemuck::cast_slice(&xf),
             );
         }
-        self.slot_patches[slot] = match patches.filter(|p| !p.sites.is_empty()) {
+        let fusion = match companion {
             None => None,
-            Some(p) => {
-                let words = 4 * (p.sites.len() + p.luma.len()) as u64;
-                self.ensure_patch_words(words, slot ^ 1);
-                let at = slot as u64 * self.patch_words * 4;
-                self.queue
-                    .write_buffer(&self.patch, at, bytemuck::cast_slice(p.sites));
-                if !p.luma.is_empty() {
-                    self.queue.write_buffer(
-                        &self.patch,
-                        at + 16 * p.sites.len() as u64,
-                        bytemuck::cast_slice(p.luma),
-                    );
-                }
-                Some(StagedPatches {
-                    sites: p.sites.len() as u32,
-                    luma_at: 4 * p.sites.len() as u32,
-                    luma: p.luma.len() as u32,
-                    ratio: p.ratio,
-                })
-            }
+            Some(c) => Some(self.stage_companion(frame, c, slot, (cx, cy))?),
         };
         Ok(Staged {
             slot,
@@ -2283,12 +2424,151 @@ impl GpuFold {
             warped: frame.pulls.is_some(),
             carried: frame.carried.is_some(),
             group,
+            fusion,
+        })
+    }
+
+    /// What a companion must agree on with its frame before anything is
+    /// uploaded.
+    fn check_companion(&self, frame: &RawFrame<'_>, c: &Companion<'_>) -> Result<(), String> {
+        let f = &c.frame;
+        let bad = |why: &str| Err(format!("GPU highlight fusion: {why}"));
+        if frame.pulls.is_none() || f.pulls.is_none() {
+            return bad("a companion needs the aligned gather");
+        }
+        if f.carried.is_some() != frame.carried.is_some() {
+            return bad("the companion's carried channels differ from its frame's");
+        }
+        if f.data.len() != frame.data.len()
+            || f.stride != frame.stride
+            || f.active != frame.active
+            || f.black != frame.black
+        {
+            return bad("the companion's geometry or levels differ from its frame's");
+        }
+        let [w, h] = c.active_size;
+        if w < 4
+            || h < 4
+            || frame.active[0] + w > frame.stride
+            || frame.active[1] + h > frame.data.len() / frame.stride
+        {
+            return bad("the active area is out of range");
+        }
+        if c.widen > FUSION_WIDEN_MAX || c.reach > c.widen {
+            return bad("the brightness window is out of range");
+        }
+        if !(c.ratio.is_finite() && c.ratio > 0.0) || !(c.full.is_finite() && c.full > 0.0) {
+            return bad("a ratio or level out of range");
+        }
+        if let Some(g) = &f.group {
+            group_params(g, f.data.len())?;
+        }
+        if c.tag as usize >= FUSION_TAGS {
+            return bad("a count tag out of range");
+        }
+        Ok(())
+    }
+
+    /// Upload a frame's companion into a companion slot, unless one holds
+    /// it: the slot the previous stage used is never overwritten (its frame
+    /// may not have folded yet), and by the frame-slot rule every frame
+    /// staged before that one has.
+    fn stage_companion(
+        &mut self,
+        frame: &RawFrame<'_>,
+        c: &Companion<'_>,
+        slot: usize,
+        (cx, cy): (f64, f64),
+    ) -> Result<StagedFusion, String> {
+        let f = &c.frame;
+        self.ensure_comp()?;
+        let pad = c.widen + 3;
+        self.ensure_fusion_scratch(c.active_size)?;
+        let comp_slot = match self.comp_keys.iter().position(|k| *k == Some(c.key)) {
+            Some(s) => s,
+            None => {
+                let s = match self.comp_last {
+                    Some(last) => last ^ 1,
+                    None => 0,
+                };
+                // Invalid until the upload has gone through.
+                self.comp_keys[s] = None;
+                let sources: Vec<&[u8]> = std::iter::once(f.data)
+                    .chain(f.group.iter().flat_map(|g| g.members))
+                    .map(bytemuck::cast_slice)
+                    .collect();
+                let per = (self.raw_samples * 2) as usize;
+                let at = u64::from(self.comp_base(s)) * 2;
+                upload_frames(
+                    &self.device,
+                    &self.queue,
+                    &mut self.comp_upload[s],
+                    per,
+                    &sources,
+                    &self.comp,
+                    at,
+                )?;
+                self.comp_keys[s] = Some(c.key);
+                s
+            }
+        };
+        self.comp_last = Some(comp_slot);
+        let pulls = f.pulls.expect("checked");
+        let xf = pull_words(&pulls, f.carried.as_ref(), cx, cy);
+        self.queue.write_buffer(
+            &self.xf,
+            ((XF_COMP + slot * PULLS) * 8 * 8) as u64,
+            bytemuck::cast_slice(&xf),
+        );
+        // This frame's counts start from zero.
+        self.queue.write_buffer(
+            &self.stats,
+            u64::from(c.tag) * 8 * 4,
+            bytemuck::cast_slice(&[0u32; 8]),
+        );
+        let (members, offsets) = match &frame.group {
+            Some(g) => (
+                4,
+                g.offsets
+                    .iter()
+                    .enumerate()
+                    .fold(0u32, |acc, (j, &(x, y))| {
+                        acc | (((x + 8) as u32 | ((y + 8) as u32) << 4) << (8 * j))
+                    }),
+            ),
+            None => (1, 8 | 8 << 4),
+        };
+        Ok(StagedFusion {
+            comp_slot,
+            group: match &f.group {
+                Some(g) => Some(group_params(g, f.data.len())?),
+                None => None,
+            },
+            gain: f.gain,
+            members,
+            offsets,
+            rows: frame.data.len() / frame.stride,
+            active_size: c.active_size,
+            pad,
+            widen: c.widen,
+            reach: c.reach,
+            ratio: c.ratio,
+            full: c.full,
+            ramp: c.ramp,
+            pin: c.pin,
+            companion_pin: c.companion_pin,
+            tag: c.tag,
         })
     }
 
     fn check_staged(&self, staged: &Staged) -> Result<(), String> {
         if staged.generation != self.raw_generation {
             return Err("GPU preparation: staged frame was evicted by a geometry change".into());
+        }
+        if let Some(f) = &staged.fusion
+            && self.comp_keys[f.comp_slot].is_none()
+        {
+            return Err("GPU preparation: a staged companion was evicted".into());
         }
         Ok(())
     }
@@ -2336,51 +2616,17 @@ impl GpuFold {
             }
             return;
         }
-        match frame.group.filter(|_| !green_only) {
-            Some(g) => {
-                let member = |j: usize| raw_base + (j as u64 * self.raw_samples) as u32;
-                let (rx, ry) = match g.residuals {
-                    Some(r) => (r.map(|v| v[0].to_bits()), r.map(|v| v[1].to_bits())),
-                    None => ([0; 4], [0; 4]),
-                };
-                rec.push(
-                    Kernel::Assemble,
-                    Params {
-                        a: [
-                            l.rgb,
-                            fw as u32,
-                            fh as u32,
-                            u32::from(g.residuals.is_some()),
-                        ],
-                        b: [member(0), member(1), member(2), member(3)],
-                        c: [frame.stride as u32, g.offsets, g.table, 0],
-                        d: rx,
-                        e: ry,
-                        f: [black, frame.gain[0], frame.gain[1], frame.gain[2]],
-                        g: g.inv,
-                    },
-                    fw * fh,
-                );
-            }
-            None => rec.push(
-                Kernel::Mhc,
-                Params {
-                    a: [l.rgb, fw as u32, fh as u32, u32::from(green_only)],
-                    b: [raw_base, frame.stride as u32, 0, 0],
-                    f: [black, frame.gain[0], frame.gain[1], frame.gain[2]],
-                    ..Default::default()
-                },
-                // One invocation per 2x2 quad.
-                gw * gh,
-            ),
-        }
+        self.record_channels(
+            rec,
+            frame.group.filter(|_| !green_only),
+            raw_base,
+            frame.stride,
+            black,
+            frame.gain,
+            green_only,
+        );
         for (&s, &d) in sites.iter().zip(dst) {
-            let ci = if s < 4 {
-                let (dx, dy) = SITES[s];
-                site_channel(dx, dy)
-            } else {
-                CARRIED_SITES[s - 4].2
-            };
+            let ci = site_channel_of(s);
             let plane = if green_only {
                 l.rgb
             } else {
@@ -2399,6 +2645,226 @@ impl GpuFold {
                 lw * lh,
             );
         }
+    }
+
+    /// The full-resolution channel planes of a frame at raw sample
+    /// `raw_base` (its active origin; [`COMP_BIT`] set for a companion):
+    /// assembled from a group's members, or demosaiced from member 1.
+    #[allow(clippy::too_many_arguments)]
+    fn record_channels(
+        &self,
+        rec: &mut Recorder,
+        group: Option<GroupParams>,
+        raw_base: u32,
+        stride: usize,
+        black: f32,
+        gain: [f32; 3],
+        green_only: bool,
+    ) {
+        let (gw, gh) = self.full.expect("preparation layout");
+        let (fw, fh) = (2 * gw, 2 * gh);
+        let l = &self.layout;
+        match group {
+            Some(g) => {
+                let member = |j: usize| raw_base + (j as u64 * self.raw_samples) as u32;
+                let (rx, ry) = match g.residuals {
+                    Some(r) => (r.map(|v| v[0].to_bits()), r.map(|v| v[1].to_bits())),
+                    None => ([0; 4], [0; 4]),
+                };
+                rec.push(
+                    Kernel::Assemble,
+                    Params {
+                        a: [
+                            l.rgb,
+                            fw as u32,
+                            fh as u32,
+                            u32::from(g.residuals.is_some()),
+                        ],
+                        b: [member(0), member(1), member(2), member(3)],
+                        c: [stride as u32, g.offsets, g.table, 0],
+                        d: rx,
+                        e: ry,
+                        f: [black, gain[0], gain[1], gain[2]],
+                        g: g.inv,
+                    },
+                    fw * fh,
+                );
+            }
+            None => rec.push(
+                Kernel::Mhc,
+                Params {
+                    a: [l.rgb, fw as u32, fh as u32, u32::from(green_only)],
+                    b: [raw_base, stride as u32, 0, 0],
+                    f: [black, gain[0], gain[1], gain[2]],
+                    ..Default::default()
+                },
+                // One invocation per 2x2 quad.
+                gw * gh,
+            ),
+        }
+    }
+
+    /// Plan X4 on the device, after the frame's own gather into `dst` and
+    /// before anything reads its planes: the base group's brightness and
+    /// its two window maxima, the companion's channel planes (over the
+    /// frame's, which the gather has finished with), then each site's
+    /// blend. Returns the fused variance's parameters.
+    fn record_fusion(
+        &self,
+        rec: &mut Recorder,
+        frame: &Staged,
+        f: &StagedFusion,
+        dst: &[u32],
+        noise: GreenNoise,
+    ) -> Params {
+        let (gw, gh) = self.full.expect("preparation layout");
+        let (fw, fh) = (2 * gw, 2 * gh);
+        let l = &self.layout;
+        let sc = self.fusion_scratch.expect("fusion scratch");
+        let [rx, ry, lw, lh] = self.rect;
+        let n0 = lw * lh;
+        let [w, h] = f.active_size;
+        let pad = f.pad;
+        let (pw, ph) = (w + 2 * pad, h + 2 * pad);
+        let base = self.raw_base(frame.slot);
+        let member = |j: usize| base + (j as u64 * self.raw_samples) as u32;
+        rec.push(
+            Kernel::HlBright,
+            Params {
+                a: [sc.wide, w as u32, h as u32, f.members],
+                b: [member(0), member(1), member(2), member(3)],
+                c: [
+                    frame.active[0] as u32,
+                    frame.active[1] as u32,
+                    frame.stride as u32,
+                    f.rows as u32,
+                ],
+                d: [f.offsets, 0, 0, 0],
+                ..Default::default()
+            },
+            w * h,
+        );
+        // The row maxima in the channel planes' room, which the companion's
+        // planes overwrite after the column pass.
+        let (hw, hn) = (l.rgb, l.rgb + (pw * h) as u32);
+        rec.push(
+            Kernel::HlDilateH,
+            Params {
+                a: [sc.wide, hw, hn, pw as u32],
+                b: [w as u32, h as u32, pad as u32, f.widen as u32],
+                c: [f.reach as u32, 0, 0, 0],
+                ..Default::default()
+            },
+            pw * h,
+        );
+        rec.push(
+            Kernel::HlDilateV,
+            Params {
+                a: [hw, hn, sc.wide, sc.narrow],
+                b: [pw as u32, h as u32, pad as u32, f.widen as u32],
+                c: [f.reach as u32, 0, 0, 0],
+                ..Default::default()
+            },
+            pw * ph,
+        );
+        let origin = (frame.active[1] * frame.stride + frame.active[0]) as u32;
+        let comp_base = COMP_BIT | (self.comp_base(f.comp_slot) + origin);
+        self.record_channels(
+            rec,
+            f.group,
+            comp_base,
+            frame.stride,
+            frame.black,
+            f.gain,
+            false,
+        );
+        let sites = dst.len();
+        for (s, &d) in dst.iter().enumerate() {
+            let ci = site_channel_of(s);
+            let flags = u32::from(s >= SITES.len())
+                | if s == 1 { 2 } else { 0 }
+                | if s == 2 { 4 } else { 0 };
+            rec.push(
+                Kernel::HlBlend,
+                Params {
+                    a: [d, l.rgb + (ci * fw * fh) as u32, fw as u32, fh as u32],
+                    b: [rx as u32, ry as u32, lw as u32, lh as u32],
+                    c: [
+                        (PULLS * frame.slot + s) as u32,
+                        (XF_COMP + PULLS * frame.slot + s) as u32,
+                        flags,
+                        f.tag * 8,
+                    ],
+                    d: [sc.wide, sc.narrow, pw as u32, pad as u32],
+                    e: [w as u32, h as u32, sc.w1, sc.w1 + n0 as u32],
+                    f: [frame.black, 1.0 / f.gain[ci], f.ratio, f.full],
+                    g: [f.ramp[0], f.ramp[1], f.pin, f.companion_pin],
+                },
+                n0,
+            );
+        }
+        debug_assert!(sites >= 3, "the greens are sites 1 and 2");
+        Params {
+            a: [n0 as u32, sc.w1, l.luma_lv[0], l.var_lv[0]],
+            f: [
+                noise.gain[0],
+                noise.read_dn[0],
+                noise.gain[1],
+                noise.read_dn[1],
+            ],
+            g: [f.ratio, 1.0 / f.ratio, 0.0, 0.0],
+            ..Default::default()
+        }
+    }
+
+    /// Each fused frame's counts since the last call, by the tag it was
+    /// staged with ([`Companion::tag`]): patched sites, sites fully
+    /// replaced, sites with a pinned base sample in their footprint, those
+    /// not fully replaced, and companion samples near its own pin. Waits
+    /// for the device.
+    pub fn fusion_counts(&mut self, tags: &[u32]) -> Result<Vec<[u64; 5]>, String> {
+        if tags.is_empty() {
+            return Ok(Vec::new());
+        }
+        let bytes = (FUSION_TAGS * 8 * 4) as u64;
+        let readback = self.device.create_buffer(&wgpu::BufferDescriptor {
+            label: Some("fold-fusion-counts"),
+            size: bytes,
+            usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
+            mapped_at_creation: false,
+        });
+        let mut encoder = self
+            .device
+            .create_command_encoder(&wgpu::CommandEncoderDescriptor {
+                label: Some("fold-fusion-counts"),
+            });
+        encoder.copy_buffer_to_buffer(&self.stats, 0, &readback, 0, bytes);
+        let index = self.queue.submit([encoder.finish()]);
+        readback
+            .slice(..)
+            .map_async(wgpu::MapMode::Read, |r| r.expect("map fusion counts"));
+        self.device
+            .poll(wgpu::PollType::Wait {
+                submission_index: Some(index),
+                timeout: None,
+            })
+            .map_err(|e| format!("GPU fusion counts: {e:?}"))?;
+        let view = readback
+            .slice(..)
+            .get_mapped_range()
+            .map_err(|e| format!("GPU fusion counts: {e:?}"))?;
+        let words: Vec<u32> = bytemuck::cast_slice::<u8, u32>(&view[..]).to_vec();
+        drop(view);
+        readback.unmap();
+        tags.iter()
+            .map(|&t| {
+                let o = t as usize * 8;
+                words
+                    .get(o..o + 5)
+                    .map(|w| std::array::from_fn(|k| u64::from(w[k])))
+                    .ok_or_else(|| "GPU fusion counts: a tag out of range".to_string())
+            })
+            .collect()
     }
 
     /// The gate-floor probe on the device: build the probe frame from the
@@ -2912,31 +3378,12 @@ impl GpuFold {
         let all: Vec<usize> = (0..sites).collect();
         let mut rec = Recorder { calls: Vec::new() };
         self.record_gather(&mut rec, frame, base, frame.slot, &all, &dst, false);
-        // Plan X4: the highlight patches, before anything reads the planes.
-        let patch_base = (frame.slot as u64 * self.patch_words) as u32;
-        let var_patch = self.slot_patches[frame.slot].map(|p| {
-            let plane_stride = if sites > 1 { dst[1] - dst[0] } else { 0 };
-            debug_assert!(dst.windows(2).all(|w| w[1] - w[0] == plane_stride));
-            rec.push(
-                Kernel::PatchPlanes,
-                Params {
-                    a: [p.sites, patch_base, dst[0], plane_stride],
-                    ..Default::default()
-                },
-                p.sites as usize,
-            );
-            Params {
-                a: [p.luma, patch_base + p.luma_at, l.luma_lv[0], l.var_lv[0]],
-                f: [
-                    noise.gain[0],
-                    noise.read_dn[0],
-                    noise.gain[1],
-                    noise.read_dn[1],
-                ],
-                g: [p.ratio, 1.0 / p.ratio, 0.0, 0.0],
-                ..Default::default()
-            }
-        });
+        // Plan X4: the companion blended in, before anything reads the planes.
+        let var_patch = frame
+            .fusion
+            .as_ref()
+            .map(|f| self.record_fusion(&mut rec, frame, f, &dst, noise));
+        let l = &self.layout;
         if let Some((count, side, first, at, _)) = crops {
             let w = l.sizes[0].width as u32;
             for (c, &plane) in dst.iter().enumerate() {

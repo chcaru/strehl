@@ -167,6 +167,7 @@ fn build() -> Result<Context, String> {
             entry(7, wgpu::BufferBindingType::Storage { read_only: false }),
             entry(8, wgpu::BufferBindingType::Storage { read_only: false }),
             entry(9, wgpu::BufferBindingType::Storage { read_only: true }),
+            entry(10, wgpu::BufferBindingType::Storage { read_only: false }),
         ],
     });
     let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {

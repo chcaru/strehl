@@ -307,8 +307,9 @@ fn pair(
 
 struct Loaded {
     /// Member 1 and the group (members 2-4, measured; `None` when the group
-    /// is demoted), taken by a gather and put back.
-    frames: Mutex<Option<(strehl_raw::Frame, Option<MeasuredGroup>)>>,
+    /// is demoted): read in place by the device's frames and the decoders'
+    /// planning, taken by a CPU gather and put back.
+    frames: std::sync::RwLock<Option<(strehl_raw::Frame, Option<MeasuredGroup>)>>,
     /// The group's demotion, if the stack's own gate refuses it: then it is
     /// used as its member 1 alone.
     gate: Option<String>,
@@ -324,6 +325,15 @@ fn shifts() -> &'static Mutex<HashMap<String, Measured<[f64; 2]>>> {
 
 /// A measurement, or why it was refused.
 type Measured<T> = std::result::Result<T, String>;
+
+/// Every shift the run has measured, by companion, measuring frame and
+/// scale: a pure function of those, kept from pass to pass while a [`Run`]
+/// lives ([`shifts`] is each pass's own choice among them).
+fn shift_memo() -> &'static Mutex<HashMap<String, Measured<[f64; 2]>>> {
+    static MEMO: std::sync::OnceLock<Mutex<HashMap<String, Measured<[f64; 2]>>>> =
+        std::sync::OnceLock::new();
+    MEMO.get_or_init(Default::default)
+}
 
 /// One companion's place in the cache, decoded outside the cache's lock.
 ///
@@ -350,9 +360,11 @@ fn loaded_cache() -> &'static Mutex<Vec<Arc<Slot>>> {
     CACHE.get_or_init(Default::default)
 }
 
-/// Companions kept decoded, four frames each: the decode-ahead preloads a
-/// few frames before the fold uses them.
-const LOADED_KEPT: usize = 4;
+/// Companions kept decoded, four frames each (about 0.5 GB at 61 MP): the
+/// decode-ahead preloads a few frames before the fold uses them, and a
+/// short stack's render pass finds the companions its preview pass decoded
+/// ([`Run`]).
+const LOADED_KEPT: usize = 8;
 
 /// The render's companions in plane order, for loading the next one while
 /// the fold uses this one.
@@ -466,7 +478,7 @@ fn decode_companion(r: &CompanionRef) -> Result<Arc<Loaded>> {
     // demoted base group.
     let group = gate.is_none().then_some(group);
     Ok(Arc::new(Loaded {
-        frames: Mutex::new(Some((m1, group))),
+        frames: std::sync::RwLock::new(Some((m1, group))),
         gate,
     }))
 }
@@ -1159,72 +1171,11 @@ fn data_ratio(base: &Assembled<'_>, companion: &Assembled<'_>, full: f32) -> Opt
 }
 
 // ---------------------------------------------------------------------------
-// one frame's patches
+// one frame's fusion
 // ---------------------------------------------------------------------------
 
-/// One replaced site of a gathered plane: `plane = plane * (1 - w) + v * w`.
-#[derive(Clone, Copy, Debug)]
-pub(crate) struct Patch {
-    /// The plane's index in the fold (0-3 the CFA sites, 4-11 carried).
-    pub plane: u32,
-    /// Index in the analysis plane.
-    pub index: u32,
-    pub w: f32,
-    pub v: f32,
-}
-
-/// One luma pixel whose greens were replaced: weights of planes 1 and 2.
-#[derive(Clone, Copy, Debug)]
-pub(crate) struct LumaPatch {
-    pub index: u32,
-    pub w1: f32,
-    pub w2: f32,
-}
-
-/// A frame's replaced sites (the sparse per-frame list of plan X4).
-#[derive(Clone, Debug, Default)]
-pub(crate) struct FramePatches {
-    pub sites: Vec<Patch>,
-    pub luma: Vec<LumaPatch>,
-    /// Base units per companion unit.
-    pub ratio: f32,
-}
-
-impl FramePatches {
-    /// Apply to the gathered planes (black-subtracted, analysis grid).
-    pub(crate) fn apply_planes(&self, planes: &mut [Vec<f32>]) {
-        for p in &self.sites {
-            if let Some(plane) = planes.get_mut(p.plane as usize) {
-                let x = &mut plane[p.index as usize];
-                let keep = 1.0 - p.w;
-                *x = *x * keep + p.v * p.w;
-            }
-        }
-    }
-
-    /// Replace the luma variance at the patched pixels: per green, the
-    /// injected model on the base sample and, times the ratio squared, on
-    /// the companion's (the luma over the ratio), blended by the weight
-    /// squared. The same expression as the GPU's `patch_variance`.
-    pub(crate) fn apply_variance(&self, luma: &[f32], var: &mut [f32], noise: &NoiseModel) {
-        let (g1, g2) = (noise.plane(CfaPlane::G1), noise.plane(CfaPlane::G2));
-        let model = [
-            g1.gain_dn_per_e,
-            g1.read_noise_e * g1.gain_dn_per_e,
-            g2.gain_dn_per_e,
-            g2.read_noise_e * g2.gain_dn_per_e,
-        ];
-        let k = self.ratio;
-        let ik = 1.0 / k;
-        for p in &self.luma {
-            let i = p.index as usize;
-            var[i] = fused_variance(luma[i], p.w1, p.w2, model, k, ik);
-        }
-    }
-}
-
-/// See [`FramePatches::apply_variance`]; `model` is gain and read noise (DN)
-/// of the two greens.
+/// See [`Fusion::apply_variance`]; `model` is gain and read noise (DN) of
+/// the two greens.
 pub(crate) fn fused_variance(l: f32, w1: f32, w2: f32, model: [f32; 4], k: f32, ik: f32) -> f32 {
     let s = l.max(0.0);
     let c = s * ik;
@@ -1270,19 +1221,167 @@ pub(crate) struct Inputs<'a> {
     pub carry: bool,
 }
 
-/// A frame's replaced sites, or `None` when it has no companion or the
-/// companion cannot be used (said once in the log, and the frame is its base
-/// exposure alone).
-pub(crate) fn plan(i: Inputs<'_>) -> Result<Option<FramePatches>> {
+/// The base frame's brightness about each pull, as the fusion weighs a
+/// site: per photosite floor `(fx, fy)`, the largest raw code of the
+/// group's photosites in `[fx - 1 - r, fx + 2 + r]` each way, each end
+/// clamped to the active area ([`Bright::max`]), for `r = widen` (the
+/// weight's window) and `r = reach` (the pinned count's). Kept over
+/// `[-pad, n + pad)`, beyond which every window clamps to the same
+/// photosites. The device builds the same two maps (`hl_dilate_h`, `_v`).
+struct Dilated {
+    pad: usize,
+    /// Padded width and height.
+    pw: usize,
+    ph: usize,
+    wide: Vec<u16>,
+    narrow: Vec<u16>,
+}
+
+impl Dilated {
+    fn new(bright: &Bright, widen: usize, reach: usize) -> Self {
+        let (w, h) = (bright.w, bright.h);
+        let pad = widen + 3;
+        let (pw, ph) = (w + 2 * pad, h + 2 * pad);
+        let (wd, rc) = (widen as isize, reach as isize);
+        let span = |x: isize, r: isize, n: usize| {
+            let c = |v: isize| v.clamp(0, n as isize - 1) as usize;
+            (c(x - 1 - r), c(x + 2 + r))
+        };
+        // Row maxima over the padded columns, both windows.
+        let mut rows_wide = vec![0u16; pw * h];
+        let mut rows_narrow = vec![0u16; pw * h];
+        rows_wide
+            .par_chunks_mut(pw)
+            .zip(rows_narrow.par_chunks_mut(pw))
+            .enumerate()
+            .for_each(|(y, (rw, rn))| {
+                let src = &bright.b[y * w..(y + 1) * w];
+                for (i, (ow, on)) in rw.iter_mut().zip(rn.iter_mut()).enumerate() {
+                    let x = i as isize - pad as isize;
+                    let (a, b) = span(x, wd, w);
+                    *ow = src[a..=b].iter().copied().max().unwrap_or(0);
+                    let (a, b) = span(x, rc, w);
+                    *on = src[a..=b].iter().copied().max().unwrap_or(0);
+                }
+            });
+        let mut wide = vec![0u16; pw * ph];
+        let mut narrow = vec![0u16; pw * ph];
+        wide.par_chunks_mut(pw)
+            .zip(narrow.par_chunks_mut(pw))
+            .enumerate()
+            .for_each(|(i, (ow, on))| {
+                let y = i as isize - pad as isize;
+                for (out, rows, r) in [(ow, &rows_wide, wd), (on, &rows_narrow, rc)] {
+                    let (a, b) = span(y, r, h);
+                    out.copy_from_slice(&rows[a * pw..(a + 1) * pw]);
+                    for k in a + 1..=b {
+                        for (o, v) in out.iter_mut().zip(&rows[k * pw..(k + 1) * pw]) {
+                            *o = (*o).max(*v);
+                        }
+                    }
+                }
+            });
+        Self {
+            pad,
+            pw,
+            ph,
+            wide,
+            narrow,
+        }
+    }
+
+    /// Both maxima at a photosite floor.
+    #[inline]
+    fn at(&self, fx: f64, fy: f64) -> (u16, u16) {
+        let p = self.pad as f64;
+        let x = fx.clamp(-p, (self.pw - self.pad - 1) as f64) + p;
+        let y = fy.clamp(-p, (self.ph - self.pad - 1) as f64) + p;
+        let i = y as usize * self.pw + x as usize;
+        (self.wide[i], self.narrow[i])
+    }
+}
+
+/// One fused frame's counts: patched sites, sites fully replaced, sites
+/// with a pinned base sample in their footprint, those not fully replaced,
+/// and companion samples near its own pin.
+type Counts = [u64; 5];
+
+/// A frame's fusion (plan X4): planned before its gather ([`plan`], or
+/// [`plan_device`] for the device), its companion blended in after it.
+///
+/// The fold's level-0 planes are blended per site: where the base group's
+/// brightest photosite about the site's pull reaches the ramp, weight
+/// `w = ramp(max)`, the companion's sample through its own placement
+/// times the ratio `k`, `plane = plane * (1 - w) + k v * w`. Every site is
+/// weighed where it lies; nothing is listed, sorted or uploaded per site.
+pub(crate) struct Fusion {
+    r: Arc<CompanionRef>,
+    /// The companion's member 1 and group, until the blend.
+    comp: CompanionFrames,
+    k: f32,
+    t: Similarity,
+    t_c: Similarity,
+    ca: Option<&'static OpticalProfile>,
+    black: f32,
+    full: f32,
+    widen: usize,
+    reach: usize,
+    carry: bool,
+    full_geom: PlaneGeometry,
+    rect: [usize; 4],
+    bands: Option<Vec<bool>>,
+    /// The CPU's brightness maps (`None` on the device).
+    dilated: Option<Dilated>,
+    bright_tiles: Option<Bright>,
+    record: Record,
+    started: std::time::Instant,
+    /// After the blend: planes 1 and 2's weights where blended, for the
+    /// variance.
+    weights: Option<[Vec<f32>; 2]>,
+}
+
+/// The ramp's start and span, the pin, and the companion's pin, as the
+/// device takes them (the CPU's [`ramp`] and comparisons, operand for
+/// operand).
+fn ramp_levels(full: f32) -> ([f32; 2], f32, f32) {
+    (
+        [RAMP_LO, RAMP_HI - RAMP_LO],
+        f32::from(CONTAINER_MAX_DN - 2),
+        0.98 * full,
+    )
+}
+
+/// A frame's fusion planned for the CPU: `None` when it has no companion or
+/// the companion cannot be used (said once in the log, and the frame is its
+/// base exposure alone).
+pub(crate) fn plan(i: Inputs<'_>) -> Result<Option<Fusion>> {
+    plan_for(i, Mode::Cpu)
+}
+
+/// The same for the device: the brightness is measured there.
+pub(crate) fn plan_device(i: Inputs<'_>) -> Result<Option<Fusion>> {
+    plan_for(i, Mode::Device)
+}
+
+/// Who plans a frame's fusion.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum Mode {
+    /// The CPU fold: the brightness maps here, the companion taken for its
+    /// gather.
+    Cpu,
+    /// The device's fold: the companion read in place.
+    Device,
+    /// A decoder, ahead of the fold ([`warm`]): only what the fold would
+    /// measure first, into the render's caches.
+    Warm,
+}
+
+fn plan_for(i: Inputs<'_>, mode: Mode) -> Result<Option<Fusion>> {
     let Some(r) = companion_of(&i.frame.path) else {
         return Ok(None);
     };
-    let started = std::time::Instant::now();
-    match plan_impl(&i, &r) {
-        Ok((patches, record)) => {
-            note_fused(&r, record, started.elapsed().as_secs_f64());
-            Ok(Some(patches))
-        }
+    match prepare(&i, &r, mode) {
+        Ok(f) => Ok(Some(f)),
         // A partial consumer without the fold's measurements: silently the
         // base exposure (the fold's account stands).
         Err(Refusal(why)) if why.is_empty() => Ok(None),
@@ -1312,7 +1411,7 @@ struct Record {
     pinned: usize,
     pinned_unreplaced: usize,
     companion_pinned: usize,
-    /// Seconds per step: load, shift, bright map, ratio, sites, gather.
+    /// Seconds per step: load, shift, bright map, ratio, windows, blend.
     steps: [f64; 6],
     /// The base group, or the companion group, was demoted and is used as
     /// its member 1 alone.
@@ -1322,28 +1421,39 @@ struct Record {
     partial: bool,
 }
 
+impl Record {
+    fn count(&mut self, c: Counts) {
+        self.sites = c[0] as usize;
+        self.replaced = c[1] as usize;
+        self.pinned = c[2] as usize;
+        self.pinned_unreplaced = c[3] as usize;
+        self.companion_pinned = c[4] as usize;
+    }
+}
+
 /// A companion's member 1 and group.
 type Frames = (strehl_raw::Frame, Option<MeasuredGroup>);
 
 /// A companion's frames taken out of their [`Loaded`] for one frame's use
 /// and put back when dropped (unless another copy went back first).
-struct Checkout<'a> {
-    home: &'a Mutex<Option<Frames>>,
+struct Held {
+    home: Arc<Loaded>,
     item: Option<Frames>,
 }
 
-impl<'a> Checkout<'a> {
-    fn take(
-        home: &'a Mutex<Option<Frames>>,
-        r: &CompanionRef,
-    ) -> std::result::Result<Self, Refusal> {
-        let held = home.lock().unwrap_or_else(|e| e.into_inner()).take();
+impl Held {
+    fn take(home: Arc<Loaded>, r: &CompanionRef) -> std::result::Result<Self, Refusal> {
+        let held = home
+            .frames
+            .write()
+            .unwrap_or_else(|e| e.into_inner())
+            .take();
         let item = match held {
             Some(item) => item,
             // In use by another frame now: a copy of its own.
             None => decode_companion(r)?
                 .frames
-                .lock()
+                .write()
                 .unwrap_or_else(|e| e.into_inner())
                 .take()
                 .ok_or_else(|| Refusal("the companion's frames could not be read".into()))?,
@@ -1353,15 +1463,48 @@ impl<'a> Checkout<'a> {
             item: Some(item),
         })
     }
+
+    fn frames(&self) -> &Frames {
+        self.item.as_ref().expect("held")
+    }
 }
 
-impl Drop for Checkout<'_> {
+impl Drop for Held {
     fn drop(&mut self) {
         if let Some(item) = self.item.take() {
-            let mut home = self.home.lock().unwrap_or_else(|e| e.into_inner());
+            let mut home = self.home.frames.write().unwrap_or_else(|e| e.into_inner());
             if home.is_none() {
                 *home = Some(item);
             }
+        }
+    }
+}
+
+/// A fusion's companion frames: taken for the CPU's gather, read in place
+/// for the device, or a copy of its own when another fold had taken them.
+enum CompanionFrames {
+    Held(Box<Held>),
+    Shared(Arc<Loaded>),
+    Own(Box<Frames>),
+}
+
+impl CompanionFrames {
+    /// `f` of member 1 and the group; `None` if a shared companion's frames
+    /// are out (taken by a CPU gather).
+    fn with<R>(
+        &self,
+        f: impl FnOnce(&strehl_raw::Frame, Option<&MeasuredGroup>) -> R,
+    ) -> Option<R> {
+        match self {
+            CompanionFrames::Held(h) => {
+                let (m, g) = h.frames();
+                Some(f(m, g.as_ref()))
+            }
+            CompanionFrames::Shared(l) => {
+                let guard = l.frames.read().unwrap_or_else(|e| e.into_inner());
+                guard.as_ref().map(|(m, g)| f(m, g.as_ref()))
+            }
+            CompanionFrames::Own(b) => Some(f(&b.0, b.1.as_ref())),
         }
     }
 }
@@ -1395,10 +1538,23 @@ fn channel_of(ci: usize) -> Channel {
     }
 }
 
-fn plan_impl(
+/// The fold's sites in plane order: `(dx, dy, channel)`, the four CFA
+/// sites then, with `carry`, the eight carried channels.
+fn fold_sites(carry: bool) -> Vec<(usize, usize, usize)> {
+    [(0, 0), (1, 0), (0, 1), (1, 1)]
+        .into_iter()
+        .map(|(dx, dy)| (dx, dy, crate::align_cmd::rggb_channel_index(dx, dy)))
+        .chain(CARRIED_SITES.iter().copied().filter(|_| carry))
+        .collect()
+}
+
+fn prepare(
     i: &Inputs<'_>,
-    r: &CompanionRef,
-) -> std::result::Result<(FramePatches, Record), Refusal> {
+    r: &Arc<CompanionRef>,
+    mode: Mode,
+) -> std::result::Result<Fusion, Refusal> {
+    let cpu = mode == Mode::Cpu;
+    let started = std::time::Instant::now();
     let frame = i.frame;
     let mut clock = std::time::Instant::now();
     let mut steps = [0.0f64; 6];
@@ -1407,7 +1563,9 @@ fn plan_impl(
         clock = std::time::Instant::now();
     };
     let l = load(r)?;
-    load_next(r);
+    if mode != Mode::Warm {
+        load_next(r);
+    }
     lap(0);
     let black = frame.levels.black;
     let full = f32::from(CONTAINER_MAX_DN) - black;
@@ -1431,13 +1589,42 @@ fn plan_impl(
         })?
     };
     let ident = strehl_raw::identity_cached(&frame.path);
-    let ca: Option<&OpticalProfile> =
+    let ca: Option<&'static OpticalProfile> =
         strehl_core::optics::profile_for_capture_env(ident.model.as_deref(), ident.lens_type3)?;
-    // The companion's frames, checked out (no lock is held across the
-    // parallel work below; see [`Slot`]): another frame using them now gets
-    // its own copy.
-    let mut out = Checkout::take(&l.frames, r)?;
-    let (cm1, cgroup) = out.item.as_mut().expect("checked out");
+    // The companion's frames: taken for the CPU's gather (another frame
+    // using them meanwhile gets its own copy), else read in place.
+    let comp = match mode {
+        Mode::Cpu => CompanionFrames::Held(Box::new(Held::take(Arc::clone(&l), r)?)),
+        _ if l.frames.read().unwrap_or_else(|e| e.into_inner()).is_some() => {
+            CompanionFrames::Shared(Arc::clone(&l))
+        }
+        // Taken by a CPU gather: a decoder leaves the frame to the fold.
+        Mode::Warm => return Err(Refusal(String::new())),
+        _ => CompanionFrames::Own(Box::new(
+            decode_companion(r)?
+                .frames
+                .write()
+                .unwrap_or_else(|e| e.into_inner())
+                .take()
+                .ok_or_else(|| Refusal("the companion's frames could not be read".into()))?,
+        )),
+    };
+    let guard = matches!(comp, CompanionFrames::Shared(_))
+        .then(|| l.frames.read().unwrap_or_else(|e| e.into_inner()));
+    let (cm1, cgroup): (&strehl_raw::Frame, Option<&MeasuredGroup>) = match (&comp, guard.as_ref())
+    {
+        (CompanionFrames::Held(h), _) => {
+            let (m, g) = h.frames();
+            (m, g.as_ref())
+        }
+        (CompanionFrames::Own(b), _) => (&b.0, b.1.as_ref()),
+        (CompanionFrames::Shared(_), Some(g)) => match g.as_ref() {
+            Some((m, g)) => (m, g.as_ref()),
+            None if mode == Mode::Warm => return Err(Refusal(String::new())),
+            None => return Err(Refusal("the companion's frames could not be read".into())),
+        },
+        (CompanionFrames::Shared(_), None) => unreachable!("read above"),
+    };
     if cm1.levels != frame.levels
         || cm1.active != frame.active
         || cm1.stride != frame.stride
@@ -1449,7 +1636,7 @@ fn plan_impl(
     }
     let base = Assembled::new(frame, i.group);
     let start_data = {
-        let comp = Assembled::new(cm1, cgroup.as_ref());
+        let comp = Assembled::new(cm1, cgroup);
         data_ratio(&base, &comp, full)
     };
     let (start, commanded) = match (r.nominal, start_data) {
@@ -1474,18 +1661,40 @@ fn plan_impl(
     let shift = match known {
         Some(s) => s,
         None if partial => return Err(Refusal(String::new())),
+        // A decoder measures only what the fold would measure first.
+        None if mode == Mode::Warm && !first_of_companion(i.frame, r) => {
+            return Err(Refusal(String::new()));
+        }
         None => {
             // Scaled by the data's own ratio where it has one: a scale error
             // reads as residual noise and hides the structure.
             let scale = start_data.unwrap_or(start);
-            let measured = if r.companion_plane == r.plane {
-                measure_shift(frame, cm1, scale)
-            } else {
-                match strehl_raw::decode(&r.anchor_m1) {
-                    Ok(a) => measure_shift(&a, cm1, scale),
-                    Err(e) => Err(format!(
-                        "its plane's base member 1 could not be read: {e:#}"
-                    )),
+            // The same frame measuring the same companion at the same scale
+            // in an earlier pass of the run measured exactly this.
+            let memo_key = format!("{}|{}|{:x}", r.key, frame.path.display(), scale.to_bits());
+            let memo = shift_memo()
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .get(&memo_key)
+                .cloned();
+            let measured = match memo {
+                Some(m) => m,
+                None => {
+                    let m = if r.companion_plane == r.plane {
+                        measure_shift(frame, cm1, scale)
+                    } else {
+                        match strehl_raw::decode(&r.anchor_m1) {
+                            Ok(a) => measure_shift(&a, cm1, scale),
+                            Err(e) => Err(format!(
+                                "its plane's base member 1 could not be read: {e:#}"
+                            )),
+                        }
+                    };
+                    shift_memo()
+                        .lock()
+                        .unwrap_or_else(|e| e.into_inner())
+                        .insert(memo_key, m.clone());
+                    m
                 }
             };
             shifts()
@@ -1501,8 +1710,6 @@ fn plan_impl(
         b: t_anchor.b + Cx::new(0.5 * shift[0], 0.5 * shift[1]),
     };
     lap(1);
-    let bright = Bright::new(frame, i.group);
-    lap(2);
     // The ratio, once per pair and placement.
     let fit_key = format!(
         "{}|{}|{}|{}|{}",
@@ -1517,6 +1724,10 @@ fn plan_impl(
         .unwrap_or_else(|e| e.into_inner())
         .get(&fit_key)
         .cloned();
+    // The CPU weighs sites from the group's brightness; the device measures
+    // it there, so here it is needed only for a ratio not yet fitted.
+    let bright = (cpu || known.is_none()).then(|| Bright::new(frame, i.group));
+    lap(2);
     let fit = match known {
         Some(f) => f,
         None if partial => return Err(Refusal(String::new())),
@@ -1542,9 +1753,17 @@ fn plan_impl(
                     white: frame.levels.white,
                 },
             );
-            let comp = Assembled::new(cm1, cgroup.as_ref());
+            let comp = Assembled::new(cm1, cgroup);
             let f = fit_pair(
-                &base, &comp, &bright, &maps, &noise, start, commanded, black, full,
+                &base,
+                &comp,
+                bright.as_ref().expect("measured for the fit"),
+                &maps,
+                &noise,
+                start,
+                commanded,
+                black,
+                full,
             );
             pair_fits()
                 .lock()
@@ -1554,284 +1773,537 @@ fn plan_impl(
         }
     }
     .map_err(|why| Refusal(format!("its exposure ratio was refused: {why}")))?;
-    let k = fit.k;
     lap(3);
-
-    // Where: every site of the analysis planes whose footprint, with the
-    // guard, reaches the ramp.
-    let lo = (black + RAMP_LO * full) as u16;
-    let pin = CONTAINER_MAX_DN - 2;
-    let sites: Vec<(usize, usize, usize)> = [(0, 0), (1, 0), (0, 1), (1, 1)]
-        .into_iter()
-        .map(|(dx, dy)| (dx, dy, crate::align_cmd::rggb_channel_index(dx, dy)))
-        .chain(CARRIED_SITES.iter().copied().filter(|_| i.carry))
-        .collect();
-    let transforms: Vec<Similarity> = sites
-        .iter()
-        .map(|&(_, _, ci)| OpticalProfile::compose(ca, channel_of(ci), i.t))
-        .collect();
-    let [rx, ry, lw, lh] = i.rect;
-    let only = i.bands;
     // A lone (demoted) frame is demosaiced before the pull: its 5 x 5
     // stencil reaches two photosites beyond the pull's taps.
-    let reach: isize = if i.group.is_some() { 0 } else { 2 };
-    let widen = GUARD + reach;
-    // (site, analysis index, full quad index, weight, base footprint pinned)
-    type Candidate = (u32, u32, u32, f32, bool);
-    let candidates: Vec<Candidate> = (0..lh)
-        .into_par_iter()
-        .filter(|&ly| {
-            only.is_none_or(|b| {
-                b.get((ry + ly) / crate::align_cmd::BAND_ROWS)
-                    .copied()
-                    .unwrap_or(false)
-            })
-        })
-        .flat_map_iter(|ly| {
-            let py = ry + ly;
-            let mut out: Vec<Candidate> = Vec::new();
-            const BLOCK: usize = 32;
-            for (s, (&(dx, dy, _), t)) in sites.iter().zip(&transforms).enumerate() {
-                let (ox, oy) = (dx as f64 * 0.5, dy as f64 * 0.5);
-                for b0 in (0..lw).step_by(BLOCK) {
-                    let b1 = (b0 + BLOCK).min(lw);
-                    // The block's pulls lie between its two ends' (the map is
-                    // affine): skip it when no tile they can reach is bright.
-                    let ends = [b0, b1 - 1].map(|lx| {
-                        t.apply_at((rx + lx) as f64 + ox, py as f64 + oy, centre.0, centre.1)
-                    });
-                    let (xa, xb) = (
-                        2.0 * ends[0].0.min(ends[1].0),
-                        2.0 * ends[0].0.max(ends[1].0),
-                    );
-                    let (ya, yb) = (
-                        2.0 * ends[0].1.min(ends[1].1),
-                        2.0 * ends[0].1.max(ends[1].1),
-                    );
-                    if xa.is_finite()
-                        && xb.is_finite()
-                        && ya.is_finite()
-                        && yb.is_finite()
-                        && bright.max(
-                            xa.floor() as isize - 2 - widen,
-                            ya.floor() as isize - 2 - widen,
-                            xb.floor() as isize + 3 + widen,
-                            yb.floor() as isize + 3 + widen,
-                            false,
-                        ) < lo
-                    {
-                        continue;
-                    }
-                    for lx in b0..b1 {
-                        let px = rx + lx;
-                        let (sx, sy) =
-                            t.apply_at(px as f64 + ox, py as f64 + oy, centre.0, centre.1);
-                        let (x, y) = (2.0 * sx, 2.0 * sy);
-                        if !(x.is_finite() && y.is_finite()) {
-                            continue;
-                        }
-                        let (fx, fy) = (x.floor() as isize, y.floor() as isize);
-                        let (x0, y0, x1, y1) = (
-                            fx - 1 - widen,
-                            fy - 1 - widen,
-                            fx + 2 + widen,
-                            fy + 2 + widen,
-                        );
-                        if bright.max(x0, y0, x1, y1, false) < lo {
-                            continue;
-                        }
-                        let m = bright.max(x0, y0, x1, y1, true);
-                        if m < lo {
-                            continue;
-                        }
-                        let w = ramp(m, black, full);
-                        if w <= 0.0 {
-                            continue;
-                        }
-                        let pinned = bright.max(
-                            fx - 1 - reach,
-                            fy - 1 - reach,
-                            fx + 2 + reach,
-                            fy + 2 + reach,
-                            true,
-                        ) >= pin;
-                        out.push((
-                            s as u32,
-                            (ly * lw + lx) as u32,
-                            (py * gw + px) as u32,
-                            w,
-                            pinned,
-                        ));
-                    }
-                }
-            }
-            out
-        })
-        .collect();
+    let reach: usize = if i.group.is_some() { 0 } else { 2 };
+    let widen = GUARD as usize + reach;
+    let dilated = match (&bright, cpu) {
+        (Some(b), true) => Some(Dilated::new(b, widen, reach)),
+        _ => None,
+    };
     lap(4);
-    let mut record = Record {
-        k,
+    let record = Record {
+        k: fit.k,
         fit: Some(fit.clone()),
         shift,
-        pinned: candidates.iter().filter(|c| c.4).count(),
+        steps,
         base_member1: i.group.is_none(),
         companion_member1: l.gate.clone(),
         partial,
         ..Default::default()
     };
-    if candidates.is_empty() {
-        return Ok((
-            FramePatches {
-                sites: Vec::new(),
-                luma: Vec::new(),
-                ratio: k as f32,
-            },
-            record,
-        ));
+    drop(guard);
+    Ok(Fusion {
+        r: Arc::clone(r),
+        comp,
+        k: fit.k as f32,
+        t: i.t,
+        t_c,
+        ca,
+        black,
+        full,
+        widen,
+        reach,
+        carry: i.carry,
+        full_geom: i.full,
+        rect: i.rect,
+        bands: i.bands.map(<[bool]>::to_vec),
+        dilated,
+        bright_tiles: if cpu { bright } else { None },
+        record,
+        started,
+        weights: None,
+    })
+}
+
+impl Fusion {
+    /// Base units per companion unit.
+    pub(crate) fn ratio(&self) -> f32 {
+        self.k
     }
-    // The companion, gathered only over the bands and columns those sites
-    // occupy, through its own placement.
-    let bands_n = gh.div_ceil(crate::align_cmd::BAND_ROWS);
-    let mut bands = vec![false; bands_n];
-    let mut spans: Vec<Option<(usize, usize)>> = vec![None; bands_n];
-    for c in &candidates {
-        let (px, py) = (c.2 as usize % gw, c.2 as usize / gw);
-        let b = py / crate::align_cmd::BAND_ROWS;
-        bands[b] = true;
-        spans[b] = Some(match spans[b] {
-            None => (px, px + 1),
-            Some((a, z)) => (a.min(px), z.max(px + 1)),
-        });
+
+    /// The companion's placement (its own plane's, plus its shift).
+    pub(crate) fn companion_placement(&self) -> Similarity {
+        self.t_c
     }
-    let columns: Vec<Vec<(usize, usize)>> =
-        spans.into_iter().map(|s| s.into_iter().collect()).collect();
-    let mut by_site: Vec<Vec<usize>> = vec![Vec::new(); sites.len()];
-    for (n, c) in candidates.iter().enumerate() {
-        by_site[c.0 as usize].push(n);
+
+    /// `f` of the companion's member 1 and group (`None` when demoted);
+    /// `None` if its frames are out.
+    pub(crate) fn with_companion<R>(
+        &self,
+        f: impl FnOnce(&strehl_raw::Frame, Option<&MeasuredGroup>) -> R,
+    ) -> Option<R> {
+        self.comp.with(f)
     }
-    let mut values: Vec<Option<f32>> = vec![None; candidates.len()];
-    {
-        // The gather's scratch, checked out as the frames are (a busy one
-        // means a fresh one here).
-        let mut scratch = companion_scratch()
+
+    /// The companion's identity, for the device's companion slots.
+    pub(crate) fn companion_key(&self) -> u64 {
+        use std::hash::{Hash, Hasher};
+        let mut h = std::collections::hash_map::DefaultHasher::new();
+        self.r.key.hash(&mut h);
+        self.r.paths.hash(&mut h);
+        self.record.companion_member1.is_none().hash(&mut h);
+        h.finish()
+    }
+
+    /// The ramp's full scale and black, the brightness windows (widen,
+    /// reach), and the ramp's start and span, the pin and the companion's
+    /// pin, as the device takes them.
+    pub(crate) fn levels(&self) -> (f32, f32, usize, usize, [f32; 2], f32, f32) {
+        let (ramp, pin, companion_pin) = ramp_levels(self.full);
+        (
+            self.black,
+            self.full,
+            self.widen,
+            self.reach,
+            ramp,
+            pin,
+            companion_pin,
+        )
+    }
+
+    /// The frame was staged on the device with counts under `tag`: its
+    /// account waits for them ([`device_counts`]). The companion's frames
+    /// go back for the next frame that uses it.
+    pub(crate) fn staged_on_device(self, tag: u32) {
+        let seconds = self.started.elapsed().as_secs_f64();
+        let Fusion { r, record, .. } = self;
+        pending()
             .lock()
             .unwrap_or_else(|e| e.into_inner())
-            .take()
-            .unwrap_or_default();
-        let (mut m1, group) = out.item.take().expect("checked out");
-        let gathered = crate::align_cmd::gather_companion(
-            &mut m1,
-            group,
-            t_c,
-            i.full,
-            &mut scratch,
-            bands,
-            columns,
-            i.carry,
-            |(dx, dy), dst, cover, inv| {
-                let s = dy * 2 + dx;
-                for &n in &by_site[s] {
-                    let fi = candidates[n].2 as usize;
-                    if cover[fi] {
-                        values[n] = Some(dst[fi] * inv);
-                    }
+            .insert(tag, (r, record, seconds));
+    }
+
+    /// The site pulls of the base frame, as its gather composes them.
+    fn base_pulls(&self) -> Vec<Similarity> {
+        fold_sites(self.carry)
+            .iter()
+            .map(|&(_, _, ci)| OpticalProfile::compose(self.ca, channel_of(ci), self.t))
+            .collect()
+    }
+
+    /// Blend the companion into the gathered planes (black-subtracted,
+    /// analysis grid), on the CPU: its gather over only the bands and
+    /// columns a site may need, then each site weighed where it lies.
+    /// Refused (the frame left as its base exposure) only before any plane
+    /// is touched.
+    pub(crate) fn apply_planes(&mut self, planes: &mut [Vec<f32>]) -> Result<()> {
+        let blend_started = std::time::Instant::now();
+        let (Some(dilated), Some(bright)) = (self.dilated.as_ref(), self.bright_tiles.as_ref())
+        else {
+            anyhow::bail!("a device-planned fusion applied on the CPU");
+        };
+        let geom = self.full_geom;
+        let (gw, gh) = (geom.width, geom.height);
+        let centre = (gw as f64 * 0.5, gh as f64 * 0.5);
+        let [rx, ry, lw, lh] = self.rect;
+        let sites = fold_sites(self.carry);
+        let pulls = self.base_pulls();
+        let (_, _, companion_pin) = ramp_levels(self.full);
+        let (black, full, k) = (self.black, self.full, self.k);
+        let lo = (black + RAMP_LO * full) as u16;
+        let widen = self.widen as isize;
+        let band_rows = crate::align_cmd::BAND_ROWS;
+        let only = self.bands.as_deref();
+        let wanted =
+            |py: usize| only.is_none_or(|b| b.get(py / band_rows).copied().unwrap_or(false));
+        // Bands and columns a site may need: a block of 32 columns of a band
+        // whose pulls (between its corners', the maps being affine) reach no
+        // bright tile is skipped. An upper bound: never too few.
+        let bands_n = gh.div_ceil(band_rows);
+        const BLOCK: usize = 32;
+        let spans: Vec<Vec<(usize, usize)>> = (0..bands_n)
+            .into_par_iter()
+            .map(|b| {
+                let (y0, y1) = ((b * band_rows).max(ry), ((b + 1) * band_rows).min(ry + lh));
+                let mut out: Vec<(usize, usize)> = Vec::new();
+                if y0 >= y1 || !(y0..y1).any(wanted) {
+                    return out;
                 }
-            },
-        );
-        match gathered {
-            Ok(group) => out.item = Some((m1, group)),
-            Err(e) => return Err(Refusal(format!("its gather failed: {e:#}"))),
-        }
-        drop(out);
-        let carried = if i.carry {
-            let mut missing = false;
-            for (k, list) in by_site.iter().enumerate().skip(4) {
-                match scratch.carried.get(k - 4) {
-                    Some(carried) => {
-                        for &n in list {
-                            values[n] = Some(carried[candidates[n].2 as usize]);
+                for b0 in (0..lw).step_by(BLOCK) {
+                    let b1 = (b0 + BLOCK).min(lw);
+                    let bright_here = sites.iter().zip(&pulls).any(|(&(dx, dy, _), t)| {
+                        let (ox, oy) = (dx as f64 * 0.5, dy as f64 * 0.5);
+                        let corners = [(b0, y0), (b1 - 1, y0), (b0, y1 - 1), (b1 - 1, y1 - 1)].map(
+                            |(lx, py)| {
+                                let (sx, sy) = t.apply_at(
+                                    (rx + lx) as f64 + ox,
+                                    py as f64 + oy,
+                                    centre.0,
+                                    centre.1,
+                                );
+                                (2.0 * sx, 2.0 * sy)
+                            },
+                        );
+                        let xs = corners.map(|c| c.0);
+                        let ys = corners.map(|c| c.1);
+                        let (xa, xb) = (
+                            xs.iter().copied().fold(f64::INFINITY, f64::min),
+                            xs.iter().copied().fold(f64::NEG_INFINITY, f64::max),
+                        );
+                        let (ya, yb) = (
+                            ys.iter().copied().fold(f64::INFINITY, f64::min),
+                            ys.iter().copied().fold(f64::NEG_INFINITY, f64::max),
+                        );
+                        !(xa.is_finite() && xb.is_finite() && ya.is_finite() && yb.is_finite())
+                            || bright.max(
+                                xa.floor() as isize - 2 - widen,
+                                ya.floor() as isize - 2 - widen,
+                                xb.floor() as isize + 3 + widen,
+                                yb.floor() as isize + 3 + widen,
+                                false,
+                            ) >= lo
+                    });
+                    if bright_here {
+                        let (c0, c1) = (rx + b0, rx + b1);
+                        match out.last_mut() {
+                            Some(last) if last.1 == c0 => last.1 = c1,
+                            _ => out.push((c0, c1)),
                         }
                     }
-                    None => missing = true,
+                }
+                out
+            })
+            .collect();
+        let gather_bands: Vec<bool> = spans.iter().map(|s| !s.is_empty()).collect();
+        let n = lw * lh;
+        let mut weights = [vec![0f32; n], vec![0f32; n]];
+        let mut counts: Counts = [0; 5];
+        if gather_bands.iter().any(|&b| b) {
+            let row_gathered = |py: usize| gather_bands[py / band_rows] && wanted(py);
+            // Blend one site's plane from the companion's samples `value`
+            // (by full quad index; `None` where it has none).
+            let blend = |s: usize,
+                         plane: &mut [f32],
+                         weight: Option<&mut [f32]>,
+                         value: &(dyn Fn(usize) -> Option<f32> + Sync)|
+             -> Counts {
+                let (dx, dy, _) = sites[s];
+                let (ox, oy) = (dx as f64 * 0.5, dy as f64 * 0.5);
+                let t = pulls[s];
+                let rows = plane.par_chunks_mut(lw).enumerate();
+                let per_row = |(ly, row): (usize, &mut [f32]), mut wrow: Option<&mut [f32]>| {
+                    let mut c: Counts = [0; 5];
+                    let py = ry + ly;
+                    if !row_gathered(py) {
+                        return c;
+                    }
+                    for (lx, x) in row.iter_mut().enumerate() {
+                        let px = rx + lx;
+                        let (sx, sy) =
+                            t.apply_at(px as f64 + ox, py as f64 + oy, centre.0, centre.1);
+                        let (fx, fy) = (2.0 * sx, 2.0 * sy);
+                        if !(fx.is_finite() && fy.is_finite()) {
+                            continue;
+                        }
+                        let (m, near) = dilated.at(fx.floor(), fy.floor());
+                        let w = ramp(m, black, full);
+                        if w <= 0.0 {
+                            continue;
+                        }
+                        let pinned = near >= CONTAINER_MAX_DN - 2;
+                        let v = value(py * gw + px);
+                        if let Some(v) = v {
+                            let keep = 1.0 - w;
+                            *x = *x * keep + (k * v) * w;
+                            c[0] += 1;
+                            if w >= 1.0 {
+                                c[1] += 1;
+                            }
+                            if v >= companion_pin {
+                                c[4] += 1;
+                            }
+                            if let Some(wr) = wrow.as_deref_mut() {
+                                wr[lx] = w;
+                            }
+                        }
+                        if pinned {
+                            c[2] += 1;
+                            if v.is_none() || w < 1.0 {
+                                c[3] += 1;
+                            }
+                        }
+                    }
+                    c
+                };
+                let add = |a: Counts, b: Counts| std::array::from_fn(|i| a[i] + b[i]);
+                match weight {
+                    Some(wp) => rows
+                        .zip(wp.par_chunks_mut(lw))
+                        .map(|(r, wr)| per_row(r, Some(wr)))
+                        .reduce(|| [0; 5], add),
+                    None => rows.map(|r| per_row(r, None)).reduce(|| [0; 5], add),
+                }
+            };
+            let mut scratch = companion_scratch()
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .take()
+                .unwrap_or_default();
+            let CompanionFrames::Held(held) = &mut self.comp else {
+                anyhow::bail!("a CPU fusion without its companion's frames");
+            };
+            let (mut m1, group) = held.item.take().expect("held");
+            let [w1, w2] = &mut weights;
+            let mut w1 = Some(&mut w1[..]);
+            let mut w2 = Some(&mut w2[..]);
+            let gathered = crate::align_cmd::gather_companion(
+                &mut m1,
+                group,
+                self.t_c,
+                geom,
+                &mut scratch,
+                gather_bands.clone(),
+                spans.clone(),
+                self.carry,
+                |(dx, dy), dst, cover, inv| {
+                    let s = dy * 2 + dx;
+                    let weight = match s {
+                        1 => w1.take(),
+                        2 => w2.take(),
+                        _ => None,
+                    };
+                    let value = |fi: usize| cover[fi].then(|| dst[fi] * inv);
+                    let c = blend(s, &mut planes[s], weight, &value);
+                    for (a, b) in counts.iter_mut().zip(c) {
+                        *a += b;
+                    }
+                },
+            );
+            let group = match gathered {
+                Ok(group) => group,
+                Err(e) => {
+                    // Before any site was blended: the frame is its base
+                    // exposure alone.
+                    *companion_scratch()
+                        .lock()
+                        .unwrap_or_else(|e| e.into_inner()) = Some(scratch);
+                    note_refused(&self.r, format!("its gather failed: {e:#}"));
+                    return Ok(());
+                }
+            };
+            held.item = Some((m1, group));
+            if self.carry {
+                anyhow::ensure!(
+                    scratch.carried.len() >= CARRIED_SITES.len(),
+                    "the companion's carried channels are missing"
+                );
+                for k in 0..CARRIED_SITES.len() {
+                    let carried = &scratch.carried[k];
+                    let value = |fi: usize| Some(carried[fi]);
+                    let c = blend(4 + k, &mut planes[4 + k], None, &value);
+                    for (a, b) in counts.iter_mut().zip(c) {
+                        *a += b;
+                    }
                 }
             }
-            !missing
-        } else {
-            true
+            let mut home = companion_scratch()
+                .lock()
+                .unwrap_or_else(|e| e.into_inner());
+            if home.is_none() {
+                *home = Some(scratch);
+            }
+        }
+        self.weights = Some(weights);
+        self.record.count(counts);
+        self.record.steps[5] = blend_started.elapsed().as_secs_f64();
+        note_fused(
+            &self.r,
+            self.record.clone(),
+            self.started.elapsed().as_secs_f64(),
+        );
+        Ok(())
+    }
+
+    /// Replace the luma variance at the fused pixels: per green, the
+    /// injected model on the base sample and, times the ratio squared, on
+    /// the companion's (the luma over the ratio), blended by the weight
+    /// squared. The same expression as the device's `hl_variance`.
+    pub(crate) fn apply_variance(&self, luma: &[f32], var: &mut [f32], noise: &NoiseModel) {
+        let Some([w1, w2]) = self.weights.as_ref() else {
+            return;
         };
-        let mut home = companion_scratch()
+        let (g1, g2) = (noise.plane(CfaPlane::G1), noise.plane(CfaPlane::G2));
+        let model = [
+            g1.gain_dn_per_e,
+            g1.read_noise_e * g1.gain_dn_per_e,
+            g2.gain_dn_per_e,
+            g2.read_noise_e * g2.gain_dn_per_e,
+        ];
+        let k = self.k;
+        let ik = 1.0 / k;
+        var.par_iter_mut()
+            .zip(luma.par_iter())
+            .zip(w1.par_iter().zip(w2.par_iter()))
+            .for_each(|((v, l), (a, b))| {
+                if *a > 0.0 || *b > 0.0 {
+                    *v = fused_variance(*l, *a, *b, model, k, ik);
+                }
+            });
+    }
+}
+
+// ---------------------------------------------------------------------------
+// planning ahead, on the decoders
+// ---------------------------------------------------------------------------
+
+/// One fold pass, as its decoders see it: frames in fold order, their
+/// placements and the fold's geometry.
+struct Pass {
+    paths: Vec<PathBuf>,
+    placements: Vec<Option<Similarity>>,
+    /// Per companion, the pass's first placed frame using it: the frame
+    /// whose fold would measure its shift.
+    first: HashMap<String, usize>,
+    full: PlaneGeometry,
+    rect: [usize; 4],
+    carry: bool,
+}
+
+fn pass() -> &'static std::sync::RwLock<Option<Arc<Pass>>> {
+    static PASS: std::sync::OnceLock<std::sync::RwLock<Option<Arc<Pass>>>> =
+        std::sync::OnceLock::new();
+    PASS.get_or_init(Default::default)
+}
+
+/// A fold pass begins: its decoders may plan each frame's fusion as they
+/// decode it ([`warm`]). `plan` is the fold's order, `placements` every
+/// frame's placement as its gather uses it.
+pub(crate) fn begin_pass(
+    paths: &[PathBuf],
+    plan: &[usize],
+    placements: Vec<Option<Similarity>>,
+    full: PlaneGeometry,
+    rect: [usize; 4],
+    carry: bool,
+) {
+    let mut first: HashMap<String, usize> = HashMap::new();
+    let mut early: Vec<Arc<CompanionRef>> = Vec::new();
+    for &i in plan {
+        if placements.get(i).copied().flatten().is_none() {
+            continue;
+        }
+        if let Some(r) = paths.get(i).and_then(|p| companion_of(p))
+            && !first.contains_key(&r.key)
+        {
+            first.insert(r.key.clone(), i);
+            early.push(r);
+        }
+    }
+    // The pass's first companions start decoding now, beside its first
+    // frames, rather than when a decoder reaches the frame that needs one.
+    // On their own thread, not a rayon worker: `load` may wait.
+    early.truncate(LOADED_KEPT);
+    if !early.is_empty() {
+        std::thread::spawn(move || {
+            for r in early {
+                let _ = load(&r);
+            }
+        });
+    }
+    *pass().write().unwrap_or_else(|e| e.into_inner()) = (!first.is_empty()).then(|| {
+        Arc::new(Pass {
+            paths: paths.to_vec(),
+            placements,
+            first,
+            full,
+            rect,
+            carry,
+        })
+    });
+}
+
+/// The pass's decoders plan no more.
+pub(crate) fn end_pass() {
+    *pass().write().unwrap_or_else(|e| e.into_inner()) = None;
+}
+
+/// Is `frame` its pass's first frame of companion `r`?
+fn first_of_companion(frame: &strehl_raw::Frame, r: &CompanionRef) -> bool {
+    let p = pass().read().unwrap_or_else(|e| e.into_inner()).clone();
+    p.is_some_and(|p| {
+        p.first
+            .get(&r.key)
+            .is_some_and(|&i| p.paths.get(i) == Some(&frame.path))
+    })
+}
+
+/// On a decoder, as frame `index` is decoded: what its fusion's planning
+/// would measure on the fold's thread (the companion's decode, its shift,
+/// the pair's ratio), into the render's caches, so the fold finds them.
+/// The caches hold exactly what the fold would compute: the shift is the
+/// one its first frame of the pass measures, the ratio a pure function of
+/// the frame, its group and both
+/// placements. A frame whose companion's shift is not yet measured leaves
+/// its ratio to the fold too (a decoder never waits for another frame).
+/// Anything refused is left to the fold, which says why.
+pub(crate) fn warm(index: usize, frame: &strehl_raw::Frame, group: Option<&MeasuredGroup>) {
+    let Some(p) = pass().read().unwrap_or_else(|e| e.into_inner()).clone() else {
+        return;
+    };
+    let Some(t) = p.placements.get(index).copied().flatten() else {
+        return;
+    };
+    if p.paths.get(index) != Some(&frame.path) {
+        return;
+    }
+    let Some(r) = companion_of(&frame.path) else {
+        return;
+    };
+    let placements = &p.placements;
+    let inputs = Inputs {
+        frame,
+        group,
+        t,
+        placement: &|q| placements.get(q).copied().flatten(),
+        full: p.full,
+        rect: p.rect,
+        bands: None,
+        carry: p.carry,
+    };
+    let _ = prepare(&inputs, &r, Mode::Warm);
+}
+
+/// Frames staged on the device, awaiting their counts: by tag, the
+/// companion, the account so far and the seconds spent.
+type Pending = HashMap<u32, (Arc<CompanionRef>, Record, f64)>;
+
+fn pending() -> &'static Mutex<Pending> {
+    static PENDING: std::sync::OnceLock<Mutex<Pending>> = std::sync::OnceLock::new();
+    PENDING.get_or_init(Default::default)
+}
+
+/// The next device count tag, below `tags`.
+pub(crate) fn next_tag(tags: usize) -> u32 {
+    static NEXT: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+    (NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed) % tags) as u32
+}
+
+/// The tags staged on the device whose counts have not been read.
+pub(crate) fn pending_tags() -> Vec<u32> {
+    let mut t: Vec<u32> = pending()
+        .lock()
+        .unwrap_or_else(|e| e.into_inner())
+        .keys()
+        .copied()
+        .collect();
+    t.sort_unstable();
+    t
+}
+
+/// The device's counts for `tags`: each frame's account is complete.
+pub(crate) fn device_counts(tags: &[u32], counts: &[[u64; 5]]) {
+    for (tag, c) in tags.iter().zip(counts) {
+        let entry = pending()
             .lock()
-            .unwrap_or_else(|e| e.into_inner());
-        if home.is_none() {
-            *home = Some(scratch);
-        }
-        drop(home);
-        if !carried {
-            return Err(Refusal(
-                "the companion's carried channels are missing".into(),
-            ));
+            .unwrap_or_else(|e| e.into_inner())
+            .remove(tag);
+        if let Some((r, mut record, seconds)) = entry {
+            record.count(*c);
+            note_fused(&r, record, seconds);
         }
     }
-    lap(5);
-    record.steps = steps;
-    let k32 = k as f32;
-    let companion_pin = 0.98 * full;
-    let mut patches: Vec<Patch> = Vec::with_capacity(candidates.len());
-    for (c, v) in candidates.iter().zip(&values) {
-        match v {
-            Some(v) => {
-                if *v >= companion_pin {
-                    record.companion_pinned += 1;
-                }
-                if c.3 >= 1.0 {
-                    record.replaced += 1;
-                }
-                patches.push(Patch {
-                    plane: c.0,
-                    index: c.1,
-                    w: c.3,
-                    v: k32 * v,
-                });
-            }
-            None => {
-                if c.4 {
-                    record.pinned_unreplaced += 1;
-                }
-            }
-        }
-    }
-    record.pinned_unreplaced += candidates
-        .iter()
-        .zip(&values)
-        .filter(|(c, v)| c.4 && v.is_some() && c.3 < 1.0)
-        .count();
-    patches.sort_by_key(|p| (p.index, p.plane));
-    let mut luma: Vec<LumaPatch> = Vec::new();
-    for p in patches.iter().filter(|p| p.plane == 1 || p.plane == 2) {
-        match luma.last_mut() {
-            Some(last) if last.index == p.index => {
-                if p.plane == 1 {
-                    last.w1 = p.w;
-                } else {
-                    last.w2 = p.w;
-                }
-            }
-            _ => luma.push(LumaPatch {
-                index: p.index,
-                w1: if p.plane == 1 { p.w } else { 0.0 },
-                w2: if p.plane == 2 { p.w } else { 0.0 },
-            }),
-        }
-    }
-    record.sites = patches.len();
-    Ok((
-        FramePatches {
-            sites: patches,
-            luma,
-            ratio: k32,
-        },
-        record,
-    ))
 }
 
 // ---------------------------------------------------------------------------
@@ -1990,8 +2462,9 @@ pub(crate) fn ceiling_factor() -> Option<f32> {
         .filter(|k| k.is_finite() && *k > 1.0)
 }
 
-/// One render's highlight account: cleared when it begins and when it ends,
-/// with the decoded companions and their gather scratch.
+/// One render pass's highlight account: cleared when it begins and when it
+/// ends, with its measurements and gather scratch, and the decoded
+/// companions unless a [`Run`] keeps them.
 pub(crate) struct Render;
 
 impl Render {
@@ -2007,12 +2480,50 @@ impl Drop for Render {
     }
 }
 
+/// A whole run's companions: kept decoded from one render pass to the next
+/// (the lateral-colour preview, then the render) while it lives, with every
+/// shift measured. A decode is a pure function of the files and a shift of
+/// its frame, companion and scale, so a pass finds exactly what it would
+/// compute; which frame measures a companion's shift, and every ratio (it
+/// depends on the pass's lateral-colour profile), are still each pass's.
+pub(crate) struct Run;
+
+static RUNS: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+
+impl Run {
+    pub(crate) fn begin() -> Self {
+        RUNS.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+        Run
+    }
+}
+
+impl Drop for Run {
+    fn drop(&mut self) {
+        if RUNS.fetch_sub(1, std::sync::atomic::Ordering::SeqCst) == 1 {
+            loaded_cache()
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .clear();
+            shift_memo()
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .clear();
+        }
+    }
+}
+
 fn clear() {
     *stats().lock().unwrap_or_else(|e| e.into_inner()) = Stats::default();
-    loaded_cache()
-        .lock()
-        .unwrap_or_else(|e| e.into_inner())
-        .clear();
+    if RUNS.load(std::sync::atomic::Ordering::SeqCst) == 0 {
+        loaded_cache()
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .clear();
+        shift_memo()
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .clear();
+    }
     order().lock().unwrap_or_else(|e| e.into_inner()).clear();
     table().lock().unwrap_or_else(|e| e.into_inner()).clear();
     shifts().lock().unwrap_or_else(|e| e.into_inner()).clear();
@@ -2020,6 +2531,8 @@ fn clear() {
         .lock()
         .unwrap_or_else(|e| e.into_inner())
         .clear();
+    pending().lock().unwrap_or_else(|e| e.into_inner()).clear();
+    end_pass();
     *companion_scratch()
         .lock()
         .unwrap_or_else(|e| e.into_inner()) = None;
@@ -2068,36 +2581,39 @@ mod tests {
         }
     }
 
+    /// The padded window maxima equal `Bright::max` over each window,
+    /// inside the active area, at its edges and far beyond them.
     #[test]
-    fn patches_blend_and_replace() {
-        let mut planes = vec![vec![1000.0f32; 4], vec![2000.0; 4]];
-        let p = FramePatches {
-            sites: vec![
-                Patch {
-                    plane: 0,
-                    index: 1,
-                    w: 1.0,
-                    v: 50_000.0,
-                },
-                Patch {
-                    plane: 1,
-                    index: 2,
-                    w: 0.5,
-                    v: 4000.0,
-                },
-                Patch {
-                    plane: 7,
-                    index: 0,
-                    w: 1.0,
-                    v: 1.0,
-                },
-            ],
-            luma: Vec::new(),
-            ratio: 20.0,
+    fn the_window_maxima_are_brights_maxima_everywhere() {
+        let (w, h) = (37usize, 29usize);
+        let mut seed = 7u64;
+        let b: Vec<u16> = (0..w * h)
+            .map(|_| {
+                seed = seed
+                    .wrapping_mul(6364136223846793005)
+                    .wrapping_add(1442695040888963407);
+                (seed >> 52) as u16
+            })
+            .collect();
+        let bright = Bright {
+            w,
+            h,
+            b,
+            tw: 1,
+            tiles: Vec::new(),
         };
-        p.apply_planes(&mut planes);
-        assert_eq!(planes[0], [1000.0, 50_000.0, 1000.0, 1000.0]);
-        assert_eq!(planes[1], [2000.0, 2000.0, 3000.0, 2000.0]);
+        for (widen, reach) in [(2usize, 0usize), (4, 2)] {
+            let d = Dilated::new(&bright, widen, reach);
+            for fy in -14isize..h as isize + 14 {
+                for fx in -14isize..w as isize + 14 {
+                    let (m, n) = d.at(fx as f64, fy as f64);
+                    let (wd, rc) = (widen as isize, reach as isize);
+                    let want = bright.max(fx - 1 - wd, fy - 1 - wd, fx + 2 + wd, fy + 2 + wd, true);
+                    let near = bright.max(fx - 1 - rc, fy - 1 - rc, fx + 2 + rc, fy + 2 + rc, true);
+                    assert_eq!((m, n), (want, near), "{fx},{fy} widen {widen}");
+                }
+            }
+        }
     }
 
     #[test]

@@ -2774,7 +2774,7 @@ pub struct WarpScratch {
     /// Plan X4: the frame's highlight patches, planned by the consumer before
     /// its gather and applied to the planes it extracts and to their luma
     /// variance (`highlight_fusion`). `None` for a frame without a companion.
-    pub(crate) fusion: Option<crate::highlight_fusion::FramePatches>,
+    pub(crate) fusion: Option<crate::highlight_fusion::Fusion>,
 }
 
 /// Plane rows per band of the banded gather, for [`WarpScratch::bands`].

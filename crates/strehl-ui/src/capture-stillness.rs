@@ -1,264 +1,403 @@
-//! Plan Q7: is the picture still? About 20 s of magnified live view,
-//! every frame registered against the first, tells the sway in sensor
-//! pixels, its axis and frequency, and the longest exposure that keeps the
-//! blur under a quarter of a pixel (MEASURED in the close-tile test: at the
-//! lens's closest focus the picture swayed 0.5 px along one axis at about
-//! 2.6 Hz, and the finished 1/4 s tile lost a third of its fine detail
-//! along it).
+//! Plan Q7: is the picture still? About 20 s of magnified live view, every
+//! frame registered against the first, tells how far the picture moves over
+//! a given time in sensor pixels, its slow drift, the axis it moves along,
+//! and the longest exposure that keeps the blur under a quarter of a pixel.
 //!
-//! Registration: a whole-pixel search on a 2x reduced crop, then
-//! Lucas-Kanade refinement at full resolution (translation only; the
-//! magnified picture moves rigidly: its quadrants agreed to 0.2 px).
+//! What was measured on the rig (2026-11-25, a backlit slide at lens
+//! position 43,453, three 25 s live series and 48 RAW shots at 1/100 s that
+//! freeze the picture, `experiments` notes in the owner's sway record):
+//!
+//! - The picture does not oscillate: it wanders. Its spectrum falls from the
+//!   lowest frequencies up, so a single "frequency" is meaningless (the old
+//!   check always found the bottom of its search, 0.1 Hz) and so was the
+//!   exposure limit it derived from one. The limit now comes from how far
+//!   the picture actually moved over each time span (`moves`): an exposure
+//!   of T seconds blurs by about half the rms movement over T (ARGUED: a
+//!   steady drift spreads a point over 0.29 of its movement, a fast sway
+//!   over 0.71).
+//! - Slow drift is reported apart, in px a minute: 1-2 px a minute after
+//!   the light came on, 0.26 px later. It moves whole planes, which the
+//!   stack's alignment absorbs, and hardly blurs one exposure.
+//! - The old check registered the centre 320 x 320 of the frame only. When
+//!   that patch held little detail it disagreed with the whole frame by
+//!   0.8 px rms and reported 1.05 px where the frame moved 0.49. Now the
+//!   whole frame is registered, with a gain and an offset (live view changes
+//!   brightness by up to 11 % from frame to frame), and a frame whose four
+//!   quarters disagree is left out.
+//! - Live view moved about twice as far up-down as the frozen RAWs over the
+//!   same time spans (0.30-0.64 against 0.16-0.20 px within 0.4-2.4 s) and
+//!   as far side to side (0.15-0.31 against 0.15-0.21). The check reports
+//!   what live view shows, so it errs on the cautious side up-down. Cause
+//!   not established (lens or body stabilisation is a candidate).
 
 use crate::capture_client::Snapshot;
 
-/// One live frame's centre crop, as luma.
+/// One live frame as luma, the whole picture.
 #[derive(Clone, Debug)]
-pub(crate) struct Crop {
+pub(crate) struct Frame {
     pub seconds: f64,
-    pub side: usize,
-    pub luma: Vec<f32>,
+    pub width: usize,
+    pub height: usize,
+    pub luma: Vec<u8>,
 }
 
-/// The crop side, in live pixels.
-pub(crate) const CROP: usize = 320;
 /// How long the check watches.
 pub(crate) const WATCH_SECONDS: f64 = 20.0;
 /// The largest blur, in sensor pixels, an exposure may add.
 const BLUR_LIMIT: f64 = 0.25;
+/// Blur over an exposure as a share of the rms movement over its length
+/// (see the module notes).
+const BLUR_SHARE: f64 = 0.5;
+/// A frame whose quarters disagree with the whole by more than this, in
+/// live pixels, is left out.
+const QUARTER_TOLERANCE: f64 = 0.5;
+/// The smallest live frame the check registers.
+const MIN_SIDE: usize = 128;
+/// Time spans the movement is measured over, seconds.
+const SPANS: [f64; 10] = [0.2, 0.3, 0.5, 0.7, 1.0, 1.5, 2.0, 3.0, 5.0, 8.0];
 
-/// The centre `CROP` x `CROP` of an RGB(A) live frame, as luma; `None`
-/// when the frame is smaller.
-pub(crate) fn crop(width: usize, height: usize, rgba: &[u8], seconds: f64) -> Option<Crop> {
-    if width < CROP || height < CROP || rgba.len() < width * height * 4 {
+/// An RGB(A) live frame (4 bytes a pixel) as luma; `None` when too small.
+pub(crate) fn frame(width: usize, height: usize, rgba: &[u8], seconds: f64) -> Option<Frame> {
+    if width < MIN_SIDE || height < MIN_SIDE || rgba.len() < width * height * 4 {
         return None;
     }
-    let (x0, y0) = ((width - CROP) / 2, (height - CROP) / 2);
-    let mut luma = Vec::with_capacity(CROP * CROP);
-    for y in y0..y0 + CROP {
-        for x in x0..x0 + CROP {
-            let i = (y * width + x) * 4;
-            luma.push(
-                0.2126 * f32::from(rgba[i])
-                    + 0.7152 * f32::from(rgba[i + 1])
-                    + 0.0722 * f32::from(rgba[i + 2]),
-            );
-        }
-    }
-    Some(Crop {
+    let luma = rgba
+        .as_chunks::<4>()
+        .0
+        .iter()
+        .take(width * height)
+        .map(|p| {
+            (0.2126 * f32::from(p[0]) + 0.7152 * f32::from(p[1]) + 0.0722 * f32::from(p[2]))
+                .round()
+                .clamp(0.0, 255.0) as u8
+        })
+        .collect();
+    Some(Frame {
         seconds,
-        side: CROP,
+        width,
+        height,
         luma,
     })
 }
 
-fn at(img: &[f32], side: usize, x: f32, y: f32) -> f32 {
-    let x = x.clamp(0.0, (side - 1) as f32 - 1e-3);
-    let y = y.clamp(0.0, (side - 1) as f32 - 1e-3);
-    let (x0, y0) = (x.floor() as usize, y.floor() as usize);
-    let (fx, fy) = (x - x0 as f32, y - y0 as f32);
-    let i = y0 * side + x0;
-    let top = img[i] * (1.0 - fx) + img[i + 1] * fx;
-    let bottom = img[i + side] * (1.0 - fx) + img[i + side + 1] * fx;
-    top * (1.0 - fy) + bottom * fy
-}
-
-/// Where `moving` sits against `reference`, in pixels: `moving(x) ≈
-/// reference(x - shift)`.
-pub(crate) fn register(reference: &Crop, moving: &Crop) -> Option<(f64, f64)> {
-    let side = reference.side;
-    if side != moving.side || side < 64 {
-        return None;
+impl Frame {
+    #[inline]
+    fn at(&self, x: usize, y: usize) -> f64 {
+        f64::from(self.luma[y * self.width + x])
     }
-    // Whole pixels on a 2x reduction, within ±8 live px.
-    let half = side / 2;
-    let reduce = |img: &[f32]| -> Vec<f32> {
-        (0..half * half)
-            .map(|i| {
-                let (x, y) = (2 * (i % half), 2 * (i / half));
-                0.25 * (img[y * side + x]
-                    + img[y * side + x + 1]
-                    + img[(y + 1) * side + x]
-                    + img[(y + 1) * side + x + 1])
-            })
-            .collect()
-    };
-    let (a, b) = (reduce(&reference.luma), reduce(&moving.luma));
-    let reach = 4i32;
-    let margin = reach as usize;
-    let mut best = (f64::INFINITY, 0i32, 0i32);
-    for dy in -reach..=reach {
-        for dx in -reach..=reach {
-            let mut sum = 0.0f64;
-            for y in margin..half - margin {
-                let row_a = y * half;
-                let row_b = (y as i32 + dy) as usize * half;
-                for x in margin..half - margin {
-                    let d = a[row_a + x] - b[row_b + (x as i32 + dx) as usize];
-                    sum += f64::from(d * d);
-                }
-            }
-            if sum < best.0 {
-                best = (sum, dx, dy);
-            }
-        }
-    }
-    let (mut sx, mut sy) = (2.0 * best.1 as f32, 2.0 * best.2 as f32);
-    // Lucas-Kanade on the full crop, inside a margin the shift cannot leave.
-    let r = &reference.luma;
-    let m = &moving.luma;
-    let edge = 12usize;
-    for _ in 0..6 {
-        let (mut gxx, mut gxy, mut gyy, mut bx, mut by) = (0.0f64, 0.0, 0.0, 0.0, 0.0);
-        for y in edge..side - edge {
-            for x in edge..side - edge {
-                let gx = 0.5 * (r[y * side + x + 1] - r[y * side + x - 1]);
-                let gy = 0.5 * (r[(y + 1) * side + x] - r[(y - 1) * side + x]);
-                let diff = at(m, side, x as f32 + sx, y as f32 + sy) - r[y * side + x];
-                let (gx, gy, diff) = (f64::from(gx), f64::from(gy), f64::from(diff));
-                gxx += gx * gx;
-                gxy += gx * gy;
-                gyy += gy * gy;
-                bx += gx * diff;
-                by += gy * diff;
-            }
-        }
-        let det = gxx * gyy - gxy * gxy;
-        if det.abs() < 1e-9 {
+    /// Bilinear sample; `None` outside the frame.
+    #[inline]
+    fn sample(&self, x: f64, y: f64) -> Option<f64> {
+        if !(x >= 0.0 && y >= 0.0) {
             return None;
         }
-        let ux = (gyy * bx - gxy * by) / det;
-        let uy = (gxx * by - gxy * bx) / det;
-        sx -= ux as f32;
-        sy -= uy as f32;
-        if ux.abs() + uy.abs() < 1e-3 {
+        let (x0, y0) = (x.floor() as usize, y.floor() as usize);
+        if x0 + 1 >= self.width || y0 + 1 >= self.height {
+            return None;
+        }
+        let (fx, fy) = (x - x0 as f64, y - y0 as f64);
+        let top = self.at(x0, y0) * (1.0 - fx) + self.at(x0 + 1, y0) * fx;
+        let bottom = self.at(x0, y0 + 1) * (1.0 - fx) + self.at(x0 + 1, y0 + 1) * fx;
+        Some(top * (1.0 - fy) + bottom * fy)
+    }
+}
+
+/// `[x0, y0, x1, y1)` in live pixels.
+type Region = [usize; 4];
+
+/// Gauss-Newton on `moving(x + d) * 1 ~ gain * reference(x) + offset` over
+/// `region` (every second pixel each way), from `d`. Returns the shift, or
+/// `None` when the region holds no usable structure.
+fn refine(
+    reference: &Frame,
+    moving: &Frame,
+    region: Region,
+    mut d: (f64, f64),
+    iterations: usize,
+) -> Option<(f64, f64)> {
+    for _ in 0..iterations {
+        // Normal equations of [gx, gy, r, 1] against m, symmetric 4 x 4.
+        let mut a = [[0f64; 4]; 4];
+        let mut b = [0f64; 4];
+        let mut n = 0usize;
+        for y in (region[1].max(1)..region[3].min(reference.height - 1)).step_by(2) {
+            for x in (region[0].max(1)..region[2].min(reference.width - 1)).step_by(2) {
+                let Some(m) = moving.sample(x as f64 + d.0, y as f64 + d.1) else {
+                    continue;
+                };
+                let r = reference.at(x, y);
+                let gx = 0.5 * (reference.at(x + 1, y) - reference.at(x - 1, y));
+                let gy = 0.5 * (reference.at(x, y + 1) - reference.at(x, y - 1));
+                let row = [gx, gy, r, 1.0];
+                for ((ai, bi), ri) in a.iter_mut().zip(b.iter_mut()).zip(row) {
+                    for (aij, rj) in ai.iter_mut().zip(row) {
+                        *aij += ri * rj;
+                    }
+                    *bi += ri * m;
+                }
+                n += 1;
+            }
+        }
+        if n < 64 {
+            return None;
+        }
+        let sol = solve4(a, b)?;
+        if sol[2].is_nan() || sol[2].abs() <= 1e-6 {
+            return None;
+        }
+        // m(x) = moving(x + d) = gain * reference(x + e) + offset with
+        // e = d - d*: the gradient terms hold gain * e.
+        let step = (sol[0] / sol[2], sol[1] / sol[2]);
+        d = (d.0 - step.0, d.1 - step.1);
+        if step.0.abs() + step.1.abs() < 1e-3 {
             break;
         }
+        if d.0.abs() > 64.0 || d.1.abs() > 64.0 {
+            return None;
+        }
     }
-    Some((f64::from(sx), f64::from(sy)))
+    Some(d)
+}
+
+/// Gaussian elimination with partial pivoting on a 4 x 4 system.
+fn solve4(mut a: [[f64; 4]; 4], mut b: [f64; 4]) -> Option<[f64; 4]> {
+    for c in 0..4 {
+        let p = (c..4).max_by(|&i, &j| a[i][c].abs().total_cmp(&a[j][c].abs()))?;
+        if a[p][c].abs() < 1e-12 {
+            return None;
+        }
+        a.swap(c, p);
+        b.swap(c, p);
+        let pivot = a[c];
+        let pb = b[c];
+        for (row, br) in a.iter_mut().zip(b.iter_mut()).skip(c + 1) {
+            let f = row[c] / pivot[c];
+            for (x, p) in row.iter_mut().zip(pivot).skip(c) {
+                *x -= f * p;
+            }
+            *br -= f * pb;
+        }
+    }
+    let mut x = [0f64; 4];
+    for c in (0..4).rev() {
+        let s: f64 = (c + 1..4).map(|k| a[c][k] * x[k]).sum();
+        x[c] = (b[c] - s) / a[c][c];
+    }
+    x.iter().all(|v| v.is_finite()).then_some(x)
+}
+
+/// The whole-pixel shift of `moving` against `reference`: sum of squared
+/// differences of 4x-reduced, mean-removed frames within +-`reach` reduced
+/// pixels.
+fn coarse(reference: &Frame, moving: &Frame, reach: i64) -> (f64, f64) {
+    let reduce = |f: &Frame| -> (Vec<f64>, usize, usize) {
+        let (w, h) = (f.width / 4, f.height / 4);
+        let mut v = vec![0f64; w * h];
+        for y in 0..h {
+            for x in 0..w {
+                let mut s = 0.0;
+                for j in 0..4 {
+                    for i in 0..4 {
+                        s += f.at(4 * x + i, 4 * y + j);
+                    }
+                }
+                v[y * w + x] = s / 16.0;
+            }
+        }
+        let mean = v.iter().sum::<f64>() / v.len().max(1) as f64;
+        v.iter_mut().for_each(|p| *p -= mean);
+        (v, w, h)
+    };
+    let (a, w, h) = reduce(reference);
+    let (b, _, _) = reduce(moving);
+    let m = reach as usize + 1;
+    let mut best = (f64::INFINITY, 0i64, 0i64);
+    for dy in -reach..=reach {
+        for dx in -reach..=reach {
+            let mut s = 0.0;
+            for y in m..h.saturating_sub(m) {
+                let yb = (y as i64 + dy) as usize;
+                for x in m..w.saturating_sub(m) {
+                    let e = b[yb * w + (x as i64 + dx) as usize] - a[y * w + x];
+                    s += e * e;
+                }
+            }
+            if s < best.0 {
+                best = (s, dx, dy);
+            }
+        }
+    }
+    (4.0 * best.1 as f64, 4.0 * best.2 as f64)
+}
+
+/// Where `moving` sits against `reference`, in live pixels: `moving(x) ~
+/// reference(x - shift)`. `None` when it cannot be registered or its four
+/// quarters disagree with the whole by more than [`QUARTER_TOLERANCE`].
+pub(crate) fn register(reference: &Frame, moving: &Frame) -> Option<(f64, f64)> {
+    if reference.width != moving.width || reference.height != moving.height {
+        return None;
+    }
+    let (w, h) = (reference.width, reference.height);
+    let margin = (w.min(h) / 16).max(8);
+    let whole = [margin, margin, w - margin, h - margin];
+    let start = coarse(reference, moving, 6);
+    let d = refine(reference, moving, whole, start, 12)?;
+    let (cx, cy) = (w / 2, h / 2);
+    for q in [
+        [margin, margin, cx, cy],
+        [cx, margin, w - margin, cy],
+        [margin, cy, cx, h - margin],
+        [cx, cy, w - margin, h - margin],
+    ] {
+        if let Some(e) = refine(reference, moving, q, d, 6)
+            && ((e.0 - d.0).abs() > QUARTER_TOLERANCE || (e.1 - d.1).abs() > QUARTER_TOLERANCE)
+        {
+            return None;
+        }
+    }
+    Some(d)
 }
 
 /// What the check found, in sensor pixels.
 #[derive(Clone, Debug, PartialEq)]
 pub(crate) struct Stillness {
+    /// Frames watched, and those registered.
     pub frames: usize,
+    pub used: usize,
     pub seconds: f64,
-    /// Motion about the slow drift, rms along the picture's x and y.
-    pub rms: [f64; 2],
-    /// The axis most of it is along: degrees from the picture's horizontal.
+    /// Slow drift, px a minute (a straight line through the positions).
+    pub drift_per_minute: f64,
+    /// Per time span (s): the rms movement over it, in px, both axes.
+    pub moves: Vec<(f64, f64)>,
+    /// The rms movement over about a second, along x and y.
+    pub second: [f64; 2],
+    /// The axis most of the short-term movement is along, degrees from the
+    /// picture's horizontal.
     pub axis_degrees: f64,
-    /// The 95th percentile of the distance from the drift line.
-    pub p95: f64,
-    /// The slow drift over the watch.
-    pub drift: f64,
-    /// The strongest frequency of the motion along its axis.
-    pub hertz: Option<f64>,
-    /// The longest exposure whose blur stays under a quarter pixel.
+    /// The longest exposure whose blur stays under a quarter pixel: `None`
+    /// when even the shortest span measured blurs more; at most the longest
+    /// span measured.
     pub longest_seconds: Option<f64>,
     pub sensor_px_per_live_px: f64,
 }
 
-/// Quadratic trend of `v` over `t` (least squares), evaluated at `t`.
-fn trend(t: &[f64], v: &[f64]) -> Vec<f64> {
-    let n = t.len() as f64;
-    let t0 = t.iter().sum::<f64>() / n;
-    let ts: Vec<f64> = t.iter().map(|x| x - t0).collect();
-    let s = |p: i32| ts.iter().map(|x| x.powi(p)).sum::<f64>();
-    let sv = |p: i32| ts.iter().zip(v).map(|(x, y)| x.powi(p) * y).sum::<f64>();
-    let m = [[n, s(1), s(2)], [s(1), s(2), s(3)], [s(2), s(3), s(4)]];
-    let r = [sv(0), sv(1), sv(2)];
-    let det3 = |m: [[f64; 3]; 3]| {
-        m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1])
-            - m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0])
-            + m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0])
-    };
-    let d = det3(m);
-    if d.abs() < 1e-12 {
-        let mean = v.iter().sum::<f64>() / n;
-        return vec![mean; v.len()];
-    }
-    let solve = |k: usize| {
-        let mut c = m;
-        for (row, value) in c.iter_mut().zip(r) {
-            row[k] = value;
+/// rms of `positions[j] - positions[i]` over pairs whose time apart lies
+/// within 20 % of `span`, per axis and in all, with the pair count.
+fn movement(t: &[f64], p: &[(f64, f64)], span: f64) -> Option<(f64, f64, f64, usize)> {
+    let (mut sx, mut sy, mut n) = (0.0, 0.0, 0usize);
+    for i in 0..t.len() {
+        for j in i + 1..t.len() {
+            let dt = t[j] - t[i];
+            if dt > 1.2 * span {
+                break;
+            }
+            if dt >= 0.8 * span {
+                let (dx, dy) = (p[j].0 - p[i].0, p[j].1 - p[i].1);
+                sx += dx * dx;
+                sy += dy * dy;
+                n += 1;
+            }
         }
-        det3(c) / d
-    };
-    let (a, b, c) = (solve(0), solve(1), solve(2));
-    ts.iter().map(|x| a + b * x + c * x * x).collect()
+    }
+    (n >= 5).then(|| {
+        let (x, y) = ((sx / n as f64).sqrt(), (sy / n as f64).sqrt());
+        (x, y, x.hypot(y), n)
+    })
 }
 
-/// The motion's description from shifts in live pixels at times `t`.
+/// The motion's description from shifts in live pixels at times `t`
+/// (seconds, increasing).
 pub(crate) fn describe(
     t: &[f64],
     shifts: &[(f64, f64)],
     sensor_px_per_live_px: f64,
+    frames: usize,
 ) -> Option<Stillness> {
     if t.len() < 8 || t.len() != shifts.len() {
         return None;
     }
     let k = sensor_px_per_live_px;
-    let x: Vec<f64> = shifts.iter().map(|s| s.0 * k).collect();
-    let y: Vec<f64> = shifts.iter().map(|s| s.1 * k).collect();
-    let (tx, ty) = (trend(t, &x), trend(t, &y));
-    let rx: Vec<f64> = x.iter().zip(&tx).map(|(a, b)| a - b).collect();
-    let ry: Vec<f64> = y.iter().zip(&ty).map(|(a, b)| a - b).collect();
+    let p: Vec<(f64, f64)> = shifts.iter().map(|s| (s.0 * k, s.1 * k)).collect();
     let n = t.len() as f64;
-    let rms = |v: &[f64]| (v.iter().map(|a| a * a).sum::<f64>() / n).sqrt();
-    // Principal axis of the residual motion.
-    let (sxx, syy, sxy) = rx
-        .iter()
-        .zip(&ry)
-        .fold((0.0, 0.0, 0.0), |(a, b, c), (x, y)| {
-            (a + x * x, b + y * y, c + x * y)
-        });
-    let angle = 0.5 * (2.0 * sxy).atan2(sxx - syy);
-    let along: Vec<f64> = rx
-        .iter()
-        .zip(&ry)
-        .map(|(x, y)| x * angle.cos() + y * angle.sin())
-        .collect();
-    let mut radial: Vec<f64> = rx.iter().zip(&ry).map(|(x, y)| x.hypot(*y)).collect();
-    radial.sort_by(f64::total_cmp);
-    let p95 = radial[((0.95 * (radial.len() - 1) as f64).round() as usize).min(radial.len() - 1)];
     let span = t[t.len() - 1] - t[0];
-    let drift = (tx[tx.len() - 1] - tx[0]).hypot(ty[ty.len() - 1] - ty[0]);
-    // The strongest frequency along the axis (a periodogram on the uneven
-    // times), up to 0.45 of the frame rate.
-    let rate = (t.len() - 1) as f64 / span.max(1e-9);
-    let top = (0.45 * rate).min(4.0);
-    let mut hertz = None;
-    if top > 0.2 {
-        let mut best = (0.0f64, 0.0f64);
-        let steps = 300;
-        for i in 0..=steps {
-            let f = 0.1 + (top - 0.1) * i as f64 / steps as f64;
-            let w = std::f64::consts::TAU * f;
-            let (c, s) = t.iter().zip(&along).fold((0.0, 0.0), |(c, s), (ti, a)| {
-                (c + a * (w * ti).cos(), s + a * (w * ti).sin())
-            });
-            let p = c * c + s * s;
-            if p > best.0 {
-                best = (p, f);
+    // Straight-line drift.
+    let tm = t.iter().sum::<f64>() / n;
+    let stt: f64 = t.iter().map(|v| (v - tm) * (v - tm)).sum();
+    let slope = |axis: usize| -> f64 {
+        let v: Vec<f64> = p
+            .iter()
+            .map(|q| if axis == 0 { q.0 } else { q.1 })
+            .collect();
+        let vm = v.iter().sum::<f64>() / n;
+        t.iter()
+            .zip(&v)
+            .map(|(a, b)| (a - tm) * (b - vm))
+            .sum::<f64>()
+            / stt.max(1e-12)
+    };
+    let drift_per_minute = 60.0 * slope(0).hypot(slope(1));
+    let mut moves = Vec::new();
+    let mut longest = None;
+    let mut blurred = false;
+    let mut previous: Option<(f64, f64)> = None;
+    for &s in &SPANS {
+        if s > 0.5 * span {
+            break;
+        }
+        let Some((_, _, all, _)) = movement(t, &p, s) else {
+            continue;
+        };
+        moves.push((s, all));
+        let blur = BLUR_SHARE * all;
+        if !blurred {
+            if blur <= BLUR_LIMIT {
+                longest = Some(s);
+            } else {
+                blurred = true;
+                // Between the last span under the limit and this one.
+                if let Some((s0, b0)) = previous {
+                    let f = ((BLUR_LIMIT / b0).ln() / (blur / b0).ln()).clamp(0.0, 1.0);
+                    longest = Some(s0 * (s / s0).powf(f));
+                }
             }
         }
-        hertz = (best.0 > 0.0).then_some(best.1);
+        previous = Some((s, blur));
     }
-    let sigma = rms(&along);
-    // A sway of rms sigma at f moves at up to 2 pi f sqrt(2) sigma.
-    let longest_seconds = hertz.and_then(|f| {
-        let speed = std::f64::consts::TAU * f * std::f64::consts::SQRT_2 * sigma;
-        (speed > 1e-9).then(|| BLUR_LIMIT / speed)
-    });
+    // Short-term movement and its axis, over about a second.
+    let (second, axis_degrees) = match movement(t, &p, 1.0) {
+        Some((x, y, _, _)) => {
+            // Principal axis of the one-second differences.
+            let (mut sxx, mut syy, mut sxy) = (0.0, 0.0, 0.0);
+            for i in 0..t.len() {
+                for j in i + 1..t.len() {
+                    let dt = t[j] - t[i];
+                    if dt > 1.2 {
+                        break;
+                    }
+                    if dt >= 0.8 {
+                        let (dx, dy) = (p[j].0 - p[i].0, p[j].1 - p[i].1);
+                        sxx += dx * dx;
+                        syy += dy * dy;
+                        sxy += dx * dy;
+                    }
+                }
+            }
+            ([x, y], (0.5 * (2.0 * sxy).atan2(sxx - syy)).to_degrees())
+        }
+        None => ([f64::NAN; 2], 0.0),
+    };
+    if moves.is_empty() {
+        return None;
+    }
     Some(Stillness {
-        frames: t.len(),
+        frames,
+        used: t.len(),
         seconds: span,
-        rms: [rms(&rx), rms(&ry)],
-        axis_degrees: angle.to_degrees(),
-        p95,
-        drift,
-        hertz,
-        longest_seconds,
+        drift_per_minute,
+        moves,
+        second,
+        axis_degrees,
+        longest_seconds: longest,
         sensor_px_per_live_px: k,
     })
 }
@@ -281,44 +420,65 @@ pub(crate) fn sensor_width(model: Option<&str>) -> Option<f64> {
     }
 }
 
+fn exposure_text(t: f64) -> String {
+    if t >= 1.0 {
+        format!("{t:.1} s")
+    } else {
+        format!("1/{:.0} s", (1.0 / t).ceil())
+    }
+}
+
 /// The plan's line for a result.
 pub(crate) fn sentence(s: &Stillness) -> String {
-    let main = s.rms[0].hypot(s.rms[1]);
-    if main < 0.1 {
+    let second = s.second[0].hypot(s.second[1]);
+    let drift = format!("drift {:.1} px a minute", s.drift_per_minute);
+    let settling = if s.drift_per_minute > 1.0 {
+        " Still settling (a light switched on warms the rig for some minutes): check again before a long stack."
+    } else {
+        ""
+    };
+    let skipped = if s.used < s.frames {
+        format!(
+            " {} of {} live frames left out.",
+            s.frames - s.used,
+            s.frames
+        )
+    } else {
+        String::new()
+    };
+    if second.is_finite() && second < 0.1 {
         return format!(
-            "Still: the picture moved {main:.2} px (rms) over {:.0} s; drift {:.1} px.",
-            s.seconds, s.drift
+            "Still: the picture moves {second:.2} px within a second; {drift}.{settling}{skipped}"
         );
     }
     let axis = if (s.axis_degrees.abs() - 90.0).abs() < 30.0 {
-        "the picture's vertical"
+        "mostly up-down"
     } else if s.axis_degrees.abs() < 30.0 {
-        "the picture's horizontal"
+        "mostly side to side"
     } else {
-        "a diagonal"
+        "diagonally"
     };
-    let along = s.rms[0].max(s.rms[1]);
-    let freq = s
-        .hertz
-        .map(|f| format!(" at {f:.1} Hz"))
-        .unwrap_or_default();
-    let longest = s
-        .longest_seconds
-        .map(|t| {
-            if t >= 1.0 {
-                format!(" Exposures up to {t:.1} s keep the blur under a quarter pixel.")
-            } else {
-                format!(
-                    " Exposures up to 1/{:.0} s keep the blur under a quarter pixel.",
-                    (1.0 / t).ceil()
-                )
-            }
-        })
-        .unwrap_or_default();
-    format!(
-        "Sways {along:.2} px (rms) along {axis}{freq}, 95 % within {:.1} px; drift {:.1} px over {:.0} s.{longest}",
-        s.p95, s.drift, s.seconds
-    )
+    let moves = if second.is_finite() {
+        format!("Moves {second:.2} px within a second, {axis}; {drift}.")
+    } else {
+        format!("{}; {drift}.", axis[..1].to_uppercase() + &axis[1..])
+    };
+    let shortest = s.moves.first().map_or(0.2, |m| m.0);
+    let limit = match s.longest_seconds {
+        Some(t) if s.moves.last().is_some_and(|m| (m.0 - t).abs() < 1e-9) => format!(
+            " Exposures up to at least {} keep the blur under a quarter pixel.",
+            exposure_text(t)
+        ),
+        Some(t) => format!(
+            " Exposures up to {} keep the blur under a quarter pixel.",
+            exposure_text(t)
+        ),
+        None => format!(
+            " It moves more than half a pixel within {}: shorter exposures, or a stiffer rig, are needed.",
+            exposure_text(shortest)
+        ),
+    };
+    format!("{moves}{limit}{settling}{skipped}")
 }
 
 /// The check as it runs: the magnifier set, the live frames watched, the
@@ -340,7 +500,7 @@ pub(crate) enum StillnessCheck {
         since: std::time::Instant,
         last: Option<u64>,
         live_width: usize,
-        crops: Vec<Crop>,
+        frames: Vec<Frame>,
     },
     Measuring {
         task: crate::jobs::Task<Option<Stillness>>,
@@ -454,7 +614,7 @@ impl StillnessCheck {
                         since: now,
                         last: s.preview.as_ref().map(|(g, _)| *g),
                         live_width: 0,
-                        crops: Vec::new(),
+                        frames: Vec::new(),
                     };
                 } else if now >= *deadline {
                     let back = (*before, at.0, at.1);
@@ -470,7 +630,7 @@ impl StillnessCheck {
                 since,
                 last,
                 live_width,
-                crops,
+                frames,
             } => {
                 let elapsed = now.saturating_duration_since(*since).as_secs_f64();
                 if let Some((generation, image)) = &s.preview
@@ -483,8 +643,8 @@ impl StillnessCheck {
                         .iter()
                         .flat_map(|p| [p.r(), p.g(), p.b(), 255])
                         .collect();
-                    if let Some(c) = crop(w, h, &rgba, elapsed) {
-                        crops.push(c);
+                    if let Some(f) = frame(w, h, &rgba, elapsed) {
+                        frames.push(f);
                         *live_width = w;
                     }
                 }
@@ -497,11 +657,11 @@ impl StillnessCheck {
                     return None;
                 }
                 let back = (*before, at.0, at.1);
-                let crops = std::mem::take(crops);
+                let frames = std::mem::take(frames);
                 let k = sensor_width(host.camera_model.as_deref())
                     .map(|sensor| sensor_px_per_live_px(sensor, *live_width as f64, *ratio));
                 *self = match k {
-                    _ if crops.len() < 8 => {
+                    _ if frames.len() < 8 => {
                         Self::Failed("too few live frames arrived to measure".into())
                     }
                     None => {
@@ -509,16 +669,16 @@ impl StillnessCheck {
                     }
                     Some(k) => Self::Measuring {
                         task: crate::jobs::spawn_task("strehl-stillness", move |_| {
-                            let reference = &crops[0];
-                            let mut t = Vec::with_capacity(crops.len());
-                            let mut shifts = Vec::with_capacity(crops.len());
-                            for c in &crops {
-                                if let Some(shift) = register(reference, c) {
-                                    t.push(c.seconds);
+                            let reference = &frames[0];
+                            let mut t = Vec::with_capacity(frames.len());
+                            let mut shifts = Vec::with_capacity(frames.len());
+                            for f in &frames {
+                                if let Some(shift) = register(reference, f) {
+                                    t.push(f.seconds);
                                     shifts.push(shift);
                                 }
                             }
-                            Ok(describe(&t, &shifts, k))
+                            Ok(describe(&t, &shifts, k, frames.len()))
                         }),
                     },
                 };
@@ -549,64 +709,151 @@ impl StillnessCheck {
 mod tests {
     use super::*;
 
-    fn texture(side: usize, dx: f64, dy: f64, seconds: f64) -> Crop {
-        let luma = (0..side * side)
+    /// A textured live frame shifted by `(dx, dy)`, with a gain and an
+    /// offset; `flat_centre` blanks the middle third (the old check's patch).
+    fn scene(
+        w: usize,
+        h: usize,
+        dx: f64,
+        dy: f64,
+        gain: f64,
+        offset: f64,
+        flat_centre: bool,
+    ) -> Frame {
+        let luma = (0..w * h)
             .map(|i| {
-                let (x, y) = ((i % side) as f64 - dx, (i / side) as f64 - dy);
-                (100.0
+                let (px, py) = ((i % w) as f64, (i / w) as f64);
+                let (x, y) = (px - dx, py - dy);
+                let mut v = 100.0
                     + 40.0 * (x * 0.21).sin() * (y * 0.17).cos()
                     + 25.0 * ((x + 2.0 * y) * 0.11).sin()
-                    + 15.0 * ((3.0 * x - y) * 0.07).cos()) as f32
+                    + 15.0 * ((3.0 * x - y) * 0.07).cos();
+                // The flat patch belongs to the scene: it moves with it.
+                let centre = x > w as f64 / 3.0
+                    && x < 2.0 * w as f64 / 3.0
+                    && y > h as f64 / 3.0
+                    && y < 2.0 * h as f64 / 3.0;
+                if flat_centre && centre {
+                    v = 120.0;
+                }
+                (v * gain + offset).round().clamp(0.0, 255.0) as u8
             })
             .collect();
-        Crop {
-            seconds,
-            side,
+        Frame {
+            seconds: 0.0,
+            width: w,
+            height: h,
             luma,
         }
     }
 
-    /// Sub-pixel shifts are found to a few hundredths, whole pixels too.
+    /// Sub-pixel and whole-pixel shifts are found to a few hundredths,
+    /// through a brightness change, and with a featureless centre (where
+    /// the old 320 px centre patch went wrong on the rig).
     #[test]
-    fn registration_finds_sub_pixel_and_whole_pixel_shifts() {
-        let reference = texture(CROP, 0.0, 0.0, 0.0);
-        for (dx, dy) in [(0.3, -0.45), (2.6, 1.2), (-5.4, 3.1), (0.0, 0.0)] {
-            let moving = texture(CROP, dx, dy, 0.1);
-            let (x, y) = register(&reference, &moving).unwrap();
-            assert!(
-                (x - dx).abs() < 0.05 && (y - dy).abs() < 0.05,
-                "{dx},{dy} -> {x},{y}"
-            );
+    fn registration_finds_shifts_through_brightness_changes_and_a_flat_centre() {
+        let (w, h) = (512, 340);
+        for flat in [false, true] {
+            let reference = scene(w, h, 0.0, 0.0, 1.0, 0.0, flat);
+            for (dx, dy, g, o) in [
+                (0.3, -0.45, 1.0, 0.0),
+                (2.6, 1.2, 0.9, 6.0),
+                (-5.4, 3.1, 1.08, -4.0),
+                (0.0, 0.0, 0.95, 0.0),
+                (13.2, -9.7, 1.0, 0.0),
+            ] {
+                let moving = scene(w, h, dx, dy, g, o, flat);
+                let (x, y) = register(&reference, &moving).expect("registers");
+                assert!(
+                    (x - dx).abs() < 0.05 && (y - dy).abs() < 0.05,
+                    "flat {flat}: {dx},{dy} -> {x},{y}"
+                );
+            }
         }
     }
 
-    /// A 2.6 Hz sway of 0.5 px rms along y with a slow drift reads as that:
-    /// axis, size, frequency and a 1/46 s exposure limit; a still
-    /// series reads as still.
+    /// A frame that does not move rigidly (one quarter moved apart) is left
+    /// out rather than averaged in.
     #[test]
-    fn a_sway_is_described_by_axis_size_and_frequency() {
-        let t: Vec<f64> = (0..124).map(|i| i as f64 / 6.2).collect();
+    fn a_frame_whose_quarters_disagree_is_left_out() {
+        let (w, h) = (512, 340);
+        let reference = scene(w, h, 0.0, 0.0, 1.0, 0.0, false);
+        let mut moving = scene(w, h, 0.4, 0.2, 1.0, 0.0, false);
+        let shifted = scene(w, h, 3.4, 2.2, 1.0, 0.0, false);
+        for y in 0..h / 2 {
+            for x in 0..w / 2 {
+                moving.luma[y * w + x] = shifted.luma[y * w + x];
+            }
+        }
+        assert!(register(&reference, &moving).is_none());
+    }
+
+    fn times() -> Vec<f64> {
+        (0..124).map(|i| i as f64 / 6.2).collect()
+    }
+
+    /// A fast sway of 0.5 px rms up-down blurs any exposure the live view
+    /// can time: it says so, and gives no exposure limit.
+    #[test]
+    fn a_fast_sway_reads_as_blurring_every_exposure() {
+        let t = times();
         let amp = 0.5 * std::f64::consts::SQRT_2;
         let shifts: Vec<(f64, f64)> = t
             .iter()
+            .map(|t| (0.0, amp * (std::f64::consts::TAU * 2.6 * t).sin()))
+            .collect();
+        let s = describe(&t, &shifts, 1.0, t.len()).unwrap();
+        assert!(s.longest_seconds.is_none(), "{s:?}");
+        assert!((s.axis_degrees.abs() - 90.0).abs() < 5.0, "{s:?}");
+        let line = sentence(&s);
+        assert!(
+            line.contains("up-down") && line.contains("more than half a pixel"),
+            "{line}"
+        );
+    }
+
+    /// A slow wander and a steady drift: the drift is reported in px a
+    /// minute, and the exposure limit is where the movement reaches half a
+    /// pixel (blur a quarter).
+    #[test]
+    fn drift_and_wander_give_a_drift_rate_and_an_exposure_limit() {
+        let t = times();
+        // 1.2 px a minute along x, and a random walk of 0.12 px a step on y.
+        let mut walk = 0.0f64;
+        let mut seed = 12345u64;
+        let shifts: Vec<(f64, f64)> = t
+            .iter()
             .map(|t| {
-                (
-                    0.02 * t,
-                    amp * (std::f64::consts::TAU * 2.6 * t).sin() + 0.03 * t,
-                )
+                seed = seed
+                    .wrapping_mul(6364136223846793005)
+                    .wrapping_add(1442695040888963407);
+                let u = ((seed >> 11) as f64 / (1u64 << 53) as f64) - 0.5;
+                walk += 0.12 * u * 3.46;
+                (0.02 * t, walk)
             })
             .collect();
-        let s = describe(&t, &shifts, 1.0).unwrap();
-        assert!((s.rms[1] - 0.5).abs() < 0.03, "{s:?}");
-        assert!(s.rms[0] < 0.02, "{s:?}");
-        assert!((s.axis_degrees.abs() - 90.0).abs() < 5.0, "{s:?}");
-        assert!((s.hertz.unwrap() - 2.6).abs() < 0.05, "{s:?}");
-        let longest = s.longest_seconds.unwrap();
-        // 0.25 / (2 pi 2.6 sqrt(2) 0.5) = 1/46 s.
-        assert!((longest - 0.0216).abs() < 0.002, "{longest}");
-        assert!(sentence(&s).contains("vertical"), "{}", sentence(&s));
-        let still: Vec<(f64, f64)> = t.iter().map(|t| (0.01 * t, 0.0)).collect();
-        assert!(sentence(&describe(&t, &still, 1.0).unwrap()).starts_with("Still"));
+        let s = describe(&t, &shifts, 1.0, t.len()).unwrap();
+        assert!((s.drift_per_minute - 1.2).abs() < 0.6, "{s:?}");
+        let limit = s.longest_seconds.expect("a limit");
+        // Movement over the limit is about half a pixel.
+        let (lo, hi) = s
+            .moves
+            .windows(2)
+            .find(|w| w[0].0 <= limit && limit <= w[1].0)
+            .map(|w| (w[0].1, w[1].1))
+            .expect("bracketed");
+        assert!(lo <= 0.5 + 1e-9 && hi >= 0.5 - 1e-9, "{s:?}");
+        assert!(sentence(&s).contains("a minute"), "{}", sentence(&s));
+    }
+
+    /// A still series reads as still.
+    #[test]
+    fn a_still_series_reads_still() {
+        let t = times();
+        let shifts: Vec<(f64, f64)> = t.iter().map(|t| (0.001 * t, 0.0)).collect();
+        let s = describe(&t, &shifts, 1.0, t.len()).unwrap();
+        assert!(sentence(&s).starts_with("Still"), "{}", sentence(&s));
+        assert!(s.longest_seconds.is_some_and(|l| l >= 5.0), "{s:?}");
     }
 
     #[test]
@@ -635,7 +882,7 @@ mod tests {
             .filter(|p| p.extension().is_some_and(|e| e == "jpg"))
             .collect();
         files.sort();
-        let mut crops = Vec::new();
+        let mut frames = Vec::new();
         let mut width = 0;
         for f in &files {
             let t: f64 = f
@@ -647,20 +894,22 @@ mod tests {
                 .unwrap();
             let img = image::open(f).unwrap().to_rgba8();
             width = img.width() as usize;
-            crops.push(crop(img.width() as usize, img.height() as usize, img.as_raw(), t).unwrap());
+            frames
+                .push(frame(img.width() as usize, img.height() as usize, img.as_raw(), t).unwrap());
         }
+        frames.sort_by(|a, b| a.seconds.total_cmp(&b.seconds));
         let (mut t, mut shifts) = (Vec::new(), Vec::new());
-        for c in &crops {
-            if let Some(shift) = register(&crops[0], c) {
-                t.push(c.seconds);
+        for f in &frames {
+            if let Some(shift) = register(&frames[0], f) {
+                t.push(f.seconds);
                 shifts.push(shift);
             }
         }
         let k = sensor_px_per_live_px(9504.0, width as f64, ratio);
-        let found = describe(&t, &shifts, k).unwrap();
+        let found = describe(&t, &shifts, k, frames.len()).unwrap();
         println!(
             "{} frames, {} registered, {:.3} sensor px a live px",
-            crops.len(),
+            frames.len(),
             t.len(),
             k
         );

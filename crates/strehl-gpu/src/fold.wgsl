@@ -37,10 +37,13 @@ const ACC_BANK: u32 = 0x40000000u;
 // their own binding, so the work arena stays below the binding cap with
 // twelve planes' pyramids.
 @group(0) @binding(8) var<storage, read_write> rgbw: array<f32>;
-// Highlight patches (plan X4): per frame slot, the replaced sites
-// (plane, index, w bits, v bits) then the patched luma pixels
-// (index, w1 bits, w2 bits, 0).
-@group(0) @binding(9) var<storage, read> patches: array<u32>;
+// Highlight companions (plan X4): raw u16 frames like `raw`, one slot of up
+// to four members per frame slot. `sensel` reads here for a sample index
+// with COMP_BIT set.
+@group(0) @binding(9) var<storage, read> comp: array<u32>;
+// Highlight fusion counts, eight words per frame tag (`hl_blend`).
+@group(0) @binding(10) var<storage, read_write> stats: array<atomic<u32>>;
+const COMP_BIT: u32 = 0x80000000u;
 
 fn acc_ld(o: u32) -> f32 {
     if (o >= ACC_BANK) { return acc_hi[o - ACC_BANK]; }
@@ -549,8 +552,11 @@ fn accum(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) 
 
 // Raw sample at word-offset `base` + `i` samples.
 fn sensel(base: u32, i: u32) -> u32 {
-    let j = base + i;
-    return (raw[j / 2u] >> (16u * (j & 1u))) & 65535u;
+    let k = base + i;
+    let j = k & ~COMP_BIT;
+    var w: u32;
+    if ((k & COMP_BIT) != 0u) { w = comp[j / 2u]; } else { w = raw[j / 2u]; }
+    return (w >> (16u * (j & 1u))) & 65535u;
 }
 
 // demosaic::reflect
@@ -1490,32 +1496,203 @@ fn combine(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups
     acc_st(p.a.x + i, v);
 }
 
-// Highlight fusion (plan X4): replace sites of the gathered level-0 planes,
-// as the engine's `FramePatches::apply_planes`: plane = plane * (1 - w) + v * w.
-// a = (count, first word, plane 0's level-0 offset, plane stride).
+// ---- Highlight fusion (plan X4), as `highlight_fusion::Fusion` ----
+// The base group's brightness per active photosite (`Bright::of`): the
+// largest of its members' samples at their offsets, raw codes.
+// a = (dst, w, h, members), b = member bases (raw samples), c = (active x,
+// active y, stride, buffer rows), d.x = offsets, 8 bits a member:
+// (ox + 8) | (oy + 8) << 4.
 @compute @workgroup_size(256)
-fn patch_planes(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
-    let j = gid(id, nwg);
-    if (j >= p.a.x) { return; }
-    let o = p.a.y + 4u * j;
-    let at = p.a.z + patches[o] * p.a.w + patches[o + 1u];
-    let w = bitcast<f32>(patches[o + 2u]);
-    let v = bitcast<f32>(patches[o + 3u]);
-    let keep = 1.0 - w;
-    work[at] = work[at] * keep + v * w;
+fn hl_bright(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
+    let i = gid(id, nwg);
+    let w = p.a.y;
+    if (i >= w * p.a.z) { return; }
+    let x = i32(i % w); let y = i32(i / w);
+    var m = 0u;
+    for (var j = 0u; j < p.a.w; j = j + 1u) {
+        let o = (p.d.x >> (8u * j)) & 255u;
+        let bx = i32(p.c.x) + x + i32(o & 15u) - 8;
+        let by = i32(p.c.y) + y + i32(o >> 4u) - 8;
+        if (bx >= 0 && by >= 0 && bx < i32(p.c.z) && by < i32(p.c.w)) {
+            m = max(m, sensel(p.b[j], u32(by) * p.c.z + u32(bx)));
+        }
+    }
+    rgbw[p.a.x + i] = f32(m);
 }
 
-// The patched luma pixels' variance, as the engine's `fused_variance`.
-// a = (count, first word, luma, var), f = (gain G1, read G1, gain G2, read G2),
-// g = (ratio, 1 / ratio).
+// Each row's maxima over the two windows `Bright::max` takes about a
+// photosite's floor x, [x - 1 - r, x + 2 + r] with each end clamped to the
+// row, for r = widen (wide) and reach (narrow), over x in [-pad, w + pad).
+// a = (src, wide dst, narrow dst, padded width), b = (w, h, pad, widen),
+// c.x = reach.
 @compute @workgroup_size(256)
-fn patch_variance(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
-    let j = gid(id, nwg);
-    if (j >= p.a.x) { return; }
-    let o = p.a.y + 4u * j;
-    let i = patches[o];
-    let w1 = bitcast<f32>(patches[o + 1u]);
-    let w2 = bitcast<f32>(patches[o + 2u]);
+fn hl_dilate_h(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
+    let i = gid(id, nwg);
+    let pw = p.a.w;
+    let w = i32(p.b.x);
+    if (i >= pw * p.b.y) { return; }
+    let x = i32(i % pw) - i32(p.b.z);
+    let row = p.a.x + (i / pw) * p.b.x;
+    let wd = i32(p.b.w); let r = i32(p.c.x);
+    var m = 0.0;
+    for (var k = clamp(x - 1 - wd, 0, w - 1); k <= clamp(x + 2 + wd, 0, w - 1); k = k + 1) {
+        m = max(m, rgbw[row + u32(k)]);
+    }
+    var n = 0.0;
+    for (var k = clamp(x - 1 - r, 0, w - 1); k <= clamp(x + 2 + r, 0, w - 1); k = k + 1) {
+        n = max(n, rgbw[row + u32(k)]);
+    }
+    rgbw[p.a.y + i] = m;
+    rgbw[p.a.z + i] = n;
+}
+
+// The same down the columns of the row maxima, over y in [-pad, h + pad).
+// a = (wide src, narrow src, wide dst, narrow dst), b = (padded width, h,
+// pad, widen), c.x = reach.
+@compute @workgroup_size(256)
+fn hl_dilate_v(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
+    let i = gid(id, nwg);
+    let pw = p.b.x;
+    let h = i32(p.b.y);
+    let pad = i32(p.b.z);
+    if (i >= pw * (p.b.y + 2u * p.b.z)) { return; }
+    let x = i % pw;
+    let y = i32(i / pw) - pad;
+    let wd = i32(p.b.w); let r = i32(p.c.x);
+    var m = 0.0;
+    for (var k = clamp(y - 1 - wd, 0, h - 1); k <= clamp(y + 2 + wd, 0, h - 1); k = k + 1) {
+        m = max(m, rgbw[p.a.x + u32(k) * pw + x]);
+    }
+    var n = 0.0;
+    for (var k = clamp(y - 1 - r, 0, h - 1); k <= clamp(y + 2 + r, 0, h - 1); k = k + 1) {
+        n = max(n, rgbw[p.a.y + u32(k) * pw + x]);
+    }
+    rgbw[p.a.z + i] = m;
+    rgbw[p.a.w + i] = n;
+}
+
+// Pull `s` of `xf` at analysis pixel (px, py), in photosites of the
+// full-resolution planes: `2 * apply_at(px + ox, py + oy)`, as `gather_value`.
+fn hl_at(s: u32, px: u32, py: u32) -> vec2<f64> {
+    let o = 8u * s;
+    let ar = xf[o]; let ai = xf[o + 1u]; let br = xf[o + 2u]; let bi = xf[o + 3u];
+    let ox = xf[o + 4u]; let oy = xf[o + 5u]; let cx = xf[o + 6u]; let cy = xf[o + 7u];
+    let pr = (f64(px) + ox) - cx;
+    let pi = (f64(py) + oy) - cy;
+    let qr = (ar * pr - ai * pi) + br;
+    let qi = (ar * pi + ai * pr) + bi;
+    return vec2(f64(2.0) * (qr + cx), f64(2.0) * (qi + cy));
+}
+
+// floor(v) clamped to [-pad, n - 1 + pad], plus pad: an index into a padded
+// dilation (beyond it every window clamps to the same photosites).
+fn hl_cell(v: f64, n: u32, pad: u32) -> u32 {
+    let lo = -f64(pad);
+    let hi = (f64(n) - f64(1.0)) + f64(pad);
+    return u32(i32(clamp(floor(v), lo, hi)) + i32(pad));
+}
+
+var<workgroup> hl_counts: array<atomic<u32>, 5>;
+
+// Blend the companion into one gathered site's level-0 plane where the base
+// group's brightness about the site's pull reaches the ramp, as the engine's
+// `highlight_fusion::Fusion::blend_site`: w = ramp(wide max); the
+// companion's sample through its own pull, times the ratio, blended by w.
+// Counts patched sites, w = 1 sites, pinned sites (narrow max at the pin),
+// pinned sites not fully replaced, and companion samples near its own pin.
+// a = (plane, companion channel plane, fw, fh), b = rect, c = (base pull,
+// companion pull, flags: 1 carried, 2 writes w1, 4 writes w2, stats word),
+// d = (wide, narrow, padded width, pad), e = (w, h, w1 plane, w2 plane),
+// f = (black, inverse gain, ratio, full), g = (ramp lo, ramp span, pin,
+// companion pin).
+@compute @workgroup_size(256)
+fn hl_blend(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>,
+            @builtin(local_invocation_index) t: u32) {
+    if (t < 5u) { atomicStore(&hl_counts[t], 0u); }
+    workgroupBarrier();
+    let i = gid(id, nwg);
+    let lw = p.b.z;
+    if (i < lw * p.b.w) {
+        let px = p.b.x + i % lw; let py = p.b.y + i / lw;
+        let q = hl_at(p.c.x, px, py);
+        var wt = 0.0;
+        var pinned = false;
+        if (abs(q.x) <= f64(1e300) && abs(q.y) <= f64(1e300)) {
+            let pad = p.d.w;
+            let cell = hl_cell(q.y, p.e.y, pad) * p.d.z + hl_cell(q.x, p.e.x, pad);
+            let m = rgbw[p.d.x + cell];
+            let u = clamp(div(div(m - p.f.x, p.f.w) - p.g.x, p.g.y), 0.0, 1.0);
+            wt = u * u * (3.0 - 2.0 * u);
+            pinned = rgbw[p.d.y + cell] >= p.g.z;
+        }
+        var covered = false;
+        if (wt > 0.0) {
+            let fw = p.a.z; let fh = p.a.w;
+            let c = hl_at(p.c.y, px, py);
+            var v = 0.0;
+            let inside = c.x >= f64(1.5) && c.y >= f64(1.5)
+                && c.x <= f64(fw) - f64(2.5) && c.y <= f64(fh) - f64(2.5);
+            if (inside) {
+                let x0 = min(u32(c.x), fw - 3u);
+                let y0 = min(u32(c.y), fh - 3u);
+                let wx = cr_weights(f32(c.x - f64(x0)));
+                let wy = cr_weights(f32(c.y - f64(y0)));
+                let base = p.a.y + (y0 - 1u) * fw + x0 - 1u;
+                var acc = 0.0;
+                for (var dy = 0u; dy < 4u; dy = dy + 1u) {
+                    let row = base + dy * fw;
+                    var r = 0.0;
+                    r = r + rgbw[row] * wx[0];
+                    r = r + rgbw[row + 1u] * wx[1];
+                    r = r + rgbw[row + 2u] * wx[2];
+                    r = r + rgbw[row + 3u] * wx[3];
+                    acc = acc + r * wy[dy];
+                }
+                if ((p.c.z & 1u) != 0u) {
+                    // A carried channel, quantised as a native site's.
+                    v = max(f32(quantize(acc * p.f.y + p.f.x)) - p.f.x, 0.0);
+                } else {
+                    v = acc * p.f.y;
+                }
+            }
+            // A carried sample outside the support reads zero; a native one
+            // leaves the site alone.
+            covered = inside || (p.c.z & 1u) != 0u;
+            if (covered) {
+                let at = p.a.x + i;
+                let keep = 1.0 - wt;
+                work[at] = work[at] * keep + (p.f.z * v) * wt;
+                atomicAdd(&hl_counts[0], 1u);
+                if (wt >= 1.0) { atomicAdd(&hl_counts[1], 1u); }
+                if (v >= p.g.w) { atomicAdd(&hl_counts[4], 1u); }
+            }
+            if (pinned) {
+                atomicAdd(&hl_counts[2], 1u);
+                if (!covered || wt < 1.0) { atomicAdd(&hl_counts[3], 1u); }
+            }
+        }
+        let wv = select(0.0, wt, covered);
+        if ((p.c.z & 2u) != 0u) { rgbw[p.e.z + i] = wv; }
+        if ((p.c.z & 4u) != 0u) { rgbw[p.e.w + i] = wv; }
+    }
+    workgroupBarrier();
+    if (t < 5u) {
+        let n = atomicLoad(&hl_counts[t]);
+        if (n != 0u) { atomicAdd(&stats[p.c.w + t], n); }
+    }
+}
+
+// The fused luma pixels' variance, as the engine's `fused_variance`, where
+// either green was replaced (its weight in w1 or w2 above zero).
+// a = (n, w1 plane (w2 follows), luma, var), f = (gain G1, read G1, gain G2,
+// read G2), g = (ratio, 1 / ratio).
+@compute @workgroup_size(256)
+fn hl_variance(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) nwg: vec3<u32>) {
+    let i = gid(id, nwg);
+    if (i >= p.a.x) { return; }
+    let w1 = rgbw[p.a.y + i];
+    let w2 = rgbw[p.a.y + p.a.x + i];
+    if (!(w1 > 0.0 || w2 > 0.0)) { return; }
     let s = max(work[p.a.z + i], 0.0);
     let c = s * p.g.y;
     let kk = p.g.x * p.g.x;

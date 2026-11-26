@@ -1133,7 +1133,10 @@ pub struct GroupMeasurement {
 /// `pixel_shift::register`, `pixel_shift::witness`, `pixel_shift::balance`
 /// or [`measure`] compute (the pinned-bits test says when): journaled
 /// measurements of another version are measured again.
-pub const GROUP_CHECK_VERSION: u32 = 2;
+/// 3 (2026-11-25): registration luma free of the CFA-parity alternation
+/// (`pixel_shift` `Integral::luma`); version 2 misread members at odd offsets
+/// on scenes whose red and blue differ in detail.
+pub const GROUP_CHECK_VERSION: u32 = 3;
 
 /// Run `f` on a rayon pool of one thread kept by the calling thread, so its
 /// parallel loops run in turn there rather than on the shared pool.
@@ -1795,6 +1798,11 @@ impl StackGroups {
         self.parked.lock().unwrap().remove(&index)
     }
 
+    /// Park a group taken with [`Self::take`] again, for the fold.
+    pub(crate) fn park(&self, index: usize, group: crate::align_cmd::MeasuredGroup) {
+        self.parked.lock().unwrap().insert(index, group);
+    }
+
     /// Each demoted frame once, in frame order. A frame can be decoded more
     /// than once in a render (`STREHL_AXIAL_CA` gathers red and blue a second
     /// time), and each decode records its demotion.
@@ -1937,8 +1945,8 @@ pub(crate) mod tests {
         assert_eq!(
             (GROUP_CHECK_VERSION, digest.as_str()),
             (
-                2,
-                "1842f805740b56fe8d6a714aee51ddfbd9efe5b032201b8d8646704923bcff47"
+                3,
+                "4a6cbe13ad0e3707bb48617709b487d7bc476b09483517cdd35c10ac8a06666e"
             ),
             "measure's output changed: bump GROUP_CHECK_VERSION and update this digest"
         );

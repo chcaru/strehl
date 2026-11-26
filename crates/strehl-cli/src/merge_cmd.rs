@@ -5859,6 +5859,17 @@ impl RawPyramidSource<'_> {
                 groups.prepare_with(index, path, &frame, serial)
             })?;
         }
+        // Plan X4: this frame's highlight fusion planned here, on the
+        // decoder, before the fold takes the frame and its group.
+        if crate::highlight_fusion::companion_of(path).is_some() {
+            let group = self.groups.and_then(|g| g.take(index));
+            fold_trace::time(fold_trace::Step::Highlight, || {
+                crate::highlight_fusion::warm(index, &frame, group.as_ref())
+            });
+            if let (Some(groups), Some(group)) = (self.groups, group) {
+                groups.park(index, group);
+            }
+        }
         #[cfg(feature = "research-lens-warp")]
         if let Some(lens) = self.lens {
             lens.validate_frame(index, &frame)?;
@@ -6959,82 +6970,141 @@ impl BandWorker {
             None => (None, None),
         };
         let black = levels.black;
-        // Plan X4: the highlight patches, planned on the CPU from the
-        // unwarped group and applied on the device before luma and variance.
+        // Plan X4: the highlight companion, its placement and ratio measured
+        // on the CPU; the device weighs, gathers and blends it before luma
+        // and variance.
         let fusion = match (t, warps) {
             (Some(t), Some(map))
                 if crate::highlight_fusion::companion_of(&frame.path).is_some() =>
             {
                 let r = self.domain.rect;
-                crate::highlight_fusion::plan(crate::highlight_fusion::Inputs {
-                    frame: &frame,
-                    group: measured.as_ref(),
-                    t,
-                    placement: &|q| placement_of(map, q),
-                    full: self.domain.full,
-                    rect: [r.x, r.y, r.width, r.height],
-                    bands: None,
-                    carry: carried.is_some(),
+                fold_trace::time(fold_trace::Step::FoldHighlight, || {
+                    crate::highlight_fusion::plan_device(crate::highlight_fusion::Inputs {
+                        frame: &frame,
+                        group: measured.as_ref(),
+                        t,
+                        placement: &|q| placement_of(map, q),
+                        full: self.domain.full,
+                        rect: [r.x, r.y, r.width, r.height],
+                        bands: None,
+                        carry: carried.is_some(),
+                    })
                 })?
             }
             _ => None,
         };
-        let packed = fusion.as_ref().map(|p| {
-            (
-                p.sites
-                    .iter()
-                    .map(|s| [s.plane, s.index, s.w.to_bits(), s.v.to_bits()])
-                    .collect::<Vec<[u32; 4]>>(),
-                p.luma
-                    .iter()
-                    .map(|s| [s.index, s.w1.to_bits(), s.w2.to_bits(), 0])
-                    .collect::<Vec<[u32; 4]>>(),
-                p.ratio,
-            )
-        });
-        let gpu_patches = packed
-            .as_ref()
-            .map(|(sites, luma, ratio)| strehl_gpu::Patches {
-                sites,
-                luma,
-                ratio: *ratio,
-            });
         let gpu = self
             .gpu
             .as_mut()
             .expect("GPU preparation without a GPU fold");
+        if fusion.is_some()
+            && crate::highlight_fusion::pending_tags().len() + 1 >= strehl_gpu::FUSION_TAGS
+        {
+            collect_fusion_counts(gpu)?;
+        }
         if let Some(progress) = progress {
             progress.merge_step(index, "gather", None, "started");
         }
-        let group = measured.as_ref().map(|m| strehl_gpu::RawGroup {
-            members: [
-                &m.members[0].data[..],
-                &m.members[1].data[..],
-                &m.members[2].data[..],
-            ],
-            offsets: m.offsets,
-            // `measured_rows`' inverse gains and `compensate_rows`' residuals.
-            inv: m.gains.map(|g| (1.0 / g) as f32),
-            residuals: m
-                .residuals
-                .map(|(r, sign)| r.map(|v| [sign * v[0] as f32, sign * v[1] as f32])),
-        });
+        fn raw_group(m: &align_cmd::MeasuredGroup) -> strehl_gpu::RawGroup<'_> {
+            strehl_gpu::RawGroup {
+                members: [
+                    &m.members[0].data[..],
+                    &m.members[1].data[..],
+                    &m.members[2].data[..],
+                ],
+                offsets: m.offsets,
+                // `measured_rows`' inverse gains and `compensate_rows`' residuals.
+                inv: m.gains.map(|g| (1.0 / g) as f32),
+                residuals: m
+                    .residuals
+                    .map(|(r, sign)| r.map(|v| [sign * v[0] as f32, sign * v[1] as f32])),
+            }
+        }
+        let group = measured.as_ref().map(raw_group);
+        let tag = fusion
+            .as_ref()
+            .map(|_| crate::highlight_fusion::next_tag(strehl_gpu::FUSION_TAGS));
+        // The companion's pulls, as `warp_fullres_banded` builds a frame's,
+        // through its own placement.
+        let companion_pulls = match &fusion {
+            Some(f) => {
+                let ident = strehl_raw::identity_cached(&frame.path);
+                let ca = strehl_core::optics::profile_for_capture_env(
+                    ident.model.as_deref(),
+                    ident.lens_type3,
+                )?;
+                let tc = f.companion_placement();
+                let pull = |channel: strehl_core::optics::Channel| {
+                    let s = strehl_core::optics::OpticalProfile::compose(ca, channel, tc);
+                    strehl_gpu::SitePull {
+                        a: [s.a.re, s.a.im],
+                        b: [s.b.re, s.b.im],
+                    }
+                };
+                let channel_of = |ci: usize| match ci {
+                    0 => strehl_core::optics::Channel::Red,
+                    2 => strehl_core::optics::Channel::Blue,
+                    _ => strehl_core::optics::Channel::Green,
+                };
+                let native = [(0, 0), (1, 0), (0, 1), (1, 1)]
+                    .map(|(dx, dy)| pull(strehl_core::optics::cfa_site_channel(dx, dy)));
+                let carried = carried
+                    .is_some()
+                    .then(|| align_cmd::CARRIED_SITES.map(|(_, _, ci)| pull(channel_of(ci))));
+                Some((native, carried))
+            }
+            None => None,
+        };
+        let base_frame = strehl_gpu::RawFrame {
+            data: &frame.data,
+            stride: frame.stride,
+            active: [frame.active.x, frame.active.y],
+            black,
+            gain: align_cmd::wb_gains(&frame.wb_coeffs),
+            pulls,
+            carried,
+            group,
+        };
         let staged = fold_trace::time(fold_trace::Step::Stage, || {
-            gpu.stage_with_patches(
-                &strehl_gpu::RawFrame {
-                    data: &frame.data,
-                    stride: frame.stride,
-                    active: [frame.active.x, frame.active.y],
-                    black,
-                    gain: align_cmd::wb_gains(&frame.wb_coeffs),
-                    pulls,
-                    carried,
-                    group,
-                },
-                gpu_patches.as_ref(),
-            )
+            match (&fusion, tag, companion_pulls) {
+                (Some(f), Some(tag), Some((native, carried_c))) => {
+                    let (_, full, widen, reach, ramp, pin, companion_pin) = f.levels();
+                    f.with_companion(|cm1, cgroup| {
+                        gpu.stage_fused(
+                            &base_frame,
+                            Some(&strehl_gpu::Companion {
+                                frame: strehl_gpu::RawFrame {
+                                    data: &cm1.data,
+                                    stride: cm1.stride,
+                                    active: [cm1.active.x, cm1.active.y],
+                                    black,
+                                    gain: align_cmd::wb_gains(&cm1.wb_coeffs),
+                                    pulls: Some(native),
+                                    carried: carried_c,
+                                    group: cgroup.map(raw_group),
+                                },
+                                key: f.companion_key(),
+                                active_size: [frame.active.width, frame.active.height],
+                                ratio: f.ratio(),
+                                full,
+                                ramp,
+                                pin,
+                                companion_pin,
+                                widen,
+                                reach,
+                                tag,
+                            }),
+                        )
+                    })
+                    .unwrap_or_else(|| Err("the highlight companion's frames are out".into()))
+                }
+                _ => gpu.stage_fused(&base_frame, None),
+            }
         })
         .map_err(|e| anyhow::anyhow!(e))?;
+        if let (Some(f), Some(tag)) = (fusion, tag) {
+            f.staged_on_device(tag);
+        }
         // The device holds its own copy now.
         if let Some(m) = measured {
             crate::pixel_shift_cmd::recycle_members(m.members);
@@ -7255,6 +7325,13 @@ impl BandWorker {
     /// needs host totals of its own.
     fn finish_chunk(&mut self, merged: &mut Option<BandMerge>, merged_alt: &mut Option<BandMerge>) {
         let g = self.domain.analysis();
+        // Plan X4: the fused frames' counts, before anything reports them.
+        #[cfg(feature = "gpu")]
+        if let Some(gpu) = self.gpu.as_mut()
+            && let Err(e) = collect_fusion_counts(gpu)
+        {
+            eprintln!("highlights      : the device's counts could not be read: {e:#}");
+        }
         // `STREHL_GPU_PROFILE`: the chunk's per-kernel device time.
         #[cfg(feature = "gpu")]
         if let Some(report) = self.gpu.as_ref().and_then(|gpu| gpu.profile_report()) {
@@ -8612,10 +8689,10 @@ fn load_frame_impl_observed(
         if carry {
             colour_carry::copy_carried(scratch, domain, planes)?;
         }
-        // Plan X4: the highlight patches, as the planes are lifted to f32
-        // and before the luma is formed from them.
-        if let Some(p) = scratch.fusion.as_ref() {
-            p.apply_planes(planes);
+        // Plan X4: the highlight companion blended in, as the planes are
+        // lifted to f32 and before the luma is formed from them.
+        if let Some(p) = scratch.fusion.as_mut() {
+            p.apply_planes(planes)?;
         }
     }
     // A consumer of a few columns (`WarpScratch::columns`: the optical
@@ -9406,6 +9483,9 @@ struct PreparedPyramid<'a> {
 /// * **No gate ladder.** Its gate is a band-power threshold, not the
 ///   estimator's focus-noise gate, and the two are not the same number.
 fn run_pyramid(opts: &MergeOptions) -> Result<()> {
+    // Plan X4: highlight companions decoded once for the preview and the
+    // render.
+    let _highlights = crate::highlight_fusion::Run::begin();
     // Measured once, before the lateral-CA preview, so the preview measures
     // the channels the render will actually use.
     let _axial = axial_colour::install_if_requested(opts)?;
@@ -10645,6 +10725,24 @@ fn run_pyramid_prepared_with_sensor(
     // side by side: each decodes its file on its own thread, cache-resident.
     source.decode_serially(worker.gpu_prep);
     let decoders = decode_ahead::decoders(worker.gpu_prep);
+    // Plan X4: the decoders plan each frame's highlight fusion as they
+    // decode it (`highlight_fusion::warm`), with the placements its gather
+    // will use.
+    if let Some(map) = warps {
+        crate::highlight_fusion::begin_pass(
+            paths,
+            &fold_plan,
+            (0..paths.len()).map(|q| placement_of(map, q)).collect(),
+            domain.full,
+            [
+                domain.rect.x,
+                domain.rect.y,
+                domain.rect.width,
+                domain.rect.height,
+            ],
+            colour_carry::active(),
+        );
+    }
     let ahead = decode_ahead::DecodeAhead::new(
         original_source,
         fold_plan,
@@ -10870,6 +10968,7 @@ fn run_pyramid_prepared_with_sensor(
             Ok(())
         });
         ahead.stop();
+        crate::highlight_fusion::end_pass();
         // Files read for decodes that will not come (a failed fold); wakes
         // any reader waiting for room.
         strehl_raw::preload::clear();
@@ -15466,4 +15565,17 @@ fn calibrated_noise(
     } else {
         noise
     }
+}
+
+/// Plan X4: the device's counts for every frame staged with a companion
+/// since the last read, into each frame's account.
+#[cfg(feature = "gpu")]
+fn collect_fusion_counts(gpu: &mut strehl_gpu::GpuFold) -> Result<()> {
+    let tags = crate::highlight_fusion::pending_tags();
+    if tags.is_empty() {
+        return Ok(());
+    }
+    let counts = gpu.fusion_counts(&tags).map_err(|e| anyhow::anyhow!(e))?;
+    crate::highlight_fusion::device_counts(&tags, &counts);
+    Ok(())
 }

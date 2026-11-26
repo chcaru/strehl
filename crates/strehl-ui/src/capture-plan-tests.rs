@@ -509,7 +509,9 @@ fn nothing_runs_past_the_plan_column() {
     input.subject_depth = Some((37150, 37700));
     input.stillness = (
         "done",
-        Some("Still: the picture moved 0.45 px rms (2.6 Hz) over 20 s; exposures up to 1/43 s keep it under 0.1 px".into()),
+        // The longest line the check writes (the rig's live series of
+        // 2026-11-25, while the light was still warming the rig).
+        Some("Moves 0.46 px within a second, mostly up-down; drift 1.4 px a minute. Exposures up to 1.1 s keep the blur under a quarter pixel. Still settling (a light switched on warms the rig for some minutes): check again before a long stack. 2 of 155 live frames left out.".into()),
     );
     for width in [300.0, 348.0, 440.0] {
         for rig_open in [false, true] {

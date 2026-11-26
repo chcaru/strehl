@@ -134,10 +134,10 @@ pub fn balance(m: &MemberView<'_>) -> [f32; 3] {
     })
 }
 
-/// Side of the block luma used for member registration. Any even-sided block
-/// holds exactly a quarter red, half green and a quarter blue photosites
-/// whatever its parity, so block sums are comparable across 1-photosite
-/// shifts; 8 also averages the noise down eightfold.
+/// Side of the blocks behind the luma used for member registration
+/// ([`Integral::luma`]). Any even-sided block holds exactly a quarter red,
+/// half green and a quarter blue photosites whatever its parity; 8 also
+/// averages the noise down eightfold.
 const BLOCK: isize = 8;
 
 /// Integral image of white-balanced samples over a rectangle of active
@@ -209,6 +209,24 @@ impl Integral {
         self.sum[(y + b) * s + x + b] - self.sum[y * s + x + b] - self.sum[(y + b) * s + x]
             + self.sum[y * s + x]
     }
+    /// Registration luma at `(x, y)`: the four blocks whose top-left corners
+    /// are `(x, y)`, `(x + 1, y)`, `(x, y + 1)` and `(x + 1, y + 1)`, summed;
+    /// a 9 x 9 window weighted 1, 2, ..., 2, 1 along each axis.
+    ///
+    /// A single block's red photosites sit one photosite from its blue ones,
+    /// which way round depending on the block's parity, so wherever red and
+    /// blue carry different detail (the white balance equalises their means,
+    /// not their contrast; lateral colour, clipping and a coloured light all
+    /// leave them different) one block's sum alternates with the parity, and
+    /// a member at an odd offset was read up to half a photosite off.
+    /// MEASURED 2026-11-25 on a backlit slide under a blue light: 0.2-0.45
+    /// photosite, against 0.05 from green alone. In this window each colour's
+    /// photosites weigh the same and centre on the window's centre at either
+    /// parity, so the alternation cancels.
+    #[inline]
+    fn luma(&self, x: isize, y: isize) -> f64 {
+        self.block(x, y) + self.block(x + 1, y) + self.block(x, y + 1) + self.block(x + 1, y + 1)
+    }
 }
 
 /// Registration of one member against member 1 on block luma.
@@ -231,6 +249,8 @@ struct Normal {
     a: [f64; 9],
 }
 
+/// The normal equations of one Lucas-Kanade step over `roi`, every `step`-th
+/// position each way, on [`Integral::luma`].
 fn normal(r: &Integral, k: &Integral, o: (isize, isize), roi: [isize; 4], step: usize) -> Normal {
     let rows: Vec<[f64; 9]> = (roi[1]..roi[1] + roi[3])
         .step_by(step)
@@ -239,10 +259,10 @@ fn normal(r: &Integral, k: &Integral, o: (isize, isize), roi: [isize; 4], step: 
         .map(|&y| {
             let mut acc = [0f64; 9];
             for x in (roi[0]..roi[0] + roi[2]).step_by(step) {
-                let c = r.block(x, y);
-                let gx = 0.5 * (r.block(x + 1, y) - r.block(x - 1, y));
-                let gy = 0.5 * (r.block(x, y + 1) - r.block(x, y - 1));
-                let kk = k.block(x + o.0, y + o.1);
+                let c = r.luma(x, y);
+                let gx = 0.5 * (r.luma(x + 1, y) - r.luma(x - 1, y));
+                let gy = 0.5 * (r.luma(x, y + 1) - r.luma(x, y - 1));
+                let kk = k.luma(x + o.0, y + o.1);
                 let e = kk - c;
                 acc[0] += gx * gx;
                 acc[1] += gx * gy;
@@ -1302,6 +1322,67 @@ mod tests {
         let bad = witness(&m, &nominal, &[1.0; 4], |_| 1.0, 32).mean_z2;
         let fine = witness(&ok, &nominal, &[1.0; 4], |_| 1.0, 32).mean_z2;
         assert!(bad > 100.0 * fine.max(0.01), "bad {bad} fine {fine}");
+    }
+
+    /// Red and blue images with different detail (the white balance equalises
+    /// their means, not their contrast; on a backlit slide under a blue light
+    /// the channels differ in blur, colour and clipping) give block luma a
+    /// component that alternates with the CFA parity. An 8 x 8 block's red
+    /// photosites sit one photosite from its blue ones, and which way round
+    /// depends on the block's parity: red alone registers a member moved by
+    /// an odd number of photosites one photosite short, blue alone one
+    /// photosite long, and only equal contrast cancels the two. Registration
+    /// must not read it as a shift: the member, with no sub-photosite
+    /// remainder, still registers within a few hundredths of a photosite.
+    /// MEASURED on the slide stack of 2026-11-25: sampling one parity only
+    /// (every second block from an even origin) read 0.2-0.45 photosite
+    /// there, demoted every group and reported whole-photosite slips that
+    /// never happened; green alone, or both parities, read 0.05.
+    #[test]
+    fn registration_ignores_a_parity_pattern_in_block_luma() {
+        let shifts = [(0isize, 0isize), (0, -1), (1, -1), (1, 0)];
+        let (stride, bh) = (300usize, 240usize);
+        let active = [8usize, 6, 280, 224];
+        let scene = |c: usize, x: isize, y: isize| -> f32 {
+            let (xf, yf) = (x as f32, y as f32);
+            let detail =
+                0.3 * (xf * 0.53).sin() * (yf * 0.41).cos() + 0.2 * (xf * 0.19 + yf * 0.27).sin();
+            // Blue carries less of the detail than red and green.
+            let contrast = [1.0f32, 1.0, 0.35][c];
+            [0.55, 1.0, 0.45][c] * (300.0 + 5000.0 * (0.5 + contrast * detail))
+        };
+        let data: Vec<Vec<u16>> = shifts
+            .iter()
+            .map(|s| {
+                let mut d = vec![0u16; stride * bh];
+                for by in 0..bh {
+                    for bx in 0..stride {
+                        let (ax, ay) = (bx as isize - 8, by as isize - 6);
+                        let c = cfa_colour(ax, ay);
+                        d[by * stride + bx] = (512.0 + scene(c, ax - s.0, ay - s.1)).round() as u16;
+                    }
+                }
+                d
+            })
+            .collect();
+        let m: [MemberView<'_>; 4] = std::array::from_fn(|k| MemberView {
+            data: &data[k],
+            stride,
+            buffer_height: bh,
+            active,
+            black: 512.0,
+            white: 15360.0,
+        });
+        // The step every caller passes.
+        for k in 1..4 {
+            let fit = register(&m[0], &m[k], 2, 2);
+            assert_eq!(fit.offset, shifts[k], "member {k}: {fit:?}");
+            let d = fit.residual;
+            assert!(
+                d[0].abs() < 0.05 && d[1].abs() < 0.05,
+                "member {k}: residual {d:?}"
+            );
+        }
     }
 
     #[test]
