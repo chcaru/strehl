@@ -16,7 +16,7 @@ in their sources, not necessarily the current default.
 | Controls, metrics, experiments | 8–13, 16–18, 20–24, 26, 30, 34–36, 39 |
 | Corpus citations and folds | 25, 28–29, 31, 31b, 37–38, 44 |
 | Prior work and allocation | 40–41, 43 |
-| Builds, processes, reproducibility | 14, 19, 27, 33, 42, 45–50 |
+| Builds, processes, reproducibility | 14, 19, 27, 33, 42, 45–51 |
 
 ## How to read older operational advice
 
@@ -1045,3 +1045,28 @@ is the identity source referred to below.
     weight. Changing an association order is an output change even when it is
     expected to round away: say so, attribute it, and show the outputs unchanged
     (the probe's row-blocked sums: bug-7 100 and 1,444 frames, byte-freezes).
+
+### Rule 51
+
+51. **A feature ships only optimized end to end; experiments need not be.**
+    Building and exploring behind a default-off switch has no speed bar. Turning
+    a feature on by default, or exposing it in the desktop or an installed
+    build, requires a before/after measurement on real stacks (typical and
+    worst case for the feature; both render passes; GPU and CPU fold; against
+    the same build with the feature off) and an overhead that is zero when
+    off and proportional to the irreducible work when on.
+
+    Incident (2026-11-25). Plan X4's highlight fusion shipped on by default
+    after only a correctness check. On the owner's first full highlight-pass
+    stack (a backlit slide, 11 planes, 6 highlight groups) the render pass took
+    46.4 s against 3.9 s with `STREHL_HIGHLIGHT_FUSION=off` (MEASURED,
+    `STREHL_FOLD_TRACE=1`). The design scaled with the clipped area: about
+    51 M sites a frame were listed on the CPU, sorted on one core, and uploaded
+    (816 MB a frame) by the thread that feeds the GPU, one frame after another,
+    while the GPU waited. The fix kept the arithmetic and removed the list
+    (weights from padded window maxima, blended on the device or inside the
+    CPU's companion gather, per-frame planning on the decoder threads): 4.8 s,
+    pixels identical
+    ([record](../../experiments/capture-fixes-2026-11-25/README.md), section 4).
+    A test case where the feature fires everywhere would have shown this
+    before release; a sparse, typical scene did not.

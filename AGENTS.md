@@ -109,6 +109,30 @@ statically linked executable. Use the source-inclusive packaging workflow.
   publication or a SYNTHESIS fold. It covers prior-art search, allocation,
   falsifiable controls, numbering/content checks and mandatory fold checks.
 
+## Shipping performance
+
+A feature may be built, run and experimented with behind a default-off switch at
+any speed. To ship it (on by default, or reachable from the desktop or an
+installed build) it must be optimized end to end and must not regress what
+already ships ([rule 51](docs/agents/engineering-ledger.md#rule-51)):
+
+- Measure before and after on real stacks: a typical one and one that triggers
+  the feature everywhere. Time both render passes on the GPU fold and the CPU
+  fold (`STREHL_GPU_FOLD=off`) with `STREHL_FOLD_TRACE=1`, against the same build
+  with the feature off. Report the wall times, the trace and the host load.
+- Switched off, the feature costs nothing. Switched on, its overhead stays
+  proportional to the work it must do and is stated against "off"; if more than
+  the irreducible work remains (extra files read, for example), the owner accepts it
+  explicitly.
+- Keep work off the fold's critical path: nothing per site listed, sorted or
+  uploaded per frame; no serial per-frame CPU stage on the thread that feeds the
+  device; a pure result (a decode, a measurement) computed once per run; per-frame
+  planning on the decoder threads; the device doing per-pixel work where the fold
+  already runs there.
+- A speed-up preserves output pixels unless the change says otherwise and is
+  shown, GPU and CPU fold, against the build it replaces (rule 50).
+- Desktop changes: measure interaction smoothness before and after.
+
 ## Build, test and shared-work hygiene
 
 Run checks appropriate to the changed path. For example, for an engine change:
