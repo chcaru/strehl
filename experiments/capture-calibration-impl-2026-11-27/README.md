@@ -164,3 +164,79 @@ more decodes and their contrast. A calibration survey has about 25 long frames. 
   a bar can lean one survey spacing past the range. Rendered in `plan+calibrated`.
   Desktop suite 1,585 passed.
 - The survey's RAWs are still deleted once read (decision 2 says keep them until Start).
+
+## Live on the rig, and the rest of S3, S4 and S5 (2026-11-27, afternoon)
+
+The owner opened the rig for live runs. The RAW receiver was the only Strehl process
+running; it was stopped, each package copied over the install
+(`%LOCALAPPDATA%\Programs\Strehl`) and the receiver started again
+(`rig/deploy.ps1`). A desktop window was launched through the control helper with a
+scratch catalog and driven by `rig/drive.py` (`open_capture`, `calibrate`, snapshots);
+the bench helper powered and connected the camera. Subject: the dragonfly of
+2026-11-26, whose stack reads in focus 32,374 to 33,174 by F2.
+
+### Three runs
+
+| Run | Build | What happened |
+| --- | --- | --- |
+| 1 | `desktop-11bbfc38cb2219da` | Light switched on just before. Sweep 33 positions in 37.5 s: range 31,627 to 33,203, busiest 32,730. Light wait, test pair (body top 0.49 at 1.3 s: survey at 1.3 s and 1/25 s), survey of 88 long frames: in focus **32,392 to 33,112**. Stuck in Return: the exposure and the lens move were sent in one frame; the host applied the first and dropped the second. Fixed (one command at a time, a dropped move sent again) |
+| 2 | `desktop-d982743fcb893b3d` | Lens left at 35,662: the sweep seeded from the plan's held range (fix of this afternoon). Sweep 35.2 s: 31,444 to 33,128. The new kept-peaks histogram showed why the near end was early: one tile alone at 31,349, one at 32,099; the rest from 32,287. Survey in focus **32,389 to 33,154**; the pass finished in 478 s and set the plan: Start and End 32,363 to 33,180, the suggested exposure (1 s with highlight groups at 1/60 s), step 8. The proof did not start: its request met the fill's last one still in flight and it gave up. Fixed (retries every 2 s, ten times) |
+| 3 | `desktop-9eb18e5c95a523cd` | Seeded from the marks run 2 set. Sweep 37.8 s: **32,407 to 33,157** (near end 33 units from the stack's range, far end 17: S1's rig gate, within 120 and 48). Test top 0.37 at 1 s: survey at 1.3 s and 1/25 s; in focus **32,407 to 33,127**, sharp depth 52. The pass measured the lens's coarse-to-fine offset itself, **+29.8 units** (the grounding's hand measurement: +27), and stored it with the depth for the 32,000 position. The proof plane followed on its own (22.2 s): the capture's gate kept it, the checker demoted it (local 0.29 px against 0.51). "Prove five times" took 123 s: **1 of 5 groups clean, 3 would be retaken** (local 0.57 to 0.70 px), 22.3 s a plane. The rig's stillness, as in the grounding (7 of 26 clean last night) |
+
+A peak alone (no neighbours with peaks) passed the coherence test, its own
+neighbourhood's median being itself. A kept peak now needs two neighbours with peaks,
+and an end of the range needs two other peaks within two sharp depths. Replays of the
+three recorded sweeps are unchanged by it (32,331 / 32,369 / 32,302 near ends). A
+warm sweep recorded with the grounding's method between runs 1 and 2 replays to
+32,302 to 33,140. MEASURED.
+
+The light wait counts from when this desktop first saw the light on: a desktop started
+with the light already on for half an hour still waits 150 s, since the host does not
+say when its outlet switched on.
+
+### Built
+
+- **Cover, Light, Glints, Still** lenses (`capture-live.rs`): one switch with Depth;
+  Light and Glints read the survey's new per-tile `maps.level` and `maps.glint`
+  (`depth-contrast.rs` `tile_levels`; `survey-cmd.rs`) scaled to the chosen exposure;
+  Glints outlines tiles the highlight groups hold and fills those that pin anyway;
+  Still draws the last proof plane's per-tile disagreement against the retake limit.
+  Each draws as one cached mesh with a ruled legend in words. Fixtures
+  `plan+lens-cover|light|glints|still`.
+- **Rail hover** isolates the Depth lens at the hovered position (spec 6.2).
+- **The proof plane** (S4, `capture-measure.rs` `Proof`, `ProofResult`; workspace
+  `prove`, `poll_proof`): a test run of the base group at the busiest position as the
+  plan stands, the highlight group's after it, the base group checked by `strehl
+  pixel-shift`, the runs deleted once read; one after every pass, "Prove five times"
+  in the Exposure step and `prove {count}` in the control interface; the readout's
+  Proof row and the Still lens.
+- **Lens memory** (S5, `LensMemory`, `measured_offset`): after each survey, the sharp
+  depth and the coarse-to-fine offset the pass measured (RAW focus less the sweep's
+  peak, median over shared tiles) are kept by focus position to the nearest 2,000 units
+  in `capture-lens-memory.json` beside `capture.json`, and seed the next pass there.
+- **Frame time** (`benchmark_depth_lens_frame_time`, release, CPU paint and
+  tessellation, best of six rounds of 60 frames): live view alone 0.022 ms, Depth lens
+  on 14,652 RAW tiles 0.094 ms, the lens moving every frame (mesh rebuilt each frame)
+  0.31 ms. MEASURED.
+
+Afterwards the camera and the light were switched off (the host cuts the camera's
+power only while connected, to confirm standby first). The plan the host holds is the
+calibration's of run 3 (marks, step, exposure and highlight groups): that is what the
+pass does; set them by hand to keep others. The owner's install is updated to the final
+build of this work (below); `capture-lens-memory.json` beside `capture.json` keeps
+run 3's measurement for the 32,000 position.
+
+### Still not built
+
+- The core sample (click a tile: its three nearest survey frames at 100 %). It needs the
+  survey's RAWs kept until Start (decision 2); they are still deleted once read, so
+  neither is built.
+- Per-value lamps beside the Depth and Exposure fields; the readout's Plan row says
+  what the pass set and kept.
+- "Run the rest" and "Search further" actions after a stopped or past-the-end pass;
+  the stop and the messages are there.
+- Memory by catalog subject (its last calibration and plan); staleness marks on facts
+  whose conditions changed.
+- The highlight sentence in the capture flight's Captured panel.
+- The light wait cannot know a light switched on before the desktop started.
+

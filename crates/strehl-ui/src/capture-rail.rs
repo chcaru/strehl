@@ -279,6 +279,9 @@ pub(crate) struct FocusRail {
     /// The head's right-hand controls' width last frame, so the survey's
     /// legend can shorten before it reaches them.
     head_right: f32,
+    /// The position under the pointer, while it hovers the chart: the Depth
+    /// lens isolates what is in focus there (spec 6.2).
+    pub hover: Option<u16>,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -1436,11 +1439,13 @@ impl FocusRail {
             );
         }
         // Hover: the position under the pointer, on the scale's resolution.
+        self.hover = None;
         if self.drag.is_none()
             && self.zoom.pan.is_none()
             && let Some(pos) = response.hover_pos()
         {
             let at = axis.snap(pos.x);
+            self.hover = Some(at);
             painter.line_segment(
                 [
                     egui::pos2(pos.x, chart.top() + 2.0),

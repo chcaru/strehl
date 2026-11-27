@@ -588,8 +588,12 @@ impl CaptureWorkspace {
         // `plan+calibrated`: the pass done, its readout and the Depth lens
         // from RAW; `plan+calibrating`: the survey part-way, the lens from
         // the live sweep (spec 9, S2).
-        if which == Fixture::Plan && matches!(open, "calibrated" | "calibrating") {
-            let done = open == "calibrated";
+        // `plan+lens-cover|light|glints|still`: calibrated, with that lens on.
+        let lens = open.strip_prefix("lens-");
+        if which == Fixture::Plan
+            && (matches!(open, "calibrated" | "calibrating") || lens.is_some())
+        {
+            let done = open != "calibrating";
             self.pass = super::measure::Pass {
                 stage: if done {
                     super::measure::Stage::Done
@@ -609,7 +613,13 @@ impl CaptureWorkspace {
                     Calibration::Done(serde_json::json!({"width":45.0,"suggested_step":6,
                     "summary":"Detail stays sharp over about 45 focus units.","survey":survey}));
             }
-            self.station.live.depth_lens = true;
+            self.station.live.lens = match lens {
+                Some("cover") => super::live::Lens::Cover,
+                Some("light") => super::live::Lens::Light,
+                Some("glints") => super::live::Lens::Glints,
+                Some("still") => super::live::Lens::Still,
+                _ => super::live::Lens::Depth,
+            };
             self.station.live.peaking = false;
         }
         self.open_fixture_panel(open);
@@ -1086,6 +1096,7 @@ impl CaptureWorkspace {
                 // Spec 6.1: the calibration's depth map, from RAW once the
                 // survey is read, else from the live sweep.
                 self.station.live.depth = self.depth_map();
+                self.station.live.rail_hover = self.station.rail.hover;
                 let intents = self.station.live.show(ui, s, &palette);
                 for intent in intents {
                     self.apply_live(s, intent);
@@ -1290,11 +1301,14 @@ impl CaptureWorkspace {
                         result: self.calibration_result(),
                         finished: self.station.calibrated_at,
                     },
-                    pass: self.pass.view(
-                        Instant::now(),
-                        self.light_on_for(Instant::now()),
-                        s.host.capabilities.exposure_tiers,
-                    ),
+                    pass: super::plan::PassView {
+                        proving: self.proof.running(),
+                        ..self.pass.view(
+                            Instant::now(),
+                            self.light_on_for(Instant::now()),
+                            s.host.capabilities.exposure_tiers,
+                        )
+                    },
                     test_shot: TestShotView {
                         stage,
                         levels,
@@ -1630,6 +1644,10 @@ impl CaptureWorkspace {
                 self.record(result);
             }
             PlanIntent::StopCalibration => self.stop_calibration(),
+            PlanIntent::Prove(n) => {
+                let result = self.prove(n);
+                self.record(result);
+            }
             PlanIntent::SetStep(step) => self.send_settings(s, step, self.draft.settle_ms),
             PlanIntent::SetSettle(ms) => self.send_settings(s, self.draft.step, ms),
             PlanIntent::SetApproach(approach) => self.send_plan(

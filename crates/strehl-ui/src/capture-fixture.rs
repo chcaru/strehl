@@ -100,7 +100,13 @@ pub(crate) fn pass_facts(surveyed: bool) -> super::measure::Facts {
                     };
                     json!([at, n])
                 }).collect::<Vec<_>>()},
-            "maps":{"cols":c,"rows":r,"tile_px":64,"focus":focus},
+            "maps":{"cols":c,"rows":r,"tile_px":64,"focus":focus,
+                "subject":(0..c * r).map(|t| inside((t % c) as f64 / c as f64 + 0.5 / c as f64,
+                    (t / c) as f64 / r as f64 + 0.5 / r as f64)).collect::<Vec<_>>(),
+                // The body's level: brighter to the right; a few glints.
+                "level":(0..c * r).map(|t| 0.004 + 0.5 * ((t % c) as f64 / c as f64).powi(3)).collect::<Vec<_>>(),
+                "glint":(0..c * r).map(|t| if (t * 7919) % 53 == 0 { 2.0 + 40.0 * ((t % 97) as f64 / 97.0) } else { 0.3 }).collect::<Vec<_>>(),
+                "long_s":1.0},
             "step":{"width":45.0,"width_p10":35.0,"width_p90":59.0,"suggested_step":6,"positions":25,"spacing":9.0,"width_low":false},
             "body":{"top":0.62,"g":{"p50":0.008}},
             "census":{"top":30.1},
@@ -120,6 +126,28 @@ pub(crate) fn pass_facts(surveyed: bool) -> super::measure::Facts {
         survey,
         preview_size: Some([w, h]),
         revision: 1 + u64::from(surveyed),
+        proofs: if surveyed {
+            vec![super::measure::ProofResult {
+                verdict: "pass".into(),
+                reason: None,
+                retake: false,
+                local_px: Some(0.31),
+                limit_px: Some(0.51),
+                residual_px: Some(0.09),
+                seconds: 20.8,
+                map: Some((
+                    148,
+                    99,
+                    64.0,
+                    (0..148 * 99)
+                        .map(|t| 0.2 + 0.25 * (((t * 7919) % 97) as f32 / 97.0))
+                        .collect(),
+                )),
+            }]
+        } else {
+            Vec::new()
+        },
+        proofs_wanted: usize::from(surveyed),
     }
 }
 

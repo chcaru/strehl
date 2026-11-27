@@ -46,6 +46,39 @@ pub fn frame_tiles(f: &strehl_raw::Frame) -> Tiles {
     focus_contrast::tiles(&plane, w, h, &|s| noise.variance(CfaPlane::G1, s))
 }
 
+/// Per contrast tile (64 sensor px from the active area's corner, the grid
+/// of [`frame_tiles`]): the mean green level and the largest sample of any
+/// colour, both above black as shares of black to white.
+pub fn tile_levels(f: &strehl_raw::Frame) -> (Vec<f32>, Vec<f32>) {
+    let (ax, ay) = (f.active.x, f.active.y);
+    let (cols, rows) = (f.active.width / TILE_PX, f.active.height / TILE_PX);
+    let black = f.levels.black;
+    let range = (f.levels.white - black).max(1.0);
+    let per: Vec<(f32, f32)> = (0..cols * rows)
+        .into_par_iter()
+        .map(|t| {
+            let (tx, ty) = (t % cols, t / cols);
+            let (mut sum, mut n, mut top) = (0.0f64, 0u32, 0u16);
+            for y in ty * TILE_PX..(ty + 1) * TILE_PX {
+                let row = &f.data[(ay + y) * f.stride + ax + tx * TILE_PX..][..TILE_PX];
+                for (x, &v) in row.iter().enumerate() {
+                    top = top.max(v);
+                    if cfa_colour((tx * TILE_PX + x) as isize, y as isize) == 1 {
+                        sum += f64::from(v);
+                        n += 1;
+                    }
+                }
+            }
+            let mean = (sum / f64::from(n.max(1))) as f32;
+            (
+                ((mean - black) / range).max(0.0),
+                ((f32::from(top) - black) / range).max(0.0),
+            )
+        })
+        .collect();
+    per.into_iter().unzip()
+}
+
 /// The tiles at least half inside `rings` (normalised to the active area of
 /// `active` sensor pixels); every tile without rings.
 pub fn subject_tiles(rings: Option<&[Vec<[f32; 2]>]>, t: &Tiles, active: [usize; 2]) -> Vec<bool> {
@@ -111,6 +144,17 @@ pub struct Maps {
     pub focus: Vec<Option<f64>>,
     /// Per tile: whether it is the subject's.
     pub subject: Vec<bool>,
+    /// Per tile (`strehl survey` only): the body's mean green level in the
+    /// brightest long frame, as a share of full scale at the long shutter
+    /// (the Light lens); and the brightest sample any short frame holds,
+    /// scaled to the long shutter (the Glints lens: over 1 pins there).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub level: Option<Vec<f32>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub glint: Option<Vec<f32>>,
+    /// The long shutter both are at, effective seconds.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub long_s: Option<f64>,
 }
 
 /// The range and maps from frames at `positions` (any order) with their
@@ -186,6 +230,9 @@ pub fn in_focus(
         } else {
             subject.to_vec()
         },
+        level: None,
+        glint: None,
+        long_s: None,
     };
     Some((out, maps))
 }

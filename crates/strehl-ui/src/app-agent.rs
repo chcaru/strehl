@@ -438,6 +438,9 @@ impl StrehlApp {
             StopCalibration {} => {
                 self.capture.stop_calibration();
             }
+            Prove { count } => {
+                self.capture.prove(count)?;
+            }
             MeasureFocusStep { index } => {
                 self.capture.measure_focus_step(index)?;
             }

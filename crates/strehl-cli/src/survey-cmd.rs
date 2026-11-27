@@ -1714,16 +1714,21 @@ pub fn run(args: &SurveyArgs) -> Result<()> {
 
     // 1b. Contrast over every long frame (spec 5.1): the in-focus range is
     // read from these, not from the evidence's energy.
-    let contrast: Vec<(f64, strehl_core::focus_contrast::Tiles)> = pool.install(|| {
+    type LongTiles = (f64, strehl_core::focus_contrast::Tiles, Vec<f32>);
+    let contrast: Vec<LongTiles> = pool.install(|| {
         plan.longs
             .par_iter()
-            .map(|s| -> Result<(f64, strehl_core::focus_contrast::Tiles)> {
+            .map(|s| -> Result<LongTiles> {
                 let f = decode(&s.path)?;
-                Ok((s.focus as f64, crate::depth_contrast::frame_tiles(&f)))
+                Ok((
+                    s.focus as f64,
+                    crate::depth_contrast::frame_tiles(&f),
+                    crate::depth_contrast::tile_levels(&f).0,
+                ))
             })
             .collect::<Result<_>>()
     })?;
-    let contrast_subject = contrast.first().map(|(_, t)| {
+    let contrast_subject = contrast.first().map(|(_, t, _)| {
         crate::depth_contrast::subject_tiles(outline.as_ref().map(|o| o.rings.as_slice()), t, size)
     });
 
@@ -1891,6 +1896,54 @@ pub fn run(args: &SurveyArgs) -> Result<()> {
                 .map_or((None, None), |(r, m)| (Some(r), Some(m)))
         }
         None => (None, None),
+    };
+    // The Light and Glints lenses' maps (spec C2): the brightest long frame's
+    // level per tile, and the short frames' brightest sample per tile scaled
+    // by the pair's ratio to the long shutter.
+    let maps = match maps {
+        Some(mut m) => {
+            let n = m.cols * m.rows;
+            let mut level = vec![0.0f32; n];
+            for (_, _, l) in &contrast {
+                for (a, b) in level.iter_mut().zip(l) {
+                    *a = a.max(*b);
+                }
+            }
+            m.level = (contrast.first().is_some_and(|c| c.2.len() == n)).then_some(level);
+            let glints: Vec<Vec<f32>> = pool.install(|| {
+                plan.pairs
+                    .par_iter()
+                    .map(|(l, s)| -> Result<Vec<f32>> {
+                        let ratio = result
+                            .as_ref()
+                            .and_then(|r| {
+                                r.ratio
+                                    .per_position
+                                    .iter()
+                                    .find(|p| p.focus == l.focus)
+                                    .map(|p| p.measured.unwrap_or(p.commanded))
+                            })
+                            .or_else(|| Some(code_effective(s.shutter)? / code_effective(l.shutter)?))
+                            .unwrap_or(1.0);
+                        let f = decode(&s.path)?;
+                        let top = crate::depth_contrast::tile_levels(&f).1;
+                        Ok(top.into_iter().map(|v| (f64::from(v) / ratio) as f32).collect())
+                    })
+                    .collect::<Result<_>>()
+            })?;
+            if !glints.is_empty() && glints.iter().all(|g| g.len() == n) {
+                let mut g = vec![0.0f32; n];
+                for one in &glints {
+                    for (a, b) in g.iter_mut().zip(one) {
+                        *a = a.max(*b);
+                    }
+                }
+                m.glint = Some(g);
+            }
+            m.long_s = code_effective(plan.long_code);
+            Some(m)
+        }
+        None => None,
     };
     let depth_out = (depth.is_some() || in_focus.is_some()).then(|| {
         let f = |i: usize| e.planes[i].position;

@@ -59,6 +59,9 @@ pub(crate) struct PassView {
     pub rows: Vec<[String; 3]>,
     /// The camera can run it (it takes a shutter per position).
     pub available: bool,
+    /// The proof planes' line (spec 5.8), and whether one is being taken.
+    pub proof: Option<String>,
+    pub proving: bool,
 }
 
 /// The test shot as the plan shows it.
@@ -127,6 +130,8 @@ pub(crate) enum PlanIntent {
     /// The calibration pass (spec 4).
     Calibrate,
     StopCalibration,
+    /// Take this many proof planes (spec 5.8).
+    Prove(usize),
     SetStep(u16),
     SetSettle(u32),
     /// The plan's approach, in focus units.
@@ -1207,6 +1212,28 @@ fn exposure_step(
             && let Some(e) = exposure
         {
             highlight_row(ui, inputs, e, editable, palette, out);
+        }
+        // Spec 5.8: the proof plane, as the plan stands. One proof is one
+        // sample: five give the retakes the time should allow for.
+        if inputs.pass.stage == "done" || inputs.pass.proof.is_some() {
+            ui.add_space(4.0);
+            ui.horizontal_wrapped(|ui| {
+                let text = match (&inputs.pass.proof, inputs.pass.proving) {
+                    (_, true) => "Proof: taking a plane at the busiest position\u{2026}".to_owned(),
+                    (Some(line), false) => format!("Proof: {line}."),
+                    (None, false) => "Proof: not taken.".to_owned(),
+                };
+                style::text(ui, &text, 12.5, palette.ink2);
+                if !inputs.pass.proving
+                    && style::link(ui, "Prove five times", editable && inputs.engine, palette)
+                        .on_hover_text(
+                            "Five planes at the busiest position exactly as the plan stands (about 100 s), each checked as the capture checks its groups",
+                        )
+                        .clicked()
+                {
+                    out.push(PlanIntent::Prove(5));
+                }
+            });
         }
         // Plan Q7: is the picture still enough for the exposure?
         let (stage, line) = &inputs.stillness;

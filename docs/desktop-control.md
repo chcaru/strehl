@@ -267,7 +267,13 @@ once; what was measured stays. `capture.tools.calibration.pass` reports its `sta
 (`sweep`, `light`, `test`, `survey`, `return`, `done`, `failed`), `error`,
 `stopped_in`, the sweep's `range`, `busiest` and kept tiles, the test pair's
 `test_top`, the survey's `shutters` and `survey_depth`; `light_on_seconds` beside it is
-how long this desktop has seen the light on.
+how long this desktop has seen the light on. `prove` with `count` (1 to 10) takes that
+many proof planes at the busiest position exactly as the plan stands, each a test run
+of the base group (and of the highlight group when the plan has them) checked by
+`strehl pixel-shift` and then deleted; a finished pass takes one by itself.
+`capture.tools.calibration.proof` reports `running`, `error`, the `results` (verdict,
+reason, `retake`, `local_px` against `limit_px`, `residual_px`, `seconds`) and their
+`line`.
 
 `calibrate_step` (with the start and end marked and the camera idle) takes
 single RAWs across the marked range and measures how far detail stays sharp: on a

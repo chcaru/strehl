@@ -1,0 +1,6 @@
+{"t": 0.2, "stage": "sweep", "calib": "idle", "light_on": 14.704981, "secs": 2.6442373, "busiest": null, "test_top": null, "shutters": null, "error": null}
+{"t": 36.6, "stage": "light", "calib": "idle", "light_on": 51.0602831, "secs": 38.9995397, "busiest": 32727, "test_top": null, "shutters": null, "error": null}
+{"t": 140.7, "stage": "test", "calib": "capturing", "light_on": 155.1496197, "secs": 143.0888761, "busiest": 32727, "test_top": null, "shutters": null, "error": null}
+{"t": 161.5, "stage": "survey", "calib": "capturing", "light_on": 176.0019826, "secs": 163.941239, "busiest": 32727, "test_top": 0.44793911637931033, "shutters": [851978, 65561], "error": null}
+{"t": 447.7, "stage": "survey", "calib": "measuring", "light_on": 462.1601153, "secs": 450.0993715, "busiest": 32727, "test_top": 0.44793911637931033, "shutters": [851978, 65561], "error": null}
+{"t": 468.5, "stage": "done", "calib": "done", "light_on": 483.0000278, "secs": 470.9397541, "busiest": 32727, "test_top": 0.44793911637931033, "shutters": [851978, 65561], "error": null}

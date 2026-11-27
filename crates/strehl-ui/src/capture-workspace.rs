@@ -171,6 +171,12 @@ pub(crate) struct CaptureWorkspace {
     /// A finished pass's values, applied one a frame once the camera is
     /// ready (marks move the lens; settings and exposure wait their turn).
     fill_queue: std::collections::VecDeque<plan::PlanIntent>,
+    /// The proof plane (spec 5.8), and the plan's base shutter while it runs.
+    pub(crate) proof: measure::Proof,
+    proof_base_shutter: Option<u64>,
+    /// A proof that could not be sent waits until then; tries so far.
+    proof_retry: Option<Instant>,
+    proof_tries: u32,
 }
 impl CaptureWorkspace {
     pub fn new(path: Option<PathBuf>) -> Self {
@@ -233,6 +239,10 @@ impl CaptureWorkspace {
             depth_cache: None,
             held: Default::default(),
             fill_queue: Default::default(),
+            proof: Default::default(),
+            proof_base_shutter: None,
+            proof_retry: None,
+            proof_tries: 0,
         }
     }
     fn calibrating(&self) -> bool {
@@ -253,6 +263,28 @@ impl CaptureWorkspace {
         map
     }
     fn build_depth_map(&self, revision: u64) -> Option<live::DepthMap> {
+        let mut map = self.build_depth_map_only(revision)?;
+        // The Still lens: the last proof plane's check (spec 6.1).
+        let active = auto_subject::active_px(None).map(|v| v as f32);
+        map.still = self.pass.facts.proofs.last().and_then(|p| {
+            let (cols, rows, tile, local) = p.map.clone()?;
+            Some(live::StillMap {
+                cols,
+                rows,
+                extent: [
+                    cols as f32 * tile / active[0],
+                    rows as f32 * tile / active[1],
+                ],
+                local,
+                limit: p.limit_px.unwrap_or(0.51) as f32,
+                verdict: measure::proof_line(std::slice::from_ref(p))
+                    .and_then(|l| l.split(':').next().map(str::to_owned))
+                    .unwrap_or_default(),
+            })
+        });
+        Some(map)
+    }
+    fn build_depth_map_only(&self, revision: u64) -> Option<live::DepthMap> {
         let f = &self.pass.facts;
         if let Some(v) = &f.survey
             && let Some(m) = v.get("maps")
@@ -287,6 +319,33 @@ impl CaptureWorkspace {
                         rows as f32 * tile / active[1],
                     ],
                     anchor: f.busiest,
+                    light: (|| {
+                        let level: Vec<f32> = m["level"]
+                            .as_array()?
+                            .iter()
+                            .map(|v| v.as_f64().unwrap_or(0.0) as f32)
+                            .collect();
+                        let glint: Vec<f32> = m["glint"]
+                            .as_array()?
+                            .iter()
+                            .map(|v| v.as_f64().unwrap_or(0.0) as f32)
+                            .collect();
+                        let subject: Vec<bool> = m["subject"]
+                            .as_array()?
+                            .iter()
+                            .map(|v| v.as_bool().unwrap_or(false))
+                            .collect();
+                        let n = cols * rows;
+                        (level.len() == n && glint.len() == n && subject.len() == n).then_some(
+                            live::LightMap {
+                                level,
+                                glint,
+                                subject,
+                                long_s: m["long_s"].as_f64()?,
+                            },
+                        )
+                    })(),
+                    still: None,
                 });
             }
         }
@@ -308,6 +367,8 @@ impl CaptureWorkspace {
                 ]
             }),
             anchor: f.busiest,
+            light: None,
+            still: None,
         })
     }
     /// The rail's bars from the calibration (spec 6.3): the survey's tiles
@@ -363,6 +424,10 @@ impl CaptureWorkspace {
             samples,
             "calibration: tiles in focus, from the live sweep".into(),
         ))
+    }
+    /// The lens memory beside `capture.json` (spec 8).
+    fn lens_memory_path(&self) -> PathBuf {
+        self.path.with_file_name("capture-lens-memory.json")
     }
     /// How long the light has been on, as this desktop saw it.
     pub(crate) fn light_on_for(&self, now: Instant) -> Option<Duration> {
@@ -486,6 +551,7 @@ impl CaptureWorkspace {
         }
         self.poll_station(&s);
         self.poll_pass(&s, now);
+        self.poll_proof(&s, now);
         // One filled value a frame, each once the camera is ready for it.
         if !self.fill_queue.is_empty()
             && s.fresh()
@@ -854,10 +920,26 @@ impl CaptureWorkspace {
             .position
             .ok_or_else(|| anyhow::anyhow!("The lens position is not known"))?;
         let moved = self.connect_position.is_some_and(|p| p != position);
-        let marks = s.host.bounds_set().then(|| s.host.plan_bounds());
+        // The marks, else the range the host still holds for this subject
+        // (spec 4.1: after a power cycle the lens can stand tens of thousands
+        // of units from the subject, and "New capture" clears only the marks).
+        let marks = if s.host.bounds_set() {
+            Some(s.host.plan_bounds())
+        } else {
+            s.host
+                .plan
+                .as_ref()
+                .map(|p| (p.start, p.end))
+                .filter(|(a, b)| a != b)
+        };
         let seed = measure::seed(position, moved, marks);
         let now = Instant::now();
+        // Spec 8: what earlier calibrations measured at this lens position.
+        let (w0, offset) =
+            measure::LensMemory::load(&self.lens_memory_path()).seed(f64::from(seed));
         self.pass = measure::Pass {
+            w0: w0.unwrap_or(measure::DEFAULT_DEPTH),
+            offset,
             stage: measure::start_sweep(seed, s.host.lens_travel.range(), now),
             started: Some(now),
             exposure_before: s
@@ -898,10 +980,11 @@ impl CaptureWorkspace {
                 sweep::Step::Wait => P::Sweep { sweep, moved },
                 sweep::Step::Failed(why) => P::Failed(why),
                 sweep::Step::Done => {
-                    let w0 = measure::DEFAULT_DEPTH;
+                    let w0 = self.pass.w0;
                     // Until this lens's coarse-to-fine offset is known: half a
                     // sharp depth (spec 5.3 point 6).
-                    match sweep::peaks(&sweep.frames, w0, w0 / 2.0) {
+                    let offset = self.pass.offset.unwrap_or(w0 / 2.0);
+                    match sweep::peaks(&sweep.frames, w0, offset) {
                         None => P::Failed("The sweep's frames could not be read".into()),
                         Some(p) if p.nothing() => {
                             let (a, b) = p.window;
@@ -997,10 +1080,36 @@ impl CaptureWorkspace {
                 C::Done(v) => {
                     self.pass.facts.survey = Some(v["survey"].clone());
                     self.pass.facts.revision += 1;
+                    // Spec 8: the sharp depth and the offset this pass measured,
+                    // remembered at its lens position.
+                    let survey = &v["survey"];
+                    self.pass.offset_measured =
+                        match (&self.pass.facts.peaks, self.pass.facts.preview_size) {
+                            (Some(p), Some(size)) => {
+                                let a = auto_subject::active_px(None).map(f64::from);
+                                measure::measured_offset(p, size, &survey["maps"], a)
+                            }
+                            _ => None,
+                        };
+                    if let Some(b) = self.pass.facts.busiest {
+                        let path = self.lens_memory_path();
+                        let mut memory = measure::LensMemory::load(&path);
+                        let unix = std::time::SystemTime::now()
+                            .duration_since(std::time::UNIX_EPOCH)
+                            .map_or(0, |d| d.as_secs());
+                        memory.record(
+                            f64::from(b),
+                            survey["step"]["width"].as_f64(),
+                            self.pass.offset_measured,
+                            unix,
+                        );
+                        let _ = memory.save(&path);
+                    }
                     match self.pass.facts.busiest {
                         Some(b) => P::Return {
                             target: b,
-                            sent: false,
+                            exposure_sent: false,
+                            moved: None,
                         },
                         None => P::Done,
                     }
@@ -1011,14 +1120,35 @@ impl CaptureWorkspace {
                     positions,
                 },
             },
-            P::Return { target, sent } => {
-                if !sent && idle {
-                    if let Some((iso, shutter)) = self.pass.exposure_before {
+            P::Return {
+                target,
+                exposure_sent,
+                moved,
+            } => {
+                let current = s.host.exposure.as_ref().and_then(|e| e.iso.zip(e.shutter));
+                let want = self.pass.exposure_before;
+                if !exposure_sent && idle {
+                    if let Some((iso, shutter)) = want.filter(|w| current != Some(*w)) {
                         self.command(s, Command::Exposure { iso, shutter });
                     }
+                    P::Return {
+                        target,
+                        exposure_sent: true,
+                        moved: None,
+                    }
+                } else if exposure_sent
+                    && idle
+                    && (want.is_none() || current == want)
+                    && s.host.position != Some(target)
+                    && moved.is_none_or(|t| now.duration_since(t) > Duration::from_secs(5))
+                {
                     self.command(s, Command::Focus { target });
-                    P::Return { target, sent: true }
-                } else if sent && idle && s.host.position == Some(target) {
+                    P::Return {
+                        target,
+                        exposure_sent,
+                        moved: Some(now),
+                    }
+                } else if exposure_sent && idle && s.host.position == Some(target) {
                     self.pass.finished = Some(std::time::SystemTime::now());
                     // Rule 2: the calibration's values fill what the owner
                     // has not set.
@@ -1027,16 +1157,228 @@ impl CaptureWorkspace {
                         self.fill_queue.extend(intents);
                         self.pass.applied = Some((set, kept));
                         self.pass.facts.revision += 1;
+                        // Spec 4 stage 6: one plane as the plan now stands.
+                        self.pass.facts.proofs_wanted = self.pass.facts.proofs.len() + 1;
                     }
                     P::Done
                 } else {
-                    P::Return { target, sent }
+                    P::Return {
+                        target,
+                        exposure_sent,
+                        moved,
+                    }
                 }
             }
             other => other,
         };
         if matches!(self.pass.stage, P::Failed(_)) && self.pass.stopped_in.is_none() {
             self.pass.stopped_in = Some("unknown");
+        }
+    }
+    /// Asks for `n` proof planes (spec 5.8): taken one after another at the
+    /// busiest position once the camera is ready.
+    pub fn prove(&mut self, n: usize) -> anyhow::Result<()> {
+        anyhow::ensure!(self.engine.is_some(), "The Strehl engine was not found");
+        anyhow::ensure!(
+            self.pass.facts.busiest.is_some(),
+            "Calibrate first: the proof is taken at the busiest position"
+        );
+        anyhow::ensure!(!self.proof.running(), "A proof is running");
+        self.pass.facts.proofs.clear();
+        self.pass.facts.proofs_wanted = n.clamp(1, 10);
+        Ok(())
+    }
+    /// Advances the proof plane: a test run of the base group, one of the
+    /// highlight group when the plan has them, the base group checked by
+    /// `strehl pixel-shift`; the runs deleted once read.
+    fn poll_proof(&mut self, s: &Snapshot, now: Instant) {
+        use measure::Proof as Q;
+        if self.connection.as_ref().is_some_and(Connection::is_fixture) || !s.fresh() {
+            return;
+        }
+        let host = &s.host;
+        let idle = !host.busy && host.editable && !s.pending && !host.phase.capturing();
+        let done = |seq: u64| {
+            host.sequence_id == Some(seq) && !host.busy && host.phase == HostPhase::Complete
+        };
+        let failed = |seq: u64| {
+            host.sequence_id == Some(seq)
+                && !host.busy
+                && matches!(
+                    host.phase,
+                    HostPhase::Stopped | HostPhase::Fault | HostPhase::Disconnected
+                )
+        };
+        let test = |shutters: Option<Vec<u64>>, at: u16| Command::CapturePositions {
+            positions: vec![at],
+            keep_power_on: true,
+            kind: PositionsKind::Test,
+            shutters,
+        };
+        let state = std::mem::take(&mut self.proof);
+        self.proof = match state {
+            Q::Idle | Q::Failed(_)
+                if self.pass.facts.proofs.len() < self.pass.facts.proofs_wanted
+                    && idle
+                    && !self.calibrating()
+                    && self.fill_queue.is_empty()
+                    && self.station.mark_at.is_none()
+                    && self.station.mark_queue.is_empty()
+                    && self.pending_highlight.is_none()
+                    && host.shots_per_plane == Some(4) =>
+            {
+                let at = self.pass.facts.busiest.unwrap_or(0);
+                let sequence = host.sequence_id.unwrap_or(0) + 1;
+                if self.proof_retry.is_some_and(|t| now < t) {
+                    Q::Idle
+                } else {
+                    match s.request(test(None, at)).and_then(|r| self.submit(r)) {
+                        Ok(()) => {
+                            self.proof_retry = None;
+                            Q::Base {
+                                sequence,
+                                since: now,
+                            }
+                        }
+                        // A request still in flight (the fill's last, on the
+                        // rig 2026-11-27): try again shortly, a few times.
+                        Err(e) => {
+                            self.proof_tries += 1;
+                            if self.proof_tries >= 10 {
+                                self.proof_tries = 0;
+                                self.pass.facts.proofs_wanted = self.pass.facts.proofs.len();
+                            }
+                            self.proof_retry = Some(now + Duration::from_secs(2));
+                            Q::Failed(format!("{e:#}"))
+                        }
+                    }
+                }
+            }
+            Q::Base { sequence, since } if done(sequence) => {
+                let base_seconds = now.duration_since(since).as_secs_f64();
+                match host.last_receipt_run() {
+                    None => Q::Failed("The proof's folder was not reported".into()),
+                    Some(base) => {
+                        if let Some(c) = &self.connection {
+                            c.mark_test_run(base.clone());
+                        }
+                        match host
+                            .plan
+                            .as_ref()
+                            .and_then(|p| p.highlight)
+                            .map(|h| h.shutter)
+                        {
+                            Some(h) => {
+                                let at = self.pass.facts.busiest.unwrap_or(0);
+                                let sequence = host.sequence_id.unwrap_or(0) + 1;
+                                match s
+                                    .request(test(Some(vec![h]), at))
+                                    .and_then(|r| self.submit(r))
+                                {
+                                    Ok(()) => Q::Highlight {
+                                        sequence,
+                                        base,
+                                        since: now,
+                                        base_seconds,
+                                    },
+                                    Err(e) => Q::Failed(format!("{e:#}")),
+                                }
+                            }
+                            None => self.check_proof(base, Vec::new(), base_seconds),
+                        }
+                    }
+                }
+            }
+            Q::Highlight {
+                sequence,
+                base,
+                since,
+                base_seconds,
+            } if done(sequence) => {
+                let mut others = Vec::new();
+                if let Some(run) = host.last_receipt_run() {
+                    if let Some(c) = &self.connection {
+                        c.mark_test_run(run.clone());
+                    }
+                    others.push(run);
+                }
+                // The camera keeps the highlight group's shutter: the plan's
+                // base shutter goes back.
+                if let (Some(iso), Some(shutter)) = (
+                    host.exposure.as_ref().and_then(|e| e.iso),
+                    self.proof_base_shutter,
+                ) {
+                    self.command(s, Command::Exposure { iso, shutter });
+                }
+                self.check_proof(
+                    base,
+                    others,
+                    base_seconds + now.duration_since(since).as_secs_f64(),
+                )
+            }
+            Q::Base { sequence, .. } | Q::Highlight { sequence, .. } if failed(sequence) => {
+                self.pass.facts.proofs_wanted = self.pass.facts.proofs.len();
+                Q::Failed("The proof plane did not finish".into())
+            }
+            Q::Checking {
+                base,
+                others,
+                mut job,
+                seconds,
+            } => match job.poll() {
+                None => Q::Checking {
+                    base,
+                    others,
+                    job,
+                    seconds,
+                },
+                Some(result) => {
+                    for run in std::iter::once(&base).chain(&others) {
+                        if run.join("manifest.json").is_file() && run.join("events.jsonl").is_file()
+                        {
+                            let _ = std::fs::remove_dir_all(run);
+                        }
+                    }
+                    match result
+                        .ok()
+                        .and_then(|v| measure::ProofResult::from_report(&v, seconds))
+                    {
+                        Some(r) => {
+                            self.pass.facts.proofs.push(r);
+                            self.pass.facts.revision += 1;
+                            Q::Idle
+                        }
+                        None => {
+                            self.pass.facts.proofs_wanted = self.pass.facts.proofs.len();
+                            Q::Failed("The proof's check could not be read".into())
+                        }
+                    }
+                }
+            },
+            other => other,
+        };
+        if matches!(self.proof, Q::Base { .. }) && self.proof_base_shutter.is_none() {
+            self.proof_base_shutter = host.exposure.as_ref().and_then(|e| e.shutter);
+        }
+        if matches!(self.proof, Q::Idle | Q::Failed(_)) {
+            self.proof_base_shutter = None;
+        }
+    }
+    fn check_proof(&mut self, base: PathBuf, others: Vec<PathBuf>, seconds: f64) -> measure::Proof {
+        let Some(engine) = &self.engine else {
+            return measure::Proof::Failed("The Strehl engine was not found".into());
+        };
+        match tools::EngineJob::start(
+            engine,
+            vec!["pixel-shift".into(), base.as_os_str().to_owned()],
+        ) {
+            Ok(job) => measure::Proof::Checking {
+                base,
+                others,
+                job: Box::new(job),
+                seconds,
+            },
+            Err(e) => measure::Proof::Failed(format!("{e:#}")),
         }
     }
     /// The test pair at the busiest position: the camera's shutter (at most
@@ -1080,7 +1422,7 @@ impl CaptureWorkspace {
         let Some((lo, hi)) = self.pass.facts.peaks.as_ref().and_then(|p| p.range) else {
             return measure::Stage::Failed("The sweep found no range".into());
         };
-        let w0 = measure::DEFAULT_DEPTH;
+        let w0 = self.pass.w0;
         let (positions, codes) = measure::survey_grid(
             (lo, hi),
             f64::from(busiest),
@@ -1185,6 +1527,12 @@ impl CaptureWorkspace {
         json!({"calibration":{"stage":self.calibration.stage(),"result":result,
                 "gives_up_seconds":self.calibration.gives_up_in(now).map(|d| d.as_secs_f64()),
                 "pass":self.pass.public(),
+                "proof":{"running":self.proof.running(),
+                    "error":match &self.proof { measure::Proof::Failed(e) => Some(e.clone()), _ => None },
+                    "results":self.pass.facts.proofs.iter().map(|p| json!({"verdict":p.verdict,"reason":p.reason,
+                        "retake":p.retake,"local_px":p.local_px,"limit_px":p.limit_px,"residual_px":p.residual_px,
+                        "seconds":p.seconds})).collect::<Vec<_>>(),
+                    "line":measure::proof_line(&self.pass.facts.proofs)},
                 "light_on_seconds":self.light_on_for(now).map(|d| d.as_secs_f64())},
             "focus_step":self.step_report.public(),
             "compact_estimate":self.compact_estimate.public(),

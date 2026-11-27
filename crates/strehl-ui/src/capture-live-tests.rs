@@ -596,3 +596,100 @@ fn an_outline_is_placed_point_by_point_and_edited() {
         other => panic!("{other:?}"),
     }
 }
+
+/// A RAW-sized depth map (148 x 99 tiles, all with a focus) over the
+/// preview, for the lens tests and the frame-time benchmark.
+fn raw_depth_map() -> Arc<DepthMap> {
+    let (cols, rows) = (148usize, 99usize);
+    Arc::new(DepthMap {
+        revision: 7,
+        cols,
+        rows,
+        focus: (0..cols * rows)
+            .map(|t| Some(29_800.0 + 400.0 * (t % cols) as f64 / cols as f64))
+            .collect(),
+        lo: 29_800.0,
+        hi: 30_200.0,
+        source: "from RAW",
+        depth: 45.0,
+        extent: [0.997, 1.0],
+        anchor: Some(30_000),
+        light: None,
+        still: None,
+    })
+}
+
+/// The Depth lens is one cached mesh: a still frame builds nothing, a lens
+/// move rebuilds it once, and tiles out of focus at the lens are dimmed.
+#[test]
+fn the_depth_lens_is_built_when_its_inputs_change() {
+    let ctx = egui::Context::default();
+    let mut view = LiveView {
+        depth: Some(raw_depth_map()),
+        lens: Lens::Depth,
+        ..Default::default()
+    };
+    let s = snapshot(1);
+    frame(&ctx, &mut view, &s, 0.0, vec![]);
+    let built = view.mesh_builds;
+    frame(&ctx, &mut view, &s, 0.1, vec![]);
+    assert_eq!(view.mesh_builds, built, "a still frame builds nothing");
+    let moved = snapshot_of(
+        ColorImage::filled([120, 80], Color32::from_gray(100)),
+        1,
+        Roi::subject(),
+        30_100,
+    );
+    frame(&ctx, &mut view, &moved, 0.2, vec![]);
+    assert_eq!(view.mesh_builds, built + 1, "a lens move rebuilds once");
+    let texts = texts(&frame(&ctx, &mut view, &moved, 0.3, vec![]).0);
+    assert!(texts.iter().any(|t| t.starts_with("DEPTH")), "{texts:?}");
+}
+
+/// Spec S1's frame-time gate: the live view with the Depth lens on (and
+/// the lens moving every frame: the mesh rebuilt each frame, the worst
+/// case) against the live view alone. Release: `cargo test --release
+/// -p strehl-ui --bin strehl-ui -- benchmark_depth_lens --ignored --nocapture`.
+#[test]
+#[ignore = "benchmark"]
+fn benchmark_depth_lens_frame_time() {
+    let ctx = egui::Context::default();
+    let image = crate::capture_workspace::fixture::subject_image(1024, 680, 1.0);
+    let mut timings = [Vec::new(), Vec::new(), Vec::new()];
+    for round in 0..6 {
+        for mode in if round % 2 == 0 { [0, 1, 2] } else { [2, 1, 0] } {
+            let mut view = LiveView {
+                depth: Some(raw_depth_map()),
+                lens: if mode == 0 { Lens::Off } else { Lens::Depth },
+                ..Default::default()
+            };
+            let mut time = 0.0;
+            let warm = snapshot_of(image.clone(), 1, Roi::subject(), 30_000);
+            for _ in 0..5 {
+                time += 1.0 / 120.0;
+                frame(&ctx, &mut view, &warm, time, vec![]);
+            }
+            let frames: Vec<Snapshot> = (0..60u16)
+                .map(|i| {
+                    // Mode 2 moves the lens every frame.
+                    let at = if mode == 2 { 29_900 + 5 * i } else { 30_000 };
+                    snapshot_of(image.clone(), 1, Roi::subject(), at)
+                })
+                .collect();
+            let start = Instant::now();
+            for s in &frames {
+                time += 1.0 / 120.0;
+                let (out, _) = frame(&ctx, &mut view, s, time, vec![]);
+                std::hint::black_box(ctx.tessellate(out.shapes, out.pixels_per_point));
+            }
+            timings[mode].push(start.elapsed().as_secs_f64() * 1000.0 / 60.0);
+        }
+    }
+    let best = |v: &Vec<f64>| v.iter().copied().fold(f64::INFINITY, f64::min);
+    println!(
+        "live_view_cpu_min_ms off={:.3} depth_still={:.3} depth_moving={:.3} tiles=14652",
+        best(&timings[0]),
+        best(&timings[1]),
+        best(&timings[2])
+    );
+}

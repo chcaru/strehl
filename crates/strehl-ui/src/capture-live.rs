@@ -437,8 +437,11 @@ pub(crate) struct LiveView {
     /// The calibration's depth map, as the station has it, and whether the
     /// Depth lens is on (spec 6.1).
     pub depth: Option<Arc<DepthMap>>,
-    pub depth_lens: bool,
-    lens_mesh: MeshCache<LensKey>,
+    pub lens: Lens,
+    /// The depth rail's hovered position: the Depth lens isolates what is in
+    /// focus there instead of at the lens (spec 6.2).
+    pub rail_hover: Option<u16>,
+    lens_mesh: Option<(LensKey, Arc<Mesh>, Cover)>,
     /// The sliders while dragged.
     auto_draft: Option<[f32; 3]>,
     /// The tool bar's width as last drawn: its box fits its buttons, and the
@@ -476,7 +479,8 @@ impl Default for LiveView {
             outline_sent: None,
             auto: AutoView::default(),
             depth: None,
-            depth_lens: false,
+            lens: Lens::Off,
+            rail_hover: None,
             lens_mesh: None,
             auto_draft: None,
             bar_width: 520.0,
@@ -494,11 +498,42 @@ impl Default for LiveView {
     }
 }
 
-/// The Depth lens: one square per tile with a peak, a hairline of picture
-/// between tiles, the ramp's colour at [`LENS_ALPHA`]; with the lens
-/// position `at`, tiles not in focus there are dimmed (spec 6.2).
-fn depth_mesh(map: &DepthMap, photo: Rect, uv: Rect, at: Option<u16>) -> Mesh {
+/// A lens's mesh: one square per tile, a hairline of picture between
+/// tiles.
+///
+/// - Depth: tiles with a focus in the ramp's colour at [`LENS_ALPHA`]; with
+///   the lens position `at`, tiles not in focus there are dimmed (spec 6.2).
+/// - Cover: against the plan's ends `marks`, a tile in focus within the
+///   planes (with half a sharp depth each side) faint, one in focus only
+///   before Start or after End in the warning colour, counted.
+/// - Light: the subject's tiles by the body's level at the chosen exposure,
+///   in five bands.
+/// - Glints: the subject's tiles whose highlights pass the pin at the chosen
+///   exposure, by how many stops; outlined when the highlight groups hold
+///   them, filled when they pin anyway.
+#[allow(clippy::too_many_arguments)]
+fn lens_mesh(
+    lens: Lens,
+    map: &DepthMap,
+    photo: Rect,
+    uv: Rect,
+    at: Option<u16>,
+    marks: Option<(u16, u16)>,
+    exposure: Option<LensExposure>,
+    palette: &CapturePalette,
+) -> (Mesh, Cover) {
     let mut mesh = Mesh::default();
+    let mut cover = Cover::default();
+    if let (Lens::Still, Some(still)) = (lens, &map.still) {
+        still_mesh(&mut mesh, &mut cover, still, photo, uv, palette);
+        return (mesh, cover);
+    }
+    if let (Lens::Light | Lens::Glints, Some(light), Some(e)) = (lens, &map.light, exposure) {
+        light_mesh(
+            &mut mesh, &mut cover, lens, map, light, e, photo, uv, palette,
+        );
+        return (mesh, cover);
+    }
     let span = (map.hi - map.lo).max(1.0);
     let to_screen = |u: f32, v: f32| {
         egui::pos2(
@@ -521,13 +556,336 @@ fn depth_mesh(map: &DepthMap, photo: Rect, uv: Rect, at: Option<u16>) -> Mesh {
             if r.width() <= 0.0 || !r.intersects(photo) {
                 continue;
             }
-            let near = at.is_none_or(|p| (f - f64::from(p)).abs() <= 0.5 * map.depth);
-            let alpha = if near { LENS_ALPHA } else { LENS_DIM };
-            let c = ramp(((f - map.lo) / span) as f32).gamma_multiply(alpha);
+            let c = match (lens, marks) {
+                (Lens::Cover, Some((s, e))) => {
+                    cover.tiles += 1;
+                    let half = 0.5 * map.depth;
+                    let (lo, hi) = (f64::from(s.min(e)) - half, f64::from(s.max(e)) + half);
+                    if f < lo {
+                        cover.before += 1;
+                        palette.warn.gamma_multiply(LENS_ALPHA)
+                    } else if f > hi {
+                        cover.after += 1;
+                        palette.warn.gamma_multiply(LENS_ALPHA)
+                    } else {
+                        palette.ink3.gamma_multiply(0.28)
+                    }
+                }
+                _ => {
+                    let near = at.is_none_or(|p| (f - f64::from(p)).abs() <= 0.5 * map.depth);
+                    let alpha = if near { LENS_ALPHA } else { LENS_DIM };
+                    ramp(((f - map.lo) / span) as f32).gamma_multiply(alpha)
+                }
+            };
             mesh.add_colored_rect(r.intersect(photo), c);
         }
     }
-    mesh
+    (mesh, cover)
+}
+
+/// The Light and Glints lenses' tiles (see [`lens_mesh`]).
+#[allow(clippy::too_many_arguments)]
+fn light_mesh(
+    mesh: &mut Mesh,
+    tally: &mut Cover,
+    lens: Lens,
+    map: &DepthMap,
+    light: &LightMap,
+    e: LensExposure,
+    photo: Rect,
+    uv: Rect,
+    palette: &CapturePalette,
+) {
+    let to_screen = |u: f32, v: f32| {
+        egui::pos2(
+            photo.left() + (u - uv.left()) / uv.width() * photo.width(),
+            photo.top() + (v - uv.top()) / uv.height() * photo.height(),
+        )
+    };
+    let (tw, th) = (
+        map.extent[0] / map.cols.max(1) as f32,
+        map.extent[1] / map.rows.max(1) as f32,
+    );
+    let scale = (e.shutter / light.long_s.max(1e-9)) as f32;
+    let band_colour = [ramp(0.0), ramp(0.18), ramp(0.38), ramp(0.72), palette.warn];
+    let mut top = 0.0f32;
+    for t in 0..map.cols * map.rows {
+        if !light.subject.get(t).copied().unwrap_or(false) {
+            continue;
+        }
+        let (tx, ty) = (t % map.cols, t / map.cols);
+        let a = to_screen(tx as f32 * tw, ty as f32 * th);
+        let b = to_screen((tx + 1) as f32 * tw, (ty + 1) as f32 * th);
+        let r = Rect::from_min_max(a, b).shrink(0.5);
+        tally.tiles += 1;
+        if lens == Lens::Light {
+            let v = light.level[t] * scale;
+            let band = LIGHT_BANDS.iter().take_while(|cut| v >= **cut).count();
+            tally.bands[band] += 1;
+            if r.width() > 0.0 && r.intersects(photo) {
+                mesh.add_colored_rect(
+                    r.intersect(photo),
+                    band_colour[band].gamma_multiply(LENS_ALPHA),
+                );
+            }
+            continue;
+        }
+        let g = light.glint[t] * scale;
+        // Also skips NaN.
+        if g.is_nan() || g <= 1.0 {
+            continue;
+        }
+        tally.over += 1;
+        let stops = g.log2();
+        top = top.max(stops);
+        let held = e
+            .groups
+            .is_some_and(|s| light.glint[t] * (s / light.long_s.max(1e-9)) as f32 <= 0.9);
+        if r.width() <= 0.0 || !r.intersects(photo) {
+            continue;
+        }
+        let c = ramp(0.62 + 0.38 * (stops / 6.0).min(1.0));
+        if held {
+            tally.held += 1;
+            // Outlined: the groups hold it. A ring of four thin quads.
+            let r = r.intersect(photo);
+            let w = 1.5f32.min(r.width() / 3.0);
+            for side in [
+                Rect::from_min_max(r.min, egui::pos2(r.right(), r.top() + w)),
+                Rect::from_min_max(egui::pos2(r.left(), r.bottom() - w), r.max),
+                Rect::from_min_max(r.min, egui::pos2(r.left() + w, r.bottom())),
+                Rect::from_min_max(egui::pos2(r.right() - w, r.top()), r.max),
+            ] {
+                mesh.add_colored_rect(side, c.gamma_multiply(0.9));
+            }
+        } else {
+            mesh.add_colored_rect(r.intersect(photo), c.gamma_multiply(LENS_ALPHA));
+        }
+    }
+    tally.top_centistops = (top * 100.0).round() as i32;
+}
+
+/// The Still lens's tiles: under the limit faint, by how near it; over it
+/// in the warning colour (counted in `tally.over`, measured in `tiles`).
+fn still_mesh(
+    mesh: &mut Mesh,
+    tally: &mut Cover,
+    still: &StillMap,
+    photo: Rect,
+    uv: Rect,
+    palette: &CapturePalette,
+) {
+    let to_screen = |u: f32, v: f32| {
+        egui::pos2(
+            photo.left() + (u - uv.left()) / uv.width() * photo.width(),
+            photo.top() + (v - uv.top()) / uv.height() * photo.height(),
+        )
+    };
+    let (tw, th) = (
+        still.extent[0] / still.cols.max(1) as f32,
+        still.extent[1] / still.rows.max(1) as f32,
+    );
+    let mut values = Vec::new();
+    for (t, &v) in still.local.iter().enumerate() {
+        if !v.is_finite() {
+            continue;
+        }
+        values.push(v);
+        tally.tiles += 1;
+        let (tx, ty) = (t % still.cols, t / still.cols);
+        let r = Rect::from_min_max(
+            to_screen(tx as f32 * tw, ty as f32 * th),
+            to_screen((tx + 1) as f32 * tw, (ty + 1) as f32 * th),
+        )
+        .shrink(0.5);
+        if !(r.width() > 0.0 && r.intersects(photo)) {
+            continue;
+        }
+        let c = if v > still.limit {
+            tally.over += 1;
+            palette.warn.gamma_multiply(LENS_ALPHA)
+        } else {
+            ramp(0.35).gamma_multiply(0.15 + 0.45 * (v / still.limit.max(1e-6)).clamp(0.0, 1.0))
+        };
+        mesh.add_colored_rect(r.intersect(photo), c);
+    }
+    values.sort_by(f32::total_cmp);
+    tally.top_centistops = values
+        .get(((values.len().max(1) - 1) as f32 * 0.99) as usize)
+        .map_or(0, |v| (v * 100.0).round() as i32);
+}
+
+/// The Still lens's legend.
+fn still_legend(
+    p: &egui::Painter,
+    photo: Rect,
+    still: &StillMap,
+    t: Cover,
+    palette: &CapturePalette,
+) {
+    let origin = photo.left_bottom() + egui::vec2(10.0, -98.0);
+    let line = format!(
+        "{}: 99th percentile {:.2} px against the retake limit {:.2}; {} of {} tiles over it",
+        still.verdict,
+        f64::from(t.top_centistops) / 100.0,
+        still.limit,
+        t.over,
+        t.tiles
+    );
+    let job = style::job(&line, 12.0, palette.ink, 0.0);
+    let galley = p.layout_job(job);
+    let box_ = Rect::from_min_size(origin, egui::vec2(galley.size().x.max(200.0) + 16.0, 50.0));
+    p.rect_filled(box_, 0.0, palette.panel.gamma_multiply(0.92));
+    p.rect_stroke(
+        box_,
+        0.0,
+        Stroke::new(1.0_f32, palette.line),
+        StrokeKind::Inside,
+    );
+    style::paint_job(
+        p,
+        origin + egui::vec2(8.0, 4.0),
+        Align2::LEFT_TOP,
+        style::job(
+            "STILL \u{b7} the proof plane's four shots against each other",
+            11.0,
+            palette.ink2,
+            0.0,
+        ),
+    );
+    p.galley(origin + egui::vec2(8.0, 24.0), galley, palette.ink);
+}
+
+/// The Light and Glints lenses' legend.
+fn light_legend(
+    p: &egui::Painter,
+    photo: Rect,
+    lens: Lens,
+    t: Cover,
+    e: Option<LensExposure>,
+    palette: &CapturePalette,
+) {
+    let origin = photo.left_bottom() + egui::vec2(10.0, -98.0);
+    let pct = |n: usize| 100.0 * n as f64 / t.tiles.max(1) as f64;
+    let (title, line) = match (lens, e) {
+        (Lens::Light, Some(e)) => (
+            format!("LIGHT \u{b7} the body at {}", seconds_label(e.shutter)),
+            format!(
+                "under 1 % {:.0} \u{b7} 1\u{2013}10 % {:.0} \u{b7} 10\u{2013}50 % {:.0} \u{b7} 50\u{2013}90 % {:.0} \u{b7} pinned {:.0} (% of the subject)",
+                pct(t.bands[0]),
+                pct(t.bands[1]),
+                pct(t.bands[2]),
+                pct(t.bands[3]),
+                pct(t.bands[4])
+            ),
+        ),
+        (_, Some(e)) => (
+            format!("GLINTS \u{b7} past the pin at {}", seconds_label(e.shutter)),
+            if t.over == 0 {
+                "No highlight passes the pin".to_owned()
+            } else {
+                format!(
+                    "{:.1} % of the subject, up to {:.1} stops over; {}",
+                    pct(t.over),
+                    f64::from(t.top_centistops) / 100.0,
+                    match e.groups {
+                        Some(g) if t.held == t.over =>
+                            format!("held by groups at {}", seconds_label(g)),
+                        Some(g) => format!(
+                            "{} of {} held by groups at {}",
+                            t.held,
+                            t.over,
+                            seconds_label(g)
+                        ),
+                        None => "no highlight groups: they pin".to_owned(),
+                    }
+                )
+            },
+        ),
+        _ => ("LIGHT".to_owned(), "The exposure is not known".to_owned()),
+    };
+    let job = style::job(&line, 12.0, palette.ink, 0.0);
+    let galley = p.layout_job(job);
+    let box_ = Rect::from_min_size(origin, egui::vec2(galley.size().x.max(200.0) + 16.0, 50.0));
+    p.rect_filled(box_, 0.0, palette.panel.gamma_multiply(0.92));
+    p.rect_stroke(
+        box_,
+        0.0,
+        Stroke::new(1.0_f32, palette.line),
+        StrokeKind::Inside,
+    );
+    style::paint_job(
+        p,
+        origin + egui::vec2(8.0, 4.0),
+        Align2::LEFT_TOP,
+        style::job(&title, 11.0, palette.ink2, 0.0),
+    );
+    p.galley(origin + egui::vec2(8.0, 24.0), galley, palette.ink);
+}
+
+/// "1.3 s" or "1/40 s".
+fn seconds_label(s: f64) -> String {
+    if s >= 0.3 {
+        format!("{s:.1} s")
+    } else {
+        format!("1/{:.0} s", 1.0 / s)
+    }
+}
+
+/// The Cover lens's legend: what the plan leaves out, in words.
+fn cover_legend(
+    p: &egui::Painter,
+    photo: Rect,
+    cover: Cover,
+    marks: Option<(u16, u16)>,
+    palette: &CapturePalette,
+) {
+    let origin = photo.left_bottom() + egui::vec2(10.0, -98.0);
+    let pct = |n: usize| 100.0 * n as f64 / cover.tiles.max(1) as f64;
+    let line = match marks {
+        None => "Mark Start and End to see what they cover".to_owned(),
+        Some(_) if cover.before + cover.after == 0 => "All of the subject is covered".to_owned(),
+        Some(_) => {
+            let mut parts = Vec::new();
+            if cover.before > 0 {
+                parts.push(format!(
+                    "{} tiles ({:.1} %) lie before Start",
+                    cover.before,
+                    pct(cover.before)
+                ));
+            }
+            if cover.after > 0 {
+                parts.push(format!(
+                    "{} tiles ({:.1} %) lie after End",
+                    cover.after,
+                    pct(cover.after)
+                ));
+            }
+            parts.join("; ")
+        }
+    };
+    let job = style::job(&line, 12.0, palette.ink, 0.0);
+    let galley = p.layout_job(job);
+    let box_ = Rect::from_min_size(origin, egui::vec2(galley.size().x.max(200.0) + 16.0, 50.0));
+    p.rect_filled(box_, 0.0, palette.panel.gamma_multiply(0.92));
+    p.rect_stroke(
+        box_,
+        0.0,
+        Stroke::new(1.0_f32, palette.line),
+        StrokeKind::Inside,
+    );
+    style::paint_job(
+        p,
+        origin + egui::vec2(8.0, 4.0),
+        Align2::LEFT_TOP,
+        style::job(
+            "COVER \u{b7} against Start and End",
+            11.0,
+            palette.ink2,
+            0.0,
+        ),
+    );
+    p.galley(origin + egui::vec2(8.0, 24.0), galley, palette.ink);
 }
 
 /// The Depth lens's legend, ruled, at the bottom left above the tool bar:
@@ -755,21 +1113,58 @@ impl LiveView {
             Stroke::new(1.0_f32, Color32::from_white_alpha(13)),
             StrokeKind::Outside,
         );
-        if self.depth_lens
+        if self.lens != Lens::Off
             && let Some(map) = &self.depth
         {
             // In focus now: the lens within half a sharp depth of a tile's
             // focus (spec 6.2). A comparison per tile when the lens moves.
-            let at = host.position.filter(|p| map.anchor != Some(*p));
-            let key: LensKey = (map.revision, rect_bits(photo), rect_bits(uv), at);
-            if self.lens_mesh.as_ref().is_none_or(|(k, _)| *k != key) {
-                self.lens_mesh = Some((key, Arc::new(depth_mesh(map, photo, uv, at))));
+            let at = self
+                .rail_hover
+                .or(host.position.filter(|p| map.anchor != Some(*p)))
+                .filter(|_| self.lens == Lens::Depth);
+            let marks = (self.lens == Lens::Cover && host.bounds_set()).then(|| host.plan_bounds());
+            let shutter = host.exposure.as_ref().and_then(|e| e.shutter);
+            let groups = host
+                .plan
+                .as_ref()
+                .and_then(|p| p.highlight)
+                .map(|h| h.shutter);
+            let exposure = shutter
+                .and_then(strehl_capture::timing::shutter_seconds)
+                .map(|s| LensExposure {
+                    shutter: s,
+                    groups: groups.and_then(strehl_capture::timing::shutter_seconds),
+                });
+            let key: LensKey = (
+                self.lens,
+                map.revision,
+                rect_bits(photo),
+                rect_bits(uv),
+                at,
+                marks,
+                [shutter.unwrap_or(0), groups.unwrap_or(0)],
+            );
+            if self.lens_mesh.as_ref().is_none_or(|(k, _, _)| *k != key) {
+                let (mesh, cover) =
+                    lens_mesh(self.lens, map, photo, uv, at, marks, exposure, palette);
+                self.lens_mesh = Some((key, Arc::new(mesh), cover));
                 self.mesh_builds += 1;
             }
-            if let Some((_, mesh)) = &self.lens_mesh {
+            if let Some((_, mesh, cover)) = &self.lens_mesh {
                 p.add(egui::Shape::mesh(Arc::clone(mesh)));
+                match self.lens {
+                    Lens::Cover => cover_legend(&p, photo, *cover, marks, palette),
+                    Lens::Light | Lens::Glints => {
+                        light_legend(&p, photo, self.lens, *cover, exposure, palette)
+                    }
+                    Lens::Still => {
+                        if let Some(still) = &map.still {
+                            still_legend(&p, photo, still, *cover, palette);
+                        }
+                    }
+                    _ => depth_legend(&p, photo, map, host.position, palette),
+                }
             }
-            depth_legend(&p, photo, map, host.position, palette);
             // Hover a tile: where it is in focus.
             if let Some(pos) = ui.ctx().pointer_hover_pos().filter(|q| photo.contains(*q)) {
                 let fx = uv.left() + (pos.x - photo.left()) / photo.width() * uv.width();
@@ -1035,12 +1430,30 @@ impl LiveView {
                     }
                 }
                 ui.add_space(6.0);
-                if self.depth.is_some()
-                    && style::button(ui, "Depth", if self.depth_lens { ButtonKind::On } else { ButtonKind::Quiet }, 22.0, true, palette)
-                        .on_hover_text("The Depth lens: where each part of the subject is in focus, near to far, from the calibration; tiles with no peak are left clear. Tiles out of focus at the lens position are dimmed")
-                        .clicked()
-                {
-                    self.depth_lens = !self.depth_lens;
+                if self.depth.is_some() {
+                    for (label, lens, tip) in [
+                        ("Depth", Lens::Depth, "The Depth lens: where each part of the subject is in focus, near to far, from the calibration; tiles with no peak are left clear. Once the lens moves, tiles out of focus at its position are dimmed"),
+                        ("Cover", Lens::Cover, "The Cover lens: against Start and End as they stand, the parts of the subject in focus only before Start or after End, counted"),
+                        ("Light", Lens::Light, "The Light lens: the body's level at the chosen exposure, by tile, in five bands (from the survey's long frames)"),
+                        ("Glints", Lens::Glints, "The Glints lens: highlights past the pin at the chosen exposure, by how many stops; outlined where the highlight groups hold them (from the survey's short frames)"),
+                        ("Still", Lens::Still, "The Still lens: how far the proof plane's four shots disagree, by tile, against the capture's retake limit"),
+                    ] {
+                        if lens == Lens::Still && self.depth.as_ref().is_none_or(|m| m.still.is_none()) {
+                            continue;
+                        }
+                        if matches!(lens, Lens::Light | Lens::Glints)
+                            && self.depth.as_ref().is_none_or(|m| m.light.is_none())
+                        {
+                            continue;
+                        }
+                        let on = self.lens == lens;
+                        if style::button(ui, label, if on { ButtonKind::On } else { ButtonKind::Quiet }, 22.0, true, palette)
+                            .on_hover_text(tip)
+                            .clicked()
+                        {
+                            self.lens = if on { Lens::Off } else { lens };
+                        }
+                    }
                 }
                 if style::button(ui, "Peaking", if self.peaking { ButtonKind::On } else { ButtonKind::Quiet }, 22.0, true, palette).clicked() {
                     self.peaking = !self.peaking;
@@ -1720,6 +2133,10 @@ pub(crate) struct DepthMap {
     /// Where the pass left the lens: away from it, the lens isolates the
     /// tiles in focus at its position (spec 6.2).
     pub anchor: Option<u16>,
+    /// The survey's light, for the Light and Glints lenses (RAW only).
+    pub light: Option<LightMap>,
+    /// The last proof plane's check, for the Still lens.
+    pub still: Option<StillMap>,
 }
 
 /// The lens's colour ramp, near (0) to far (1): a perceptual rainbow
@@ -1740,9 +2157,87 @@ pub(crate) fn ramp(t: f32) -> Color32 {
 const LENS_ALPHA: f32 = 0.62;
 const LENS_DIM: f32 = 0.12;
 
-/// The Depth lens's mesh's key: the map, the picture's rectangle, the zoom
-/// and the lens position it isolates (none: every tile at full colour).
-type LensKey = (u64, [u32; 4], [u32; 4], Option<u16>);
+/// The evidence lenses over the live view (spec 6.1): one at a time.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub(crate) enum Lens {
+    #[default]
+    Off,
+    /// Where each part is in focus, near to far.
+    Depth,
+    /// What the plan's Start and End leave out.
+    Cover,
+    /// The body's level at the chosen exposure.
+    Light,
+    /// The highlights past the pin.
+    Glints,
+    /// How far the proof plane's shots disagree, by tile.
+    Still,
+}
+
+/// The proof plane's check by tile (the Still lens): columns, rows, the
+/// share of the frame's width and height the grid covers, the local
+/// disagreement in photosites (NaN where not measured), and its limit.
+#[derive(Clone, Debug, PartialEq)]
+pub(crate) struct StillMap {
+    pub cols: usize,
+    pub rows: usize,
+    pub extent: [f32; 2],
+    pub local: Vec<f32>,
+    pub limit: f32,
+    /// "clean", "would be retaken" (the proof's verdict in words).
+    pub verdict: String,
+}
+
+/// The survey's per-tile light (64 px tiles, the depth map's RAW grid):
+/// the body's level and the highlights' top as shares of full scale at the
+/// survey's long shutter.
+#[derive(Clone, Debug, PartialEq)]
+pub(crate) struct LightMap {
+    pub level: Vec<f32>,
+    pub glint: Vec<f32>,
+    pub subject: Vec<bool>,
+    pub long_s: f64,
+}
+
+/// The exposure a light lens is read at: the chosen shutter, and the
+/// highlight groups' (seconds).
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub(crate) struct LensExposure {
+    pub shutter: f64,
+    pub groups: Option<f64>,
+}
+
+/// The Light lens's bands: under 1 %, to 10 %, to 50 %, to 90 % of full
+/// scale, and at the pin.
+const LIGHT_BANDS: [f32; 4] = [0.01, 0.10, 0.50, 0.90];
+
+/// A lens mesh's key: the lens, the map, the picture's rectangle, the zoom,
+/// the lens position it isolates (none: every tile at full colour) and the
+/// plan's ends (Cover).
+type LensKey = (
+    Lens,
+    u64,
+    [u32; 4],
+    [u32; 4],
+    Option<u16>,
+    Option<(u16, u16)>,
+    [u64; 2],
+);
+
+/// What the Cover lens counted: tiles with a focus, and those in focus only
+/// before Start or only after End.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub(crate) struct Cover {
+    pub tiles: usize,
+    pub before: usize,
+    pub after: usize,
+    /// Light: subject tiles per band. Glints: tiles past the pin, of them
+    /// held by the groups, and the top in stops over the pin (x100).
+    pub bands: [usize; 5],
+    pub over: usize,
+    pub held: usize,
+    pub top_centistops: i32,
+}
 
 /// The automatic selection as the live view shows it.
 #[derive(Clone, Debug, Default, PartialEq)]

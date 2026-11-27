@@ -48,6 +48,9 @@ pub(crate) const MIN_TILES: usize = 8;
 /// Running off an end: this share of the prominent tiles peak at the
 /// window's first or last position.
 pub(crate) const OFF_END_SHARE: f64 = 0.03;
+/// A kept peak has at least this many neighbours with peaks (3 x 3), and
+/// an end of the range at least this many others within two sharp depths.
+pub(crate) const MIN_NEIGHBOURS: usize = 2;
 /// An end-peaking tile counts with this many end-peaking neighbours.
 pub(crate) const END_NEIGHBOURS: usize = 3;
 /// Every move arrives from below, as a capture's do.
@@ -187,6 +190,26 @@ impl Peaks {
     pub fn nothing(&self) -> bool {
         self.kept < MIN_TILES
     }
+    /// Kept peaks by sweep position (`[position, tiles]`, the window cut in
+    /// equal steps, the offset taken off): what the rail draws and a run's
+    /// record shows.
+    pub fn histogram(&self) -> Vec<[f64; 2]> {
+        let (a, b) = self.window;
+        let n = POSITIONS.max(2);
+        let step = (b - a) / (n - 1) as f64;
+        let mut counts = vec![0usize; n];
+        for v in self.focus.iter().flatten() {
+            let i = ((v - self.offset - a) / step.max(1.0)).round();
+            if i >= 0.0 && (i as usize) < n {
+                counts[i as usize] += 1;
+            }
+        }
+        counts
+            .iter()
+            .enumerate()
+            .map(|(i, c)| [a + step * i as f64, *c as f64])
+            .collect()
+    }
     /// The subject runs off the window's low (-1) or high (+1) end.
     pub fn off_end(&self) -> Option<i8> {
         let share = |n: usize| n as f64 / self.prominent.max(1) as f64;
@@ -325,12 +348,33 @@ pub(crate) fn peaks(frames: &[FrameTiles], w0: f64, offset: f64) -> Option<Peaks
                     }
                 }
             }
+            // A lone peak has itself for a median: it needs neighbours
+            // (MEASURED on the rig, 2026-11-27: one stray tile 1,000 units
+            // before the subject set the sweep's near end).
+            if near.len() < 1 + MIN_NEIGHBOURS {
+                return None;
+            }
             let m = median_f64(near)?;
             ((v - m).abs() <= COHERENCE_DEPTHS * w0).then_some(v + offset)
         })
         .collect();
     let kept: Vec<f64> = focus.iter().flatten().copied().collect();
-    let range = kept
+    // The range: peaks with company in depth too (two others within two
+    // sharp depths), so one tile alone at its depth does not move an end.
+    let mut sorted = kept.clone();
+    sorted.sort_by(f64::total_cmp);
+    let reach = COHERENCE_DEPTHS * w0;
+    let supported: Vec<f64> = sorted
+        .iter()
+        .enumerate()
+        .filter(|(i, v)| {
+            let lo = sorted.partition_point(|x| *x < **v - reach);
+            let hi = sorted.partition_point(|x| *x <= **v + reach);
+            hi - lo > MIN_NEIGHBOURS && *i < sorted.len()
+        })
+        .map(|(_, v)| *v)
+        .collect();
+    let range = supported
         .iter()
         .copied()
         .fold(None, |r: Option<(f64, f64)>, v| match r {

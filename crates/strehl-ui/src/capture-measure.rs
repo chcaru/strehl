@@ -61,9 +61,14 @@ pub(crate) enum Stage {
         shutters: (u64, u64),
         positions: usize,
     },
+    /// The camera's exposure as it was, then the lens to `target`: one
+    /// command at a time (a host given both in one frame applied the first
+    /// and dropped the second, MEASURED on the rig 2026-11-27); a move not
+    /// seen done is sent again.
     Return {
         target: u16,
-        sent: bool,
+        exposure_sent: bool,
+        moved: Option<Instant>,
     },
     Done,
     Failed(String),
@@ -97,6 +102,246 @@ pub(crate) struct Facts {
     pub preview_size: Option<[usize; 2]>,
     /// Counts every change of the facts the lenses draw.
     pub revision: u64,
+    /// The proof planes taken since the pass (spec 5.8), and how many more
+    /// are asked for.
+    pub proofs: Vec<ProofResult>,
+    pub proofs_wanted: usize,
+}
+
+/// One proof plane (spec 5.8): a four-shot group exactly as the plan stands
+/// at the busiest position, checked as the capture checks its groups, and
+/// the highlight group after it when the plan has them.
+#[derive(Clone, Debug, PartialEq)]
+pub(crate) struct ProofResult {
+    /// "pass", "demote" or "retake" (the check's verdict), and its reason.
+    pub verdict: String,
+    pub reason: Option<String>,
+    /// The capture would have retaken it.
+    pub retake: bool,
+    /// The shots' local disagreement at the 99th percentile and its limit
+    /// (photosites), and the largest member residual.
+    pub local_px: Option<f64>,
+    pub limit_px: Option<f64>,
+    pub residual_px: Option<f64>,
+    /// Seconds the plane took (base and highlight groups).
+    pub seconds: f64,
+    /// The check's per-tile local disagreement (the Still lens): columns,
+    /// rows, sensor pixels a tile, values (NaN where not measured).
+    pub map: Option<(usize, usize, f32, Vec<f32>)>,
+}
+
+impl ProofResult {
+    /// From `strehl pixel-shift --json`'s first group.
+    pub fn from_report(v: &Value, seconds: f64) -> Option<Self> {
+        let g = v["groups"].as_array()?.first()?;
+        let residual = g["residual_px"].as_array().map(|r| {
+            r.iter()
+                .filter_map(|p| Some(p.get(0)?.as_f64()?.hypot(p.get(1)?.as_f64()?)))
+                .fold(0.0, f64::max)
+        });
+        let map = (|| {
+            let grid = g["tile_grid"].as_array()?;
+            let (cols, rows) = (
+                grid.first()?.as_u64()? as usize,
+                grid.get(1)?.as_u64()? as usize,
+            );
+            let tile = g["tile"].as_f64()? as f32 * 2.0;
+            let values: Vec<f32> = g["tile_local_map"]
+                .as_array()?
+                .iter()
+                .map(|v| v.as_f64().map_or(f32::NAN, |x| x as f32))
+                .collect();
+            (values.len() == cols * rows).then_some((cols, rows, tile, values))
+        })();
+        Some(Self {
+            verdict: g["verdict"].as_str().unwrap_or("unknown").to_owned(),
+            reason: g["gate"]["reason"].as_str().map(str::to_owned),
+            retake: g["gate"]["retake"].as_bool().unwrap_or(false),
+            local_px: g["gate"]["local_px"].as_f64(),
+            limit_px: g["gate"]["local_tolerance_px"].as_f64(),
+            residual_px: residual,
+            seconds,
+            map,
+        })
+    }
+
+    /// Clean: the checker passed it (its shots agree). A group the capture's
+    /// gate keeps can still be demoted by the checker (MEASURED on the rig
+    /// 2026-11-27: kept at 0.29 px local, demoted for its witness pairs).
+    pub fn clean(&self) -> bool {
+        self.reason.is_none() && self.verdict.starts_with("pass")
+    }
+}
+
+/// The proof's stages, driven once a frame by the workspace.
+#[derive(Debug, Default)]
+pub(crate) enum Proof {
+    #[default]
+    Idle,
+    /// A test run being taken: the base group, then the highlight group.
+    Base {
+        sequence: u64,
+        since: Instant,
+    },
+    Highlight {
+        sequence: u64,
+        base: std::path::PathBuf,
+        since: Instant,
+        base_seconds: f64,
+    },
+    /// The base group being checked by the engine.
+    Checking {
+        base: std::path::PathBuf,
+        others: Vec<std::path::PathBuf>,
+        job: Box<super::tools::EngineJob>,
+        seconds: f64,
+    },
+    Failed(String),
+}
+
+impl std::fmt::Debug for super::tools::EngineJob {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "EngineJob({:.0} s)", self.elapsed().as_secs_f64())
+    }
+}
+
+impl Proof {
+    pub fn running(&self) -> bool {
+        matches!(
+            self,
+            Self::Base { .. } | Self::Highlight { .. } | Self::Checking { .. }
+        )
+    }
+}
+
+/// "3 of 5 groups clean, 1 would be retaken" (spec 5.8).
+pub(crate) fn proof_line(proofs: &[ProofResult]) -> Option<String> {
+    let last = proofs.last()?;
+    let clean = proofs.iter().filter(|p| p.clean()).count();
+    let retaken = proofs.iter().filter(|p| p.retake).count();
+    let secs = proofs.iter().map(|p| p.seconds).sum::<f64>() / proofs.len() as f64;
+    Some(if proofs.len() == 1 {
+        let within = match (last.local_px, last.limit_px) {
+            (Some(l), Some(m)) => format!(": its shots within {l:.2} px (limit {m:.2})"),
+            _ => String::new(),
+        };
+        format!(
+            "{}{within}; {secs:.1} s a plane",
+            if last.clean() {
+                "clean"
+            } else if last.retake {
+                "would be retaken"
+            } else {
+                "not clean, kept"
+            }
+        )
+    } else {
+        format!(
+            "{clean} of {} groups clean, {retaken} would be retaken; {secs:.1} s a plane",
+            proofs.len()
+        )
+    })
+}
+
+/// What calibrations taught about the lens (spec 8), by focus position to
+/// the nearest [`MEMORY_BIN`] units, newest last: the sharp depth and the
+/// coarse-to-fine offset. They seed the next calibration there; they are
+/// never shown as a subject's figures (the sharp depth differed by a third
+/// between subjects at one position, grounding R5).
+#[derive(Clone, Debug, Default, PartialEq, serde::Serialize, serde::Deserialize)]
+pub(crate) struct LensMemory {
+    pub entries: Vec<LensEntry>,
+}
+
+#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
+pub(crate) struct LensEntry {
+    pub bin: u32,
+    pub width: Option<f64>,
+    pub offset: Option<f64>,
+    pub unix: u64,
+}
+
+/// Focus units a remembered figure covers.
+pub(crate) const MEMORY_BIN: u32 = 2000;
+/// Entries kept in all.
+const MEMORY_KEPT: usize = 64;
+
+impl LensMemory {
+    pub fn load(path: &std::path::Path) -> Self {
+        std::fs::read_to_string(path)
+            .ok()
+            .and_then(|t| serde_json::from_str(&t).ok())
+            .unwrap_or_default()
+    }
+    pub fn save(&self, path: &std::path::Path) -> std::io::Result<()> {
+        let text = serde_json::to_string_pretty(self).map_err(std::io::Error::other)?;
+        let tmp = path.with_extension("json.tmp");
+        std::fs::write(&tmp, text)?;
+        std::fs::rename(&tmp, path)
+    }
+    fn bin(position: f64) -> u32 {
+        ((position / f64::from(MEMORY_BIN)).round().max(0.0) as u32) * MEMORY_BIN
+    }
+    pub fn record(&mut self, position: f64, width: Option<f64>, offset: Option<f64>, unix: u64) {
+        if width.is_none() && offset.is_none() {
+            return;
+        }
+        self.entries.push(LensEntry {
+            bin: Self::bin(position),
+            width,
+            offset,
+            unix,
+        });
+        if self.entries.len() > MEMORY_KEPT {
+            self.entries.drain(..self.entries.len() - MEMORY_KEPT);
+        }
+    }
+    /// The newest sharp depth and offset remembered at `position`'s bin.
+    pub fn seed(&self, position: f64) -> (Option<f64>, Option<f64>) {
+        let bin = Self::bin(position);
+        let at = || self.entries.iter().rev().filter(move |e| e.bin == bin);
+        (at().find_map(|e| e.width), at().find_map(|e| e.offset))
+    }
+}
+
+/// The lens's coarse-to-fine offset as this pass measured it (spec 5.3
+/// point 6): the median, over preview tiles the sweep kept, of the RAW
+/// survey's focus at the tile's centre less the sweep's peak (without the
+/// offset it added). `None` under 30 tiles.
+pub(crate) fn measured_offset(
+    peaks: &Peaks,
+    preview: [usize; 2],
+    maps: &Value,
+    active: [f64; 2],
+) -> Option<f64> {
+    let (cols, rows) = (
+        maps["cols"].as_u64()? as usize,
+        maps["rows"].as_u64()? as usize,
+    );
+    let tile = maps["tile_px"].as_f64().unwrap_or(64.0);
+    let focus = maps["focus"].as_array()?;
+    let mut d = Vec::new();
+    for (t, f) in peaks.focus.iter().enumerate() {
+        let Some(f) = f else { continue };
+        let (tx, ty) = (t % peaks.cols, t / peaks.cols);
+        let fx = (tx as f64 + 0.5) * super::sweep::TILE as f64 / preview[0].max(1) as f64;
+        let fy = (ty as f64 + 0.5) * super::sweep::TILE as f64 / preview[1].max(1) as f64;
+        let (rx, ry) = (
+            (fx * active[0] / tile) as usize,
+            (fy * active[1] / tile) as usize,
+        );
+        if rx >= cols || ry >= rows {
+            continue;
+        }
+        if let Some(raw) = focus.get(ry * cols + rx).and_then(Value::as_f64) {
+            d.push(raw - (f - peaks.offset));
+        }
+    }
+    if d.len() < 30 {
+        return None;
+    }
+    d.sort_by(f64::total_cmp);
+    Some(d[d.len() / 2])
 }
 
 /// Values the owner set by hand since "New capture" (spec 3, rule 2): a
@@ -192,6 +437,12 @@ pub(crate) struct Pass {
     pub four_before: bool,
     /// The stage that did not finish, for "Run the rest".
     pub stopped_in: Option<&'static str>,
+    /// The sharp depth and the coarse-to-fine offset this pass seeds with
+    /// (remembered at this lens position, else the defaults), and the offset
+    /// it measured.
+    pub w0: f64,
+    pub offset: Option<f64>,
+    pub offset_measured: Option<f64>,
     /// What the finished pass set and what it left as the owner had it.
     pub applied: Option<(Vec<String>, Vec<String>)>,
 }
@@ -206,6 +457,9 @@ impl Default for Pass {
             exposure_before: None,
             four_before: false,
             stopped_in: None,
+            w0: DEFAULT_DEPTH,
+            offset: None,
+            offset_measured: None,
             applied: None,
         }
     }
@@ -283,10 +537,13 @@ impl Pass {
             "stopped_in": self.stopped_in,
             "sweep": p.map(|p| json!({
                 "range": p.range, "busiest": p.busiest, "kept_tiles": p.kept,
+                "kept_by_position": p.histogram(),
                 "window": p.window, "offset": p.offset,
                 "seconds": self.facts.sweep_seconds, "positions": self.facts.sweep_positions,
             })),
             "busiest": self.facts.busiest,
+            "seeded": {"sharp_depth": self.w0, "offset": self.offset},
+            "offset_measured": self.offset_measured,
             "test_top": self.facts.test_top,
             "shutters": self.facts.shutters,
             "light_on_seconds": self.facts.light_on_seconds,
@@ -370,6 +627,19 @@ impl Pass {
                 } else {
                     format!("{} kept as you set them", join(kept))
                 },
+            ]);
+        }
+        if let Some(line) = proof_line(&self.facts.proofs) {
+            rows.push([
+                "Proof".into(),
+                line,
+                format!(
+                    "{} at the busiest position, as the plan stands",
+                    match self.facts.proofs.len() {
+                        1 => "one plane".to_owned(),
+                        n => format!("{n} planes"),
+                    }
+                ),
             ]);
         }
         if let Some(share) = v["subject"]["area_share"].as_f64() {
@@ -458,6 +728,8 @@ impl Pass {
             finished: self.finished,
             rows: self.rows(),
             available,
+            proof: proof_line(&self.facts.proofs),
+            proving: false,
         }
     }
 }
@@ -678,6 +950,114 @@ mod tests {
         // A side the subject reaches has no suggestion: the marks stay.
         let past = json!({"depth":{"suggested_start":32349.0,"suggested_end":null}});
         assert!(fill(&past, Held::default()).0.is_empty());
+    }
+
+    #[test]
+    fn the_lens_memory_seeds_by_position() {
+        let mut m = LensMemory::default();
+        m.record(32_700.0, Some(48.0), Some(27.0), 1);
+        m.record(32_900.0, Some(44.0), None, 2);
+        m.record(51_000.0, Some(80.0), Some(40.0), 3);
+        // 32,700 and 32,900 both fall in the 32,000 bin (nearest 2,000).
+        assert_eq!(m.seed(32_500.0), (Some(44.0), Some(27.0)));
+        assert_eq!(m.seed(51_400.0), (Some(80.0), Some(40.0)));
+        assert_eq!(m.seed(10_000.0), (None, None));
+        let path =
+            std::env::temp_dir().join(format!("strehl-lens-memory-{}.json", std::process::id()));
+        m.save(&path).unwrap();
+        assert_eq!(LensMemory::load(&path), m);
+        let _ = std::fs::remove_file(&path);
+    }
+
+    #[test]
+    fn the_offset_is_the_raw_focus_less_the_sweeps_peak() {
+        // A 4 x 2 preview grid over a 128 x 64 preview; the RAW grid 2 x 1
+        // tiles of 64 px over a 128 x 64 sensor; every RAW tile 30 later.
+        let focus: Vec<Option<f64>> = (0..8)
+            .map(|i| Some(1000.0 + 10.0 * f64::from(i % 4 / 2) + 5.0))
+            .collect();
+        let peaks = super::super::sweep::Peaks {
+            cols: 4,
+            rows: 2,
+            focus: focus.clone(),
+            range: None,
+            busiest: None,
+            kept: 8,
+            at_first: 0,
+            at_last: 0,
+            prominent: 8,
+            window: (0.0, 1.0),
+            offset: 5.0,
+        };
+        let maps = json!({"cols":2,"rows":1,"tile_px":64,"focus":[1030.0, 1040.0]});
+        // Under 30 tiles: not measured.
+        assert_eq!(
+            measured_offset(&peaks, [128, 64], &maps, [128.0, 64.0]),
+            None
+        );
+        let many = super::super::sweep::Peaks {
+            cols: 4,
+            rows: 8,
+            focus: (0..32)
+                .map(|i| Some(1000.0 + 10.0 * f64::from(i % 4 / 2) + 5.0))
+                .collect(),
+            ..peaks
+        };
+        assert_eq!(
+            measured_offset(&many, [128, 256], &maps, [128.0, 64.0]),
+            Some(30.0)
+        );
+    }
+
+    /// The proof's report as `strehl pixel-shift --json` writes it (the
+    /// rig's numbers of 2026-11-27), and the line five of them make.
+    #[test]
+    fn proofs_read_the_checks_report() {
+        let group = |verdict: &str, reason: Option<&str>, retake: bool, local: f64| {
+            json!({"groups":[{"verdict":verdict,"gate":{"reason":reason,"retake":retake,
+                "local_px":local,"local_tolerance_px":0.51},
+                "residual_px":[[0.0,0.0],[0.1,0.05],[0.2,0.1],[0.0,0.3]],
+                "tile":32,"tile_grid":[2,1],"tile_local_map":[0.2,null]}]})
+        };
+        let pass = ProofResult::from_report(&group("pass", None, false, 0.21), 21.9).unwrap();
+        assert!(pass.clean());
+        assert_eq!(
+            pass.map.as_ref().map(|m| (m.0, m.1, m.2)),
+            Some((2, 1, 64.0))
+        );
+        assert!(pass.map.as_ref().unwrap().3[1].is_nan());
+        assert!((pass.residual_px.unwrap() - 0.3).abs() < 1e-9);
+        let kept = ProofResult::from_report(
+            &group(
+                "demote: witness pairs misregistered beyond tolerance",
+                None,
+                false,
+                0.34,
+            ),
+            22.5,
+        )
+        .unwrap();
+        assert!(!kept.clean() && !kept.retake);
+        assert!(
+            proof_line(std::slice::from_ref(&kept))
+                .unwrap()
+                .starts_with("not clean, kept")
+        );
+        let retake = ProofResult::from_report(
+            &group(
+                "demote: witness pairs misregistered beyond tolerance",
+                Some("witness tiles disagree locally"),
+                true,
+                0.67,
+            ),
+            22.4,
+        )
+        .unwrap();
+        let five = [retake.clone(), pass, retake.clone(), kept, retake];
+        assert_eq!(
+            proof_line(&five).unwrap(),
+            "1 of 5 groups clean, 3 would be retaken; 22.3 s a plane"
+        );
     }
 
     #[test]

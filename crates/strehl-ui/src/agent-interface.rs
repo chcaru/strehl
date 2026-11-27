@@ -119,6 +119,12 @@ pub(crate) enum AgentCommand {
     /// Stop the calibration pass or the step calibration; what was measured
     /// stays.
     StopCalibration {},
+    /// Take `count` proof planes (1 to 10) at the calibration's busiest
+    /// position, exactly as the plan stands; each checked by the engine and
+    /// deleted. Takes RAWs.
+    Prove {
+        count: usize,
+    },
     /// Measure how far detail stayed sharp across a completed capture's planes.
     MeasureFocusStep {
         index: usize,
