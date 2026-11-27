@@ -1,0 +1,72 @@
+<!--meta {"id": "ready", "nav": "1 · Ready", "kind": "app", "station": "capture", "title": "Ready: one button, and nothing to set first", "crumbs": ["Dragonfly", "New stack"], "states": {"capture": "cur", "stack": "todo", "develop": "todo", "export": "todo"}, "rig": "on", "job": "idle"} -->
+<!--lede-->
+The camera is connected, the light is on and the subject is framed. There are no marks to set and no exposure to guess: one button measures everything the plan needs. The steps under it wait, and say plainly that they are not measured.
+<!--body-->
+<div class="body l-insp">
+  <div class="main">
+    <div class="cstrip">
+      <span class="cap">Pre-flight</span>
+      <span class="chip ok">Rig</span><span class="chip ok">Light on 6 min</span><span class="chip idle">Calibrated</span><span class="chip idle">Depth</span><span class="chip idle">Exposure</span><span class="chip ok">Disk</span><span class="chip ok">Receiver</span><span class="chip ok">Subject</span>
+      <span class="sp"></span><span class="chip idle" style="color:var(--ink)">Not calibrated</span>
+    </div>
+    <div class="canvas center">
+      <div class="photo">
+        <div class="base im im-cpf-live"></div>
+        <div class="lensbar glass"><span class="cap">Lens</span><div class="seg"><span class="on">Off</span><span class="off">Depth</span><span class="off">Cover</span><span class="off">Light</span><span class="off">Glints</span><span class="off">Still</span></div></div>
+        
+        <div class="lvbar glass">
+          <div class="seg"><span class="on">Fit</span><span>100%</span></div>
+          <span class="btn sm quiet">Peaking</span><span class="btn sm quiet">Clipping</span><span class="btn sm quiet">Grid</span><span class="btn sm quiet">Outline</span><span class="btn sm quiet">Magnifier</span>
+        </div>
+        <div class="lvstate glass"><span class="led"></span>Live · preview 0.2 s old</div>
+      </div>
+    </div>
+    <div class="rail" data-flowrail='{"view": [31900, 33500], "lens": 32700, "h": 118}'>
+      <div class="rail-head"><b>Depth rail</b>
+        <span class="jog"><i>−128</i><i>−16</i><i>−1</i><b>32,700</b><i>+1</i><i>+16</i><i>+128</i></span>
+        <span class="key">nothing measured yet</span>
+        <span class="sp"></span><button class="link">Fit</button>
+      </div>
+      <div class="rail-svg"></div>
+    </div>
+  </div>
+  <div class="insp">
+    <div class="insp-body planflow">
+      <div class="names">
+        <div><span class="cap">Subject</span><div class="inp">Dragonfly<svg class="i"><use href="#i-down"/></svg></div></div>
+        <div><span class="cap">Stack name</span><div class="inp">Wings · dorsal</div></div>
+      </div>
+      <div class="dest"><i class="gl ok"></i>New subject “Dragonfly”, in Bugs<span class="sp"></span><button class="link">New capture</button></div>
+
+      <div class="step ok fold"><i>1</i><div><div class="ttl"><b>Rig</b><em>A7CR · light on 6 min</em><span class="sp"></span><button class="link">Settings</button></div></div></div>
+      <div class="step cur"><i class="pin in new" style="left:auto;right:-7px;top:0">1</i><i>2</i><div><div class="ttl"><b>Calibrate</b><span class="sp"></span><button class="btn primary sm">Calibrate</button></div>
+        <p>Sweeps the lens through the subject in live view, then takes about 60 single RAWs and one proof plane. About 5 minutes. Nothing is kept as a stack.</p>
+        <div class="frows">
+          <div class="frow wait"><i class="gl idle"></i><b>In focus</b><span>live sweep, 36 s</span></div>
+          <div class="frow wait"><i class="gl idle"></i><b>Outline</b><span>from the sweep, then from RAW</span></div>
+          <div class="frow wait"><i class="gl idle"></i><b>Sharp depth</b><span>25 RAWs around the busiest depth</span></div>
+          <div class="frow wait"><i class="gl idle"></i><b>Body, highlights</b><span>22 positions, two shutters</span></div>
+          <div class="frow wait"><i class="gl idle"></i><b>Proof</b><span>one plane as planned, 21 s</span></div>
+        </div>
+        <p class="note">Searches 3,000 units either side of the lens: 29,700 to 35,700.</p>
+      </div></div>
+      <div class="step fold"><i class="pin in new" style="left:auto;right:-7px;top:0">2</i><i>3</i><div><div class="ttl"><b>Depth</b><em>no marks · step 8 · not measured</em><span class="sp"></span><button class="link">Mark by hand</button></div></div></div>
+      <div class="step fold"><i>4</i><div><div class="ttl"><b>Exposure</b><em>ISO 100 · 1/40 s · not measured</em></div></div></div>
+
+      <div class="runline"><span class="cap">Run</span>
+        <span><i class="toggle on"></i>Check each plane</span><span><i class="toggle on"></i>Retake, up to 2</span>
+        <span><i class="toggle on"></i>Stack when done</span><span><i class="toggle on"></i>Power down after</span>
+      </div>
+      <div class="sp"></div>
+    </div>
+    <div class="insp-foot" style="flex-direction:column;align-items:stretch">
+      <div class="row dim" style="font-size:12.5px"><span class="warn">Calibrate, or mark Start and End</span><span class="sp"></span><span>244 GB free</span></div>
+      <div class="row"><button class="btn primary lg wide" disabled><svg class="i"><use href="#i-play"/></svg>Start stack</button><button class="btn lg" disabled>Schedule…</button></div>
+    </div>
+  </div>
+</div>
+<div class="hint"><span><span class="kbd">←</span><span class="kbd">→</span>focus by 1</span><span><span class="kbd">C</span>calibrate</span><span><span class="kbd">L</span>next lens</span><span><span class="kbd">S</span>mark start</span><span><span class="kbd">E</span>mark end</span><span><span class="kbd">T</span>test shot</span><span><span class="kbd">Enter</span>start</span><span class="sp"></span><span>Camera host online · receiver ready · D:\StrehlCaptures</span></div>
+<!--notes-->
+<div class="new"><i>1</i><b>One button.</b> It finds the subject's range by itself, so there is no Range step and no marks to set first. Marking by hand still works and is kept if you do it.</div>
+<div class="new"><i>2</i><b>Not measured is said.</b> Depth and Exposure show what the camera holds now and that nothing stands behind it. The shutter here is whatever the camera woke up with, which is why the calibration picks its own from a test shot.</div>
+<div class="legend"><em style="background:#f2b24a"></em>reorganises what exists today<em style="background:#7db8ff"></em>new</div>

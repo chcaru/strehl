@@ -755,3 +755,20 @@ Owner request (2026-11-25): "fix everything" after the sway analysis of two back
 | Identifier | Question and scope | Owned paths | Owner and state |
 | --- | --- | --- | --- |
 | capture-fixes-2026-11-25 | GPU highlight patches over the binding limit, then highlight fusion made dense (weights from padded window maxima, blended on the GPU or in the CPU gather, planned on the decoders); CFA-parity-free registration luma in the four-shot check (`GROUP_CHECK_VERSION` 3); stillness check rewritten on whole-frame registration with drift and movement over time spans. | crates/strehl-gpu/src/ (lib.rs, fold.wgsl, context.rs, strict.rs); crates/strehl-core/src/pixel-shift.rs; crates/strehl-cli/src/ (highlight-fusion.rs, merge_cmd.rs, merge_cmd/fold-trace.rs, pixel-shift-cmd.rs, align_cmd.rs); crates/strehl-ui/src/capture-stillness.rs; crates/strehl-ui/src/capture-plan-tests.rs; experiments/capture-fixes-2026-11-25/ | root; done 2026-11-25 on `fix/stack-checker-stillness`: slide stacks render on the GPU and the CPU bit-identical to the old engine, highlight stack 57.4 s to about 10 s on the GPU; check verdicts unchanged on the scarab and the weevil; stillness replayed on the rig's live series |
+
+## Capture calibration (2026-11-27)
+
+Owner request (2026-11-26): the Capture plan's "2. Exposure -> 3. Depth doesn't seem to work cohesively"; 2026-11-27: one button runs the whole calibration, then review and confirm; "the blur and highlights count as sharp when they're clearly visibly not"; ground it on the rig. Spec: [capture calibration](../proposals/2026-11-capture-calibration-spec.md); owner accepted its decisions and asked for the implementation the same day.
+
+| Identifier | Question and scope | Owned paths | Owner and state |
+| --- | --- | --- | --- |
+| capture-planning-flow-2026-11-26 | The first proposal and its mockups. Design only. | docs/proposals/2026-11-capture-planning-flow.md; experiments/capture-planning-flow-2026-11-26/mockups/ | root; done, replaced by the spec |
+| cpf-grounding-2026-11-27 | The measurements the spec stands on: the dragonfly's true range, a contrast focus measure on eight stacks, the live sweep's peaks, highlight fusion on the dragonfly, rig stillness and light warm-up. | experiments/capture-planning-flow-2026-11-26/grounding/ | root; done ([results](../../experiments/capture-planning-flow-2026-11-26/grounding/results.md)) |
+| cpf-f1-highlights | Spec F1 (5.7): the highlight ratio from well-exposed cells, the texture test removed, the highlight group's check under a signal floor, tone sets fused sites aside, the checks row. | crates/strehl-cli/src/ (highlight-fusion.rs, tone-subject.rs, survey-cmd.rs, the stack's checks); crates/strehl-ui/ (the checks row) | root |
+| cpf-f2-bounds | Spec F2 (5.1, 5.2, C1-C3): `strehl_core::focus_contrast`, in-focus range and bounds in `strehl survey` and `strehl subject`, the Depth step's line. | crates/strehl-core/src/focus-contrast.rs; crates/strehl-cli/src/ (survey-cmd.rs, subject-cmd.rs, focus-step-cmd.rs); crates/strehl-ui/src/capture-plan.rs | root |
+| cpf-f3-light | Spec F3: exposure work waits for the light; the survey's shutters from a test shot. | crates/strehl-ui/src/capture-tools.rs, capture-measure.rs | root |
+| cpf-s1-sweep | Spec S1: the live sweep, the Depth lens, "in focus now". | crates/strehl-ui/ (capture-measure.rs, capture-live.rs, capture-rail.rs) | root |
+| cpf-s2-pass | Spec S2: the calibration pass and the column, measured-or-held values, control requests. | crates/strehl-ui/ (capture-*.rs, capture-control.rs); docs/desktop-control.md; scripts/strehl-control.py | root |
+| cpf-s3-lenses | Spec S3: Cover, Light and Glints lenses, the core sample, the rail's bars. | crates/strehl-ui/ (capture-live.rs, capture-rail.rs) | root |
+| cpf-s4-proof | Spec S4: the proof plane and the Still lens. | crates/strehl-ui/ | root |
+| cpf-s5-memory | Spec S5: what is remembered, staleness. | crates/strehl-ui/ | root |
