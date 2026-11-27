@@ -497,6 +497,7 @@ fn inputs<'a>(s: &'a Snapshot, p: Option<&'a Progress>) -> FlightInputs<'a> {
         stack_stopped: None,
         highlight_pass: None,
         retakes: RetakeInputs::default(),
+        highlights: None,
     }
 }
 
@@ -1012,4 +1013,50 @@ fn the_start_says_warm_up_and_approach() {
         "Studio light on · warming for 60 s"
     );
     assert!(headline(&snapshot(capturing()), None).starting.is_none());
+}
+
+/// Once the capture's stack has said, the Captured panel says whether it
+/// used the highlight groups (spec 5.7 point 6).
+#[test]
+fn the_captured_panel_says_whether_the_highlight_groups_were_used() {
+    let ctx = egui::Context::default();
+    crate::theme::install(&ctx);
+    let mut s = crate::capture_workspace::fixture::snapshot(
+        crate::capture_workspace::fixture::Fixture::Flight,
+    );
+    crate::capture_workspace::fixture::finish(&mut s);
+    let progress = crate::capture_workspace::fixture::progress();
+    let mut input = inputs(&s, Some(&progress));
+    input.ended = true;
+    input.highlights = Some((
+        "Used on 0 of 151 planes; plane not fused: its exposure ratio was refused".into(),
+        false,
+    ));
+    let palette = CapturePalette::default();
+    let out = ctx.run(
+        egui::RawInput {
+            screen_rect: Some(Rect::from_min_size(Pos2::ZERO, egui::vec2(320.0, 900.0))),
+            ..Default::default()
+        },
+        |ctx| {
+            egui::CentralPanel::default()
+                .frame(egui::Frame::NONE)
+                .show(ctx, |ui| {
+                    inspector(ui, &input, &palette);
+                });
+        },
+    );
+    let text: String = out
+        .shapes
+        .iter()
+        .filter_map(|c| match &c.shape {
+            egui::Shape::Text(t) => Some(t.galley.text().to_owned()),
+            _ => None,
+        })
+        .collect::<Vec<_>>()
+        .join(" ");
+    assert!(
+        text.contains("Highlight groups: used on 0 of 151 planes"),
+        "{text}"
+    );
 }

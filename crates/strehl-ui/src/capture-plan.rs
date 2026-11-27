@@ -132,6 +132,9 @@ pub(crate) enum PlanIntent {
     StopCalibration,
     /// Take this many proof planes (spec 5.8).
     Prove(usize),
+    /// A calibration whose sweep is centred here: past the end the subject
+    /// still reached.
+    SearchFurther(u16),
     SetStep(u16),
     SetSettle(u32),
     /// The plan's approach, in focus units.
@@ -1352,7 +1355,15 @@ fn in_focus_line(inputs: &PlanInputs<'_>) -> Option<guide::Line> {
                 style::focus_units(at.round() as u16)
             ),
             tone: Tone::Warn,
-            action: None,
+            // A new pass whose window lies past that end (spec 6.4).
+            action: Some((
+                "Search further",
+                PlanIntent::SearchFurther(if r.reaches_last {
+                    (at + 2500.0).min(65535.0) as u16
+                } else {
+                    (at - 2500.0).max(0.0) as u16
+                }),
+            )),
         });
     }
     let (lo, hi) = (r.start?, r.end?);

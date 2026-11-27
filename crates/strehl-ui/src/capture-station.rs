@@ -1189,6 +1189,15 @@ impl CaptureWorkspace {
                     .format("%H:%M")
                     .to_string()
             }),
+            highlights: self
+                .stacked_highlights
+                .as_ref()
+                .filter(|(dir, _, _)| {
+                    s.host.last_receipt_run().is_some_and(|run| {
+                        std::fs::canonicalize(&run).ok() == std::fs::canonicalize(dir).ok()
+                    })
+                })
+                .map(|(_, line, all)| (line.clone(), *all)),
             retakes: flight::RetakeInputs {
                 in_hand: retakes_in_hand(s, &self.station.asked, progress, Instant::now()),
                 step: s.host.plan.as_ref().map(|p| p.step),
@@ -1644,6 +1653,10 @@ impl CaptureWorkspace {
                 self.record(result);
             }
             PlanIntent::StopCalibration => self.stop_calibration(),
+            PlanIntent::SearchFurther(at) => {
+                let result = self.calibrate_pass_at(Some(at));
+                self.record(result);
+            }
             PlanIntent::Prove(n) => {
                 let result = self.prove(n);
                 self.record(result);

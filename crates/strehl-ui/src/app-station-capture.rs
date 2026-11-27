@@ -95,6 +95,12 @@ impl StrehlApp {
         self.capture
             .set_presenter(self.editor.viewport.presenter.as_ref());
         self.capture_finished();
+        // Spec 5.7 point 6: the capture's own panel says whether its stack
+        // used the highlight groups, once a stack of it has said.
+        if let (Some(stack), Some(h)) = (&self.stack, &self.progress.highlights) {
+            self.capture.stacked_highlights =
+                Some((stack.directory.clone(), h.fact(), h.complete()));
+        }
         self.capture_confirm_window(ctx);
     }
 

@@ -233,10 +233,13 @@ run 3's measurement for the 32,000 position.
   neither is built.
 - Per-value lamps beside the Depth and Exposure fields; the readout's Plan row says
   what the pass set and kept.
-- "Run the rest" and "Search further" actions after a stopped or past-the-end pass;
-  the stop and the messages are there.
 - Memory by catalog subject (its last calibration and plan); staleness marks on facts
   whose conditions changed.
-- The highlight sentence in the capture flight's Captured panel.
 - The light wait cannot know a light switched on before the desktop started.
+- "Run the rest" after a stopped pass (Calibrate again runs it whole).
+
+Built since the runs (unit-tested, not run on the rig): **Search further** on the Depth
+line when the subject is still in focus at the survey's first or last frame (a pass
+whose sweep is centred 2,500 units past it), and the **Captured panel's line** "Highlight
+groups: used on N of M planes" once a stack of that capture has reported it.
 

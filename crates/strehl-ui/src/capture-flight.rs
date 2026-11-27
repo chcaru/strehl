@@ -1405,6 +1405,9 @@ pub(crate) struct FlightInputs<'a> {
     pub highlight_pass: Option<usize>,
     /// Retakes by hand and the stack's coverage (h-retake).
     pub retakes: RetakeInputs,
+    /// The stack of this capture: whether it used its highlight groups
+    /// ("Used on 151 of 151 planes"), and whether all were (spec 5.7).
+    pub highlights: Option<(String, bool)>,
 }
 
 /// What the retake actions and the coverage warning need (h-retake).
@@ -2261,6 +2264,17 @@ pub(crate) fn inspector(
             health_row(ui, line, palette);
         }
         if inputs.ended {
+            if let Some((line, all)) = &inputs.highlights {
+                ui.add_space(8.0);
+                let mut job = style::job(
+                    &format!("Highlight groups: {}", line.to_lowercase()),
+                    12.5,
+                    if *all { palette.ink2 } else { palette.warn },
+                    0.0,
+                );
+                job.wrap.max_width = ui.available_width();
+                ui.label(job);
+            }
             return;
         }
         ui.add_space(14.0);

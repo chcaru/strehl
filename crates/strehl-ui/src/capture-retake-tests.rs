@@ -37,6 +37,7 @@ fn inputs<'a>(s: &'a Snapshot, p: &'a Progress, ended: bool) -> FlightInputs<'a>
             step: Some(7),
             width: Some(50.0),
         },
+        highlights: None,
     }
 }
 

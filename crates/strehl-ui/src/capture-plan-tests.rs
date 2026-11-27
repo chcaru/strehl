@@ -896,3 +896,25 @@ fn the_calibrations_in_focus_range_is_read_from_the_survey() {
         None
     );
 }
+
+/// A subject still in focus at the survey's last frame is said so, with a
+/// pass whose window lies past that end.
+#[test]
+fn a_subject_past_the_survey_offers_to_search_further() {
+    let s = snapshot(ready());
+    let mut input = inputs(&s, &[]);
+    input.calibration.result = json!({"survey":{"depth":{"in_focus_first":37_200.0,
+        "in_focus_last":37_900.0,"reaches_first":false,"reaches_last":true,
+        "suggested_start":37_170.0}}});
+    let line = in_focus_line(&input).unwrap();
+    assert!(
+        line.text
+            .contains("Still in focus at the survey's last frame"),
+        "{}",
+        line.text
+    );
+    assert_eq!(
+        line.action.map(|a| a.1),
+        Some(PlanIntent::SearchFurther(40_400))
+    );
+}

@@ -174,6 +174,9 @@ pub(crate) struct CaptureWorkspace {
     /// The proof plane (spec 5.8), and the plan's base shutter while it runs.
     pub(crate) proof: measure::Proof,
     proof_base_shutter: Option<u64>,
+    /// The last stack's highlight-group line, for the capture it is of:
+    /// its folder, the line, and whether every group was used.
+    pub(crate) stacked_highlights: Option<(PathBuf, String, bool)>,
     /// A proof that could not be sent waits until then; tries so far.
     proof_retry: Option<Instant>,
     proof_tries: u32,
@@ -243,6 +246,7 @@ impl CaptureWorkspace {
             proof_base_shutter: None,
             proof_retry: None,
             proof_tries: 0,
+            stacked_highlights: None,
         }
     }
     fn calibrating(&self) -> bool {
@@ -899,6 +903,10 @@ impl CaptureWorkspace {
     /// The calibration pass (spec 4), from the column's Calibrate button or
     /// the control interface's `calibrate`.
     pub fn calibrate_pass(&mut self) -> anyhow::Result<()> {
+        self.calibrate_pass_at(None)
+    }
+    /// [`Self::calibrate_pass`] with the sweep centred on `at` when given.
+    pub fn calibrate_pass_at(&mut self, at: Option<u16>) -> anyhow::Result<()> {
         let s = self
             .connection
             .as_ref()
@@ -932,7 +940,7 @@ impl CaptureWorkspace {
                 .map(|p| (p.start, p.end))
                 .filter(|(a, b)| a != b)
         };
-        let seed = measure::seed(position, moved, marks);
+        let seed = at.unwrap_or_else(|| measure::seed(position, moved, marks));
         let now = Instant::now();
         // Spec 8: what earlier calibrations measured at this lens position.
         let (w0, offset) =
