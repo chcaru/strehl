@@ -1228,17 +1228,32 @@ impl CaptureWorkspace {
             }
             self.station.ticks.as_ref().map(|(_, t)| t.clone()).unwrap()
         });
-        let survey =
-            (!host.samples.is_empty()).then(|| "survey: where the subject is sharp".to_owned());
+        // Spec 6.3: once calibrated, the bars are the subject's tiles in
+        // focus by position (the survey's, else the live sweep's peaks), not
+        // the host's energy; a broad hump of "sharpness" is not drawn.
+        let calibrated = self.rail_samples();
+        let survey = match &calibrated {
+            Some((_, caption)) => Some(caption.clone()),
+            None => {
+                (!host.samples.is_empty()).then(|| "survey: where the subject is sharp".to_owned())
+            }
+        };
+        let samples: &[crate::capture_client::host::SurveySample] = match &calibrated {
+            Some((samples, _)) => samples,
+            None => &host.samples,
+        };
         let inputs = RailInputs {
-            samples: &host.samples,
+            samples,
             start: host.start_set.then_some(start),
             end: host.end_set.then_some(end),
             step: host.plan.as_ref().map_or(1, |p| p.step),
             lens: self.focus_pending.or(host.position),
             flight: ticks.as_deref(),
             survey,
-            can_use_survey: host.suggestion.as_ref().is_some_and(|s| !s.clipped),
+            // The host's half-height bounds are not offered once calibrated
+            // (spec 5.2): the Depth step offers the calibration's.
+            can_use_survey: calibrated.is_none()
+                && host.suggestion.as_ref().is_some_and(|s| !s.clipped),
             editable: s.fresh() && host.editable && !s.pending && self.focus_flight.is_none(),
             keys: !self.station.glance && !self.schedule_ui.editing(),
             ends: (host.lens_travel.near, host.lens_travel.far),
@@ -1335,6 +1350,15 @@ impl CaptureWorkspace {
                     });
                 }
                 for intent in intents {
+                    // The owner's own choices are held (rule 2): a
+                    // calibration's values never replace them.
+                    match &intent {
+                        PlanIntent::SetStep(_) => self.held.step = true,
+                        PlanIntent::UseAdvice { .. } | PlanIntent::SetHighlight(_) => {
+                            self.held.exposure = true
+                        }
+                        _ => {}
+                    }
                     self.apply_plan(&s, intent);
                 }
             }
@@ -1528,7 +1552,10 @@ impl CaptureWorkspace {
     pub(super) fn apply_plan(&mut self, s: &Snapshot, intent: PlanIntent) {
         match intent {
             PlanIntent::SetSubject(_) | PlanIntent::SetStackName(_) => {}
-            PlanIntent::NewCapture => self.new_capture(false),
+            PlanIntent::NewCapture => {
+                self.held = Default::default();
+                self.new_capture(false)
+            }
             PlanIntent::UseAdvice { shutter, highlight } => {
                 // The exposure now, its highlight plan once the camera has it.
                 let iso = s.host.exposure.as_ref().and_then(|e| e.iso).unwrap_or(100);
@@ -1580,6 +1607,7 @@ impl CaptureWorkspace {
             PlanIntent::OpenRig => self.station.rig_requested = true,
             PlanIntent::Connect => self.connect_camera(s, Command::Connect {}),
             PlanIntent::Exposure { iso, shutter } => {
+                self.held.exposure = true;
                 self.command(s, Command::Exposure { iso, shutter })
             }
             PlanIntent::TestShot => {
@@ -1589,8 +1617,14 @@ impl CaptureWorkspace {
                 }
             }
             PlanIntent::StopTestShot => self.stop_test_shot(),
-            PlanIntent::MarkStart => self.command(s, Command::Mark { start: true }),
-            PlanIntent::MarkEnd => self.command(s, Command::Mark { start: false }),
+            PlanIntent::MarkStart => {
+                self.held.bounds = true;
+                self.command(s, Command::Mark { start: true })
+            }
+            PlanIntent::MarkEnd => {
+                self.held.bounds = true;
+                self.command(s, Command::Mark { start: false })
+            }
             PlanIntent::Calibrate => {
                 let result = self.calibrate_pass();
                 self.record(result);

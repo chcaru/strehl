@@ -141,7 +141,26 @@ more decodes and their contrast. A calibration survey has about 25 long frames. 
   started against the host. The pass's first run on the rig is the owner's, or the next
   session's with the owner's go-ahead.
 - **Frame time** of the live view with the Depth lens on is not measured (S1's last gate).
-- Rule 2 (measured or held), the Use links in the column's other steps, S3 (Cover, Light,
-  Glints, the core sample, the rail's bars), S4 (the proof plane, Still), S5 (memory):
-  not built yet.
+- S3's other lenses (Cover, Light, Glints), the core sample and the rail's hover
+  isolation; S4 (the proof plane, Still); S5 (memory): not built yet. Per-value lamps
+  ("the calibration gives 10 · Use" under a held value) are not drawn; the readout's
+  Plan row says what was set and what was kept.
+
+## S2 rule 2 and S3's rail bars
+
+- **Measured, or held** (`capture-measure.rs` `Held`, `fill`, `step_for`; the station's
+  intent loop). Marking Start or End, choosing a step, an exposure, an advice row or a
+  highlight plan by hand holds that value until "New capture". When a pass finishes,
+  what is not held takes the calibration's value, one command a frame once the camera
+  is ready: Start and End from `suggested_start/end` (a side the subject reaches keeps
+  the marks), the coarsest step keeping 99 % of the detail by the measured retention
+  curve, the suggested exposure (with its highlight groups). The readout's Plan row says
+  what was set and what was kept. Unit-tested (`a_pass_fills_only_what_the_owner_has_not_set`,
+  `the_step_keeps_ninety_nine_percent`). VERIFIED (unit), not run on the rig.
+- **The rail's bars** (`capture-workspace.rs` `rail_samples`): once calibrated, the
+  subject's tiles in focus by frame from the survey, else the live sweep's kept peaks
+  counted per sweep position, captioned with their source; the host's half-height
+  bounds are no longer offered on the rail. The rail interpolates between frames, so
+  a bar can lean one survey spacing past the range. Rendered in `plan+calibrated`.
+  Desktop suite 1,585 passed.
 - The survey's RAWs are still deleted once read (decision 2 says keep them until Start).

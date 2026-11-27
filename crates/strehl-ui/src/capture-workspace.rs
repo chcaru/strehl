@@ -166,6 +166,11 @@ pub(crate) struct CaptureWorkspace {
     connect_position: Option<u16>,
     /// The Depth lens's map, built when the pass's facts change.
     depth_cache: Option<(u64, Option<std::sync::Arc<live::DepthMap>>)>,
+    /// What the owner set by hand since "New capture" (rule 2).
+    pub(crate) held: measure::Held,
+    /// A finished pass's values, applied one a frame once the camera is
+    /// ready (marks move the lens; settings and exposure wait their turn).
+    fill_queue: std::collections::VecDeque<plan::PlanIntent>,
 }
 impl CaptureWorkspace {
     pub fn new(path: Option<PathBuf>) -> Self {
@@ -226,6 +231,8 @@ impl CaptureWorkspace {
             light_on_since: None,
             connect_position: None,
             depth_cache: None,
+            held: Default::default(),
+            fill_queue: Default::default(),
         }
     }
     fn calibrating(&self) -> bool {
@@ -302,6 +309,60 @@ impl CaptureWorkspace {
             }),
             anchor: f.busiest,
         })
+    }
+    /// The rail's bars from the calibration (spec 6.3): the survey's tiles
+    /// in focus per frame, else the live sweep's kept peaks counted per
+    /// sweep position; with the rail's caption.
+    pub(crate) fn rail_samples(
+        &self,
+    ) -> Option<(Vec<crate::capture_client::host::SurveySample>, String)> {
+        use crate::capture_client::host::SurveySample;
+        let f = &self.pass.facts;
+        if let Some(pp) = f
+            .survey
+            .as_ref()
+            .and_then(|v| v["depth"]["per_position"].as_array())
+            .filter(|a| !a.is_empty())
+        {
+            let samples = pp
+                .iter()
+                .filter_map(|p| {
+                    let pos = p.get(0)?.as_f64()?;
+                    let n = p.get(1)?.as_f64()?;
+                    Some(SurveySample {
+                        position: pos.round().clamp(0.0, 65535.0) as u16,
+                        scores: vec![Some(n as f32)],
+                    })
+                })
+                .collect();
+            return Some((
+                samples,
+                "calibration: subject tiles in focus, from RAW".into(),
+            ));
+        }
+        let p = f.peaks.as_ref()?;
+        let (a, b) = p.window;
+        let n = f.sweep_positions.max(2);
+        let spacing = (b - a) / (n - 1) as f64;
+        let mut counts = vec![0u32; n];
+        for v in p.focus.iter().flatten() {
+            let i = ((v - p.offset - a) / spacing).round();
+            if i >= 0.0 && (i as usize) < n {
+                counts[i as usize] += 1;
+            }
+        }
+        let samples = counts
+            .iter()
+            .enumerate()
+            .map(|(i, c)| SurveySample {
+                position: (a + spacing * i as f64).round().clamp(0.0, 65535.0) as u16,
+                scores: vec![Some(*c as f32)],
+            })
+            .collect();
+        Some((
+            samples,
+            "calibration: tiles in focus, from the live sweep".into(),
+        ))
     }
     /// How long the light has been on, as this desktop saw it.
     pub(crate) fn light_on_for(&self, now: Instant) -> Option<Duration> {
@@ -425,6 +486,19 @@ impl CaptureWorkspace {
         }
         self.poll_station(&s);
         self.poll_pass(&s, now);
+        // One filled value a frame, each once the camera is ready for it.
+        if !self.fill_queue.is_empty()
+            && s.fresh()
+            && !s.pending
+            && s.host.editable
+            && !s.host.busy
+            && self.station.mark_at.is_none()
+            && self.station.mark_queue.is_empty()
+            && self.pending_highlight.is_none()
+            && let Some(intent) = self.fill_queue.pop_front()
+        {
+            self.apply_plan(&s, intent);
+        }
         use tools::Calibration as C;
         let stage_before = self.calibration.stage();
         let state = std::mem::replace(&mut self.calibration, C::Idle);
@@ -946,6 +1020,14 @@ impl CaptureWorkspace {
                     P::Return { target, sent: true }
                 } else if sent && idle && s.host.position == Some(target) {
                     self.pass.finished = Some(std::time::SystemTime::now());
+                    // Rule 2: the calibration's values fill what the owner
+                    // has not set.
+                    if let Some(survey) = &self.pass.facts.survey {
+                        let (intents, set, kept) = measure::fill(survey, self.held);
+                        self.fill_queue.extend(intents);
+                        self.pass.applied = Some((set, kept));
+                        self.pass.facts.revision += 1;
+                    }
                     P::Done
                 } else {
                     P::Return { target, sent }

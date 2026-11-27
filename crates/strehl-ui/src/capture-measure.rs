@@ -99,6 +99,86 @@ pub(crate) struct Facts {
     pub revision: u64,
 }
 
+/// Values the owner set by hand since "New capture" (spec 3, rule 2): a
+/// calibration never changes them; its own values fill the rest.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub(crate) struct Held {
+    pub bounds: bool,
+    pub step: bool,
+    pub exposure: bool,
+}
+
+/// The retained-detail target of the suggested step (owner, 2026-11-26 and
+/// 2026-11-27: 99 %).
+pub(crate) const DETAIL_TARGET: f64 = 0.99;
+
+/// The coarsest step whose kept detail is at least [`DETAIL_TARGET`] at the
+/// sharp depth `width` (spec 5.4), by the measured retention curve.
+pub(crate) fn step_for(width: f64) -> u16 {
+    let mut best = 1u16;
+    for step in 1..=(width.max(1.0).ceil() as u16) {
+        if super::guide::detail_kept(width / f64::from(step)).low >= DETAIL_TARGET {
+            best = step;
+        }
+    }
+    best
+}
+
+/// What a finished pass sets, value by value: the plan intents to apply for
+/// those not held, and the readout's words for both.
+pub(crate) fn fill(
+    survey: &Value,
+    held: Held,
+) -> (Vec<super::plan::PlanIntent>, Vec<String>, Vec<String>) {
+    use super::plan::PlanIntent;
+    let (mut intents, mut set, mut kept) = (Vec::new(), Vec::new(), Vec::new());
+    let d = &survey["depth"];
+    let unit = |v: &Value| v.as_f64().map(|f| f.round().clamp(0.0, 65535.0) as u16);
+    if let (Some(lo), Some(hi)) = (unit(&d["suggested_start"]), unit(&d["suggested_end"])) {
+        if held.bounds {
+            kept.push("Start and End".to_string());
+        } else {
+            intents.push(PlanIntent::UseSubjectBounds(lo, hi));
+            set.push("Start and End".to_string());
+        }
+    }
+    if let Some(w) = survey["step"]["width"].as_f64() {
+        let step = step_for(w);
+        if held.step {
+            kept.push("Step".to_string());
+        } else {
+            intents.push(PlanIntent::SetStep(step));
+            set.push(format!("Step {step}"));
+        }
+    }
+    let advice = &survey["advice"];
+    let choice = match advice["suggested"].as_str() {
+        Some("highlight_pass") => advice["highlight_pass"]["base_code"].as_u64().map(|b| {
+            (
+                b,
+                advice["highlight_pass"]["short_code"].as_u64(),
+                "the exposure with highlight groups",
+            )
+        }),
+        Some("protect") => advice["protect"]["code"]
+            .as_u64()
+            .map(|c| (c, None, "the exposure")),
+        Some("accept") => advice["accept"]["code"]
+            .as_u64()
+            .map(|c| (c, None, "the exposure")),
+        _ => None,
+    };
+    if let Some((shutter, highlight, words)) = choice {
+        if held.exposure {
+            kept.push("the exposure".to_string());
+        } else {
+            intents.push(PlanIntent::UseAdvice { shutter, highlight });
+            set.push(words.to_string());
+        }
+    }
+    (intents, set, kept)
+}
+
 /// The pass and what it found.
 #[derive(Debug)]
 pub(crate) struct Pass {
@@ -112,6 +192,8 @@ pub(crate) struct Pass {
     pub four_before: bool,
     /// The stage that did not finish, for "Run the rest".
     pub stopped_in: Option<&'static str>,
+    /// What the finished pass set and what it left as the owner had it.
+    pub applied: Option<(Vec<String>, Vec<String>)>,
 }
 
 impl Default for Pass {
@@ -124,6 +206,7 @@ impl Default for Pass {
             exposure_before: None,
             four_before: false,
             stopped_in: None,
+            applied: None,
         }
     }
 }
@@ -269,6 +352,26 @@ impl Pass {
         let Some(v) = survey else {
             return rows;
         };
+        if let Some((set, kept)) = &self.applied {
+            let join = |v: &[String]| match v.len() {
+                0 => String::new(),
+                1 => v[0].clone(),
+                n => format!("{} and {}", v[..n - 1].join(", "), v[n - 1]),
+            };
+            rows.push([
+                "Plan".into(),
+                if set.is_empty() {
+                    "nothing set".into()
+                } else {
+                    format!("set {}", join(set))
+                },
+                if kept.is_empty() {
+                    "from this calibration".into()
+                } else {
+                    format!("{} kept as you set them", join(kept))
+                },
+            ]);
+        }
         if let Some(share) = v["subject"]["area_share"].as_f64() {
             rows.push([
                 "Outline".into(),
@@ -531,6 +634,50 @@ mod tests {
         assert_eq!(shorts, 13);
         // The cluster: 9 apart around 32,742.
         assert!(p.contains(&32_634) && p.contains(&32_850));
+    }
+
+    #[test]
+    fn the_step_keeps_ninety_nine_percent() {
+        let s = step_for(48.0);
+        assert!((4..=9).contains(&s), "{s}");
+        assert!(super::super::guide::detail_kept(48.0 / f64::from(s)).low >= DETAIL_TARGET);
+        assert!(super::super::guide::detail_kept(48.0 / f64::from(s + 1)).low < DETAIL_TARGET);
+        assert!(
+            step_for(96.0) >= s,
+            "a deeper sharp depth never asks a finer step"
+        );
+    }
+
+    #[test]
+    fn a_pass_fills_only_what_the_owner_has_not_set() {
+        use super::super::plan::PlanIntent;
+        let survey = json!({"depth":{"suggested_start":32349.0,"suggested_end":33199.0},
+            "step":{"width":48.0},
+            "advice":{"suggested":"highlight_pass","highlight_pass":{"base_code":851978,"short_code":65636}}});
+        let (intents, set, kept) = fill(&survey, Held::default());
+        assert_eq!(intents.len(), 3);
+        assert_eq!(intents[0], PlanIntent::UseSubjectBounds(32349, 33199));
+        assert!(matches!(intents[1], PlanIntent::SetStep(_)));
+        assert_eq!(
+            intents[2],
+            PlanIntent::UseAdvice {
+                shutter: 851978,
+                highlight: Some(65636)
+            }
+        );
+        assert_eq!(set.len(), 3);
+        assert!(kept.is_empty());
+        let held = Held {
+            bounds: false,
+            step: true,
+            exposure: true,
+        };
+        let (intents, _, kept) = fill(&survey, held);
+        assert_eq!(intents, [PlanIntent::UseSubjectBounds(32349, 33199)]);
+        assert_eq!(kept, ["Step", "the exposure"]);
+        // A side the subject reaches has no suggestion: the marks stay.
+        let past = json!({"depth":{"suggested_start":32349.0,"suggested_end":null}});
+        assert!(fill(&past, Held::default()).0.is_empty());
     }
 
     #[test]

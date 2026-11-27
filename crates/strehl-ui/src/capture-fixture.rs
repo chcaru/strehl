@@ -89,7 +89,17 @@ pub(crate) fn pass_facts(surveyed: bool) -> super::measure::Facts {
             "subject":{"area_share":0.287},
             "depth":{"in_focus_first":37_112.0,"in_focus_last":37_758.0,"reaches_first":false,"reaches_last":false,
                 "suggested_start":37_087.0,"suggested_end":37_783.0,
-                "per_position":(0..24).map(|i| json!([36_980.0 + 45.0 * f64::from(i), 0.0])).collect::<Vec<_>>()},
+                "per_position":(0..24).map(|i| {
+                    let at = 36_980.0 + 45.0 * f64::from(i);
+                    // Tiles in focus: none outside the range, a band of the
+                    // oval's width inside it.
+                    let n = if (37_112.0..=37_758.0).contains(&at) {
+                        (420.0 * (1.0 - ((at - 37_435.0) / 400.0).powi(2))).round()
+                    } else {
+                        0.0
+                    };
+                    json!([at, n])
+                }).collect::<Vec<_>>()},
             "maps":{"cols":c,"rows":r,"tile_px":64,"focus":focus},
             "step":{"width":45.0,"width_p10":35.0,"width_p90":59.0,"suggested_step":6,"positions":25,"spacing":9.0,"width_low":false},
             "body":{"top":0.62,"g":{"p50":0.008}},
