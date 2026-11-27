@@ -44,6 +44,23 @@ pub(crate) struct CalibrationView {
     pub finished: Option<SystemTime>,
 }
 
+/// The calibration pass as the column shows it (spec 6.4).
+#[derive(Clone, Debug, Default, PartialEq)]
+pub(crate) struct PassView {
+    /// `measure::Pass::stage_name`.
+    pub stage: &'static str,
+    /// The running stage in words; the failure's reason once failed.
+    pub doing: String,
+    /// Stages passed of the five (sweep, light, test, survey, return), for
+    /// the progress line.
+    pub passed: usize,
+    pub finished: Option<SystemTime>,
+    /// The readout: what, the value, where it came from.
+    pub rows: Vec<[String; 3]>,
+    /// The camera can run it (it takes a shutter per position).
+    pub available: bool,
+}
+
 /// The test shot as the plan shows it.
 #[derive(Clone, Debug, Default, PartialEq)]
 pub(crate) struct TestShotView {
@@ -75,6 +92,8 @@ pub(crate) struct PlanInputs<'a> {
     pub step: u16,
     pub settle_ms: u32,
     pub calibration: CalibrationView,
+    /// The calibration pass (spec 4).
+    pub pass: PassView,
     pub test_shot: TestShotView,
     /// Plan Q7: the stillness check's stage and line.
     pub stillness: (&'static str, Option<String>),
@@ -105,6 +124,7 @@ pub(crate) enum PlanIntent {
     StopTestShot,
     MarkStart,
     MarkEnd,
+    /// The calibration pass (spec 4).
     Calibrate,
     StopCalibration,
     SetStep(u16),
@@ -537,8 +557,9 @@ impl PlanView {
                             palette,
                             &mut out,
                         );
-                        exposure_step(ui, inputs, palette, &mut out);
+                        calibrate_step(ui, inputs, palette, &mut out);
                         depth_step(ui, inputs, &rows, &mut self.custom_step, palette, &mut out);
+                        exposure_step(ui, inputs, palette, &mut out);
                         after_step(ui, inputs, palette, &mut out);
                         ui.add_space(4.0);
                         if style::link(ui, "Captures, storage and connection…", true, palette)
@@ -753,7 +774,151 @@ fn subject_row(
     response
 }
 
-/// A numbered step: its numeral (green when ready) and content.
+/// The Calibrate step (spec 6.4): one button; while it runs, the stage in
+/// words, a ruled progress line and Stop; then what it measured, a row at a
+/// time, with where each came from.
+fn calibrate_step(
+    ui: &mut Ui,
+    inputs: &PlanInputs<'_>,
+    palette: &CapturePalette,
+    out: &mut Vec<PlanIntent>,
+) {
+    let s = inputs.s;
+    let p = &inputs.pass;
+    let running = !matches!(p.stage, "idle" | "done" | "failed");
+    let editable = s.fresh() && s.host.editable && !s.pending && s.host.connected;
+    step(ui, 2, p.stage == "done", palette, |ui| {
+        title(ui, "Calibrate", palette, |ui| {
+            if running {
+                if style::button(ui, "Stop", ButtonKind::Quiet, 22.0, true, palette).clicked() {
+                    out.push(PlanIntent::StopCalibration);
+                }
+            } else if style::button(
+                ui,
+                if p.stage == "idle" {
+                    "Calibrate"
+                } else {
+                    "Calibrate again"
+                },
+                if p.stage == "idle" {
+                    ButtonKind::Primary
+                } else {
+                    ButtonKind::Plain
+                },
+                22.0,
+                editable
+                    && inputs.engine
+                    && p.available
+                    && matches!(inputs.calibration.stage, "idle" | "done" | "failed"),
+                palette,
+            )
+            .on_hover_text(
+                "Sweeps the lens to find the subject's range, waits for the light, takes a test pair and a survey of single RAWs around the range, and measures them on this PC. The survey is not kept as a stack.",
+            )
+            .clicked()
+            {
+                out.push(PlanIntent::Calibrate);
+            }
+        });
+        ui.add_space(3.0);
+        match p.stage {
+            "idle" if !p.available => note(
+                ui,
+                "The camera host cannot take a shutter per position: update it to calibrate.",
+                palette,
+            ),
+            "idle" => note(
+                ui,
+                "Measures the range, the sharp depth and the light: about 5 minutes, about 60 single RAWs, not kept as a stack.",
+                palette,
+            ),
+            "failed" => {
+                let mut job = style::job(&guide::unbreak(&p.doing), 12.5, palette.warn, 0.0);
+                job.wrap.max_width = ui.available_width();
+                ui.label(job);
+            }
+            "done" => {}
+            _ => {
+                note(ui, &p.doing, palette);
+                ui.add_space(4.0);
+                progress_line(ui, p.passed, 5, palette);
+            }
+        }
+        if !p.rows.is_empty() {
+            ui.add_space(6.0);
+            readout(ui, &p.rows, palette);
+        }
+    });
+}
+
+/// A ruled line with a tick at each stage boundary, filled to `passed`.
+fn progress_line(ui: &mut Ui, passed: usize, stages: usize, palette: &CapturePalette) {
+    let (r, _) = ui.allocate_exact_size(egui::vec2(ui.available_width(), 7.0), Sense::hover());
+    let p = ui.painter();
+    let y = r.center().y;
+    style::hairline(
+        p,
+        egui::pos2(r.left(), y),
+        egui::pos2(r.right(), y),
+        palette.line,
+    );
+    let x = |k: usize| r.left() + r.width() * k as f32 / stages.max(1) as f32;
+    p.rect_filled(
+        Rect::from_min_max(
+            egui::pos2(r.left(), y - 1.0),
+            egui::pos2(x(passed.min(stages)), y + 1.0),
+        ),
+        0.0,
+        palette.accent,
+    );
+    for k in 0..=stages {
+        style::hairline(
+            p,
+            egui::pos2(x(k), r.top()),
+            egui::pos2(x(k), r.bottom()),
+            palette.ink3,
+        );
+    }
+}
+
+/// The readout's rows: what, its value, and its source under it.
+fn readout(ui: &mut Ui, rows: &[[String; 3]], palette: &CapturePalette) {
+    const LABEL: f32 = 92.0;
+    for [what, value, source] in rows {
+        let top = ui.cursor().top();
+        style::hairline(
+            ui.painter(),
+            egui::pos2(ui.max_rect().left(), top + 0.5),
+            egui::pos2(ui.max_rect().right(), top + 0.5),
+            palette.line,
+        );
+        ui.add_space(4.0);
+        ui.horizontal_top(|ui| {
+            ui.spacing_mut().item_spacing.x = 8.0;
+            ui.allocate_ui_with_layout(
+                egui::vec2(LABEL, 16.0),
+                egui::Layout::left_to_right(egui::Align::Min),
+                |ui| {
+                    ui.set_min_width(LABEL);
+                    style::text(ui, what, 12.0, palette.ink2);
+                },
+            );
+            ui.vertical(|ui| {
+                ui.spacing_mut().item_spacing.y = 1.0;
+                let mut job = style::job(&guide::unbreak(value), 12.5, palette.ink, 0.0);
+                job.wrap.max_width = ui.available_width();
+                ui.label(job);
+                let mut job = style::job(source, 11.0, palette.ink3, 0.0);
+                job.wrap.max_width = ui.available_width();
+                ui.label(job);
+            });
+        });
+        ui.add_space(3.0);
+    }
+}
+
+/// A numbered step: its numeral (green when ready) and content; `n` 0 has
+/// no numeral (the Run row).
 fn step(ui: &mut Ui, n: u8, ready: bool, palette: &CapturePalette, content: impl FnOnce(&mut Ui)) {
     let top = ui.cursor().top();
     let left = ui.max_rect().left();
@@ -768,17 +933,19 @@ fn step(ui: &mut Ui, n: u8, ready: bool, palette: &CapturePalette, content: impl
     ui.horizontal_top(|ui| {
         ui.spacing_mut().item_spacing.x = 8.0;
         let (r, _) = ui.allocate_exact_size(egui::vec2(26.0, 26.0), Sense::hover());
-        style::paint_job(
-            ui.painter(),
-            r.left_top() - egui::vec2(0.0, 3.0),
-            Align2::LEFT_TOP,
-            style::job(
-                &n.to_string(),
-                26.0,
-                if ready { palette.ok } else { palette.ink3 },
-                0.0,
-            ),
-        );
+        if n > 0 {
+            style::paint_job(
+                ui.painter(),
+                r.left_top() - egui::vec2(0.0, 3.0),
+                Align2::LEFT_TOP,
+                style::job(
+                    &n.to_string(),
+                    26.0,
+                    if ready { palette.ok } else { palette.ink3 },
+                    0.0,
+                ),
+            );
+        }
         ui.vertical(|ui| {
             ui.spacing_mut().item_spacing.y = 3.0;
             content(ui);
@@ -955,7 +1122,7 @@ fn exposure_step(
     let exposure = s.host.exposure.as_ref();
     let ready = exposure.is_some() && !has(inputs.blockers, &[Check::Exposure]);
     let editable = s.fresh() && s.host.editable && !s.pending;
-    step(ui, 2, ready, palette, |ui| {
+    step(ui, 4, ready, palette, |ui| {
         let running = matches!(inputs.test_shot.stage, "capturing" | "reading");
         title(ui, "Exposure", palette, |ui| {
             if running {
@@ -1177,7 +1344,10 @@ fn in_focus_line(inputs: &PlanInputs<'_>) -> Option<guide::Line> {
             action: use_it,
         });
     }
-    if mlo > lo || mhi < hi {
+    // The marks must hold the range itself; its margin (half a sharp depth
+    // or half the survey's spacing) is offered, not required.
+    let (first, last) = (r.first.round() as u16, r.last.round() as u16);
+    if mlo > first || mhi < last {
         return Some(guide::Line {
             text: format!(
                 "{range}: the marks leave part of it out ({} to {} holds it, with its margin).",
@@ -1529,23 +1699,15 @@ fn depth_step(
     let editable = s.fresh() && host.editable && !s.pending;
     let calibrating = !matches!(inputs.calibration.stage, "idle" | "done" | "failed");
     step(ui, 3, ready, palette, |ui| {
+        // The survey-only step calibration is the pass's now (spec 3); one
+        // running (from `calibrate_step`) can still be stopped here.
         title(ui, "Depth", palette, |ui| {
-            if calibrating {
-                if style::button(ui, "Stop waiting", ButtonKind::Quiet, 22.0, true, palette).clicked() {
-                    out.push(PlanIntent::StopCalibration);
-                }
-            } else if style::button(
-                ui,
-                "Calibrate step",
-                ButtonKind::Plain,
-                22.0,
-                editable && host.bounds_set() && inputs.engine,
-                palette,
-            )
-            .on_hover_text("Takes 25 single RAWs around the middle of the marked range, measures how far detail stays sharp and deletes the survey.")
-            .clicked()
+            if calibrating
+                && inputs.pass.stage == "idle"
+                && style::button(ui, "Stop waiting", ButtonKind::Quiet, 22.0, true, palette)
+                    .clicked()
             {
-                out.push(PlanIntent::Calibrate);
+                out.push(PlanIntent::StopCalibration);
             }
         });
         ui.add_space(5.0);
@@ -1617,7 +1779,11 @@ fn depth_step(
                 });
             }
         });
-        if let Some(line) = guide::bounds_line(s, inputs.step, inputs.settle_ms) {
+        // The host's bounds survey (its half-height rule) speaks only when
+        // the calibration has not measured the range (spec 5.2).
+        if in_focus(&inputs.calibration.result).is_none()
+            && let Some(line) = guide::bounds_line(s, inputs.step, inputs.settle_ms)
+        {
             ui.add_space(2.0);
             guidance(ui, Some(&line), None, editable, palette, out);
         }
@@ -2011,7 +2177,7 @@ fn after_step(
     let sw = inputs.switches;
     let s = inputs.s;
     let between = s.fresh() && !s.pending && !s.host.phase.active();
-    step(ui, 4, true, palette, |ui| {
+    step(ui, 0, true, palette, |ui| {
         style::text(ui, "While it runs, and after", 13.0, palette.ink);
         if style::option(
             ui,

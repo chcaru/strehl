@@ -585,6 +585,33 @@ impl CaptureWorkspace {
             });
         }
         self.test_shot_exposure = Some((100, 65544));
+        // `plan+calibrated`: the pass done, its readout and the Depth lens
+        // from RAW; `plan+calibrating`: the survey part-way, the lens from
+        // the live sweep (spec 9, S2).
+        if which == Fixture::Plan && matches!(open, "calibrated" | "calibrating") {
+            let done = open == "calibrated";
+            self.pass = super::measure::Pass {
+                stage: if done {
+                    super::measure::Stage::Done
+                } else {
+                    super::measure::Stage::Survey {
+                        shutters: (65_537, 65_568),
+                        positions: 62,
+                    }
+                },
+                facts: fixture::pass_facts(done),
+                started: Some(Instant::now()),
+                finished: done.then(|| fixture::earlier(3)),
+                ..Default::default()
+            };
+            if let Some(survey) = self.pass.facts.survey.clone() {
+                self.calibration =
+                    Calibration::Done(serde_json::json!({"width":45.0,"suggested_step":6,
+                    "summary":"Detail stays sharp over about 45 focus units.","survey":survey}));
+            }
+            self.station.live.depth_lens = true;
+            self.station.live.peaking = false;
+        }
         self.open_fixture_panel(open);
         // The subject's states (owner feedback, 2026-11-22): unnamed, its
         // list open, an existing subject chosen, or one's name typed.
@@ -1056,6 +1083,9 @@ impl CaptureWorkspace {
                                 .params()
                                 .map(|p| [p.sensitivity, p.grow, p.buffer_px]),
                         });
+                // Spec 6.1: the calibration's depth map, from RAW once the
+                // survey is read, else from the live sweep.
+                self.station.live.depth = self.depth_map();
                 let intents = self.station.live.show(ui, s, &palette);
                 for intent in intents {
                     self.apply_live(s, intent);
@@ -1245,6 +1275,11 @@ impl CaptureWorkspace {
                         result: self.calibration_result(),
                         finished: self.station.calibrated_at,
                     },
+                    pass: self.pass.view(
+                        Instant::now(),
+                        self.light_on_for(Instant::now()),
+                        s.host.capabilities.exposure_tiers,
+                    ),
                     test_shot: TestShotView {
                         stage,
                         levels,
@@ -1557,7 +1592,7 @@ impl CaptureWorkspace {
             PlanIntent::MarkStart => self.command(s, Command::Mark { start: true }),
             PlanIntent::MarkEnd => self.command(s, Command::Mark { start: false }),
             PlanIntent::Calibrate => {
-                let result = self.calibrate();
+                let result = self.calibrate_pass();
                 self.record(result);
             }
             PlanIntent::StopCalibration => self.stop_calibration(),

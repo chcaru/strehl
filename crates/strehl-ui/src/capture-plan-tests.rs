@@ -52,6 +52,11 @@ fn inputs<'a>(s: &'a Snapshot, blockers: &'a [Blocker]) -> PlanInputs<'a> {
             result: calibrated(),
             ..Default::default()
         },
+        pass: PassView {
+            stage: "idle",
+            available: true,
+            ..Default::default()
+        },
         test_shot: TestShotView {
             stage: "idle",
             ..Default::default()
@@ -228,7 +233,8 @@ fn frame(
     });
     let mut intents = Vec::new();
     let raw = RawInput {
-        screen_rect: Some(Rect::from_min_size(Pos2::ZERO, egui::vec2(348.0, 1040.0))),
+        // Tall enough for every step with the Calibrate step above Depth.
+        screen_rect: Some(Rect::from_min_size(Pos2::ZERO, egui::vec2(348.0, 1400.0))),
         time: Some(time),
         events,
         ..Default::default()
@@ -321,10 +327,37 @@ fn clicks_become_intents() {
         ),
         [PlanIntent::SetStackWhenDone(false)]
     );
-    assert_eq!(
-        click(&ctx, &mut view, &input, "Calibrate step"),
-        [PlanIntent::Calibrate]
-    );
+    // The step's title and its button both read "Calibrate": the button is
+    // the one at the right.
+    let (out, _) = frame(&ctx, &mut view, &input, 0.0, vec![]);
+    let at = out
+        .shapes
+        .iter()
+        .filter_map(|s| match &s.shape {
+            egui::Shape::Text(t) if t.galley.text() == "Calibrate" => {
+                Some(t.visual_bounding_rect().center())
+            }
+            _ => None,
+        })
+        .max_by(|a, b| a.x.total_cmp(&b.x))
+        .expect("the Calibrate button");
+    let press = |pressed| Event::PointerButton {
+        pos: at,
+        button: PointerButton::Primary,
+        pressed,
+        modifiers: Default::default(),
+    };
+    let mut got = frame(
+        &ctx,
+        &mut view,
+        &input,
+        0.0,
+        vec![Event::PointerMoved(at), press(true)],
+    )
+    .1;
+    got.extend(frame(&ctx, &mut view, &input, 0.0, vec![press(false)]).1);
+    got.extend(frame(&ctx, &mut view, &input, 0.0, vec![]).1);
+    assert_eq!(got, [PlanIntent::Calibrate]);
 }
 
 /// A blocked plan does not start; its blocker is on the Start button and
@@ -603,7 +636,20 @@ fn guidance_applies_and_opens_the_comparison() {
         }]
     );
     let (out, _) = frame_at(&ctx, &mut view, &input, 348.0, vec![]);
-    let more = text_at(&out, "WHAT CHANGES").expect("the comparison link");
+    // The exposure guidance's own link: the first below its APPLY (the Depth
+    // step's guidance has one too, above it).
+    let more = out
+        .shapes
+        .iter()
+        .filter_map(|s| match &s.shape {
+            egui::Shape::Text(t) if t.galley.text() == "WHAT CHANGES" => {
+                Some(t.visual_bounding_rect().center())
+            }
+            _ => None,
+        })
+        .filter(|p| p.y > apply.y)
+        .min_by(|a, b| a.y.total_cmp(&b.y))
+        .expect("the comparison link");
     assert_eq!(
         press_at(&ctx, &mut view, &input, more),
         [PlanIntent::OpenGuide(GuideTab::Exposure)]

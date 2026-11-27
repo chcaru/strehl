@@ -252,6 +252,23 @@ an `index` from `capture.completed` rechecks and opens a completed receiver run.
 or `false`. Folder selection remains in the native UI. Closing a headless control
 workspace does not stop the Pi or the background receiver.
 
+`calibrate` runs the calibration pass of
+[the capture calibration spec](proposals/2026-11-capture-calibration-spec.md)
+(camera connected and idle, a host with `exposure_tiers`; no marks needed): a live
+sweep of 33 lens positions over 6,000 units around the lens (or the marks' middle
+until the lens has moved since it connected), read from the preview after each move;
+a wait until the light has been on 150 s; a test pair at the sweep's busiest position
+(the camera's shutter, at most 1.3 s, and five stops under) read by `strehl survey`,
+whose body top sets the survey's long shutter; and the survey around the sweep's
+range, read by `strehl survey`. It then puts the lens back at the busiest position and
+the camera's ISO and shutter as they were. It moves the lens and takes RAWs; the
+survey's are deleted once read. `stop_calibration` stops it (or a `calibrate_step`) at
+once; what was measured stays. `capture.tools.calibration.pass` reports its `stage`
+(`sweep`, `light`, `test`, `survey`, `return`, `done`, `failed`), `error`,
+`stopped_in`, the sweep's `range`, `busiest` and kept tiles, the test pair's
+`test_top`, the survey's `shutters` and `survey_depth`; `light_on_seconds` beside it is
+how long this desktop has seen the light on.
+
 `calibrate_step` (with the start and end marked and the camera idle) takes
 single RAWs across the marked range and measures how far detail stays sharp: on a
 host with `exposure_tiers`, a survey at two shutters read by `strehl survey`

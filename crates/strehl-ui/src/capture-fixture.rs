@@ -33,6 +33,86 @@ impl Fixture {
     }
 }
 
+/// The calibration pass's facts for the fixtures (spec 9, S2): a sweep
+/// over the fixture's subject (the oval of [`subject_image`] at 960 x 640,
+/// in focus from 37,100 at its left to 37,764 at its right), and, once
+/// `surveyed`, a survey read from RAW.
+pub(crate) fn pass_facts(surveyed: bool) -> super::measure::Facts {
+    let (w, h) = (960usize, 640usize);
+    let (cols, rows) = (w / super::sweep::TILE, h / super::sweep::TILE);
+    let inside = |fx: f64, fy: f64| {
+        let (dx, dy) = ((fx - 0.5) / 0.34, (fy - 0.52) / 0.30);
+        dx * dx + dy * dy <= 0.92
+    };
+    let focus_at = |fx: f64| 37_100.0 + 664.0 * ((fx - 0.16) / 0.68).clamp(0.0, 1.0);
+    let focus: Vec<Option<f64>> = (0..cols * rows)
+        .map(|t| {
+            let (fx, fy) = (
+                (t % cols) as f64 / cols as f64 + 0.5 / cols as f64,
+                (t / cols) as f64 / rows as f64 + 0.5 / rows as f64,
+            );
+            // A few tiles with no peak, as a real sweep leaves.
+            (inside(fx, fy) && (t * 7919) % 23 != 0).then(|| focus_at(fx).round())
+        })
+        .collect();
+    let kept = focus.iter().flatten().count();
+    let peaks = super::sweep::Peaks {
+        cols,
+        rows,
+        focus,
+        range: Some((37_100.0, 37_764.0)),
+        busiest: Some(37_430.0),
+        kept,
+        at_first: 0,
+        at_last: 0,
+        prominent: kept + 12,
+        window: (34_430.0, 40_430.0),
+        offset: 22.5,
+    };
+    let survey = surveyed.then(|| {
+        // 64 px tiles of the 9,504 x 6,336 sensor.
+        let (c, r) = (148usize, 99usize);
+        let focus: Vec<Value> = (0..c * r)
+            .map(|t| {
+                let (fx, fy) = (
+                    (t % c) as f64 / c as f64 + 0.5 / c as f64,
+                    (t / c) as f64 / r as f64 + 0.5 / r as f64,
+                );
+                if inside(fx, fy) && (t * 104_729) % 31 != 0 {
+                    json!(focus_at(fx).round())
+                } else {
+                    Value::Null
+                }
+            })
+            .collect();
+        json!({
+            "subject":{"area_share":0.287},
+            "depth":{"in_focus_first":37_112.0,"in_focus_last":37_758.0,"reaches_first":false,"reaches_last":false,
+                "suggested_start":37_087.0,"suggested_end":37_783.0,
+                "per_position":(0..24).map(|i| json!([36_980.0 + 45.0 * f64::from(i), 0.0])).collect::<Vec<_>>()},
+            "maps":{"cols":c,"rows":r,"tile_px":64,"focus":focus},
+            "step":{"width":45.0,"width_p10":35.0,"width_p90":59.0,"suggested_step":6,"positions":25,"spacing":9.0,"width_low":false},
+            "body":{"top":0.62,"g":{"p50":0.008}},
+            "census":{"top":30.1},
+            "shutters":{"long_effective_s":1.0,"short_effective_s":0.03125},
+            "positions":{"pairs":13}
+        })
+    });
+    super::measure::Facts {
+        peaks: Some(peaks),
+        sweep_seconds: Some(36.2),
+        sweep_positions: 33,
+        // Where the fixture's lens stands: every tile at full colour.
+        busiest: Some(37_556),
+        test_top: Some(0.48),
+        shutters: Some((65_537, 65_568)),
+        light_on_seconds: Some(240.0),
+        survey,
+        preview_size: Some([w, h]),
+        revision: 1 + u64::from(surveyed),
+    }
+}
+
 /// A textured oval on black, as a camera preview of a small subject.
 pub(crate) fn subject_image(width: usize, height: usize, sharp: f32) -> ColorImage {
     let mut image = ColorImage::filled([width, height], Color32::BLACK);

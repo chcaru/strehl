@@ -36,6 +36,8 @@ pub(crate) mod glance;
 pub(crate) mod guide;
 #[path = "capture-live.rs"]
 pub(crate) mod live;
+#[path = "capture-measure.rs"]
+pub(crate) mod measure;
 #[path = "capture-plan.rs"]
 pub(crate) mod plan;
 #[path = "capture-plane-view.rs"]
@@ -58,6 +60,8 @@ pub(crate) mod stillness;
 pub(crate) mod style;
 #[path = "capture-subject.rs"]
 pub(crate) mod subject;
+#[path = "capture-sweep.rs"]
+pub(crate) mod sweep;
 #[path = "capture-test-shot.rs"]
 pub(crate) mod test_shot;
 #[path = "capture-tools.rs"]
@@ -151,6 +155,17 @@ pub(crate) struct CaptureWorkspace {
     /// selection made from them.
     survey_frames: auto_subject::SurveyFrames,
     auto_subject: auto_subject::AutoSubject,
+    /// The calibration pass (capture calibration spec 4): one button runs
+    /// the sweep, the light wait, the test pair and the survey.
+    pub(crate) pass: measure::Pass,
+    /// When the light was first seen on (spec 4: exposure work waits until
+    /// it has been on [`measure::LIGHT_SETTLED`]).
+    light_on_since: Option<Instant>,
+    /// The lens position when the camera was first seen connected: a pass
+    /// seeds its sweep from the marks until the lens has moved.
+    connect_position: Option<u16>,
+    /// The Depth lens's map, built when the pass's facts change.
+    depth_cache: Option<(u64, Option<std::sync::Arc<live::DepthMap>>)>,
 }
 impl CaptureWorkspace {
     pub fn new(path: Option<PathBuf>) -> Self {
@@ -207,10 +222,90 @@ impl CaptureWorkspace {
             pending_highlight: None,
             survey_frames: Default::default(),
             auto_subject: Default::default(),
+            pass: Default::default(),
+            light_on_since: None,
+            connect_position: None,
+            depth_cache: None,
         }
     }
     fn calibrating(&self) -> bool {
-        self.calibration.running()
+        self.calibration.running() || self.pass.running()
+    }
+    /// The calibration's depth map for the Depth lens (spec 6.1): from the
+    /// survey's RAW tiles once read, else from the live sweep's.
+    pub(crate) fn depth_map(&mut self) -> Option<std::sync::Arc<live::DepthMap>> {
+        let f = &self.pass.facts;
+        let revision = f.revision;
+        if let Some((r, m)) = &self.depth_cache
+            && *r == revision
+        {
+            return m.clone();
+        }
+        let map = self.build_depth_map(revision).map(std::sync::Arc::new);
+        self.depth_cache = Some((revision, map.clone()));
+        map
+    }
+    fn build_depth_map(&self, revision: u64) -> Option<live::DepthMap> {
+        let f = &self.pass.facts;
+        if let Some(v) = &f.survey
+            && let Some(m) = v.get("maps")
+            && let (Some(cols), Some(rows), Some(focus)) = (
+                m["cols"].as_u64(),
+                m["rows"].as_u64(),
+                m["focus"].as_array(),
+            )
+        {
+            let (cols, rows) = (cols as usize, rows as usize);
+            let focus: Vec<Option<f64>> = focus.iter().map(Value::as_f64).collect();
+            let d = &v["depth"];
+            let active = auto_subject::active_px(None).map(|v| v as f32);
+            let tile = m["tile_px"].as_f64().unwrap_or(64.0) as f32;
+            if focus.len() == cols * rows
+                && let (Some(lo), Some(hi)) =
+                    (d["in_focus_first"].as_f64(), d["in_focus_last"].as_f64())
+            {
+                return Some(live::DepthMap {
+                    revision,
+                    cols,
+                    rows,
+                    focus,
+                    lo,
+                    hi,
+                    source: "from RAW",
+                    depth: v["step"]["width"]
+                        .as_f64()
+                        .unwrap_or(measure::DEFAULT_DEPTH),
+                    extent: [
+                        cols as f32 * tile / active[0],
+                        rows as f32 * tile / active[1],
+                    ],
+                    anchor: f.busiest,
+                });
+            }
+        }
+        let p = f.peaks.as_ref()?;
+        let (lo, hi) = p.range?;
+        Some(live::DepthMap {
+            revision,
+            cols: p.cols,
+            rows: p.rows,
+            focus: p.focus.clone(),
+            lo,
+            hi,
+            source: "from the live sweep, coarse",
+            depth: measure::DEFAULT_DEPTH,
+            extent: f.preview_size.map_or([1.0, 1.0], |[w, h]| {
+                [
+                    (p.cols * sweep::TILE) as f32 / w.max(1) as f32,
+                    (p.rows * sweep::TILE) as f32 / h.max(1) as f32,
+                ]
+            }),
+            anchor: f.busiest,
+        })
+    }
+    /// How long the light has been on, as this desktop saw it.
+    pub(crate) fn light_on_for(&self, now: Instant) -> Option<Duration> {
+        self.light_on_since.map(|t| now.duration_since(t))
     }
     /// A run the desktop knows is not a stack: a test shot (by its
     /// manifest, or one this desktop took), a survey, or a sequence it
@@ -252,6 +347,21 @@ impl CaptureWorkspace {
         let now = Instant::now();
         if let Some(run) = self.test_shot.poll(&s, now) {
             connection.mark_test_run(run);
+        }
+        // The light's time on, and the lens where the camera connected.
+        match s.host.power.as_ref().and_then(|p| p.light.on) {
+            Some(true) => {
+                self.light_on_since.get_or_insert(now);
+            }
+            Some(false) => self.light_on_since = None,
+            None => {}
+        }
+        if s.fresh() && s.host.connected {
+            if self.connect_position.is_none() {
+                self.connect_position = s.host.position;
+            }
+        } else if s.fresh() {
+            self.connect_position = None;
         }
         if let Some((ratio, x, y)) = self.stillness.poll(&s, now) {
             // The magnifier as it was before the check.
@@ -314,6 +424,7 @@ impl CaptureWorkspace {
             self.connect_wait = None;
         }
         self.poll_station(&s);
+        self.poll_pass(&s, now);
         use tools::Calibration as C;
         let stage_before = self.calibration.stage();
         let state = std::mem::replace(&mut self.calibration, C::Idle);
@@ -571,6 +682,7 @@ impl CaptureWorkspace {
         // subject when the plan has none.
         if stage_before != "done"
             && let C::Done(v) = &self.calibration
+            && !self.pass.testing()
             && host.plan.as_ref().is_some_and(|p| p.subject.is_none())
             && let Some(subject) = survey_subject(&v["survey"]["subject"])
         {
@@ -635,12 +747,278 @@ impl CaptureWorkspace {
     }
     /// Stops waiting for the calibration at whatever stage it is in (see
     /// [`tools::Calibration::stop`]). A survey being captured is left to
-    /// finish on the host and is not followed.
+    /// finish on the host and is not followed. A pass stops too: what it
+    /// measured stays.
     pub fn stop_calibration(&mut self) {
         if let Some(sequence) = self.calibration.survey_sequence() {
             self.unfollowed_sequence = Some(sequence);
         }
         self.calibration.stop("Calibration stopped");
+        self.pass.stop("Calibration stopped");
+    }
+    /// The calibration pass (spec 4), from the column's Calibrate button or
+    /// the control interface's `calibrate`.
+    pub fn calibrate_pass(&mut self) -> anyhow::Result<()> {
+        let s = self
+            .connection
+            .as_ref()
+            .ok_or_else(|| anyhow::anyhow!("Open Capture first"))?
+            .snapshot();
+        anyhow::ensure!(!self.calibrating(), "A calibration is running");
+        anyhow::ensure!(self.engine.is_some(), "The Strehl engine was not found");
+        anyhow::ensure!(!self.test_shot.running(), "A test shot is running");
+        anyhow::ensure!(
+            s.fresh() && s.host.editable && !s.pending && s.host.connected,
+            "The camera is not ready"
+        );
+        anyhow::ensure!(
+            s.host.capabilities.exposure_tiers,
+            "The camera host cannot take a shutter per position: update it"
+        );
+        let position = s
+            .host
+            .position
+            .ok_or_else(|| anyhow::anyhow!("The lens position is not known"))?;
+        let moved = self.connect_position.is_some_and(|p| p != position);
+        let marks = s.host.bounds_set().then(|| s.host.plan_bounds());
+        let seed = measure::seed(position, moved, marks);
+        let now = Instant::now();
+        self.pass = measure::Pass {
+            stage: measure::start_sweep(seed, s.host.lens_travel.range(), now),
+            started: Some(now),
+            exposure_before: s
+                .host
+                .exposure
+                .as_ref()
+                .and_then(|e| Some((e.iso?, e.shutter?))),
+            four_before: s.host.shots_per_plane == Some(4),
+            ..Default::default()
+        };
+        Ok(())
+    }
+    /// Advances the calibration pass (spec 4) once a frame. The test pair
+    /// and the survey run on [`tools::Calibration`]; this watches it.
+    fn poll_pass(&mut self, s: &Snapshot, now: Instant) {
+        use measure::Stage as P;
+        use tools::Calibration as C;
+        if !self.pass.running()
+            || !s.fresh()
+            || self.connection.as_ref().is_some_and(Connection::is_fixture)
+        {
+            return;
+        }
+        if !s.host.connected && !s.host.busy {
+            self.pass
+                .stop("The camera switched off during the calibration");
+            return;
+        }
+        let reach = s.host.lens_travel.range();
+        let idle = !s.host.busy && s.host.editable && !s.pending;
+        let stage = std::mem::replace(&mut self.pass.stage, P::Idle);
+        self.pass.stage = match stage {
+            P::Sweep { mut sweep, moved } => match sweep.poll(s, now) {
+                sweep::Step::Move(target) => {
+                    self.command(s, Command::Focus { target });
+                    P::Sweep { sweep, moved }
+                }
+                sweep::Step::Wait => P::Sweep { sweep, moved },
+                sweep::Step::Failed(why) => P::Failed(why),
+                sweep::Step::Done => {
+                    let w0 = measure::DEFAULT_DEPTH;
+                    // Until this lens's coarse-to-fine offset is known: half a
+                    // sharp depth (spec 5.3 point 6).
+                    match sweep::peaks(&sweep.frames, w0, w0 / 2.0) {
+                        None => P::Failed("The sweep's frames could not be read".into()),
+                        Some(p) if p.nothing() => {
+                            let (a, b) = p.window;
+                            self.pass.facts.peaks = Some(p);
+                            P::Failed(format!(
+                                "Nothing in focus between {} and {}: move the lens to the subject, or mark the range by hand",
+                                style::focus_units(a as u16),
+                                style::focus_units(b as u16)
+                            ))
+                        }
+                        Some(p) => {
+                            let off = p.off_end();
+                            let (a, b) = p.window;
+                            self.pass.facts.sweep_seconds =
+                                Some(now.duration_since(sweep.started).as_secs_f64());
+                            self.pass.facts.sweep_positions = sweep.positions.len();
+                            self.pass.facts.busiest = p.busiest.map(|v| v.round() as u16);
+                            self.pass.facts.preview_size = sweep.size;
+                            self.pass.facts.peaks = Some(p);
+                            self.pass.facts.revision += 1;
+                            match off {
+                                // Moved half its width that way, once (spec 4.1).
+                                Some(dir) if !moved => {
+                                    let seed = (0.5 * (a + b) + f64::from(dir) * 0.5 * (b - a))
+                                        .clamp(0.0, 65535.0)
+                                        as u16;
+                                    P::Sweep {
+                                        sweep: Box::new(sweep::Sweep::new(
+                                            sweep::window(seed, reach),
+                                            now,
+                                        )),
+                                        moved: true,
+                                    }
+                                }
+                                Some(dir) => P::Failed(format!(
+                                    "The subject is still in focus at the sweep's {} end, {}: move the lens past it and calibrate again",
+                                    if dir > 0 { "far" } else { "near" },
+                                    style::focus_units(if dir > 0 { b } else { a } as u16)
+                                )),
+                                None => P::Light { sent: false },
+                            }
+                        }
+                    }
+                }
+            },
+            P::Light { sent } => {
+                let power = s.host.power.as_ref().filter(|p| p.available);
+                let on = power.and_then(|p| p.light.on);
+                if power.is_some() && on == Some(false) && !sent {
+                    self.command(
+                        s,
+                        Command::Power {
+                            device: strehl_capture::power::Outlet::Light,
+                            on: true,
+                        },
+                    );
+                    P::Light { sent: true }
+                } else {
+                    // Without studio outlets the light's state is not known.
+                    let settled = power.is_none()
+                        || self
+                            .light_on_for(now)
+                            .is_some_and(|d| d >= measure::LIGHT_SETTLED);
+                    match (settled && idle, self.pass.facts.busiest) {
+                        (true, Some(b)) => self.start_test_pair(s, b, now),
+                        (true, None) => P::Failed("The sweep found no busiest position".into()),
+                        _ => P::Light { sent },
+                    }
+                }
+            }
+            P::Test { position, shutters } => match &self.calibration {
+                C::Done(v) => {
+                    let survey = &v["survey"];
+                    let top = survey["body"]["top"].as_f64();
+                    self.pass.facts.test_top = top;
+                    let options = s
+                        .host
+                        .exposure
+                        .as_ref()
+                        .map(|e| e.shutter_options.clone())
+                        .unwrap_or_default();
+                    let pair =
+                        measure::survey_shutters(&options, shutters.0, top).unwrap_or(shutters);
+                    self.start_survey(s, position, pair, now)
+                }
+                C::Failed(why) => P::Failed(format!("The test pair: {why}")),
+                _ => P::Test { position, shutters },
+            },
+            P::Survey {
+                shutters,
+                positions,
+            } => match &self.calibration {
+                C::Done(v) => {
+                    self.pass.facts.survey = Some(v["survey"].clone());
+                    self.pass.facts.revision += 1;
+                    match self.pass.facts.busiest {
+                        Some(b) => P::Return {
+                            target: b,
+                            sent: false,
+                        },
+                        None => P::Done,
+                    }
+                }
+                C::Failed(why) => P::Failed(format!("The survey: {why}")),
+                _ => P::Survey {
+                    shutters,
+                    positions,
+                },
+            },
+            P::Return { target, sent } => {
+                if !sent && idle {
+                    if let Some((iso, shutter)) = self.pass.exposure_before {
+                        self.command(s, Command::Exposure { iso, shutter });
+                    }
+                    self.command(s, Command::Focus { target });
+                    P::Return { target, sent: true }
+                } else if sent && idle && s.host.position == Some(target) {
+                    self.pass.finished = Some(std::time::SystemTime::now());
+                    P::Done
+                } else {
+                    P::Return { target, sent }
+                }
+            }
+            other => other,
+        };
+        if matches!(self.pass.stage, P::Failed(_)) && self.pass.stopped_in.is_none() {
+            self.pass.stopped_in = Some("unknown");
+        }
+    }
+    /// The test pair at the busiest position: the camera's shutter (at most
+    /// 1.3 s) and five stops under, one RAW each.
+    fn start_test_pair(&mut self, s: &Snapshot, at: u16, now: Instant) -> measure::Stage {
+        let Some(e) = s.host.exposure.as_ref() else {
+            return measure::Stage::Failed("The camera's exposure is not known".into());
+        };
+        let Some(pair) = e
+            .shutter
+            .and_then(|c| measure::test_shutters(&e.shutter_options, c))
+        else {
+            return measure::Stage::Failed("The camera's shutters are not known".into());
+        };
+        self.pass.facts.light_on_seconds = self.light_on_for(now).map(|d| d.as_secs_f64());
+        if s.host.shots_per_plane == Some(4) {
+            self.command(s, Command::PixelShift { shots: 1 });
+        }
+        self.restore_four_after_calibration = self.pass.four_before;
+        // No second round: a pair at one position has no step to measure.
+        self.calibration = tools::Calibration::Switching {
+            restore_four: false,
+            positions: vec![at, at],
+            shutters: Some(vec![pair.0, pair.1]),
+            round: 1,
+            deadline: now + tools::SWITCH_TIMEOUT,
+        };
+        measure::Stage::Test {
+            position: at,
+            shutters: pair,
+        }
+    }
+    /// The survey on the grid of spec 4.2 around the sweep's range.
+    fn start_survey(
+        &mut self,
+        s: &Snapshot,
+        busiest: u16,
+        shutters: (u64, u64),
+        now: Instant,
+    ) -> measure::Stage {
+        let Some((lo, hi)) = self.pass.facts.peaks.as_ref().and_then(|p| p.range) else {
+            return measure::Stage::Failed("The sweep found no range".into());
+        };
+        let w0 = measure::DEFAULT_DEPTH;
+        let (positions, codes) = measure::survey_grid(
+            (lo, hi),
+            f64::from(busiest),
+            w0,
+            shutters,
+            s.host.lens_travel.range(),
+        );
+        self.pass.facts.shutters = Some(shutters);
+        let n = positions.len();
+        self.calibration = tools::Calibration::Switching {
+            restore_four: self.pass.four_before,
+            positions,
+            shutters: Some(codes),
+            round: 1,
+            deadline: now + tools::SWITCH_TIMEOUT,
+        };
+        measure::Stage::Survey {
+            shutters,
+            positions: n,
+        }
     }
     /// `calibrate_step` from the control interface.
     pub fn calibrate(&mut self) -> anyhow::Result<()> {
@@ -723,7 +1101,9 @@ impl CaptureWorkspace {
             _ => Value::Null,
         };
         json!({"calibration":{"stage":self.calibration.stage(),"result":result,
-                "gives_up_seconds":self.calibration.gives_up_in(now).map(|d| d.as_secs_f64())},
+                "gives_up_seconds":self.calibration.gives_up_in(now).map(|d| d.as_secs_f64()),
+                "pass":self.pass.public(),
+                "light_on_seconds":self.light_on_for(now).map(|d| d.as_secs_f64())},
             "focus_step":self.step_report.public(),
             "compact_estimate":self.compact_estimate.public(),
             "compact":self.compact_apply.public(),

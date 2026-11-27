@@ -112,6 +112,13 @@ pub(crate) enum AgentCommand {
     /// Calibrate the focus step: a short single-shot survey across the middle
     /// of the marked range, measured on this PC, then deleted. Takes RAWs.
     CalibrateStep {},
+    /// The calibration pass (capture calibration spec 4): a live sweep, the
+    /// light's wait, a test pair and a survey around the range found, all
+    /// measured on this PC. Moves the lens and takes RAWs.
+    Calibrate {},
+    /// Stop the calibration pass or the step calibration; what was measured
+    /// stays.
+    StopCalibration {},
     /// Measure how far detail stayed sharp across a completed capture's planes.
     MeasureFocusStep {
         index: usize,

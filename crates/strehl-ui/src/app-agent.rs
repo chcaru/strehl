@@ -432,6 +432,12 @@ impl StrehlApp {
             CalibrateStep {} => {
                 self.capture.calibrate()?;
             }
+            Calibrate {} => {
+                self.capture.calibrate_pass()?;
+            }
+            StopCalibration {} => {
+                self.capture.stop_calibration();
+            }
             MeasureFocusStep { index } => {
                 self.capture.measure_focus_step(index)?;
             }

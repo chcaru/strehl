@@ -445,6 +445,11 @@ pub(crate) struct Connection {
     fixture: bool,
 }
 impl Connection {
+    /// A fixture's connection: it sends nothing, and nothing drives the
+    /// camera from it.
+    pub fn is_fixture(&self) -> bool {
+        self.fixture
+    }
     pub fn start(config: Config, path: PathBuf, ctx: egui::Context) -> Result<Self> {
         let shared = Arc::new(Mutex::new(Snapshot::default()));
         let (sender, receiver) = mpsc::sync_channel(2);

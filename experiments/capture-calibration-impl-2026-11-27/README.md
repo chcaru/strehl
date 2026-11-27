@@ -110,3 +110,38 @@ a sharp depth; not tuned away.
 
 `strehl survey` on the dragonfly stack (151 long frames): 21.6 s against 15.9 s, for 151
 more decodes and their contrast. A calibration survey has about 25 long frames. MEASURED.
+
+## S1, S2 and F3, first part: the pass, the column, the Depth lens (`cpf-s1-sweep`, `cpf-s2-pass`, `cpf-f3-light`)
+
+### What changed
+
+| Spec | Where | What |
+| --- | --- | --- |
+| 4.1, 5.3 | `strehl-ui/src/capture-sweep.rs` (new) | The live sweep: the window (33 positions, 3,000 units each side of the seed, inside the lens's ends, approached from below), the second fresh preview after each move measured off the UI thread, the tile measure `E / (Lnear^2 + 0.03^2)` on 32 px tiles, the peak rule (smoothed over 40 units, 3 times the 15th percentile, not at an end, parabola vertex), coherence within two sharp depths of the 3 x 3 median, the offset, range, busiest position and the end test |
+| 4 | `strehl-ui/src/capture-measure.rs` (new), `capture-workspace.rs` `poll_pass` | The pass: Sweep, Light (switched on if off; waits until on 150 s as this desktop saw it), Test (a two-shutter pair at the busiest position read by `strehl survey`; its body top sets the survey's long shutter), Survey (the grid of 4.2 and the cluster), Return (lens to the busiest position, the camera's ISO and shutter as before). The test and the survey run on the existing survey machinery, so one-RAW switching, deletion and restoring four-shot are unchanged |
+| 6.4 | `capture-plan.rs` | The column: 1 Rig, 2 Calibrate, 3 Depth, 4 Exposure, Run (no numeral). Calibrate: the button; while running the stage in words, a ruled progress line with a tick a stage, Stop; the readout a row at a time (In focus, Outline, Sharp depth, Body, Highlights) with each source. Depth's "Calibrate step" button is gone; the host's half-height line speaks only before a calibration has measured the range |
+| 6.1, 6.2 | `capture-live.rs` | The Depth lens: one cached mesh of the measurement's own tiles (from RAW once the survey is read, else from the sweep), a hairline of picture between them, 62 % opacity, one ramp; tiles with no peak clear; hover reads "in focus at N"; once the lens leaves the position the pass left it at, tiles not within half a sharp depth of it dim ("in focus now"), rebuilt only when the position changes. A ruled legend with the ramp, its ends, the lens position and the source |
+| C8 | `agent-interface.rs`, `app-agent.rs`, `docs/desktop-control.md` | `calibrate`, `stop_calibration`; `capture.tools.calibration.pass` in snapshots. `calibrate_step` stays |
+| Fixtures | `capture-fixture.rs`, `capture-station.rs` | `plan+calibrated`, `plan+calibrating` (a fixture's pass never advances) |
+
+### Gates
+
+| Gate | Result | Label |
+| --- | --- | --- |
+| S1 rig gate, replayed: the sweep's range against the stack's in-focus range (32,374 to 33,174): far end within one sharp depth, near end within two and a half | The owner's sweep of 2026-11-27 replayed from its saved previews through this code (`the_recorded_dragonfly_sweep_finds_its_range`, `STREHL_SWEEP_FRAMES`): wide sweep (33 positions, 29,500 to 35,580) 32,331 to 33,150; dense sweep (77 positions) 32,369 to 33,149; no end flagged | MEASURED (replay, not a live rig run) |
+| Planted sweeps | two depths come back as two populations; a stray peak unlike its neighbours is dropped; a flat scene finds nothing; a subject just past the window's end is flagged; the measure is the same at twice the brightness | VERIFIED |
+| The end test | First version flagged the real dragonfly sweep as running off its far end (16 of 450 prominent tiles peaked there, 2,400 units past the subject, as strays). An end-peaking tile now counts only with three such neighbours: 0 flagged on both real sweeps, and the planted subject past the end still is | MEASURED |
+| Survey grid and shutters | The dragonfly's range gives 24 grid positions (32,220 to 33,255), 13 shorts and the cluster 9 apart around the busiest position; a camera left at 1/40 s with a test top of 0.0148 and one at 1.3 s with 0.77 both choose 1 s for the survey (unit tests) | VERIFIED (arithmetic) |
+| Desktop suite | 1,583 passed, 0 failed | VERIFIED |
+| Offscreen | `plan+calibrated` and `plan+calibrating` at 1680 x 1050 rendered and read (renders kept in scratch) | VERIFIED |
+
+### Not yet done, in this part
+
+- **No live rig run.** The owner's desktop holds the receiver; a second desktop was not
+  started against the host. The pass's first run on the rig is the owner's, or the next
+  session's with the owner's go-ahead.
+- **Frame time** of the live view with the Depth lens on is not measured (S1's last gate).
+- Rule 2 (measured or held), the Use links in the column's other steps, S3 (Cover, Light,
+  Glints, the core sample, the rail's bars), S4 (the proof plane, Still), S5 (memory):
+  not built yet.
+- The survey's RAWs are still deleted once read (decision 2 says keep them until Start).

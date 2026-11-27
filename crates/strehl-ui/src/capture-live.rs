@@ -434,6 +434,11 @@ pub(crate) struct LiveView {
     outline_sent: Option<Vec<Vec<Pos2>>>,
     /// The automatic selection, as the station has it.
     pub auto: AutoView,
+    /// The calibration's depth map, as the station has it, and whether the
+    /// Depth lens is on (spec 6.1).
+    pub depth: Option<Arc<DepthMap>>,
+    pub depth_lens: bool,
+    lens_mesh: MeshCache<LensKey>,
     /// The sliders while dragged.
     auto_draft: Option<[f32; 3]>,
     /// The tool bar's width as last drawn: its box fits its buttons, and the
@@ -470,6 +475,9 @@ impl Default for LiveView {
             outline_edit: OutlineEdit::None,
             outline_sent: None,
             auto: AutoView::default(),
+            depth: None,
+            depth_lens: false,
+            lens_mesh: None,
             auto_draft: None,
             bar_width: 520.0,
             drag: None,
@@ -482,6 +490,108 @@ impl Default for LiveView {
             trace: FocusTrace::default(),
             uploads: 0,
             mesh_builds: 0,
+        }
+    }
+}
+
+/// The Depth lens: one square per tile with a peak, a hairline of picture
+/// between tiles, the ramp's colour at [`LENS_ALPHA`]; with the lens
+/// position `at`, tiles not in focus there are dimmed (spec 6.2).
+fn depth_mesh(map: &DepthMap, photo: Rect, uv: Rect, at: Option<u16>) -> Mesh {
+    let mut mesh = Mesh::default();
+    let span = (map.hi - map.lo).max(1.0);
+    let to_screen = |u: f32, v: f32| {
+        egui::pos2(
+            photo.left() + (u - uv.left()) / uv.width() * photo.width(),
+            photo.top() + (v - uv.top()) / uv.height() * photo.height(),
+        )
+    };
+    let (tw, th) = (
+        map.extent[0] / map.cols.max(1) as f32,
+        map.extent[1] / map.rows.max(1) as f32,
+    );
+    for ty in 0..map.rows {
+        for tx in 0..map.cols {
+            let Some(f) = map.focus[ty * map.cols + tx] else {
+                continue;
+            };
+            let a = to_screen(tx as f32 * tw, ty as f32 * th);
+            let b = to_screen((tx + 1) as f32 * tw, (ty + 1) as f32 * th);
+            let r = Rect::from_min_max(a, b).shrink(0.5);
+            if r.width() <= 0.0 || !r.intersects(photo) {
+                continue;
+            }
+            let near = at.is_none_or(|p| (f - f64::from(p)).abs() <= 0.5 * map.depth);
+            let alpha = if near { LENS_ALPHA } else { LENS_DIM };
+            let c = ramp(((f - map.lo) / span) as f32).gamma_multiply(alpha);
+            mesh.add_colored_rect(r.intersect(photo), c);
+        }
+    }
+    mesh
+}
+
+/// The Depth lens's legend, ruled, at the bottom left above the tool bar:
+/// the ramp, its ends, the lens position on it, and where the map came from.
+fn depth_legend(
+    p: &egui::Painter,
+    photo: Rect,
+    map: &DepthMap,
+    at: Option<u16>,
+    palette: &CapturePalette,
+) {
+    let w = 220.0;
+    let origin = photo.left_bottom() + egui::vec2(10.0, -98.0);
+    let box_ = Rect::from_min_size(origin, egui::vec2(w + 16.0, 50.0));
+    p.rect_filled(box_, 0.0, palette.panel.gamma_multiply(0.92));
+    p.rect_stroke(
+        box_,
+        0.0,
+        Stroke::new(1.0_f32, palette.line),
+        StrokeKind::Inside,
+    );
+    let bar = Rect::from_min_size(origin + egui::vec2(8.0, 20.0), egui::vec2(w, 8.0));
+    let steps = 44;
+    for i in 0..steps {
+        let x0 = bar.left() + bar.width() * i as f32 / steps as f32;
+        let x1 = bar.left() + bar.width() * (i + 1) as f32 / steps as f32;
+        p.rect_filled(
+            Rect::from_min_max(egui::pos2(x0, bar.top()), egui::pos2(x1, bar.bottom())),
+            0.0,
+            ramp((i as f32 + 0.5) / steps as f32),
+        );
+    }
+    let text = |pos: Pos2, align: Align2, s: &str, c: Color32| {
+        style::paint_job(p, pos, align, style::job(s, 11.0, c, 0.0));
+    };
+    text(
+        origin + egui::vec2(8.0, 4.0),
+        Align2::LEFT_TOP,
+        &format!("DEPTH \u{b7} {}", map.source),
+        palette.ink2,
+    );
+    text(
+        bar.left_bottom() + egui::vec2(0.0, 3.0),
+        Align2::LEFT_TOP,
+        &style::focus_units(map.lo.round() as u16),
+        palette.ink3,
+    );
+    text(
+        bar.right_bottom() + egui::vec2(0.0, 3.0),
+        Align2::RIGHT_TOP,
+        &style::focus_units(map.hi.round() as u16),
+        palette.ink3,
+    );
+    if let Some(at) = at {
+        let f = ((f64::from(at) - map.lo) / (map.hi - map.lo).max(1.0)) as f32;
+        if (0.0..=1.0).contains(&f) {
+            let x = bar.left() + bar.width() * f;
+            p.line_segment(
+                [
+                    egui::pos2(x, bar.top() - 3.0),
+                    egui::pos2(x, bar.bottom() + 3.0),
+                ],
+                Stroke::new(1.5_f32, palette.ink),
+            );
         }
     }
 }
@@ -645,6 +755,51 @@ impl LiveView {
             Stroke::new(1.0_f32, Color32::from_white_alpha(13)),
             StrokeKind::Outside,
         );
+        if self.depth_lens
+            && let Some(map) = &self.depth
+        {
+            // In focus now: the lens within half a sharp depth of a tile's
+            // focus (spec 6.2). A comparison per tile when the lens moves.
+            let at = host.position.filter(|p| map.anchor != Some(*p));
+            let key: LensKey = (map.revision, rect_bits(photo), rect_bits(uv), at);
+            if self.lens_mesh.as_ref().is_none_or(|(k, _)| *k != key) {
+                self.lens_mesh = Some((key, Arc::new(depth_mesh(map, photo, uv, at))));
+                self.mesh_builds += 1;
+            }
+            if let Some((_, mesh)) = &self.lens_mesh {
+                p.add(egui::Shape::mesh(Arc::clone(mesh)));
+            }
+            depth_legend(&p, photo, map, host.position, palette);
+            // Hover a tile: where it is in focus.
+            if let Some(pos) = ui.ctx().pointer_hover_pos().filter(|q| photo.contains(*q)) {
+                let fx = uv.left() + (pos.x - photo.left()) / photo.width() * uv.width();
+                let fy = uv.top() + (pos.y - photo.top()) / photo.height() * uv.height();
+                let (tx, ty) = (
+                    (fx / map.extent[0] * map.cols as f32).floor(),
+                    (fy / map.extent[1] * map.rows as f32).floor(),
+                );
+                if tx >= 0.0 && ty >= 0.0 && (tx as usize) < map.cols && (ty as usize) < map.rows {
+                    let text = match map.focus[ty as usize * map.cols + tx as usize] {
+                        Some(f) => format!("in focus at {}", style::focus_units(f.round() as u16)),
+                        None => "no peak here".into(),
+                    };
+                    let job = style::job(&text, 12.0, palette.ink, 0.0);
+                    let galley = ui.fonts_mut(|f| f.layout_job(job));
+                    let r = Rect::from_min_size(
+                        pos + egui::vec2(14.0, 10.0),
+                        galley.size() + egui::vec2(12.0, 6.0),
+                    );
+                    p.rect_filled(r, 0.0, palette.panel);
+                    p.rect_stroke(
+                        r,
+                        0.0,
+                        Stroke::new(1.0_f32, palette.line),
+                        StrokeKind::Inside,
+                    );
+                    p.galley(r.min + egui::vec2(6.0, 3.0), galley, palette.ink);
+                }
+            }
+        }
         if self.grid {
             for i in 1..3 {
                 let f = i as f32 / 3.0;
@@ -880,6 +1035,13 @@ impl LiveView {
                     }
                 }
                 ui.add_space(6.0);
+                if self.depth.is_some()
+                    && style::button(ui, "Depth", if self.depth_lens { ButtonKind::On } else { ButtonKind::Quiet }, 22.0, true, palette)
+                        .on_hover_text("The Depth lens: where each part of the subject is in focus, near to far, from the calibration; tiles with no peak are left clear. Tiles out of focus at the lens position are dimmed")
+                        .clicked()
+                {
+                    self.depth_lens = !self.depth_lens;
+                }
                 if style::button(ui, "Peaking", if self.peaking { ButtonKind::On } else { ButtonKind::Quiet }, 22.0, true, palette).clicked() {
                     self.peaking = !self.peaking;
                 }
@@ -1535,6 +1697,52 @@ fn subject_box(
 #[cfg(test)]
 #[path = "capture-live-tests.rs"]
 mod tests;
+
+/// The calibration's depth map as the Depth lens shows it (spec 6.1): each
+/// tile's focus, from the live sweep (32 px preview tiles) or from RAW (64 px
+/// sensor tiles), over the part of the preview the grid covers.
+#[derive(Clone, Debug, PartialEq)]
+pub(crate) struct DepthMap {
+    /// Changes whenever the map does: the lens's mesh is rebuilt then.
+    pub revision: u64,
+    pub cols: usize,
+    pub rows: usize,
+    pub focus: Vec<Option<f64>>,
+    /// The ramp's ends: the in-focus range.
+    pub lo: f64,
+    pub hi: f64,
+    /// "from the live sweep, coarse" or "from RAW".
+    pub source: &'static str,
+    /// The sharp depth: a tile is in focus now within half of it.
+    pub depth: f64,
+    /// The share of the preview's width and height the grid covers.
+    pub extent: [f32; 2],
+    /// Where the pass left the lens: away from it, the lens isolates the
+    /// tiles in focus at its position (spec 6.2).
+    pub anchor: Option<u16>,
+}
+
+/// The lens's colour ramp, near (0) to far (1): a perceptual rainbow
+/// (Mikhailov's turbo, polynomial fit), the same on the stage and in the
+/// legend.
+pub(crate) fn ramp(t: f32) -> Color32 {
+    let t = t.clamp(0.0, 1.0);
+    let (t2, t3, t4, t5) = (t * t, t * t * t, t * t * t * t, t * t * t * t * t);
+    let r = 0.1357 + 4.5974 * t - 42.3277 * t2 + 130.5887 * t3 - 150.5666 * t4 + 58.1375 * t5;
+    let g = 0.0914 + 2.1856 * t + 4.8052 * t2 - 14.0195 * t3 + 4.2109 * t4 + 2.7747 * t5;
+    let b = 0.1067 + 12.5925 * t - 60.1097 * t2 + 109.0745 * t3 - 88.5066 * t4 + 26.8183 * t5;
+    let u = |v: f32| (v.clamp(0.0, 1.0) * 255.0).round() as u8;
+    Color32::from_rgb(u(r), u(g), u(b))
+}
+
+/// The lens's opacity, and a tile's when the lens isolates what is in focus
+/// at the lens position and it is not.
+const LENS_ALPHA: f32 = 0.62;
+const LENS_DIM: f32 = 0.12;
+
+/// The Depth lens's mesh's key: the map, the picture's rectangle, the zoom
+/// and the lens position it isolates (none: every tile at full colour).
+type LensKey = (u64, [u32; 4], [u32; 4], Option<u16>);
 
 /// The automatic selection as the live view shows it.
 #[derive(Clone, Debug, Default, PartialEq)]
