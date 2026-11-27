@@ -16,6 +16,7 @@ use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
 use std::time::Instant;
 use strehl_core::CfaPlane;
+use strehl_core::focus_contrast::Tiles;
 use strehl_core::noise::Provenance;
 use strehl_core::profile;
 use strehl_core::subject::{
@@ -140,7 +141,25 @@ pub fn bounds(
         let planes = positions.iter().filter(|p| (lo..=hi).contains(*p)).count();
         (s, e, planes, (e - s).abs() / span)
     };
-    let (start, end, planes, fraction) = around(depth.first_focus?, depth.last_focus?);
+    // The in-focus range from contrast when it was read (spec 5.2: the
+    // larger of half the width and half the spacing; a side the subject
+    // reaches keeps the run's own end); else the earlier rule.
+    let contrast = depth.in_focus_first.zip(depth.in_focus_last);
+    let (start, end, planes, fraction) = match contrast {
+        Some(_) => {
+            // `suggested_*` are in increasing focus and absent on a side the
+            // subject reaches: there the run's own end stands.
+            let low = depth.suggested_start.unwrap_or(run_start.min(run_end));
+            let high = depth.suggested_end.unwrap_or(run_start.max(run_end));
+            let (s, e) = if dir > 0.0 { (low, high) } else { (high, low) };
+            let planes = positions
+                .iter()
+                .filter(|p| (low..=high).contains(*p))
+                .count();
+            (s, e, planes, (e - s).abs() / span)
+        }
+        None => around(depth.first_focus?, depth.last_focus?),
+    };
     let core = match (
         focus_of(depth.core_first_plane),
         focus_of(depth.core_last_plane),
@@ -168,8 +187,18 @@ pub fn bounds(
         planes,
         planes_saved: positions.len() - planes,
         fraction,
-        reaches_run_start: depth.first_plane == first.0,
-        reaches_run_end: depth.last_plane == last.0,
+        reaches_run_start: (if dir > 0.0 {
+            depth.reaches_first
+        } else {
+            depth.reaches_last
+        })
+        .unwrap_or(depth.first_plane == first.0),
+        reaches_run_end: (if dir > 0.0 {
+            depth.reaches_last
+        } else {
+            depth.reaches_first
+        })
+        .unwrap_or(depth.last_plane == last.0),
         core,
     })
 }
@@ -224,37 +253,39 @@ pub fn choose<T: Clone>(
         .collect())
 }
 
-/// Evidence of a run from the chosen planes, and how long the decode took.
+/// Evidence of a run from the chosen planes, how long the decode took, and
+/// each plane's contrast tiles ([`crate::depth_contrast::frame_tiles`]) from
+/// the same decode.
 pub fn run_evidence(
     dir: &Path,
     chosen: &[(u64, (Option<f64>, PathBuf))],
     registration: Registration,
-) -> Result<(Evidence, Provenance, f64)> {
+) -> Result<(Evidence, Provenance, f64, Vec<Tiles>)> {
     let t = Instant::now();
-    let cells: Vec<(FrameCells, Provenance, [usize; 2])> = chosen
+    type Decoded = (FrameCells, Provenance, [usize; 2], Tiles);
+    let cells: Vec<Decoded> = chosen
         .par_iter()
-        .map(
-            |(_, (_, path))| -> Result<(FrameCells, Provenance, [usize; 2])> {
-                let f = strehl_raw::decode(path).with_context(|| path.display().to_string())?;
-                let noise = profile::noise_model_for(&f.camera, f.iso, f.levels);
-                let view = CfaView {
-                    data: &f.data,
-                    stride: f.stride,
-                    x0: f.active.x,
-                    y0: f.active.y,
-                    width: f.active.width,
-                    height: f.active.height,
-                    black: f.levels.black,
-                    white: f.levels.white,
-                };
-                let variance = |s: f32| noise.variance(CfaPlane::G1, s);
-                Ok((
-                    raw_frame_cells(&view, &variance),
-                    noise.provenance,
-                    [f.active.width, f.active.height],
-                ))
-            },
-        )
+        .map(|(_, (_, path))| -> Result<Decoded> {
+            let f = strehl_raw::decode(path).with_context(|| path.display().to_string())?;
+            let noise = profile::noise_model_for(&f.camera, f.iso, f.levels);
+            let view = CfaView {
+                data: &f.data,
+                stride: f.stride,
+                x0: f.active.x,
+                y0: f.active.y,
+                width: f.active.width,
+                height: f.active.height,
+                black: f.levels.black,
+                white: f.levels.white,
+            };
+            let variance = |s: f32| noise.variance(CfaPlane::G1, s);
+            Ok((
+                raw_frame_cells(&view, &variance),
+                noise.provenance,
+                [f.active.width, f.active.height],
+                crate::depth_contrast::frame_tiles(&f),
+            ))
+        })
         .collect::<Result<_>>()?;
     let secs = t.elapsed().as_secs_f64();
     let size = cells[0].2;
@@ -264,7 +295,8 @@ pub fn run_evidence(
         dir.display()
     );
     let provenance = cells[0].1;
-    let frames: Vec<FrameCells> = cells.into_iter().map(|c| c.0).collect();
+    let (frames, tiles): (Vec<FrameCells>, Vec<Tiles>) =
+        cells.into_iter().map(|c| (c.0, c.3)).unzip();
     let planes: Vec<PlaneRef> = chosen
         .iter()
         .map(|(o, (pos, _))| PlaneRef {
@@ -276,6 +308,7 @@ pub fn run_evidence(
         assemble(frames, planes, raw_layout(size[0], size[1]), registration),
         provenance,
         secs,
+        tiles,
     ))
 }
 
@@ -320,6 +353,14 @@ pub struct SubjectJson {
     /// no depth or the planes have no recorded focus.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bounds: Option<BoundsJson>,
+    /// Per-tile focus over the planes used (spec C2).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub maps: Option<crate::depth_contrast::Maps>,
+    /// The in-focus range from contrast (spec 5.2), also when the outline
+    /// found nothing and `depth` is `null` (the whole frame is then the
+    /// subject).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub in_focus: Option<crate::depth_contrast::InFocus>,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -352,6 +393,28 @@ pub struct DepthJson {
     /// plane wide).
     pub core_first_plane: u64,
     pub core_last_plane: u64,
+    /// The in-focus range from contrast (capture calibration spec 5.2):
+    /// the first and last focus where the subject is in focus, and whether
+    /// it still is at the first or last plane used. The fields above are the
+    /// earlier rule, kept for comparison; the bounds come from these.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub in_focus_first: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub in_focus_last: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reaches_first: Option<bool>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reaches_last: Option<bool>,
+    /// Subject tiles in focus per plane used: `[focus, tiles]`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub per_position: Option<Vec<[f64; 2]>>,
+    /// The in-focus range widened by the larger of half the sharp width and
+    /// half the planes' spacing there, in increasing focus; absent on a side
+    /// the subject reaches.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub suggested_start: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub suggested_end: Option<f64>,
 }
 
 impl SubjectJson {
@@ -385,6 +448,13 @@ impl SubjectJson {
                 last_focus: e.planes[d.last].position,
                 core_first_plane: e.planes[d.core_first].ordinal,
                 core_last_plane: e.planes[d.core_last].ordinal,
+                in_focus_first: None,
+                in_focus_last: None,
+                reaches_first: None,
+                reaches_last: None,
+                per_position: None,
+                suggested_start: None,
+                suggested_end: None,
             }),
             area_share: sel.area_share,
             reference_focus: reference.and_then(|r| r.position),
@@ -394,6 +464,8 @@ impl SubjectJson {
             grid: [e.cols, e.rows],
             summary: sel.summary.clone(),
             bounds: None,
+            maps: None,
+            in_focus: None,
         }
     }
 }
@@ -480,7 +552,7 @@ pub fn run(args: &SubjectArgs) -> Result<()> {
         Registration::Fit
     };
     let t = Instant::now();
-    let (e, provenance, decode_secs) = run_evidence(&args.dir, &chosen, registration)?;
+    let (e, provenance, decode_secs, contrast) = run_evidence(&args.dir, &chosen, registration)?;
     let evidence_secs = t.elapsed().as_secs_f64();
     let t = Instant::now();
     let q = quiet(&e);
@@ -545,19 +617,61 @@ pub fn run(args: &SubjectArgs) -> Result<()> {
         points.join(",")
     ));
     let mut json = SubjectJson::new(&e, &sel, Some(provenance));
+    let (width, from) = match args.width {
+        Some(w) => (w, "given"),
+        None => std::fs::read_to_string(args.dir.join("focus-step.json"))
+            .ok()
+            .and_then(|t| serde_json::from_str::<serde_json::Value>(&t).ok())
+            .and_then(|v| v["width"].as_f64())
+            .map_or((0.0, "none"), |w| (w, "focus-step")),
+    };
+    // The in-focus range from contrast over the planes used (spec 5.2).
+    let known: Vec<(f64, Tiles)> = chosen
+        .iter()
+        .zip(contrast)
+        .filter_map(|((_, (pos, _)), t)| Some(((*pos)?, t)))
+        .collect();
+    if let Some((_, t0)) = known.first() {
+        let subject = crate::depth_contrast::subject_tiles(
+            (!sel.rings.is_empty()).then_some(sel.rings.as_slice()),
+            t0,
+            [
+                e.layout.active_px[0] as usize,
+                e.layout.active_px[1] as usize,
+            ],
+        );
+        let positions: Vec<f64> = known.iter().map(|k| k.0).collect();
+        let tiles: Vec<Tiles> = known.into_iter().map(|k| k.1).collect();
+        if let Some((r, maps)) = crate::depth_contrast::in_focus(
+            &positions,
+            &tiles,
+            &subject,
+            (width > 0.0).then_some(width),
+        ) {
+            line(format!(
+                "in focus        : {} (contrast over {} planes, {} subject tiles)",
+                crate::depth_contrast::describe(&r),
+                r.per_position.len(),
+                r.subject_tiles
+            ));
+            if let Some(d) = json.depth.as_mut() {
+                d.in_focus_first = r.in_focus_first;
+                d.in_focus_last = r.in_focus_last;
+                d.reaches_first = Some(r.reaches_first);
+                d.reaches_last = Some(r.reaches_last);
+                d.per_position = Some(r.per_position.clone());
+                d.suggested_start = r.suggested_start;
+                d.suggested_end = r.suggested_end;
+            }
+            json.maps = Some(maps);
+            json.in_focus = Some(r);
+        }
+    }
     if let Some(d) = &json.depth {
         line(format!(
             "depth           : planes {} to {} (focus {:?} to {:?})",
             d.first_plane, d.last_plane, d.first_focus, d.last_focus
         ));
-        let (width, from) = match args.width {
-            Some(w) => (w, "given"),
-            None => std::fs::read_to_string(args.dir.join("focus-step.json"))
-                .ok()
-                .and_then(|t| serde_json::from_str::<serde_json::Value>(&t).ok())
-                .and_then(|v| v["width"].as_f64())
-                .map_or((0.0, "none"), |w| (w, "focus-step")),
-        };
         let run: Vec<(u64, Option<f64>)> = all.iter().map(|(o, (pos, _))| (*o, *pos)).collect();
         json.bounds = bounds(d, &run, width, from);
         if let Some(b) = &json.bounds {
@@ -572,12 +686,12 @@ pub fn run(args: &SubjectArgs) -> Result<()> {
                 b.planes_saved,
                 100.0 * b.fraction,
                 if b.reaches_run_start {
-                    "; sharpest at the first plane"
+                    "; still in focus at the first plane: the subject may go on"
                 } else {
                     ""
                 },
                 if b.reaches_run_end {
-                    "; sharpest at the last plane"
+                    "; still in focus at the last plane: the subject may go on"
                 } else {
                     ""
                 }
@@ -662,6 +776,13 @@ mod tests {
                 last_focus: Some(focus(last)),
                 core_first_plane: core.0,
                 core_last_plane: core.1,
+                in_focus_first: None,
+                in_focus_last: None,
+                reaches_first: None,
+                reaches_last: None,
+                per_position: None,
+                suggested_start: None,
+                suggested_end: None,
             };
         // 100 planes from 1000, step 10, rising.
         let up = |o: u64| 1000.0 + 10.0 * (o as f64 - 1.0);
@@ -683,6 +804,18 @@ mod tests {
         assert!(b.reaches_run_start && !b.reaches_run_end);
         let b = bounds(&depth(1, 120, (5, 110), &down), &run, 13.0, "given").unwrap();
         assert_eq!((b.start, b.end), (62807.0, down(120) - 7.0));
+        // With the in-focus range from contrast, its suggestion is the
+        // bounds, and a side the subject reaches keeps the run's end.
+        let mut d = depth(21, 70, (25, 66), &up);
+        d.in_focus_first = Some(1300.0);
+        d.in_focus_last = Some(1600.0);
+        d.reaches_first = Some(false);
+        d.reaches_last = Some(true);
+        d.suggested_start = Some(1250.0);
+        let run: Vec<(u64, Option<f64>)> = (1..=100).map(|o| (o, Some(up(o)))).collect();
+        let b = bounds(&d, &run, 25.0, "given").unwrap();
+        assert_eq!((b.start, b.end), (1250.0, up(100)));
+        assert!(!b.reaches_run_start && b.reaches_run_end);
         // No recorded focus: no bounds.
         let blind: Vec<(u64, Option<f64>)> = (1..=10).map(|o| (o, None)).collect();
         assert!(bounds(&depth(2, 8, (2, 8), &up), &blind, 10.0, "given").is_none());

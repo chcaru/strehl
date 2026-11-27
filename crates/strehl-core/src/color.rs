@@ -237,6 +237,8 @@ pub struct Render {
     to_srgb: [[f32; 3]; 3],
     ceiling: [f32; 3],
     top: f32,
+    /// [`Self::with_fused_headroom`]'s factor; 1 for an unfused render.
+    fused: f32,
 }
 
 impl Render {
@@ -247,6 +249,7 @@ impl Render {
             to_srgb,
             ceiling: [f32::INFINITY; 3],
             top: crate::highlight::CONTAINER_TOP,
+            fused: 1.0,
         }
     }
 
@@ -315,8 +318,15 @@ impl Render {
         }
         Self {
             ceiling: self.ceiling.map(|c| c * factor),
+            fused: self.fused * factor,
             ..self
         }
+    }
+
+    /// Where the base exposure pins, for a fused render ([`Self::with_fused_headroom`]):
+    /// `None` for one that is not fused.
+    pub fn unfused_ceiling(&self) -> Option<[f32; 3]> {
+        (self.fused > 1.0).then(|| self.ceiling.map(|c| c / self.fused))
     }
 
     /// Camera RGB to linear sRGB. Every row sums to 1.

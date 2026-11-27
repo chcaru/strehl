@@ -1,0 +1,16 @@
+stack-1795713444768-14989 | all | 32374.0 - 33174.0 (want 32366 - 33174, tol 8); reaches (False, False); bounds 32370.0 - 33178.0; old 32062.0 - 33262.0 | ok
+stack-1795713444768-14989 | 13 | 32358.0 - 33158.0 (want 32366 - 33166, tol 104); reaches (False, False); bounds 32306.0 - 33210.0; old 32062.0 - 33262.0 | ok
+stack-1795460665629-8651 | all | 24692.0 - 25651.0 (want 24699 - 25644, tol 7); reaches (False, False); bounds 24688.0 - 25655.0; old 24510.0 - 25623.0 | ok
+stack-1795460665629-8651 | 13 | 24713.0 - 25637.0 (want 24713 - 25637, tol 119); reaches (False, False); bounds 24653.0 - 25697.0; old 24594.0 - 25749.0 | ok
+stack-1795300522964-6430 | all | 31111.0 - 32287.0 (want 31125 - 32287, tol 7); reaches (False, False); bounds 31107.0 - 32291.0; old 31020.0 - 32294.0 | FAIL
+stack-1795300522964-6430 | 13 | 31125.0 - 32231.0 (want 31132 - 32231, tol 126); reaches (False, False); bounds 31062.0 - 32294.0; old 31006.0 - 32350.0 | ok
+stack-1795433406862-8651 | all | 30704.0 - 31754.0 (want 30704 - 31754, tol 10); reaches (False, False); bounds 30699.0 - 31759.0; old 30664.0 - 31734.0 | ok
+stack-1795433406862-8651 | 13 | 30784.0 - 31684.0 (want 30784 - 31684, tol 120); reaches (False, False); bounds 30729.0 - 31739.0; old 30564.0 - 31794.0 | ok
+stack-1795371396674-6430 | all | 15843.0 - 16418.0 (want 15833 - 16418, tol 5); reaches (False, False); bounds 15840.0 - 16421.0; old 15748.0 - 16413.0 | FAIL
+stack-1795371396674-6430 | 13 | 15848.0 - 16388.0 (want 15853 - 16388, tol 70); reaches (False, False); bounds 15813.0 - 16423.0; old 15718.0 - 16453.0 | ok
+stack-1795476520452-8651 | all | 60830.0 - 62800.0 (want 60830 - 62800, tol 13); reaches (True, True); bounds 62800.0 - 60830.0; old 62800.0 - 60830.0 | ok
+stack-1795476520452-8651 | 13 | 60830.0 - 62800.0 (want 60830 - 62800, tol 169); reaches (True, True); bounds 62800.0 - 60830.0; old 62800.0 - 60830.0 | ok
+stack-1794786793543-11226 | all | 50300.0 - 51860.0 (want 50300 - 51860, tol 8); reaches (True, True); bounds 50300.0 - 51860.0; old 50300.0 - 51860.0 | ok
+stack-1794786793543-11226 | 13 | 50300.0 - 51860.0 (want 50300 - 51860, tol 136); reaches (True, True); bounds None - None; old None - None | ok
+stack-1794689780304-11226 | all | 61050.0 - 61898.0 (want 61050 - 61898, tol 8); reaches (True, True); bounds 61050.0 - 61898.0; old 61050.0 - 61898.0 | ok
+stack-1794689780304-11226 | 13 | 61050.0 - 61898.0 (want 61050 - 61898, tol 72); reaches (True, True); bounds 61050.0 - 61898.0; old 61050.0 - 61898.0 | ok

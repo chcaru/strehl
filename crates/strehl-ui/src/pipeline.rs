@@ -267,6 +267,43 @@ impl OpticalRestore {
     }
 }
 
+/// Whether a capture's highlight groups reached the picture
+/// (`event=highlights`; capture calibration spec 5.7 point 6).
+#[derive(Clone, Debug, PartialEq)]
+pub(crate) struct HighlightUse {
+    /// Planes with a highlight companion, and how many were fused.
+    pub planes: usize,
+    pub used: usize,
+    /// Why the first unused plane was not.
+    pub reason: Option<String>,
+}
+
+impl HighlightUse {
+    fn parse<'a>(field: &impl Fn(&str) -> Option<&'a str>) -> Option<Self> {
+        let planes = field("planes")?.parse().ok()?;
+        let used: usize = field("used")?.parse().ok()?;
+        (used <= planes).then(|| Self {
+            planes,
+            used,
+            reason: field("reason").map(|r| r.replace('-', " ").chars().take(160).collect()),
+        })
+    }
+
+    /// The check's line: "Used on 151 of 151 planes", or with the reason.
+    pub(crate) fn fact(&self) -> String {
+        let head = format!("Used on {} of {} planes", self.used, self.planes);
+        match (&self.reason, self.used < self.planes) {
+            (Some(r), true) => format!("{head}; plane not fused: {r}"),
+            _ => head,
+        }
+    }
+
+    /// Every plane with a highlight group used it.
+    pub(crate) fn complete(&self) -> bool {
+        self.used == self.planes
+    }
+}
+
 #[derive(Debug, Default)]
 pub struct PipelineProgress {
     pub(crate) view: Option<ViewProgress>,
@@ -383,6 +420,8 @@ pub struct PipelineProgress {
     pub tone: Option<String>,
     /// What the optical restoration did (`event=optical-restore`).
     pub(crate) optical_restore: Option<OpticalRestore>,
+    /// Whether the highlight groups were used (`event=highlights`).
+    pub(crate) highlights: Option<HighlightUse>,
     pub events: VecDeque<PipelineEvent>,
     pending: String,
     discarding_line: bool,
@@ -836,6 +875,12 @@ impl PipelineProgress {
                 } else {
                     self.live_file = named;
                 }
+            }
+            return;
+        }
+        if field("event") == Some("highlights") {
+            if let Some(report) = HighlightUse::parse(&field) {
+                self.highlights = Some(report);
             }
             return;
         }
@@ -1442,6 +1487,31 @@ wrote           : result.partial.tiff (7032 x 4688, 16-bit RGB)\n";
         assert!(
             matches!(progress.optical_restore, Some(OpticalRestore::Off { .. })),
             "an incomplete report is ignored"
+        );
+    }
+
+    #[test]
+    fn the_highlight_groups_use_is_reported_for_the_checks() {
+        let mut progress = PipelineProgress::default();
+        progress.ingest("STREHL_UI_PROGRESS event=highlights planes=151 used=151\n");
+        let h = progress.highlights.clone().unwrap();
+        assert!(h.complete());
+        assert_eq!(h.fact(), "Used on 151 of 151 planes");
+        progress.ingest(
+            "STREHL_UI_PROGRESS event=highlights planes=151 used=0 \
+             reason=its-exposure-ratio-was-refused\n",
+        );
+        let h = progress.highlights.clone().unwrap();
+        assert!(!h.complete());
+        assert_eq!(
+            h.fact(),
+            "Used on 0 of 151 planes; plane not fused: its exposure ratio was refused"
+        );
+        progress.ingest("STREHL_UI_PROGRESS event=highlights planes=3 used=4\n");
+        assert_eq!(
+            progress.highlights,
+            Some(h),
+            "an impossible report is ignored"
         );
     }
 

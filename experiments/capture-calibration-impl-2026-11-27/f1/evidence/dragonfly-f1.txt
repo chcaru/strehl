@@ -1,0 +1,4 @@
+tone subject    : subject 58.1 % of the frame (8742672 quads, from the capture's manifest (plan.subject)); 2.339 % of it set aside as highlights (0.912 % pinned: a colour at 0.95 of saturation or within 4 quads of one; the rest brighter than 2 x the local diffuse level, the 75th percentile of 16-quad blocks, 3 x 3 around); diffuse top (p99.9 of the brightest colour) 0.59026 -> 0.85; white 2.48772 -> 0.69435 (+1.84 stops); subject median luminance 0.00483, placed 0.002 -> 0.006; shoulder from 0.8
+total           : 29.3 s
+highlights      : 151 planes fused (0 of them a demoted base group's member 1, 4 with a demoted highlight group's member 1), 0 the base exposure alone; ratio 49.636-51.334; 147776736 sites replaced or blended (103123928 with a pinned sample in their footprint, 0 of those not fully replaced; 0 near the companion's own pin); hand-over median 0.9977 (planes 0.9645-1.0188); 37.3 s
+STREHL_UI_PROGRESS event=highlights planes=151 used=151

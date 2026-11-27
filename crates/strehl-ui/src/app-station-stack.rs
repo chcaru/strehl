@@ -1155,6 +1155,18 @@ impl StrehlApp {
                 }),
             });
         }
+        if let Some(h) = &p.highlights {
+            // A capture must never spend its highlight frames silently.
+            checks.push(StackCheck {
+                title: "Highlight groups",
+                fact: h.fact(),
+                mark: Some(if h.complete() {
+                    w::Mark::Fine
+                } else {
+                    w::Mark::Look
+                }),
+            });
+        }
         let brackets = self.stack_station.rail.brackets();
         let ends: Vec<String> = brackets
             .iter()

@@ -1111,6 +1111,111 @@ pub(crate) fn subject_bounds(inputs: &PlanInputs<'_>) -> Option<(u16, u16)> {
     Some((lo.saturating_sub(half), hi.saturating_add(half)))
 }
 
+/// The calibration survey's in-focus range (`strehl survey`'s
+/// `depth.in_focus_*`, capture calibration spec 5.2): the first and last
+/// focus holding the subject in focus, the suggested start and end (absent
+/// on a side the subject reaches), and whether it reaches either end.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub(crate) struct InFocus {
+    pub first: f64,
+    pub last: f64,
+    pub start: Option<u16>,
+    pub end: Option<u16>,
+    pub reaches_first: bool,
+    pub reaches_last: bool,
+}
+
+pub(crate) fn in_focus(calibration: &Value) -> Option<InFocus> {
+    let d = &calibration["survey"]["depth"];
+    let unit = |v: &Value| v.as_f64().map(|f| f.round().clamp(0.0, 65535.0) as u16);
+    Some(InFocus {
+        first: d["in_focus_first"].as_f64()?,
+        last: d["in_focus_last"].as_f64()?,
+        start: unit(&d["suggested_start"]),
+        end: unit(&d["suggested_end"]),
+        reaches_first: d["reaches_first"].as_bool().unwrap_or(false),
+        reaches_last: d["reaches_last"].as_bool().unwrap_or(false),
+    })
+}
+
+/// The Depth step's line from the calibration (spec 6.4): whether the marks
+/// fit the in-focus range, what they spend outside it, or that the subject
+/// goes on past the survey.
+fn in_focus_line(inputs: &PlanInputs<'_>) -> Option<guide::Line> {
+    let r = in_focus(&inputs.calibration.result)?;
+    let s = inputs.s;
+    let range = format!(
+        "In focus from {} to {}",
+        style::focus_units(r.first.round() as u16),
+        style::focus_units(r.last.round() as u16)
+    );
+    if r.reaches_first || r.reaches_last {
+        let at = if r.reaches_last { r.last } else { r.first };
+        let which = if r.reaches_last { "last" } else { "first" };
+        return Some(guide::Line {
+            text: format!(
+                "{range}. Still in focus at the survey's {which} frame, {}: the subject may go on.",
+                style::focus_units(at.round() as u16)
+            ),
+            tone: Tone::Warn,
+            action: None,
+        });
+    }
+    let (lo, hi) = (r.start?, r.end?);
+    let (start, end) = s.host.plan_bounds();
+    let (mlo, mhi) = (start.min(end), start.max(end));
+    let same = s.host.bounds_set() && mlo == lo && mhi == hi;
+    let use_it = (!same).then_some(("Use", PlanIntent::UseSubjectBounds(lo, hi)));
+    if !s.host.bounds_set() {
+        return Some(guide::Line {
+            text: format!(
+                "{range}: {} to {} with its margin.",
+                style::focus_units(lo),
+                style::focus_units(hi)
+            ),
+            tone: Tone::Note,
+            action: use_it,
+        });
+    }
+    if mlo > lo || mhi < hi {
+        return Some(guide::Line {
+            text: format!(
+                "{range}: the marks leave part of it out ({} to {} holds it, with its margin).",
+                style::focus_units(lo),
+                style::focus_units(hi)
+            ),
+            tone: Tone::Warn,
+            action: use_it,
+        });
+    }
+    let step = inputs.step.max(1);
+    let marked = plane_count(mlo, mhi, step);
+    let needed = plane_count(lo, hi, step);
+    if marked <= needed + 1 {
+        return Some(guide::Line {
+            text: format!("{range} \u{b7} the marks fit it."),
+            tone: Tone::Good,
+            action: None,
+        });
+    }
+    let seconds = stack_seconds(s, marked, inputs.settle_ms)
+        .zip(stack_seconds(s, needed, inputs.settle_ms))
+        .map(|(a, b)| a - b);
+    Some(guide::Line {
+        text: format!(
+            "{range}: {} planes outside {} to {} hold nothing in focus{}.",
+            marked - needed,
+            style::focus_units(lo),
+            style::focus_units(hi),
+            seconds
+                .map(|t| format!(", {}", style::minutes(t)))
+                .unwrap_or_default()
+        ),
+        tone: Tone::Note,
+        action: use_it,
+    })
+}
+
 fn subject_bounds_line(inputs: &PlanInputs<'_>) -> Option<guide::Line> {
     let s = inputs.s;
     let (lo, hi) = subject_bounds(inputs)?;
@@ -1516,9 +1621,9 @@ fn depth_step(
             ui.add_space(2.0);
             guidance(ui, Some(&line), None, editable, palette, out);
         }
-        // Plan S4: bounds from the subject's own depth, offered, never applied
-        // (owner's decision): half a sharp width each side.
-        if let Some(line) = subject_bounds_line(inputs) {
+        // The calibration's in-focus range (spec 5.2) when it has one; else
+        // plan S4's bounds from the live view's depth, offered, never applied.
+        if let Some(line) = in_focus_line(inputs).or_else(|| subject_bounds_line(inputs)) {
             ui.add_space(2.0);
             guidance(ui, Some(&line), None, editable, palette, out);
         }

@@ -454,6 +454,7 @@ mod tests {
                 pair_members: [[0, 1], [2, 3]],
                 tile_ratio: 1.0,
                 local_px,
+                local_tiles: 3200,
             }),
             margins: [8; 4],
             levels_agree: true,

@@ -65,6 +65,8 @@ mod session_reproducibility;
 pub mod session_sampling;
 #[path = "follow-cmd.rs"]
 mod follow_cmd;
+#[path = "exposure-ratio.rs"]
+pub mod exposure_ratio;
 #[path = "highlight-fusion.rs"]
 mod highlight_fusion;
 #[path = "pixel-shift-cmd.rs"]
@@ -1097,6 +1099,9 @@ enum Command {
 // compact of a finished capture.
 #[path = "compact-cmd.rs"]
 pub mod compact_cmd;
+// Capture calibration spec 5.2 (2026-11-27): the in-focus range from contrast.
+#[path = "depth-contrast.rs"]
+pub mod depth_contrast;
 #[path = "focus-step-cmd.rs"]
 pub mod focus_step_cmd;
 // Plan S2 (2026-11-23): the subject, found automatically.

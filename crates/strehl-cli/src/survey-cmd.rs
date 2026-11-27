@@ -41,6 +41,7 @@ use strehl_core::subject::{
     CfaView, Depth, Evidence, Params, Quiet, Registration, Ring, quiet, rasterize, select,
 };
 
+use crate::exposure_ratio::{self, median};
 use crate::focus_step_cmd::{EDGE, SAFE};
 use crate::pixel_shift_cmd::all_groups;
 use crate::subject_cmd::{SubjectJson, run_evidence};
@@ -76,14 +77,6 @@ const CELL: usize = 8;
 /// A site within this many DN of white is pinned (the prototype's
 /// `ladder.py`).
 const PIN_MARGIN_DN: f32 = 2.0;
-/// Ratio cells: the long frame's cell mean between these shares of
-/// black..white, no pinned sample, and the short mean this many of its own
-/// standard errors above black.
-const RATIO_LOW: f32 = 0.05;
-const RATIO_HIGH: f32 = 0.7;
-const RATIO_SNR: f32 = 10.0;
-/// Fewer selected cells than this: the ratio is not measured.
-const MIN_RATIO_CELLS: usize = 100;
 /// Long sites set aside from the body: the short frame shows a site within
 /// two pixels above this multiple of the body's 99th percentile (scaled by
 /// the measured ratio).
@@ -676,26 +669,14 @@ pub fn long_pass(v: &CfaView<'_>, mask: &SiteMask) -> LongPass {
 }
 
 /// The exposure ratio short / long of one pair, measured on 8 px cells
-/// well exposed in both (never from the shutter codes).
+/// well exposed in both (never from the shutter codes), by the estimator
+/// the highlight fusion uses ([`exposure_ratio`]).
 #[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct RatioMeasure {
     /// Median over the selected cells of all colours.
     pub ratio: Option<f64>,
     pub per_colour: [Option<f64>; 3],
     pub cells: usize,
-}
-
-fn median(mut v: Vec<f64>) -> Option<f64> {
-    if v.is_empty() {
-        return None;
-    }
-    v.sort_by(f64::total_cmp);
-    let n = v.len();
-    Some(if n % 2 == 1 {
-        v[n / 2]
-    } else {
-        0.5 * (v[n / 2 - 1] + v[n / 2])
-    })
 }
 
 /// `short_var(colour, signal_dn)`: the injected noise model of the short
@@ -708,7 +689,7 @@ pub fn measure_ratio(
     let (cols, rows) = (long.width / CELL, long.height / CELL);
     let range = (long.white - long.black).max(1.0);
     let pin = long.white - PIN_MARGIN_DN;
-    let cells: Vec<(usize, f64)> = (0..rows)
+    let cells: Vec<exposure_ratio::Cell> = (0..rows)
         .into_par_iter()
         .flat_map_iter(|cy| {
             // Per cell and colour: long sum, short sum, count, long max.
@@ -728,31 +709,27 @@ pub fn measure_ratio(
                 .filter_map(|(k, a)| {
                     let c = k % 3;
                     let n = a[2];
-                    if n == 0.0 || a[3] >= f64::from(pin) {
+                    if n == 0.0 {
                         return None;
                     }
                     let (lm, sm) = (a[0] / n, a[1] / n);
-                    let share = (lm / f64::from(range)) as f32;
-                    let se = (f64::from(short_var(c, sm.max(0.0) as f32)) / n).sqrt();
-                    ((RATIO_LOW..=RATIO_HIGH).contains(&share) && sm >= f64::from(RATIO_SNR) * se)
-                        .then(|| (c, sm / lm))
+                    Some(exposure_ratio::Cell {
+                        colour: c,
+                        long: lm,
+                        long_share: (lm / f64::from(range)) as f32,
+                        pinned: a[3] >= f64::from(pin),
+                        short: sm,
+                        short_se: (f64::from(short_var(c, sm.max(0.0) as f32)) / n).sqrt(),
+                    })
                 })
                 .collect::<Vec<_>>()
         })
         .collect();
-    let per_colour = std::array::from_fn(|c| {
-        let v: Vec<f64> = cells.iter().filter(|p| p.0 == c).map(|p| p.1).collect();
-        (v.len() >= MIN_RATIO_CELLS / 3)
-            .then(|| median(v))
-            .flatten()
-    });
-    let n = cells.len();
+    let e = exposure_ratio::estimate(cells);
     RatioMeasure {
-        ratio: (n >= MIN_RATIO_CELLS)
-            .then(|| median(cells.into_iter().map(|p| p.1).collect()))
-            .flatten(),
-        per_colour,
-        cells: n,
+        ratio: e.ratio,
+        per_colour: e.per_colour,
+        cells: e.cells,
     }
 }
 
@@ -1449,6 +1426,12 @@ pub struct StepJson {
     pub positions: usize,
     pub spacing: f64,
     pub source: String,
+    /// The positions' span over the width: under
+    /// [`crate::focus_step_cmd::MIN_SPAN_WIDTHS`] the width reads low
+    /// (capture calibration spec R5, C3); `null` without a width.
+    pub span_widths: Option<f64>,
+    /// [`Self::span_widths`] is under the minimum.
+    pub width_low: bool,
 }
 
 /// The step from per-position tile energies (focus order) over the tiles
@@ -1484,6 +1467,9 @@ pub fn step_from(
         positions: positions.len(),
         spacing,
         source,
+        span_widths: crate::focus_step_cmd::span_widths(positions, width),
+        width_low: crate::focus_step_cmd::span_widths(positions, width)
+            .is_some_and(|s| s < crate::focus_step_cmd::MIN_SPAN_WIDTHS),
     }
 }
 
@@ -1491,16 +1477,20 @@ pub fn step_from(
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct DepthOut {
+    /// The engine's earlier depth (each subject cell's plane of largest
+    /// energy, `strehl subject`'s rule), kept for comparison: bright blur
+    /// outranks dim detail by it, so nothing offers these as bounds
+    /// (capture calibration spec 5.2).
     pub first_focus: Option<f64>,
     pub last_focus: Option<f64>,
     pub core_first_focus: Option<f64>,
     pub core_last_focus: Option<f64>,
-    pub first_plane: u64,
-    pub last_plane: u64,
-    /// First and last focus widened by half a sharp width each side (plan
-    /// S4's bounds); `null` without a width.
-    pub suggested_start: Option<f64>,
-    pub suggested_end: Option<f64>,
+    pub first_plane: Option<u64>,
+    pub last_plane: Option<u64>,
+    /// The in-focus range from contrast over every long frame, with the
+    /// suggested start and end (spec 5.2); absent when it could not be read.
+    #[serde(flatten)]
+    pub in_focus: Option<crate::depth_contrast::InFocus>,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -1525,6 +1515,8 @@ pub struct SurveyJson {
     /// statistics cover the whole active area.
     pub scope: String,
     pub depth: Option<DepthOut>,
+    /// Per-tile figures for the desktop's lenses (spec C2).
+    pub maps: Option<crate::depth_contrast::Maps>,
     pub step: StepJson,
     pub body: Option<BodyJson>,
     pub ratio: Option<RatioJson>,
@@ -1660,7 +1652,7 @@ pub fn run(args: &SurveyArgs) -> Result<()> {
     } else {
         Registration::Fit
     };
-    let (e, provenance, _) = pool.install(|| run_evidence(&args.dir, &chosen, registration))?;
+    let (e, provenance, _, _) = pool.install(|| run_evidence(&args.dir, &chosen, registration))?;
     let size = [
         e.layout.active_px[0] as usize,
         e.layout.active_px[1] as usize,
@@ -1719,6 +1711,21 @@ pub fn run(args: &SurveyArgs) -> Result<()> {
             .as_ref()
             .map_or_else(|| SiteMask::all(size), |o| o.mask_at(focus as f64, size))
     };
+
+    // 1b. Contrast over every long frame (spec 5.1): the in-focus range is
+    // read from these, not from the evidence's energy.
+    let contrast: Vec<(f64, strehl_core::focus_contrast::Tiles)> = pool.install(|| {
+        plan.longs
+            .par_iter()
+            .map(|s| -> Result<(f64, strehl_core::focus_contrast::Tiles)> {
+                let f = decode(&s.path)?;
+                Ok((s.focus as f64, crate::depth_contrast::frame_tiles(&f)))
+            })
+            .collect::<Result<_>>()
+    })?;
+    let contrast_subject = contrast.first().map(|(_, t)| {
+        crate::depth_contrast::subject_tiles(outline.as_ref().map(|o| o.rings.as_slice()), t, size)
+    });
 
     // 2. Step from the dense cluster, over the subject's tiles.
     let dense_pos: Vec<f64> = plan.dense.iter().map(|s| s.focus as f64).collect();
@@ -1874,19 +1881,27 @@ pub fn run(args: &SurveyArgs) -> Result<()> {
         Some(census(&pair_results, lv, plan.long_code, &offered)?)
     };
 
-    // Depth, with half a sharp width each side.
-    let depth_out = depth.as_ref().map(|d| {
+    // Depth: the in-focus range from contrast, the earlier rule beside it.
+    let (in_focus, maps) = match &contrast_subject {
+        Some(subject) => {
+            let positions: Vec<f64> = contrast.iter().map(|c| c.0).collect();
+            let tiles: Vec<strehl_core::focus_contrast::Tiles> =
+                contrast.iter().map(|c| c.1.clone()).collect();
+            crate::depth_contrast::in_focus(&positions, &tiles, subject, step.width)
+                .map_or((None, None), |(r, m)| (Some(r), Some(m)))
+        }
+        None => (None, None),
+    };
+    let depth_out = (depth.is_some() || in_focus.is_some()).then(|| {
         let f = |i: usize| e.planes[i].position;
-        let half = step.width.map(|w| w / 2.0);
         DepthOut {
-            first_focus: f(d.first),
-            last_focus: f(d.last),
-            core_first_focus: f(d.core_first),
-            core_last_focus: f(d.core_last),
-            first_plane: e.planes[d.first].ordinal,
-            last_plane: e.planes[d.last].ordinal,
-            suggested_start: f(d.first).zip(half).map(|(a, h)| a - h),
-            suggested_end: f(d.last).zip(half).map(|(a, h)| a + h),
+            first_focus: depth.as_ref().and_then(|d| f(d.first)),
+            last_focus: depth.as_ref().and_then(|d| f(d.last)),
+            core_first_focus: depth.as_ref().and_then(|d| f(d.core_first)),
+            core_last_focus: depth.as_ref().and_then(|d| f(d.core_last)),
+            first_plane: depth.as_ref().map(|d| e.planes[d.first].ordinal),
+            last_plane: depth.as_ref().map(|d| e.planes[d.last].ordinal),
+            in_focus: in_focus.clone(),
         }
     });
 
@@ -1913,6 +1928,7 @@ pub fn run(args: &SurveyArgs) -> Result<()> {
         subject: subject_value,
         scope: scope.into(),
         depth: depth_out,
+        maps,
         step,
         body: result.as_ref().map(|r| r.body.clone()),
         ratio: result.as_ref().map(|r| r.ratio.clone()),
@@ -1955,6 +1971,26 @@ pub fn run(args: &SurveyArgs) -> Result<()> {
         out.positions.dense,
         skipped
     ));
+    if let Some(r) = out.depth.as_ref().and_then(|d| d.in_focus.as_ref()) {
+        line(format!(
+            "in focus        : {} (contrast over {} long frames, {} subject tiles, {} needed a frame); suggested {} to {}",
+            crate::depth_contrast::describe(r),
+            r.per_position.len(),
+            r.subject_tiles,
+            r.tiles_needed,
+            r.suggested_start.map_or("-".into(), |v| format!("{v:.0}")),
+            r.suggested_end.map_or("-".into(), |v| format!("{v:.0}")),
+        ));
+    }
+    if let Some(d) = &out.depth {
+        line(format!(
+            "energy depth    : first {} last {}, core {} to {} (the earlier rule, not offered)",
+            d.first_focus.map_or("-".into(), |v| format!("{v:.0}")),
+            d.last_focus.map_or("-".into(), |v| format!("{v:.0}")),
+            d.core_first_focus.map_or("-".into(), |v| format!("{v:.0}")),
+            d.core_last_focus.map_or("-".into(), |v| format!("{v:.0}")),
+        ));
+    }
     line(format!("noise model     : {provenance:?}"));
     if let Some([b, w]) = frame_levels {
         line(format!("levels          : black {b}, white {w}"));
@@ -2040,18 +2076,30 @@ fn summarize(
     r: Option<&Census>,
 ) -> String {
     let mut s = Vec::new();
-    match (area, depth) {
-        (Some(a), Some(d)) => s.push(format!(
-            "Subject found{a}, sharp from focus {} to {}.",
-            d.first_focus.map_or("?".into(), |f| format!("{f:.0}")),
-            d.last_focus.map_or("?".into(), |f| format!("{f:.0}"))
+    match (area, depth.and_then(|d| d.in_focus.as_ref())) {
+        (Some(a), Some(r)) if r.in_focus_first.is_some() => s.push(format!(
+            "Subject found{a}, {}.",
+            crate::depth_contrast::describe(r)
         )),
-        (Some(a), None) => s.push(format!("Subject{a}; no part of it comes into focus.")),
-        (None, _) => s.push(format!(
-            "No subject: the statistics cover the whole {scope}."
-        )),
+        (Some(a), _) => s.push(format!("Subject{a}; no part of it comes into focus.")),
+        (None, r) => {
+            s.push(format!(
+                "No subject: the statistics cover the whole {scope}."
+            ));
+            if let Some(r) = r.filter(|r| r.in_focus_first.is_some()) {
+                s.push(format!(
+                    "The frame is {}.",
+                    crate::depth_contrast::describe(r)
+                ));
+            }
+        }
     }
     match (step.width, step.suggested_step) {
+        (Some(w), Some(st)) if step.width_low => s.push(format!(
+            "Detail stays sharp over about {w:.0} focus units, low: the cluster spans {:.1} widths, under {}; a step of {st} suits it.",
+            step.span_widths.unwrap_or(0.0),
+            crate::focus_step_cmd::MIN_SPAN_WIDTHS
+        )),
         (Some(w), Some(st)) => s.push(format!(
             "Detail stays sharp over about {w:.0} focus units; a step of {st} suits it."
         )),

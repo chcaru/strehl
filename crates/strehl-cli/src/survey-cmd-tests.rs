@@ -128,7 +128,7 @@ fn ratio_is_measured() {
     let m = measure_ratio(&view(&long), &view(&short), &var);
     let r = m.ratio.unwrap();
     assert!((r / true_ratio - 1.0).abs() < 0.01, "{r} vs {true_ratio}");
-    assert!(m.cells >= MIN_RATIO_CELLS);
+    assert!(m.cells >= crate::exposure_ratio::MIN_CELLS);
     for c in m.per_colour {
         assert!((c.unwrap() / true_ratio - 1.0).abs() < 0.01);
     }

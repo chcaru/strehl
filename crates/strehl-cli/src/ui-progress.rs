@@ -102,6 +102,26 @@ pub(crate) fn optical_restore(fields: &str, reason: Option<&str>) {
     }
 }
 
+/// Whether a capture's highlight groups reached the picture (capture
+/// calibration spec 5.7 point 6), for the Stack station's checks: `planes`
+/// had a highlight companion, `used` of them were fused, and why the first
+/// unused one was not.
+pub(crate) fn highlights(planes: usize, used: usize, reason: Option<&str>) {
+    if enabled_value(std::env::var(ENV).ok().as_deref()) {
+        eprintln!("{}", highlights_line(planes, used, reason));
+    }
+}
+
+fn highlights_line(planes: usize, used: usize, reason: Option<&str>) -> String {
+    match reason {
+        Some(r) => format!(
+            "STREHL_UI_PROGRESS event=highlights planes={planes} used={used} reason={}",
+            reason_token(r)
+        ),
+        None => format!("STREHL_UI_PROGRESS event=highlights planes={planes} used={used}"),
+    }
+}
+
 fn optical_restore_line(fields: &str, reason: Option<&str>) -> String {
     match reason {
         Some(r) => format!(

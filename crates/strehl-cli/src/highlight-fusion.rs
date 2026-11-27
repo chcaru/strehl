@@ -9,15 +9,22 @@
 //!
 //! # What happens to a base frame with a companion
 //!
-//! 1. **Ratio.** The commanded shutter ratio is only the start: it is
-//!    corrected from sites well exposed in both groups by the bounded fit of
-//!    the session pipeline (`session-photometry.rs`, `assess_pair`: trimmed
-//!    patch means per colour, the median log ratio of fit patches, at most
-//!    0.25 EV of correction, held-out validation patches within 1 / 3 / 5 %,
-//!    a textured-agreement check). That module is compiled only with
-//!    `multi-stack`, so its rule is restated here with its tolerances. A
-//!    refused fit leaves the frame the base exposure alone, and the log says
-//!    so.
+//! 1. **Ratio.** The commanded shutter ratio is only the start: the ratio is
+//!    measured by the estimator `strehl survey` uses for the same quantity
+//!    ([`crate::exposure_ratio`]: 8-photosite cells well exposed in both
+//!    groups, the median of base over companion), with the companion read
+//!    through its placement. It must lie within 0.25 EV of the start, two
+//!    interleaved halves of its cells must agree within 1 %, and the
+//!    hand-over sites (the base at 0.50 to 0.75 of the pin, nothing brighter
+//!    near) must read 1.00 within 3 % after it when there are 400 of them
+//!    and the companion is its own plane's (a borrowed one sees another
+//!    focus). A pair with too few cells takes the commanded ratio when its
+//!    hand-over sites confirm it. Motion between the groups is judged by the
+//!    companion's measured shift, refused over two photosites. A refused
+//!    ratio leaves the frame the base exposure alone, and the log says so
+//!    (capture calibration spec, 5.7: the earlier patch fit and its texture
+//!    test refused every plane of a dark subject under a deep highlight
+//!    group).
 //! 2. **Where.** A site of the gathered plane is replaced where any colour
 //!    of the base group within the site's resampling footprint, widened by a
 //!    two-photosite guard, is near the raw pin: a smooth ramp from 0.75 to
@@ -68,30 +75,29 @@ pub const RAMP_LO: f32 = 0.75;
 pub const RAMP_HI: f32 = 0.90;
 /// Photosites added around a site's resampling footprint.
 pub const GUARD: isize = 2;
-/// Fit patches: the base below this fraction of the pin everywhere.
-const FIT_CEILING: f32 = 0.70;
-/// Side of a fit patch, photosites (32 x 32 quads, the session's patch).
-const PATCH: usize = 64;
-/// Patches the fit uses at most (half of them held out).
-const MAX_PATCHES: usize = 64;
-/// The session's tolerances (`PhotometryConfig::default`).
-const MIN_FIT: usize = 6;
-const MIN_VALIDATION: usize = 6;
-const MIN_TEXTURED: usize = 4;
-const SIGNAL_SIGMA: f32 = 8.0;
+/// The measured ratio's largest departure from the start, EV.
 const CORRECTION_LIMIT_EV: f32 = 0.25;
-const MEDIAN_LIMIT: f32 = 0.01;
-const P95_LIMIT: f32 = 0.03;
-const MAX_LIMIT: f32 = 0.05;
-const TEXTURE_LIMIT: f32 = 0.1;
-/// The session allows 16 times the injected variance before a patch counts
-/// as textured (its passes lie within about 1 EV). A highlight group lies 3
-/// to 5 EV under the base, so its noise scaled by the ratio squared is 8 to
-/// 26 times the base's, and with that allowance no patch of the weevil
-/// fixture counted as textured (MEASURED: 0 of 32 on two planes). Here the
-/// variance is the injected model's own, unallowed; a patch still needs 16
-/// times it in texture power, and the residual test is the session's.
-const NOISE_ALLOWANCE: f32 = 1.0;
+/// Two interleaved halves of the ratio's cells agree within this fraction.
+const HALVES_LIMIT: f64 = 0.01;
+/// The hand-over sites read 1 within this fraction after the ratio, when
+/// there are at least [`MIN_HANDOVER`] of them and the companion is its own
+/// plane's. A companion borrowed from the next plane sees the scene at
+/// another focus, and near highlights that moves its hand-over sites more
+/// than the ratio does (MEASURED on the dragonfly of 2026-11-26: own planes
+/// 0.990 to 1.002 over 117 pairs, borrowed 0.971 to 1.019 over 96, their
+/// cell ratios within 0.11 % between halves): there the sites are reported,
+/// and gate only a commanded ratio the cells could not measure.
+const HANDOVER_LIMIT: f64 = 0.03;
+const MIN_HANDOVER: usize = 400;
+/// Cells this far inside the active area (the companion must cover them).
+const RATIO_MARGIN: usize = 128;
+/// The companion moved against its base group by more than this, in
+/// photosites: refused. Its placement includes the shift, so this is a
+/// guard against gross motion, not a tolerance on it (MEASURED on the
+/// dragonfly: median 0.21, largest 0.83 over 213 pairs, on a rig whose
+/// four-shot members are 0.14 to 0.50 px apart; spec 5.7 point 3 said one
+/// photosite, which that rig would reach).
+const MAX_SHIFT_PX: f64 = 2.0;
 /// Bright-map tile side, photosites.
 const TILE: usize = 16;
 
@@ -458,7 +464,8 @@ fn decode_companion(r: &CompanionRef) -> Result<Arc<Loaded>> {
         &noise,
         r.companion_plane as usize,
     );
-    let gate = crate::pixel_shift_cmd::judge(&m, r.residual);
+    // A highlight group's own check, under the witness's signal floor.
+    let gate = crate::pixel_shift_cmd::judge_highlight(&m, r.residual);
     let mut it = frames.into_iter();
     let m1 = it.next().expect("four frames");
     let members: [strehl_raw::Frame; 3] = [
@@ -844,11 +851,12 @@ struct PairFit {
     /// commanded at all.
     start: f64,
     commanded: bool,
-    /// The correction the fit applied, EV (positive: the companion was
-    /// brighter than the start says).
+    /// The correction the measurement applied, `log2(k / start)`.
     correction_ev: f64,
-    patches: (usize, usize, usize),
-    validation: [f32; 3],
+    /// Cells the ratio was measured on (0: the commanded ratio, confirmed
+    /// by the hand-over sites), and how far its two halves disagree.
+    cells: usize,
+    split: Option<f64>,
     /// Scaled companion over base, green, where the base is at 0.50-0.75 of
     /// the pin and nothing near is brighter: median, robust spread, sites.
     handover: Option<(f64, f64, usize)>,
@@ -863,25 +871,6 @@ fn percentile(values: &[f32], fraction: f32) -> f32 {
     sorted[low] + (sorted[high] - sorted[low]) * (position - low as f32)
 }
 
-fn trimmed_mean(values: &[f32]) -> Option<f32> {
-    if values.is_empty() || values.iter().any(|v| !v.is_finite()) {
-        return None;
-    }
-    let mut sorted = values.to_vec();
-    sorted.sort_by(f32::total_cmp);
-    let trim = sorted.len() / 10;
-    let kept = &sorted[trim..sorted.len() - trim];
-    Some(kept.iter().sum::<f32>() / kept.len() as f32)
-}
-
-/// CfaPlane order `R, G1, B, G2`: each plane's colour and photosite in the quad.
-const PLANES: [(CfaPlane, usize, (usize, usize)); 4] = [
-    (CfaPlane::R, 0, (0, 0)),
-    (CfaPlane::G1, 1, (1, 0)),
-    (CfaPlane::B, 2, (1, 1)),
-    (CfaPlane::G2, 1, (0, 1)),
-];
-
 #[allow(clippy::too_many_arguments)]
 fn fit_pair(
     base: &Assembled<'_>,
@@ -891,221 +880,193 @@ fn fit_pair(
     noise: &NoiseModel,
     start: f64,
     commanded: bool,
+    borrowed: bool,
     black: f32,
     full: f32,
 ) -> std::result::Result<PairFit, String> {
-    let ceiling = (black + FIT_CEILING * full) as u16;
-    let lo = (black + RAMP_LO * full) as u16;
-    let (w, h) = (bright.w, bright.h);
-    let margin = 128usize;
-    // Candidate patches: unclipped and below the ramp everywhere, their
-    // companion inside its frame, the companion's expected green well above
-    // its noise.
-    let mut candidates: Vec<(usize, usize)> = Vec::new();
-    let mut y0 = margin;
-    while y0 + PATCH + margin <= h {
-        let mut x0 = margin;
-        while x0 + PATCH + margin <= w {
-            candidates.push((x0, y0));
-            x0 += PATCH;
+    let e = ratio_cells(base, companion, bright, maps, noise, black, full);
+    let (k, cells, split) = match e.ratio {
+        Some(r) => (1.0 / r, e.cells, e.split()),
+        // Nothing well exposed in both: the commanded ratio, if the
+        // hand-over sites confirm it.
+        None if commanded => (start, 0, None),
+        None => {
+            return Err(format!(
+                "only {} cells are well exposed in both groups (need {}), and the capture \
+                 records no commanded ratio",
+                e.cells,
+                crate::exposure_ratio::MIN_CELLS
+            ));
         }
-        y0 += PATCH;
-    }
-    let kept: Vec<(usize, usize)> = candidates
-        .into_par_iter()
-        .filter(|&(x0, y0)| {
-            let (x0i, y0i) = (x0 as isize, y0 as isize);
-            let (x1, y1) = (x0i + PATCH as isize - 1, y0i + PATCH as isize - 1);
-            if bright.max(x0i, y0i, x1, y1, false) >= ceiling
-                && bright.max(x0i, y0i, x1, y1, true) >= ceiling
-            {
-                return false;
-            }
-            for (cx, cy) in [(x0i, y0i), (x1, y0i), (x0i, y1), (x1, y1)] {
-                for m in maps {
-                    let (u, v) = m.apply(cx as f64, cy as f64);
-                    if !companion.inside(u, v, 4.0) {
-                        return false;
-                    }
-                }
-            }
-            // The dimmest colour's mean, as the companion would read it.
-            let mut sum = [0.0f32; 3];
-            let mut n = 0.0f32;
-            for y in (y0i..=y1).step_by(8) {
-                for x in (x0i..=x1).step_by(8) {
-                    for (c, s) in sum.iter_mut().enumerate() {
-                        *s += base.sample(c, x, y);
-                    }
-                    n += 1.0;
-                }
-            }
-            let dimmest = sum.iter().copied().fold(f32::INFINITY, f32::min) / n;
-            let c = (dimmest / start as f32).max(0.0);
-            c > 1.5 * SIGNAL_SIGMA * noise.variance(CfaPlane::G1, c).sqrt()
-        })
-        .collect();
-    if kept.len() < MIN_FIT + MIN_VALIDATION {
-        return Err(format!(
-            "only {} patches are well exposed in both groups (need {})",
-            kept.len(),
-            MIN_FIT + MIN_VALIDATION
-        ));
-    }
-    let chosen: Vec<(usize, usize)> = if kept.len() > MAX_PATCHES {
-        (0..MAX_PATCHES)
-            .map(|i| kept[i * kept.len() / MAX_PATCHES])
-            .collect()
-    } else {
-        kept
     };
-    // Each patch's [R, G1, B, G2] values: the base's own, and the
-    // companion's at the same scene points.
-    type Values = [Vec<f32>; 4];
-    let sampled: Vec<(Values, Values)> = chosen
-        .par_iter()
-        .map(|&(x0, y0)| {
-            let mut a: Values = Default::default();
-            let mut b: Values = Default::default();
-            for qy in 0..PATCH / 2 {
-                for qx in 0..PATCH / 2 {
-                    for (p, &(_, c, (dx, dy))) in PLANES.iter().enumerate() {
-                        let x = (x0 + 2 * qx + dx) as isize;
-                        let y = (y0 + 2 * qy + dy) as isize;
-                        a[p].push(base.sample(c, x, y));
-                        let (u, v) = maps[c].apply(x as f64, y as f64);
-                        b[p].push(companion.interpolate(c, u, v));
-                    }
-                }
-            }
-            (a, b)
-        })
-        .collect();
-    let mut fit = Vec::new();
-    let mut ratios: Vec<Option<[f32; 4]>> = Vec::with_capacity(sampled.len());
-    let (mut fit_patches, mut validation_patches) = (0usize, 0usize);
-    let start32 = start as f32;
-    for (i, (a, b)) in sampled.iter().enumerate() {
-        let mut r = [0.0f32; 4];
-        let mut ok = true;
-        for (p, &(plane, _, _)) in PLANES.iter().enumerate() {
-            let (Some(ma), Some(mb)) = (trimmed_mean(&a[p]), trimmed_mean(&b[p])) else {
-                ok = false;
-                break;
-            };
-            let (va, vb) = (noise.variance(plane, ma), noise.variance(plane, mb));
-            if !(ma > SIGNAL_SIGMA * va.sqrt()) || !(mb > SIGNAL_SIGMA * vb.sqrt()) {
-                ok = false;
-                break;
-            }
-            r[p] = ((mb * start32) / ma).ln();
-            if !r[p].is_finite() {
-                ok = false;
-                break;
-            }
-        }
-        if !ok {
-            ratios.push(None);
-            continue;
-        }
-        if i % 2 == 1 {
-            validation_patches += 1;
-        } else {
-            fit.extend(r);
-            fit_patches += 1;
-        }
-        ratios.push(Some(r));
-    }
-    if fit_patches < MIN_FIT || validation_patches < MIN_VALIDATION {
+    let correction_ev = (k / start).log2();
+    if correction_ev.abs() > f64::from(CORRECTION_LIMIT_EV) {
         return Err(format!(
-            "only {fit_patches} fit and {validation_patches} validation patches have four-colour \
-             signal in both groups"
+            "the measured ratio is {k:.3} against a start of {start:.3}: a correction of \
+             {correction_ev:+.3} EV, beyond the {CORRECTION_LIMIT_EV} EV bound"
         ));
     }
-    let fitted = percentile(&fit, 0.5);
-    let correction_ev = -fitted / std::f32::consts::LN_2;
-    if fitted.abs() / std::f32::consts::LN_2 > CORRECTION_LIMIT_EV {
-        return Err(format!(
-            "the measured ratio is {:.3} against a start of {start:.3}: a correction of \
-             {correction_ev:+.3} EV, beyond the {CORRECTION_LIMIT_EV} EV bound",
-            start / f64::from(fitted).exp()
-        ));
-    }
-    let residuals: Vec<f32> = ratios
-        .iter()
-        .enumerate()
-        .filter(|(i, _)| i % 2 == 1)
-        .filter_map(|(_, r)| *r)
-        .flatten()
-        .map(|r| ((r - fitted).exp() - 1.0).abs())
-        .collect();
-    let validation = [
-        percentile(&residuals, 0.5),
-        percentile(&residuals, 0.95),
-        residuals.iter().copied().fold(0.0, f32::max),
-    ];
-    if !(validation[0] <= MEDIAN_LIMIT && validation[1] <= P95_LIMIT && validation[2] <= MAX_LIMIT)
+    if let Some(s) = split
+        && !(s <= HALVES_LIMIT)
     {
         return Err(format!(
-            "held-out patches disagree with one ratio (median {:.2} %, p95 {:.2} %, max {:.2} %)",
-            100.0 * validation[0],
-            100.0 * validation[1],
-            100.0 * validation[2]
+            "two halves of the {cells} cells disagree by {:.2} % (limit {:.0} %)",
+            100.0 * s,
+            100.0 * HALVES_LIMIT
         ));
     }
-    // Textured agreement, as the session checks it.
-    let gain_b = start32 / fitted.exp();
-    let mut textured = 0usize;
-    let mut worst_all = 0.0f32;
-    for ((a, b), r) in sampled.iter().zip(&ratios) {
-        if r.is_none() {
-            continue;
-        }
-        let mut is_textured = false;
-        let mut worst = 0.0f32;
-        for (p, &(plane, _, _)) in PLANES.iter().enumerate() {
-            let (x, y) = (&a[p], &b[p]);
-            let n = x.len() as f32;
-            let mx = x.iter().sum::<f32>() / n;
-            let my = y.iter().sum::<f32>() / n;
-            let (mut tx, mut ty, mut difference, mut variance) = (0.0f32, 0.0, 0.0, 0.0);
-            for (&x, &y) in x.iter().zip(y) {
-                let dx = x - mx;
-                let dy = (y - my) * gain_b;
-                tx += dx * dx;
-                ty += dy * dy;
-                difference += (dx - dy) * (dx - dy);
-                variance += noise.variance(plane, x) + noise.variance(plane, y) * gain_b * gain_b;
+    let samples = handover_samples(base, companion, bright, maps, k, black, full);
+    let handover = (samples.len() >= 50).then(|| {
+        let q = |p| f64::from(percentile(&samples, p));
+        (q(0.5), 0.7413 * (q(0.75) - q(0.25)), samples.len())
+    });
+    let gates = cells == 0 || !borrowed;
+    let confirmed = match handover {
+        Some((m, _, n)) if n >= MIN_HANDOVER => {
+            if gates && !((m - 1.0).abs() <= HANDOVER_LIMIT) {
+                return Err(format!(
+                    "the {n} hand-over sites read {m:.4} after the {} ratio {k:.3} (limit 1 \
+                     +- {HANDOVER_LIMIT})",
+                    if cells > 0 { "measured" } else { "commanded" }
+                ));
             }
-            tx /= n;
-            ty /= n;
-            difference /= n;
-            variance = variance / n * NOISE_ALLOWANCE;
-            if tx.min(ty) > 16.0 * variance {
-                is_textured = true;
-                worst = worst.max((difference - variance).max(0.0) / tx.max(ty));
+            (m - 1.0).abs() <= HANDOVER_LIMIT
+        }
+        _ => false,
+    };
+    if cells == 0 && !confirmed {
+        return Err(format!(
+            "the exposure ratio could not be measured: {} cells well exposed in both groups \
+             (need {}) and {} hand-over sites to confirm the commanded ratio (need \
+             {MIN_HANDOVER})",
+            e.cells,
+            crate::exposure_ratio::MIN_CELLS,
+            handover.map_or(0, |h| h.2)
+        ));
+    }
+    Ok(PairFit {
+        k,
+        start,
+        commanded,
+        correction_ev,
+        cells,
+        split,
+        handover,
+    })
+}
+
+/// The shared estimator's cells for a base group and its companion: base
+/// samples at each photosite, the companion's at the photosite its
+/// placement maps it to (nearest; a cell's mean does not need the
+/// fraction). Cells with a base sample at the fusion's ramp do not count.
+#[allow(clippy::too_many_arguments)]
+fn ratio_cells(
+    base: &Assembled<'_>,
+    companion: &Assembled<'_>,
+    bright: &Bright,
+    maps: &[PointMap; 3],
+    noise: &NoiseModel,
+    black: f32,
+    full: f32,
+) -> crate::exposure_ratio::Estimate {
+    use crate::exposure_ratio::{CELL, Cell, HIGH, LOW};
+    let lo = (black + RAMP_LO * full) as u16;
+    let floor = (black + LOW * full) as u16;
+    let (w, h) = (bright.w, bright.h);
+    let cols = w.saturating_sub(2 * RATIO_MARGIN) / CELL;
+    let rows = h.saturating_sub(2 * RATIO_MARGIN) / CELL;
+    // Samples of each colour a mosaic cell holds: the standard error is
+    // taken as a single exposure's, whatever the assembly adds.
+    let mosaic = [CELL * CELL / 4, CELL * CELL / 2, CELL * CELL / 4];
+    let planes = [CfaPlane::R, CfaPlane::G1, CfaPlane::B];
+    let cells: Vec<Cell> = (0..rows)
+        .into_par_iter()
+        .flat_map_iter(|cy| {
+            let mut out = Vec::new();
+            for cx in 0..cols {
+                let x0 = (RATIO_MARGIN + cx * CELL) as isize;
+                let y0 = (RATIO_MARGIN + cy * CELL) as isize;
+                let (x1, y1) = (x0 + CELL as isize - 1, y0 + CELL as isize - 1);
+                // The brightest raw sample of the four members: a cell at the
+                // ramp is pinned, and one under the floor everywhere cannot
+                // count (most of a dark subject; it is not read further).
+                let top = bright.max(x0, y0, x1, y1, true);
+                if top >= lo || top < floor {
+                    continue;
+                }
+                let mut long = [0.0f64; 3];
+                for y in y0..=y1 {
+                    for x in x0..=x1 {
+                        for (c, s) in long.iter_mut().enumerate() {
+                            *s += f64::from(base.sample(c, x, y));
+                        }
+                    }
+                }
+                let n = (CELL * CELL) as f64;
+                let long = long.map(|s| s / n);
+                let share = long.map(|l| (l / f64::from(full)) as f32);
+                // Only a cell some colour of which can count reads the
+                // companion.
+                if !share.iter().any(|s| (LOW..=HIGH).contains(s)) {
+                    continue;
+                }
+                let corners = [(x0, y0), (x1, y0), (x0, y1), (x1, y1)];
+                if !corners.iter().all(|&(x, y)| {
+                    maps.iter().all(|m| {
+                        let (u, v) = m.apply(x as f64, y as f64);
+                        companion.inside(u, v, 4.0)
+                    })
+                }) {
+                    continue;
+                }
+                let mut short = [0.0f64; 3];
+                for y in y0..=y1 {
+                    for x in x0..=x1 {
+                        for (c, s) in short.iter_mut().enumerate() {
+                            let (u, v) = maps[c].apply(x as f64, y as f64);
+                            *s += f64::from(companion.sample(
+                                c,
+                                u.round() as isize,
+                                v.round() as isize,
+                            ));
+                        }
+                    }
+                }
+                for c in 0..3 {
+                    let s = short[c] / n;
+                    out.push(Cell {
+                        colour: c,
+                        long: long[c],
+                        long_share: share[c],
+                        pinned: false,
+                        short: s,
+                        short_se: (f64::from(noise.variance(planes[c], s.max(0.0) as f32))
+                            / mosaic[c] as f64)
+                            .sqrt(),
+                    });
+                }
             }
-        }
-        if is_textured {
-            textured += 1;
-            worst_all = worst_all.max(worst);
-        }
-    }
-    if worst_all > TEXTURE_LIMIT {
-        return Err(format!(
-            "textured patches disagree after the ratio (worst residual {worst_all:.3} of the \
-             texture's power): focus, motion or placement"
-        ));
-    }
-    if textured < MIN_TEXTURED {
-        return Err(format!(
-            "only {textured} textured patches can confirm the groups see the same detail \
-             (need {MIN_TEXTURED})"
-        ));
-    }
-    let k = f64::from(gain_b);
-    // The hand-over: where the base is high but below the ramp, the scaled
-    // companion must read what the base reads.
+            out
+        })
+        .collect();
+    crate::exposure_ratio::estimate(cells)
+}
+
+/// The hand-over: where the base is high but below the ramp, the scaled
+/// companion must read what the base reads. `k` x companion / base, green,
+/// over the sites where the base is at 0.50 to 0.75 of the pin and nothing
+/// within four photosites reaches the ramp.
+fn handover_samples(
+    base: &Assembled<'_>,
+    companion: &Assembled<'_>,
+    bright: &Bright,
+    maps: &[PointMap; 3],
+    k: f64,
+    black: f32,
+    full: f32,
+) -> Vec<f32> {
+    let lo = (black + RAMP_LO * full) as u16;
+    let (w, h) = (bright.w, bright.h);
     let (b_lo, b_hi) = (0.50 * full, RAMP_LO * full);
     let rows: Vec<Vec<f32>> = (8..h.saturating_sub(8))
         .step_by(3)
@@ -1137,20 +1098,10 @@ fn fit_pair(
             out
         })
         .collect();
-    let handover: Vec<f32> = rows.into_iter().flatten().collect();
-    let handover = (handover.len() >= 50).then(|| {
-        let q = |p| f64::from(percentile(&handover, p));
-        (q(0.5), 0.7413 * (q(0.75) - q(0.25)), handover.len())
-    });
-    Ok(PairFit {
-        k,
-        start,
-        commanded,
-        correction_ev: f64::from(correction_ev),
-        patches: (fit_patches, validation_patches, textured),
-        validation,
-        handover,
-    })
+    rows.into_iter()
+        .flatten()
+        .filter(|v| v.is_finite())
+        .collect()
 }
 
 /// A rough ratio from the data, for a companion whose exposure the journal
@@ -1705,6 +1656,13 @@ fn prepare(
         }
     }
     .map_err(Refusal)?;
+    let moved = shift[0].hypot(shift[1]);
+    if !(moved <= MAX_SHIFT_PX) {
+        return Err(Refusal(format!(
+            "its highlight group moved {moved:.2} photosites against its base group (limit \
+             {MAX_SHIFT_PX}): motion between the groups"
+        )));
+    }
     let t_c = Similarity {
         a: t_anchor.a,
         b: t_anchor.b + Cx::new(0.5 * shift[0], 0.5 * shift[1]),
@@ -1762,6 +1720,7 @@ fn prepare(
                 &noise,
                 start,
                 commanded,
+                r.companion_plane != r.plane,
                 black,
                 full,
             );
@@ -2334,8 +2293,8 @@ fn note_fused(r: &CompanionRef, record: Record, seconds: f64) {
             "commanded": f.map(|f| f.commanded),
             "ratio": record.k,
             "correction_ev": f.map(|f| f.correction_ev),
-            "patches_fit_validation_textured": f.map(|f| [f.patches.0, f.patches.1, f.patches.2]),
-            "validation_median_p95_max": f.map(|f| f.validation),
+            "ratio_cells": f.map(|f| f.cells),
+            "ratio_halves_split": f.and_then(|f| f.split),
             "handover_median_spread_sites": f.and_then(|f| f.handover).map(|h| [h.0, h.1, h.2 as f64]),
             "shift_px": record.shift,
             "patched_sites": record.sites,
@@ -2390,6 +2349,21 @@ fn note_refused(r: &CompanionRef, why: String) {
         }
         s.refused.insert(r.plane, why);
     }
+}
+
+/// Tell the desktop how many planes with a highlight companion used it
+/// ([`crate::ui_progress::highlights`]); nothing when none had one.
+pub(crate) fn report_use() {
+    let s = stats().lock().unwrap_or_else(|e| e.into_inner());
+    let planes = s.fused.len() + s.refused.len();
+    if planes == 0 {
+        return;
+    }
+    crate::ui_progress::highlights(
+        planes,
+        s.fused.len(),
+        s.refused.values().next().map(String::as_str),
+    );
 }
 
 /// The render's summary line, when it had highlight companions.

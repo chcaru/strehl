@@ -9741,6 +9741,7 @@ fn run_pyramid_attempt(opts: &MergeOptions) -> Result<()> {
     if let Some(line) = crate::highlight_fusion::summary() {
         eprintln!("{line}");
     }
+    crate::highlight_fusion::report_use();
     if rendered.is_ok()
         && let Some(inputs) = focus_inputs
     {

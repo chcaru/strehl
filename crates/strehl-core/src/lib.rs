@@ -28,6 +28,10 @@ pub mod edgeaware;
 pub mod election_coherence;
 pub mod flat_ratio;
 pub mod focus;
+// Capture calibration spec 5.1 (2026-11-27): fine detail against its own
+// brightness, the calibration's focus measure.
+#[path = "focus-contrast.rs"]
+pub mod focus_contrast;
 #[path = "focus-evidence.rs"]
 pub mod focus_evidence;
 pub mod highlight;

@@ -751,6 +751,7 @@ fn measurement_json(m: &GroupMeasurement) -> Value {
             "pair_members": w.pair_members,
             "tile_ratio": bits(w.tile_ratio),
             "local_px": bits(w.local_px),
+            "local_tiles": w.local_tiles,
         })),
         "margins": m.margins,
         "levels_agree": m.levels_agree,
@@ -801,6 +802,7 @@ fn measurement_from_json(v: &Value) -> Option<GroupMeasurement> {
                 pair_members: members.try_into().ok()?,
                 tile_ratio: unbits(&w["tile_ratio"])?,
                 local_px: unbits(&w["local_px"])?,
+                local_tiles: w["local_tiles"].as_u64()? as usize,
             })
         }
     };
@@ -1112,6 +1114,9 @@ pub struct WitnessSummary {
     /// witness pair's whole-group shift is taken out. `NaN` when no tile has
     /// enough structure.
     pub local_px: f64,
+    /// Tiles with a finite local measure: how much of the frame carries
+    /// enough signal for the witness to judge.
+    pub local_tiles: usize,
 }
 
 /// Everything the group checks compute from a group's four members: a pure
@@ -1136,7 +1141,9 @@ pub struct GroupMeasurement {
 /// 3 (2026-11-25): registration luma free of the CFA-parity alternation
 /// (`pixel_shift` `Integral::luma`); version 2 misread members at odd offsets
 /// on scenes whose red and blue differ in detail.
-pub const GROUP_CHECK_VERSION: u32 = 3;
+/// 4 (2026-11-27): the witness reports how many tiles it measured
+/// ([`WitnessSummary::local_tiles`]).
+pub const GROUP_CHECK_VERSION: u32 = 4;
 
 /// Run `f` on a rayon pool of one thread kept by the calling thread, so its
 /// parallel loops run in turn there rather than on the shared pool.
@@ -1218,6 +1225,7 @@ fn measure_impl(
             pair_members: w.pair_members,
             tile_ratio: q(0.99) / q(0.5),
             local_px: local_p99(&w.tile_local_px),
+            local_tiles: w.tile_local_px.iter().filter(|v| v.is_finite()).count(),
         }
     });
     let a = first.active;
@@ -1254,6 +1262,37 @@ fn local_p99(tiles: &[f32]) -> f64 {
 /// gate judges what residual compensation leaves.
 pub fn judge(m: &GroupMeasurement, residual: ResidualMode) -> Option<String> {
     demotion(m, residual).map(|(reason, _)| reason)
+}
+
+/// A witness with fewer measured tiles than this does not demote a
+/// highlight group. A group five stops under its base has signal in a few
+/// hundred tiles where its base group has thousands (MEASURED on the
+/// dragonfly of 2026-11-26: 175 to 193 against 3,200), and there the
+/// witness reads its own noise: 73 of 151 such groups were demoted, and on
+/// the rig 12 of 13 of them registered against their base group within
+/// 0.2 px (capture calibration spec, 5.7 point 4).
+pub const WITNESS_SIGNAL_FLOOR: usize = 1000;
+
+/// [`judge`] for a highlight group: under [`WITNESS_SIGNAL_FLOOR`] measured
+/// tiles the witness's local and pair tests do not demote it (its
+/// whole-group registration, parities, margins and levels still do).
+pub fn judge_highlight(m: &GroupMeasurement, residual: ResidualMode) -> Option<String> {
+    let thin = m
+        .witness
+        .as_ref()
+        .is_some_and(|w| w.local_tiles < WITNESS_SIGNAL_FLOOR);
+    if !thin {
+        return judge(m, residual);
+    }
+    let mut quiet = m.clone();
+    if let Some(w) = quiet.witness.as_mut() {
+        w.local_px = f64::NAN;
+        w.pair_shift = [[0.0; 2]; 2];
+    }
+    // The pair test compares the witness's shifts with the residuals;
+    // with the witness set aside, the residuals are not compared either.
+    quiet.check.residual = [[0.0; 2]; 4];
+    judge(&quiet, ResidualMode::Off)
 }
 
 /// Whether taking the group again could make it pass: only when something
@@ -1900,6 +1939,7 @@ pub(crate) mod tests {
             v.extend(w.pair_members.iter().flatten().map(|x| *x as u64));
             v.push(w.tile_ratio.to_bits());
             v.push(w.local_px.to_bits());
+            v.push(w.local_tiles as u64);
         }
         v.extend(m.margins.map(|x| x as u64));
         v.push(u64::from(m.levels_agree));
@@ -1945,8 +1985,8 @@ pub(crate) mod tests {
         assert_eq!(
             (GROUP_CHECK_VERSION, digest.as_str()),
             (
-                3,
-                "4a6cbe13ad0e3707bb48617709b487d7bc476b09483517cdd35c10ac8a06666e"
+                4,
+                "cfb79cf134f6606bd16bda3cbb4b84cf8d21d4d24bbfa63e4725e736b5983d9c"
             ),
             "measure's output changed: bump GROUP_CHECK_VERSION and update this digest"
         );
@@ -2156,6 +2196,36 @@ pub(crate) mod tests {
         std::fs::write(dir.join("events.jsonl"), text).unwrap();
         assert!(!crate::follow_cmd::followup_open(&dir));
         let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    /// A highlight group whose witness had too few tiles to judge is not
+    /// demoted on the witness; with enough tiles, or for its other checks,
+    /// it is.
+    #[test]
+    fn a_highlight_group_short_of_signal_is_not_demoted_on_its_witness() {
+        let frames = synthetic_group([(0, 0), (1, 0), (1, 1), (0, 1)], [1.0, 1.004, 0.997, 1.0]);
+        let good = measure(
+            [&frames[0], &frames[1], &frames[2], &frames[3]],
+            &synthetic_noise(),
+        );
+        let r = ResidualMode::Compensate;
+        let mut thin = good.clone();
+        let w = thin.witness.as_mut().unwrap();
+        w.local_px = LOCAL_TOLERANCE_PX * 2.0;
+        w.pair_shift[0] = [0.6, 0.0];
+        w.local_tiles = 180;
+        assert!(judge(&thin, r).is_some(), "a base group is still judged");
+        assert_eq!(judge_highlight(&thin, r), None);
+        let mut rich = thin.clone();
+        rich.witness.as_mut().unwrap().local_tiles = WITNESS_SIGNAL_FLOOR;
+        assert!(judge_highlight(&rich, r).is_some());
+        let mut edge = thin.clone();
+        edge.margins = [0; 4];
+        assert!(
+            judge_highlight(&edge, r)
+                .unwrap()
+                .contains("leave the sensor buffer")
+        );
     }
 
     /// A retake is suggested only for a fault of the exposures, never for a

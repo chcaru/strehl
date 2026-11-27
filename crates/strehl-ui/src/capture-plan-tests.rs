@@ -828,3 +828,25 @@ fn the_calibrations_advice_is_offered_three_ways() {
         highlight: None
     }));
 }
+
+/// The calibration survey's in-focus range (spec 5.2) is read from
+/// `survey.depth`; a side the subject reaches has no suggestion.
+#[test]
+fn the_calibrations_in_focus_range_is_read_from_the_survey() {
+    let r = json!({"survey":{"depth":{"in_focus_first":32374.0,"in_focus_last":33174.0,
+        "reaches_first":false,"reaches_last":false,"suggested_start":32349.0,"suggested_end":33199.0}}});
+    let f = in_focus(&r).unwrap();
+    assert_eq!((f.start, f.end), (Some(32349), Some(33199)));
+    assert!(!f.reaches_first && !f.reaches_last);
+    let past = json!({"survey":{"depth":{"in_focus_first":60830.0,"in_focus_last":62800.0,
+        "reaches_first":true,"reaches_last":true}}});
+    let f = in_focus(&past).unwrap();
+    assert_eq!((f.start, f.end), (None, None));
+    assert!(f.reaches_last);
+    // A focus-step calibration, or the earlier survey, has none.
+    assert_eq!(in_focus(&json!({"width":48.0})), None);
+    assert_eq!(
+        in_focus(&json!({"survey":{"depth":{"first_focus":32062.0,"last_focus":33262.0}}})),
+        None
+    );
+}

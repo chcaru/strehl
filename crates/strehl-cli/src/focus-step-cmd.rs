@@ -64,6 +64,18 @@ const MIN_TILES: usize = 30;
 pub const SAFE: f64 = 7.0;
 /// Step = width / EDGE lost 2-3 % of detail amplitude there.
 pub const EDGE: f64 = 3.6;
+/// Positions spanning fewer widths than this read the width low (MEASURED
+/// on five stacks, capture calibration grounding R5: thinned to a cluster
+/// of under four sharp depths, the half-height width read low).
+pub const MIN_SPAN_WIDTHS: f64 = 4.0;
+
+/// The span of `positions` in widths; `None` without a width.
+pub fn span_widths(positions: &[f64], width: Option<f64>) -> Option<f64> {
+    let w = width.filter(|w| *w > 0.0)?;
+    let lo = positions.iter().copied().fold(f64::INFINITY, f64::min);
+    let hi = positions.iter().copied().fold(f64::NEG_INFINITY, f64::max);
+    (hi >= lo).then(|| (hi - lo) / w)
+}
 
 #[derive(Clone, Debug, Serialize)]
 pub struct FocusStep {
@@ -81,6 +93,10 @@ pub struct FocusStep {
     /// The step the width supports (units), and the spacing over it.
     pub suggested_step: Option<u32>,
     pub oversampling: Option<f64>,
+    /// The planes' span over the width, and whether it is under
+    /// [`MIN_SPAN_WIDTHS`] (the width then reads low).
+    pub span_widths: Option<f64>,
+    pub width_low: bool,
     /// Plain-language reading of the result.
     pub summary: String,
     /// With a subject (plan S4), the fields above are over the tiles that
@@ -319,6 +335,8 @@ pub fn measure_with(
         width_p90: None,
         suggested_step: None,
         oversampling: None,
+        span_widths: None,
+        width_low: false,
         summary: String::new(),
         subject: subject_name,
         subject_tiles,
@@ -337,6 +355,16 @@ pub fn measure_with(
     }
     let width = percentile(&widths, 0.5);
     result.width = Some(width);
+    result.span_widths = span_widths(&positions, Some(width));
+    result.width_low = result.span_widths.is_some_and(|s| s < MIN_SPAN_WIDTHS);
+    let low = if result.width_low {
+        format!(
+            " The width reads low: these planes span {:.1} widths, under {MIN_SPAN_WIDTHS}.",
+            result.span_widths.unwrap_or(0.0)
+        )
+    } else {
+        String::new()
+    };
     result.width_p10 = Some(percentile(&widths, 0.1));
     result.width_p90 = Some(percentile(&widths, 0.9));
     let step = (width / SAFE).floor().max(1.0);
@@ -356,7 +384,7 @@ pub fn measure_with(
         format!(
             "{on}Detail stays sharp over about {width:.0} focus units; this run's step of {spacing:.0} suits it (suggested {step:.0})."
         )
-    };
+    } + &low;
     Ok(result)
 }
 

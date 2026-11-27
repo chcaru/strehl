@@ -70,10 +70,20 @@ pub(crate) const PIN_REACH: usize = 4;
 const MIN_QUADS: usize = 4096;
 
 /// Whether a camera-RGB triple (white-balanced, normalised, before the
-/// matrix) has a colour at or near the sensor's saturation ceiling.
+/// matrix) has a colour at or near the sensor's saturation ceiling. In a
+/// render with highlight fusion the ceiling is the base exposure's, not the
+/// fused data's: a site the fusion replaced holds a real value above it,
+/// and is set aside exactly where the base exposure would have pinned it.
+/// Without this a fused render's tone found no highlight pinned, took the
+/// glints as the diffuse top and placed white 3.6 stops too high (MEASURED
+/// on the dragonfly of 2026-11-26, capture calibration spec 5.7 point 5).
+/// Sites the fusion only blends (from 0.75 to 0.90 of the pin) hold values
+/// the base exposure measured itself and are judged as in an unfused
+/// render; setting them aside too placed white 16 % under the unfused
+/// render's on the dragonfly.
 pub(crate) fn near_pin(v: [f32; 3], render: Option<&strehl_core::color::Render>) -> bool {
     render.is_some_and(|r| {
-        let c = r.ceiling();
+        let c = r.unfused_ceiling().unwrap_or_else(|| r.ceiling());
         (0..3).any(|i| c[i].is_finite() && v[i] >= PIN_NEAR * c[i])
     })
 }
