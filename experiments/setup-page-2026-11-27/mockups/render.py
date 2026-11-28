@@ -20,7 +20,7 @@ CANDIDATES = [r"C:\Program Files\Google\Chrome\Application\chrome.exe",
               r"C:\Program Files\Microsoft\Edge\Application\msedge.exe",
               "/usr/bin/google-chrome", "/usr/bin/chromium",
               "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"]
-SCREENS = ["first", "not-dark", "dark", "bright", "levels", "scale", "motion", "summary"]
+SCREENS = ["equipment", "first", "not-dark", "dark", "bright", "levels", "scale", "motion", "by-hand", "chain", "summary"]
 
 
 def main():

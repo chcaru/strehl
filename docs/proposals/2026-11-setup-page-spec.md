@@ -1,7 +1,7 @@
 # Setup: measuring the camera, lens, rig and light
 
 **Status:** Spec, for an implementing agent. Nothing here is built except where a section
-says "exists". Six decisions are the owner's (section 17); each has a default the
+says "exists". Seven decisions are the owner's (section 17); each has a default the
 implementer follows until told otherwise.
 **Date:** 2026-11-27.
 **Origin:** the Calibration page deferred by
@@ -13,10 +13,13 @@ stacks already on disk. "R3" points at that document's section 3.
 **Mockups:** [`experiments/setup-page-2026-11-27/mockups/`](../../experiments/setup-page-2026-11-27/mockups/README.md).
 **Written against:** `origin/main` at `31e778bfb` (installed desktop
 `desktop-f88d128f907bcfba`). Paths are under `crates/` unless they say otherwise.
-**Stage labels** (E1 to E4, P1 to P8) are local to this plan; their milestone rows are
+**Stage labels** (E1 to E4, P1 to P10) are local to this plan; their milestone rows are
 allocated (section 19).
 
 Labels as in `AGENTS.md`: MEASURED, VERIFIED, DERIVED, ARGUED, UNVERIFIED.
+
+**To read it quickly:** sections 3 and 4 are the design, section 17 the decisions, section
+18 the order of work. Sections 5 to 13 are for whoever builds it.
 
 ---
 
@@ -37,11 +40,18 @@ In their words:
 - "i'm imagining things like it takes dark fields images, white field, etc. … an entirely
   new user/setup should be able to do this, without an agent. i would imagine it could
   support multiple profiles."
+- On the first draft of this document: "it would be good to make sure someone can manually
+  do the setup too, if they don't have a driver. some of these would need to be optional
+  too. for example, the light. not everybody would have a light. so the setup would need
+  to be configurable. ofc optimize for the ideal setup (my current setup) though
+  (automatic driver + my equipment / capability level)."
 
 So: **a page where a person with a camera Strehl has never seen makes Strehl correct for
-it, by placing a few simple things in front of the lens and pressing one button for each;
-what is measured is kept as profiles, several of them, and the rest of the app uses
-them.**
+it. They say what equipment they have. For each thing worth measuring they put something
+simple in front of the lens and either press one button, on a rig Strehl drives, or shoot
+a short list by hand and drop the folder. What is measured is kept as profiles, several
+of them, and the rest of the app uses them. The rig that can do everything does most of
+it from one press.**
 
 Read as written, "other camera formats" means the RAW formats of other makers (CR2, CR3,
 NEF and so on), with RAW still the input. Rendered formats (JPEG, TIFF) are not accepted,
@@ -72,8 +82,8 @@ and section 16 says why.
 | --- | --- | --- |
 | M1 | Of 24 public RAW files from Canon, Nikon, Fujifilm, Panasonic, Pentax, Hasselblad and Sony, the linked decoder reads 22. 18 of those are one sample per pixel with a 2 x 2 colour pattern: 17 with RGGB at the active area's corner, 1 GBRG (Panasonic S1R). 2 are X-Trans and 2 are reduced-size files with three samples per pixel. It cannot read Nikon's High Efficiency NEF or one Hasselblad variant (R1) | Other makers' files are within reach of the engine's gates, not of the decoder. Section 9 lists the gates to open and the files to refuse by name |
 | M2 | In 13 of the 18 the data's top code is above the white level the decoder declares: Canon R6 II 16383 against 12735, Nikon Z 8 16383 (1.5 million samples on it) against 15892, Sony 16383 against 15360. Black is 64, 100, 128, 256, 510, 512 or 1008, and two bodies give different black per colour. Containers are 12, 14 and 16 bit (R1) | The top of the data is measured, never assumed. Per-colour black is kept. The 14-bit constant goes |
-| M3 | With the light switched off and no lens cap, 8 frames give the A7CR's black within 0.1 DN and its read noise within 4 % of the lens-capped series of 14 November at every ISO tried (1.305 DN at ISO 100 against 1.305). The level rises 0.19 DN between 1/100 s and 2.5 s. With the light on, the same test reads 119 DN at 0.6 s and 458 DN at 2.5 s (R2) | The dark measurement needs no cap on a rig with a switched light, and a two-shutter test tells a person at once whether their frames are dark |
-| M4 | At 1/8000 s the A7CR's read noise is 1.547 DN against 1.305 to 1.331 DN from 1/1000 s down (R2) | A camera is measured in the shutter mode it is used in. A fast or silent shutter is another mode |
+| M3 | Capped, with the door closed, 8 frames give the A7CR's read noise as 1.311 DN at ISO 100 and 2.144 at ISO 400. With no cap, the light switched off and the room not fully dark, the same 8 frames give 1.305 and 2.134: within 0.5 % at the four ISO settings tried, and black within 0.2 DN. The room's light shows only at the longest exposure: over 2.5 s the level rises 0.19 DN uncapped and 0.04 capped. With the light on and no cap the level rises 456 DN. With the cap on and the light on it rises 0.09 (R2, R9) | The dark measurement needs no cap on a rig with a switched light, a cap alone is enough in a lit room, and a two-shutter test tells a person at once whether their frames are dark |
+| M4 | The A7CR's read noise at ISO 100 is 1.31 to 1.33 DN from 1/2000 s to 2.5 s, 1.385 at 1/4000 s, 1.546 at 1/8000 s and 1.594 at 8 s, while its black stays at 512.2 to 512.3 at every one (R9) | A camera is measured at the exposures it is used at. The very fast and the very long are not the same camera, and dark current shows as noise, never as level |
 | M5 | From 40 single shots of the subject that happened to be on the stage, 5,000 units out of focus, taken in 2 min 40 s with no white card, the fit gives a green gain of 0.4040 DN/e- at ISO 100. The hand-made profile says 0.4040. One burst of 8 at each of ISO 200, 320, 400 and 800 gives the gain within -0.3 % to +1.4 % of proportional to ISO (R3) | The gain needs no flat field and no agent. "Proportional to ISO", unverified since 14 November, holds within 1.4 % |
 | M6 | The sensor's response is linear to within 0.1 % up to the code where it clips, 16383, at ISO 100 and 400: the ratio of an 8 s burst to a 5 s burst stays within 0.07 % of flat from 1,300 to 15,400 DN above black. The engine's white is 15360 (R3) | 6.9 % of the range above black (0.1 stop) is treated as clipped today. Decision 3 |
 | M7 | The light's level moved by 0.2 to 0.5 % from frame to frame inside a burst and stepped up 4 % six and a half minutes after it was switched on (R4) | Every exposure measurement removes the light's drift frame by frame, and says how large it was |
@@ -97,8 +107,9 @@ passes through.
 01 Library   02 Capture   03 Stack   04 Develop   05 Export            Setup ●
 ```
 
-A **setup** is a camera, a lens, a rig and a light, each with what Strehl has measured
-about it. Setup shows one setup at a time and holds as many as the person owns.
+A **setup** is a camera, a lens, a rig and, where there is one, a light, each with what
+Strehl has measured about it. Setup shows one setup at a time and holds as many as the
+person owns.
 
 Everything is measured in **sittings**. A sitting is everything Strehl can measure with
 one thing in front of the lens:
@@ -109,15 +120,25 @@ one thing in front of the lens:
 | 2 Bright | Anything bright, far out of focus. A white card is best | Gain at each ISO, the code the data clip at and how far they stay linear; with a card, the dust map, the sensor's fixed pattern and the light's colour | Every camera |
 | 3 Scale | A ruler, a stage micrometer or a slide, in focus | Micrometres per pixel at this focus position | Anyone who wants a scale bar or depth in millimetres |
 | 4 Detail | Nothing new: a stack already shot of a finely detailed subject | The lens's lateral colour, its sharp depth and working aperture | Every lens |
-| 5 Motion | The same detailed subject | How the focus axis returns to a position, how long the picture takes to settle, how still it is | Rigs Strehl drives |
-| 6 Warm-up | Anything | The light's level against minutes since it was switched on | Rigs whose light Strehl switches |
+| 5 Motion | The same detailed subject | How the focus axis returns to a position, how long the picture takes to settle, how still it is | Anyone who steps focus with a rail or a motor |
+| 6 Warm-up | Anything | The light's level against minutes since it was switched on | Anyone with a continuous light |
 
-Each sitting is **one button** on a rig Strehl drives, and a **shot list and a folder
-drop** on one it does not (Detail is a choice of stack on both). The analysis is the same
-program either way.
+**Three ways to a number.** Strehl measures it: one button, on a rig it drives. You shoot
+it: a list in your camera's own words, then a folder dropped on the page. You type it,
+where you simply know it: a pixel pitch, a rail's step, a scale. The analysis is the same
+program for the first two, and the page says which of the three every number came from.
 
-What a sitting measures goes into the setup's four **parts** (camera, lens, rig, light),
-which are files. The engine reads them where it reads its compiled tables today. Where a
+**What you have.** A setup begins with three questions: how frames reach Strehl, what
+moves the focus, what lights the subject (section 4). The answers decide which sittings
+are offered and how each is worded. Nothing a setup does not have is asked for.
+
+**One press for the rig that can do everything.** Where Strehl's host drives the camera
+and the focus and switches the light, Dark, Warm-up, Motion and Bright need nothing
+changed in front of the lens. "Measure the rig" runs the four unattended in about 21
+minutes (section 4.4). Scale needs a ruler put down; Detail needs a stack.
+
+What a sitting measures goes into the setup's **parts** (camera, lens, rig, light), which
+are files. The engine reads them where it reads its compiled tables today. Where a
 measurement is missing and costs quality, the app says so at the place it costs: on the
 stack, in Capture's Rig step, on the scale bar.
 
@@ -127,16 +148,15 @@ An implementer who has to choose between two readings of this document picks the
 keeps these.
 
 1. **One thing in front of the lens, one button.** A sitting never asks the person to
-   change the target half-way. Sittings that share a target can run back to back.
+   swap the target half-way. Sittings that share a target can run back to back.
 2. **Strehl tells you when the target is wrong, in its first ten seconds, and says what to
    do.** "These frames are not dark: the level rises with exposure time." A check that
    only an agent can read is not a check.
-3. **Every sitting works from files.** The rig path automates the shooting; it adds no
-   measurement that a folder of the same frames could not give, except Motion and
-   Warm-up, which are about the rig itself.
-4. **Measured here, shipped, or guessed: always said.** Every number on the page carries
-   one of those three, with the date and what it was taken under. Nothing is called
-   calibrated because a file exists.
+3. **Every sitting can be done by hand.** A rig Strehl drives automates the shooting. It
+   never adds a measurement that a folder of the same frames could not give.
+4. **Where a number came from is always said.** Measured here, shipped with Strehl, from
+   a file, entered, or guessed (section 5.9), with the date and what it was taken under.
+   Nothing is called calibrated because a file exists.
 5. **A measurement that passes its checks is kept. One that would replace an earlier
    measurement shows both and waits.** One that fails a check is never kept without a
    click, and names the check.
@@ -153,20 +173,129 @@ keeps these.
 10. **Pixels do not change by surprise.** Reading the two shipped profiles from files
     renders the same bytes as today. Anything that changes a render of an existing stack
     is a decision in section 17.
+11. **Nothing a setup lacks is asked for.** No light, no warm-up to measure and none
+    drawn as missing. The station's mark counts what applies.
+12. **The best-equipped rig has the shortest path.** Whatever a host can do unattended,
+    it does unattended; a press is spent only where a person's hands are needed.
 
 ---
 
-## 4. Supporting other cameras: what it means here
+## 4. What you have
+
+A setup starts by saying what the equipment is. Three questions, asked once when a setup
+is made and editable afterwards: the first two on the Rig sheet, the third on the Light
+sheet or, for a setup with no light yet, from the setup's menu (section 8.2). Where a host
+is connected the page fills in the answers it can see and the person corrects them.
+
+### 4.1 Three questions
+
+**How do frames reach Strehl?**
+
+| Answer | Means |
+| --- | --- |
+| Strehl's host takes them | A camera the capture host drives (today Sony bodies, F9). Sittings are one button |
+| I shoot and bring the files | Anything else: the camera's own bracketing, a rail controller, another tethering program. Sittings are shot lists |
+
+**What moves the focus?** (`axis.kind` in the rig part)
+
+| Answer | Positions | Notes |
+| --- | --- | --- |
+| The lens's motor, driven by Strehl | Read back from the lens for every frame | The owner's rig |
+| A motorised rail with its own controller | Counted from the step the person types, in micrometres | Not driven by Strehl; the person runs the controller |
+| The camera's own focus bracketing | None: frames are in order and nothing more is known | The camera cannot be sent back to a position, so Return is not offered |
+| By hand: a manual rail, a helicoid, the focus ring | None, or a typed step if the rail has a scale | |
+
+**What lights the subject?** (`kind` in the light part; the last answer means no light
+part at all)
+
+| Answer | Warm-up | Dark without a cap | Bright's exposures |
+| --- | --- | --- | --- |
+| A continuous light Strehl switches | One button | Strehl switches it off | Set by shutter time |
+| A continuous light switched by hand | By hand, with frames at a steady interval | "Cap the lens" | Set by shutter time |
+| Flash | Not offered: a flash has no warm-up | "Cap the lens" | Set by flash power; the page asks for five powers |
+| Nothing of its own: daylight, room light | Not offered | "Cap the lens" | Set by shutter time; the Light check is advice only |
+
+Every setup has a rig part, if only to hold these answers. A setup that works from files
+adds to it whatever the person measures by hand or types.
+
+### 4.2 What the answers change
+
+Nothing a setup does not have is asked for, drawn as missing, or counted in the station's
+mark. A sitting that does not apply is not on the list; the Rig or Light sheet says why in
+one line ("No light to warm up").
+
+| Sitting | A rig Strehl drives | By hand |
+| --- | --- | --- |
+| Dark | One button. With a switched light Strehl turns it off; otherwise "Cap the lens, then Continue" | Shot list, folder drop |
+| Bright | One button. Strehl drives the focus away; with an axis it cannot drive, "Turn the focus away until the bar is under the line, then Continue" | Shot list, folder drop |
+| Scale | One frame, then a band dragged on it | One file, then the band |
+| Detail | A stack chosen from the Library | A stack chosen or dropped |
+| Motion: Return | One button | Shot list (a short stack, then arrivals at one position), folder drop. Not offered for the camera's own bracketing |
+| Motion: Settle | One button | The same short run shot at two settle delays of the person's controller |
+| Motion: Still | 20 s of live view | Ten frames with nothing touched |
+| Warm-up | One button, with a light Strehl switches | Frames at a steady interval from switch-on. Continuous lights only |
+
+Sections 6 and 7 give each by-hand list in the words the page uses.
+
+### 4.3 What can be typed instead
+
+Some facts a person simply knows. They are entered on a sheet, marked "entered", and used
+exactly as a measured value would be:
+
+| Fact | Where | Used for |
+| --- | --- | --- |
+| Pixel pitch, or the sensor's width in millimetres | Camera sheet (filled from the file when it gives one) | Magnification; the working aperture |
+| A rail's step in micrometres | Rig sheet | Depth in millimetres; the step's sharpness advice |
+| Scale: micrometres per pixel, or a magnification | Lens sheet (and per subject, as today) | Scale bars |
+| The settle delay and approach in use on an outside controller | Rig sheet | Shown beside what Motion measured |
+| How long the person waits for their light | Light sheet | Shown beside what Warm-up measured |
+
+Not typed: noise, gain, levels and lens colour. Those are measured, shipped or imported
+as a file from someone who measured them (section 5.2). A typed gain would be believed by
+every stage of the engine and checked by none.
+
+### 4.4 The rig that can do everything: one button
+
+The owner's rig is the case to be best at: Strehl's host drives the camera and the lens
+and switches the light. There, with a detailed subject in focus on the stage, four
+sittings need nothing changed in front of the lens, and **Measure the rig** runs them back
+to back, unattended:
+
+| Order | Sitting | Light | Time, measured 2026-11-27 |
+| --- | --- | --- | --- |
+| 1 | Dark | Off (switched off by Strehl) | 2 min 52 s |
+| 2 | Warm-up | On, from cold | 3 min 25 s |
+| 3 | Motion: Return, Settle, Still | On | 4 min 46 s, 4 min 34 s, 20 s |
+| 4 | Bright (the subject, far out of focus) | On for 13 minutes by now | 4 min 40 s for five ISO settings |
+| | The lens is put back where it was; exposure, four-shot and the light as they were | | |
+
+20 min 37 s of shooting, about 21 minutes with the reading. The order is the light's:
+dark first while it is off, the warm-up when it comes on, the exposure work last when it
+has been on longest.
+
+- Before it starts the page says what it will do and what it cannot: "The light has been
+  off for 4 minutes. Warm-up needs 20: wait until 22:31, or skip it." "No white card:
+  Bright will give gain and levels, not the dust map."
+- A sitting whose check fails stops, keeps nothing of its own, and the chain goes on to
+  the next. Nothing later depends on an earlier one except Bright's plate, which draws
+  the read noise Dark gave.
+- At the end the summary plate (8.5) shows what each sitting gave, with the ones that
+  would replace an earlier measurement waiting side by side (rule 5).
+- Stop works at any moment and leaves the rig as it was found.
+
+Scale needs a ruler or slide put on the stage, and Detail needs a stack: those two stay
+their own buttons. So a rig like this one is fully measured in two presses and a stack.
+
+### 4.5 Supporting other cameras: what it means here
 
 Two different things are called support, and only one of them is in this spec.
 
-**From files (in scope, complete).** A person shoots with whatever controls their camera:
-its own focus bracketing, a rail controller, another tethering program. They drop the
-folder into the Library. Strehl decodes it, finds or asks for the camera's and lens's
-profiles, and stacks it. Setup's sittings 1 to 4 give those profiles from frames the
-person shoots by hand from a shot list. This works for every camera whose files pass
-section 9's gates: on the evidence of M1, current Canon, Nikon, Pentax, Hasselblad, Sony
-and Bayer Panasonic bodies.
+**From files (in scope, complete).** A person shoots with whatever controls their camera.
+They drop the folder into the Library. Strehl decodes it, finds or asks for the camera's
+and lens's profiles, and stacks it. Every sitting has a by-hand form (4.2), so the whole
+setup can be done with no driver. This works for every camera whose files pass section
+9's gates: on the evidence of M1, current Canon, Nikon, Pentax, Hasselblad, Sony and
+Bayer Panasonic bodies.
 
 **Tethered (not in scope, prepared for).** Strehl's capture host drives the camera, the
 focus axis and the light. Today that is a Sony body over Sony's PTP dialect with focus by
@@ -193,8 +322,10 @@ Nikon High Efficiency NEF, and demosaiced (linear) DNG.
 | **Rig** | The focus axis, the stand, the host | A name, and the host's identity | Section 5.5 |
 | **Light** | The lamp and its supply | A name, and the plug's identity where it is switched | Section 5.6 |
 
-A **setup** is a name and one of each. Rig and light are empty for someone who works from
-files. The same camera part can sit in several setups; so can any part.
+A **setup** is a name and one of each part that applies. It always has a camera, a lens
+and a rig part: the rig part holds the answers of section 4.1 even when nothing else about
+the rig is known. It has a light part when it has a light of its own. The same camera
+part can sit in several setups; so can any part.
 
 Why four and not one: a measurement belongs to what it is a property of. The lens's
 lateral colour "is a property of the glass, not of the body"
@@ -250,17 +381,21 @@ modes             [ Mode ]
 source            "measured" | "shipped" | "imported"
 ```
 
-A **mode** is everything that changes how the sensor is read out. Two frames belong to
-the same mode when these agree:
+A **mode** is one way the camera reads its sensor out: a shutter type, a bit depth, a
+compression. Most people have one. A second is made on the Camera sheet ("New mode…")
+and measured by running Dark and Bright again in it.
 
 ```text
 Mode
-  label           "Mechanical shutter", "Silent", as the person names it; "Default" for the first
+  label           "Mechanical shutter", "Silent": the person's words; "Default" for the first
   signature       { container_bits, compression: String, width_px, height_px }
   iso             [ IsoPoint ]
-  defaults_for    which setups shoot in this mode (the engine cannot read shutter type
-                  from every maker's files; a stack's manifest or the current setup says)
 ```
+
+Which mode a stack uses: the one its setup names, for a stack Strehl captured (section
+11.1). For an imported stack, the mode whose signature its first frame matches; when two
+modes share a signature (the A7CR at 1/8000 s and at 1/100 s do, M4), the current setup's
+choice, shown on the stack and changeable there.
 
 ```text
 IsoPoint
@@ -272,7 +407,7 @@ IsoPoint
   gain_dn_per_e       Option<[f32; 4]>
   clip                Option<[u16; 4]>   the highest code the data reach
   linear_to           Option<[f32; 4]>   DN above black the response is linear to (1 %)
-  dark_dn_per_s       Option<f32>
+  read_dn_long        Option<{ shutter_s, read_dn: [f32; 4] }>   the Dark sitting's burst b
   taken               { unix, frames, shutter_s: [..], sitting: "dark" | "bright" }
 ```
 
@@ -315,7 +450,9 @@ f_number          f32
 path              String     "2x converter, no filter": the person's words
 lateral           [ { focus: Option<f64>, red: { scale, translation }, blue: { .. }, fit: FitStats,
                       from: String, unix } ]
-scale             [ { focus: Option<f64>, um_per_px: f64, unix, how: "pitch" | "length" } ]
+scale             [ { focus: Option<f64>, um_per_px: f64, unix, how: "pitch" | "length" | "entered" } ]
+live_offset       [ { focus: f64, units: f64, unix } ]          section 7.1; lens-motor axes
+colour_focus      [ { focus: Option<f64>, red: f64, blue: f64, unit: String, unix } ]   section 6.4
 depth             [ { focus: Option<f64>, width: f64, unit: String, unix } ]
 cutoff            [ { focus: Option<f64>, green: f64, residual, tiles, unix } ]
 dust_map          Option<path>      at this f-number, for one camera serial
@@ -350,29 +487,35 @@ source            "measured" | "shipped" | "imported"
 schema        "strehl.setup.rig.v1"
 name          String
 host          Option<String>         the controller's identity
-axis          { kind: "lens" | "rail", unit: String, um_per_unit: Option<f64>,
-                step_quantum: Option<f64> }
+frames        "host" | "files"       section 4.1's first answer
+axis          { kind: "lens" | "rail" | "camera" | "hand", driven: bool, unit: String,
+                um_per_unit: Option<f64>, step: Option<f64> }
 approach      Option<{ distance, from: "below" | "above", repeat_sd, hysteresis,
                        after_far_move: { offset, scatter }, unix }>
-settle        Option<{ ms, after_approach_ms, table: [ { ms, moved_px } ], unix }>
+settle        Option<{ ms, after_approach_ms, table: [ { ms, moved_px } ], limit_px, unix }>
 stillness     Option<{ moved: [ { span_s, px } ], drift_px_per_min, exposure_limit_s, unix }>
+level         Option<{ across_width, across_height, bowl, unit: String, unix }>     section 6.4
 timing        Option<{ per_plane_s, per_image_s, link_mbps, unix }>
-source        "measured" | "defaults"
 ```
 
-A rig part with `source: "defaults"` holds today's constants (F8) and says so.
+`driven` is true when Strehl's host moves the axis. `unit` is "lens units", "um" or
+"frames"; an axis with no positions counts in frames. Each measurement carries its own
+source (5.9); a host's rig part starts with today's constants (F8) marked "default".
 
 ### 5.6 The light part
 
 ```text
 schema        "strehl.setup.light.v1"
 name          String
+kind          "switched" | "continuous" | "flash"     section 4.1's third answer
 plug          Option<String>
 warm_up       Option<{ settled_s, tolerance, curve: [ { s, level } ], drift_px_per_min, unix }>
-steadiness    Option<{ rel_sd, at_shutter_s, unix }>
+steadiness    Option<{ rel_sd, at_shutter_s, unix }>      frame to frame; flash to flash for a flash
 balance       Option<{ red, blue, target: String, unix }>      multipliers against green
-source        "measured" | "defaults"
 ```
+
+`warm_up` exists only for the two continuous kinds. A setup lit by daylight has no light
+part; what Bright sees of its light's steadiness is on Bright's plate and nowhere else.
 
 ### 5.7 What makes a measurement out of date
 
@@ -397,7 +540,22 @@ Sensor noise and levels do not age on these time scales and are never ringed for
   it, or make a new setup that keeps the camera, rig and light.
 - **The Library does not ask.** An imported stack finds its camera part by model and its
   lens part by 5.4's rule, whatever the current setup is.
-- A new setup starts from a copy of the current one's parts or from nothing.
+- A new setup starts from a copy of the current one's parts or from nothing, and with
+  section 4.1's three questions.
+
+### 5.9 Where a number came from
+
+Every number on the page, in a sheet's table and on a stack's checks row carries one of
+these, drawn as a mark and said in a word:
+
+| Source | Mark | Means |
+| --- | --- | --- |
+| Measured here | ● | A sitting on this machine gave it, on the date shown |
+| Shipped | ○ "shipped" | It came with Strehl, measured on another body or lens of the same model |
+| From a file | ○ "from a file" | Imported from a `.strehl-setup` someone else made |
+| Entered | ○ "entered" | The person typed it (section 4.3) |
+| Default | ○ "default" | A constant Strehl has always used: today's settle, approach and light wait |
+| Guessed | ○ in the warning colour, "guessed" | Nothing stands behind it: the noise model of a camera nobody has measured |
 
 ---
 
@@ -413,11 +571,17 @@ Sensor noise and levels do not age on these time scales and are never ringed for
   *Check* (live view, a few seconds: is this the right target?), *Shoot* (the host takes
   the bursts as a capture of kind `setup`, section 11.2), *Read* (the engine's
   `strehl setup <sitting>`, section 10.4), *Plate* (the result on the stage).
-- **From files** the page shows the shot list in plain words with the camera's own
-  settings, and a place to drop the folder. `strehl setup sort` groups what was dropped
-  into bursts by ISO, shutter and mode signature, tells dark frames from lit ones by their
+- **By hand** (the button says "From files…") the page shows the shot list in plain words
+  with the camera's own settings, and a place to drop the folder. A list needs nothing but the camera, its own controls
+  and the thing in front of the lens. `strehl setup sort` groups what was dropped into
+  bursts by ISO, shutter and mode signature, tells dark frames from lit ones by their
   level, and shows what it found against the list: "ISO 100, 1/100 s: 8 dark frames.
-  ISO 400: 2 dark frames, 8 are needed." Then *Read* and *Plate* as on the rig.
+  ISO 400: 2 dark frames, 8 are needed." Where a list needs frames in a known order
+  (Motion), it numbers them and the page shows each dropped frame against its number
+  before reading. Then *Read* and *Plate* as on the rig.
+- **A rig that drives only part of it** never fails for want of the rest. Where the host
+  takes the frames but cannot do a step itself (switch the light, move the focus), the
+  sitting waits on one sentence and a Continue button: "Cap the lens, then Continue."
 - **Time.** MEASURED on the A7CR over the Pi: a burst of 8 single shots takes 16.6 s at
   1/100 s, 22 s at 0.6 s, 27 s at 1.3 s, 37 s at 2.5 s and 82 s at 8 s, so about 2.1 s a
   frame beside its exposure. The page's time for a sitting is that sum, shown before it
@@ -431,22 +595,35 @@ Sensor noise and levels do not age on these time scales and are never ringed for
 
 ### 6.1 Dark
 
-**In front of the lens:** nothing. "Switch the light off, or put the lens cap on. On an
-SLR, cover the viewfinder."
+**In front of the lens:** nothing. With a light Strehl switches: "Strehl switches the
+light off and puts it back afterwards." Otherwise: "Put the lens cap on. On an SLR, cover
+the viewfinder too."
 
-**Why a cap is not needed on a rig with a switched light.** MEASURED (M3, R2): light off,
-no cap, room as it was at night, against the capped series of 14 November.
+**What dark has to mean.** MEASURED (M3, R2, R9), 8 frames a burst, green, the same
+night: capped with the door closed; no cap, light off, room not fully dark; and the
+capped series of 14 November (16 to 32 frames, at 0.6 s unless marked).
 
-| ISO, shutter | Black, no cap | Read noise, no cap, 8 frames | Read noise, capped, 16 to 32 frames |
+| ISO, shutter | Capped: black, read noise | No cap, light off: black, read noise | 14 November, capped |
 | --- | --- | --- | --- |
-| 100, 1/100 s | 512.22 | 1.305 | 1.305 (1/8 s) |
-| 100, 0.6 s | 512.34 | 1.323 | 1.330 |
-| 100, 2.5 s | 512.41 | 1.373 | 1.363 |
-| 320, 1/100 s | 512.31 | 3.754 | 3.836 (0.6 s) |
-| 400, 1/100 s | 512.21 | 2.134 | 2.224 (0.6 s) |
-| 3200, 1/100 s | 512.06 | 15.75 | 16.81 (0.6 s) |
+| 100, 1/100 s | 512.25, 1.311 | 512.22, 1.305 | 1.305 (1/8 s) |
+| 100, 2.5 s | 512.29, 1.325 | 512.41, 1.373 | 1.363 (2.5 s) |
+| 200, 1/100 s | 512.22, 2.416 | | 2.467 |
+| 320, 1/100 s | 512.27, 3.745 | 512.31, 3.754 | 3.836 |
+| 400, 1/100 s | 512.19, 2.144 | 512.21, 2.134 | 2.224 |
+| 800, 1/100 s | 512.14, 4.171 | | 4.406 |
+| 3200, 1/100 s | 512.25, 15.81 | 512.06, 15.75 | 16.81 |
+| 100, 1/100 s, capped, light on | 512.25, 1.305 | | |
+| 100, 2.5 s, capped, light on | 512.34, 1.319 | | |
 
-On a rig the page switches the light off itself and switches it back afterwards.
+- The numbers the engine uses (black and read noise at 1/100 s) are the same with and
+  without the cap, within 0.5 %. A rig with a switched light needs no cap.
+- The room's stray light shows at 2.5 s and nowhere else: black +0.12 DN and read noise
+  +3.6 % against the capped burst. It passes the check below and the page says so in a
+  note; it is the passing input nearest the line.
+- A cap alone is enough with the light on.
+- Tonight's read noise is 2 to 6 % under the 14 November series from ISO 200 up. That
+  series was shot at 0.6 s on a camera that had been running for an hour; which of the
+  two matters was not separated.
 
 **Shot list.**
 
@@ -457,13 +634,23 @@ On a rig the page switches the light off itself and switches it back afterwards.
 | c… | Each further whole stop up to 3200 | T1 | 8 each |
 | d… | Where the read noise in DN divided by ISO falls by more than a quarter from one whole stop to the next: the third-stops between them | T1 | 8 each |
 
-A7CR: a, b, five of c and two of d, about 3 minutes. From files the list is a, b and "8
-frames at each other ISO you shoot at"; d is offered after the first read if a fall was
-found.
+A7CR: a, b, five of c and two of d: nine bursts, 2 min 52 s (MEASURED, R9).
 
-T1 is 1/100 s because every camera's ordinary shutter does it. MEASURED (M4): at 1/8000 s
-the A7CR reads 1.547 DN where it reads 1.331 at 1/1000 s and 1.305 at 1/100 s. A person
-who stacks with a silent or electronic shutter makes a second mode and measures it there.
+**By hand.** "Put the lens cap on. Shoot 8 frames at 1/100 s at each ISO you use, and 8
+more at your lowest ISO at your longest exposure." Burst d is offered after the first
+read if a fall was found: "The gain mode changes between ISO 200 and 400. Shoot ISO 250
+and 320 to find where."
+
+T1 is 1/100 s because every camera's ordinary shutter does it and nothing odd happens
+there. MEASURED (M4, R9), A7CR, ISO 100, capped:
+
+| Shutter | 1/8000 s | 1/4000 s | 1/2000 s | 1/1000 s | 1/100 s | 0.6 s | 2.5 s | 8 s |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Read noise, DN | 1.546 | 1.385 | 1.318 | 1.325 | 1.311 | 1.323 | 1.325 | 1.594 |
+| Black | 512.23 | 512.24 | 512.24 | 512.21 | 512.25 | 512.30 | 512.29 | 512.28 |
+
+A person who stacks at the fastest speeds or with a silent shutter makes a second mode
+and measures it there. Long exposures are covered by burst b.
 
 **Check, in live view (rig):** the frame's mean is under 4 of 255 and its 99.9th
 percentile under 16 (the test that guarded the 14 November series). Otherwise the sitting
@@ -486,28 +673,33 @@ burst and per CFA position over the active area:
 5. Hot photosites, from burst b: `m - black` above the larger of 50 DN and 10 `read_dn`.
    Written as a defect map (the existing format, hot arm); the engine's use of it is
    unchanged (off, `defect_map.rs` records why).
-6. Dark current: `(black_b - black_a) / (T2 - T1)`.
+6. Long exposures: burst b's `read_dn`, kept as `read_dn_long` with its shutter time. The
+   camera holds its black whatever the exposure (the table above), so dark current never
+   shows in the level, only as noise. When b reads more than 5 % over a, the mode's notes
+   say so: "At 8 s the read noise is 21 % higher (1.59 DN). Strehl's model uses 1.31."
+   The engine goes on using burst a's figure; section 14.
 7. Row and column noise beyond the photosites' share, and the correlation of a
    photosite's temporal noise with its same-colour neighbours. A correlation above 0.01
    and three times its own error gets the note "<colour> is filtered in camera" (the
    A7CR's blue, MEASURED 2026-11-14).
 8. Gain modes: with the points in ISO order, a new mode starts at the first ISO whose
    `read_dn / ISO` is under three quarters of the previous point's. A7CR: 0.0131 at 100,
-   0.0123 at 200, 0.0121 at 250, 0.0117 at 320, 0.0053 at 400, so a mode starts at 400
-   (MEASURED 2026-11-14 and R2).
+   0.0121 at 200, 0.0120 at 250, 0.0117 at 320, 0.0054 at 400, 0.0052 at 800, so a mode
+   starts at 400 (MEASURED 2026-11-14 and R9).
 
 **Checks.**
 
 | Check | Passes when | Sentence on failure | Measured pass / fail |
 | --- | --- | --- | --- |
-| Dark | `black_b - black_a` is at most 0.5 DN | "These frames are not dark. The level rises with exposure time: 513.9 at 1/100 s, 969.8 at 2.5 s. Switch the light off or cap the lens." | 0.19 DN / 455.9 DN with the light on (R2) |
+| Dark | `black_b - black_a` is at most 0.5 DN | "These frames are not dark. The level rises with exposure time: 513.9 at 1/100 s, 969.8 at 2.5 s. Switch the light off or cap the lens." | 0.04 DN capped, 0.09 capped with the light on, 0.19 uncapped in a dim room / 455.9 DN with the light on (R2, R9) |
+| A little light (a note, not a failure) | The same rise is over 0.1 DN | "A little light reaches the sensor at long exposures (0.19 DN in 2.5 s). It does not change the numbers Strehl uses; cap the lens if you want it gone." | 0.19 / 0.04 |
 | Steady | No frame's mean is further from its burst's than the larger of 0.5 DN and 0.15 `read_dn` | "The black level moved during the burst (1.4 DN). Let the camera idle for a minute and repeat." | 0.05 to 0.21 DN at ISO 100 / none seen; a planted 2 DN step is the failing input |
 | One mode | Every frame has the first frame's signature | "Frame 5 is 12-bit and the others are 14-bit. Shoot the sitting in one mode." | |
 | Enough | At least 6 frames in every burst | "ISO 400 has 2 dark frames; 8 are needed." | |
 | Sane | `read_dn` between 0.2 DN and 2 % of the range | "The read noise does not look like a sensor's (0.0 DN). Are these RAW files as the camera wrote them?" | 1.3 to 15.8 DN / a developed or stacked file |
 
-**Gives:** `black`, `black_declared`, `read_dn`, `read_dn_median`, `dark_dn_per_s` for
-each ISO; the gain modes; the hot map; the notes.
+**Gives:** `black`, `black_declared`, `read_dn`, `read_dn_median` for each ISO;
+`read_dn_long` at the lowest; the gain modes; the hot map; the notes.
 
 ### 6.2 Bright
 
@@ -555,8 +747,26 @@ found so far minus black, the container's until a burst clips.
    scene is too dim to reach the top of the range at ISO 100. Gain is measured; the clip
    level is measured at ISO 400", and does that.
 3. The bursts, in the order a to e, f, then g to i with the axis moved by a quarter of the
-   defocus between them. The card is never touched (rule 1). From files the list says "3
-   bursts of 4, moving the card a finger's width between them".
+   defocus between them. The card is never touched (rule 1).
+
+**By hand.** The list, in the page's words:
+
+> Turn the focus well away from the subject, so that nothing in the frame is sharp. At
+> your lowest ISO shoot 8 frames at each of five exposures, from dim to clearly
+> overexposed. With a continuous light, change the shutter time: a quarter of your usual,
+> your usual, then 2.5, 4 and 6 times it. With a flash, change its power over the same
+> range. Then 8 frames at each other ISO you shoot at, at your usual exposure. Touch
+> nothing between frames. If you have a white card that fills the frame: 3 more bursts of
+> 4, moving the card a finger's width between them.
+
+The page reads what was dropped against what it needs and says what is missing in the
+words of the checks below: "Nothing clipped: add one burst twice as bright." The five
+exposures need not be exact; the Spread and Reaches the top checks are what count.
+
+**With a flash** the same analysis holds: flash-to-flash differences are removed frame by
+frame exactly as a continuous light's drift is, and reported as the light's steadiness
+("Flash to flash 3.1 %"). The Light check is then advice, not a ring. UNVERIFIED: no flash
+series was shot for this design.
 
 **Read** (prototype: `experiments/setup-page-2026-11-27/sensor.rs`), per burst and CFA
 position:
@@ -619,7 +829,8 @@ position:
 lens. A ruler when more than 2 mm is in view; a stage micrometer or a calibration slide's
 grid above about 5x.
 
-**Shoot:** one single shot at the subject's exposure. From files: one RAW.
+**Shoot:** one single shot at the subject's exposure. **By hand:** one RAW of the target
+dropped on the page. A person who already knows their scale types it instead (4.3).
 
 **On the stage** the frame at fit, with two tools:
 
@@ -710,6 +921,31 @@ between subjects.
 
 **Gives:** the lens part's `lateral`, one `depth` sample, one `cutoff` record.
 
+**Two more readings from the same stack** (stage P10, decision 7: proposed here, and the
+last things to build).
+
+- *Colour focus.* Red and blue come to focus at a different depth from green. The sharp
+  depth's measure (`focus-step`, a tile's contrast against focus) is taken on the red
+  and on the blue photosites as well as the green; the median over tiles of red's peak
+  less green's, and of blue's less green's, in the axis's unit, goes to `colour_focus`
+  and is drawn on the Depth plate as three curves. MEASURED 2026-11-16 by another route
+  (`point-focus.py`, the scarab stack at a step of 8 units): red peaks 3 to 3.5 frames
+  after green and blue 2 to 2.5, and at green's focus red keeps 0.93 and blue 0.96 of
+  their own peak. No default render uses it (`STREHL_AXIAL_CA` is off). It tells a person
+  what a coarse step costs first, and it is the number that switch would start from.
+- *Level.* When the person says the stack is of a flat target, each tile's best focus
+  (`strehl survey`'s `maps.focus`) is fitted with a plane, then a plane and a bowl: the
+  tilt across the frame's width and height and the field's curvature, in the axis's unit
+  and in sharp depths, kept in the rig part's `level` and drawn on a Level plate as
+  contours over the frame. It says how square the stage lies to the sensor, which a
+  rebuilt stand or a tiled capture needs. ARGUED, and not measured: the flat-target
+  stacks on disk are too shallow. Its guard is measured (R10): on the slide stack of
+  2026-11-25 (6 planes over 38 units) 3,622 of 14,751 tiles peak inside the stack and
+  7,119 are sharpest at its first plane, and the fit that results is not to be believed.
+  The check: at least four fifths of the tiles with detail peak inside the stack, or
+  "The stack is too shallow to tell: 7,119 tiles are sharpest at or before its first
+  plane. Shoot from further below the target to further above it."
+
 **What the engine does without it** (decision 4): today an unknown lens gets no colour
 correction (F4). With the default of decision 4 the engine runs the same two passes on
 every stack whose lens has no part, and the Stack station's checks row says "Lens colour
@@ -718,9 +954,11 @@ with too little detail to measure themselves, and for the plate.
 
 ---
 
-## 7. The rig's own sittings
+## 7. Motion and Warm-up
 
-These two need the host. They measure what Capture now takes from constants (F8).
+These two are about the rig and the light, not the sensor or the lens. A host does them
+unattended. By hand they are shot lists like the others (4.2). They measure what Capture
+takes from constants today (F8).
 
 ### 7.0 The fingerprint: reading where the lens is from live view
 
@@ -748,6 +986,12 @@ within 0.16 units; with its own position left out of the fingerprint, within 1.8
 good to about 2 units, 4 % of the sharp depth, and the page says so on the plate.
 
 The magnifier is not used: the camera drops it on every focus move (M9).
+
+**By hand** the same reading is made from RAW frames instead of live ones: the sweep is a
+short stack at the person's finest step, the tiles are 64-pixel tiles of the
+half-resolution green plane, and positions count in the typed step or in frames. The
+arithmetic is the same function. UNVERIFIED on RAW frames: the lens was capped by the
+time this was written down; stage P6 gates it against the live-view result on this rig.
 
 ### 7.1 Motion: Return
 
@@ -803,8 +1047,30 @@ calibration's sweep it is the error to expect.
 | Instrument | Leaving a position out, the sweep reads itself within a tenth of the sharp depth | "The reading is not steady enough to judge (9 units). Is the subject moving, or the light changing?" |
 | Drift | The second sweep reads within a tenth of the sharp depth of the first | "Focus drifted 7 units during the test. Let the rig warm up and repeat." |
 
-**Gives:** the rig part's `approach`. Capture's Rig step shows it beside the plan's own
-(8.6).
+**By hand**, for a rail or any axis that can be sent back to a position (not the
+camera's own bracketing). The list, in the page's words:
+
+> 1. Shoot a stack of 33 frames through the subject at your finest step, going up.
+> 2. Go down past the start by your usual run-up, come up to where frame 17 was, shoot one
+>    frame. Do that five times.
+> 3. Go up past the end, come down to where frame 17 was, shoot one frame. Five times.
+> 4. Shoot the stack of step 1 again.
+
+The page shows the 76 dropped frames against the list before it reads them. The answer is
+in the person's own unit: "From below it returns within 0.4 of a step. From above it
+lands 3 steps low: your rail has 3 steps of backlash. Always arrive from below."
+
+**Live view against RAW** (a lens axis on a host; stage P10, decision 7). Capture's pass
+finds the subject in live view and then in RAW, and the two disagree: RAW focus less the
+live sweep's peak was +29.8 and +29.0 units on the dragonfly (MEASURED 2026-11-27 by the
+pass itself, `LensMemory`; cause not established, and R5 shows it is not the axis's
+hysteresis, which is 4 units). After the sweep the sitting takes 13 single shots from
+`P - 24` to `P + 24` units, reads each tile's peak from them and from the live frames, and
+keeps the median difference in the lens part's `live_offset` by focus position. Capture's
+pass starts from it instead of from zero, and goes on measuring its own.
+
+**Gives:** the rig part's `approach`; the lens part's `live_offset`. Capture's Rig step
+shows the approach beside the plan's own (8.6).
 
 ### 7.2 Motion: Settle
 
@@ -813,7 +1079,7 @@ move is commanded, one live pixel is 9.3 sensor pixels, and by that first frame 
 picture is already within 0.3 to 0.5 sensor pixels of where it stays. Live view cannot see
 a settle of half a second.
 
-**Shoot** (RAW; 5 min on the rig): bursts of ten single shots at planes one plan step
+**Shoot** (RAW; 4 min 34 s on the rig): bursts of ten single shots at planes one plan step
 apart, at 1/100 s with the ISO raised to keep the exposure (3200 here), so that the
 exposure freezes the picture at the moment the settle ends. One burst each with the
 settle at 2,000 ms (the reference), then 100, 250, 500, 1,000 and 2,000 ms, twice over,
@@ -870,13 +1136,26 @@ registers against itself (even against odd planes shifted back) within 0.1 px.
 own until the person takes it. `AFTER_APPROACH_MS` stays 2 s: this sitting does not test
 the plane after an approach.
 
+**By hand.** "Shoot the same run of ten steps three times: with your controller's settle
+delay at 2 s, at the delay you use, and at 2 s again. Use 1/100 s, or flash." The first
+run is the reference and the third shows what drift and wander leave; the reading is the
+one above.
+
 **Still** is `capture-stillness.rs` as it is, run from this sitting's row and kept in the
-rig part with its date. **Timing**: the seconds per plane and per image are read from the
-bursts every sitting shoots (their journals carry the times) and kept in `timing`.
+rig part with its date. **By hand:** "Shoot ten frames at 1/100 s with nothing touched."
+The frames are registered against the first as in Settle, and the movement between
+frames is reported with the times between them.
+
+**Timing**: the seconds per plane and per image are read from the bursts every sitting
+shoots (a host's journals carry the times; by hand, the files' own times) and kept in
+`timing`.
 
 ### 7.3 Warm-up
 
 **In front of the lens:** anything lit, in focus or not.
+
+Offered for continuous lights only (4.1). A flash's frame-to-frame steadiness comes from
+Bright.
 
 **Check:** the light has been off for 20 minutes (the page knows from the plug, or from
 the time it last saw the light go off). "Start anyway" runs it and marks the result "the
@@ -884,6 +1163,12 @@ light was warm".
 
 **Shoot** (3 min 25 s): the light is switched on and one burst of 70 single shots at the
 plan's exposure starts at once, a frame about every 2.9 s.
+
+**By hand.** "Leave the light off for 20 minutes. Set the camera to shoot a frame every 3
+to 5 seconds at your usual exposure. Switch the light on, start the camera at once, and
+let it run for 4 minutes. Tell Strehl how many seconds passed between the switch and the
+first frame." The frames' own times place them, to the second where the file gives no
+finer.
 
 **Read** (`strehl setup warm-up`; prototype `analysis/series-an.py`): each frame's level
 is its mean above black over photosites that are between 5 % and 50 % of the range in the
@@ -936,6 +1221,9 @@ lettering; the same state mark. Key `6`. The mark is:
 | ◐ | Something the app would use is missing: say which in the tip ("Scale not measured") |
 | ○ | The camera's noise is guessed |
 
+Only what the setup has counts (rule 11). A setup that works from files in daylight is ●
+with its camera and lens measured.
+
 ### 8.2 Layout
 
 The skeleton is Capture's (`app-station-capture.rs`, `capture-station.rs`,
@@ -970,36 +1258,41 @@ its rail, and the inspector at the right, 348 px, where Capture has its plan.
 
 **The control strip** (where Capture has its pre-flight chips): the setup's name as a
 selector, whose menu is the other setups, New setup…, Rename, Export…, Import…; then one
-chip for each part with its mark, which opens that part's tab; at the right, what is left
-for this setup as time.
+chip for each part the setup has, with its mark, which opens that part's tab; at the
+right, what is left for this setup as time.
 
 **The inspector's first tab, Sittings** (a view that returns intents, as `capture-plan.rs`
 does).
 
-- Six sitting rows, drawn with `capture-plan.rs`'s `step` (hairline, 26 px numeral, green
-  when everything it gives is measured). Closed, a row is its name, its mark and one
-  line: the date and what it gave, or what is missing in the words of 8.6.
+- One row for each sitting that applies to this setup (4.2), numbered as in section 3 so
+  that a number always means the same sitting. Rows are drawn with `capture-plan.rs`'s
+  `step` (hairline, 26 px numeral, green when everything it gives is measured). Closed,
+  a row is its name, its mark and one line: the date and what it gave, or what is
+  missing in the words of 8.6.
 - One row is open at a time. Open, it shows, in this order: the sentence about what goes
   in front of the lens, with a drawn pictogram 48 px high (a cap; a card with a blurred
   edge; a ruler; a patch of fine texture; a double-headed arrow on an axis; a lamp); the
   shot list in one line with its time ("9 bursts of 8 · about 3 min"); the buttons
-  **Measure** (primary; absent with no rig) and **From files…**; and after a run the
+  **Measure** (primary; present where the host can shoot it) and **From files…** (always;
+  primary when it is the only one); and after a run the
   readout (`capture-plan.rs`'s `readout`: what, value, source) with one row for each
   number it gave.
 - Under a value that came from this sitting: "● measured 27 Nov". Under one that did not:
   "○ shipped with Strehl", "○ from a file" or "○ guessed". The dot and ring are
   `capture-plan.rs`'s `value_marker` with new words.
-- Footer: when two or more unmeasured sittings need the same target, one button that
-  runs them back to back ("Measure Detail and Motion").
-- Sittings the setup cannot use are drawn in the third ink with the reason: "Motion needs
-  a rig Strehl drives."
+- Footer: where section 4.4 applies, **Measure the rig**, with its time and what it will
+  skip ("21 min · Warm-up skipped: the light has been off 4 min"). It is the primary
+  button of the page on such a rig until those four sittings are measured.
+- Sittings that do not apply are not listed. The Rig and Light sheets say why (4.2).
 
 **The stage.**
 
 | State | Shows |
 | --- | --- |
 | A sitting is open, a rig is connected, nothing running | Live view (`capture-live.rs`'s `LiveView` without Capture's lenses) with the sitting's meter over it (8.3) |
-| A sitting is open, no rig | The shot list set large, and the drop target: a ruled rectangle, "Drop the folder here" |
+| A sitting is open, by hand | The shot list set large, and the drop target: a ruled rectangle, "Drop the folder here". After a drop: the frames found against the list, and Read |
+| Waiting on the person | The live frame, one sentence and Continue: "Cap the lens, then Continue." |
+| Measure the rig is running | As Shooting. The progress line has one segment for each of the four sittings, the Sittings tab marks each as it ends, and the plate of the one just finished shows until the next has something to draw |
 | Shooting | The last live frame held, dimmed by a third, and over it the burst being shot: "ISO 400 · 1/100 s · frame 5 of 8". The progress line (`capture-plan.rs`'s `progress_line`) has one tick per burst |
 | Read | The plate (8.4) |
 | No sitting open | The setup's summary plate (8.5) |
@@ -1023,8 +1316,10 @@ actions.
 | --- | --- | --- |
 | Camera | One row per ISO: black, read noise (DN and electrons), gain, clip, linear to. Notes under it | Mode (selector; New mode…), Pixel pitch (a field, filled from the file when it gives one), Use another camera part…, Compare with shipped, Export…, Forget |
 | Lens | Lateral colour by focus position; scale samples; depth samples; working aperture; the dust map's date and count | Name of the path (a field: "2x converter, no filter"), Use another…, Export…, Forget a row |
-| Rig | Axis; approach; settle; stillness; time per plane | Name, axis kind and unit (fields), Use in Capture (shows what Capture's Rig step will take, 8.6) |
-| Light | Warm-up; steadiness; balance | Name; "The lamp or its setting changed" (rings what depends on it) |
+| Rig | The first two answers of 4.1; the axis's unit and step; approach; settle; stillness; level; time per plane | The two answers as ruled choices; name; unit and step (fields, 4.3); Use in Capture (shows what Capture's Rig step will take, 8.6) |
+| Light | The third answer of 4.1; warm-up; steadiness; balance | The answer as a ruled choice; name; "The lamp or its setting changed" (rings what depends on it); "No light of its own" removes the part |
+
+A setup with no light part has no Light tab and no Light chip.
 
 Compare with shipped draws both in the sheet's table, the difference in a third column,
 and on the open plate as a second line in the third ink.
@@ -1066,9 +1361,9 @@ a line, and one sentence. Every number in the Sittings tab can be found on a pla
 
 ### 8.5 The summary plate
 
-With no sitting open the stage shows the setup on one sheet: four ruled panels, Camera,
-Lens, Rig, Light, each with its three or four headline numbers in the readout face and
-their marks, and under them the one thing most worth doing next with its time: "Scale is
+With no sitting open the stage shows the setup on one sheet: a ruled panel for each part
+it has, each with its three or four headline numbers in the readout face and their
+marks, and under them the one thing most worth doing next with its time: "Scale is
 not measured. 1 min with a ruler." This is also what a new person sees first, with most
 of it empty.
 
@@ -1079,6 +1374,7 @@ First visits:
 | No camera known, no rig | "Strehl has not met a camera here yet." | Drop a folder of RAW files from your camera · Connect a rig (Capture's connection sheet) |
 | A folder from an unmeasured camera | "Canon EOS R5. Strehl is guessing its noise until you measure it: two sittings, about 10 minutes with the camera in your hands." | Dark and Bright open, From files |
 | A rig with a shipped camera and lens | "A7CR with the FE 100mm F2.8 Macro GM OSS + 2X Teleconverter. Shipped with Strehl, measured on another A7CR on 14 November 2026." | Measure your own · Scale, Motion and Warm-up as not measured |
+| A new setup | "What do you have?" and the three questions of 4.1, each a row of ruled choices, with what a connected host can see already chosen | Continue, to the summary plate with the sittings that apply |
 | A file that cannot be used | Section 9.2's sentence for it | |
 
 ### 8.6 Where the rest of the app says it
@@ -1347,7 +1643,9 @@ The page asks the host what it can do and never what it is. `/api/state.capabili
 | `switches_light` | Dark without a cap; Warm-up |
 | `reports_focus` | A focus position on scale, depth and colour records |
 
-A sitting whose capability is missing offers From files, or says what it needs (8.2).
+A step whose capability is missing waits on the person (6.0), and every sitting has its
+by-hand form (4.2). The capabilities also fill in section 4.1's answers for a new setup:
+a host that reports `drives_focus` and `switches_light` is the rig of section 4.4.
 
 ### 11.4 Who the camera is
 
@@ -1386,6 +1684,8 @@ the palette's icons, `station_purpose`, `hints`, `tip`), `studio-preferences.rs`
 | `setup-run.rs` | A sitting as a small state machine, Check, Shoot, Read, Plate, with stop and failure, in the manner of `capture-measure.rs`'s `Pass` |
 | `setup-files.rs` | The files path: the shot list's words, the drop, `strehl setup sort` |
 | `setup-store.rs` | The folder of 5.2 through `strehl_core::setup`; watching it for a part kept by the command line |
+| `setup-equipment.rs` | Section 4: the three questions as a view, and one function, `applies(setup) -> [Sitting]`, that the Sittings tab, the station's mark and Measure the rig all read |
+| `setup-chain.rs` | Measure the rig (4.4): the order, the waits, what is skipped and why, stop and restore |
 | `setup-fixture.rs` | Fixtures (12.5) |
 
 Reused as they are: `capture-client.rs` and `capture-host.rs` (the host), `capture-live.rs`
@@ -1405,7 +1705,8 @@ Motion), `capture-stillness.rs` (Still), `capture-tools.rs` (`EngineJob`),
 
 ### 12.4 Control
 
-Requests (`agent-interface.rs`, `app-agent.rs`, `docs/desktop-control.md`): `open_setup`,
+Requests (`agent-interface.rs`, `app-agent.rs`, `docs/desktop-control.md`):
+`setup_describe { frames, axis, light }`, `setup_measure_rig`, `setup_continue`, `open_setup`,
 `setup_select { setup }`, `setup_open { sitting }`, `setup_measure { sitting }`,
 `setup_from_files { sitting, folders }`, `setup_stop`, `setup_keep`, `setup_discard`,
 `setup_scale { band | box, pitch_um | marks, length_um }`, `setup_detail { stack }`.
@@ -1429,6 +1730,10 @@ their sentences.
 | `motion-return` | R5's points |
 | `shooting` | A sitting in its Shoot stage, burst c of 9 |
 | `refused` | An X-Trans folder dropped |
+| `new-setup` | The three questions, for a Canon body on a rail with a flash |
+| `waiting` | Dark on a host with an unswitched light: "Cap the lens, then Continue" |
+| `rig-chain` | Measure the rig in its third sitting of four |
+| `by-hand-return` | Motion from files: the list, and 76 frames found against it |
 
 The plates' fixture points are the measured ones in
 `experiments/setup-page-2026-11-27/plates/`, so a fixture screenshot shows real numbers.
@@ -1458,13 +1763,17 @@ Said here so that nobody reads the rest as more certain than it is.
 | --- | --- | --- |
 | A stack from a Canon, Nikon or any other maker's camera, rendered end to end. None is on disk; the samples are single frames | The decoder's report on 24 files (R1) and the list of gates in section 9 | Stage E2 needs one real stack from another maker before it is called done. The owner has no such camera: a borrowed folder, or a public one, is an input the implementer asks for |
 | The Bright sitting with a white card: the dust map, the fixed pattern, the light's balance | The dust detector's own record on the A7C II's flats (`defect_map.rs`), and 2026-11-16's fixed-pattern figures. The subject on the stage tonight is a wing on a black ground, dark over most of the frame, and nobody was at the rig to place a card | Stage P3's rig gate, with the owner placing a card |
-| Any sitting done from files by a person reading the shot list | The same analysis run on the rig's frames | Stage P2: the owner shoots Dark and Bright by hand on the A7C II and the page must reach the shipped numbers |
+| Any sitting done by hand by a person reading the shot list | The same analysis run on the rig's frames | Stage P2: the owner shoots Dark and Bright by hand on the A7C II and the page must reach the shipped numbers |
+| The by-hand forms of Return, Settle, Still and Warm-up, on RAW files | The same functions on live frames (Return) and on RAW frames the host shot (Settle, Warm-up) | Stages P6 and P7: the host shoots each by-hand list and the files must give the host's own answer |
+| A flash | Nothing. The analysis treats flash-to-flash differences as it treats a lamp's drift | The first person with a flash, at stage P2 |
+| The stage's level | Its guard only (R10) | Stage P10, with a flat target shot through focus |
+| Long exposures in the engine's noise model. At 8 s the A7CR reads 21 % more noise than the model's figure (M4) | The note of 6.1 | A later decision, if anyone stacks at such exposures |
 | The scale against a second standard | Two regions of one grid agreeing to 0.4 % (R6). The slide's own labels are not a standard: it is a reduction | Stage P4, with a ruler and the slide in the same frame |
 | That a second mode (silent shutter, 12-bit) is told from the first by its signature alone | ARGUED from the samples: bit depth and compression differ between the modes seen (R1). The A7CR's 1/8000 s frames have the same signature as its 1/100 s frames and 17 % more read noise (M4) | The mode is the person's to name; a stack says which it was shot in through its setup. Decision 2 touches this |
 | The lens's step. The return test reads positions that cluster about 2 units apart, which may be the lens's own smallest step or the instrument's interpolation between samples 4 units apart (R5) | Nothing depends on it | A fingerprint sampled every unit, in stage P6 |
 | What changing the white level to the measured clip does to a finished picture | DERIVED: 6.9 % more of the range before a photosite counts as clipped | Decision 3's gate |
 | Whether live view can time a settle. It gives a first frame 0.7 to 0.9 s after a move and one live pixel is 9.3 sensor pixels (R5) | The RAW ladder of 7.2 | Done in R8 |
-| A rail, or any axis that is not the lens's motor | The axis description in the rig part and sittings written in units of sharp depth | Section 15 |
+| A rail, or any axis that is not the lens's motor | By hand: section 4's axis kinds and sittings written in the person's own step. Driven by Strehl: nothing | A rail owner at stage P6; a driver, section 15 |
 
 ---
 
@@ -1524,6 +1833,11 @@ entry there comes before the first line of code.
   Next and Back; any sitting can be done alone, in any order, any number of times.
 - **Calibrating by itself.** Setup measures when asked. It never starts a sitting because
   time has passed.
+- **Four more measurements a setup could hold.** A mechanical shutter's blur by shutter
+  speed; a lens's sharpness by aperture, for people who can stop down; the direction,
+  scale and return of an XY stage, which tiled capture will want when the stage exists;
+  and micrometres per lens unit along the focus axis, for depth in millimetres. Each fits
+  the page as another sitting or another reading of one. None is designed here.
 
 ---
 
@@ -1534,11 +1848,12 @@ Each has a default the implementer follows until told otherwise.
 | # | Question | Default |
 | --- | --- | --- |
 | 1 | The names: the page **Setup**; the sittings Dark, Bright, Scale, Detail, Motion, Warm-up; the parts Camera, Lens, Rig, Light. Capture's step 2 stays "Calibrate" (it measures the subject; Setup measures the instrument) | As written |
-| 2 | What "support other cameras" delivers first: other makers' RAW **from files**, complete, with tethering for another maker left to its own decision when a body is on the bench (sections 4, 15). The larger reading, a Canon or Nikon driver now, cannot be tested on the hardware here | Files first |
+| 2 | What "support other cameras" delivers first: other makers' RAW **from files**, complete, with every sitting doable by hand, and tethering for another maker left to its own decision when a body is on the bench (sections 4, 15). The larger reading, a Canon or Nikon driver now, cannot be tested on the hardware here | Files first |
 | 3 | Take the engine's white level from the measured clip (A7CR: 16,143 in place of 15,360)? It changes finished pictures near the top of the range and moves the pin counts Capture's exposure advice reads. Its gate: the dragonfly and one more stack rendered both ways, compared at the highlights at 100 %, the Light and Glints lenses' counts side by side | Off for the two shipped cameras until you have looked. A camera with no shipped part uses its measured clip from the start: it has no earlier renders to keep, and its files' declared white is the thing M2 shows cannot be trusted |
 | 4 | With no lens in Setup, measure the lens's colour shift on each stack and correct it (today: no correction)? R7: within 3 to 7 ppm of the shipped profile's result on three stacks in two passes of a few seconds | Yes |
 | 5 | The dust map and the sensor's fixed pattern: measured and drawn only, or applied to renders? Both corrections exist and are off by default | Measured and drawn only |
 | 6 | When your own measurement of a camera exists beside the one shipped with Strehl, which does the engine use? | Yours, with "Compare with shipped" on the sheet and one click back |
+| 7 | Three further readings are proposed: the lens's colour focus and the stage's level, both from a stack (6.4), and live view against RAW (7.1). Build them, and when? | Yes, last (P10) |
 
 ---
 
@@ -1570,10 +1885,11 @@ Section 9.
 `strehl setup sort`, `dark`, `bright`, `keep`; the noise model read from a measured part.
 
 - Gate, on the frames kept from 2026-11-27 (`D:/StrehlCaptures/setup-page-2026-11-27/`,
-  listed in R9): Dark gives the table of 6.1 within 0.01 DN; its Dark check fails on the
-  lit bursts (1/100 s against 2.5 s) with the sentence of 6.1; Bright gives green 0.4040 at
-  ISO 100 and 1.632 at ISO 400 within 0.3 %, clip 16383, linear to the clip; the gain
-  mode starts at ISO 400.
+  listed in R11): Dark gives the capped column of 6.1's table within 0.01 DN; its Dark
+  check fails on the lit bursts (1/100 s against 2.5 s) with the sentence of 6.1, passes
+  on the uncapped pair with the note about a little light, and passes capped with the
+  light on; Bright gives green 0.4040 at ISO 100 and 1.632 at ISO 400 within 0.3 %, clip
+  16383, linear to the clip; the gain mode starts at ISO 400.
 - Gate, independent: the same commands on the 14 November folders that still exist give
   that day's numbers.
 - A render of an A7CR stack with the measured part differs from the shipped render only
@@ -1587,14 +1903,19 @@ Section 10.3, decision 4.
 
 ### P1. The station, empty
 
-Sections 8.1, 8.2, 8.5, 12.1, 12.2 (store, column, sheets, summary plate), 12.5's
-`empty`, `unmeasured`, `shipped`, `refused`. No sitting runs yet; the sheets show the
-shipped parts.
+Sections 4.1 to 4.3, 5.9, 8.1, 8.2, 8.5, 12.1, 12.2 (store, equipment, sheets, summary
+plate), 12.5's `empty`, `new-setup`, `unmeasured`, `shipped`, `refused`. No sitting runs
+yet; the sheets show the shipped parts.
 
-- Gate: the four fixtures against the mockups; the first-visit sentences of 8.5; Setup
+- Gate: the five fixtures against the mockups; the first-visit sentences of 8.5; Setup
   opens within a frame of the Library; pointer sweep.
+- Gate: `applies` for four setups: the owner's rig lists all six sittings; a Canon on a
+  rail with a flash lists Dark, Bright, Scale, Detail and Motion and has no Warm-up; a
+  camera using its own bracketing in daylight lists Dark, Bright, Scale, Detail and
+  Motion without Return, and has no Light tab; a host with an unswitched light lists all
+  six with Dark waiting on the person.
 
-### P2. Dark and Bright from files
+### P2. Dark and Bright by hand
 
 `setup-files.rs`, `setup-run.rs`'s Read and Plate stages, the Dark and Bright plates, rule
 5's keep and replace.
@@ -1637,6 +1958,10 @@ Section 7.1 and 7.2; Capture's Rig step reading the rig part (12.3, 8.6).
 - Gate, rig: the Return plate reproduces R5 within the instrument's 2 units; the settle
   ladder reproduces R8. Capture offers the measured settle and approach and changes
   nothing by itself.
+- Gate, by hand: the host shoots the by-hand lists as RAW (the stack, the arrivals, the
+  stack; the run of ten at three settles; ten untouched frames). Read as dropped files
+  they give the host's own answers: hysteresis within 2 units, the settle table within
+  its detection limit.
 
 ### P7. Warm-up
 
@@ -1644,6 +1969,9 @@ Section 7.3; Capture's light wait.
 
 - Gate, rig: two runs from cold agree on the settled time within 20 s. Capture's pass
   waits the light part's time and says where it came from.
+- Gate, by hand: a cold series shot by the host, read as dropped files with the delay
+  typed, gives the host's own settled time within one frame. A setup whose light is a
+  flash is not offered the sitting.
 
 ### P8. Several setups, and the rest of the app
 
@@ -1652,6 +1980,29 @@ Section 5.8; export and import; section 8.6's lines; section 12.3's last rows.
 - Gate: a second setup with another lens leaves the first's camera part untouched; a
   part exported and imported on a clean folder renders the same bytes; each line of 8.6
   appears in the state that calls for it and not otherwise.
+
+### P9. Measure the rig
+
+Section 4.4; `setup-chain.rs`.
+
+- Gate, rig: one press with a detailed subject on the stage and the light cold. It ends
+  within 23 minutes; each sitting's numbers pass that sitting's own gate; the rig is as
+  it was found.
+- Failing inputs: with the light left on by hand, Dark stops at its check and the other
+  three still run. With the light off for 4 minutes, the page offers the wait or the
+  skip before it starts. Stop in each of the four leaves exposure, four-shot, light and
+  lens as they were.
+
+### P10. Further readings
+
+Decision 7: colour focus and level (6.4), live view against RAW (7.1).
+
+- Gate: colour focus on the scarab stack gives red 3 to 3.5 frames and blue 2 to 2.5
+  after green (2026-11-16's figures by another route).
+- Gate: level on a flat target the owner shoots through focus; and the slide stack of
+  2026-11-25 fails with R10's sentence.
+- Gate, rig: live view against RAW within 5 units of what Capture's pass measures on the
+  same subject the same hour.
 
 ---
 
@@ -1664,9 +2015,9 @@ Allocated in [the milestone ledger](../agents/milestone-ledger.md) on 2026-11-27
 | --- | --- |
 | setup-page-2026-11-27 | This design, its measurements and mockups. Done, design only |
 | setup-e1-parts, setup-e2-files, setup-e3-sensor, setup-e4-lens-colour | Section 18, E1 to E4 |
-| setup-p1-station … setup-p8-setups | Section 18, P1 to P8 |
+| setup-p1-station … setup-p10-further | Section 18, P1 to P10 |
 
 Evidence: [results](../../experiments/setup-page-2026-11-27/results.md) with its scripts
 under `rig/` and `analysis/`, the two prototype programs `sensor.rs` and `probe-any.rs`
 (examples of `strehl-raw`), and the plates' points under `plates/`. The frames behind
-E3's gate are kept outside the repository (R9).
+E3's gate are kept outside the repository (R11).

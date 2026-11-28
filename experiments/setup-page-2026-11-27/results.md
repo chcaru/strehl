@@ -7,8 +7,10 @@
 **Rig:** the owner's A7CR (ILCE-7CR), FE 100mm F2.8 Macro GM OSS with the 2x converter at
 f/5.6, on the Pi capture host over USB at 5 Gbit/s, light a Schott KL 1500 LCD on a
 switched plug (174 W). Subject on the stage: a dragonfly wing on a black ground, in focus
-from about 32,360 to 33,140 lens units. Nobody was at the rig: no lens cap, no white card,
-nothing moved by hand. All frames single shot, 14-bit uncompressed, 9504 x 6336 active.
+from about 32,360 to 33,140 lens units. Nobody was at the rig for R2 to R8: no lens cap,
+no white card, nothing moved by hand, and the room, the owner said afterwards, was not
+fully dark. For R9 the owner capped the lens and closed the door. All frames single shot,
+14-bit uncompressed, 9504 x 6336 active.
 
 **Builds:** analysis examples and `strehl-raw-archive` from `origin/main` at `31e778bfb`
 (`target/release`); the two prototypes of this folder and the engine with the experiment
@@ -83,7 +85,8 @@ the light on. The first seven "dark" bursts were taken with the light on (174 W)
 
 This is the failing input of the spec's Dark check: 455.9 DN between 1/100 s and 2.5 s.
 
-**Second attempt: managed power off (`power_plan` disabled), light off, no cap.**
+**Second attempt: managed power off (`power_plan` disabled), light off, no cap, in a room
+that was not fully dark** (R9 repeats it capped).
 MEASURED, green (G1), against the capped series of 2026-11-14
 (`experiments/a7cr-calibration-2026-11-14/results.md`, 16 to 32 frames each):
 
@@ -358,19 +361,91 @@ four exposures of a group.
 
 ---
 
-## R9. What is kept, and the state the rig was left in
+## R9. Darks again, capped, with the door closed
+
+`rig/capped.py`, the same analysis as R2. The owner capped the lens and closed the door. A
+live frame read 0.8 of 255 with the light off and 0.7 with it on before the run. 8 frames a
+burst (4 at 8 s), light off except for the last two rows.
+
+MEASURED, green (G1):
+
+| ISO, shutter | Black | Read noise, pooled | Median photosite | Over 50 DN | R2, no cap |
+| --- | --- | --- | --- | --- | --- |
+| 100, 1/100 s | 512.25 | 1.311 | 1.069 | 0 | 512.22, 1.305 |
+| 100, 2.5 s | 512.29 | 1.325 | 1.069 | 1 | 512.41, 1.373 |
+| 200, 1/100 s | 512.22 | 2.416 | 1.847 | 0 | |
+| 250, 1/100 s | 512.27 | 3.002 | 2.264 | 0 | |
+| 320, 1/100 s | 512.27 | 3.745 | 2.800 | 0 | 512.31, 3.754 |
+| 400, 1/100 s | 512.19 | 2.144 | 1.512 | 0 | 512.21, 2.134 |
+| 800, 1/100 s | 512.14 | 4.171 | 2.850 | 5 | |
+| 1600, 1/100 s | 512.20 | 8.170 | 5.548 | 378 | |
+| 3200, 1/100 s | 512.25 | 15.812 | 10.609 | 7,390 | 512.06, 15.750 |
+| 100, 1/8000 s | 512.23 | 1.546 | 1.246 | 0 | 512.24, 1.547 |
+| 100, 1/4000 s | 512.24 | 1.385 | 1.126 | 0 | |
+| 100, 1/2000 s | 512.24 | 1.318 | 1.069 | 0 | |
+| 100, 1/1000 s | 512.21 | 1.325 | 1.069 | 0 | 512.22, 1.331 |
+| 100, 0.6 s | 512.30 | 1.323 | 1.069 | 0 | 512.34, 1.323 |
+| 100, 8 s (4 frames) | 512.28 | 1.594 | 1.291 | 9 | |
+| 100, 1/100 s, light on | 512.25 | 1.305 | 1.069 | 0 | |
+| 100, 2.5 s, light on | 512.34 | 1.319 | 1.069 | 0 | |
+
+- **The cap against no cap.** At 1/100 s the read noise agrees within 0.5 % at ISO 100,
+  320, 400 and 3200 and black within 0.19 DN. At 2.5 s the uncapped burst reads black
+  0.12 DN higher and read noise 3.6 % higher: the room's light. From 1/100 s to 2.5 s the
+  level rises 0.04 DN capped, 0.09 capped with the light on, 0.19 uncapped, and 455.9
+  with the light on and no cap (R2).
+- **A cap is enough with the light on:** the last two rows against the first two.
+- **Shutter time.** Read noise is 1.31 to 1.33 DN from 1/2000 s to 2.5 s, 5.6 % higher at
+  1/4000 s, 18 % higher at 1/8000 s and 21 % higher at 8 s. Black does not move: the
+  camera holds it, so dark current cannot be read from the level. Why the fastest speeds
+  are noisier was not established.
+- **The gain mode.** Read noise over ISO: 0.0131 at 100, 0.0121 at 200, 0.0120 at 250,
+  0.0117 at 320, 0.0054 at 400, 0.0052 at 800, 0.0051 at 1600, 0.0049 at 3200. The rule of
+  the spec's 6.1 (a fall to under three quarters) starts a mode at 400 and nowhere else.
+- **Against 2026-11-14** (capped, 0.6 s, 16 frames): tonight reads 2.1 % lower at ISO 200,
+  3.6 % at 400, 5.3 % at 800, 5.5 % at 1600 and 5.9 % at 3200, and 0.5 % lower at ISO 100.
+  Tonight's ladder is at 1/100 s on a camera a few minutes on; that one at 0.6 s after an
+  hour of series. The cause was not separated.
+- **Time.** The nine bursts of the spec's Dark list took 172 s.
+
+---
+
+## R10. Level from a flat target: the guard
+
+`analysis/flat.py` on the calibration-slide stack `stack-1795638138175-14989` (6 planes at
+43,432 to 43,470, one frame a plane). Per 64-pixel tile, the Laplacian's energy over the
+tile's mean squared; a tile's best focus is the vertex of a parabola through its three
+highest planes; tiles sharpest at the first or last plane are left out.
+
+MEASURED: of 14,751 tiles, 3,622 peak inside the stack, 7,119 are sharpest at the first
+plane and 2,443 at the last. A plane fitted to the 3,622 reads +8.0 units across the
+frame's width and +7.8 across its height with 10 units of scatter, and two random halves
+agree (7.1, 7.4 against 8.8, 7.8). That agreement means nothing: the tiles used are the
+ones that happened to peak inside 38 units, the median best focus by region runs from
+43,438 in the middle of the frame to 43,465 on the right with nothing like a plane in
+it, and most of the frame's focus lies outside the stack.
+
+So this stack cannot give the slide's tilt, and the count of tiles peaking inside is the
+number that says so. The spec's Level reading is otherwise unmeasured.
+
+---
+
+## R11. What is kept, and the state the rig was left in
 
 - **Frames kept for the spec's stage E3**, outside the repository:
-  `D:/StrehlCaptures/setup-page-2026-11-27/` (7.2 GB, 24 bursts of 8): the eight unlit dark
-  bursts, the four lit ISO 100 bursts that fail the Dark check, and the twelve bright
-  bursts, each in a folder named for it, with `index.json`. Delete it when E3 has landed.
-- **Deleted:** the two warm-up series, the settle ladder, the defocus probe and the three
-  lit bursts at other ISO settings (12.6 GB), the live-view recordings and the sample files
-  in scratch. Their numbers are in this document
+  `D:/StrehlCaptures/setup-page-2026-11-27/` (8.6 GB, 31 bursts): thirteen capped dark
+  bursts (the spec's nine, 1/8000 s, 8 s, and two with the light on), the two uncapped
+  ISO 100 bursts that show the room's stray light, the four lit ISO 100 bursts that fail
+  the Dark check, and the twelve bright bursts, each in a folder named for it, with
+  `index.json`. Delete it when E3 has landed.
+- **Deleted:** the two warm-up series, the settle ladder, the defocus probe, the three
+  lit bursts at other ISO settings, six uncapped dark bursts the capped set replaces and
+  four capped bursts at other shutter speeds (14.6 GB), the live-view recordings and the
+  sample files in scratch. Their numbers are in this document
   and in `plates/`.
 - **Rig:** camera and light off; four-shot, error correction and managed power on; the
   plan (32,332 to 33,169, step 8, settle 500 ms, approach 128) and the exposure (ISO 100,
   1.3 s) as found. During the work managed power was off for 43 minutes and error
-  correction for 52.
+  correction for 52, and again for 6 minutes during R9.
 - **The owner's desktop** was not opened; the receiver ran throughout and was not
   restarted.

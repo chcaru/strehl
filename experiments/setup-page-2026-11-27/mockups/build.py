@@ -18,7 +18,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 STUDIO = HERE.parents[1] / "desktop-studio-2026-11-20" / "mockups"
 OUT = HERE / "outputs" / "setup-page-mockups.html"
-ORDER = ["first", "not-dark", "dark", "bright", "levels", "scale", "motion", "summary"]
+ORDER = ["equipment", "first", "not-dark", "dark", "bright", "levels", "scale", "motion", "by-hand", "chain", "summary"]
 ASSETS = HERE / "outputs" / "assets"
 OWN = ["setup-slide"]
 

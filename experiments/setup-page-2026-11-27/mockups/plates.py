@@ -181,9 +181,9 @@ def dark_read():
     p.band(d["second_mode_iso"], 8000)
     p.text(d["second_mode_iso"] * 1.05, 34, f"second gain mode, from ISO {d['second_mode_iso']}")
     p.line(d["model"], "fit")
-    p.points([(r["iso"], r["read"]) for r in d["capped"]], "dim", 7)
+    p.points([(r["iso"], r["read"]) for r in d["capped"]], "dim", 9)
     p.points([(r["iso"], r["read"]) for r in d["measured"]], "g")
-    p.text(90, 1.12, "squares: tonight, light off, no cap, 8 frames · larger: lens-capped series of 14 November · line: the model the engine uses")
+    p.text(90, 1.12, "squares: tonight, capped, 8 frames · larger: the series of 14 November at 0.6 s · line: the model the engine uses")
     return svg(p)
 
 
