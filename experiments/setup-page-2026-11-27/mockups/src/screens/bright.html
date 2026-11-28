@@ -1,0 +1,70 @@
+<!--meta {"id": "bright", "nav": "4 · Bright: noise", "kind": "app", "station": "setup", "title": "Bright, read: the sensor's gain from whatever was on the stage", "crumbs": ["Setup", "A7CR · FE 100 + 2x"], "states": {"capture": "todo", "stack": "todo", "develop": "todo", "export": "todo"}, "rig": "on", "job": "idle", "setup": "ok"} -->
+<!--lede-->
+Forty single shots of a dragonfly wing, 5,000 units out of focus, taken in 2 minutes 40 seconds on 27 November with no white card. Every square is a measured bin; the line is the engine's noise model with the gain this sitting fitted. It gives 0.4040, the number the hand-made profile of 14 November holds. The band underneath is the same data as variance over signal: flat where the fit was taken.
+<!--body-->
+<div class="body l-insp">
+  <div class="main">
+    <div class="cstrip">
+      <span class="cap">Setup</span>
+      <span class="setupname">A7CR · FE 100 + 2x<svg class="i"><use href="#i-down"/></svg></span>
+      <span class="vr"></span>
+      <span class="chip ok">Camera</span><span class="chip ok">Lens</span><span class="chip run">Rig</span><span class="chip idle">Light</span>
+      <span class="sp"></span><span class="left">Bright · read in 11 s</span>
+    </div>
+    <div class="canvas platebg">
+      <div class="platebar"><span class="btn sm on">Noise</span><span class="btn sm quiet">Levels</span><span class="btn sm quiet" style="opacity:.45">Field</span><span class="dim2" style="font-size:12px">needs a card that fills the frame</span><span class="sp"></span><div class="seg"><span class="on">100</span><span>200</span><span>320</span><span>400</span><span>800</span></div></div>
+      <div class="platebody">
+        <!--@plate:bright-noise-->
+        <div class="readout left"><b>Gain</b><span>0.4040<small>DN/e-</small></span><b>Holds</b><span>39,300<small>e-</small></span><b>Range</b><span>13.6<small>stops</small></span></div>
+        <div class="sentence">Gain 0.404 DN per electron. The sensor holds 39,300 electrons at ISO 100: 13.6 stops over its read noise.<small>Green; red 0.399 and blue 0.376. Blue reads 7 % low: the camera filters it. The light moved 0.2 to 0.5 % from frame to frame, removed.</small></div>
+        <span class="pin in new" style="left:52%;top:33%">1</span>
+        <span class="pin in new" style="left:33%;top:83%">2</span>
+      </div>
+    </div>
+    <div class="sstrip">
+      <div class="rail-head"><b>Bright</b><span>9 bursts · 72 frames · 4 min 37 s</span><span class="sp"></span><span>out of focus by 5,000 units · single shot</span></div>
+      <div class="bursts">
+        <div class="burst cur"><b>a</b>100 · 0.4 s<div class="fr"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+        <div class="burst cur"><b>b</b>100 · 1.3 s<div class="fr"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+        <div class="burst cur"><b>c</b>100 · 3.2 s<div class="fr"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+        <div class="burst cur"><b>d</b>100 · 5 s<div class="fr"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+        <div class="burst cur"><b>e</b>100 · 8 s<div class="fr"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+        <div class="burst"><b>f</b>200 · 1.6 s<div class="fr"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+        <div class="burst"><b>f</b>320 · 1 s<div class="fr"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+        <div class="burst"><b>f</b>400 · 0.8 s<div class="fr"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+        <div class="burst"><b>f</b>800 · 0.4 s<div class="fr"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="insp">
+    <div class="tabs"><span class="on">Sittings</span><span>Camera</span><span>Lens</span><span>Rig</span><span>Light</span></div>
+    <div class="insp-body sittings">
+      <div class="sit ok"><i>1</i><div><div class="ttl"><b>Dark</b><em>27 Nov · 4 ISO settings</em><span class="sp"></span><i class="gl ok"></i></div></div></div>
+      <div class="sit cur"><i>2</i><div><div class="ttl"><b>Bright</b><span class="sp"></span><i class="gl ok"></i></div>
+        <div class="target"><svg viewBox="0 0 56 48"><rect x="9" y="8" width="38" height="32"/><path d="M14 13h28M14 19h28M14 25h28M14 31h28" stroke-dasharray="1 4" opacity=".6"/><path d="M4 44l48-40" stroke-dasharray="3 3"/></svg><span>Anything bright, far out of focus. A white card that fills the frame also gives the dust map and the light's colour.</span></div>
+        <div class="shots">Measured 27 Nov 21:58 · the subject on the stage, no card</div>
+        <div class="vals">
+          <b>Gain, ISO 100</b><span>0.4040 DN/e-</span><em>measured 27 Nov</em>
+          <b>ISO 200</b><span>0.8078</span><em>measured 27 Nov</em>
+          <b>ISO 400</b><span>1.6322</span><em>measured 27 Nov</em>
+          <b>ISO 800</b><span>3.2782</span><em>measured 27 Nov</em>
+          <b>Clip</b><span>16,383</span><em>measured 27 Nov</em>
+          <b>Linear to</b><span>the clip</span><em>measured 27 Nov</em>
+          <b>Dust, pattern</b><span>not measured</span><em class="ring">needs a card</em>
+          <b>Light's colour</b><span>not measured</span><em class="ring">needs a card</em>
+        </div>
+        <div class="acts" style="margin-top:8px"><button class="btn sm">Measure again</button><button class="link">From files…</button></div>
+      </div></div>
+      <div class="sit"><i>3</i><div><div class="ttl"><b>Scale</b><em>not measured</em><span class="sp"></span><i class="gl idle"></i></div></div></div>
+      <div class="sit ok"><i>4</i><div><div class="ttl"><b>Detail</b><em>shipped with Strehl</em><span class="sp"></span><i class="gl idle"></i></div></div></div>
+      <div class="sit"><i>5</i><div><div class="ttl"><b>Motion</b><em>settle and approach not measured</em><span class="sp"></span><i class="gl idle"></i></div></div></div>
+      <div class="sit"><i>6</i><div><div class="ttl"><b>Warm-up</b><em>not measured · 150 s assumed</em><span class="sp"></span><i class="gl idle"></i></div></div></div>
+      <div class="sp"></div>
+    </div>
+  </div>
+</div>
+<div class="hint"><span><span class="kbd">Tab</span>next plate</span><span><span class="kbd">←</span><span class="kbd">→</span>ISO</span><span class="sp"></span><span>Camera host online · lens back at 32,933</span></div>
+<!--notes-->
+<div class="new"><i>1</i><b>No flat field, no agent.</b> Each photosite's own variance across eight frames against its own mean, with the light's drift removed frame by frame. An out-of-focus subject is enough; a white card adds the dust map, the fixed pattern and the light's colour.</div>
+<div class="new"><i>2</i><b>The fit shows its range.</b> The raised band is where the gain was fitted (30 to 4,000 DN). Above it the points wander by 5 %, which is the light, not the sensor; the plate does not hide it.</div>
+<div class="legend"><em style="background:#7db8ff"></em>new</div>

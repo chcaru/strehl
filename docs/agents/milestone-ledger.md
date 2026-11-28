@@ -772,3 +772,23 @@ Owner request (2026-11-26): the Capture plan's "2. Exposure -> 3. Depth doesn't 
 | cpf-s3-lenses | Spec S3: Cover, Light and Glints lenses, the core sample, the rail's bars. | crates/strehl-ui/ (capture-live.rs, capture-rail.rs) | root |
 | cpf-s4-proof | Spec S4: the proof plane and the Still lens. | crates/strehl-ui/ | root |
 | cpf-s5-memory | Spec S5: what is remembered, staleness. | crates/strehl-ui/ | root |
+
+## Setup page (2026-11-27)
+
+Owner request (2026-11-27): "a standalone full page rig/camera calibration feature … where a new user could calibrate strehl for their specific rig/camera (not just mine / baked into strehl)"; "i would want it to support other cameras (Canon, Nikon, etc.)"; "an entirely new user/setup should be able to do this, without an agent … it could support multiple profiles". The page deferred from the capture planning proposal (its section 18).
+
+| Identifier | Question and scope | Owned paths | Owner and state |
+| --- | --- | --- | --- |
+| setup-page-2026-11-27 | The design: a Setup station, four parts (camera, lens, rig, light) as files, six sittings each one button or a shot list, the engine changes for other makers' RAW. Its measurements: 24 public RAW files through the decoder; darks without a cap; gain, clip and linearity from an out-of-focus subject; the light's warm-up; how the focus axis returns; the settle ladder; lateral colour from nothing on four stacks; the pitch of a slide's grid. Mockups. Design only. | docs/proposals/2026-11-setup-page-spec.md; experiments/setup-page-2026-11-27/ | root; done, author-run, no independent review |
+| setup-e1-parts | Spec E1: camera and lens profiles as files of one schema, the two shipped ones embedded, `strehl setup show`; byte-identical renders. | crates/strehl-core/src/ (setup.rs, profile.rs, optics.rs); crates/strehl-cli/src/setup-cmd.rs | unassigned |
+| setup-e2-files | Spec E2 (section 9): other makers' RAW scanned and decoded, any Bayer order, black per colour, the container's top from the frame, the refusals' sentences. Needs one real stack from another maker. | crates/strehl-raw/; crates/strehl-core/src/clip.rs; crates/strehl-cli/src/ (merge_cmd.rs, highlight-fusion.rs, color.rs); crates/strehl-raw-codec/src/calibrated.rs | unassigned |
+| setup-e3-sensor | Spec E3 (6.1, 6.2): `strehl setup sort`, `dark`, `bright`, `keep`; the noise model read from a measured part. Gates on the frames kept in `D:/StrehlCaptures/setup-page-2026-11-27/`. | crates/strehl-cli/src/ (setup-*.rs); crates/strehl-core/src/ (setup.rs, profile.rs) | unassigned |
+| setup-e4-lens-colour | Spec E4 (10.3, decision 4): lateral colour measured from nothing when no lens part matches; lens parts by focus position. | crates/strehl-core/src/ (optics.rs, ca-refine.rs); crates/strehl-cli/src/merge_cmd.rs | unassigned; decision 4's default is yes |
+| setup-p1-station | Spec P1: the Setup station, its store, sheets and summary plate, fixtures. | crates/strehl-ui/src/ (app-station-setup.rs, setup-*.rs, studio-route.rs, studio-shell*.rs); docs/desktop-control.md; scripts/strehl-control.py | unassigned |
+| setup-p2-files | Spec P2: Dark and Bright from files, their plates, keep and replace. | crates/strehl-ui/src/setup-*.rs | unassigned |
+| setup-p3-rig | Spec P3 (11.2, 11.3): the capture kind for sittings, capabilities, meters, Dark and Bright on the rig. | crates/strehl-capture/src/ (session.rs, worker.rs, ptp.rs); crates/strehl-ui/src/setup-*.rs | unassigned; needs a host deploy |
+| setup-p4-scale | Spec P4 (6.3): Scale, and its use by Develop and the subject page. | crates/strehl-cli/src/setup-scale.rs; crates/strehl-ui/src/ | unassigned |
+| setup-p5-detail | Spec P5 (6.4): Detail from a stack; the lens sheet. | crates/strehl-cli/src/setup-detail.rs; crates/strehl-ui/src/ | unassigned |
+| setup-p6-motion | Spec P6 (7.0 to 7.2): the fingerprint, Return, Settle, Still; what Capture's Rig step takes. | crates/strehl-cli/src/setup-motion.rs; crates/strehl-ui/src/ (setup-*.rs, capture-plan.rs, capture-rig-settings.rs) | unassigned |
+| setup-p7-warm-up | Spec P7 (7.3): Warm-up; Capture's light wait. | crates/strehl-cli/src/setup-warm-up.rs; crates/strehl-ui/src/ (setup-*.rs, capture-measure.rs) | unassigned |
+| setup-p8-setups | Spec P8 (5.8, 8.6, 12.3): several setups, export and import, the lines in Stack, Library, Capture and Develop. | crates/strehl-ui/src/ | unassigned |

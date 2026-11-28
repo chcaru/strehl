@@ -1,0 +1,65 @@
+<!--meta {"id": "scale", "nav": "6 · Scale", "kind": "app", "station": "setup", "title": "Scale: Strehl counts the pixels, you type the length", "crumbs": ["Setup", "A7CR · FE 100 + 2x"], "states": {"capture": "todo", "stack": "todo", "develop": "todo", "export": "todo"}, "rig": "on", "job": "idle", "setup": "ok"} -->
+<!--lede-->
+One frame of the calibration slide. The person dragged a band along a row of dots; Strehl found the pitch (108.5 sensor pixels, the figure measured on this slide on 27 November) and put a tick on every dot it counted. It cannot know what the pitch is in millimetres, so it asks. The two halves of the band agree, which is the check that the slide lies square.
+<!--body-->
+<div class="body l-insp">
+  <div class="main">
+    <div class="cstrip">
+      <span class="cap">Setup</span>
+      <span class="setupname">A7CR · FE 100 + 2x<svg class="i"><use href="#i-down"/></svg></span>
+      <span class="vr"></span>
+      <span class="chip ok">Camera</span><span class="chip run">Lens</span><span class="chip run">Rig</span><span class="chip idle">Light</span>
+      <span class="sp"></span><span class="left">Scale · one frame at 43,450</span>
+    </div>
+    <div class="canvas platebg">
+      <div class="platebar"><span class="btn sm on">Target</span><span class="btn sm quiet">By focus</span><span class="sp"></span><div class="seg"><span class="on">Pitch</span><span>Length</span></div><div class="seg"><span class="on">Fit</span><span>100%</span></div></div>
+      <div class="platebody" style="padding:0">
+        <div class="target-photo im im-setup-slide"></div>
+        <div class="scaleband">
+          <i style="left:2.2%"></i><i style="left:9.6%"></i><i style="left:17%"></i><i style="left:24.4%"></i><i style="left:31.8%"></i><i style="left:39.2%"></i><i style="left:46.6%"></i><i style="left:54%"></i><i style="left:61.4%"></i><i style="left:68.8%"></i><i style="left:76.2%"></i><i style="left:83.6%"></i><i style="left:91%"></i><i style="left:98.4%"></i>
+        </div>
+        <div class="readout glass scalebox" style="padding:10px 14px"><b>Pitch</b><span>108.46<small>px</small></span><b>Marks counted</b><span>14</span><b>Left half</b><span>108.41<small>px</small></span><b>Right half</b><span>108.52<small>px</small></span></div>
+        <span class="pin in new" style="left:40%;top:52%">1</span>
+        <span class="pin in new" style="left:88%;top:8%">2</span>
+      </div>
+    </div>
+    <div class="sstrip">
+      <div class="rail-head"><b>Scale</b><span>micrometres per pixel, by focus position</span><span class="sp"></span><span>1 sample · the nearest one is used for a stack</span></div>
+      <div class="bursts">
+        <div class="burst cur"><b>now</b>43,450 · 2.30 µm per px · 1.63×<div class="fr"><i class="on"></i></div></div>
+        <div class="burst" style="flex:3"><b></b><span class="dim2">Measure again with the target at another focus position to add a sample.</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="insp">
+    <div class="tabs"><span class="on">Sittings</span><span>Camera</span><span>Lens</span><span>Rig</span><span>Light</span></div>
+    <div class="insp-body sittings">
+      <div class="sit ok"><i>1</i><div><div class="ttl"><b>Dark</b><em>27 Nov · 4 ISO settings</em><span class="sp"></span><i class="gl ok"></i></div></div></div>
+      <div class="sit ok"><i>2</i><div><div class="ttl"><b>Bright</b><em>27 Nov · gain, clip</em><span class="sp"></span><i class="gl ok"></i></div></div></div>
+      <div class="sit cur"><i>3</i><div><div class="ttl"><b>Scale</b><span class="sp"></span><i class="gl run"></i></div>
+        <div class="target"><svg viewBox="0 0 56 48"><rect x="5" y="16" width="46" height="16"/><path d="M10 16v7M15 16v4M20 16v7M25 16v4M30 16v7M35 16v4M40 16v7M45 16v4"/></svg><span>Something with a known length, in focus and square to the lens: a ruler, a stage micrometer, a slide's grid.</span></div>
+        <div class="shots">Drag a band along evenly spaced marks, or switch to Length and drag between two.</div>
+        <div class="names" style="margin:4px 0 2px">
+          <div><span class="cap">One pitch is</span><div class="inp">0.25<span class="dim2" style="margin-left:auto">mm</span></div></div>
+          <div><span class="cap">or 13 pitches span</span><div class="inp dim2">3.25<span class="dim2" style="margin-left:auto">mm</span></div></div>
+        </div>
+        <div class="vals">
+          <b>Scale</b><span>2.305 µm per pixel</span><em class="ring">not kept yet</em>
+          <b>Magnification</b><span>1.63×</span><em class="ring">3.76 µm pitch</em>
+          <b>Halves</b><span>agree within 0.10 %</span><em>check passed</em>
+          <b>Frame is</b><span>21.9 × 14.6 mm</span><em class="ring">derived</em>
+        </div>
+        <div class="acts" style="margin-top:8px"><button class="btn primary sm">Keep</button><button class="btn sm">Another frame</button><button class="link">From a file…</button></div>
+      </div></div>
+      <div class="sit ok"><i>4</i><div><div class="ttl"><b>Detail</b><em>shipped with Strehl</em><span class="sp"></span><i class="gl idle"></i></div></div></div>
+      <div class="sit"><i>5</i><div><div class="ttl"><b>Motion</b><em>settle and approach not measured</em><span class="sp"></span><i class="gl idle"></i></div></div></div>
+      <div class="sit"><i>6</i><div><div class="ttl"><b>Warm-up</b><em>not measured · 150 s assumed</em><span class="sp"></span><i class="gl idle"></i></div></div></div>
+      <div class="sp"></div>
+    </div>
+  </div>
+</div>
+<div class="hint"><span><span class="kbd">P</span>pitch</span><span><span class="kbd">L</span>length</span><span><span class="kbd">Enter</span>keep</span><span class="sp"></span><span>Camera host online · lens at 43,450</span></div>
+<!--notes-->
+<div class="new"><i>1</i><b>A tick on every mark it counted.</b> So a miscount is seen, not trusted. The pitch is the peak of the band's spectrum, read from the green photosites.</div>
+<div class="new"><i>2</i><b>The typed length is the person's.</b> This slide is a photographic reduction: its printed group numbers give no size. The pitch of 0.25 mm is an example, and so are the two halves; the 108.46 pixels are measured.</div>
+<div class="legend"><em style="background:#7db8ff"></em>new</div>

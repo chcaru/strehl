@@ -1,0 +1,66 @@
+<!--meta {"id": "levels", "nav": "5 · Bright: levels", "kind": "app", "station": "setup", "title": "Levels: where the data clip, and the camera's sheet", "crumbs": ["Setup", "A7CR · FE 100 + 2x"], "states": {"capture": "todo", "stack": "todo", "develop": "todo", "export": "todo"}, "rig": "on", "job": "idle", "setup": "ok"} -->
+<!--lede-->
+The same sitting's second plate. Each curve is one burst divided by the next shorter one, photosite by photosite, against how bright the longer burst was. A linear sensor draws a flat line; it stays inside a tenth of a per cent up to the code where the data stop, 16,383. The files declare a white level of 15,360. The inspector is on the Camera tab: everything Strehl holds about this body, by ISO, with where each number came from.
+<!--body-->
+<div class="body l-insp">
+  <div class="main">
+    <div class="cstrip">
+      <span class="cap">Setup</span>
+      <span class="setupname">A7CR · FE 100 + 2x<svg class="i"><use href="#i-down"/></svg></span>
+      <span class="vr"></span>
+      <span class="chip ok">Camera</span><span class="chip ok">Lens</span><span class="chip run">Rig</span><span class="chip idle">Light</span>
+      <span class="sp"></span><span class="left">Bright · read in 11 s</span>
+    </div>
+    <div class="canvas platebg">
+      <div class="platebar"><span class="btn sm quiet">Noise</span><span class="btn sm on">Levels</span><span class="btn sm quiet" style="opacity:.45">Field</span><span class="sp"></span><div class="seg"><span class="on">100</span><span>400</span></div></div>
+      <div class="platebody">
+        <!--@plate:bright-levels-->
+        <div class="readout" style="top:470px;right:210px"><b>Clip</b><span>16,383</span><b>Linear to</b><span>the clip</span><b>Files declare</b><span>15,360</span></div>
+        <div class="sentence">Linear to the clip at 16,383. The files declare 15,360.<small>Strehl treats everything above 15,360 as clipped today: 6.9 % of the range. Using the measured level is your decision; it changes finished pictures near the top.</small></div>
+        <span class="pin in new" style="left:83%;top:27%">1</span>
+      </div>
+    </div>
+    <div class="sstrip">
+      <div class="rail-head"><b>Bright</b><span>4 pairs of bursts at ISO 100</span><span class="sp"></span><span>1.3 s over 0.4 s · 3.2 s over 1.3 s · 5 s over 3.2 s · 8 s over 5 s</span></div>
+      <div class="bursts">
+        <div class="burst"><b>a</b>100 · 0.4 s<div class="fr"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+        <div class="burst"><b>b</b>100 · 1.3 s<div class="fr"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+        <div class="burst"><b>c</b>100 · 3.2 s<div class="fr"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+        <div class="burst cur"><b>d</b>100 · 5 s<div class="fr"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+        <div class="burst cur"><b>e</b>100 · 8 s · clips<div class="fr"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="insp">
+    <div class="tabs"><span>Sittings</span><span class="on">Camera</span><span>Lens</span><span>Rig</span><span>Light</span></div>
+    <div class="insp-body" style="gap:10px">
+      <div class="sheethead"><b>Sony ILCE-7CR</b><small>one body</small></div>
+      <div class="dest" style="margin:0"><i class="gl ok"></i>Measured here, 27 Nov 2026<span class="sp"></span><button class="link">Compare with shipped</button></div>
+      <div><span class="cap">Mode</span><div class="inp" style="margin-top:5px">Mechanical shutter · 14-bit uncompressed<svg class="i"><use href="#i-down"/></svg></div></div>
+      <table class="sheet">
+        <thead><tr><th>ISO</th><th>Read, DN</th><th>e-</th><th>Gain</th><th>Clip</th></tr></thead>
+        <tbody>
+          <tr><td>100</td><td>1.305</td><td>3.23</td><td>0.4040</td><td>16,383</td></tr>
+          <tr><td>200</td><td class="dim">2.47</td><td class="dim">3.06</td><td>0.8078</td><td class="dim">16,383</td></tr>
+          <tr><td>320</td><td>3.754</td><td>2.91</td><td>1.2883</td><td class="dim">16,383</td></tr>
+          <tr><td>400</td><td>2.134</td><td>1.31</td><td>1.6322</td><td>16,383</td></tr>
+          <tr><td>800</td><td class="dim">4.41</td><td class="dim">1.34</td><td>3.2782</td><td class="dim">16,383</td></tr>
+          <tr><td>3200</td><td>15.75</td><td class="dim">1.20</td><td class="dim">13.11</td><td class="dim">16,383</td></tr>
+        </tbody>
+      </table>
+      <div class="notes2">
+        <p>Dim numbers are taken from the nearest measured ISO of the same gain mode, or shipped.</p>
+        <p>Gain modes: ISO 100 to 320, and from ISO 400.</p>
+        <p>Blue is filtered in camera (reads 7 % low).</p>
+        <p>At 1/8000 s the read noise is 1.55 DN: measure a second mode if you shoot there.</p>
+      </div>
+      <div><span class="cap">Pixel pitch</span><div class="inp" style="margin-top:5px">3.76 µm<span class="dim2" style="margin-left:auto;font-size:12px">from the file</span></div></div>
+      <div class="sp"></div>
+    </div>
+    <div class="insp-foot"><button class="btn sm">New mode…</button><button class="btn sm">Export…</button><span class="sp"></span><button class="link">Forget</button></div>
+  </div>
+</div>
+<div class="hint"><span><span class="kbd">Tab</span>next plate</span><span><span class="kbd">C</span>compare with shipped</span><span class="sp"></span><span>Camera host online</span></div>
+<!--notes-->
+<div class="new"><i>1</i><b>Measured, not assumed.</b> In 13 of 18 files from other cameras the data reach above the white level their decoder declares. The page finds the top of the data and how far the response stays linear, and shows both beside what the files say.</div>
+<div class="legend"><em style="background:#7db8ff"></em>new</div>

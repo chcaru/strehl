@@ -1,0 +1,147 @@
+/* ---------- Setup page (2026-11-27): what this spec adds to the Studio 2 language ---------- */
+.app { --cr: #d9705f; --cg: #9cc56b; --cb: #6f9fe0; }
+[data-theme="lightbox"] .app { --cr: #b5442f; --cg: #47792a; --cb: #2a60b0; }
+
+/* the station: after a rule, no numeral */
+.stations .st.setup { letter-spacing: .02em; }
+
+/* control strip: the setup's name and its four parts */
+.cstrip .setupname { display: flex; align-items: center; gap: 8px; color: var(--ink); height: 24px; padding: 0 9px; box-shadow: inset 0 0 0 1px var(--line-2); }
+.cstrip .setupname svg { width: 10px; height: 10px; color: var(--ink-3); }
+.cstrip .left { color: var(--ink-3); }
+
+/* the stage when it shows a plate */
+.canvas.platebg { background: var(--bg); display: flex; flex-direction: column; }
+.platebar { height: 38px; flex: none; display: flex; align-items: center; gap: 12px; padding: 0 14px; border-bottom: 1px solid var(--line); }
+.platebar .sp { flex: 1; }
+.platebody { position: relative; flex: 1; min-height: 0; padding: 8px 18px 0; display: flex; flex-direction: column; }
+.platebody > svg.plate { flex: 1; min-height: 0; width: 100%; }
+.sentence { flex: none; padding: 10px 6px 16px 86px; font-size: 15px; color: var(--ink); max-width: 1000px; }
+.sentence small { display: block; color: var(--ink-3); font-size: 12.5px; margin-top: 4px; }
+.readout { position: absolute; right: 44px; top: 34px; display: grid; grid-template-columns: auto auto; gap: 3px 16px; font-size: 12.5px;
+  background: var(--bg); padding: 8px 0 8px 12px; }
+.readout b { font-weight: 400; color: var(--ink-3); letter-spacing: .1em; font-size: 10.5px; text-transform: uppercase; align-self: center; }
+.readout span { font: 300 21px/1.15 var(--ui); color: var(--ink); text-align: right; }
+.readout span small { font-size: 12px; color: var(--ink-3); margin-left: 4px; }
+
+/* plates: an engraving, not a chart */
+svg.plate .pl-axis { fill: none; stroke: var(--line-2); stroke-width: 1; shape-rendering: crispEdges; }
+svg.plate .pl-axis.faint { stroke: var(--line); }
+svg.plate .pl-num { font: 12px var(--ui); fill: var(--ink-2); letter-spacing: .03em; }
+svg.plate .pl-cap { font: 600 10.5px var(--ui); fill: var(--ink-3); letter-spacing: .13em; }
+svg.plate .pl-note { font: 12px var(--ui); fill: var(--ink-3); }
+svg.plate .pl-pt { fill: var(--bg); stroke-width: 1.2; shape-rendering: crispEdges; }
+svg.plate .pl-pt.r { stroke: var(--cr); } svg.plate .pl-pt.g { stroke: var(--cg); } svg.plate .pl-pt.b { stroke: var(--cb); }
+svg.plate .pl-pt.dim { stroke: var(--ink-3); } svg.plate .pl-pt.acc { stroke: var(--accent); fill: var(--accent); }
+svg.plate .pl-line { fill: none; stroke-width: 1.2; }
+svg.plate .pl-line.fit { stroke: var(--accent); }
+svg.plate .pl-line.g { stroke: var(--cg); } svg.plate .pl-line.dim { opacity: .45; }
+svg.plate .pl-wall { fill: none; stroke: var(--ink-2); stroke-width: 1; shape-rendering: crispEdges; }
+svg.plate .pl-wall.dash { stroke: var(--ink-3); stroke-dasharray: 5 4; }
+svg.plate .pl-band { fill: var(--raised); }
+
+/* the strip of bursts, in the rail's place */
+.sstrip { height: 96px; flex: none; background: var(--panel); border-top: 1px solid var(--line); display: flex; flex-direction: column; }
+.sstrip .rail-head { flex: none; }
+.bursts { flex: 1; display: flex; align-items: stretch; gap: 0; padding: 0 14px 10px; overflow: hidden; }
+.burst { flex: 1; min-width: 0; padding: 6px 10px 0; border-left: 1px solid var(--line); font-size: 12px; color: var(--ink-2); white-space: nowrap; }
+.burst:last-child { border-right: 1px solid var(--line); }
+.burst b { font-weight: 600; color: var(--ink-3); margin-right: 7px; font-size: 10.5px; letter-spacing: .1em; }
+.burst .fr { display: flex; gap: 3px; margin-top: 8px; }
+.burst .fr i { width: 9px; height: 16px; box-shadow: inset 0 0 0 1px var(--line-2); }
+.burst .fr i.on { background: var(--ink-2); box-shadow: none; }
+.burst .fr i.bad { background: none; box-shadow: inset 0 0 0 1px var(--bad); }
+.burst.cur { background: var(--accent-soft); box-shadow: inset 0 1px 0 var(--accent); color: var(--ink); }
+.burst.cur .fr i.on { background: var(--accent); }
+.burst.stopped { color: var(--ink); } .burst.stopped b { color: var(--bad); }
+
+/* sittings in the inspector */
+.insp-body.sittings { gap: 0; padding-top: 4px; }
+.sit { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 0 8px; padding: 10px 0 10px; border-top: 1px solid var(--line); }
+.sit:first-child { border-top: 0; }
+.sit > i { font: 300 26px/1 var(--ui); font-style: normal; color: var(--ink-3); margin-top: -3px; }
+.sit.ok > i { color: var(--ok); } .sit.cur > i { color: var(--ink); }
+.sit .ttl { display: flex; align-items: baseline; gap: 8px; min-height: 19px; }
+.sit .ttl > em { font-style: normal; color: var(--ink-2); font-size: 12.5px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sit .ttl .sp { flex: 1; }
+.sit.na { opacity: .55; }
+.sit .target { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 10px; align-items: center; margin: 8px 0 6px; font-size: 12.5px; color: var(--ink-2); }
+.sit .target svg { width: 56px; height: 48px; stroke: var(--ink-2); fill: none; stroke-width: 1.2; }
+.sit .shots { font-size: 12px; color: var(--ink-3); margin-bottom: 8px; }
+.sit .acts { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+.vals { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 0 8px; margin-top: 8px; font-size: 12.5px; border-bottom: 1px solid var(--line); }
+.vals > b, .vals > span { padding: 4px 0 0; border-top: 1px solid var(--line); white-space: nowrap; }
+.vals > b { font-weight: 400; color: var(--ink-2); grid-column: 1; grid-row: span 2; }
+.vals > span { color: var(--ink); grid-column: 2; }
+.vals > em { grid-column: 2; font-style: normal; color: var(--ink-3); font-size: 11.5px; padding: 0 0 4px; white-space: nowrap; }
+.vals > em::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; background: var(--ok); vertical-align: 1px; }
+.vals > em.ring::before { background: none; box-shadow: inset 0 0 0 1.2px var(--ink-3); }
+.vals > em.guess::before { background: none; box-shadow: inset 0 0 0 1.2px var(--warn); }
+.fail { color: var(--ink); font-size: 13px; margin: 8px 0 4px; padding: 8px 10px; box-shadow: inset 2px 0 0 var(--bad); background: var(--raised); }
+.fail small { display: block; color: var(--ink-2); font-size: 12.5px; margin-top: 4px; }
+
+/* a part's sheet */
+table.sheet { width: 100%; border-collapse: collapse; font-size: 12px; margin: 6px 0 4px; }
+table.sheet th { text-align: right; color: var(--ink-3); font-weight: 600; font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; padding: 3px 0 4px; }
+table.sheet th:first-child, table.sheet td:first-child { text-align: left; }
+table.sheet td { padding: 4px 0; border-top: 1px solid var(--line); text-align: right; color: var(--ink); white-space: nowrap; }
+table.sheet td.dim { color: var(--ink-3); }
+.sheethead { display: flex; align-items: baseline; gap: 8px; font-size: 13.5px; color: var(--ink); }
+.sheethead small { color: var(--ink-3); font-size: 12px; }
+.notes2 { color: var(--ink-2); font-size: 12.5px; }
+.notes2 p { margin: 0 0 5px; }
+
+/* the files path: the shot list set large, and the drop */
+.shotlist { position: absolute; inset: 0; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 54px; padding: 60px 70px 50px; }
+.shotlist h3 { font: 300 30px/1.15 var(--ui); margin: 0 0 6px; color: var(--ink); }
+.shotlist h3 + p { color: var(--ink-2); font-size: 14.5px; margin: 0 0 26px; max-width: 520px; }
+.shots2 { border-top: 1px solid var(--line-2); }
+.shots2 > div { display: grid; grid-template-columns: 30px 150px minmax(0, 1fr); gap: 0 12px; padding: 13px 0; border-bottom: 1px solid var(--line); font-size: 15px; color: var(--ink); align-items: baseline; }
+.shots2 > div > i { font: 300 22px/1 var(--ui); font-style: normal; color: var(--ink-3); }
+.shots2 > div > span { color: var(--ink-2); font-size: 13.5px; }
+.drop { box-shadow: inset 0 0 0 1px var(--line-2); display: grid; place-items: center; text-align: center; color: var(--ink-2); font-size: 14px; position: relative; }
+.drop::before, .drop::after { content: ""; position: absolute; width: 22px; height: 22px; border: 1px solid var(--ink-2); }
+.drop::before { left: -1px; top: -1px; border-right: 0; border-bottom: 0; } .drop::after { right: -1px; bottom: -1px; border-left: 0; border-top: 0; }
+.drop b { display: block; font: 300 22px/1.2 var(--ui); color: var(--ink); margin-bottom: 8px; }
+
+/* the "not dark" stage */
+.verdict { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.verdict > div { width: 760px; }
+.verdict h3 { font: 300 34px/1.15 var(--ui); margin: 0 0 10px; color: var(--ink); }
+.verdict p { color: var(--ink-2); font-size: 15px; margin: 0 0 24px; }
+.lv { display: grid; grid-template-columns: 110px minmax(0, 1fr) 130px; gap: 10px 14px; align-items: center; font-size: 13.5px; color: var(--ink-2); }
+.lv .bar2 { height: 9px; background: var(--raised); position: relative; }
+.lv .bar2 i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--bad); }
+.lv .bar2 i.okb { background: var(--ok); }
+.lv .bar2 u { position: absolute; top: -4px; bottom: -4px; width: 1px; background: var(--ink-2); }
+.lv span:last-child { color: var(--ink); text-align: right; font: 300 18px/1 var(--ui); }
+
+/* the summary plate */
+.summary { position: absolute; inset: 0; padding: 34px 44px 30px; display: grid; grid-template-rows: auto 1fr auto; gap: 22px; }
+.summary h3 { font: 300 30px/1.1 var(--ui); margin: 0; color: var(--ink); }
+.summary h3 small { display: block; font-size: 14px; color: var(--ink-2); margin-top: 8px; }
+.panels { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); }
+.panel { padding: 16px 20px 14px; border-left: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.panel:first-child { border-left: 0; padding-left: 0; }
+.panel .cap { display: flex; align-items: center; gap: 8px; }
+.panel h4 { font: 400 17px/1.2 var(--ui); margin: 0; color: var(--ink); }
+.panel h4 small { display: block; font-size: 12.5px; color: var(--ink-3); margin-top: 3px; }
+.kv { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 10px; font-size: 13px; }
+.kv > * { padding: 6px 0; border-top: 1px solid var(--line); }
+.kv b { font-weight: 400; color: var(--ink-2); }
+.kv span { color: var(--ink); text-align: right; font-size: 15px; }
+.kv span.none { color: var(--ink-3); font-size: 13px; }
+.kv span small { color: var(--ink-3); font-size: 11.5px; margin-left: 5px; }
+.next { display: flex; align-items: center; gap: 16px; font-size: 14.5px; color: var(--ink); }
+.next span { color: var(--ink-2); }
+
+/* scale: the target with its ticks */
+.target-photo { position: absolute; inset: 0; background-size: cover; background-position: center; }
+.scaleband { position: absolute; left: 14%; top: 55%; width: 58%; height: 34px; box-shadow: 0 0 0 1px var(--accent); transform: rotate(-.3deg); }
+.scaleband i { position: absolute; top: -9px; bottom: -9px; width: 1px; background: var(--accent); }
+.scalebox { position: absolute; right: 34px; top: 30px; }
+
+/* borrowed from the capture calibration mockups */
+.dest { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--ink-2); white-space: nowrap; }
+.dest .sp { flex: 1; }
+.readout.left { right: auto; left: 128px; top: 44px; padding: 8px 12px 8px 0; }

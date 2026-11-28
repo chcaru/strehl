@@ -1,0 +1,42 @@
+diff --git a/crates/strehl-core/src/optics.rs b/crates/strehl-core/src/optics.rs
+index 0745f41ce..1add21f06 100644
+--- a/crates/strehl-core/src/optics.rs
++++ b/crates/strehl-core/src/optics.rs
+@@ -1203,11 +1203,35 @@ pub fn profile_for_capture_env(
+     body_model: Option<&str>,
+     lens_type3: Option<u16>,
+ ) -> Result<Option<&'static OpticalProfile>, CaConfigError> {
+-    profile_for_capture(
++    let found = profile_for_capture(
+         std::env::var(CA_ENV).ok().as_deref(),
+         body_model,
+         lens_type3,
+-    )
++    )?;
++    // EXPERIMENT (setup-page-2026-11-27, not for merge): a matched profile
++    // with its coefficients zeroed, so the per-capture refinement measures
++    // the lens from nothing.
++    if found.is_some()
++        && let Ok(v) = std::env::var("STREHL_CA_ZERO_PROFILE")
++    {
++        // "1": zero. "R,B": those two coefficients in ppm (a second pass).
++        static CHOSEN: std::sync::OnceLock<OpticalProfile> = std::sync::OnceLock::new();
++        let p = CHOSEN.get_or_init(|| {
++            let mut parts = v.split(',').filter_map(|s| s.trim().parse::<f64>().ok());
++            let (r, b) = match (parts.next(), parts.next()) {
++                (Some(r), Some(b)) => (r * 1e-6, b * 1e-6),
++                _ => (0.0, 0.0),
++            };
++            OpticalProfile {
++                eps_r: r,
++                eps_b: Some(b),
++                translation: (0.0, 0.0),
++                ..A7CR_FE100GM_2XTC
++            }
++        });
++        return Ok(Some(p));
++    }
++    Ok(found)
+ }
+ 
+ #[cfg(test)]

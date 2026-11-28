@@ -37,3 +37,11 @@ path = "../../experiments/a7cr-calibration-2026-11-14/ptc-analysis.rs"
 [[example]]
 name = "a7cr-pair-noise"
 path = "../../experiments/a7cr-calibration-2026-11-14/pair-noise.rs"
+
+[[example]]
+name = "setup-probe-any"
+path = "../../experiments/setup-page-2026-11-27/probe-any.rs"
+
+[[example]]
+name = "setup-sensor"
+path = "../../experiments/setup-page-2026-11-27/sensor.rs"
