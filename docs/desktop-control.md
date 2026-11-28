@@ -273,7 +273,12 @@ of the base group (and of the highlight group when the plan has them) checked by
 `strehl pixel-shift` and then deleted; a finished pass takes one by itself.
 `capture.tools.calibration.proof` reports `running`, `error`, the `results` (verdict,
 reason, `retake`, `local_px` against `limit_px`, `residual_px`, `seconds`) and their
-`line`.
+`line`. A finished pass keeps its survey's RAWs until Start, New capture or the next
+calibration (`survey_kept`); `pin_core_sample` with a `column` and `row` of the
+survey's 64 px tile grid reads that tile's core sample from them
+(`capture.tools.calibration.core_sample`: the tile, its focus, the three frames' focus
+and its contrast curve). `resume_calibration` runs a stopped pass's remaining stages
+from the light's wait on.
 
 `calibrate_step` (with the start and end marked and the camera idle) takes
 single RAWs across the marked range and measures how far detail stays sharp: on a

@@ -39,6 +39,8 @@ use crate::capture_client::Snapshot;
 /// What the user asked of the live view.
 #[derive(Clone, Debug, PartialEq)]
 pub(crate) enum LiveIntent {
+    /// Pin a tile of the survey's grid for its core sample (spec 6.2).
+    PinTile(usize, usize),
     /// A new subject box, normalised to the preview.
     SetRoi(Roi),
     /// A new subject outline (plan S3), or none.
@@ -441,6 +443,11 @@ pub(crate) struct LiveView {
     /// The depth rail's hovered position: the Depth lens isolates what is in
     /// focus there instead of at the lens (spec 6.2).
     pub rail_hover: Option<u16>,
+    /// The pinned tile's core sample, being read, or why not (spec 6.2).
+    pub core: Option<Arc<super::core_sample::CoreSample>>,
+    pub core_reading: bool,
+    pub core_error: Option<String>,
+    core_textures: Option<(usize, Vec<TextureHandle>)>,
     lens_mesh: Option<(LensKey, Arc<Mesh>, Cover)>,
     /// The sliders while dragged.
     auto_draft: Option<[f32; 3]>,
@@ -481,6 +488,10 @@ impl Default for LiveView {
             depth: None,
             lens: Lens::Off,
             rail_hover: None,
+            core: None,
+            core_reading: false,
+            core_error: None,
+            core_textures: None,
             lens_mesh: None,
             auto_draft: None,
             bar_width: 520.0,
@@ -1114,8 +1125,9 @@ impl LiveView {
             StrokeKind::Outside,
         );
         if self.lens != Lens::Off
-            && let Some(map) = &self.depth
+            && let Some(map) = self.depth.clone()
         {
+            let map = &*map;
             // In focus now: the lens within half a sharp depth of a tile's
             // focus (spec 6.2). A comparison per tile when the lens moves.
             let at = self
@@ -1164,6 +1176,29 @@ impl LiveView {
                     }
                     _ => depth_legend(&p, photo, map, host.position, palette),
                 }
+            }
+            // Click a tile of the RAW map: pin its core sample.
+            let clicked = ui
+                .input(|i| i.pointer.primary_clicked())
+                .then(|| ui.ctx().pointer_interact_pos())
+                .flatten()
+                .filter(|q| photo.contains(*q));
+            if self.lens == Lens::Depth
+                && map.source == "from RAW"
+                && let Some(pos) = clicked
+            {
+                let fx = uv.left() + (pos.x - photo.left()) / photo.width() * uv.width();
+                let fy = uv.top() + (pos.y - photo.top()) / photo.height() * uv.height();
+                let (tx, ty) = (
+                    (fx / map.extent[0] * map.cols as f32).floor(),
+                    (fy / map.extent[1] * map.rows as f32).floor(),
+                );
+                if tx >= 0.0 && ty >= 0.0 && (tx as usize) < map.cols && (ty as usize) < map.rows {
+                    out.push(LiveIntent::PinTile(tx as usize, ty as usize));
+                }
+            }
+            if self.lens == Lens::Depth {
+                self.core_panel(ui, &p, photo, uv, map, palette);
             }
             // Hover a tile: where it is in focus.
             if let Some(pos) = ui.ctx().pointer_hover_pos().filter(|q| photo.contains(*q)) {
@@ -1393,6 +1428,160 @@ impl LiveView {
         self.bar(ui, photo, s, roi, palette, &mut out);
         self.estimate(ui, photo, s, now, palette);
         out
+    }
+
+    /// The core sample beside its tile (spec 6.2): three survey frames at
+    /// 100 %, its contrast against focus, one sentence; a ruled box.
+    fn core_panel(
+        &mut self,
+        ui: &Ui,
+        p: &egui::Painter,
+        photo: Rect,
+        uv: Rect,
+        map: &DepthMap,
+        palette: &CapturePalette,
+    ) {
+        let text = |p: &egui::Painter, at: Pos2, s: &str, c: Color32| {
+            style::paint_job(p, at, Align2::LEFT_TOP, style::job(s, 11.5, c, 0.0));
+        };
+        let origin = photo.right_top() + egui::vec2(-3.0 * 164.0 - 22.0, 12.0);
+        if self.core.is_none() {
+            let line = match (&self.core_error, self.core_reading) {
+                (_, true) => "Reading the tile from the survey's RAWs\u{2026}".to_owned(),
+                (Some(e), false) => e.clone(),
+                _ => return,
+            };
+            let r = Rect::from_min_size(origin, egui::vec2(3.0 * 164.0 + 12.0, 26.0));
+            p.rect_filled(r, 0.0, palette.panel.gamma_multiply(0.94));
+            p.rect_stroke(
+                r,
+                0.0,
+                Stroke::new(1.0_f32, palette.line),
+                StrokeKind::Inside,
+            );
+            text(p, r.min + egui::vec2(8.0, 6.0), &line, palette.ink2);
+            return;
+        }
+        let core = self.core.clone().expect("checked");
+        let key = Arc::as_ptr(&core) as usize;
+        if self.core_textures.as_ref().is_none_or(|(k, _)| *k != key) {
+            let textures = core
+                .crops
+                .iter()
+                .enumerate()
+                .map(|(i, (_, img))| {
+                    ui.ctx().load_texture(
+                        format!("capture-core-{i}"),
+                        img.clone(),
+                        TextureOptions::NEAREST,
+                    )
+                })
+                .collect();
+            self.core_textures = Some((key, textures));
+            self.uploads += 1;
+        }
+        // The pinned tile, outlined.
+        let (tw, th) = (
+            map.extent[0] / map.cols.max(1) as f32,
+            map.extent[1] / map.rows.max(1) as f32,
+        );
+        let to_screen = |u: f32, v: f32| {
+            egui::pos2(
+                photo.left() + (u - uv.left()) / uv.width() * photo.width(),
+                photo.top() + (v - uv.top()) / uv.height() * photo.height(),
+            )
+        };
+        let (tx, ty) = (core.tile.0 as f32, core.tile.1 as f32);
+        let tile = Rect::from_min_max(
+            to_screen(tx * tw, ty * th),
+            to_screen((tx + 1.0) * tw, (ty + 1.0) * th),
+        );
+        p.rect_stroke(
+            tile.expand(1.0),
+            0.0,
+            Stroke::new(1.5_f32, palette.ink),
+            StrokeKind::Outside,
+        );
+        let side = super::core_sample::CROP as f32;
+        let box_ = Rect::from_min_size(origin, egui::vec2(3.0 * (side + 4.0) + 12.0, side + 106.0));
+        p.rect_filled(box_, 0.0, palette.panel.gamma_multiply(0.96));
+        p.rect_stroke(
+            box_,
+            0.0,
+            Stroke::new(1.0_f32, palette.line),
+            StrokeKind::Inside,
+        );
+        text(
+            p,
+            origin + egui::vec2(8.0, 6.0),
+            &format!("CORE SAMPLE \u{b7} {}", core.sentence),
+            palette.ink2,
+        );
+        if let Some((_, textures)) = &self.core_textures {
+            for (i, (t, (pos, _))) in textures.iter().zip(&core.crops).enumerate() {
+                let r = Rect::from_min_size(
+                    origin + egui::vec2(8.0 + i as f32 * (side + 4.0), 24.0),
+                    egui::vec2(side, side),
+                );
+                p.image(
+                    t.id(),
+                    r,
+                    Rect::from_min_max(Pos2::ZERO, egui::pos2(1.0, 1.0)),
+                    Color32::WHITE,
+                );
+                text(
+                    p,
+                    r.left_bottom() + egui::vec2(0.0, 2.0),
+                    &style::focus_units(pos.round() as u16),
+                    palette.ink3,
+                );
+            }
+        }
+        // The contrast curve, ruled, the tile's focus marked.
+        let chart = Rect::from_min_size(
+            origin + egui::vec2(8.0, side + 44.0),
+            egui::vec2(3.0 * (side + 4.0) - 4.0, 52.0),
+        );
+        style::hairline(p, chart.left_bottom(), chart.right_bottom(), palette.line);
+        if core.curve.len() >= 2 {
+            let (lo, hi) = (
+                core.curve[0].0,
+                core.curve[core.curve.len() - 1]
+                    .0
+                    .max(core.curve[0].0 + 1.0),
+            );
+            let top = core.curve.iter().map(|c| c.1).fold(1e-9f32, f32::max);
+            let at = |pos: f64, v: f32| {
+                egui::pos2(
+                    chart.left() + chart.width() * ((pos - lo) / (hi - lo)) as f32,
+                    chart.bottom() - chart.height() * (v / top).clamp(0.0, 1.0),
+                )
+            };
+            let pts: Vec<Pos2> = core.curve.iter().map(|c| at(c.0, c.1)).collect();
+            p.add(egui::Shape::line(pts, Stroke::new(1.5_f32, ramp(0.55))));
+            let x = at(core.focus, 0.0).x;
+            p.line_segment(
+                [egui::pos2(x, chart.top()), egui::pos2(x, chart.bottom())],
+                Stroke::new(1.0_f32, palette.ink3),
+            );
+            text(
+                p,
+                chart.left_bottom() + egui::vec2(0.0, 2.0),
+                &style::focus_units(lo.round() as u16),
+                palette.ink3,
+            );
+            style::paint_job(
+                p,
+                chart.right_bottom() + egui::vec2(0.0, 2.0),
+                Align2::RIGHT_TOP,
+                style::job(
+                    &style::focus_units(hi.round() as u16),
+                    11.5,
+                    palette.ink3,
+                    0.0,
+                ),
+            );
+        }
     }
 
     /// The tool bar at the bottom left (`.lvbar`).

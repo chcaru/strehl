@@ -148,6 +148,7 @@ pub(crate) fn pass_facts(surveyed: bool) -> super::measure::Facts {
             Vec::new()
         },
         proofs_wanted: usize::from(surveyed),
+        survey_run: None,
     }
 }
 

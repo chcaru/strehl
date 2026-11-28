@@ -226,20 +226,36 @@ pass does; set them by hand to keep others. The owner's install is updated to th
 build of this work (below); `capture-lens-memory.json` beside `capture.json` keeps
 run 3's measurement for the 32,000 position.
 
-### Still not built
-
-- The core sample (click a tile: its three nearest survey frames at 100 %). It needs the
-  survey's RAWs kept until Start (decision 2); they are still deleted once read, so
-  neither is built.
-- Per-value lamps beside the Depth and Exposure fields; the readout's Plan row says
-  what the pass set and kept.
-- Memory by catalog subject (its last calibration and plan); staleness marks on facts
-  whose conditions changed.
-- The light wait cannot know a light switched on before the desktop started.
-- "Run the rest" after a stopped pass (Calibrate again runs it whole).
-
 Built since the runs (unit-tested, not run on the rig): **Search further** on the Depth
 line when the subject is still in focus at the survey's first or last frame (a pass
 whose sweep is centred 2,500 units past it), and the **Captured panel's line** "Highlight
 groups: used on N of M planes" once a stack of that capture has reported it.
+
+## The rest (2026-11-27, evening)
+
+The owner: "then can you build the rest?" Everything the log listed as not built:
+
+| Item | Where | What |
+| --- | --- | --- |
+| Survey RAWs kept (decision 2) | `capture-workspace.rs` (survey deletion, `drop_survey_run`) | A pass's survey run is kept (and out of the lists) until Start, New capture or the next calibration; a step calibration's is deleted as before |
+| Core sample (spec 6.2) | `capture-core.rs` (new), `capture-live.rs` `core_panel`, `pin_tile` | Click a tile of the RAW depth map: the three survey frames nearest its focus at 100 % (each sensor pixel its own colour, white-balanced, one display transform for the three), its contrast against focus from the frames within 300 units, one sentence; read on a worker from the kept survey |
+| Per-value markers (rule 2) | `capture-plan.rs` `value_marker`, `measure::calibrated` | Under Start/End, the step table and the exposure: "● from the calibration" when the value is the calibration's (marks that fit the range count); "The calibration gives X · Use" under a value the owner set (Use takes that one value and stops holding it) |
+| Staleness (spec 5.5) | `pass_view` | Stale when the subject's outline changed after the survey or the survey was taken while the light was settling: a ring and "calibrate again"; the markers turn to rings |
+| Run the rest | `resume_pass`; Calibrate step; `resume_calibration` | A pass stopped after its sweep runs its remaining stages from the light's wait, keeping what it measured |
+| Memory by subject (spec 8) | `LensMemory.subjects` | Each survey records the catalog subject's in-focus range; a new calibration of it with nothing marked and the lens unmoved centres its sweep there; the idle Calibrate step says when it was last calibrated |
+| Light across restarts | `LensMemory.light_on_unix`, `light_off_unix` | A switch the desktop sees is remembered; a desktop opened with the light on counts from the remembered switch (a switch made while no desktop ran is not known) |
+| Control | `pin_core_sample`, `resume_calibration` | |
+| Stopped surveys | `discard_sequence` | A survey stopped mid-way finishes on the host; its run is now deleted once it has (it used to stay on disk, about 2 GB) |
+
+### Run 4 on the rig (`desktop-2c33dc57fee0464c`, `rig/run4.py`)
+
+Seeded from the marks run 3 set and from lens memory (sharp depth 52.0, offset +29.8).
+Stopped 30 s into the survey (stopped in "survey"); "Run the rest" finished the pass
+in 450 s: in focus **32,360 to 33,141** (the stack: 32,355 to 33,161 by the grounding's
+narrow-peak truth, 32,374 to 33,174 by F2), offset measured again +29.0, the light's
+time on tracked (657 s). The proof followed: "not clean, kept: its shots within 0.36 px
+(limit 0.51)". The survey was kept; `pin_core_sample` on tile (74, 49) read in 5 s:
+in focus at 32,933, crops at 32,881 / 32,933 / 32,985, its contrast 0.84 at 32,933
+against 0.07 and 0.01 at the frames either side. MEASURED. The two survey runs of
+this run were deleted afterwards (the stopped one by hand: the fix above came after).
 

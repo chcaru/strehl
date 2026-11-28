@@ -53,6 +53,8 @@ def main():
         if not (s['power']['camera'] or {}).get('on'):
             bench.cmd('power', device='camera', on=True)
             time.sleep(3)
+            # Switching the camera on starts its connection: wait it out.
+            bench.wait(lambda a: not a['busy'], 120)
         if not (s['power']['light'] or {}).get('on'):
             bench.cmd('power', device='light', on=True)
         bench.wait(lambda a: not a['busy'], 60)

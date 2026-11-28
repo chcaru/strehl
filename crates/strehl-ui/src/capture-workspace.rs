@@ -24,6 +24,8 @@ use strehl_capture::{
 };
 #[path = "capture-auto-subject.rs"]
 pub(crate) mod auto_subject;
+#[path = "capture-core.rs"]
+pub(crate) mod core_sample;
 #[path = "capture-fixture.rs"]
 pub(crate) mod fixture;
 #[path = "capture-flight.rs"]
@@ -161,6 +163,12 @@ pub(crate) struct CaptureWorkspace {
     /// When the light was first seen on (spec 4: exposure work waits until
     /// it has been on [`measure::LIGHT_SETTLED`]).
     light_on_since: Option<Instant>,
+    /// A stopped survey's sequence: its run is deleted once finished.
+    discard_sequence: Option<u64>,
+    /// The kept-survey cleanup of an earlier desktop has run.
+    kept_checked: bool,
+    /// The light as last seen (on or off), to tell a switch from a start.
+    light_seen: Option<bool>,
     /// The lens position when the camera was first seen connected: a pass
     /// seeds its sweep from the marks until the lens has moved.
     connect_position: Option<u16>,
@@ -177,6 +185,10 @@ pub(crate) struct CaptureWorkspace {
     /// The last stack's highlight-group line, for the capture it is of:
     /// its folder, the line, and whether every group was used.
     pub(crate) stacked_highlights: Option<(PathBuf, String, bool)>,
+    /// The core sample: being read, or read (spec 6.2).
+    pub(crate) core: Option<crate::jobs::Task<core_sample::CoreSample>>,
+    pub(crate) core_ready: Option<std::sync::Arc<core_sample::CoreSample>>,
+    pub(crate) core_error: Option<String>,
     /// A proof that could not be sent waits until then; tries so far.
     proof_retry: Option<Instant>,
     proof_tries: u32,
@@ -238,6 +250,9 @@ impl CaptureWorkspace {
             auto_subject: Default::default(),
             pass: Default::default(),
             light_on_since: None,
+            light_seen: None,
+            kept_checked: false,
+            discard_sequence: None,
             connect_position: None,
             depth_cache: None,
             held: Default::default(),
@@ -247,6 +262,9 @@ impl CaptureWorkspace {
             proof_retry: None,
             proof_tries: 0,
             stacked_highlights: None,
+            core: None,
+            core_ready: None,
+            core_error: None,
         }
     }
     fn calibrating(&self) -> bool {
@@ -429,6 +447,140 @@ impl CaptureWorkspace {
             "calibration: tiles in focus, from the live sweep".into(),
         ))
     }
+    /// Deletes a kept survey run (at Start, New capture or the next
+    /// calibration): only a run this desktop took as a survey.
+    pub(crate) fn drop_survey_run(&mut self) {
+        // A run kept by an earlier desktop goes too.
+        let path = self.lens_memory_path();
+        let mut memory = measure::LensMemory::load(&path);
+        let earlier = memory.kept_survey.take();
+        if earlier.is_some() {
+            let _ = memory.save(&path);
+        }
+        for run in earlier
+            .into_iter()
+            .filter(|r| Some(r) != self.pass.facts.survey_run.as_ref())
+        {
+            if run.join("manifest.json").is_file() && run.join("events.jsonl").is_file() {
+                let _ = std::fs::remove_dir_all(&run);
+            }
+        }
+        if let Some(run) = self.pass.facts.survey_run.take()
+            && run.join("manifest.json").is_file()
+            && run.join("events.jsonl").is_file()
+        {
+            let _ = std::fs::remove_dir_all(&run);
+        }
+        self.core = None;
+        self.core_ready = None;
+    }
+    /// Pins a tile of the survey's grid: its core sample is read from the
+    /// kept survey on a worker.
+    pub(crate) fn pin_tile(&mut self, tile: (usize, usize)) {
+        let Some(run) = self.pass.facts.survey_run.clone() else {
+            self.core_error =
+                Some("The survey's RAWs are not kept: calibrate again to sample a tile".into());
+            return;
+        };
+        let focus = self.pass.facts.survey.as_ref().and_then(|v| {
+            let m = &v["maps"];
+            let cols = m["cols"].as_u64()? as usize;
+            m["focus"].as_array()?.get(tile.1 * cols + tile.0)?.as_f64()
+        });
+        let Some(focus) = focus else {
+            self.core_error = Some("This tile has no focus".into());
+            return;
+        };
+        self.core_error = None;
+        self.core_ready = None;
+        self.core = Some(crate::jobs::spawn_task("strehl-core-sample", move |_| {
+            core_sample::read(&run, tile, focus)
+        }));
+    }
+    fn poll_core(&mut self) {
+        if let Some(task) = &self.core {
+            match task.receiver.try_recv() {
+                Ok(Ok(c)) => {
+                    self.core_ready = Some(std::sync::Arc::new(c));
+                    self.core = None;
+                }
+                Ok(Err(e)) => {
+                    self.core_error = Some(e);
+                    self.core = None;
+                }
+                Err(std::sync::mpsc::TryRecvError::Empty) => {}
+                Err(std::sync::mpsc::TryRecvError::Disconnected) => self.core = None,
+            }
+        }
+    }
+    /// Runs a stopped pass's remaining stages, from the light's wait on;
+    /// what it measured stays.
+    pub fn resume_pass(&mut self) -> anyhow::Result<()> {
+        anyhow::ensure!(!self.calibrating(), "A calibration is running");
+        anyhow::ensure!(
+            self.pass.facts.peaks.is_some() && self.pass.facts.busiest.is_some(),
+            "The sweep did not finish: calibrate again"
+        );
+        self.pass.stage = measure::Stage::Light { sent: false };
+        self.pass.stopped_in = None;
+        Ok(())
+    }
+    /// The column's view of the pass, with rule 2's values and staleness.
+    pub(crate) fn pass_view(&self, s: &Snapshot, now: Instant) -> plan::PassView {
+        let mut v = self.pass.view(
+            now,
+            self.light_on_for(now),
+            s.host.capabilities.exposure_tiers,
+        );
+        v.proving = self.proof.running();
+        v.held = self.held;
+        if let Some(survey) = &self.pass.facts.survey {
+            v.values = measure::calibrated(survey);
+            let outline = format!(
+                "{:?}",
+                s.host
+                    .plan
+                    .as_ref()
+                    .and_then(|p| p.subject.as_ref())
+                    .map(|x| &x.rings)
+            );
+            v.stale = match &self.pass.outline_key {
+                Some(k) if *k != outline => Some("The outline changed after the survey".into()),
+                _ => self
+                    .pass
+                    .facts
+                    .light_on_seconds
+                    .filter(|s| *s < measure::LIGHT_SETTLED.as_secs_f64())
+                    .map(|_| "Measured while the light was settling".into()),
+            };
+        }
+        v.resumable = matches!(self.pass.stage, measure::Stage::Failed(_))
+            && self.pass.facts.busiest.is_some()
+            && self.pass.stopped_in.is_some_and(|st| st != "sweep");
+        let subject = self.station.plan.subject.trim();
+        if !subject.is_empty()
+            && let Some(e) = measure::LensMemory::load(&self.lens_memory_path())
+                .subjects
+                .get(subject)
+        {
+            let days = (std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .map_or(0, |d| d.as_secs())
+                .saturating_sub(e.unix))
+                / 86_400;
+            v.last = Some(format!(
+                "Last calibrated {}: in focus {} \u{2013} {}; the sweep starts there",
+                match days {
+                    0 => "today".to_owned(),
+                    1 => "yesterday".to_owned(),
+                    d => format!("{d} days ago"),
+                },
+                style::focus_units(e.in_focus[0].round() as u16),
+                style::focus_units(e.in_focus[1].round() as u16)
+            ));
+        }
+        v
+    }
     /// The lens memory beside `capture.json` (spec 8).
     fn lens_memory_path(&self) -> PathBuf {
         self.path.with_file_name("capture-lens-memory.json")
@@ -475,16 +627,70 @@ impl CaptureWorkspace {
         };
         let s = connection.snapshot();
         let now = Instant::now();
+        // A stopped survey, once the host has finished it: its RAWs go.
+        if let Some(seq) = self.discard_sequence
+            && s.host.sequence_id == Some(seq)
+            && !s.host.busy
+            && !s.host.phase.capturing()
+        {
+            self.discard_sequence = None;
+            if let Some(run) = s.host.last_receipt_run()
+                && run.join("manifest.json").is_file()
+                && run.join("events.jsonl").is_file()
+            {
+                let _ = std::fs::remove_dir_all(&run);
+            }
+        }
+        // A survey an earlier desktop kept is of no use to this one.
+        if !self.kept_checked {
+            self.kept_checked = true;
+            if self.pass.facts.survey_run.is_none()
+                && measure::LensMemory::load(&self.lens_memory_path())
+                    .kept_survey
+                    .is_some()
+            {
+                self.drop_survey_run();
+            }
+        }
+        let Some(connection) = &self.connection else {
+            return;
+        };
         if let Some(run) = self.test_shot.poll(&s, now) {
             connection.mark_test_run(run);
         }
         // The light's time on, and the lens where the camera connected.
+        // A switch seen here is remembered (lens memory), so a desktop
+        // opened with the light on knows how long it has been on.
+        let unix = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map_or(0, |d| d.as_secs());
         match s.host.power.as_ref().and_then(|p| p.light.on) {
-            Some(true) => {
-                self.light_on_since.get_or_insert(now);
+            Some(true) if self.light_on_since.is_none() => {
+                let path = self.lens_memory_path();
+                let mut memory = measure::LensMemory::load(&path);
+                let since = match (self.light_seen, memory.light_on_seconds(unix)) {
+                    // Seen off, now on: switched on now.
+                    (Some(false), _) | (_, None) => {
+                        memory.light_on_unix = Some(unix);
+                        let _ = memory.save(&path);
+                        now
+                    }
+                    (_, Some(seconds)) => {
+                        now.checked_sub(Duration::from_secs(seconds)).unwrap_or(now)
+                    }
+                };
+                self.light_on_since = Some(since);
+                self.light_seen = Some(true);
             }
-            Some(false) => self.light_on_since = None,
-            None => {}
+            Some(false) if self.light_seen != Some(false) => {
+                self.light_on_since = None;
+                self.light_seen = Some(false);
+                let path = self.lens_memory_path();
+                let mut memory = measure::LensMemory::load(&path);
+                memory.light_off_unix = Some(unix);
+                let _ = memory.save(&path);
+            }
+            _ => {}
         }
         if s.fresh() && s.host.connected {
             if self.connect_position.is_none() {
@@ -556,6 +762,7 @@ impl CaptureWorkspace {
         self.poll_station(&s);
         self.poll_pass(&s, now);
         self.poll_proof(&s, now);
+        self.poll_core();
         // One filled value a frame, each once the camera is ready for it.
         if !self.fill_queue.is_empty()
             && s.fresh()
@@ -710,7 +917,23 @@ impl CaptureWorkspace {
                     // The survey's RAWs served their purpose (or the
                     // measurement was ended): free the disk. The engine has
                     // been reaped by now.
-                    if run.join("manifest.json").is_file() && run.join("events.jsonl").is_file() {
+                    // A pass's survey is kept until Start, New capture or the
+                    // next calibration (decision 2): the core sample reads it.
+                    let keep = matches!(self.pass.stage, measure::Stage::Survey { .. })
+                        && ended.is_none()
+                        && result.is_ok();
+                    if keep {
+                        if let Some(c) = &self.connection {
+                            c.mark_test_run(run.clone());
+                        }
+                        self.pass.facts.survey_run = Some(run.clone());
+                        let path = self.lens_memory_path();
+                        let mut memory = measure::LensMemory::load(&path);
+                        memory.kept_survey = Some(run.clone());
+                        let _ = memory.save(&path);
+                    } else if run.join("manifest.json").is_file()
+                        && run.join("events.jsonl").is_file()
+                    {
                         let _ = std::fs::remove_dir_all(&run);
                     }
                     match (ended, result) {
@@ -896,6 +1119,8 @@ impl CaptureWorkspace {
     pub fn stop_calibration(&mut self) {
         if let Some(sequence) = self.calibration.survey_sequence() {
             self.unfollowed_sequence = Some(sequence);
+            // The host finishes a stopped survey: its RAWs are deleted then.
+            self.discard_sequence = Some(sequence);
         }
         self.calibration.stop("Calibration stopped");
         self.pass.stop("Calibration stopped");
@@ -940,7 +1165,21 @@ impl CaptureWorkspace {
                 .map(|p| (p.start, p.end))
                 .filter(|(a, b)| a != b)
         };
-        let seed = at.unwrap_or_else(|| measure::seed(position, moved, marks));
+        // A subject calibrated before: its range, when nothing else says
+        // where to look (spec 8).
+        let remembered = (!moved && !s.host.bounds_set())
+            .then(|| {
+                let name = self.station.plan.subject.trim();
+                measure::LensMemory::load(&self.lens_memory_path())
+                    .subjects
+                    .get(name)
+                    .map(|e| (0.5 * (e.in_focus[0] + e.in_focus[1])).round() as u16)
+            })
+            .flatten();
+        let seed = at
+            .or(remembered)
+            .unwrap_or_else(|| measure::seed(position, moved, marks));
+        self.drop_survey_run();
         let now = Instant::now();
         // Spec 8: what earlier calibrations measured at this lens position.
         let (w0, offset) =
@@ -1087,6 +1326,14 @@ impl CaptureWorkspace {
             } => match &self.calibration {
                 C::Done(v) => {
                     self.pass.facts.survey = Some(v["survey"].clone());
+                    self.pass.outline_key = Some(format!(
+                        "{:?}",
+                        s.host
+                            .plan
+                            .as_ref()
+                            .and_then(|p| p.subject.as_ref())
+                            .map(|x| &x.rings)
+                    ));
                     self.pass.facts.revision += 1;
                     // Spec 8: the sharp depth and the offset this pass measured,
                     // remembered at its lens position.
@@ -1111,6 +1358,22 @@ impl CaptureWorkspace {
                             self.pass.offset_measured,
                             unix,
                         );
+                        // By catalog subject (spec 8): its in-focus range.
+                        let name = self.station.plan.subject.trim().to_owned();
+                        if !name.is_empty()
+                            && let (Some(a), Some(z)) = (
+                                survey["depth"]["in_focus_first"].as_f64(),
+                                survey["depth"]["in_focus_last"].as_f64(),
+                            )
+                        {
+                            memory.subjects.insert(
+                                name,
+                                measure::SubjectEntry {
+                                    in_focus: [a, z],
+                                    unix,
+                                },
+                            );
+                        }
                         let _ = memory.save(&path);
                     }
                     match self.pass.facts.busiest {
@@ -1535,6 +1798,11 @@ impl CaptureWorkspace {
         json!({"calibration":{"stage":self.calibration.stage(),"result":result,
                 "gives_up_seconds":self.calibration.gives_up_in(now).map(|d| d.as_secs_f64()),
                 "pass":self.pass.public(),
+                "survey_kept":self.pass.facts.survey_run.is_some(),
+                "core_sample":{"reading":self.core.is_some(),"error":self.core_error,
+                    "sample":self.core_ready.as_ref().map(|c| json!({"tile":[c.tile.0,c.tile.1],"focus":c.focus,
+                        "sentence":c.sentence,"crops":c.crops.iter().map(|x| x.0).collect::<Vec<_>>(),
+                        "curve":c.curve}))},
                 "proof":{"running":self.proof.running(),
                     "error":match &self.proof { measure::Proof::Failed(e) => Some(e.clone()), _ => None },
                     "results":self.pass.facts.proofs.iter().map(|p| json!({"verdict":p.verdict,"reason":p.reason,

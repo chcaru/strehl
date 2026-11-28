@@ -125,6 +125,15 @@ pub(crate) enum AgentCommand {
     Prove {
         count: usize,
     },
+    /// Pin a tile of the survey's 64 px grid for its core sample (three
+    /// survey frames at 100 % and its contrast against focus), read from
+    /// the kept survey.
+    /// Run a stopped calibration pass's remaining stages.
+    ResumeCalibration {},
+    PinCoreSample {
+        column: usize,
+        row: usize,
+    },
     /// Measure how far detail stayed sharp across a completed capture's planes.
     MeasureFocusStep {
         index: usize,

@@ -106,6 +106,9 @@ pub(crate) struct Facts {
     /// are asked for.
     pub proofs: Vec<ProofResult>,
     pub proofs_wanted: usize,
+    /// The survey's run, kept until Start, New capture or the next
+    /// calibration (the owner's decision 2): the core sample reads it.
+    pub survey_run: Option<std::path::PathBuf>,
 }
 
 /// One proof plane (spec 5.8): a four-shot group exactly as the plan stands
@@ -251,6 +254,26 @@ pub(crate) fn proof_line(proofs: &[ProofResult]) -> Option<String> {
 #[derive(Clone, Debug, Default, PartialEq, serde::Serialize, serde::Deserialize)]
 pub(crate) struct LensMemory {
     pub entries: Vec<LensEntry>,
+    /// By catalog subject: its last calibration's in-focus range and when
+    /// (spec 8). A new calibration of it centres its sweep there.
+    #[serde(default)]
+    pub subjects: std::collections::BTreeMap<String, SubjectEntry>,
+    /// When the light was last seen switched on and off (unix seconds), so
+    /// a desktop opened with the light on knows how long it has been.
+    #[serde(default)]
+    pub light_on_unix: Option<u64>,
+    #[serde(default)]
+    pub light_off_unix: Option<u64>,
+    /// A survey run kept for the core sample: a desktop that starts finds
+    /// it here and deletes it (the run outlived the desktop that kept it).
+    #[serde(default)]
+    pub kept_survey: Option<std::path::PathBuf>,
+}
+
+#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
+pub(crate) struct SubjectEntry {
+    pub in_focus: [f64; 2],
+    pub unix: u64,
 }
 
 #[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
@@ -295,6 +318,12 @@ impl LensMemory {
         if self.entries.len() > MEMORY_KEPT {
             self.entries.drain(..self.entries.len() - MEMORY_KEPT);
         }
+    }
+    /// The light's time on as remembered: seconds since it was switched
+    /// on, if it was seen switched on after it was last seen off.
+    pub fn light_on_seconds(&self, now_unix: u64) -> Option<u64> {
+        let on = self.light_on_unix?;
+        (self.light_off_unix.is_none_or(|off| off < on)).then(|| now_unix.saturating_sub(on))
     }
     /// The newest sharp depth and offset remembered at `position`'s bin.
     pub fn seed(&self, position: f64) -> (Option<f64>, Option<f64>) {
@@ -367,6 +396,29 @@ pub(crate) fn step_for(width: f64) -> u16 {
         }
     }
     best
+}
+
+/// The values a calibration gives, for the column's markers (rule 2).
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub(crate) struct Calibrated {
+    pub bounds: Option<(u16, u16)>,
+    pub step: Option<u16>,
+    pub shutter: Option<u64>,
+}
+
+pub(crate) fn calibrated(survey: &Value) -> Calibrated {
+    let d = &survey["depth"];
+    let unit = |v: &Value| v.as_f64().map(|f| f.round().clamp(0.0, 65535.0) as u16);
+    let advice = &survey["advice"];
+    Calibrated {
+        bounds: unit(&d["suggested_start"]).zip(unit(&d["suggested_end"])),
+        step: survey["step"]["width"].as_f64().map(step_for),
+        shutter: match advice["suggested"].as_str() {
+            Some("highlight_pass") => advice["highlight_pass"]["base_code"].as_u64(),
+            Some(k @ ("protect" | "accept")) => advice[k]["code"].as_u64(),
+            _ => None,
+        },
+    }
 }
 
 /// What a finished pass sets, value by value: the plan intents to apply for
@@ -445,6 +497,9 @@ pub(crate) struct Pass {
     pub offset_measured: Option<f64>,
     /// What the finished pass set and what it left as the owner had it.
     pub applied: Option<(Vec<String>, Vec<String>)>,
+    /// The subject outline the survey was read under (its debug form): a
+    /// changed outline makes the pass's facts stale (spec 5.5).
+    pub outline_key: Option<String>,
 }
 
 impl Default for Pass {
@@ -457,6 +512,7 @@ impl Default for Pass {
             exposure_before: None,
             four_before: false,
             stopped_in: None,
+            outline_key: None,
             w0: DEFAULT_DEPTH,
             offset: None,
             offset_measured: None,
@@ -730,6 +786,7 @@ impl Pass {
             available,
             proof: proof_line(&self.facts.proofs),
             proving: false,
+            ..Default::default()
         }
     }
 }
@@ -1058,6 +1115,29 @@ mod tests {
             proof_line(&five).unwrap(),
             "1 of 5 groups clean, 3 would be retaken; 22.3 s a plane"
         );
+    }
+
+    #[test]
+    fn the_lights_time_on_is_remembered_across_desktops() {
+        let mut m = LensMemory::default();
+        assert_eq!(m.light_on_seconds(1_000), None);
+        m.light_on_unix = Some(400);
+        assert_eq!(m.light_on_seconds(1_000), Some(600));
+        m.light_off_unix = Some(700);
+        assert_eq!(m.light_on_seconds(1_000), None, "switched off since");
+        // An older file without these fields still reads.
+        let old: LensMemory = serde_json::from_str(r#"{"entries":[]}"#).unwrap();
+        assert!(old.subjects.is_empty() && old.light_on_unix.is_none());
+    }
+
+    #[test]
+    fn the_calibrated_values_are_the_fills() {
+        let survey = json!({"depth":{"suggested_start":32349.0,"suggested_end":33199.0},
+            "step":{"width":48.0},"advice":{"suggested":"protect","protect":{"code":65546}}});
+        let c = calibrated(&survey);
+        assert_eq!(c.bounds, Some((32349, 33199)));
+        assert_eq!(c.step, Some(step_for(48.0)));
+        assert_eq!(c.shutter, Some(65546));
     }
 
     #[test]

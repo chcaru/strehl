@@ -1097,6 +1097,9 @@ impl CaptureWorkspace {
                 // survey is read, else from the live sweep.
                 self.station.live.depth = self.depth_map();
                 self.station.live.rail_hover = self.station.rail.hover;
+                self.station.live.core = self.core_ready.clone();
+                self.station.live.core_reading = self.core.is_some();
+                self.station.live.core_error = self.core_error.clone();
                 let intents = self.station.live.show(ui, s, &palette);
                 for intent in intents {
                     self.apply_live(s, intent);
@@ -1310,14 +1313,7 @@ impl CaptureWorkspace {
                         result: self.calibration_result(),
                         finished: self.station.calibrated_at,
                     },
-                    pass: super::plan::PassView {
-                        proving: self.proof.running(),
-                        ..self.pass.view(
-                            Instant::now(),
-                            self.light_on_for(Instant::now()),
-                            s.host.capabilities.exposure_tiers,
-                        )
-                    },
+                    pass: self.pass_view(&s, Instant::now()),
                     test_shot: TestShotView {
                         stage,
                         levels,
@@ -1577,6 +1573,7 @@ impl CaptureWorkspace {
             PlanIntent::SetSubject(_) | PlanIntent::SetStackName(_) => {}
             PlanIntent::NewCapture => {
                 self.held = Default::default();
+                self.drop_survey_run();
                 self.new_capture(false)
             }
             PlanIntent::UseAdvice { shutter, highlight } => {
@@ -1653,6 +1650,29 @@ impl CaptureWorkspace {
                 self.record(result);
             }
             PlanIntent::StopCalibration => self.stop_calibration(),
+            PlanIntent::ResumeCalibration => {
+                let result = self.resume_pass();
+                self.record(result);
+            }
+            PlanIntent::TakeCalibrated(field) => {
+                if let Some(survey) = self.pass.facts.survey.clone() {
+                    let mut held = self.held;
+                    match field {
+                        "bounds" => held.bounds = false,
+                        "step" => held.step = false,
+                        _ => held.exposure = false,
+                    }
+                    // Only the one field: the others stay as they are.
+                    let only = super::measure::Held {
+                        bounds: field != "bounds",
+                        step: field != "step",
+                        exposure: field != "exposure",
+                    };
+                    let (intents, _, _) = super::measure::fill(&survey, only);
+                    self.held = held;
+                    self.fill_queue.extend(intents);
+                }
+            }
             PlanIntent::SearchFurther(at) => {
                 let result = self.calibrate_pass_at(Some(at));
                 self.record(result);
@@ -1715,6 +1735,7 @@ impl CaptureWorkspace {
             PlanIntent::SetPowerDown(on) => self.command(s, Command::PowerPlan { enabled: on }),
             PlanIntent::Start => {
                 if preflight::start_blockers(s, self).is_empty() {
+                    self.drop_survey_run();
                     self.command(s, Command::Start {});
                 }
             }
@@ -1765,6 +1786,7 @@ impl CaptureWorkspace {
                 self.station.fixture_auto = None;
                 self.apply_live(s, LiveIntent::SetSubject(None));
             }
+            LiveIntent::PinTile(tx, ty) => self.pin_tile((tx, ty)),
             LiveIntent::AutoSubject => {
                 let active = super::auto_subject::active_px(s.host.camera_model.as_deref());
                 if let Err(e) = self.auto_subject.start(&self.survey_frames, active) {

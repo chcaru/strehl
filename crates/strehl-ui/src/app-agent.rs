@@ -441,6 +441,12 @@ impl StrehlApp {
             Prove { count } => {
                 self.capture.prove(count)?;
             }
+            ResumeCalibration {} => {
+                self.capture.resume_pass()?;
+            }
+            PinCoreSample { column, row } => {
+                self.capture.pin_tile((column, row));
+            }
             MeasureFocusStep { index } => {
                 self.capture.measure_focus_step(index)?;
             }

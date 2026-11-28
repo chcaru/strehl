@@ -62,6 +62,15 @@ pub(crate) struct PassView {
     /// The proof planes' line (spec 5.8), and whether one is being taken.
     pub proof: Option<String>,
     pub proving: bool,
+    /// The values the calibration gives, and which the owner holds (rule 2).
+    pub values: super::measure::Calibrated,
+    pub held: super::measure::Held,
+    /// Why the calibration's facts no longer hold, if they do not (spec 5.5).
+    pub stale: Option<String>,
+    /// A stopped pass can run its remaining stages.
+    pub resumable: bool,
+    /// The subject's last calibration, for the idle state.
+    pub last: Option<String>,
 }
 
 /// The test shot as the plan shows it.
@@ -132,6 +141,11 @@ pub(crate) enum PlanIntent {
     StopCalibration,
     /// Take this many proof planes (spec 5.8).
     Prove(usize),
+    /// Run a stopped pass's remaining stages.
+    ResumeCalibration,
+    /// Take the calibration's value for one held field ("bounds", "step",
+    /// "exposure"): it is no longer held.
+    TakeCalibrated(&'static str),
     /// A calibration whose sweep is centred here: past the end the subject
     /// still reached.
     SearchFurther(u16),
@@ -835,15 +849,27 @@ fn calibrate_step(
                 "The camera host cannot take a shutter per position: update it to calibrate.",
                 palette,
             ),
-            "idle" => note(
-                ui,
-                "Measures the range, the sharp depth and the light: about 5 minutes, about 60 single RAWs, not kept as a stack.",
-                palette,
-            ),
+            "idle" => {
+                note(
+                    ui,
+                    "Measures the range, the sharp depth and the light: about 5 minutes, about 60 single RAWs, not kept as a stack.",
+                    palette,
+                );
+                if let Some(last) = &p.last {
+                    style::text(ui, last, 11.5, palette.ink3);
+                }
+            }
             "failed" => {
                 let mut job = style::job(&guide::unbreak(&p.doing), 12.5, palette.warn, 0.0);
                 job.wrap.max_width = ui.available_width();
                 ui.label(job);
+                if p.resumable
+                    && style::link(ui, "Run the rest", editable && inputs.engine, palette)
+                        .on_hover_text("The stages the pass did not finish, from the light's wait on; what it measured stays")
+                        .clicked()
+                {
+                    out.push(PlanIntent::ResumeCalibration);
+                }
             }
             "done" => {}
             _ => {
@@ -852,11 +878,68 @@ fn calibrate_step(
                 progress_line(ui, p.passed, 5, palette);
             }
         }
+        if let Some(why) = &p.stale {
+            ui.add_space(3.0);
+            let mut job = style::job(
+                &format!("\u{25cb} {why}: calibrate again"),
+                12.0,
+                palette.warn,
+                0.0,
+            );
+            job.wrap.max_width = ui.available_width();
+            ui.label(job);
+        }
         if !p.rows.is_empty() {
             ui.add_space(6.0);
             readout(ui, &p.rows, palette);
         }
     });
+}
+
+/// Rule 2's marker under a value: the lamp when it is the calibration's
+/// (a ring when the calibration's facts are stale); for a value the owner
+/// set, what the calibration gives and Use.
+#[allow(clippy::too_many_arguments)]
+fn value_marker(
+    ui: &mut Ui,
+    matches: bool,
+    held: bool,
+    stale: bool,
+    calibrated: &str,
+    field: &'static str,
+    editable: bool,
+    palette: &CapturePalette,
+    out: &mut Vec<PlanIntent>,
+) {
+    if matches && !held {
+        let (mark, colour, words) = if stale {
+            (
+                "\u{25cb}",
+                palette.warn,
+                "from the calibration, before its facts changed",
+            )
+        } else {
+            ("\u{25cf}", palette.ok, "from the calibration")
+        };
+        ui.horizontal(|ui| {
+            ui.spacing_mut().item_spacing.x = 5.0;
+            style::text(ui, mark, 11.0, colour);
+            style::text(ui, words, 11.5, palette.ink3);
+        });
+    } else if !matches {
+        ui.horizontal(|ui| {
+            ui.spacing_mut().item_spacing.x = 6.0;
+            style::text(
+                ui,
+                &format!("The calibration gives {calibrated}"),
+                11.5,
+                palette.ink3,
+            );
+            if style::link(ui, "Use", editable, palette).clicked() {
+                out.push(PlanIntent::TakeCalibrated(field));
+            }
+        });
+    }
 }
 
 /// A ruled line with a tick at each stage boundary, filled to `passed`.
@@ -1209,6 +1292,19 @@ fn exposure_step(
         // shutters.
         if let Some(e) = exposure {
             advice_rows(ui, inputs, e, editable, palette, out);
+            if let Some(cal) = inputs.pass.values.shutter {
+                value_marker(
+                    ui,
+                    e.shutter == Some(cal),
+                    inputs.pass.held.exposure,
+                    inputs.pass.stale.is_some(),
+                    &style::shutter_label(cal),
+                    "exposure",
+                    editable,
+                    palette,
+                    out,
+                );
+            }
         }
         // Plan X3: highlight groups, for the glints the base exposure pins.
         if s.host.capabilities.exposure_tiers
@@ -1333,6 +1429,23 @@ pub(crate) fn in_focus(calibration: &Value) -> Option<InFocus> {
         reaches_first: d["reaches_first"].as_bool().unwrap_or(false),
         reaches_last: d["reaches_last"].as_bool().unwrap_or(false),
     })
+}
+
+/// The marks hold the calibration's in-focus range and spend at most one
+/// plane more than its suggestion: the Depth line's "the marks fit it".
+fn marks_fit(inputs: &PlanInputs<'_>) -> bool {
+    let Some(r) = in_focus(&inputs.calibration.result) else {
+        return false;
+    };
+    let (Some(lo), Some(hi)) = (r.start, r.end) else {
+        return false;
+    };
+    let (start, end) = inputs.s.host.plan_bounds();
+    let (mlo, mhi) = (start.min(end), start.max(end));
+    let step = inputs.step.max(1);
+    mlo <= r.first.round() as u16
+        && mhi >= r.last.round() as u16
+        && plane_count(mlo, mhi, step) <= plane_count(lo, hi, step) + 1
 }
 
 /// The Depth step's line from the calibration (spec 6.4): whether the marks
@@ -1779,6 +1892,24 @@ fn depth_step(
                 palette,
             );
         });
+        if let Some((lo, hi)) = inputs.pass.values.bounds {
+            let now = (start.min(end), start.max(end));
+            value_marker(
+                ui,
+                host.bounds_set() && (now == (lo, hi) || marks_fit(inputs)),
+                inputs.pass.held.bounds,
+                inputs.pass.stale.is_some(),
+                &format!(
+                    "{} \u{2013} {}",
+                    style::focus_units(lo),
+                    style::focus_units(hi)
+                ),
+                "bounds",
+                editable,
+                palette,
+                out,
+            );
+        }
         ui.add_space(4.0);
         ui.horizontal(|ui| {
             ui.spacing_mut().item_spacing.x = 8.0;
@@ -1842,6 +1973,19 @@ fn depth_step(
             if let Some(step) = step_table(ui, rows, custom_row.as_ref(), custom, editable, palette)
             {
                 out.push(PlanIntent::SetStep(step));
+            }
+            if let Some(cal) = inputs.pass.values.step {
+                value_marker(
+                    ui,
+                    inputs.step == cal,
+                    inputs.pass.held.step,
+                    inputs.pass.stale.is_some(),
+                    &format!("step {cal}"),
+                    "step",
+                    editable,
+                    palette,
+                    out,
+                );
             }
             match (&typed, custom_row.as_ref()) {
                 (Ok(v), Some(row)) if !row.current => {
