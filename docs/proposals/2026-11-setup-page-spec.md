@@ -88,7 +88,7 @@ and section 16 says why.
 | M6 | The sensor's response is linear to within 0.1 % up to the code where it clips, 16383, at ISO 100 and 400: the ratio of an 8 s burst to a 5 s burst stays within 0.07 % of flat from 1,300 to 15,400 DN above black. The engine's white is 15360 (R3) | 6.9 % of the range above black (0.1 stop) is treated as clipped today. Decision 3 |
 | M7 | The light's level moved by 0.2 to 0.5 % from frame to frame inside a burst and stepped up 4 % six and a half minutes after it was switched on (R4) | Every exposure measurement removes the light's drift frame by frame, and says how large it was |
 | M8 | Reached from 128 units below, the lens lands at the same place within 0.8 units (1.5 % of the sharp depth). Reached from above it lands 4.1 units lower. A reversal of 8 or 16 units does not undo that. After 5,000 units of travel upward it lands 3 to 4 units high with 2 to 4 units of scatter, stays there for the 12 s watched, and a 128-unit approach straight after does not always cure it (R5) | The approach distance and direction are measurable facts of a focus axis. The rig measurement finds them and Capture uses them |
-| M9 | The host switches the light on for every capture when it manages power, so the first dark series of this work was lit; and the camera's magnifier resets on a focus move (R2, R5) | Two host changes: a capture kind that leaves the light alone, and nothing here depends on the magnifier surviving a move |
+| M9 | The host switches the light on for every capture when it manages power, so the first dark series of this work was lit; the camera's magnifier resets on a focus move; and the camera wakes with the exposure and shot mode of its last capture, not the last ones set, so an exposure put back and not shot is gone at the next power-on (R2, R5, R11) | Two host changes: a capture kind that leaves the light alone, and one that ends on a capture at the settings it found. Nothing here depends on the magnifier surviving a move |
 | M10 | A plain Fourier peak finds the pitch of the calibration slide's dot grid as 108.46 and 108.56 sensor pixels along its two axes in one region and 108.36 and 108.13 in another (R6). The slide's own labels do not give an absolute size (it is a photographic reduction) | Scale is a pitch Strehl counts in pixels and a length the person types |
 | M11 | Starting from a lens profile of zero, two passes of the engine's own per-stack instrument reach the same lateral colour as one pass on top of the hand-made profile, within 3 to 7 ppm in red on three stacks and 36 ppm on the fourth, where the hand-made profile is 214 ppm off. Between stacks with the same lens the colour shift itself runs from -215 to -386 ppm in red and +30 to +188 in blue (R7) | An unknown lens needs no hand-made profile, and a stored one is a start, not the answer. Decision 4 |
 | M12 | With the settle before an exposure set to 100, 250, 500, 1,000 and 2,000 ms, the picture is 0.29 to 0.58 px (median) from rest when a 1/100 s exposure starts, with no trend; the test could have seen 0.23 px (R8) | On this rig the settle is not what moves the picture: its own movement between frames is. The settle test must be able to say "no difference" |
@@ -579,6 +579,11 @@ these, drawn as a mark and said in a word:
   ISO 400: 2 dark frames, 8 are needed." Where a list needs frames in a known order
   (Motion), it numbers them and the page shows each dropped frame against its number
   before reading. Then *Read* and *Plate* as on the rig.
+- **Left as found.** A sitting on a rig ends by putting back the exposure, the shot mode,
+  the light and the focus position it found. MEASURED (M9, R11): on this camera a setting
+  that was changed and not shot does not survive the power-off. Three times a restored
+  exposure was gone at the next wake, and the camera came up with the last burst's. So the
+  sitting's last act is one capture at the settings it found, which it discards.
 - **A rig that drives only part of it** never fails for want of the rest. Where the host
   takes the frames but cannot do a step itself (switch the light, move the focus), the
   sitting waits on one sentence and a Continue button: "Cap the lens, then Continue."
@@ -1626,7 +1631,8 @@ stack's catalog record; a stack imported later has none and matches by section 5
 | `settle_ms` | Optional, for this run only | The settle ladder (7.2) without rewriting the person's plan |
 
 Kind `"setup"` never powers the camera or the light down at its end, whatever the power
-plan says.
+plan says. Its last capture is one group at the exposure and shot mode it started with,
+marked in the journal to be discarded on the PC (6.0, "Left as found").
 
 The receiver keeps a `"setup"` run in `setup\scratch\` rather than among the captures.
 
@@ -1934,7 +1940,8 @@ Section 11.2, 11.3; the meters; the Shoot stage.
   this work was not). Both sittings end within 10 % of the time the page promised. A
   white card: the Field plate, the dust map through `detect_dust`, the fixed pattern
   against 2026-11-16's 0.30, 0.35, 0.40 %.
-- Stop in each stage leaves the camera's exposure, the light and the lens as they were.
+- Stop in each stage leaves the camera's exposure, shot mode, the light and the lens as
+  they were, checked again after the camera has been powered off and on.
 
 ### P4. Scale
 

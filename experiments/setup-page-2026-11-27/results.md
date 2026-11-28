@@ -306,9 +306,10 @@ photographic reduction.
 
 The engine's own per-stack instrument (`strehl_core::ca_refine::measure` on the preview
 render of `strehl stack --srgb`). An experiment switch, in this folder's worktree only and
-not for merge, made the matched profile's coefficients zero (`STREHL_CA_ZERO_PROFILE=1`)
-or two given numbers (`=R,B` in ppm) so that a second pass could be run
-(`analysis/ca-zero-profile.patch`). `analysis/ca-zero.sh` ran each stack three ways; four-shot stacks with
+not for merge, made the matched profile's coefficients zero (`STREHL_CA_ZERO_PROFILE=1`) or
+two given numbers (`=R,B` in ppm) so that a second pass could be run
+(`analysis/ca-zero-profile.patch`). `analysis/ca-zero.sh` ran each stack three ways;
+four-shot stacks with
 `STREHL_PIXEL_SHIFT=remosaic`. Isolated cache (`STREHL_CACHE_DIR`), no output kept.
 
 MEASURED, scale in ppm, red / blue:
@@ -447,5 +448,13 @@ number that says so. The spec's Level reading is otherwise unmeasured.
   plan (32,332 to 33,169, step 8, settle 500 ms, approach 128) and the exposure (ISO 100,
   1.3 s) as found. During the work managed power was off for 43 minutes and error
   correction for 52, and again for 6 minutes during R9.
+- **The exposure needed a repair, and why.** MEASURED: setting an exposure through the
+  host and powering the camera off does not keep it. The camera wakes with the exposure
+  and shot mode of its last capture. After the settle ladder (last burst ISO 3200,
+  1/100 s; then ISO 100, 1.3 s set, not shot) it woke at ISO 3200, 1/100 s. After R9 (last
+  burst ISO 100, 2.5 s) it woke at ISO 100, 2.5 s. Set to 1.3 s and powered off without a
+  shot, it woke at 2.5 s again. One four-shot group at ISO 100, 1.3 s, deleted afterwards,
+  fixed it: the next wake read ISO 100, 1.3 s, four-shot. R9's script had also recorded
+  the wrong starting exposure, because it read the camera after the first of these.
 - **The owner's desktop** was not opened; the receiver ran throughout and was not
   restarted.
